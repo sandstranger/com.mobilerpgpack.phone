@@ -25,7 +25,7 @@ android {
         externalNativeBuild {
             cmake {
                 arguments"-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
-                        "-DCMAKE_CXX_FLAGS=-O3",
+                        "-DCMAKE_CXX_FLAGS=-O3 -Wno-c++11-narrowing",
                         "-DCMAKE_C_FLAGS=-O3"
             }
         }
