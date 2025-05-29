@@ -23,3 +23,5 @@ rootProject.name = "DOOM & Wolf RPG"
 include ':app'
 include ':openal'
 include ':gl4es'
+include ':sdl2:android-project:app'
+
