@@ -1,0 +1,3 @@
+[submodule "openal/src/main/jni/openal"]
+	path = openal/src/main/jni/openal
+	url = https://github.com/kcat/openal-soft.git
