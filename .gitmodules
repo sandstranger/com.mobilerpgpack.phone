@@ -4,3 +4,6 @@
 [submodule "gl4es/src/main/jni/gl4es"]
 	path = gl4es/src/main/jni/gl4es
 	url = https://github.com/sandstranger/gl4es.git
+[submodule "sdl2"]
+	path = sdl2
+	url = https://github.com/sandstranger/SDL.git
