@@ -7,3 +7,6 @@
 [submodule "sdl2"]
 	path = sdl2
 	url = https://github.com/sandstranger/SDL.git
+[submodule "app/src/main/jni/WolfensteinRPG-RE"]
+	path = app/src/main/jni/WolfensteinRPG-RE
+	url = https://github.com/sandstranger/WolfensteinRPG-RE.git
