@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "DOOM & Wolf RPG"
 include ':app'
 include ':openal'
+include ':gl4es'
