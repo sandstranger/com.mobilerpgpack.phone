@@ -1,3 +1,6 @@
 [submodule "openal/src/main/jni/openal"]
 	path = openal/src/main/jni/openal
 	url = https://github.com/kcat/openal-soft.git
+[submodule "gl4es/src/main/jni/gl4es"]
+	path = gl4es/src/main/jni/gl4es
+	url = https://github.com/sandstranger/gl4es.git
