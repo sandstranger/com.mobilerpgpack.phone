@@ -25,6 +25,8 @@ internal fun setFullscreen(decorView: View) {
 fun killEngine() = Process.killProcess(Process.myPid())
 
 fun startEngine(context: Context) {
+    Os.setenv("LIBGL_ES", "2", true)
+    Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
     Os.setenv("ANDROID_GAME_PATH","${Environment.getExternalStorageDirectory().absolutePath}/wolfenstein",true)
     Os.setenv("WOLF_IPA_FILE_NAME","Wolfenstein RPG.ipa",true)
     context.startActivity<EngineActivity>()
