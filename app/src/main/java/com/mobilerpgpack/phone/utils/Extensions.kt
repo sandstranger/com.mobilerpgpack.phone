@@ -7,14 +7,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import android.text.InputType
-import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.EditTextPreference
 import com.mobilerpgpack.phone.BuildConfig
 
@@ -41,10 +44,28 @@ fun EditTextPreference.setHint (hintId : Int){
     }
 }
 
-fun Activity.displayInCutoutArea (prefsManager: SharedPreferences){
-    val displayInCutout = prefsManager.getBoolean("display_cutout_area", false)
-    if (displayInCutout && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+fun Activity.displayInSafeArea (prefsManager: SharedPreferences){
+    val displayInSafeArea = prefsManager.getBoolean("display_safe_area", true)
+    if (displayInSafeArea) {
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = bars.left,
+                top = bars.top,
+                right = bars.right,
+                bottom = bars.bottom,
+            )
+
+            val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            if (cutout.top > 0 || cutout.left > 0 || cutout.right > 0) {
+                v.setBackgroundColor(Color.BLACK)
+            }
+
+            WindowInsetsCompat.CONSUMED
+        }
     }
 }
 
