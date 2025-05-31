@@ -13,6 +13,10 @@ import org.libsdl.app.SDLActivity
 class EngineActivity : SDLActivity() {
     private lateinit var prefsManager : SharedPreferences
 
+    private external fun pauseSound()
+
+    private external fun resumeSound()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setFullscreen(window.decorView)
         super.onCreate(savedInstanceState)
@@ -23,6 +27,16 @@ class EngineActivity : SDLActivity() {
     override fun getMainSharedObject() = MAIN_ENGINE_NATIVE_LIB
 
     override fun getLibraries() = libsArray
+
+    override fun onPause() {
+        super.onPause()
+        pauseSound()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resumeSound()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
