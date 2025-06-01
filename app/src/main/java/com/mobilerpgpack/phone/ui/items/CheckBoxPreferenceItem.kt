@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,22 +24,21 @@ fun CheckBoxPreferenceItem(
     onCheckedChange : (Boolean) -> Unit
 ) {
     val checked by checkedFlow.collectAsState(initial = false)
-    val checkedState = remember { mutableStateOf(false) }
-    checkedState.value = checked!!
+    var checkedState by remember (checked!!) { mutableStateOf(checked!!) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                checkedState.value = !checkedState.value
-                onCheckedChange(checkedState.value)
+                checkedState = !checkedState
+                onCheckedChange(checkedState)
             }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(title, modifier = Modifier.weight(1f))
         Checkbox(
-            checked = checkedState.value,
+            checked = checkedState,
             onCheckedChange = null
         )
     }
