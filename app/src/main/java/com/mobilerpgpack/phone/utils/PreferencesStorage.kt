@@ -9,20 +9,37 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences_storage")
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences_storage")
 
 object PreferencesStorage {
     private val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
+    private val preserveScreenAspectRatioPrefsKey = booleanPreferencesKey("preserve_screen_aspect_ratio")
+    private val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
 
-    fun getDisplayInSafeAreaValue(context: Context): Flow<Boolean?> {
+    fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
+
+    suspend fun setDisplayInSafeAreaValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, displayInSafeAreaPrefsKey, valueToSave)
+
+    fun getPreserveAspectRatioValue (context: Context) = getBooleanValue(context, preserveScreenAspectRatioPrefsKey)
+
+    suspend fun setPreserveAspectRationValue (context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, preserveScreenAspectRatioPrefsKey, valueToSave)
+
+    fun getShowCustomMouseCursorValue (context: Context) = getBooleanValue(context, showCustomMouseCursorPrefsKey)
+
+    suspend fun setShowCustomMouseCursorValue (context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, showCustomMouseCursorPrefsKey, valueToSave)
+
+    private fun getBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, defaultValue : Boolean = false): Flow<Boolean?> {
         return context.dataStore.data.map { preferences ->
-            preferences[displayInSafeAreaPrefsKey] ?: false
+            preferences[prefsKey] ?: defaultValue
         }
     }
 
-    suspend fun setDisplayInSafeAreaValue(context: Context, valueToSave : Boolean) {
+    private suspend fun setBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, valueToSave : Boolean) {
         context.dataStore.edit { preferences ->
-            preferences[displayInSafeAreaPrefsKey] = valueToSave
+            preferences[prefsKey] = valueToSave
         }
     }
 }
