@@ -44,8 +44,31 @@ fun SettingsScreen() {
             }
         }
 
-       // Spacer(Modifier.height(24.dp))
+        DrawDivider()
 
-        HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
+        CheckBoxPreferenceItem(context.getString(R.string.preserve_aspect_ratio),
+            checkedFlow = PreferencesStorage.getPreserveAspectRatioValue(context),
+            ) { newValue ->
+            scope.launch {
+                PreferencesStorage.setPreserveAspectRationValue(context, newValue)
+            }
+        }
+
+        DrawDivider()
+
+        CheckBoxPreferenceItem(context.getString(R.string.show_custom_mouse_cursor),
+            checkedFlow = PreferencesStorage.getShowCustomMouseCursorValue(context),
+            ) { newValue ->
+            scope.launch {
+                PreferencesStorage.setShowCustomMouseCursorValue(context, newValue)
+            }
+        }
+
+        DrawDivider()
     }
 }
+
+@Composable
+private fun DrawDivider () = HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
+
+
