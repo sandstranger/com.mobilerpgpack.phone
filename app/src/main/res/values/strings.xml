@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">DOOM &amp; Wolf RPG</string>
+    <string name="access_to_all_files">Allow access to manage all files</string>
+    <string name="grant_permission">Grant permission</string>
+    <string name="common_settings">Common settings</string>
+    <string name="display_in_safe_area">Display in safe area</string>
 </resources>
