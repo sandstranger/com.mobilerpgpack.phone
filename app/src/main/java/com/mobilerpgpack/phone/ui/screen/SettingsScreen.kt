@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,13 +14,19 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.items.CheckBoxPreferenceItem
+import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,38 +41,60 @@ fun SettingsScreen() {
             .padding(16.dp)
             .verticalScroll(scrollState)
     ) {
-        Text(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
+        DrawCommonSettings(context, scope)
 
-        CheckBoxPreferenceItem(context.getString(R.string.display_in_safe_area),
-            checkedFlow = PreferencesStorage.getDisplayInSafeAreaValue(context),
-            ) { newValue ->
-            scope.launch {
-                PreferencesStorage.setDisplayInSafeAreaValue(context, newValue)
-            }
-        }
-
-        DrawDivider()
-
-        CheckBoxPreferenceItem(context.getString(R.string.preserve_aspect_ratio),
-            checkedFlow = PreferencesStorage.getPreserveAspectRatioValue(context),
-            ) { newValue ->
-            scope.launch {
-                PreferencesStorage.setPreserveAspectRationValue(context, newValue)
-            }
-        }
-
-        DrawDivider()
-
-        CheckBoxPreferenceItem(context.getString(R.string.show_custom_mouse_cursor),
-            checkedFlow = PreferencesStorage.getShowCustomMouseCursorValue(context),
-            ) { newValue ->
-            scope.launch {
-                PreferencesStorage.setShowCustomMouseCursorValue(context, newValue)
-            }
-        }
-
-        DrawDivider()
     }
+}
+@Composable
+private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
+
+    val engineState by produceState(
+        initialValue = EngineTypes.DefaultActiveEngine,
+        key1 = context
+    ) {
+        value = PreferencesStorage.getActiveEngineValue(context)
+    }
+
+    Text(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
+
+    ListPreferenceItem(context.getString(R.string.active_engine),engineState,EngineTypes.entries) {
+        newValue ->
+        scope.launch {
+            PreferencesStorage.setActiveEngineValue(context, enumValueOf<EngineTypes>(newValue))
+        }
+    }
+
+    DrawDivider()
+
+    CheckBoxPreferenceItem(context.getString(R.string.display_in_safe_area),
+        checkedFlow = PreferencesStorage.getDisplayInSafeAreaValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setDisplayInSafeAreaValue(context, newValue)
+        }
+    }
+
+    DrawDivider()
+
+    CheckBoxPreferenceItem(context.getString(R.string.preserve_aspect_ratio),
+        checkedFlow = PreferencesStorage.getPreserveAspectRatioValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setPreserveAspectRationValue(context, newValue)
+        }
+    }
+
+    DrawDivider()
+
+    CheckBoxPreferenceItem(context.getString(R.string.show_custom_mouse_cursor),
+        checkedFlow = PreferencesStorage.getShowCustomMouseCursorValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setShowCustomMouseCursorValue(context, newValue)
+        }
+    }
+
+    DrawDivider()
 }
 
 @Composable
