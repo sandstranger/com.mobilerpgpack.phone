@@ -3,11 +3,11 @@ package com.mobilerpgpack.phone.engine
 
 
 enum class EngineTypes {
-    WolfensteingRpg,
+    WolfensteinRpg,
     DoomRpg,
     Doom2Rpg;
 
     companion object{
-        val DefaultActiveEngine = WolfensteingRpg
+        val DefaultActiveEngine = WolfensteinRpg
     }
 }
