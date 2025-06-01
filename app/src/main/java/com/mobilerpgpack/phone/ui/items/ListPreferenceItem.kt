@@ -1,131 +1,69 @@
 package com.mobilerpgpack.phone.ui.items
 
-import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-
-/*
-// DataStore delegate
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
-// Ключи
-val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
-val LANGUAGE_KEY = stringPreferencesKey("language")
 
 @Composable
-fun SettingsScreen(dataStore: DataStore<Preferences>) {
-    val scope = rememberCoroutineScope()
+fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collection<T>, onValueChange : (String) -> Unit) {
+    var showValuesDialog by remember { mutableStateOf(false) }
+    var activeValue by remember (initialValue.toString()) { mutableStateOf(initialValue.toString()) }
+    val stringValues: Collection<String> = allValues.map { it.toString() }
 
-    val prefs by dataStore.data.collectAsState(initial = emptyPreferences())
-
-    val darkMode = prefs[DARK_MODE_KEY] ?: false
-    val language = prefs[LANGUAGE_KEY] ?: "ru"
-
-    val languageOptions = listOf("ru" to "Русский", "en" to "English")
-
-    var showLanguageDialog by remember { mutableStateOf(false) }
-
-    Column(
+    Row(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .fillMaxWidth()
+            .clickable { showValuesDialog = true }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text("Настройки", style = MaterialTheme.typography.titleLarge)
+        Text(title, Modifier.weight(1f))
+        Text(activeValue, style = MaterialTheme.typography.bodyMedium)
+    }
 
-        Spacer(Modifier.height(24.dp))
-
-        SwitchPreferenceItem(
-            title = "Тёмная тема",
-            checked = darkMode,
-            onCheckedChange = {
-                scope.launch {
-                    dataStore.edit { prefs ->
-                        prefs[DARK_MODE_KEY] = it
-                    }
-                }
-            }
-        )
-
-        Divider(modifier = Modifier.padding(vertical = 12.dp))
-
-        ListPreferenceItem(
-            title = "Язык интерфейса",
-            value = languageOptions.find { it.first == language }?.second ?: "Не выбрано",
-            onClick = { showLanguageDialog = true }
-        )
-
-        if (showLanguageDialog) {
-            AlertDialog(
-                onDismissRequest = { showLanguageDialog = false },
-                title = { Text("Выберите язык") },
-                text = {
-                    Column {
-                        languageOptions.forEach { (code, label) ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        scope.launch {
-                                            dataStore.edit { prefs ->
-                                                prefs[LANGUAGE_KEY] = code
-                                            }
-                                        }
-                                        showLanguageDialog = false
-                                    }
-                                    .padding(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = code == language,
-                                    onClick = null
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text(label)
-                            }
+    if (showValuesDialog){
+        AlertDialog(
+            onDismissRequest = { showValuesDialog = false },
+            title = { Text(title) },
+            text = {
+                Column {
+                    stringValues.forEach { stringValue ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    activeValue = stringValue
+                                    onValueChange(stringValue)
+                                    showValuesDialog = false
+                                }
+                                .padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(selected = activeValue == stringValue, onClick = null)
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringValue)
                         }
                     }
-                },
-                confirmButton = {}
-            )
-        }
+                }
+            },
+            confirmButton = {}
+        )
     }
 }
-
-@Composable
-fun SwitchPreferenceItem(title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onCheckedChange(!checked) }
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(title, Modifier.weight(1f))
-        Switch(checked = checked, onCheckedChange = onCheckedChange)
-    }
-}
-
-@Composable
-fun ListPreferenceItem(title: String, value: String, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(title, Modifier.weight(1f))
-        Text(value, style = MaterialTheme.typography.bodyMedium)
-    }
-}*/
