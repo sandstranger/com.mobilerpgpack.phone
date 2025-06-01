@@ -1,39 +1,46 @@
 package com.mobilerpgpack.phone.ui.activity
 
 import android.os.Bundle
-import com.mobilerpgpack.phone.databinding.MainActivityBinding
-import com.mobilerpgpack.phone.presenter.MainActivityPresenter
-import moxy.MvpAppCompatActivity
-import moxy.MvpView
-import moxy.presenter.InjectPresenter
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.mobilerpgpack.phone.ui.screen.PermissionScreen
+import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
-internal class MainActivity : MvpAppCompatActivity(), MvpView {
-    @InjectPresenter
-    lateinit var presenter: MainActivityPresenter
+internal class MainActivity : ComponentActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = MainActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.startGameButton.setOnClickListener {
-            presenter.onStartGameBtnClicked(this@MainActivity)
-        }
-
-        presenter.requestExternalStorage(this)
-//        changeFragment()
+        buildScreens()
     }
 
-   /* private fun changeFragment() {
-        val fragmentContainterResId = R.id.fragments_container
-        var fragment = supportFragmentManager.findFragmentById(fragmentContainterResId)
-
-        if (fragment == null) {
-            fragment = SettingsFragment()
-            supportFragmentManager.beginTransaction().apply {
-                replace(fragmentContainterResId, fragment)
-                commit()
+    private fun buildScreens(){
+        val startScreen : String = if (this@MainActivity.isExternalStoragePermissionGranted())
+            Screen.Settings.route else Screen.Permission.route
+        setContent {
+            MaterialTheme {
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = startScreen ) {
+                    composable(Screen.Permission.route)
+                    {
+                        PermissionScreen {
+                            navController.navigate(Screen.Settings.route){
+                                popUpTo(Screen.Permission.route) { inclusive = true }
+                            }
+                        }
+                    }
+                    composable(Screen.Settings.route) { SettingsScreen() }
+                }
             }
         }
-    }*/
+    }
+
+    private sealed class Screen(val route: String) {
+        data object Permission : Screen("permission")
+        data object Settings : Screen("settings")
+    }
 }

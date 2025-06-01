@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.preference.EditTextPreference
 import com.mobilerpgpack.phone.BuildConfig
+import androidx.core.net.toUri
 
 inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity {
     val i = Intent(this, T::class.java)
@@ -31,21 +32,19 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
     if (finishParentActivity && this is Activity) this.finish();
 }
 
-fun EditTextPreference.changeInputTypeToDecimal (){
-    this.setOnBindEditTextListener { editText ->
-        editText.inputType =
-            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED
+fun Context.isExternalStoragePermissionGranted () : Boolean {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        return Environment.isExternalStorageManager()
     }
-}
 
-fun EditTextPreference.setHint (hintId : Int){
-    this.setOnBindEditTextListener { editText ->
-        editText.setHint(hintId)
-    }
+    return ContextCompat.checkSelfPermission(
+        this,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    ) == PackageManager.PERMISSION_GRANTED
 }
 
 fun Activity.displayInSafeArea (prefsManager: SharedPreferences){
-    val displayInSafeArea = prefsManager.getBoolean("display_safe_area", true)
+    val displayInSafeArea = prefsManager.getBoolean(DISPLAY_IN_SAFE_AREA_PREFS_KEY, true)
     if (displayInSafeArea) {
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
             val bars = insets.getInsets(
@@ -65,37 +64,6 @@ fun Activity.displayInSafeArea (prefsManager: SharedPreferences){
             }
 
             WindowInsetsCompat.CONSUMED
-        }
-    }
-}
-
-fun Activity.requestExternalStoragePermission () {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        if (!Environment.isExternalStorageManager()) {
-            val uri = Uri.parse("package:${BuildConfig.APPLICATION_ID}")
-            this.startActivity(
-                Intent(
-                    Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                    uri
-                )
-            )
-        }
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 23
-                )
-            }
         }
     }
 }
