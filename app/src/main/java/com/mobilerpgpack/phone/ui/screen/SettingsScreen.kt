@@ -64,7 +64,7 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
         }
     }
 
-    DrawDivider()
+    HorizontalDivider()
 
     CheckBoxPreferenceItem(context.getString(R.string.display_in_safe_area),
         checkedFlow = PreferencesStorage.getDisplayInSafeAreaValue(context),
@@ -74,7 +74,7 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
         }
     }
 
-    DrawDivider()
+    HorizontalDivider()
 
     CheckBoxPreferenceItem(context.getString(R.string.preserve_aspect_ratio),
         checkedFlow = PreferencesStorage.getPreserveAspectRatioValue(context),
@@ -84,7 +84,7 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
         }
     }
 
-    DrawDivider()
+    HorizontalDivider()
 
     CheckBoxPreferenceItem(context.getString(R.string.show_custom_mouse_cursor),
         checkedFlow = PreferencesStorage.getShowCustomMouseCursorValue(context),
@@ -94,10 +94,10 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
         }
     }
 
-    DrawDivider()
+    HorizontalDivider()
 }
 
 @Composable
-private fun DrawDivider () = HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
+private fun DrawSettingsDivider () = HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
 
 

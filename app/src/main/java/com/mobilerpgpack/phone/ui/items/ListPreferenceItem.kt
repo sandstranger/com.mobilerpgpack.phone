@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,8 +24,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collection<T>, onValueChange : (String) -> Unit) {
-    var showValuesDialog by remember { mutableStateOf(false) }
-    var activeValue by remember (initialValue.toString()) { mutableStateOf(initialValue.toString()) }
+    var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
+    var activeValue by rememberSaveable (initialValue.toString()) { mutableStateOf(initialValue.toString()) }
     val stringValues: Collection<String> = allValues.map { it.toString() }
 
     Row(
