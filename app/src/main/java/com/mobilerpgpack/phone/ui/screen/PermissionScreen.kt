@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
@@ -46,7 +47,7 @@ fun PermissionScreen( onPermissionGranted: () -> Unit ) {
             }
         }
 
-        Text(text = activity!!.getString(R.string.access_to_all_files))
+        Text(text = activity!!.getString(R.string.access_to_all_files), fontSize = 24.sp)
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
@@ -65,7 +66,7 @@ fun PermissionScreen( onPermissionGranted: () -> Unit ) {
                 }
             },
         ) {
-            Text(text = activity.getString(R.string.grant_permission))
+            Text(text = activity.getString(R.string.grant_permission), fontSize = 24.sp)
         }
     }
 }

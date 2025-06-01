@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import android.text.InputType
+import androidx.compose.runtime.collectAsState
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -21,6 +22,8 @@ import androidx.core.view.updatePadding
 import androidx.preference.EditTextPreference
 import com.mobilerpgpack.phone.BuildConfig
 import androidx.core.net.toUri
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 
 inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity {
     val i = Intent(this, T::class.java)
@@ -43,9 +46,9 @@ fun Context.isExternalStoragePermissionGranted () : Boolean {
     ) == PackageManager.PERMISSION_GRANTED
 }
 
-fun Activity.displayInSafeArea (prefsManager: SharedPreferences){
-    val displayInSafeArea = prefsManager.getBoolean(DISPLAY_IN_SAFE_AREA_PREFS_KEY, true)
-    if (displayInSafeArea) {
+suspend fun Activity.displayInSafeArea (){
+    val displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this).first()
+    if (displayInSafeArea!!) {
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
             val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
