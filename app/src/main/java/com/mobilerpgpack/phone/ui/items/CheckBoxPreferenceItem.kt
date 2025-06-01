@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.items
 
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,17 +23,23 @@ fun CheckBoxPreferenceItem(
     onCheckedChange : (Boolean) -> Unit
 ) {
     val checked by checkedFlow.collectAsState(initial = false)
+    val checkedState = remember { mutableStateOf(false) }
+    checkedState.value = checked!!
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                checkedState.value = !checkedState.value
+                onCheckedChange(checkedState.value)
+            }
             .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(title, modifier = Modifier.weight(1f))
         Checkbox(
-            checked = checked!!,
-            onCheckedChange = onCheckedChange
+            checked = checkedState.value,
+            onCheckedChange = null
         )
     }
 }
