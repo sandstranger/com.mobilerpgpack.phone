@@ -55,7 +55,7 @@ class EngineActivity : SDLActivity() {
         runBlocking {
             activeEngineType = PreferencesStorage.getActiveEngineValue(this@EngineActivity)
             displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this@EngineActivity).first()!!
-            needToPreserveScreenAspectRatio = PreferencesStorage.getPreserveAspectRatioValue(this@EngineActivity).first()!! && !displayInSafeArea
+            needToPreserveScreenAspectRatio = PreferencesStorage.getPreserveAspectRatioValue(this@EngineActivity).first()!!
             pathToEngineResourceFile = File(getEngineResourcePath(this@EngineActivity,activeEngineType))
         }
 
