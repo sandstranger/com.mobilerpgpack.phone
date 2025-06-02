@@ -1,15 +1,16 @@
 package com.mobilerpgpack.phone.engine.activity
 
 import android.os.Bundle
-import android.os.Environment
 import android.system.Os
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.getEngineResourcePath
 import com.mobilerpgpack.phone.engine.killEngine
+import com.mobilerpgpack.phone.engine.preserveScreenAspectRatio
 import com.mobilerpgpack.phone.engine.setFullscreen
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.libsdl.app.SDLActivity
 import java.io.File
@@ -48,11 +49,22 @@ class EngineActivity : SDLActivity() {
 
     private fun initializeEngineData(){
         var pathToEngineResourceFile : File
+        var needToPreserveScreenAspectRatio = false
+        var displayInSafeArea = false
 
         runBlocking {
             activeEngineType = PreferencesStorage.getActiveEngineValue(this@EngineActivity)
+            displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this@EngineActivity).first()!!
+            needToPreserveScreenAspectRatio = PreferencesStorage.getPreserveAspectRatioValue(this@EngineActivity).first()!! && !displayInSafeArea
             pathToEngineResourceFile = File(getEngineResourcePath(this@EngineActivity,activeEngineType))
-            this@EngineActivity.displayInSafeArea()
+        }
+
+        if (needToPreserveScreenAspectRatio){
+            preserveScreenAspectRatio()
+        }
+
+        if (displayInSafeArea){
+            this.displayInSafeArea()
         }
 
         Os.setenv("LIBGL_ES", "2", true)

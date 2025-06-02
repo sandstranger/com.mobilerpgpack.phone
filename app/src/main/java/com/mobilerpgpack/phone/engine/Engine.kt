@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Process
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
@@ -9,6 +10,7 @@ import com.mobilerpgpack.phone.engine.activity.EngineActivity
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.startActivity
 import kotlinx.coroutines.flow.first
+import org.libsdl.app.SDLSurface
 
 internal val enginesInfo : HashMap<EngineTypes, EngineLibs> = hashMapOf(
     EngineTypes.WolfensteinRpg to EngineLibs("libWolfensteinRPG.so", arrayOf("GL","SDL2","openal","WolfensteinRPG")),
@@ -55,4 +57,23 @@ suspend fun getEngineResourcePath (context: Context, activeEngineType : EngineTy
     }
 
     return engineResourcePath;
+}
+
+fun preserveScreenAspectRatio (){
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+        val targetRatio = 16f / 9f
+        val screenRatio = screenWidth.toFloat() / screenHeight
+
+
+        return if (screenRatio > targetRatio) {
+            val newWidth = (screenHeight * targetRatio).toInt()
+            SDLSurface.fixedWidth = newWidth
+            SDLSurface.fixedHeight = screenHeight
+        } else {
+            val newHeight = (screenWidth / targetRatio).toInt()
+            SDLSurface.fixedWidth = screenWidth
+            SDLSurface.fixedHeight = newHeight
+        }
 }
