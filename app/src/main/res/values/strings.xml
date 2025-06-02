@@ -16,4 +16,5 @@
     <string name="can_not_start_engine">path to engine resource file does not exist, so engine cannot be launched</string>
     <string name="dialog_box_positive_text">OK</string>
     <string name="error">Error</string>
+    <string name="choose_file_request">Choose zip or ipa file for engine</string>
 </resources>
