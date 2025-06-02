@@ -71,6 +71,7 @@ dependencies {
     implementation project(':sdl2:android-project:app')
     implementation (project(":openal"))
     implementation (project(":gl4es"))
+    implementation (project(":file-picker"))
 
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
