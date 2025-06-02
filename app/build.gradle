@@ -73,6 +73,7 @@ dependencies {
     implementation (project(":gl4es"))
     implementation (project(":file-picker"))
 
+    implementation (libs.core)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.material3)
