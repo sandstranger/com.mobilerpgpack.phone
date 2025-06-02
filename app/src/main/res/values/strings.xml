@@ -7,4 +7,10 @@
     <string name="preserve_aspect_ratio">Preserve 16x9 screen aspect ratio (useful for phones)</string>
     <string name="show_custom_mouse_cursor">Show custom mouse cursor (useful only for Wolfenstein and Doom 2)</string>
     <string name="active_engine">Active game engine</string>
+    <string name="use_custom_file_picker">Use custom file picker (useful for Android TV)</string>
+    <string name="start_game">Start game</string>
+    <string name="wolfenstein_rpg_settings">Wolfenstein RPG settings</string>
+    <string name="wolfenstein_rpg_ipa_file">Path to Wolfenstein RPG ipa</string>
+    <string name="configure_screen_controls">Configure custom screen controls</string>
+    <string name="hide_custom_screen_controls">Hide custom screen controls</string>
 </resources>
