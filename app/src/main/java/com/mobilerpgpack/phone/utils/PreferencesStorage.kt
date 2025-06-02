@@ -19,11 +19,31 @@ object PreferencesStorage {
     private val preserveScreenAspectRatioPrefsKey = booleanPreferencesKey("preserve_screen_aspect_ratio")
     private val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
     private val activeEnginePrefsKey = stringPreferencesKey("current_engine")
+    private val useCustomFilePickerPrefsKey = booleanPreferencesKey("use_custom_file_picker")
+    private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
+    private val hideWolfensteinRpgScreenControlsPrefsKey = booleanPreferencesKey("hide_wolfenstein_screen_controls")
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
     suspend fun setDisplayInSafeAreaValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, displayInSafeAreaPrefsKey, valueToSave)
+
+    fun getHideWolfensteinRpgScreenControlsValue(context: Context) =
+        getBooleanValue(context, hideWolfensteinRpgScreenControlsPrefsKey, defaultValue = true)
+
+    suspend fun setHideWolfensteinRpgScreenControlsValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, hideWolfensteinRpgScreenControlsPrefsKey, valueToSave)
+
+    fun getPathToWolfensteinRpgIpaFileValue(context: Context) = getStringValue(context, pathToWolfensteinRpgIpaPrefsKey)
+
+    suspend fun setPathToWolfensteinRpgIpaFile(context: Context, valueToSave : String) =
+        setStringValue(context, pathToWolfensteinRpgIpaPrefsKey, valueToSave)
+
+    fun getUseCustomFilePickerValue(context: Context) =
+        getBooleanValue(context, useCustomFilePickerPrefsKey, defaultValue = context.isTelevision)
+
+    suspend fun setUseCustomFilePickerValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, useCustomFilePickerPrefsKey, valueToSave)
 
     fun getPreserveAspectRatioValue (context: Context) = getBooleanValue(context, preserveScreenAspectRatioPrefsKey)
 
