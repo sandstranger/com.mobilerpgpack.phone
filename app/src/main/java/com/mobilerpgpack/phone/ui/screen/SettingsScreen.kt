@@ -1,6 +1,8 @@
 package com.mobilerpgpack.phone.ui.screen
 
 import android.content.Context
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,9 +21,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -33,7 +39,10 @@ import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getPathFromIntent
+import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 import com.mobilerpgpack.phone.utils.isTelevision
+import com.mobilerpgpack.phone.utils.requestResourceFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -171,9 +180,35 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
 
 @Composable
 private fun DrawWolfensteinRpgSettings (context: Context,scope: CoroutineScope){
+
+    fun saveSelectedIpaFile(pathToFile : String){
+        scope.launch {
+            PreferencesStorage.setPathToWolfensteinRpgIpaFile(context, pathToFile)
+        }
+    }
+
+    val pathToIpaFileState by PreferencesStorage.getPathToWolfensteinRpgIpaFileValue(context).collectAsState(initial = "")
+    var pathToIpaFile by rememberSaveable (pathToIpaFileState!!) { mutableStateOf(pathToIpaFileState!!) }
+    val systemFilePicker = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val selectedFilePath = getPathFromIntent(it.data)
+
+        if (selectedFilePath.isNotEmpty()){
+            pathToIpaFile = selectedFilePath
+            saveSelectedIpaFile(pathToIpaFile)
+        }
+    }
+
     Text(context.getString(R.string.wolfenstein_rpg_settings), style = MaterialTheme.typography.titleLarge)
 
-    PreferenceItem(context.getString(R.string.wolfenstein_rpg_ipa_file))
+    PreferenceItem(context.getString(R.string.wolfenstein_rpg_ipa_file), pathToIpaFile,
+        onClick = {
+            scope.launch {
+                context.requestResourceFile(systemFilePicker, onFileSelected = {
+                    selectedFilePath -> pathToIpaFile = selectedFilePath
+                    saveSelectedIpaFile(selectedFilePath)
+                })
+            }
+        })
 
     HorizontalDivider()
 
@@ -188,5 +223,7 @@ private fun DrawWolfensteinRpgSettings (context: Context,scope: CoroutineScope){
             PreferencesStorage.setHideWolfensteinRpgScreenControlsValue(context, newValue)
         }
     }
+
+    HorizontalDivider()
 }
 

@@ -13,6 +13,8 @@ import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import android.text.InputType
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.result.ActivityResult
 import androidx.compose.runtime.collectAsState
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,8 +24,12 @@ import androidx.core.view.updatePadding
 import androidx.preference.EditTextPreference
 import com.mobilerpgpack.phone.BuildConfig
 import androidx.core.net.toUri
+import com.mobilerpgpack.phone.R
+import com.obsez.android.lib.filechooser.ChooserDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+
+val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
 inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity {
     val i = Intent(this, T::class.java)
@@ -45,8 +51,6 @@ fun Context.isExternalStoragePermissionGranted () : Boolean {
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     ) == PackageManager.PERMISSION_GRANTED
 }
-
-val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
 suspend fun Activity.displayInSafeArea (){
     val displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this).first()
@@ -70,5 +74,35 @@ suspend fun Activity.displayInSafeArea (){
 
             WindowInsetsCompat.CONSUMED
         }
+    }
+}
+
+suspend fun Context.requestResourceFile (launcher : ManagedActivityResultLauncher<Intent, ActivityResult>, onFileSelected : (String) -> Unit ){
+    val useAlternateFilePicker = PreferencesStorage.getUseCustomFilePickerValue(this).first()!!
+
+    if (!useAlternateFilePicker){
+        launcher.launch(Intent.createChooser(buildRequestResourceFileIntent(), this.getString(R.string.choose_file_request)))
+        return
+    }
+
+    this.requestResourceFileByAlternateFilePicker (onFileSelected)
+}
+
+private fun Context.requestResourceFileByAlternateFilePicker (onFileSelected : (String) -> Unit ){
+    ChooserDialog(this)
+        .withFilter(false, false, "ipa", "zip")
+        .withStartFile(Environment.getExternalStorageDirectory().absolutePath)
+        .withChosenListener { path, _ ->
+            onFileSelected(path)
+        }
+        .build()
+        .show()
+}
+
+private fun buildRequestResourceFileIntent () : Intent {
+    return Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+        addCategory(Intent.CATEGORY_OPENABLE)
+        type = "*/*"
+        putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/zip", "application/octet-stream"))
     }
 }

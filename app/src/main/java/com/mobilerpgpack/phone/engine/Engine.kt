@@ -1,19 +1,16 @@
 package com.mobilerpgpack.phone.engine
 
 import android.content.Context
-import android.os.Environment
 import android.os.Process
-import android.system.Os
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.activity.EngineActivity
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.startActivity
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
 
-internal val enginesInfo :  HashMap<EngineTypes, EngineLibs> = hashMapOf(
+internal val enginesInfo : HashMap<EngineTypes, EngineLibs> = hashMapOf(
     EngineTypes.WolfensteinRpg to EngineLibs("libWolfensteinRPG.so", arrayOf("GL","SDL2","openal","WolfensteinRPG")),
     EngineTypes.DoomRpg to EngineLibs("libdoomrpg.so", arrayOf("")),
     EngineTypes.Doom2Rpg to EngineLibs("", arrayOf(""))
@@ -32,7 +29,6 @@ internal fun setFullscreen(decorView: View) {
 
 fun killEngine() = Process.killProcess(Process.myPid())
 
-@OptIn(InternalCoroutinesApi::class)
 suspend fun startEngine(context: Context) {
     val activeEngineType = PreferencesStorage.getActiveEngineValue(context)
 
