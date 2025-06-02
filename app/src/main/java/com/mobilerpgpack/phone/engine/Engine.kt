@@ -5,11 +5,19 @@ import android.os.Environment
 import android.os.Process
 import android.system.Os
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
+import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.activity.EngineActivity
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.startActivity
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.first
 
-internal const val MAIN_ENGINE_NATIVE_LIB = "libWolfensteinRPG.so"
-internal val libsArray= arrayOf("GL","SDL2","openal","WolfensteinRPG")
+internal val enginesInfo :  HashMap<EngineTypes, EngineLibs> = hashMapOf(
+    EngineTypes.WolfensteinRpg to EngineLibs("libWolfensteinRPG.so", arrayOf("GL","SDL2","openal","WolfensteinRPG")),
+    EngineTypes.DoomRpg to EngineLibs("libdoomrpg.so", arrayOf("")),
+    EngineTypes.Doom2Rpg to EngineLibs("", arrayOf(""))
+)
 
 @Suppress("DEPRECATION")
 internal fun setFullscreen(decorView: View) {
@@ -24,10 +32,31 @@ internal fun setFullscreen(decorView: View) {
 
 fun killEngine() = Process.killProcess(Process.myPid())
 
-fun startEngine(context: Context) {
-    Os.setenv("LIBGL_ES", "2", true)
-    Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
-    Os.setenv("ANDROID_GAME_PATH","${Environment.getExternalStorageDirectory().absolutePath}/wolfenstein",true)
-    Os.setenv("WOLF_IPA_FILE_NAME","Wolfenstein RPG.ipa",true)
+@OptIn(InternalCoroutinesApi::class)
+suspend fun startEngine(context: Context) {
+    val activeEngineType = PreferencesStorage.getActiveEngineValue(context)
+
+    if (getEngineResourcePath(context,activeEngineType).isEmpty()){
+        MaterialDialog(context).show {
+            title(R.string.error)
+            message(R.string.can_not_start_engine)
+            positiveButton(R.string.dialog_box_positive_text)
+        }
+        return
+    }
+
     context.startActivity<EngineActivity>()
+}
+
+suspend fun getEngineResourcePath (context: Context, activeEngineType : EngineTypes) : String {
+    var engineResourcePath = ""
+
+    when (activeEngineType) {
+        com.mobilerpgpack.phone.engine.EngineTypes.WolfensteinRpg ->
+            engineResourcePath = PreferencesStorage.getPathToWolfensteinRpgIpaFileValue(context).first()!!
+        com.mobilerpgpack.phone.engine.EngineTypes.DoomRpg -> TODO()
+        com.mobilerpgpack.phone.engine.EngineTypes.Doom2Rpg -> TODO()
+    }
+
+    return engineResourcePath;
 }

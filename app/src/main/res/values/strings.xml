@@ -13,4 +13,7 @@
     <string name="wolfenstein_rpg_ipa_file">Path to Wolfenstein RPG ipa</string>
     <string name="configure_screen_controls">Configure custom screen controls</string>
     <string name="hide_custom_screen_controls">Hide custom screen controls</string>
+    <string name="can_not_start_engine">path to engine resource file does not exist, so engine cannot be launched</string>
+    <string name="dialog_box_positive_text">OK</string>
+    <string name="error">Error</string>
 </resources>

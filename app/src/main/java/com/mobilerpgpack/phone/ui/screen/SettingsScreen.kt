@@ -1,26 +1,34 @@
 package com.mobilerpgpack.phone.ui.screen
 
 import android.content.Context
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
@@ -32,24 +40,26 @@ import kotlinx.coroutines.launch
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current;
+    val scope = rememberCoroutineScope()
 
     if (context.isTelevision){
-        DrawTelevisionSettings(context)
+        DrawTelevisionSettings(context, scope)
         return
     }
 
-    DrawPhoneSettings(context)
+    DrawPhoneSettings(context, scope)
 }
 
 @Composable
-private fun DrawTelevisionSettings (context: Context){
+private fun DrawTelevisionSettings (context: Context,scope: CoroutineScope){
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
     ) {
         Button(
-            onClick = {},
+            onClick = { scope.launch { startEngine(context) } },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
@@ -57,33 +67,32 @@ private fun DrawTelevisionSettings (context: Context){
             Text(context.getString(R.string.start_game), fontSize = 25.sp)
         }
 
-        DrawAllSettings(context)
+        DrawAllSettings(context, scope)
     }
 }
 
 @Composable
-private fun DrawPhoneSettings (context: Context){
+private fun DrawPhoneSettings (context: Context,scope: CoroutineScope){
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {}
+                onClick = { scope.launch { startEngine(context) }}
             ) {
                 Icon(Icons.Default.PlayArrow, contentDescription = context.getString(R.string.start_game))
             }
         }
     ) { innerPadding ->
-        DrawAllSettings(context, innerPadding)
+        DrawAllSettings(context, innerPadding, scope)
     }
 }
 
 @Composable
-private fun DrawAllSettings (context: Context) {
-    DrawAllSettings(context, PaddingValues())
+private fun DrawAllSettings (context: Context, scope: CoroutineScope) {
+    DrawAllSettings(context, PaddingValues(),scope)
 }
 
 @Composable
-private fun DrawAllSettings (context: Context, innerPadding: PaddingValues){
-    val scope = rememberCoroutineScope()
+private fun DrawAllSettings (context: Context, innerPadding: PaddingValues, scope: CoroutineScope){
     val scrollState = rememberScrollState()
 
     Column(
@@ -180,8 +189,4 @@ private fun DrawWolfensteinRpgSettings (context: Context,scope: CoroutineScope){
         }
     }
 }
-
-@Composable
-private fun DrawSettingsDivider () = HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-
 
