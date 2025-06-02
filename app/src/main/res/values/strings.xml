@@ -5,6 +5,6 @@
     <string name="common_settings">Common settings</string>
     <string name="display_in_safe_area">Display in safe area</string>
     <string name="preserve_aspect_ratio">Preserve 16x9 screen aspect ratio (useful for phones)</string>
-    <string name="show_custom_mouse_cursor">Show custom mouse cursor (works only in Wolfenstein and Doom 2)</string>
+    <string name="show_custom_mouse_cursor">Show custom mouse cursor (useful only for Wolfenstein and Doom 2)</string>
     <string name="active_engine">Active game engine</string>
 </resources>

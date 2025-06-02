@@ -1,7 +1,5 @@
 package com.mobilerpgpack.phone.engine
 
-
-
 enum class EngineTypes {
     WolfensteinRpg,
     DoomRpg,

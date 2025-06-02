@@ -46,6 +46,8 @@ fun Context.isExternalStoragePermissionGranted () : Boolean {
     ) == PackageManager.PERMISSION_GRANTED
 }
 
+val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
+
 suspend fun Activity.displayInSafeArea (){
     val displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this).first()
     if (displayInSafeArea!!) {
