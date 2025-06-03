@@ -17,4 +17,6 @@
     <string name="dialog_box_positive_text">OK</string>
     <string name="error">Error</string>
     <string name="choose_file_request">Choose zip or ipa file for engine</string>
+    <string name="path_to_log">Path to log</string>
+    <string name="choose_directory">Choose directory</string>
 </resources>
