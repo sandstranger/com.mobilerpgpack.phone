@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.activity
 
 import android.os.Bundle
+import android.os.Environment
 import android.system.Os
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
@@ -17,6 +18,8 @@ import java.io.File
 
 class EngineActivity : SDLActivity() {
     private lateinit var activeEngineType : EngineTypes
+    private lateinit var pathToLog : String
+    private lateinit var logcatProcess : Process
 
     private external fun pauseSound()
 
@@ -44,6 +47,7 @@ class EngineActivity : SDLActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        logcatProcess.destroy()
         killEngine()
     }
 
@@ -54,6 +58,7 @@ class EngineActivity : SDLActivity() {
 
         runBlocking {
             activeEngineType = PreferencesStorage.getActiveEngineValue(this@EngineActivity)
+            pathToLog = PreferencesStorage.getPathToLogFileValue(this@EngineActivity).first()!!
             displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this@EngineActivity).first()!!
             needToPreserveScreenAspectRatio = PreferencesStorage.getPreserveAspectRatioValue(this@EngineActivity).first()!!
             pathToEngineResourceFile = File(getEngineResourcePath(this@EngineActivity,activeEngineType))
@@ -67,9 +72,24 @@ class EngineActivity : SDLActivity() {
             this.displayInSafeArea()
         }
 
+        logcatProcess = enableLogcat()
+
         Os.setenv("LIBGL_ES", "2", true)
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
         Os.setenv("ANDROID_GAME_PATH",pathToEngineResourceFile.parent,true)
         Os.setenv("RESOURCE_FILE_NAME",pathToEngineResourceFile.name,true)
+    }
+
+    private fun enableLogcat() : Process {
+        val logcatFile = File(pathToLog)
+        if (logcatFile.exists()) {
+            logcatFile.delete()
+        }
+
+        val processBuilder = ProcessBuilder()
+        val commandToExecute = arrayOf("/system/bin/sh", "-c", "logcat *:W -d -f $pathToLog")
+        processBuilder.command(*commandToExecute)
+        processBuilder.redirectErrorStream(true)
+        return processBuilder.start()
     }
 }
