@@ -24,6 +24,7 @@ object PreferencesStorage {
     private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
     private val hideWolfensteinRpgScreenControlsPrefsKey = booleanPreferencesKey("hide_wolfenstein_screen_controls")
     private val pathToLogFilePrefsKey = stringPreferencesKey("path_to_log_file")
+    private val customScreenResolutionPrefsKey = stringPreferencesKey("custom_screen_resolution")
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
@@ -35,6 +36,11 @@ object PreferencesStorage {
 
     suspend fun setHideWolfensteinRpgScreenControlsValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, hideWolfensteinRpgScreenControlsPrefsKey, valueToSave)
+
+    fun getCustomScreenResolutionValue(context: Context) = getStringValue(context, customScreenResolutionPrefsKey )
+
+    suspend fun setCustomScreenResolution(context: Context, valueToSave : String) =
+        setStringValue(context, customScreenResolutionPrefsKey, valueToSave)
 
     fun getPathToLogFileValue(context: Context) = getStringValue(context, pathToLogFilePrefsKey,
         defaultPathToLogcatFile)
