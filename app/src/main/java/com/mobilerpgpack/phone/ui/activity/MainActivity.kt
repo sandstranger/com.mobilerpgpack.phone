@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,6 +16,7 @@ internal class MainActivity : ComponentActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         buildScreens()
     }
 
@@ -24,6 +26,7 @@ internal class MainActivity : ComponentActivity(){
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
+
                 NavHost(navController = navController, startDestination = startScreen ) {
                     composable(Screen.Permission.route)
                     {
