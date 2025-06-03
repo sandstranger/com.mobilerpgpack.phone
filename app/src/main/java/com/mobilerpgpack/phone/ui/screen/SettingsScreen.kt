@@ -34,17 +34,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
+import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getPathFromIntent
-import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 import com.mobilerpgpack.phone.utils.isTelevision
+import com.mobilerpgpack.phone.utils.requestDirectory
 import com.mobilerpgpack.phone.utils.requestResourceFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 @Composable
 fun SettingsScreen() {
@@ -176,39 +179,26 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
     }
 
     HorizontalDivider()
+
+    val pathToLogFile by PreferencesStorage.getPathToLogFileValue(context).collectAsState(initial = defaultPathToLogcatFile)
+    val requestPathHelper = RequestPathHelper (context, scope, onPathSelected = {
+            selectedPath -> scope.launch { PreferencesStorage.setPathToLogFile(context, selectedPath) }
+    }, requestDirectory = true)
+
+    requestPathHelper.DrawRequestPathItem(context.getString(R.string.path_to_log), pathToLogFile!!,
+        logcatFileName)
 }
 
 @Composable
 private fun DrawWolfensteinRpgSettings (context: Context,scope: CoroutineScope){
-
-    fun saveSelectedIpaFile(pathToFile : String){
-        scope.launch {
-            PreferencesStorage.setPathToWolfensteinRpgIpaFile(context, pathToFile)
-        }
-    }
-
     val pathToIpaFileState by PreferencesStorage.getPathToWolfensteinRpgIpaFileValue(context).collectAsState(initial = "")
-    var pathToIpaFile by rememberSaveable (pathToIpaFileState!!) { mutableStateOf(pathToIpaFileState!!) }
-    val systemFilePicker = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val selectedFilePath = getPathFromIntent(it.data)
-
-        if (selectedFilePath.isNotEmpty()){
-            pathToIpaFile = selectedFilePath
-            saveSelectedIpaFile(pathToIpaFile)
-        }
-    }
+    val requestPathHelper = RequestPathHelper (context, scope, onPathSelected = {
+        selectedPath -> scope.launch { PreferencesStorage.setPathToWolfensteinRpgIpaFile(context, selectedPath) }
+    })
 
     Text(context.getString(R.string.wolfenstein_rpg_settings), style = MaterialTheme.typography.titleLarge)
 
-    PreferenceItem(context.getString(R.string.wolfenstein_rpg_ipa_file), pathToIpaFile,
-        onClick = {
-            scope.launch {
-                context.requestResourceFile(systemFilePicker, onFileSelected = {
-                    selectedFilePath -> pathToIpaFile = selectedFilePath
-                    saveSelectedIpaFile(selectedFilePath)
-                })
-            }
-        })
+    requestPathHelper.DrawRequestPathItem(context.getString(R.string.wolfenstein_rpg_ipa_file), pathToIpaFileState!!)
 
     HorizontalDivider()
 
@@ -227,3 +217,41 @@ private fun DrawWolfensteinRpgSettings (context: Context,scope: CoroutineScope){
     HorizontalDivider()
 }
 
+private class RequestPathHelper (private val context: Context, val scope: CoroutineScope,
+                                 private val onPathSelected : (String) -> Unit,
+                                 private val requestDirectory : Boolean = false){
+
+    @Composable
+    fun DrawRequestPathItem (itemName : String, savedPath : String, selectedPathPostFix : String = ""){
+        var currentPath by rememberSaveable (savedPath) { mutableStateOf(savedPath) }
+
+        fun onPathSelected (selectedPath : String){
+            if (selectedPath.isNotEmpty()){
+                currentPath = selectedPath + File.separator + selectedPathPostFix
+                saveSelectedIpaFile(currentPath)
+            }
+        }
+
+        val systemFilePicker = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            onPathSelected(getPathFromIntent(it.data))
+        }
+
+        PreferenceItem(itemName, currentPath,
+            onClick = {
+                scope.launch {
+                    if (requestDirectory){
+                        context.requestDirectory(systemFilePicker, onDirectorySelected = onPathSelected)
+                    }
+                    else{
+                        context.requestResourceFile(systemFilePicker, onFileSelected = onPathSelected)
+                    }
+                }
+            })
+    }
+
+    private fun saveSelectedIpaFile(pathToFile : String){
+        scope.launch {
+            onPathSelected(pathToFile)
+        }
+    }
+}

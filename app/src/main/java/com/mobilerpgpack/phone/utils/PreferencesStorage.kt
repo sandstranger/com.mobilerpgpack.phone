@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -22,6 +23,7 @@ object PreferencesStorage {
     private val useCustomFilePickerPrefsKey = booleanPreferencesKey("use_custom_file_picker")
     private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
     private val hideWolfensteinRpgScreenControlsPrefsKey = booleanPreferencesKey("hide_wolfenstein_screen_controls")
+    private val pathToLogFilePrefsKey = stringPreferencesKey("path_to_log_file")
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
@@ -33,6 +35,12 @@ object PreferencesStorage {
 
     suspend fun setHideWolfensteinRpgScreenControlsValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, hideWolfensteinRpgScreenControlsPrefsKey, valueToSave)
+
+    fun getPathToLogFileValue(context: Context) = getStringValue(context, pathToLogFilePrefsKey,
+        defaultPathToLogcatFile)
+
+    suspend fun setPathToLogFile(context: Context, valueToSave : String) =
+        setStringValue(context, pathToLogFilePrefsKey, valueToSave)
 
     fun getPathToWolfensteinRpgIpaFileValue(context: Context) = getStringValue(context, pathToWolfensteinRpgIpaPrefsKey)
 

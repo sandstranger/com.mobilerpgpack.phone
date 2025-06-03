@@ -28,7 +28,7 @@ fun PreferenceItem(title: String, initialValue: String = "", onClick : () -> Uni
         )
 
         if (initialValue.isNotBlank()) {
-            Spacer(modifier = Modifier.height(4.dp)) // немного отступа
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = initialValue,
                 style = MaterialTheme.typography.bodySmall,

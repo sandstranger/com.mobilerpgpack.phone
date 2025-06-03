@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.createChooser
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -82,12 +83,27 @@ suspend fun Context.requestResourceFile (launcher : ManagedActivityResultLaunche
         return
     }
 
-    this.requestResourceFileByAlternateFilePicker (onFileSelected)
+    this.requestResourceFileByAlternateFilePicker ( dirOnly = false, onFileSelected)
 }
 
-private fun Context.requestResourceFileByAlternateFilePicker (onFileSelected : (String) -> Unit ){
+suspend fun Context.requestDirectory (launcher : ManagedActivityResultLauncher<Intent, ActivityResult>, onDirectorySelected : (String) -> Unit ){
+    val useAlternateFilePicker = PreferencesStorage.getUseCustomFilePickerValue(this).first()!!
+
+    if (!useAlternateFilePicker){
+        with(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)) {
+            addCategory(Intent.CATEGORY_DEFAULT)
+            launcher.launch(createChooser(this, this@requestDirectory.getString(R.string.choose_directory)))
+        }
+
+        return
+    }
+
+    this.requestResourceFileByAlternateFilePicker ( dirOnly = true, onDirectorySelected)
+}
+
+private fun Context.requestResourceFileByAlternateFilePicker ( dirOnly : Boolean, onFileSelected : (String) -> Unit ){
     ChooserDialog(this)
-        .withFilter(false, false, "ipa", "zip")
+        .withFilter(dirOnly, false, "ipa", "zip")
         .withStartFile(Environment.getExternalStorageDirectory().absolutePath)
         .withChosenListener { path, _ ->
             onFileSelected(path)
