@@ -83,7 +83,7 @@ private fun DrawTelevisionSettings (context: Context,scope: CoroutineScope){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(5.dp),
     ) {
         Button(
             onClick = { scope.launch { startEngine(context) } },
@@ -126,7 +126,7 @@ private fun DrawAllSettings (context: Context, innerPadding: PaddingValues, scop
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .padding(16.dp)
+            .padding(5.dp)
             .verticalScroll(scrollState),
     ) {
         DrawCommonSettings(context, scope)
