@@ -41,12 +41,10 @@ fun PermissionScreen( onPermissionGranted: () -> Unit ) {
             .systemBarsPadding()
     ) {
         CustomTopBar(title = activity.getString(R.string.app_name))
-
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White).padding(16.dp),
+                .background(Color.White).padding(5.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val launcher =
