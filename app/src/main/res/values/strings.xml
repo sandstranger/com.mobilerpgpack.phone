@@ -20,6 +20,6 @@
     <string name="choose_file_request">Choose zip or ipa file for engine</string>
     <string name="path_to_log">Path to log</string>
     <string name="choose_directory">Choose directory</string>
-    <string name="custom_resolution">Custom Resolution (overrides "preserve 16x9 screen aspect ratio" option)</string>
+    <string name="custom_resolution">Custom screen resolution (overrides \"preserve 16x9 screen aspect ratio\" option)</string>
     <string name="custom_resolution_hint">1920x1080</string>
 </resources>

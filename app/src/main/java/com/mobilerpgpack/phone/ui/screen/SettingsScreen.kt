@@ -122,7 +122,6 @@ private fun DrawAllSettings (context: Context, innerPadding: PaddingValues, scop
 
 @Composable
 private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
-
     val engineState by produceState(
         initialValue = EngineTypes.DefaultActiveEngine,
         key1 = context
@@ -163,7 +162,7 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
     }
 
     HorizontalDivider()
-    
+
     EditTextPreferenceItem(context.getString(R.string.custom_resolution),
         customScreenResolution!!, context.getString(R.string.custom_resolution_hint)) {
         newValue -> scope.launch {
