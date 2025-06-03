@@ -37,6 +37,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
 import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
+import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
@@ -129,6 +130,9 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
         value = PreferencesStorage.getActiveEngineValue(context)
     }
 
+    val customScreenResolution by PreferencesStorage.getCustomScreenResolutionValue(context)
+        .collectAsState(initial = defaultPathToLogcatFile)
+
     Text(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
 
     ListPreferenceItem(context.getString(R.string.active_engine),engineState,EngineTypes.entries) {
@@ -155,6 +159,15 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
     ) { newValue ->
         scope.launch {
             PreferencesStorage.setPreserveAspectRationValue(context, newValue)
+        }
+    }
+
+    HorizontalDivider()
+    
+    EditTextPreferenceItem(context.getString(R.string.custom_resolution),
+        customScreenResolution!!, context.getString(R.string.custom_resolution_hint)) {
+        newValue -> scope.launch {
+            PreferencesStorage.setCustomScreenResolution(context, newValue)
         }
     }
 
@@ -187,6 +200,9 @@ private fun DrawCommonSettings (context: Context, scope: CoroutineScope){
 
     requestPathHelper.DrawRequestPathItem(context.getString(R.string.path_to_log), pathToLogFile!!,
         logcatFileName)
+
+    HorizontalDivider()
+
 }
 
 @Composable

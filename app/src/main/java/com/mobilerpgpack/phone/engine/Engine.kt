@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.engine
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Environment
 import android.os.Process
 import android.view.View
@@ -11,7 +10,6 @@ import com.mobilerpgpack.phone.engine.activity.EngineActivity
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.startActivity
 import kotlinx.coroutines.flow.first
-import org.libsdl.app.SDLSurface
 import java.io.File
 
 const val logcatFileName = "wolfenstein_doom_rpg_log.log"
@@ -45,7 +43,7 @@ suspend fun startEngine(context: Context) {
         MaterialDialog(context).show {
             title(R.string.error)
             message(R.string.can_not_start_engine)
-            positiveButton(R.string.dialog_box_positive_text)
+            positiveButton(R.string.ok_text)
         }
         return
     }
@@ -57,29 +55,11 @@ suspend fun getEngineResourcePath (context: Context, activeEngineType : EngineTy
     var engineResourcePath = ""
 
     when (activeEngineType) {
-        com.mobilerpgpack.phone.engine.EngineTypes.WolfensteinRpg ->
+        EngineTypes.WolfensteinRpg ->
             engineResourcePath = PreferencesStorage.getPathToWolfensteinRpgIpaFileValue(context).first()!!
-        com.mobilerpgpack.phone.engine.EngineTypes.DoomRpg -> TODO()
-        com.mobilerpgpack.phone.engine.EngineTypes.Doom2Rpg -> TODO()
+        EngineTypes.DoomRpg -> TODO()
+        EngineTypes.Doom2Rpg -> TODO()
     }
 
     return engineResourcePath;
-}
-
-fun preserveScreenAspectRatio() {
-    val displayMetrics = Resources.getSystem().displayMetrics
-    val screenWidth = displayMetrics.widthPixels
-    val screenHeight = displayMetrics.heightPixels
-    val targetRatio = 16f / 9f
-    val screenRatio = screenWidth.toFloat() / screenHeight
-
-    if (screenRatio > targetRatio) {
-        val newWidth = (screenHeight * targetRatio).toInt()
-        SDLSurface.fixedWidth = newWidth
-        SDLSurface.fixedHeight = screenHeight
-    } else {
-        val newHeight = (screenWidth / targetRatio).toInt()
-        SDLSurface.fixedWidth = screenWidth
-        SDLSurface.fixedHeight = newHeight
-    }
 }

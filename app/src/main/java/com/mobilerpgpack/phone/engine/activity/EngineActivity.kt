@@ -1,20 +1,22 @@
 package com.mobilerpgpack.phone.engine.activity
 
+import android.content.res.Resources
 import android.os.Bundle
-import android.os.Environment
 import android.system.Os
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.getEngineResourcePath
 import com.mobilerpgpack.phone.engine.killEngine
-import com.mobilerpgpack.phone.engine.preserveScreenAspectRatio
 import com.mobilerpgpack.phone.engine.setFullscreen
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.libsdl.app.SDLActivity
+import org.libsdl.app.SDLSurface
 import java.io.File
+
+private const val RESOLUTION_DELIMITER = "x"
 
 class EngineActivity : SDLActivity() {
     private lateinit var activeEngineType : EngineTypes
@@ -55,17 +57,21 @@ class EngineActivity : SDLActivity() {
         var pathToEngineResourceFile : File
         var needToPreserveScreenAspectRatio = false
         var displayInSafeArea = false
+        var customScreenResolution = ""
 
         runBlocking {
             activeEngineType = PreferencesStorage.getActiveEngineValue(this@EngineActivity)
             pathToLog = PreferencesStorage.getPathToLogFileValue(this@EngineActivity).first()!!
+            customScreenResolution = PreferencesStorage.getCustomScreenResolutionValue(this@EngineActivity).first()!!
             displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this@EngineActivity).first()!!
             needToPreserveScreenAspectRatio = PreferencesStorage.getPreserveAspectRatioValue(this@EngineActivity).first()!!
             pathToEngineResourceFile = File(getEngineResourcePath(this@EngineActivity,activeEngineType))
         }
 
-        if (needToPreserveScreenAspectRatio){
-            preserveScreenAspectRatio()
+        var customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
+
+        if (needToPreserveScreenAspectRatio && !customScreenResolutionWasSet){
+            preserve16x9ScreenAspectRatio()
         }
 
         if (displayInSafeArea){
@@ -91,5 +97,39 @@ class EngineActivity : SDLActivity() {
         processBuilder.command(*commandToExecute)
         processBuilder.redirectErrorStream(true)
         return processBuilder.start()
+    }
+
+    private fun preserve16x9ScreenAspectRatio() {
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+        val targetRatio = 16f / 9f
+        val screenRatio = screenWidth.toFloat() / screenHeight
+
+        if (screenRatio > targetRatio) {
+            val newWidth = (screenHeight * targetRatio).toInt()
+            setScreenResolution(newWidth, screenHeight)
+        } else {
+            val newHeight = (screenWidth / targetRatio).toInt()
+            setScreenResolution(screenWidth, newHeight)
+        }
+    }
+
+    private fun setScreenResolution ( savedScreenResolution : String ) : Boolean {
+        if (savedScreenResolution.isNotEmpty() && savedScreenResolution.contains(RESOLUTION_DELIMITER)) {
+            try {
+                val resolutionsArray = savedScreenResolution.split(RESOLUTION_DELIMITER)
+                setScreenResolution(Integer.parseInt(resolutionsArray[0]), Integer.parseInt(resolutionsArray[1]))
+                return true
+            } catch (_: Exception) {
+            }
+        }
+
+        return false
+    }
+
+    private fun setScreenResolution (screenWidth : Int, screenHeight: Int ){
+        SDLSurface.fixedWidth = screenWidth
+        SDLSurface.fixedHeight = screenHeight
     }
 }
