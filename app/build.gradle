@@ -18,6 +18,7 @@ android {
         ndk {
             abiFilters = []
             abiFilters.addAll(abi_filters)
+            debugSymbolLevel = 'FULL'
         }
 
         externalNativeBuild {
@@ -39,6 +40,9 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            jniDebuggable true
         }
     }
     compileOptions {
