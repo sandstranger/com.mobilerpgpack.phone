@@ -7,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -256,8 +255,8 @@ private class RequestPathHelper (private val context: Context, val scope: Corout
 
         fun onPathSelected (selectedPath : String){
             if (selectedPath.isNotEmpty()){
-                currentPath = selectedPath + File.separator + selectedPathPostFix
-                saveSelectedIpaFile(currentPath)
+                currentPath = selectedPath + if (selectedPathPostFix.isNotEmpty()) File.separator + selectedPathPostFix else ""
+                saveSelectedPath(currentPath)
             }
         }
 
@@ -269,16 +268,18 @@ private class RequestPathHelper (private val context: Context, val scope: Corout
             onClick = {
                 scope.launch {
                     if (requestDirectory){
-                        context.requestDirectory(systemFilePicker, onDirectorySelected = onPathSelected)
+                        context.requestDirectory(systemFilePicker, onDirectorySelected =
+                            { selectedPath -> onPathSelected (selectedPath)})
                     }
                     else{
-                        context.requestResourceFile(systemFilePicker, onFileSelected = onPathSelected)
+                        context.requestResourceFile(systemFilePicker, onFileSelected =
+                            { selectedPath -> onPathSelected (selectedPath)} )
                     }
                 }
             })
     }
 
-    private fun saveSelectedIpaFile(pathToFile : String){
+    private fun saveSelectedPath(pathToFile : String){
         scope.launch {
             onPathSelected(pathToFile)
         }
