@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
@@ -13,7 +12,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
