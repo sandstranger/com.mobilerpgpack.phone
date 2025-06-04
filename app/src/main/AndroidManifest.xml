@@ -58,6 +58,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.activity.ConfigureControlsActivity"
+            android:exported="true"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/AppFullScreenTheme"
+            tools:ignore="DiscouragedApi">
+        </activity>
+
         <activity android:name=".engine.activity.EngineActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="sensorLandscape"

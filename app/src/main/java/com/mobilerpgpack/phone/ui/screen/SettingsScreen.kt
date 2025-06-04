@@ -41,6 +41,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
 import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
+import com.mobilerpgpack.phone.ui.activity.ConfigureControlsActivity
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
@@ -230,7 +231,9 @@ private fun DrawWolfensteinRpgSettings (context: Context,scope: CoroutineScope){
 
     HorizontalDivider()
 
-    PreferenceItem(context.getString(R.string.configure_screen_controls))
+    PreferenceItem(context.getString(R.string.configure_screen_controls)){
+        ConfigureControlsActivity.startActivity(context, EngineTypes.WolfensteinRpg)
+    }
 
     HorizontalDivider()
 
