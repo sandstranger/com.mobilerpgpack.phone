@@ -78,6 +78,18 @@ object PreferencesStorage {
     suspend fun setActiveEngineValue (context: Context, valueToSave : EngineTypes) =
         setStringValue(context, activeEnginePrefsKey, valueToSave.toString())
 
+    fun getFloatValue(context: Context, prefsKey : Preferences.Key<Float>, defaultValue : Float = 0.0f ): Flow<Float?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[prefsKey] ?: defaultValue
+        }
+    }
+
+    suspend fun setFloatValue(context: Context, prefsKey : Preferences.Key<Float>, valueToSave : Float) {
+        context.dataStore.edit { preferences ->
+            preferences[prefsKey] = valueToSave
+        }
+    }
+
     private fun getBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, defaultValue : Boolean = false): Flow<Boolean?> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
