@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -26,6 +27,8 @@ object PreferencesStorage {
     private val pathToLogFilePrefsKey = stringPreferencesKey("path_to_log_file")
     private val customScreenResolutionPrefsKey = stringPreferencesKey("custom_screen_resolution")
     private val editCustomScreenControlsInGamePrefsKey = booleanPreferencesKey("edit_screen_controls_in_game")
+    private val OFFSET_X_MOUSE = floatPreferencesKey("offset_x_mouse")
+    private val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
@@ -33,7 +36,7 @@ object PreferencesStorage {
         setBooleanValue(context, displayInSafeAreaPrefsKey, valueToSave)
 
     fun getEditCustomScreenControlsInGameValue(context: Context) =
-        getBooleanValue(context, hideScreenControlsPrefsKey, defaultValue = true)
+        getBooleanValue(context, editCustomScreenControlsInGamePrefsKey, defaultValue = true)
 
     suspend fun setEditCustomScreenControlsInGameValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, editCustomScreenControlsInGamePrefsKey, valueToSave)
@@ -107,6 +110,30 @@ object PreferencesStorage {
     suspend fun setIntValue(context: Context, prefsKey : Preferences.Key<Int>, valueToSave : Int ) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
+        }
+    }
+
+    fun getOffsetXMouse(context: Context): Flow<Float?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[OFFSET_X_MOUSE]
+        }
+    }
+
+    fun getOffsetYMouse(context: Context): Flow<Float?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[OFFSET_Y_MOUSE]
+        }
+    }
+
+    suspend fun setOffsetXMouse(context: Context, offsetX: Float) {
+        context.dataStore.edit { preferences ->
+            preferences[OFFSET_X_MOUSE] = offsetX
+        }
+    }
+
+    suspend fun setOffsetYMouse(context: Context, offsetY: Float) {
+        context.dataStore.edit { preferences ->
+            preferences[OFFSET_Y_MOUSE] = offsetY
         }
     }
 
