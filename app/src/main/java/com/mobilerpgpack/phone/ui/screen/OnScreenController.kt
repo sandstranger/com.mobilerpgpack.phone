@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,11 +46,13 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.engine.EngineTypes
 
 private const val dpadId = "dpad"
 
@@ -57,29 +61,41 @@ private enum class DpadDirection {
 }
 
 // Теперь каждый ButtonState один раз создаёт свои ключи
-private class ButtonState(
+class ButtonState(
     val id: String,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,
     size: Float = 64f,
-    alpha: Float = 1f
+    alpha: Float = 0.75f,
+    val buttonResId : Int = android.R.drawable.ic_menu_add,
+    sdlKeyEvent : Int = 0,
 ) {
     // Ключи создаются единожды при инициализации инстанса
-    val keyX: Preferences.Key<Float> = floatPreferencesKey("${id}_x")
-    val keyY: Preferences.Key<Float> = floatPreferencesKey("${id}_y")
-    val keySize: Preferences.Key<Float> = floatPreferencesKey("${id}_size")
-    val keyAlpha: Preferences.Key<Float> = floatPreferencesKey("${id}_alpha")
+    private val keyX: Preferences.Key<Float> = floatPreferencesKey("${id}_x")
+    private val keyY: Preferences.Key<Float> = floatPreferencesKey("${id}_y")
+    private val keySize: Preferences.Key<Float> = floatPreferencesKey("${id}_size")
+    private val keyAlpha: Preferences.Key<Float> = floatPreferencesKey("${id}_alpha")
+    private val sdlKeyEventPrefsKey: Preferences.Key<Int> = intPreferencesKey("${id}_sdl_key")
+
+    private val defaultOffsetXPercent = offsetXPercent
+    private val defaultOffsetYPercent = offsetYPercent
+    private val defaultSize = size
+    private val defaultAlpha = alpha
+    private val defaultSdlKeyEvent = sdlKeyEvent
 
     var offsetXPercent by mutableFloatStateOf(offsetXPercent)
     var offsetYPercent by mutableFloatStateOf(offsetYPercent)
     var size by mutableFloatStateOf(size)
     var alpha by mutableFloatStateOf(alpha)
+    var sdlKeyEvent by mutableIntStateOf(sdlKeyEvent)
+
 
     suspend fun loadButtonState (context: Context){
         offsetXPercent = PreferencesStorage.getFloatValue(context, keyX, offsetXPercent).first()!!
         offsetYPercent = PreferencesStorage.getFloatValue(context, keyY, offsetXPercent).first()!!
         size = PreferencesStorage.getFloatValue(context, keySize, size).first()!!
         alpha = PreferencesStorage.getFloatValue(context, keyAlpha, alpha).first()!!
+        sdlKeyEvent = PreferencesStorage.getIntValue(context, sdlKeyEventPrefsKey, sdlKeyEvent).first()!!
     }
 
     suspend fun saveButtonState(context: Context) {
@@ -87,12 +103,26 @@ private class ButtonState(
         PreferencesStorage.setFloatValue(context, keyY, offsetYPercent)
         PreferencesStorage.setFloatValue(context, keySize, size)
         PreferencesStorage.setFloatValue(context, keyAlpha, alpha)
+        PreferencesStorage.setIntValue(context, sdlKeyEventPrefsKey, sdlKeyEvent)
+    }
+
+    suspend fun resetToDefaults (context: Context){
+        offsetXPercent = defaultOffsetXPercent
+        offsetYPercent = defaultOffsetYPercent
+        size = defaultSize
+        alpha = defaultAlpha
+        saveButtonState(context)
+    }
+
+    suspend fun resetKeyEvent (context: Context){
+        sdlKeyEvent = defaultSdlKeyEvent
+        saveButtonState(context)
     }
 }
 
 // Дефолтные экземпляры для сброса
 private val defaultButtons = listOf(
-    ButtonState("btn1", 0.1f, 0.1f),
+    ButtonState("btn1", 0.1f, 0.1f, sdlKeyEvent = KeyEvent.KEYCODE_0),
     ButtonState("btn2", 0.6f, 0.2f),
     ButtonState("btn3", 0.3f, 0.4f),
     ButtonState("btn4", 0.8f, 0.5f),
@@ -102,6 +132,13 @@ private val defaultButtons = listOf(
 
 @Composable
 fun OnScreenController() {
+    KeyEventEditDialog(defaultButtons, onDismiss = {})
+   // ButtonStateEditorDialog(defaultButtons, LocalContext.current)
+//    OnScreenController(EngineTypes.DefaultActiveEngine, false)
+}
+
+@Composable
+fun OnScreenController(activeEngineType : EngineTypes, inGame : Boolean) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val density = LocalContext.current.resources.displayMetrics.density
@@ -124,30 +161,6 @@ fun OnScreenController() {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        buttonStates.forEach { (id, state) ->
-            val offsetX = state.offsetXPercent * screenWidth
-            val offsetY = state.offsetYPercent * screenHeight
-
-            DraggableImageButton(
-                id = id,
-                state = state,
-                offset = Offset(offsetX, offsetY),
-                isEditMode = isEditMode,
-                isSelected = (selectedButtonId == id),
-                onClick = {
-                    if (isEditMode) selectedButtonId = id
-                    else println("Action: $id")
-                },
-                onDragEnd = { newX, newY ->
-                    state.offsetXPercent = (newX / screenWidth).coerceIn(0f, 1f)
-                    state.offsetYPercent = (newY / screenHeight).coerceIn(0f, 1f)
-                    coroutineScope.launch {
-                        state.saveButtonState(context)
-                    }
-                }
-            )
-        }
-
         EditControls(
             onAlphaChange = { delta ->
                 selectedButtonId?.let { id ->
@@ -170,12 +183,7 @@ fun OnScreenController() {
             onReset = {
                 coroutineScope.launch {
                     buttonStates.values.forEach { state ->
-                        val def = defaultButtons.first { it.id == state.id }
-                        state.offsetXPercent = def.offsetXPercent
-                        state.offsetYPercent = def.offsetYPercent
-                        state.size = def.size
-                        state.alpha = def.alpha
-                        state.saveButtonState(context)
+                        state.resetToDefaults(context)
                     }
                     selectedButtonId = null
                 }
@@ -191,6 +199,30 @@ fun OnScreenController() {
             onClick = { isEditMode = !isEditMode }
         ) {
             Text(if (isEditMode) "Exit Edit Mode" else "Edit Mode")
+        }
+
+        buttonStates.forEach { (id, state) ->
+            val offsetX = state.offsetXPercent * screenWidth
+            val offsetY = state.offsetYPercent * screenHeight
+
+            DraggableImageButton(
+                id = id,
+                state = state,
+                offset = Offset(offsetX, offsetY),
+                isEditMode = isEditMode,
+                isSelected = (selectedButtonId == id),
+                onClick = {
+                    if (isEditMode) selectedButtonId = id
+                    else println("Action: $id")
+                },
+                onDragEnd = { newX, newY ->
+                    state.offsetXPercent = (newX / screenWidth).coerceIn(0f, 1f)
+                    state.offsetYPercent = (newY / screenHeight).coerceIn(0f, 1f)
+                    coroutineScope.launch {
+                        state.saveButtonState(context)
+                    }
+                }
+            )
         }
     }
 }
@@ -221,7 +253,7 @@ private fun DraggableImageButton(
                 else Color.Transparent,
                 RoundedCornerShape(8.dp)
             )
-            .pointerInput(isEditMode, isSelected) {
+            .pointerInput(isEditMode) {
                 detectDragGestures(
                     onDragStart = {
                         if (isEditMode && !isSelected) {
@@ -278,9 +310,9 @@ private fun DraggableImageButton(
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
-fun DPad(
+private fun DPad(
     modifier: Modifier = Modifier,
-    isEditMode: Boolean = false,
+    isEditMode: Boolean,
 ) {
     BoxWithConstraints(
         modifier = modifier,
