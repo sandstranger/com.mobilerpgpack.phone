@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,6 +42,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -156,7 +159,7 @@ val defaultButtons = listOf(
 @Composable
 fun OnScreenController(
     buttonsToDraw: Collection<ButtonState>, inGame: Boolean,
-    allowToEditControls: Boolean = true, onBack: () -> Unit = { }
+    allowToEditControls: Boolean = true, sdlView : View? = null, onBack: () -> Unit = { }
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
@@ -187,7 +190,10 @@ fun OnScreenController(
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(backgroundColor)) {
+        .background(backgroundColor).pointerInteropFilter { motionEvent ->
+            sdlView?.dispatchTouchEvent(motionEvent)
+            true // true — чтобы событие считалось обработанным
+        }) {
         if (isEditMode) {
             EditControls(
                 context,
