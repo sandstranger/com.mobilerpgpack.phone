@@ -48,7 +48,6 @@ public class TouchCamera extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Log.d("CALLED", event.toString());
         /* Ref: http://developer.android.com/training/gestures/multi.html */
         int touchDevId = event.getDeviceId();
         final int pointerCount = event.getPointerCount();
