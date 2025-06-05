@@ -192,7 +192,7 @@ fun OnScreenController(
         .fillMaxSize()
         .background(backgroundColor).pointerInteropFilter { motionEvent ->
             sdlView?.dispatchTouchEvent(motionEvent)
-            true // true — чтобы событие считалось обработанным
+            true
         }) {
         if (isEditMode) {
             EditControls(
