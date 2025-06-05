@@ -22,20 +22,27 @@ object PreferencesStorage {
     private val activeEnginePrefsKey = stringPreferencesKey("current_engine")
     private val useCustomFilePickerPrefsKey = booleanPreferencesKey("use_custom_file_picker")
     private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
-    private val hideWolfensteinRpgScreenControlsPrefsKey = booleanPreferencesKey("hide_wolfenstein_screen_controls")
+    private val hideScreenControlsPrefsKey = booleanPreferencesKey("hide_screen_controls")
     private val pathToLogFilePrefsKey = stringPreferencesKey("path_to_log_file")
     private val customScreenResolutionPrefsKey = stringPreferencesKey("custom_screen_resolution")
+    private val editCustomScreenControlsInGamePrefsKey = booleanPreferencesKey("edit_screen_controls_in_game")
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
     suspend fun setDisplayInSafeAreaValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, displayInSafeAreaPrefsKey, valueToSave)
 
-    fun getHideWolfensteinRpgScreenControlsValue(context: Context) =
-        getBooleanValue(context, hideWolfensteinRpgScreenControlsPrefsKey, defaultValue = true)
+    fun getEditCustomScreenControlsInGameValue(context: Context) =
+        getBooleanValue(context, hideScreenControlsPrefsKey, defaultValue = true)
 
-    suspend fun setHideWolfensteinRpgScreenControlsValue(context: Context, valueToSave : Boolean) =
-        setBooleanValue(context, hideWolfensteinRpgScreenControlsPrefsKey, valueToSave)
+    suspend fun setEditCustomScreenControlsInGameValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, editCustomScreenControlsInGamePrefsKey, valueToSave)
+
+    fun getHideScreenControlsValue(context: Context) =
+        getBooleanValue(context, hideScreenControlsPrefsKey, defaultValue = false)
+
+    suspend fun setHideControlsValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, hideScreenControlsPrefsKey, valueToSave)
 
     fun getCustomScreenResolutionValue(context: Context) = getStringValue(context, customScreenResolutionPrefsKey )
 
@@ -69,11 +76,12 @@ object PreferencesStorage {
     suspend fun setShowCustomMouseCursorValue (context: Context, valueToSave : Boolean) =
         setBooleanValue(context, showCustomMouseCursorPrefsKey, valueToSave)
 
-
     suspend fun getActiveEngineValue (context: Context) : EngineTypes{
         val activeEngine = getStringValue(context, activeEnginePrefsKey, EngineTypes.DefaultActiveEngine.toString()).first()
         return if (activeEngine.isNullOrEmpty()) EngineTypes.DefaultActiveEngine else enumValueOf<EngineTypes>(activeEngine)
     }
+
+    fun getActiveEngineValueAsFlowString (context: Context) = getStringValue(context, activeEnginePrefsKey)
 
     suspend fun setActiveEngineValue (context: Context, valueToSave : EngineTypes) =
         setStringValue(context, activeEnginePrefsKey, valueToSave.toString())
