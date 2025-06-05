@@ -59,7 +59,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.ConfigureControlsActivity"
+            android:name=".ui.activity.ScreenControlsEditorActivity"
             android:exported="true"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/AppFullScreenTheme"
