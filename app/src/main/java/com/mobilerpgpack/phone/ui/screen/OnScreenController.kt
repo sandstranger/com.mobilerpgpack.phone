@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,44 +46,58 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
-import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.engine.EngineTypes
 
 private const val dpadId = "dpad"
 
-private enum class DpadDirection {
-    UP, DOWN, LEFT, RIGHT
+private const val notExistingResId = Int.MIN_VALUE
+
+enum class ButtonType{
+    Default,
+    Dpad,
+    DpadUp,
+    DpadDown,
+    DpadLeft,
+    DpadRight,
+    ControlsHider
 }
 
 // Теперь каждый ButtonState один раз создаёт свои ключи
 class ButtonState(
     val id: String,
+    val engineType : EngineTypes,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,
     size: Float = 64f,
     alpha: Float = 0.75f,
-    val buttonResId : Int = android.R.drawable.ic_menu_add,
-    sdlKeyEvent : Int = 0,
-) {
-    // Ключи создаются единожды при инициализации инстанса
-    private val keyX: Preferences.Key<Float> = floatPreferencesKey("${id}_x")
-    private val keyY: Preferences.Key<Float> = floatPreferencesKey("${id}_y")
-    private val keySize: Preferences.Key<Float> = floatPreferencesKey("${id}_size")
-    private val keyAlpha: Preferences.Key<Float> = floatPreferencesKey("${id}_alpha")
-    private val sdlKeyEventPrefsKey: Preferences.Key<Int> = intPreferencesKey("${id}_sdl_key")
-
+    sdlKeyEvent: Int = 0,
+    val buttonResId: Int = android.R.drawable.ic_menu_add,
+    val buttonType: ButtonType = ButtonType.Default,
+) : Cloneable {
+    private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
     private val defaultOffsetYPercent = offsetYPercent
-    private val defaultSize = size
-    private val defaultAlpha = alpha
-    private val defaultSdlKeyEvent = sdlKeyEvent
+    private val defaultSize           = size
+    private val defaultAlpha          = alpha
+    private val engineTypeString = engineType.toString().lowercase()
+
+    private val keyX: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_x")
+    private val keyY: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_y") // Corrected key name
+    private val keySize: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_size")
+    private val keyAlpha: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_alpha")
+    private val sdlKeyEventPrefsKey: Preferences.Key<Int> = intPreferencesKey("${engineTypeString}_${id}_sdl_key")
+
+    val allowToEditKeyEvent
+        get() = buttonResId!=notExistingResId && buttonType != ButtonType.Dpad && buttonType!= ButtonType.ControlsHider
 
     var offsetXPercent by mutableFloatStateOf(offsetXPercent)
     var offsetYPercent by mutableFloatStateOf(offsetYPercent)
@@ -89,56 +105,59 @@ class ButtonState(
     var alpha by mutableFloatStateOf(alpha)
     var sdlKeyEvent by mutableIntStateOf(sdlKeyEvent)
 
-
-    suspend fun loadButtonState (context: Context){
-        offsetXPercent = PreferencesStorage.getFloatValue(context, keyX, offsetXPercent).first()!!
-        offsetYPercent = PreferencesStorage.getFloatValue(context, keyY, offsetXPercent).first()!!
-        size = PreferencesStorage.getFloatValue(context, keySize, size).first()!!
-        alpha = PreferencesStorage.getFloatValue(context, keyAlpha, alpha).first()!!
-        sdlKeyEvent = PreferencesStorage.getIntValue(context, sdlKeyEventPrefsKey, sdlKeyEvent).first()!!
+    suspend fun loadButtonState(context: Context) {
+        offsetXPercent = PreferencesStorage.getFloatValue(context, keyX, defaultOffsetXPercent).first()!! // Use default if not found
+        offsetYPercent = PreferencesStorage.getFloatValue(context, keyY, defaultOffsetYPercent).first()!! // Use default if not found
+        size = PreferencesStorage.getFloatValue(context, keySize, defaultSize).first()!! // Use default if not found
+        alpha = PreferencesStorage.getFloatValue(context, keyAlpha, defaultAlpha).first()!! // Use default if not found
+        sdlKeyEvent = PreferencesStorage.getIntValue(context, sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()!! // Use default if not found
     }
 
     suspend fun saveButtonState(context: Context) {
-        PreferencesStorage.setFloatValue(context,keyX, offsetXPercent)
+        PreferencesStorage.setFloatValue(context, keyX, offsetXPercent)
         PreferencesStorage.setFloatValue(context, keyY, offsetYPercent)
         PreferencesStorage.setFloatValue(context, keySize, size)
         PreferencesStorage.setFloatValue(context, keyAlpha, alpha)
         PreferencesStorage.setIntValue(context, sdlKeyEventPrefsKey, sdlKeyEvent)
     }
 
-    suspend fun resetToDefaults (context: Context){
+    suspend fun resetToDefaults(context: Context) {
         offsetXPercent = defaultOffsetXPercent
         offsetYPercent = defaultOffsetYPercent
-        size = defaultSize
-        alpha = defaultAlpha
+        size           = defaultSize
+        alpha          = defaultAlpha
+        sdlKeyEvent = defaultSdlKeyEvent // Reset SDL key event too
         saveButtonState(context)
     }
 
-    suspend fun resetKeyEvent (context: Context){
+    suspend fun resetKeyEvent(context: Context) {
         sdlKeyEvent = defaultSdlKeyEvent
         saveButtonState(context)
     }
 }
 
-// Дефолтные экземпляры для сброса
-private val defaultButtons = listOf(
-    ButtonState("btn1", 0.1f, 0.1f, sdlKeyEvent = KeyEvent.KEYCODE_0),
-    ButtonState("btn2", 0.6f, 0.2f),
-    ButtonState("btn3", 0.3f, 0.4f),
-    ButtonState("btn4", 0.8f, 0.5f),
-    ButtonState("btn5", 0.5f, 0.6f),
-    ButtonState(dpadId, 0.1f, 0.8f, size = 150f)
+val defaultButtons = listOf(
+    ButtonState("btn1", EngineTypes.WolfensteinRpg, 0.1f, 0.1f, sdlKeyEvent = KeyEvent.KEYCODE_0),
+    ButtonState("btn2",EngineTypes.WolfensteinRpg, 0.6f, 0.2f),
+    ButtonState("btn3",EngineTypes.WolfensteinRpg, 0.3f, 0.4f),
+    ButtonState("btn4",EngineTypes.WolfensteinRpg, 0.8f, 0.5f),
+    ButtonState("btn5",EngineTypes.WolfensteinRpg, 0.5f, 0.6f),
+    ButtonState(dpadId,EngineTypes.WolfensteinRpg, 0.1f, 0.8f, size = 150f, buttonType = ButtonType.Dpad),
+    ButtonState(ButtonType.DpadDown.toString().lowercase(),EngineTypes.WolfensteinRpg,
+        sdlKeyEvent = KeyEvent.KEYCODE_DPAD_DOWN, buttonType = ButtonType.DpadDown, buttonResId = R.drawable.dpad_down, size = 64f),
+    ButtonState(ButtonType.DpadUp.toString().lowercase(),EngineTypes.WolfensteinRpg,
+        sdlKeyEvent = KeyEvent.KEYCODE_DPAD_UP, buttonType = ButtonType.DpadUp, buttonResId = R.drawable.dpad_up, size = 64f),
+    ButtonState(ButtonType.DpadLeft.toString().lowercase(),EngineTypes.WolfensteinRpg,
+        sdlKeyEvent = KeyEvent.KEYCODE_DPAD_LEFT, buttonType = ButtonType.DpadLeft, buttonResId = R.drawable.dpad_left, size = 64f),
+    ButtonState(ButtonType.DpadRight.toString().lowercase(),EngineTypes.WolfensteinRpg,
+        sdlKeyEvent = KeyEvent.KEYCODE_DPAD_RIGHT, buttonType = ButtonType.DpadRight, buttonResId = R.drawable.dpad_right, size = 64f),
 )
 
 @Composable
-fun OnScreenController() {
-    KeyEventEditDialog(defaultButtons, onDismiss = {})
-   // ButtonStateEditorDialog(defaultButtons, LocalContext.current)
-//    OnScreenController(EngineTypes.DefaultActiveEngine, false)
-}
-
-@Composable
-fun OnScreenController(activeEngineType : EngineTypes, inGame : Boolean) {
+fun OnScreenController(
+    buttonsToDraw: Collection<ButtonState>, inGame: Boolean,
+    allowToEditControls: Boolean = true, onBack: () -> Unit = { }
+) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val density = LocalContext.current.resources.displayMetrics.density
@@ -148,62 +167,97 @@ fun OnScreenController(activeEngineType : EngineTypes, inGame : Boolean) {
 
     var buttonStates by remember { mutableStateOf(mapOf<String, ButtonState>()) }
     var selectedButtonId by remember { mutableStateOf<String?>(null) }
-    var isEditMode by remember { mutableStateOf(false) }
+    var isEditMode by remember(!inGame) { mutableStateOf((!inGame)) }
+    var backgroundColor by remember { mutableStateOf(Color.Transparent) }
 
     LaunchedEffect(Unit) {
-        val loadedMap = defaultButtons.associate { def ->
-            // Создаём новый инстанс, но сразу переиспользуем дефолтные ключи из шаблона
-            val instance = ButtonState(def.id, def.offsetXPercent, def.offsetYPercent, def.size, def.alpha)
-            instance.loadButtonState(context)
-            def.id to instance
+        val loadedMap = buttonsToDraw.associateBy { it.id } // { id -> тот же ButtonState }
+        loadedMap.values.forEach { state ->
+            state.loadButtonState(context)
         }
         buttonStates = loadedMap
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        EditControls(
-            onAlphaChange = { delta ->
-                selectedButtonId?.let { id ->
-                    val state = buttonStates[id] ?: return@let
-                    state.alpha = (state.alpha + delta).coerceIn(0.1f, 1f)
-                    coroutineScope.launch {
-                        state.saveButtonState(context)
-                    }
-                }
-            },
-            onSizeChange = { delta ->
-                selectedButtonId?.let { id ->
-                    val state = buttonStates[id] ?: return@let
-                    state.size = (state.size + delta).coerceIn(24f, 200f)
-                    coroutineScope.launch {
-                        state.saveButtonState(context)
-                    }
-                }
-            },
-            onReset = {
-                coroutineScope.launch {
-                    buttonStates.values.forEach { state ->
-                        state.resetToDefaults(context)
-                    }
-                    selectedButtonId = null
-                }
-            },
-            onBack = { selectedButtonId = null },
-            modifier = Modifier.align(Alignment.Center)
-        )
+    if (!inGame){
+        backgroundColor = Color.DarkGray
+    }
+    else if (isEditMode){
+        backgroundColor = Color.DarkGray.copy(alpha = 0.5f)
+    }
 
-        Button(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(8.dp),
-            onClick = { isEditMode = !isEditMode }
-        ) {
-            Text(if (isEditMode) "Exit Edit Mode" else "Edit Mode")
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(backgroundColor)) {
+        if (isEditMode) {
+            EditControls(
+                context,
+                selectedButtonId,
+                inGame,
+                onAlphaChange = { delta ->
+                    selectedButtonId?.let { id ->
+                        val state = buttonStates[id] ?: return@let
+                        state.alpha = (state.alpha + delta).coerceIn(0.0f, 1f)
+                        coroutineScope.launch {
+                            state.saveButtonState(context)
+                        }
+                    }
+                },
+                onSizeChange = { delta ->
+                    selectedButtonId?.let { id ->
+                        val state = buttonStates[id] ?: return@let
+                        state.size = (state.size + delta).coerceIn(24f, Float.MAX_VALUE)
+                        coroutineScope.launch {
+                            state.saveButtonState(context)
+                        }
+                    }
+                },
+                onReset = {
+                    coroutineScope.launch {
+                        buttonStates.values.forEach { state ->
+                            state.resetToDefaults(context)
+                        }
+                        selectedButtonId = null
+                    }
+                },
+                onBack =
+                    {
+                        selectedButtonId = null
+                        onBack()
+                    },
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+        if (inGame && allowToEditControls) {
+            Image(
+                painter = painterResource(R.drawable.cog),
+                contentDescription = "settings_button",
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .size(60.dp)
+                    .alpha(0.75f)
+                    .padding(8.dp)
+                    .then(
+                        Modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            isEditMode = !isEditMode
+                        }
+                    ))
         }
 
         buttonStates.forEach { (id, state) ->
-            val offsetX = state.offsetXPercent * screenWidth
-            val offsetY = state.offsetYPercent * screenHeight
+            // Skip D-pad directional buttons here, they will be drawn within the DPad composable
+            if (state.buttonType.ordinal >= ButtonType.DpadUp.ordinal && state.buttonType.ordinal <= ButtonType.DpadRight.ordinal) {
+                return@forEach // Skip to the next iteration
+            }
+
+            val sizePx = state.size * density
+            val availableWidth = screenWidth - sizePx
+            val offsetX = state.offsetXPercent * availableWidth
+            val availableHeight = screenHeight - sizePx
+            val offsetY = state.offsetYPercent * availableHeight
 
             DraggableImageButton(
                 id = id,
@@ -213,15 +267,15 @@ fun OnScreenController(activeEngineType : EngineTypes, inGame : Boolean) {
                 isSelected = (selectedButtonId == id),
                 onClick = {
                     if (isEditMode) selectedButtonId = id
-                    else println("Action: $id")
                 },
                 onDragEnd = { newX, newY ->
-                    state.offsetXPercent = (newX / screenWidth).coerceIn(0f, 1f)
-                    state.offsetYPercent = (newY / screenHeight).coerceIn(0f, 1f)
+                    state.offsetXPercent = (newX / availableWidth).coerceIn(0f, 1f)
+                    state.offsetYPercent = (newY / availableHeight).coerceIn(0f, 1f)
                     coroutineScope.launch {
                         state.saveButtonState(context)
                     }
-                }
+                },
+                buttonsToDraw = buttonsToDraw
             )
         }
     }
@@ -235,7 +289,8 @@ private fun DraggableImageButton(
     isEditMode: Boolean,
     isSelected: Boolean,
     onClick: () -> Unit,
-    onDragEnd: (x: Float, y: Float) -> Unit
+    onDragEnd: (x: Float, y: Float) -> Unit,
+    buttonsToDraw: Collection<ButtonState> // This is passed for DPad specifically
 ) {
     var position by remember(id) { mutableStateOf(offset) }
 
@@ -279,31 +334,37 @@ private fun DraggableImageButton(
             },
         contentAlignment = Alignment.Center
     ) {
-        if (id.contains(dpadId)) {
-            DPad(
-                modifier = Modifier.fillMaxSize(),
-                isEditMode = isEditMode,
-            )
-        } else {
-            Image(
-                painter = painterResource(id = android.R.drawable.ic_menu_add),
-                contentDescription = id,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(
-                        if (!isEditMode) {
-                            Modifier.clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) {
-                                // Здесь можно вызвать onClick() или любую другую логику "обычного" клика
-                                onClick()
+
+        when (state.buttonType) {
+            ButtonType.Default ->{
+                Image(
+                    painter = painterResource(id = state.buttonResId), // Use state.buttonResId
+                    contentDescription = id,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .then(
+                            if (!isEditMode) {
+                                Modifier.clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) {
+                                    // Here you'd likely want to send the SDL key event
+                                    Log.d("Button Click", "Button ${state.id} clicked. SDL KeyEvent: ${state.sdlKeyEvent}")
+                                }
+                            } else {
+                                Modifier
                             }
-                        } else {
-                            Modifier
-                        }
-                    )
-            )
+                        )
+                )
+            }
+            ButtonType.Dpad -> {
+                DPad(
+                    modifier = Modifier.fillMaxSize(),
+                    isEditMode = isEditMode,
+                    buttonsToDraw = buttonsToDraw
+                )
+            }
+            else -> {}
         }
     }
 }
@@ -313,6 +374,7 @@ private fun DraggableImageButton(
 private fun DPad(
     modifier: Modifier = Modifier,
     isEditMode: Boolean,
+    buttonsToDraw: Collection<ButtonState>
 ) {
     BoxWithConstraints(
         modifier = modifier,
@@ -321,14 +383,21 @@ private fun DPad(
         val buttonSize = maxWidth * 0.4f
         val offsetAmount = maxWidth * 0.35f
 
+        val offsetYStorage = hashMapOf<ButtonType, Dp>(ButtonType.DpadUp to -offsetAmount,
+            ButtonType.DpadDown to offsetAmount)
+
+        val offsetXStorage = hashMapOf<ButtonType, Dp>(ButtonType.DpadLeft to -offsetAmount,
+            ButtonType.DpadRight to offsetAmount)
+
         @Composable
         fun dpadButton(
             painterId: Int,
             desc: String,
+            sdlKeyEvent: Int = 0,
             offsetX: Dp = 0.dp,
             offsetY: Dp = 0.dp,
-            direction: DpadDirection
         ) {
+            Log.d("ID", painterId.toString())
             Image(
                 painter = painterResource(painterId),
                 contentDescription = desc,
@@ -350,16 +419,25 @@ private fun DPad(
             )
         }
 
-        dpadButton(R.drawable.dpad_up, "Up", offsetY = -offsetAmount, direction = DpadDirection.UP)
-        dpadButton(R.drawable.dpad_down, "Down", offsetY = offsetAmount, direction = DpadDirection.DOWN)
-        dpadButton(R.drawable.dpad_left, "Left", offsetX = -offsetAmount, direction = DpadDirection.LEFT)
-        dpadButton(R.drawable.dpad_right, "Right", offsetX = offsetAmount, direction = DpadDirection.RIGHT)
+        for (button in buttonsToDraw) {
+            if (offsetYStorage.containsKey(button.buttonType)){
+                dpadButton(button.buttonResId, button.id,  button.sdlKeyEvent, offsetY = offsetYStorage[button.buttonType]!!)
+                continue
+            }
+
+            if (offsetXStorage.containsKey(button.buttonType)){
+                dpadButton(button.buttonResId, button.id,  button.sdlKeyEvent, offsetX = offsetXStorage[button.buttonType]!!)
+            }
+        }
     }
 }
 
 
 @Composable
 private fun EditControls(
+    context: Context,
+    selectedButtonId : String?,
+    inGame: Boolean,
     onAlphaChange: (Float) -> Unit,
     onSizeChange: (Float) -> Unit,
     onReset: () -> Unit,
@@ -372,18 +450,30 @@ private fun EditControls(
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (selectedButtonId !=null && selectedButtonId.isNotBlank()){
+            Text(
+                text = selectedButtonId,
+                color = Color.White,
+                style = MaterialTheme.typography.labelMedium,
+                fontSize = 18.sp
+            )
+            Spacer(Modifier.height(8.dp))
+        }
+
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { onAlphaChange(+0.1f) }) { Text("ALPHA+") }
-            Button(onClick = { onAlphaChange(-0.1f) }) { Text("ALPHA-") }
+            Button(onClick = { onAlphaChange(+0.1f) }) { Text(context.getString(R.string.increase_controls_alpha)) }
+            Button(onClick = { onAlphaChange(-0.1f) }) { Text(context.getString(R.string.decrease_controls_alpha)) }
         }
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { onSizeChange(+8f) }) { Text("SIZE+") }
-            Button(onClick = { onSizeChange(-8f) }) { Text("SIZE-") }
+            Button(onClick = { onSizeChange(+8f) }) { Text(context.getString(R.string.increase_controls_size)) }
+            Button(onClick = { onSizeChange(-8f) }) { Text(context.getString(R.string.decrease_controls_size)) }
         }
         Spacer(Modifier.height(8.dp))
-        Button(onClick = onReset) { Text("RESET TO DEFAULTS") }
+        Button(onClick = onReset) { Text(context.getString(R.string.reset_controls_to_default)) }
         Spacer(Modifier.height(8.dp))
-        Button(onClick = onBack) { Text("BACK") }
+        if (!inGame) {
+            Button(onClick = onBack) { Text(context.getString(R.string.close_controls_configuration)) }
+        }
     }
 }
