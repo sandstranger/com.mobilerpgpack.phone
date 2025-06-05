@@ -397,7 +397,6 @@ private fun DPad(
             offsetX: Dp = 0.dp,
             offsetY: Dp = 0.dp,
         ) {
-            Log.d("ID", painterId.toString())
             Image(
                 painter = painterResource(painterId),
                 contentDescription = desc,
