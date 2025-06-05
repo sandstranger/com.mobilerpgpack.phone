@@ -9,8 +9,10 @@ import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalConfiguration
@@ -58,6 +61,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.libsdl.app.SDLActivity
 import kotlin.math.roundToInt
 
 private const val dpadId = "dpad"
@@ -170,8 +174,9 @@ fun OnScreenController(
 
     var buttonStates by remember { mutableStateOf(mapOf<String, ButtonState>()) }
     var selectedButtonId by remember { mutableStateOf<String?>(null) }
-    var isEditMode by remember(!inGame) { mutableStateOf((!inGame)) }
+    var isEditMode by remember { mutableStateOf((!inGame)) }
     var backgroundColor by remember { mutableStateOf(Color.Transparent) }
+    var hideScreenControls by remember(false) { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val loadedMap = buttonsToDraw.associateBy { it.id } // { id -> тот же ButtonState }
@@ -191,8 +196,10 @@ fun OnScreenController(
     Box(modifier = Modifier
         .fillMaxSize()
         .background(backgroundColor).pointerInteropFilter { motionEvent ->
-            sdlView?.dispatchTouchEvent(motionEvent)
-            true
+            if (!isEditMode) {
+                sdlView?.dispatchTouchEvent(motionEvent)
+            }
+            false
         }) {
         if (isEditMode) {
             EditControls(
@@ -264,25 +271,33 @@ fun OnScreenController(
             val offsetX = state.offsetXPercent * availableWidth
             val availableHeight = screenHeight - sizePx
             val offsetY = state.offsetYPercent * availableHeight
+            val renderButton = state.buttonType == ButtonType.ControlsHider || !hideScreenControls || isEditMode
 
-            DraggableImageButton(
-                id = id,
-                state = state,
-                offset = Offset(offsetX, offsetY),
-                isEditMode = isEditMode,
-                isSelected = (selectedButtonId == id),
-                onClick = {
-                    if (isEditMode) selectedButtonId = id
-                },
-                onDragEnd = { newX, newY ->
-                    state.offsetXPercent = (newX / availableWidth).coerceIn(0f, 1f)
-                    state.offsetYPercent = (newY / availableHeight).coerceIn(0f, 1f)
-                    coroutineScope.launch {
-                        state.saveButtonState(context)
-                    }
-                },
-                buttonsToDraw = buttonsToDraw
-            )
+            if (renderButton) {
+                DraggableImageButton(
+                    id = id,
+                    state = state,
+                    offset = Offset(offsetX, offsetY),
+                    isEditMode = isEditMode,
+                    isSelected = (selectedButtonId == id),
+                    onClick = {
+                        if (isEditMode) selectedButtonId = id
+
+                        if (state.buttonType == ButtonType.ControlsHider && inGame && !isEditMode){
+                            hideScreenControls = !hideScreenControls
+                        }
+                    },
+                    onDragEnd = { newX, newY ->
+                        state.offsetXPercent = (newX / availableWidth).coerceIn(0f, 1f)
+                        state.offsetYPercent = (newY / availableHeight).coerceIn(0f, 1f)
+                        coroutineScope.launch {
+                            state.saveButtonState(context)
+                        }
+                    },
+                    inGame = inGame,
+                    buttonsToDraw = buttonsToDraw
+                )
+            }
         }
     }
 }
@@ -293,6 +308,7 @@ private fun DraggableImageButton(
     state: ButtonState,
     offset: Offset,
     isEditMode: Boolean,
+    inGame: Boolean,
     isSelected: Boolean,
     onClick: () -> Unit,
     onDragEnd: (x: Float, y: Float) -> Unit,
@@ -348,26 +364,50 @@ private fun DraggableImageButton(
                     contentDescription = id,
                     modifier = Modifier
                         .fillMaxSize()
-                        .then(
-                            if (!isEditMode) {
-                                Modifier.clickable(
-                                    indication = null,
-                                    interactionSource = remember { MutableInteractionSource() }
-                                ) {
-                                    // Here you'd likely want to send the SDL key event
-                                    Log.d("Button Click", "Button ${state.id} clicked. SDL KeyEvent: ${state.sdlKeyEvent}")
+                        .pointerInput(!isEditMode, inGame) {
+                            detectTapGestures(
+                                onPress = {
+                                    if (isEditMode || !inGame){
+                                        return@detectTapGestures
+                                    }
+                                    onTouchDown(state.sdlKeyEvent)
+                                    try {
+                                        awaitRelease()
+                                        onTouchUp(state.sdlKeyEvent)
+                                    } catch (_: Exception) {
+                                        onTouchUp(state.sdlKeyEvent)
+                                    }
                                 }
-                            } else {
-                                Modifier
-                            }
-                        )
+                            )
+                        }
                 )
             }
             ButtonType.Dpad -> {
                 DPad(
                     modifier = Modifier.fillMaxSize(),
                     isEditMode = isEditMode,
+                    inGame = inGame,
                     buttonsToDraw = buttonsToDraw
+                )
+            }
+            ButtonType.ControlsHider -> {
+                Image(
+                    painter = painterResource(id = state.buttonResId), // Use state.buttonResId
+                    contentDescription = id,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .then(
+                            if (!isEditMode && inGame) {
+                                Modifier.clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) {
+                                    onClick()
+                                }
+                            } else {
+                                Modifier // в режиме редактирования — никакой кликабельности
+                            }
+                        )
                 )
             }
             else -> {}
@@ -380,6 +420,7 @@ private fun DraggableImageButton(
 private fun DPad(
     modifier: Modifier = Modifier,
     isEditMode: Boolean,
+    inGame: Boolean,
     buttonsToDraw: Collection<ButtonState>
 ) {
     BoxWithConstraints(
@@ -409,18 +450,22 @@ private fun DPad(
                 modifier = Modifier
                     .size(buttonSize)
                     .offset(x = offsetX, y = offsetY)
-                    .then(
-                        if (!isEditMode) {
-                            Modifier.clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) {
-                                // Обычное действие D-pad (например, перемещение)
-                            }
-                        } else {
-                            Modifier // в режиме редактирования — никакой кликабельности
-                        }
-                    )
+                    .pointerInput(!isEditMode, inGame) {
+                       detectTapGestures(
+                           onPress = {
+                               if (isEditMode || !inGame){
+                                   return@detectTapGestures
+                               }
+                               onTouchDown(sdlKeyEvent)
+                               try {
+                                   awaitRelease()
+                                   onTouchUp(sdlKeyEvent)
+                               } catch (_: Exception) {
+                                   onTouchUp(sdlKeyEvent)
+                               }
+                           }
+                       )
+                    }
             )
         }
 
@@ -482,3 +527,7 @@ private fun EditControls(
         }
     }
 }
+
+private fun onTouchDown (keyCode : Int) = SDLActivity.onNativeKeyDown(keyCode)
+
+private fun onTouchUp (keyCode : Int) = SDLActivity.onNativeKeyUp(keyCode)
