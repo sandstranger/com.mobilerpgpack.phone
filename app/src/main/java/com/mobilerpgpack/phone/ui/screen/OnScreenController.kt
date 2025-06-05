@@ -178,11 +178,11 @@ fun OnScreenController(
         buttonStates = loadedMap
     }
 
-    if (!inGame){
-        backgroundColor = Color.DarkGray
+    backgroundColor = if (!inGame){
+        Color.DarkGray
     }
-    else if (isEditMode){
-        backgroundColor = Color.DarkGray.copy(alpha = 0.5f)
+    else{
+        if (isEditMode) Color.DarkGray.copy(alpha = 0.5f) else Color.Transparent
     }
 
     Box(modifier = Modifier
