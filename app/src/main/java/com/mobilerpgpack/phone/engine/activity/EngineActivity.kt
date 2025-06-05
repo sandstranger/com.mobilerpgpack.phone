@@ -24,6 +24,7 @@ import com.mobilerpgpack.phone.engine.killEngine
 import com.mobilerpgpack.phone.engine.setFullscreen
 import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.OnScreenController
+import com.mobilerpgpack.phone.ui.views.TouchCamera
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import kotlinx.coroutines.flow.first
@@ -200,6 +201,10 @@ class EngineActivity : SDLActivity() {
             (sdlView.parent as? ViewGroup)?.removeView(sdlView)
             sdlContainer.addView(sdlView) // Add SDL view to the sdl_container
 
+            val touchCamera = findViewById<TouchCamera>(R.id.touchCamera)
+            (touchCamera.parent as? ViewGroup)?.removeView(touchCamera)
+            sdlContainer.addView(touchCamera)
+
             // Setup Compose overlay for buttons
             val composeViewUI = findViewById<ComposeView>(R.id.compose_overlayUI)
             (composeViewUI.parent as? ViewGroup)?.removeView(composeViewUI)
@@ -223,7 +228,8 @@ class EngineActivity : SDLActivity() {
                             OnScreenController(
                                 enginesInfo[activeEngineType]!!.buttonsToDraw,
                                 inGame = true,
-                                allowToEditControls = allowToEditScreenControlsInGame
+                                allowToEditControls = allowToEditScreenControlsInGame,
+                                sdlView = touchCamera
                             )
                         }
                     }
