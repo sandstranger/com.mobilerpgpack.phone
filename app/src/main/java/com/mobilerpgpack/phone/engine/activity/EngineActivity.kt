@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.system.Os
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
-import com.mobilerpgpack.phone.engine.getEngineResourcePath
 import com.mobilerpgpack.phone.engine.killEngine
 import com.mobilerpgpack.phone.engine.setFullscreen
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -65,7 +64,7 @@ class EngineActivity : SDLActivity() {
             customScreenResolution = PreferencesStorage.getCustomScreenResolutionValue(this@EngineActivity).first()!!
             displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this@EngineActivity).first()!!
             needToPreserveScreenAspectRatio = PreferencesStorage.getPreserveAspectRatioValue(this@EngineActivity).first()!!
-            pathToEngineResourceFile = File(getEngineResourcePath(this@EngineActivity,activeEngineType))
+            pathToEngineResourceFile = File(enginesInfo[activeEngineType]!!.pathToResourcesCallback(this@EngineActivity).first()!!)
         }
 
         var customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
@@ -82,8 +81,14 @@ class EngineActivity : SDLActivity() {
 
         Os.setenv("LIBGL_ES", "2", true)
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
-        Os.setenv("ANDROID_GAME_PATH",pathToEngineResourceFile.parent,true)
-        Os.setenv("RESOURCE_FILE_NAME",pathToEngineResourceFile.name,true)
+
+        if (pathToEngineResourceFile.isFile){
+            Os.setenv("ANDROID_GAME_PATH",pathToEngineResourceFile.parent,true)
+            Os.setenv("RESOURCE_FILE_NAME",pathToEngineResourceFile.name,true)
+        }
+        else{
+            Os.setenv("ANDROID_GAME_PATH",pathToEngineResourceFile.absolutePath,true)
+        }
     }
 
     private fun enableLogcat() : Process {

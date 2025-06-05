@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen
 
+import android.util.Log
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -14,29 +15,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import com.mobilerpgpack.phone.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun KeyEventEditDialog(
+fun KeysEditor(
     buttonStates: Collection<ButtonState>,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
+    val modifier = Modifier
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val buttonsToEdit = buttonStates.filter { it.allowToEditKeyEvent }
 
-    LaunchedEffect(buttonStates) {
+    LaunchedEffect(buttonsToEdit) {
         scope.launch {
-            buttonStates.forEach { it.loadButtonState(context) }
+            buttonsToEdit.forEach { it.loadButtonState(context) }
         }
     }
 
-    var selectedButton by rememberSaveable { mutableStateOf(buttonStates.first()) }
+    var selectedButton by remember { mutableStateOf(buttonsToEdit.first()) }
+    var selectedButtonId by rememberSaveable { mutableStateOf(selectedButton.id) }
     var selectedKeyCode by rememberSaveable { mutableIntStateOf(selectedButton.sdlKeyEvent) }
+    selectedButton = buttonsToEdit.first { it.id == selectedButtonId }
 
-    var shouldSave by rememberSaveable { mutableStateOf(false) }
     var shouldReset by rememberSaveable { mutableStateOf(false) }
-
     var showButtonSelectDialog by rememberSaveable { mutableStateOf(false) }
     var showKeyCodeDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -51,19 +54,10 @@ fun KeyEventEditDialog(
             }
     }
 
-    if (shouldSave) {
-        LaunchedEffect(buttonStates) {
-            scope.launch {
-                buttonStates.forEach { it.saveButtonState(context) }
-            }
-            shouldSave = false
-        }
-    }
-
     if (shouldReset) {
-        LaunchedEffect(buttonStates) {
+        LaunchedEffect(buttonsToEdit) {
             scope.launch {
-                buttonStates.forEach { it.resetKeyEvent(context) }
+                buttonsToEdit.forEach { it.resetKeyEvent(context) }
                 selectedKeyCode = currentButton.value.sdlKeyEvent
             }
             selectedKeyCode = currentButton.value.sdlKeyEvent
@@ -78,19 +72,20 @@ fun KeyEventEditDialog(
             onDismissRequest = { showButtonSelectDialog = false },
             confirmButton = {
                 TextButton(onClick = { showButtonSelectDialog = false }) {
-                    Text("Close")
+                    Text(context.getString(R.string.close_text))
                 }
             },
-            title = { Text("Select Button") },
+            title = { Text(context.getString(R.string.select_button)) },
             text = {
                 Column (modifier = Modifier.verticalScroll(scrollState)){
-                    buttonStates.forEach { button ->
+                    buttonsToEdit.forEach { button ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedButton = button
+                                    selectedButtonId = button.id
                                     selectedKeyCode = button.sdlKeyEvent
                                     showButtonSelectDialog = false
                                 }
@@ -132,6 +127,9 @@ fun KeyEventEditDialog(
                                 .clickable {
                                     selectedKeyCode = code
                                     currentButton.value.sdlKeyEvent = selectedKeyCode
+                                    scope.launch {
+                                        currentButton.value.saveButtonState(context)
+                                    }
                                     showKeyCodeDialog = false
                                 }
                                 .padding(8.dp)
@@ -148,20 +146,19 @@ fun KeyEventEditDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = {
-                shouldSave = true
                 onDismiss()
             }) {
-                Text("Save")
+                Text(context.getString(R.string.close_text))
             }
         },
         dismissButton = {
             TextButton(onClick = {
                 shouldReset = true
             }) {
-                Text("Reset to default")
+                Text(context.getString(R.string.reset_to_default))
             }
         },
-        title = { Text("Edit SDL Key Event") },
+        title = { Text(context.getString(R.string.keys_editor)) },
         text = {
             Column(modifier = modifier.fillMaxWidth()) {
 
@@ -185,13 +182,13 @@ fun KeyEventEditDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Selected Key Code", style = MaterialTheme.typography.labelMedium)
+                Text(context.getString(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium)
                 Row(
                     modifier = Modifier
                         .clickable { showKeyCodeDialog = true }
                         .padding(8.dp)
                 ) {
-                    Text(text = keyCodeMap[selectedKeyCode] ?: "Unknown")
+                    Text(text = keyCodeMap[selectedKeyCode] ?: context.getString(R.string.uknown))
                 }
             }
         }
