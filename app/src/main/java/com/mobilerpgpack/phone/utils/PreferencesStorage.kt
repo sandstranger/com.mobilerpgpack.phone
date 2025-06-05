@@ -84,7 +84,8 @@ object PreferencesStorage {
         return if (activeEngine.isNullOrEmpty()) EngineTypes.DefaultActiveEngine else enumValueOf<EngineTypes>(activeEngine)
     }
 
-    fun getActiveEngineValueAsFlowString (context: Context) = getStringValue(context, activeEnginePrefsKey)
+    fun getActiveEngineValueAsFlowString (context: Context) = getStringValue(context, activeEnginePrefsKey,
+        EngineTypes.DefaultActiveEngine.toString())
 
     suspend fun setActiveEngineValue (context: Context, valueToSave : EngineTypes) =
         setStringValue(context, activeEnginePrefsKey, valueToSave.toString())
