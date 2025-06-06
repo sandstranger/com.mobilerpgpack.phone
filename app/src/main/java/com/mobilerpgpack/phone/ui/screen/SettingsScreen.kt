@@ -83,12 +83,13 @@ private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(5.dp),
+            .background(Color.White),
     ) {
         Button(
             onClick = { scope.launch { startEngine(context) } },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(5.dp)
                 .height(56.dp)
         ) {
             Text(context.getString(R.string.start_game), fontSize = 25.sp)
