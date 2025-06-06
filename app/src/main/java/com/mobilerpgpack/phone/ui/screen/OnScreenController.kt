@@ -46,7 +46,11 @@ import kotlin.math.roundToInt
 private const val dpadId = "dpad"
 private const val notExistingResId = Int.MIN_VALUE
 
-private val clampButtonsPrefsKey = booleanPreferencesKey("clamp_buttons")
+private val clampButtonsMap = hashMapOf<EngineTypes, Preferences.Key<Boolean>>(
+    EngineTypes.WolfensteinRpg to booleanPreferencesKey("clamp_wolfenstein_buttons"),
+    EngineTypes.DoomRpg to booleanPreferencesKey("clamp_doom_rpg_buttons"),
+    EngineTypes.Doom2Rpg to booleanPreferencesKey("clamp_doom_2_rpg_buttons")
+)
 
 enum class ButtonType {
     Default,
@@ -254,6 +258,7 @@ val wolfensteinButtons = listOf(
 @Composable
 fun OnScreenController(
     buttonsToDraw: Collection<ButtonState>,
+    activeEngine : EngineTypes,
     inGame: Boolean,
     allowToEditControls: Boolean = true,
     onBack: () -> Unit = { }
@@ -264,6 +269,7 @@ fun OnScreenController(
     val screenWidthPx = configuration.screenWidthDp * density
     val screenHeightPx = configuration.screenHeightDp * density
     val coroutineScope = rememberCoroutineScope()
+    val clampButtonsPrefsKey = clampButtonsMap[activeEngine]!!
 
     var buttonStates by remember { mutableStateOf(mapOf<String, ButtonState>()) }
     var selectedButtonId by remember { mutableStateOf<String?>(null) }
