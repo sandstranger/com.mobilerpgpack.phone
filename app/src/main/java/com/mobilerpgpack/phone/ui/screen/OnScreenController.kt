@@ -5,14 +5,11 @@ import android.content.Context
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,12 +40,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -62,6 +61,7 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.libsdl.app.SDLActivity
+import org.libsdl.app.SDLSurface
 import kotlin.math.roundToInt
 
 private const val dpadId = "dpad"
@@ -163,7 +163,7 @@ val defaultButtons = listOf(
 @Composable
 fun OnScreenController(
     buttonsToDraw: Collection<ButtonState>, inGame: Boolean,
-    allowToEditControls: Boolean = true, sdlView : View? = null, onBack: () -> Unit = { }
+    allowToEditControls: Boolean = true, onBack: () -> Unit = { }
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
@@ -177,6 +177,7 @@ fun OnScreenController(
     var isEditMode by remember { mutableStateOf((!inGame)) }
     var backgroundColor by remember { mutableStateOf(Color.Transparent) }
     var hideScreenControls by remember(false) { mutableStateOf(false) }
+    val childBounds = remember { mutableMapOf<String, android.graphics.RectF>() }
 
     LaunchedEffect(Unit) {
         val loadedMap = buttonsToDraw.associateBy { it.id } // { id -> тот же ButtonState }
@@ -195,12 +196,15 @@ fun OnScreenController(
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(backgroundColor).pointerInteropFilter { motionEvent ->
+        .background(backgroundColor)) {
+
+        if (inGame){
+            DrawBlockAndroidViewsBox()
             if (!isEditMode) {
-                sdlView?.dispatchTouchEvent(motionEvent)
+                DrawTouchCamera()
             }
-            false
-        }) {
+        }
+
         if (isEditMode) {
             EditControls(
                 context,
@@ -295,7 +299,8 @@ fun OnScreenController(
                         }
                     },
                     inGame = inGame,
-                    buttonsToDraw = buttonsToDraw
+                    buttonsToDraw = buttonsToDraw,
+                    childBounds = childBounds
                 )
             }
         }
@@ -312,7 +317,8 @@ private fun DraggableImageButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     onDragEnd: (x: Float, y: Float) -> Unit,
-    buttonsToDraw: Collection<ButtonState> // This is passed for DPad specifically
+    buttonsToDraw: Collection<ButtonState>,
+    childBounds: MutableMap<String, android.graphics.RectF>
 ) {
     var position by remember(id) { mutableStateOf(offset) }
 
@@ -330,6 +336,16 @@ private fun DraggableImageButton(
                 else Color.Transparent,
                 RoundedCornerShape(8.dp)
             )
+            .onGloballyPositioned { layoutCoordinates ->
+                val loc = layoutCoordinates.localToWindow(Offset.Zero)
+                val leftPx = loc.x
+                val topPx = loc.y
+                val rightPx = leftPx + layoutCoordinates.size.width
+                val bottomPx = topPx + layoutCoordinates.size.height
+                childBounds[id] = android.graphics.RectF(
+                    leftPx, topPx, rightPx, bottomPx
+                )
+            }
             .pointerInput(isEditMode) {
                 detectDragGestures(
                     onDragStart = {
@@ -367,7 +383,7 @@ private fun DraggableImageButton(
                         .pointerInput(!isEditMode, inGame) {
                             detectTapGestures(
                                 onPress = {
-                                    if (isEditMode || !inGame){
+                                    if (isEditMode || !inGame) {
                                         return@detectTapGestures
                                     }
                                     onTouchDown(state.sdlKeyEvent)
@@ -387,7 +403,8 @@ private fun DraggableImageButton(
                     modifier = Modifier.fillMaxSize(),
                     isEditMode = isEditMode,
                     inGame = inGame,
-                    buttonsToDraw = buttonsToDraw
+                    buttonsToDraw = buttonsToDraw,
+                    childBounds
                 )
             }
             ButtonType.ControlsHider -> {
@@ -415,13 +432,201 @@ private fun DraggableImageButton(
     }
 }
 
+@Composable
+private fun DrawBlockAndroidViewsBox(){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        awaitPointerEvent()
+                    }
+                }
+            }
+    )
+}
+
+@Composable
+private fun DrawTouchCamera() {
+    var mWidth by remember { mutableFloatStateOf(0.0f) }
+    var mHeight by remember { mutableFloatStateOf(0.0f) }
+    var isActionDownActive by remember { mutableStateOf(false) }
+    var widthSize = 0
+    var heightSize = 0
+
+    fun onTouchEvent(event: MotionEvent): Boolean {
+        /* Ref: http://developer.android.com/training/gestures/multi.html */
+        var touchDevId = event.deviceId
+        val pointerCount = event.pointerCount
+        var action = event.actionMasked
+        var pointerFingerId: Int
+        var i = -1
+        var x: Float
+        var y: Float
+        var p: Float
+
+        /*
+         * Prevent id to be -1, since it's used in SDL internal for synthetic events
+         * Appears when using Android emulator, eg:
+         *  adb shell input mouse tap 100 100
+         *  adb shell input touchscreen tap 100 100
+         */
+        if (touchDevId < 0) {
+            touchDevId -= 1
+        }
+
+        when (action) {
+            MotionEvent.ACTION_MOVE -> {
+                i = 0
+                while (i < pointerCount) {
+                    pointerFingerId = if (isActionDownActive) event.getPointerId(i) else (event.getPointerId(i) - 1)
+                    if (pointerFingerId < 0) {
+                        pointerFingerId = 0
+                    }
+                    x = event.getX(i) / mWidth
+                    y = event.getY(i) / mHeight
+                    p = event.getPressure(i)
+                    if (p > 1.0f) {
+                        // may be larger than 1.0f on some devices
+                        // see the documentation of getPressure(i)
+                        p = 1.0f
+                    }
+                    SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p)
+                    i++
+                }
+            }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_DOWN -> {
+                isActionDownActive = event.actionMasked == MotionEvent.ACTION_DOWN
+                // Primary pointer up/down, the index is always zero
+                i = 0
+                // Non primary pointer up/down
+                if (i == -1) {
+                    i = event.getActionIndex()
+                }
+
+                pointerFingerId = event.getPointerId(i)
+                x = event.getX(i) / mWidth
+                y = event.getY(i) / mHeight
+                p = event.getPressure(i)
+                if (p > 1.0f) {
+                    // may be larger than 1.0f on some devices
+                    // see the documentation of getPressure(i)
+                    p = 1.0f
+                }
+                SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p)
+            }
+
+            MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_POINTER_DOWN -> {
+                if (i == -1) {
+                    i = event.getActionIndex()
+                }
+
+                pointerFingerId = if (isActionDownActive) event.getPointerId(i) else (event.getPointerId(i) - 1)
+                if (pointerFingerId < 0) {
+                    pointerFingerId = 0
+                }
+
+                if (!isActionDownActive && pointerFingerId == 0){
+                    action = if (action == MotionEvent.ACTION_POINTER_DOWN) MotionEvent.ACTION_DOWN else MotionEvent.ACTION_UP
+                }
+
+                Log.d("CALLED",pointerFingerId.toString())
+                Log.d("CALLED",action.toString())
+
+                x = event.getX(i) / mWidth
+                y = event.getY(i) / mHeight
+                p = event.getPressure(i)
+                if (p > 1.0f) {
+                    p = 1.0f
+                }
+                SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p)
+            }
+
+            MotionEvent.ACTION_CANCEL -> {
+                isActionDownActive = false
+                i = 0
+                while (i < pointerCount) {
+                    pointerFingerId = event.getPointerId(i)
+                    x = event.getX(i) / mWidth
+                    y = event.getY(i) / mHeight
+                    p = event.getPressure(i)
+                    if (p > 1.0f) {
+                        // may be larger than 1.0f on some devices
+                        // see the documentation of getPressure(i)
+                        p = 1.0f
+                    }
+                    SDLActivity.onNativeTouch(
+                        touchDevId,
+                        pointerFingerId,
+                        MotionEvent.ACTION_UP,
+                        x,
+                        y,
+                        p
+                    )
+                    i++
+                }
+            }
+
+            else -> {}
+        }
+
+        return true
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .layout { measurable, constraints ->
+                widthSize = constraints.maxWidth
+                heightSize = constraints.maxHeight
+
+                if (SDLSurface.fixedWidth > 0) {
+                    val myAspect = 1.0f * SDLSurface.fixedWidth / SDLSurface.fixedHeight
+                    var resultWidth = widthSize.toFloat()
+                    var resultHeight = resultWidth / myAspect
+                    if (resultHeight > heightSize) {
+                        resultHeight = heightSize.toFloat()
+                        resultWidth = resultHeight * myAspect
+                    }
+
+                    mWidth = resultWidth
+                    mHeight = resultHeight
+                } else {
+                    mWidth = widthSize.toFloat()
+                    mHeight = heightSize.toFloat()
+                }
+
+                val placeable = measurable.measure(
+                    Constraints.fixed(mWidth.toInt(), mHeight.toInt())
+                )
+
+                layout(mWidth.toInt(), mHeight.toInt()) {
+                    placeable.place(0, 0)
+                }
+            }
+            .clickable(
+                indication = null, // Убираем Ripple эффект
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
+            }
+            .alpha(0f)
+            .pointerInteropFilter { motionEvent ->
+                onTouchEvent(motionEvent)
+                true
+            }
+    )
+}
+
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 private fun DPad(
     modifier: Modifier = Modifier,
     isEditMode: Boolean,
     inGame: Boolean,
-    buttonsToDraw: Collection<ButtonState>
+    buttonsToDraw: Collection<ButtonState>,
+    childBounds: MutableMap<String, android.graphics.RectF>
 ) {
     BoxWithConstraints(
         modifier = modifier,
@@ -450,21 +655,31 @@ private fun DPad(
                 modifier = Modifier
                     .size(buttonSize)
                     .offset(x = offsetX, y = offsetY)
+                    .onGloballyPositioned { layoutCoordinates ->
+                        val loc = layoutCoordinates.localToWindow(Offset.Zero)
+                        val leftPx = loc.x
+                        val topPx = loc.y
+                        val rightPx = leftPx + layoutCoordinates.size.width
+                        val bottomPx = topPx + layoutCoordinates.size.height
+                        childBounds[desc] = android.graphics.RectF(
+                            leftPx, topPx, rightPx, bottomPx
+                        )
+                    }
                     .pointerInput(!isEditMode, inGame) {
-                       detectTapGestures(
-                           onPress = {
-                               if (isEditMode || !inGame){
-                                   return@detectTapGestures
-                               }
-                               onTouchDown(sdlKeyEvent)
-                               try {
-                                   awaitRelease()
-                                   onTouchUp(sdlKeyEvent)
-                               } catch (_: Exception) {
-                                   onTouchUp(sdlKeyEvent)
-                               }
-                           }
-                       )
+                        detectTapGestures(
+                            onPress = {
+                                if (isEditMode || !inGame) {
+                                    return@detectTapGestures
+                                }
+                                onTouchDown(sdlKeyEvent)
+                                try {
+                                    awaitRelease()
+                                    onTouchUp(sdlKeyEvent)
+                                } catch (_: Exception) {
+                                    onTouchUp(sdlKeyEvent)
+                                }
+                            }
+                        )
                     }
             )
         }
