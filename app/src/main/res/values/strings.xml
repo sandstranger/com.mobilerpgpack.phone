@@ -37,4 +37,5 @@
     <string name="uknown">Unknown</string>
     <string name="reset_to_default">Reset to default</string>
     <string name="keys_editor">Keys editor</string>
+    <string name="controls_autohing">Enable screen controls auto hiding (do not working in doom rpg)</string>
 </resources>
