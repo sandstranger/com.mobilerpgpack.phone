@@ -211,6 +211,7 @@ class EngineActivity : SDLActivity() {
                                 OnScreenController(
                                     enginesInfo[activeEngineType]!!.buttonsToDraw,
                                     inGame = true,
+                                    activeEngine = activeEngineType,
                                     allowToEditControls = allowToEditScreenControlsInGame
                                 )
                             }

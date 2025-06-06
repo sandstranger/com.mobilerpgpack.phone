@@ -34,10 +34,12 @@ class ScreenControlsEditorActivity : ComponentActivity() {
             this.displayInSafeArea()
         }
 
+        val selectedEngine = getSelectedEngineType()
+
         setContent {
             MaterialTheme {
-                OnScreenController(enginesInfo[getSelectedEngineType()]!!.buttonsToDraw,
-                    inGame = false){
+                OnScreenController(enginesInfo[selectedEngine]!!.buttonsToDraw,
+                    inGame = false, activeEngine = selectedEngine){
                     this@ScreenControlsEditorActivity.finish()
                 }
             }
