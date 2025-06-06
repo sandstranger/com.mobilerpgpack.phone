@@ -248,7 +248,7 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
     HorizontalDivider()
 
     PreferenceItem(context.getString(R.string.configure_screen_controls)) {
-        ScreenControlsEditorActivity.startActivity(context, activeEngine)
+        ScreenControlsEditorActivity.editControls(context, activeEngine)
     }
 
     HorizontalDivider()

@@ -44,7 +44,7 @@ import org.libsdl.app.SDLSurface
 import kotlin.math.roundToInt
 
 private const val dpadId = "dpad"
-private const val notExistingResId = Int.MIN_VALUE
+private const val notExistingResId = android.R.drawable.ic_menu_add
 
 private val clampButtonsMap = hashMapOf<EngineTypes, Preferences.Key<Boolean>>(
     EngineTypes.WolfensteinRpg to booleanPreferencesKey("clamp_wolfenstein_buttons"),
@@ -70,9 +70,9 @@ class ButtonState(
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = 0,
-    val buttonResId: Int = android.R.drawable.ic_menu_add,
+    val buttonResId: Int = notExistingResId,
     val buttonType: ButtonType = ButtonType.Default
-) : Cloneable {
+)  {
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
     private val defaultOffsetYPercent = offsetYPercent
