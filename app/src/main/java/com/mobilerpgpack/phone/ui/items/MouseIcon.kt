@@ -39,9 +39,21 @@ fun MouseIcon() {
 
     LaunchedEffect(Unit) {
         while (true) {
-            val x = (SDLActivity.getMouseX().toFloat() + (offsetXMouse ?: 0f)) * (screenWidth / sdlWidth)
-            val y = (SDLActivity.getMouseY().toFloat() + (offsetYMouse ?: 0f)) * (screenHeight / sdlHeight)
-            iconOffset = IntOffset(x.roundToInt(), y.roundToInt())
+            if (sdlWidth >0 && sdlHeight >0) {
+                val x = (SDLActivity.getMouseX().toFloat() + (offsetXMouse
+                    ?: 0f)) * (screenWidth / sdlWidth)
+                val y = (SDLActivity.getMouseY().toFloat() + (offsetYMouse
+                    ?: 0f)) * (screenHeight / sdlHeight)
+                iconOffset = IntOffset(x.roundToInt(), y.roundToInt())
+            }
+            else{
+                val x = (SDLActivity.getMouseX().toFloat() + (offsetXMouse
+                    ?: 0f))
+                val y = (SDLActivity.getMouseY().toFloat() + (offsetYMouse
+                    ?: 0f))
+                iconOffset = IntOffset(x.roundToInt(), y.roundToInt())
+            }
+
             delay(16L)
         }
     }
@@ -57,4 +69,3 @@ fun MouseIcon() {
         )
     }
 }
-
