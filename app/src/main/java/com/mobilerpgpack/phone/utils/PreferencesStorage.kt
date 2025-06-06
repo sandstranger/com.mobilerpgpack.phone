@@ -138,13 +138,13 @@ object PreferencesStorage {
         }
     }
 
-    private fun getBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, defaultValue : Boolean = false): Flow<Boolean?> {
+     fun getBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, defaultValue : Boolean = false): Flow<Boolean?> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
     }
 
-    private suspend fun setBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, valueToSave : Boolean) {
+    suspend fun setBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, valueToSave : Boolean) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
         }

@@ -7,8 +7,7 @@ import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.activity.EngineActivity
-import com.mobilerpgpack.phone.engine.enginesInfo
-import com.mobilerpgpack.phone.ui.screen.defaultButtons
+import com.mobilerpgpack.phone.ui.screen.wolfensteinButtons
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.startActivity
 import kotlinx.coroutines.flow.first
@@ -18,11 +17,11 @@ const val logcatFileName = "wolfenstein_doom_rpg_log.log"
 
 internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
     EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so", arrayOf("GL","SDL2","openal","WolfensteinRPG"),
-        defaultButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
+        wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
     EngineTypes.DoomRpg to EngineInfo("libdoomrpg.so", arrayOf(""),
-        defaultButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) }),
+        wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) }),
     EngineTypes.Doom2Rpg to EngineInfo("", arrayOf(""),
-        defaultButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) })
+        wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) })
 )
 
 internal val defaultPathToLogcatFile: String = "${Environment.getExternalStorageDirectory().absolutePath}" +
