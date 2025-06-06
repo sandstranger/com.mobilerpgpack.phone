@@ -29,6 +29,7 @@ object PreferencesStorage {
     private val editCustomScreenControlsInGamePrefsKey = booleanPreferencesKey("edit_screen_controls_in_game")
     private val OFFSET_X_MOUSE = floatPreferencesKey("offset_x_mouse")
     private val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
+    private val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
@@ -68,6 +69,12 @@ object PreferencesStorage {
 
     suspend fun setUseCustomFilePickerValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, useCustomFilePickerPrefsKey, valueToSave)
+
+    fun getControlsAutoHidingValue(context: Context) =
+        getBooleanValue(context, enableControlsAutoHiding, defaultValue = false)
+
+    suspend fun setControlsAutoHidingValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, enableControlsAutoHiding, valueToSave)
 
     fun getPreserveAspectRatioValue (context: Context) = getBooleanValue(context, preserveScreenAspectRatioPrefsKey)
 

@@ -286,6 +286,17 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
 
     HorizontalDivider()
 
+    SwitchPreferenceItem(
+        context.getString(R.string.controls_autohing),
+        checkedFlow = PreferencesStorage.getControlsAutoHidingValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setControlsAutoHidingValue(context, newValue)
+        }
+    }
+
+    HorizontalDivider()
+
     if (drawKeysEditor){
         val buttonsToDraw = enginesInfo[activeEngine]!!.buttonsToDraw
         KeysEditor(buttonsToDraw) {

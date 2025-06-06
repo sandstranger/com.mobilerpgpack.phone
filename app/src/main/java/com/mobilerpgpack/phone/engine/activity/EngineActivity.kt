@@ -8,15 +8,12 @@ import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.ComposeView
-import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.EngineActivityBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
@@ -26,29 +23,39 @@ import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.OnScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.libsdl.app.SDLActivity
-import org.libsdl.app.SDLActivity.isMouseShown
 import org.libsdl.app.SDLSurface
 import java.io.File
 
 private const val RESOLUTION_DELIMITER = "x"
 
 class EngineActivity : SDLActivity() {
+    private val screenControlsVisibilityUpdater = CoroutineScope(Dispatchers.Default)
+
     private lateinit var activeEngineType: EngineTypes
     private lateinit var pathToLog: String
     private lateinit var logcatProcess: Process
-    private lateinit var sdlView: View
+    private var controlsOverlayUI : View? = null
 
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
     private var allowToEditScreenControlsInGame = false
     private var isCursorVisible by mutableIntStateOf(0)
+    private var enableControlsAutoHidingFeature = false
+    private var needToShowControlsLastState : Boolean = false
 
     private external fun pauseSound()
 
     private external fun resumeSound()
+
+    private external fun needToShowScreenControls () : Boolean
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setFullscreen(window.decorView)
@@ -74,6 +81,7 @@ class EngineActivity : SDLActivity() {
     override fun onDestroy() {
         super.onDestroy()
         logcatProcess.destroy()
+        screenControlsVisibilityUpdater.cancel()
         killEngine()
     }
 
@@ -84,14 +92,16 @@ class EngineActivity : SDLActivity() {
         var customScreenResolution = ""
 
         runBlocking {
+            hideScreenControls =
+                PreferencesStorage.getHideScreenControlsValue(this@EngineActivity).first()!!
+            activeEngineType = PreferencesStorage.getActiveEngineValue(this@EngineActivity)
+            enableControlsAutoHidingFeature = PreferencesStorage.getControlsAutoHidingValue(this@EngineActivity)
+                .first()!! && activeEngineType!= EngineTypes.DoomRpg && !hideScreenControls
             allowToEditScreenControlsInGame =
                 PreferencesStorage.getEditCustomScreenControlsInGameValue(this@EngineActivity)
                     .first()!!
             showCustomMouseCursor =
                 PreferencesStorage.getShowCustomMouseCursorValue(this@EngineActivity).first()!!
-            hideScreenControls =
-                PreferencesStorage.getHideScreenControlsValue(this@EngineActivity).first()!!
-            activeEngineType = PreferencesStorage.getActiveEngineValue(this@EngineActivity)
             pathToLog = PreferencesStorage.getPathToLogFileValue(this@EngineActivity).first()!!
             customScreenResolution =
                 PreferencesStorage.getCustomScreenResolutionValue(this@EngineActivity).first()!!
@@ -193,33 +203,52 @@ class EngineActivity : SDLActivity() {
                 )
             )
 
+            if (!showCustomMouseCursor){
+                binding.mouseOverlayUI.visibility = View.GONE
+            }
+
+            if (hideScreenControls){
+                binding.controlsOverlayUI.visibility = View.GONE
+            }
+            else{
+                controlsOverlayUI = binding.controlsOverlayUI
+            }
+
             binding.sdlContainer.post {
                 binding.sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-                        // Adds Overlay menu for buttons and edit mode
-                        binding.composeOverlayUI.setContent {
 
-                            if (showCustomMouseCursor) {
+                        if (showCustomMouseCursor){
+                            binding.mouseOverlayUI.setContent {
                                 AutoMouseModeComposable()
                                 if (isCursorVisible == 1) {
                                     MouseIcon()
                                 }
                             }
+                        }
 
-                            if (!hideScreenControls) {
+                        if (!hideScreenControls) {
+                            binding.controlsOverlayUI.setContent {
                                 OnScreenController(
                                     enginesInfo[activeEngineType]!!.buttonsToDraw,
                                     inGame = true,
                                     activeEngine = activeEngineType,
-                                    allowToEditControls = allowToEditScreenControlsInGame
+                                    allowToEditControls = allowToEditScreenControlsInGame,
                                 )
                             }
                         }
-                        // Remove the Global Layout Listener to prevent multiple calls
+
                         binding.sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
                 })
+
+                if (enableControlsAutoHidingFeature) {
+                    needToShowControlsLastState = true
+                    screenControlsVisibilityUpdater.launch {
+                        changeScreenControlsVisibility()
+                    }
+                }
             }
         }
     }
@@ -246,4 +275,24 @@ class EngineActivity : SDLActivity() {
         }
     }
 
+    private suspend fun changeScreenControlsVisibility(){
+        if (this@EngineActivity.controlsOverlayUI == null){
+            return
+        }
+
+        while (true){
+            val needToShowControls = needToShowScreenControls()
+            if (needToShowControls != needToShowControlsLastState){
+                this@EngineActivity.runOnUiThread {
+                    if (needToShowControls) {
+                        this@EngineActivity.controlsOverlayUI!!.visibility = View.VISIBLE
+                    } else {
+                        this@EngineActivity.controlsOverlayUI!!.visibility = View.GONE
+                    }
+                }
+            }
+            needToShowControlsLastState = needToShowControls
+            delay(200)
+        }
+    }
 }
