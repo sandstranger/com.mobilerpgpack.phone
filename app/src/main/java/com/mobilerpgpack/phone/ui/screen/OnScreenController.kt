@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.layout
@@ -357,10 +358,16 @@ private fun DraggableImageButton(
                 )
             }
             .pointerInput(isEditMode) {
-                detectTapGestures(
-                    onTap = { onClick() }
-                )
-            },
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        if (event.type == PointerEventType.Press && isEditMode && !isSelected && event.changes.any { it.pressed }) {
+                            onClick()
+                        }
+                    }
+                }
+            }
+        ,
         contentAlignment = Alignment.Center
     ) {
         when (state.buttonType) {
