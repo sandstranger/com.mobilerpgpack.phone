@@ -63,12 +63,8 @@ class ButtonState(
     val engineType: EngineTypes,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,
-    /**
-     * Теперь `sizePercent` — это доля (0f..1f) от ширины экрана.
-     * Например, 0.1f = 10% ширины экрана, 0.3f = 30% ширины экрана и т.д.
-     */
-    sizePercent: Float = 0.1f,
-    alpha: Float = 0.75f,
+    sizePercent: Float = 0.13f,
+    alpha: Float = 0.65f,
     sdlKeyEvent: Int = 0,
     val buttonResId: Int = android.R.drawable.ic_menu_add,
     val buttonType: ButtonType = ButtonType.Default
@@ -136,6 +132,96 @@ val wolfensteinButtons = listOf(
         buttonType = ButtonType.Dpad
     ),
     ButtonState(
+        "attack",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.8f,
+        offsetYPercent = 0.45f,
+        sizePercent = 0.13f,
+        buttonResId = R.drawable.attack_button,
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER
+    ),
+    ButtonState(
+        "next_weapon",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.1f,
+        sizePercent = 0.075f,
+        buttonResId = R.drawable.next_weapon,
+        sdlKeyEvent = KeyEvent.KEYCODE_Z
+    ),
+    ButtonState(
+        "prev_weapon",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.26f,
+        sizePercent = 0.075f,
+        buttonResId = R.drawable.prev_weapon,
+        sdlKeyEvent = KeyEvent.KEYCODE_X
+    ),
+    ButtonState(
+        "pass_turn",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.97f,
+        offsetYPercent = 0.7f,
+        sizePercent = 0.085f,
+        buttonResId = R.drawable.pass_turn,
+        sdlKeyEvent = KeyEvent.KEYCODE_C
+    ),
+    ButtonState(
+        "automap",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.86f,
+        offsetYPercent = 0.9f,
+        sizePercent = 0.085f,
+        buttonResId = R.drawable.automap,
+        sdlKeyEvent = KeyEvent.KEYCODE_TAB
+    ),
+    ButtonState(
+        "journal",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.76f,
+        offsetYPercent = 0.26f,
+        sizePercent = 0.085f,
+        buttonResId = R.drawable.journal,
+        sdlKeyEvent = KeyEvent.KEYCODE_P
+    ),
+    ButtonState(
+        "items",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.72f,
+        offsetYPercent = 0.9f,
+        sizePercent = 0.085f,
+        buttonResId = R.drawable.items,
+        sdlKeyEvent = KeyEvent.KEYCODE_I
+    ),
+    ButtonState(
+        "syringes",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.7f,
+        offsetYPercent = 0.45f,
+        sizePercent = 0.085f,
+        buttonResId = R.drawable.syringe,
+        sdlKeyEvent = KeyEvent.KEYCODE_O
+    ),
+    ButtonState(
+        "escape",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.99f,
+        offsetYPercent = 0.05f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.pause,
+        sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
+    ),
+    ButtonState(
+        "hide_controls",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.5f,
+        offsetYPercent = 0.05f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.toggles,
+        buttonType = ButtonType.ControlsHider
+    ),
+    ButtonState(
         ButtonType.DpadDown.toString().lowercase(),
         EngineTypes.WolfensteinRpg,
         sdlKeyEvent = KeyEvent.KEYCODE_DPAD_DOWN,
@@ -190,11 +276,22 @@ fun OnScreenController(
         if (!clampButtonsFlow!!){
             return
         }
-        state.offsetXPercent = state.offsetXPercent.coerceIn(0f, 1f - state.sizePercent)
 
+        val extraMarginPercent = 0.05f // 5% запас от ширины/высоты экрана
+
+        // Горизонтальные границы с запасом
+        val minX = -extraMarginPercent
+        val maxX = 1f - state.sizePercent + extraMarginPercent
+        state.offsetXPercent = state.offsetXPercent.coerceIn(minX, maxX)
+
+        // Высота кнопки в пикселях и процентовка от экрана
         val buttonHeightPx = state.sizePercent * screenWidthPx
         val buttonHeightPercent = buttonHeightPx / screenHeightPx
-        state.offsetYPercent = state.offsetYPercent.coerceIn(0f, 1f - buttonHeightPercent)
+
+        // Вертикальные границы с запасом
+        val minY = -extraMarginPercent
+        val maxY = 1f - buttonHeightPercent + extraMarginPercent
+        state.offsetYPercent = state.offsetYPercent.coerceIn(minY, maxY)
     }
 
     LaunchedEffect(Unit) {
