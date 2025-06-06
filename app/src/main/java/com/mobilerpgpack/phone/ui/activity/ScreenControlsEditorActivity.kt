@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.activity.EngineActivity
 import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.setFullscreen
 import com.mobilerpgpack.phone.ui.screen.OnScreenController
@@ -16,7 +15,6 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import java.io.File
 
 class ScreenControlsEditorActivity : ComponentActivity() {
 
@@ -58,7 +56,7 @@ class ScreenControlsEditorActivity : ComponentActivity() {
     companion object{
         private const val EXTRA_ENGINE_TYPE = "extra_engine_type"
 
-        fun startActivity(context: Context, engineType: EngineTypes) {
+        fun editControls(context: Context, engineType: EngineTypes) {
             with (Intent(context, ScreenControlsEditorActivity::class.java)){
                 this.putExtra(EXTRA_ENGINE_TYPE, engineType)
                 context.startActivity(this)
