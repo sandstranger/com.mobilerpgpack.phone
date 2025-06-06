@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.databinding.EngineActivityBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.killEngine
@@ -28,6 +29,7 @@ import com.mobilerpgpack.phone.utils.displayInSafeArea
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.libsdl.app.SDLActivity
+import org.libsdl.app.SDLActivity.isMouseShown
 import org.libsdl.app.SDLSurface
 import java.io.File
 
@@ -181,55 +183,43 @@ class EngineActivity : SDLActivity() {
 
     private fun loadControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
-            setContentView(R.layout.engine_activity)
+            val binding = EngineActivityBinding.inflate(layoutInflater)
 
-            if (!hideScreenControls) {
-                sdlView = getContentView()
-            } else {
-                sdlView = View(this).apply {
-                    layoutParams = FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    )
-                }
-            }
+            window.addContentView(
+                binding.root,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            )
 
-            // Add SDL view programmatically
-            val sdlContainer = findViewById<FrameLayout>(R.id.sdl_container)
-            (sdlView.parent as? ViewGroup)?.removeView(sdlView)
-            sdlContainer.addView(sdlView) // Add SDL view to the sdl_container
+            binding.sdlContainer.post {
+                binding.sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        // Adds Overlay menu for buttons and edit mode
+                        binding.composeOverlayUI.setContent {
 
-            // Setup Compose overlay for buttons
-            val composeViewUI = findViewById<ComposeView>(R.id.compose_overlayUI)
-            (composeViewUI.parent as? ViewGroup)?.removeView(composeViewUI)
-            sdlContainer.addView(composeViewUI)
+                            if (showCustomMouseCursor) {
+                                AutoMouseModeComposable()
+                                if (isCursorVisible == 1) {
+                                    MouseIcon()
+                                }
+                            }
 
-            // Adding a Global Layout Listener to get container dimensions
-            sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    // Adds Overlay menu for buttons and edit mode
-                    composeViewUI.setContent {
-
-                        if (showCustomMouseCursor) {
-                            AutoMouseModeComposable()
-                            if (isCursorVisible == 1) {
-                                MouseIcon()
+                            if (!hideScreenControls) {
+                                OnScreenController(
+                                    enginesInfo[activeEngineType]!!.buttonsToDraw,
+                                    inGame = true,
+                                    allowToEditControls = allowToEditScreenControlsInGame
+                                )
                             }
                         }
-
-                        if (!hideScreenControls) {
-                            OnScreenController(
-                                enginesInfo[activeEngineType]!!.buttonsToDraw,
-                                inGame = true,
-                                allowToEditControls = allowToEditScreenControlsInGame
-                            )
-                        }
+                        // Remove the Global Layout Listener to prevent multiple calls
+                        binding.sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
-                    // Remove the Global Layout Listener to prevent multiple calls
-                    sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
+                })
+            }
         }
     }
 
