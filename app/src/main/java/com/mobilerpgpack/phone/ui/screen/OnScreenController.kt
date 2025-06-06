@@ -523,9 +523,6 @@ private fun DrawTouchCamera() {
                     action = if (action == MotionEvent.ACTION_POINTER_DOWN) MotionEvent.ACTION_DOWN else MotionEvent.ACTION_UP
                 }
 
-                Log.d("CALLED",pointerFingerId.toString())
-                Log.d("CALLED",action.toString())
-
                 x = event.getX(i) / mWidth
                 y = event.getY(i) / mHeight
                 p = event.getPressure(i)
