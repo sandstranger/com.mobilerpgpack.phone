@@ -43,7 +43,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -78,7 +77,6 @@ enum class ButtonType{
     ControlsHider
 }
 
-// Теперь каждый ButtonState один раз создаёт свои ключи
 class ButtonState(
     val id: String,
     val engineType : EngineTypes,
@@ -98,7 +96,7 @@ class ButtonState(
     private val engineTypeString = engineType.toString().lowercase()
 
     private val keyX: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_x")
-    private val keyY: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_y") // Corrected key name
+    private val keyY: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_y")
     private val keySize: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_size")
     private val keyAlpha: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_alpha")
     private val sdlKeyEventPrefsKey: Preferences.Key<Int> = intPreferencesKey("${engineTypeString}_${id}_sdl_key")
@@ -113,11 +111,11 @@ class ButtonState(
     var sdlKeyEvent by mutableIntStateOf(sdlKeyEvent)
 
     suspend fun loadButtonState(context: Context) {
-        offsetXPercent = PreferencesStorage.getFloatValue(context, keyX, defaultOffsetXPercent).first()!! // Use default if not found
-        offsetYPercent = PreferencesStorage.getFloatValue(context, keyY, defaultOffsetYPercent).first()!! // Use default if not found
-        size = PreferencesStorage.getFloatValue(context, keySize, defaultSize).first()!! // Use default if not found
-        alpha = PreferencesStorage.getFloatValue(context, keyAlpha, defaultAlpha).first()!! // Use default if not found
-        sdlKeyEvent = PreferencesStorage.getIntValue(context, sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()!! // Use default if not found
+        offsetXPercent = PreferencesStorage.getFloatValue(context, keyX, defaultOffsetXPercent).first()!!
+        offsetYPercent = PreferencesStorage.getFloatValue(context, keyY, defaultOffsetYPercent).first()!!
+        size = PreferencesStorage.getFloatValue(context, keySize, defaultSize).first()!!
+        alpha = PreferencesStorage.getFloatValue(context, keyAlpha, defaultAlpha).first()!!
+        sdlKeyEvent = PreferencesStorage.getIntValue(context, sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()!!
     }
 
     suspend fun saveButtonState(context: Context) {
@@ -133,7 +131,7 @@ class ButtonState(
         offsetYPercent = defaultOffsetYPercent
         size           = defaultSize
         alpha          = defaultAlpha
-        sdlKeyEvent = defaultSdlKeyEvent // Reset SDL key event too
+        sdlKeyEvent = defaultSdlKeyEvent
         saveButtonState(context)
     }
 
@@ -177,10 +175,9 @@ fun OnScreenController(
     var isEditMode by remember { mutableStateOf((!inGame)) }
     var backgroundColor by remember { mutableStateOf(Color.Transparent) }
     var hideScreenControls by remember(false) { mutableStateOf(false) }
-    val childBounds = remember { mutableMapOf<String, android.graphics.RectF>() }
 
     LaunchedEffect(Unit) {
-        val loadedMap = buttonsToDraw.associateBy { it.id } // { id -> тот же ButtonState }
+        val loadedMap = buttonsToDraw.associateBy { it.id }
         loadedMap.values.forEach { state ->
             state.loadButtonState(context)
         }
@@ -272,16 +269,16 @@ fun OnScreenController(
 
             val sizePx = state.size * density
             val availableWidth = screenWidth - sizePx
-            val offsetX = state.offsetXPercent * availableWidth
             val availableHeight = screenHeight - sizePx
-            val offsetY = state.offsetYPercent * availableHeight
             val renderButton = state.buttonType == ButtonType.ControlsHider || !hideScreenControls || isEditMode
+            val renderOffsetX = state.offsetXPercent * availableWidth
+            val renderOffsetY = state.offsetYPercent * availableHeight
 
             if (renderButton) {
                 DraggableImageButton(
                     id = id,
                     state = state,
-                    offset = Offset(offsetX, offsetY),
+                    offset = Offset(renderOffsetX, renderOffsetY), // Передаем рассчитанный офсет без "прижатия"
                     isEditMode = isEditMode,
                     isSelected = (selectedButtonId == id),
                     onClick = {
@@ -292,15 +289,20 @@ fun OnScreenController(
                         }
                     },
                     onDragEnd = { newX, newY ->
-                        state.offsetXPercent = (newX / availableWidth).coerceIn(0f, 1f)
-                        state.offsetYPercent = (newY / availableHeight).coerceIn(0f, 1f)
+                        // При завершении перетаскивания, сохраняем позицию как процент от "доступного" пространства.
+                        // **ВАЖНО:** Здесь мы используем актуальные `availableWidth` и `availableHeight`
+                        // для расчета процента. Это ключевой момент для предотвращения "прыжков".
+                        val currentAvailableWidth = screenWidth - (state.size * density)
+                        val currentAvailableHeight = screenHeight - (state.size * density)
+
+                        state.offsetXPercent = (newX / currentAvailableWidth) // **Здесь тоже нет coerceIn(0f, 1f)**
+                        state.offsetYPercent = (newY / currentAvailableHeight) // **Здесь тоже нет coerceIn(0f, 1f)**
                         coroutineScope.launch {
                             state.saveButtonState(context)
                         }
                     },
                     inGame = inGame,
-                    buttonsToDraw = buttonsToDraw,
-                    childBounds = childBounds
+                    buttonsToDraw = buttonsToDraw
                 )
             }
         }
@@ -317,8 +319,7 @@ private fun DraggableImageButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     onDragEnd: (x: Float, y: Float) -> Unit,
-    buttonsToDraw: Collection<ButtonState>,
-    childBounds: MutableMap<String, android.graphics.RectF>
+    buttonsToDraw: Collection<ButtonState>
 ) {
     var position by remember(id) { mutableStateOf(offset) }
 
@@ -329,23 +330,13 @@ private fun DraggableImageButton(
     Box(
         modifier = Modifier
             .offset { IntOffset(position.x.roundToInt(), position.y.roundToInt()) }
-            .size(state.size.dp)
+            .size(state.size.dp) // Размер кнопки в dp
             .alpha(state.alpha)
             .background(
                 if (isSelected && isEditMode) Color.Red.copy(alpha = 0.5f)
                 else Color.Transparent,
                 RoundedCornerShape(8.dp)
             )
-            .onGloballyPositioned { layoutCoordinates ->
-                val loc = layoutCoordinates.localToWindow(Offset.Zero)
-                val leftPx = loc.x
-                val topPx = loc.y
-                val rightPx = leftPx + layoutCoordinates.size.width
-                val bottomPx = topPx + layoutCoordinates.size.height
-                childBounds[id] = android.graphics.RectF(
-                    leftPx, topPx, rightPx, bottomPx
-                )
-            }
             .pointerInput(isEditMode) {
                 detectDragGestures(
                     onDragStart = {
@@ -355,7 +346,7 @@ private fun DraggableImageButton(
                     },
                     onDrag = { _, dragAmount ->
                         if (isEditMode) {
-                            position += dragAmount
+                            position = Offset(position.x + dragAmount.x, position.y + dragAmount.y)
                         }
                     },
                     onDragEnd = {
@@ -372,18 +363,17 @@ private fun DraggableImageButton(
             },
         contentAlignment = Alignment.Center
     ) {
-
         when (state.buttonType) {
             ButtonType.Default ->{
                 Image(
-                    painter = painterResource(id = state.buttonResId), // Use state.buttonResId
+                    painter = painterResource(id = state.buttonResId),
                     contentDescription = id,
                     modifier = Modifier
                         .fillMaxSize()
                         .pointerInput(!isEditMode, inGame) {
                             detectTapGestures(
                                 onPress = {
-                                    if (isEditMode || !inGame) {
+                                    if (isEditMode || !inGame){
                                         return@detectTapGestures
                                     }
                                     onTouchDown(state.sdlKeyEvent)
@@ -403,13 +393,12 @@ private fun DraggableImageButton(
                     modifier = Modifier.fillMaxSize(),
                     isEditMode = isEditMode,
                     inGame = inGame,
-                    buttonsToDraw = buttonsToDraw,
-                    childBounds
+                    buttonsToDraw = buttonsToDraw
                 )
             }
             ButtonType.ControlsHider -> {
                 Image(
-                    painter = painterResource(id = state.buttonResId), // Use state.buttonResId
+                    painter = painterResource(id = state.buttonResId),
                     contentDescription = id,
                     modifier = Modifier
                         .fillMaxSize()
@@ -422,12 +411,14 @@ private fun DraggableImageButton(
                                     onClick()
                                 }
                             } else {
-                                Modifier // в режиме редактирования — никакой кликабельности
+                                Modifier
                             }
                         )
                 )
             }
-            else -> {}
+            else -> {
+                // Обработка других ButtonType, если они есть
+            }
         }
     }
 }
@@ -606,11 +597,6 @@ private fun DrawTouchCamera() {
                     placeable.place(0, 0)
                 }
             }
-            .clickable(
-                indication = null, // Убираем Ripple эффект
-                interactionSource = remember { MutableInteractionSource() }
-            ) {
-            }
             .alpha(0f)
             .pointerInteropFilter { motionEvent ->
                 onTouchEvent(motionEvent)
@@ -626,14 +612,13 @@ private fun DPad(
     isEditMode: Boolean,
     inGame: Boolean,
     buttonsToDraw: Collection<ButtonState>,
-    childBounds: MutableMap<String, android.graphics.RectF>
 ) {
     BoxWithConstraints(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         val buttonSize = maxWidth * 0.4f
-        val offsetAmount = maxWidth * 0.35f
+        val offsetAmount = maxWidth * 0.33f
 
         val offsetYStorage = hashMapOf<ButtonType, Dp>(ButtonType.DpadUp to -offsetAmount,
             ButtonType.DpadDown to offsetAmount)
@@ -655,16 +640,6 @@ private fun DPad(
                 modifier = Modifier
                     .size(buttonSize)
                     .offset(x = offsetX, y = offsetY)
-                    .onGloballyPositioned { layoutCoordinates ->
-                        val loc = layoutCoordinates.localToWindow(Offset.Zero)
-                        val leftPx = loc.x
-                        val topPx = loc.y
-                        val rightPx = leftPx + layoutCoordinates.size.width
-                        val bottomPx = topPx + layoutCoordinates.size.height
-                        childBounds[desc] = android.graphics.RectF(
-                            leftPx, topPx, rightPx, bottomPx
-                        )
-                    }
                     .pointerInput(!isEditMode, inGame) {
                         detectTapGestures(
                             onPress = {
