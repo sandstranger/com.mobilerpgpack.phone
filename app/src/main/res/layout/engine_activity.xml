@@ -3,9 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <!-- Placeholder for ComposeView -->
         <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/compose_overlayUI"
+            android:id="@+id/mouse_overlayUI"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top|start" />
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/controls_overlayUI"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="top|start" />
