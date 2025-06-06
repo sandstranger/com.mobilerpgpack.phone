@@ -170,7 +170,7 @@ val wolfensteinButtons = listOf(
     ButtonState(
         "automap",
         EngineTypes.WolfensteinRpg,
-        offsetXPercent = 0.86f,
+        offsetXPercent = 0.83f,
         offsetYPercent = 0.9f,
         sizePercent = 0.085f,
         buttonResId = R.drawable.automap,
@@ -217,7 +217,7 @@ val wolfensteinButtons = listOf(
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.5f,
         offsetYPercent = 0.05f,
-        sizePercent = 0.05f,
+        sizePercent = 0.06f,
         buttonResId = R.drawable.toggles,
         buttonType = ButtonType.ControlsHider
     ),
@@ -277,21 +277,10 @@ fun OnScreenController(
             return
         }
 
-        val extraMarginPercent = 0.05f // 5% запас от ширины/высоты экрана
-
-        // Горизонтальные границы с запасом
-        val minX = -extraMarginPercent
-        val maxX = 1f - state.sizePercent + extraMarginPercent
-        state.offsetXPercent = state.offsetXPercent.coerceIn(minX, maxX)
-
-        // Высота кнопки в пикселях и процентовка от экрана
+        state.offsetXPercent = state.offsetXPercent.coerceIn(0f, 1f - state.sizePercent)
         val buttonHeightPx = state.sizePercent * screenWidthPx
         val buttonHeightPercent = buttonHeightPx / screenHeightPx
-
-        // Вертикальные границы с запасом
-        val minY = -extraMarginPercent
-        val maxY = 1f - buttonHeightPercent + extraMarginPercent
-        state.offsetYPercent = state.offsetYPercent.coerceIn(minY, maxY)
+        state.offsetYPercent = state.offsetYPercent.coerceIn(0f, 1f - buttonHeightPercent)
     }
 
     LaunchedEffect(Unit) {
