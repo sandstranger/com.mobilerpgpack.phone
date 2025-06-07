@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import androidx.compose.foundation.Image
@@ -27,6 +28,7 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.*
 import androidx.datastore.preferences.core.Preferences
@@ -36,6 +38,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -261,13 +264,12 @@ fun OnScreenController(
     activeEngine : EngineTypes,
     inGame: Boolean,
     allowToEditControls: Boolean = true,
+    drawInSafeArea : Boolean = false,
     onBack: () -> Unit = { }
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val density = LocalContext.current.resources.displayMetrics.density
-    val screenWidthPx = configuration.screenWidthDp * density
-    val screenHeightPx = configuration.screenHeightDp * density
     val coroutineScope = rememberCoroutineScope()
     val clampButtonsPrefsKey = clampButtonsMap[activeEngine]!!
 
@@ -276,10 +278,14 @@ fun OnScreenController(
     var isEditMode by remember { mutableStateOf((!inGame)) }
     var backgroundColor by remember { mutableStateOf(Color.Transparent) }
     var hideScreenControls by remember(false) { mutableStateOf(false) }
-    val clampButtonsFlow by PreferencesStorage.getBooleanValue(context, clampButtonsPrefsKey, true).collectAsStateWithLifecycle (true)
+    var readyToDrawControls by remember { mutableStateOf(false) }
+    val clampButtonsFlow by PreferencesStorage.getBooleanValue(context, clampButtonsPrefsKey, true).collectAsStateWithLifecycle(true)
+
+    var screenWidthPx by remember { mutableFloatStateOf(0f) }
+    var screenHeightPx by remember { mutableFloatStateOf(0f) }
 
     fun clampButton(state: ButtonState) {
-        if (!clampButtonsFlow!!){
+        if (!clampButtonsFlow!!) {
             return
         }
 
@@ -289,7 +295,7 @@ fun OnScreenController(
         state.offsetYPercent = state.offsetYPercent.coerceIn(0f, 1f - buttonHeightPercent)
     }
 
-    LaunchedEffect(Unit) {
+    suspend fun preloadButtons() {
         val loadedMap = buttonsToDraw.associateBy { it.id }
         loadedMap.values.forEach { state ->
             state.loadButtonState(context)
@@ -299,6 +305,35 @@ fun OnScreenController(
             coroutineScope.launch { state.saveButtonState(context) }
         }
         buttonStates = loadedMap
+    }
+
+    if (drawInSafeArea) {
+        val insets = WindowInsets.systemBars.asPaddingValues()
+        val localDensity = LocalDensity.current
+
+        val left = with(localDensity) { insets.calculateLeftPadding(LayoutDirection.Ltr).toPx() }
+        val right = with(localDensity) { insets.calculateRightPadding(LayoutDirection.Ltr).toPx() }
+        val top = with(localDensity) { insets.calculateTopPadding().toPx() }
+        val bottom = with(localDensity) { insets.calculateBottomPadding().toPx() }
+
+        LaunchedEffect(configuration, localDensity, left, right, top, bottom) {
+            val drawItems = top > 0f || bottom > 0f || left > 0f || right > 0f
+
+            if (drawItems) {
+                screenWidthPx = configuration.screenWidthDp * localDensity.density - left - right
+                screenHeightPx = configuration.screenHeightDp * localDensity.density - top - bottom
+
+                preloadButtons()
+                readyToDrawControls = true
+            }
+        }
+    } else {
+        screenWidthPx = configuration.screenWidthDp * density
+        screenHeightPx = configuration.screenHeightDp * density
+        LaunchedEffect(Unit) {
+            preloadButtons()
+            readyToDrawControls = true
+        }
     }
 
     backgroundColor = if (!inGame) {
@@ -383,48 +418,55 @@ fun OnScreenController(
             )
         }
 
-        buttonStates.forEach { (id, state) ->
-            if (state.buttonType.ordinal in ButtonType.DpadUp.ordinal..ButtonType.DpadRight.ordinal) {
-                return@forEach
-            }
+        if (readyToDrawControls) {
+            buttonStates.forEach { (id, state) ->
+                if (state.buttonType.ordinal in ButtonType.DpadUp.ordinal..ButtonType.DpadRight.ordinal) {
+                    return@forEach
+                }
 
-            val sizePx: Float = screenWidthPx * state.sizePercent
-            val sizeDp: Dp = (sizePx / density).dp
+                val sizePx: Float = screenWidthPx * state.sizePercent
+                val sizeDp: Dp = (sizePx / density).dp
 
-            val renderOffsetX = state.offsetXPercent * screenWidthPx
-            val renderOffsetY = state.offsetYPercent * screenHeightPx
+                val renderOffsetX = state.offsetXPercent * screenWidthPx
+                val renderOffsetY = state.offsetYPercent * screenHeightPx
 
-            val renderButton = state.buttonType == ButtonType.ControlsHider || !hideScreenControls || isEditMode
-            if (renderButton) {
-                DraggableImageButton(
-                    id = id,
-                    state = state,
-                    offset = Offset(renderOffsetX, renderOffsetY),
-                    sizeDp = sizeDp,
-                    isEditMode = isEditMode,
-                    isSelected = (selectedButtonId == id),
-                    onClick = {
-                        if (isEditMode) {
-                            selectedButtonId = id
-                            coroutineScope.launch {
-                                PreferencesStorage.setBooleanValue(context, clampButtonsPrefsKey, false)
+                val renderButton =
+                    state.buttonType == ButtonType.ControlsHider || !hideScreenControls || isEditMode
+                if (renderButton) {
+                    DraggableImageButton(
+                        id = id,
+                        state = state,
+                        offset = Offset(renderOffsetX, renderOffsetY),
+                        sizeDp = sizeDp,
+                        isEditMode = isEditMode,
+                        isSelected = (selectedButtonId == id),
+                        onClick = {
+                            if (isEditMode) {
+                                selectedButtonId = id
+                                coroutineScope.launch {
+                                    PreferencesStorage.setBooleanValue(
+                                        context,
+                                        clampButtonsPrefsKey,
+                                        false
+                                    )
+                                }
                             }
-                        }
 
-                        if (state.buttonType == ButtonType.ControlsHider && inGame && !isEditMode) {
-                            hideScreenControls = !hideScreenControls
-                        }
-                    },
-                    onDragEnd = { newX, newY ->
-                        state.offsetXPercent = (newX / screenWidthPx)
-                        state.offsetYPercent = (newY / screenHeightPx)
-                        coroutineScope.launch {
-                            state.saveButtonState(context)
-                        }
-                    },
-                    inGame = inGame,
-                    buttonsToDraw = buttonsToDraw
-                )
+                            if (state.buttonType == ButtonType.ControlsHider && inGame && !isEditMode) {
+                                hideScreenControls = !hideScreenControls
+                            }
+                        },
+                        onDragEnd = { newX, newY ->
+                            state.offsetXPercent = (newX / screenWidthPx)
+                            state.offsetYPercent = (newY / screenHeightPx)
+                            coroutineScope.launch {
+                                state.saveButtonState(context)
+                            }
+                        },
+                        inGame = inGame,
+                        buttonsToDraw = buttonsToDraw
+                    )
+                }
             }
         }
     }
