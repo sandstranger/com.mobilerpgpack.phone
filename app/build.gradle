@@ -70,12 +70,13 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':sdl2:android-project:app:build', ':openal:build',':gl4es:build'
+preBuild.dependsOn ':sdl2:android-project:app:build', ':openal:build',':gl4es:build',':sdl2-mixer:build'
 
 dependencies {
     implementation project(':sdl2:android-project:app')
     implementation (project(":openal"))
     implementation (project(":gl4es"))
+    implementation(project(":sdl2-mixer"))
     implementation (project(":file-picker"))
 
     implementation (libs.core)
