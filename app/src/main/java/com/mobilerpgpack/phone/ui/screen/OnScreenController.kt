@@ -2,21 +2,43 @@ package com.mobilerpgpack.phone.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.View
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -30,7 +52,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.view.ViewCompat
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
@@ -38,7 +66,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -265,6 +292,7 @@ fun OnScreenController(
     inGame: Boolean,
     allowToEditControls: Boolean = true,
     drawInSafeArea : Boolean = false,
+    gameView : View? = null,
     onBack: () -> Unit = { }
 ) {
     val context = LocalContext.current
@@ -307,24 +335,52 @@ fun OnScreenController(
         buttonStates = loadedMap
     }
 
+    // костыль на отрисовку игровых контролов в safearea в игре и редакторе контролов
     if (drawInSafeArea) {
-        val insets = WindowInsets.systemBars.asPaddingValues()
-        val localDensity = LocalDensity.current
+        if (inGame && gameView != null) {
+            DisposableEffect(gameView) {
+                ViewCompat.setOnApplyWindowInsetsListener(gameView) { _, insets ->
+                    val metrics = gameView.resources.displayMetrics
+                    screenWidthPx =
+                        (metrics.widthPixels - insets.systemGestureInsets.left - insets.systemGestureInsets.right).toFloat()
+                    screenHeightPx =
+                        (metrics.heightPixels - insets.systemGestureInsets.top - insets.systemGestureInsets.bottom).toFloat()
 
-        val left = with(localDensity) { insets.calculateLeftPadding(LayoutDirection.Ltr).toPx() }
-        val right = with(localDensity) { insets.calculateRightPadding(LayoutDirection.Ltr).toPx() }
-        val top = with(localDensity) { insets.calculateTopPadding().toPx() }
-        val bottom = with(localDensity) { insets.calculateBottomPadding().toPx() }
+                    coroutineScope.launch {
+                        preloadButtons()
+                        readyToDrawControls = true
+                    }
 
-        LaunchedEffect(configuration, localDensity, left, right, top, bottom) {
-            val drawItems = top > 0f || bottom > 0f || left > 0f || right > 0f
+                    ViewCompat.setOnApplyWindowInsetsListener(gameView, null)
+                    insets
+                }
+                onDispose {
+                    ViewCompat.setOnApplyWindowInsetsListener(gameView, null)
+                }
+            }
+        } else {
+            val insets = WindowInsets.systemBars.asPaddingValues()
+            val localDensity = LocalDensity.current
 
-            if (drawItems) {
-                screenWidthPx = configuration.screenWidthDp * localDensity.density - left - right
-                screenHeightPx = configuration.screenHeightDp * localDensity.density - top - bottom
+            val left =
+                with(localDensity) { insets.calculateLeftPadding(LayoutDirection.Ltr).toPx() }
+            val right =
+                with(localDensity) { insets.calculateRightPadding(LayoutDirection.Ltr).toPx() }
+            val top = with(localDensity) { insets.calculateTopPadding().toPx() }
+            val bottom = with(localDensity) { insets.calculateBottomPadding().toPx() }
 
-                preloadButtons()
-                readyToDrawControls = true
+            LaunchedEffect(configuration, localDensity, left, right, top, bottom) {
+                val drawItems = top > 0f || bottom > 0f || left > 0f || right > 0f
+
+                if (drawItems) {
+                    screenWidthPx =
+                        configuration.screenWidthDp * localDensity.density - left - right
+                    screenHeightPx =
+                        configuration.screenHeightDp * localDensity.density - top - bottom
+
+                    preloadButtons()
+                    readyToDrawControls = true
+                }
             }
         }
     } else {
