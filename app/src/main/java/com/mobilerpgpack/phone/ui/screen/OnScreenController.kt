@@ -2,9 +2,11 @@ package com.mobilerpgpack.phone.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -59,6 +61,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
@@ -292,7 +295,6 @@ fun OnScreenController(
     inGame: Boolean,
     allowToEditControls: Boolean = true,
     drawInSafeArea : Boolean = false,
-    gameView : View? = null,
     onBack: () -> Unit = { }
 ) {
     val context = LocalContext.current
@@ -337,50 +339,23 @@ fun OnScreenController(
 
     // костыль на отрисовку игровых контролов в safearea в игре и редакторе контролов
     if (drawInSafeArea) {
-        if (inGame && gameView != null) {
-            DisposableEffect(gameView) {
-                ViewCompat.setOnApplyWindowInsetsListener(gameView) { _, insets ->
-                    val metrics = gameView.resources.displayMetrics
-                    screenWidthPx =
-                        (metrics.widthPixels - insets.systemGestureInsets.left - insets.systemGestureInsets.right).toFloat()
-                    screenHeightPx =
-                        (metrics.heightPixels - insets.systemGestureInsets.top - insets.systemGestureInsets.bottom).toFloat()
+        val activity = LocalActivity.current!!
 
-                    coroutineScope.launch {
-                        preloadButtons()
-                        readyToDrawControls = true
-                    }
+        activity.window.decorView.post {
+            val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
+            val metrics = activity.window.decorView.resources.displayMetrics
+            insets.let {
+                val systemBarsInsets = insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+                )
 
-                    ViewCompat.setOnApplyWindowInsetsListener(gameView, null)
-                    insets
-                }
-                onDispose {
-                    ViewCompat.setOnApplyWindowInsetsListener(gameView, null)
-                }
+                screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
+                screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
             }
-        } else {
-            val insets = WindowInsets.systemBars.asPaddingValues()
-            val localDensity = LocalDensity.current
 
-            val left =
-                with(localDensity) { insets.calculateLeftPadding(LayoutDirection.Ltr).toPx() }
-            val right =
-                with(localDensity) { insets.calculateRightPadding(LayoutDirection.Ltr).toPx() }
-            val top = with(localDensity) { insets.calculateTopPadding().toPx() }
-            val bottom = with(localDensity) { insets.calculateBottomPadding().toPx() }
-
-            LaunchedEffect(configuration, localDensity, left, right, top, bottom) {
-                val drawItems = top > 0f || bottom > 0f || left > 0f || right > 0f
-
-                if (drawItems) {
-                    screenWidthPx =
-                        configuration.screenWidthDp * localDensity.density - left - right
-                    screenHeightPx =
-                        configuration.screenHeightDp * localDensity.density - top - bottom
-
-                    preloadButtons()
-                    readyToDrawControls = true
-                }
+            coroutineScope.launch {
+                preloadButtons()
+                readyToDrawControls = true
             }
         }
     } else {

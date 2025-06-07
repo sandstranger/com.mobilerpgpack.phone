@@ -236,7 +236,6 @@ class EngineActivity : SDLActivity() {
                                     activeEngine = activeEngineType,
                                     allowToEditControls = allowToEditScreenControlsInGame,
                                     drawInSafeArea = displayInSafeArea,
-                                    gameView = window.decorView
                                 )
                             }
                         }
