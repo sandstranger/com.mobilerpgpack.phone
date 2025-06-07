@@ -344,14 +344,12 @@ fun OnScreenController(
         activity.window.decorView.post {
             val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
             val metrics = activity.window.decorView.resources.displayMetrics
-            insets.let {
-                val systemBarsInsets = insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-                )
+            val systemBarsInsets = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
 
-                screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
-                screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
-            }
+            screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
+            screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
 
             coroutineScope.launch {
                 preloadButtons()
