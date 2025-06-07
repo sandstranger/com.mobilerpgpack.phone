@@ -37,7 +37,9 @@ class ScreenControlsEditorActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 OnScreenController(enginesInfo[selectedEngine]!!.buttonsToDraw,
-                    inGame = false, activeEngine = selectedEngine, drawInSafeArea = displayInSafeArea ){
+                    inGame = false,
+                    activeEngine = selectedEngine,
+                    drawInSafeArea = displayInSafeArea){
                     this@ScreenControlsEditorActivity.finish()
                 }
             }
