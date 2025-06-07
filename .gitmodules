@@ -13,3 +13,6 @@
 [submodule "sdl2-mixer/src/main/jni/SDL_mixer"]
 	path = sdl2-mixer/src/main/jni/SDL_mixer
 	url = https://github.com/sandstranger/SDL_mixer.git
+[submodule "app/src/main/jni/DoomRPG-RE"]
+	path = app/src/main/jni/DoomRPG-RE
+	url = https://github.com/sandstranger/DoomRPG-RE.git
