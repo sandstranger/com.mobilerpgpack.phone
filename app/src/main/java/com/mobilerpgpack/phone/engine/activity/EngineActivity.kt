@@ -50,6 +50,7 @@ class EngineActivity : SDLActivity() {
     private var isCursorVisible by mutableIntStateOf(0)
     private var enableControlsAutoHidingFeature = false
     private var needToShowControlsLastState : Boolean = false
+    private var displayInSafeArea : Boolean = false
 
     private external fun pauseSound()
 
@@ -88,7 +89,6 @@ class EngineActivity : SDLActivity() {
     private fun initializeEngineData() {
         var pathToEngineResourceFile: File
         var needToPreserveScreenAspectRatio = false
-        var displayInSafeArea = false
         var customScreenResolution = ""
 
         runBlocking {
@@ -235,6 +235,7 @@ class EngineActivity : SDLActivity() {
                                     inGame = true,
                                     activeEngine = activeEngineType,
                                     allowToEditControls = allowToEditScreenControlsInGame,
+                                    drawInSafeArea = displayInSafeArea
                                 )
                             }
                         }
