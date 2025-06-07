@@ -159,7 +159,7 @@ class ButtonState(
     }
 }
 
-val wolfensteinButtons = listOf(
+val wolfensteinButtons : Collection<ButtonState> = listOf(
     ButtonState(
         dpadId,
         EngineTypes.WolfensteinRpg,
@@ -340,7 +340,6 @@ fun OnScreenController(
     // костыль на отрисовку игровых контролов в safearea в игре и редакторе контролов
     if (drawInSafeArea) {
         val activity = LocalActivity.current!!
-
         activity.window.decorView.post {
             val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
             val metrics = activity.window.decorView.resources.displayMetrics
