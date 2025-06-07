@@ -26,3 +26,4 @@ include ':gl4es'
 include ':sdl2:android-project:app'
 
 include ':file-picker'
+include ':sdl2-mixer'
