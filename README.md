@@ -37,11 +37,11 @@ To get an APK file, clone this repository, open the `doom-wolf-rpg-android-port 
 
 2. For running Doom1 rpg get doom1 rpg zip file from here https://archive.org/details/doomrpg_brew.
 
-Get doomrpg.bar from this zip, get BarToZip exe from this PC release build https://github.com/Erick194/DoomRPG-RE/releases/tag/v.0.2.2 
+   Get doomrpg.bar from this zip, get BarToZip exe from this PC release build https://github.com/Erick194/DoomRPG-RE/releases/tag/v.0.2.2 
 
-and follow this instructions https://www.doomworld.com/forum/topic/129997-doom-rpg-port-reverse-engineering-update-version-022-source-code-release/
+   and follow this instructions https://www.doomworld.com/forum/topic/129997-doom-rpg-port-reverse-engineering-update-version-022-source-code-release/
 
-to get DoomRPG.zip file. Copy DoomRPG.zip to your device.
+   to get DoomRPG.zip file. Copy DoomRPG.zip to your device.
 
    Run this android port and specify path to this file in launcher.
 
