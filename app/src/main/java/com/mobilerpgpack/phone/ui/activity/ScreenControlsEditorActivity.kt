@@ -39,8 +39,9 @@ class ScreenControlsEditorActivity : ComponentActivity() {
                 OnScreenController(enginesInfo[selectedEngine]!!.buttonsToDraw,
                     inGame = false,
                     activeEngine = selectedEngine,
-                    drawInSafeArea = displayInSafeArea){
-                    this@ScreenControlsEditorActivity.finish()
+                    drawInSafeArea = displayInSafeArea, onBack = {
+                        this@ScreenControlsEditorActivity.finish()
+                    }){
                 }
             }
         }
