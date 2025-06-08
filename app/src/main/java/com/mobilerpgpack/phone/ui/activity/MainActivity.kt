@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.utils.copyAssetsFolderToInternalStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
 internal class MainActivity : ComponentActivity(){
@@ -18,6 +19,7 @@ internal class MainActivity : ComponentActivity(){
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         buildScreens()
+        copyAssetsContentToInternalStorage()
     }
 
     private fun buildScreens(){
@@ -45,5 +47,9 @@ internal class MainActivity : ComponentActivity(){
     private sealed class Screen(val route: String) {
         data object Permission : Screen("permission")
         data object Settings : Screen("settings")
+    }
+
+    private fun copyAssetsContentToInternalStorage (){
+        copyAssetsFolderToInternalStorage(this, "game_files", this.getExternalFilesDir("")!!)
     }
 }

@@ -35,6 +35,8 @@ import org.libsdl.app.SDLSurface
 import java.io.File
 
 private const val RESOLUTION_DELIMITER = "x"
+private const val AndroidGamePathEnvName = "ANDROID_GAME_PATH"
+private const val ResourceFileNameEnvName = "RESOURCE_FILE_NAME"
 
 class EngineActivity : SDLActivity() {
     private val screenControlsVisibilityUpdater = CoroutineScope(Dispatchers.Default)
@@ -131,10 +133,19 @@ class EngineActivity : SDLActivity() {
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
 
         if (pathToEngineResourceFile.isFile) {
-            Os.setenv("ANDROID_GAME_PATH", pathToEngineResourceFile.parent, true)
-            Os.setenv("RESOURCE_FILE_NAME", pathToEngineResourceFile.name, true)
+            when (activeEngineType) {
+                EngineTypes.DoomRpg -> {
+                    Os.setenv(AndroidGamePathEnvName, this@EngineActivity.getExternalFilesDir("")!!.absolutePath, true)
+                    Os.setenv(ResourceFileNameEnvName, pathToEngineResourceFile.absolutePath, true)
+                    Os.setenv("FORCE_FILE_PATH", "true", true)
+                }
+                else -> {
+                    Os.setenv(AndroidGamePathEnvName, pathToEngineResourceFile.parent, true)
+                    Os.setenv(ResourceFileNameEnvName, pathToEngineResourceFile.name, true)
+                }
+            }
         } else {
-            Os.setenv("ANDROID_GAME_PATH", pathToEngineResourceFile.absolutePath, true)
+            Os.setenv(AndroidGamePathEnvName, pathToEngineResourceFile.absolutePath, true)
         }
     }
 
