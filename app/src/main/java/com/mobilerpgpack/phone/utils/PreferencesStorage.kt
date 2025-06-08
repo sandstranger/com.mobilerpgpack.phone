@@ -23,6 +23,7 @@ object PreferencesStorage {
     private val activeEnginePrefsKey = stringPreferencesKey("current_engine")
     private val useCustomFilePickerPrefsKey = booleanPreferencesKey("use_custom_file_picker")
     private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
+    private val pathToDoomRpgZipFilePrefsKey = stringPreferencesKey("doom_rpg_zip_file")
     private val hideScreenControlsPrefsKey = booleanPreferencesKey("hide_screen_controls")
     private val pathToLogFilePrefsKey = stringPreferencesKey("path_to_log_file")
     private val customScreenResolutionPrefsKey = stringPreferencesKey("custom_screen_resolution")
@@ -63,6 +64,11 @@ object PreferencesStorage {
 
     suspend fun setPathToWolfensteinRpgIpaFile(context: Context, valueToSave : String) =
         setStringValue(context, pathToWolfensteinRpgIpaPrefsKey, valueToSave)
+
+    fun getPathToDoomRpgZipFileValue(context: Context) = getStringValue(context, pathToDoomRpgZipFilePrefsKey)
+
+    suspend fun setPathToDoomRpgZipFile(context: Context, valueToSave : String) =
+        setStringValue(context, pathToDoomRpgZipFilePrefsKey, valueToSave)
 
     fun getUseCustomFilePickerValue(context: Context) =
         getBooleanValue(context, useCustomFilePickerPrefsKey, defaultValue = context.isTelevision)

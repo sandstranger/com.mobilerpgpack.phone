@@ -7,6 +7,7 @@ import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.activity.EngineActivity
+import com.mobilerpgpack.phone.ui.screen.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.wolfensteinButtons
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.startActivity
@@ -18,8 +19,10 @@ const val logcatFileName = "wolfenstein_doom_rpg_log.log"
 internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
     EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so", arrayOf("GL","SDL2","openal","WolfensteinRPG"),
         wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
-    EngineTypes.DoomRpg to EngineInfo("libdoomrpg.so", arrayOf(""),
-        wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) }),
+    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so", arrayOf("c++_shared","omp","FLAC","gio-2.0","glib-2.0","gmodule-2.0","gobject-2.0",
+        "gthread-2.0","instpatch-1.0","oboe","ogg","opus","pcre","pcreposix","sndfile","vorbis","vorbisenc",
+        "vorbisfile","fluidsynth-assetloader","fluidsynth","GL","SDL2","gme","SDL2_mixer","DoomRPG"),
+        doomRPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
     EngineTypes.Doom2Rpg to EngineInfo("", arrayOf(""),
         wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) })
 )
