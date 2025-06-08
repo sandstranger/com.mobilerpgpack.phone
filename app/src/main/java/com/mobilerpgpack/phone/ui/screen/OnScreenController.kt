@@ -40,6 +40,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,6 +70,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.items.BoxGrid2
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -92,7 +94,8 @@ enum class ButtonType {
     DpadDown,
     DpadLeft,
     DpadRight,
-    ControlsHider
+    ControlsHider,
+    Keyboard
 }
 
 class ButtonState(
@@ -250,6 +253,15 @@ val wolfensteinButtons : Collection<ButtonState> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
     ButtonState(
+        "keyboard",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.05f,
+        sizePercent = 0.08f,
+        buttonResId = R.drawable.keyboard,
+        buttonType = ButtonType.Keyboard
+    ),
+    ButtonState(
         "hide_controls",
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.5f,
@@ -361,6 +373,15 @@ val doomRPGButtons : Collection<ButtonState> = listOf(
         buttonType = ButtonType.ControlsHider
     ),
     ButtonState(
+        "keyboard",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.05f,
+        sizePercent = 0.08f,
+        buttonResId = R.drawable.keyboard,
+        buttonType = ButtonType.Keyboard
+    ),
+    ButtonState(
         ButtonType.DpadDown.toString().lowercase(),
         EngineTypes.DoomRpg,
         sdlKeyEvent = KeyEvent.KEYCODE_DPAD_DOWN,
@@ -397,7 +418,8 @@ fun OnScreenController(
     inGame: Boolean,
     allowToEditControls: Boolean = true,
     drawInSafeArea : Boolean = false,
-    onBack: () -> Unit = { }
+    onBack: () -> Unit = { },
+    showVirtualKeyboardEvent : (Boolean) -> Unit = { }
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
@@ -411,6 +433,7 @@ fun OnScreenController(
     var backgroundColor by remember { mutableStateOf(Color.Transparent) }
     var hideScreenControls by remember(false) { mutableStateOf(false) }
     var readyToDrawControls by remember { mutableStateOf(false) }
+    var showVirtualKeyboard by remember { mutableStateOf(false) }
     val clampButtonsFlow by PreferencesStorage.getBooleanValue(context, clampButtonsPrefsKey, true).collectAsStateWithLifecycle(true)
 
     var screenWidthPx by remember { mutableFloatStateOf(0f) }
@@ -501,7 +524,7 @@ fun OnScreenController(
                 onSizeChange = { deltaPercent ->
                     selectedButtonId?.let { id ->
                         val state = buttonStates[id] ?: return@let
-                        state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(0.02f, 1f)
+                        state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(0f, 1f)
                         coroutineScope.launch {
                             state.saveButtonState(context)
                         }
@@ -543,6 +566,7 @@ fun OnScreenController(
                             interactionSource = remember { MutableInteractionSource() }
                         ) {
                             isEditMode = !isEditMode
+                            showVirtualKeyboard = false
                         }
                     )
             )
@@ -560,8 +584,8 @@ fun OnScreenController(
                 val renderOffsetX = state.offsetXPercent * screenWidthPx
                 val renderOffsetY = state.offsetYPercent * screenHeightPx
 
-                val renderButton =
-                    state.buttonType == ButtonType.ControlsHider || !hideScreenControls || isEditMode
+                val renderButton = state.buttonType == ButtonType.ControlsHider || state.buttonType == ButtonType.Keyboard ||
+                        !hideScreenControls || isEditMode
                 if (renderButton) {
                     DraggableImageButton(
                         id = id,
@@ -584,6 +608,13 @@ fun OnScreenController(
 
                             if (state.buttonType == ButtonType.ControlsHider && inGame && !isEditMode) {
                                 hideScreenControls = !hideScreenControls
+                                showVirtualKeyboard = false
+                                showVirtualKeyboardEvent(false)
+                            }
+
+                            if (state.buttonType == ButtonType.Keyboard && inGame && !isEditMode){
+                                showVirtualKeyboard = !showVirtualKeyboard
+                                showVirtualKeyboardEvent(showVirtualKeyboard)
                             }
                         },
                         onDragEnd = { newX, newY ->
@@ -694,7 +725,8 @@ private fun DraggableImageButton(
                     dpadSize = sizeDp
                 )
             }
-            ButtonType.ControlsHider -> {
+            ButtonType.ControlsHider,
+            ButtonType.Keyboard -> {
                 Image(
                     painter = painterResource(id = state.buttonResId),
                     contentDescription = id,
@@ -976,10 +1008,10 @@ private fun EditControls(
         }
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { onSizeChange(+0.02f) }) {
+            Button(onClick = { onSizeChange(+0.01f) }) {
                 Text(context.getString(R.string.increase_controls_size))
             }
-            Button(onClick = { onSizeChange(-0.02f) }) {
+            Button(onClick = { onSizeChange(-0.01f) }) {
                 Text(context.getString(R.string.decrease_controls_size))
             }
         }
