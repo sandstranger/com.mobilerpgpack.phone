@@ -7,6 +7,7 @@ import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.activity.EngineActivity
+import com.mobilerpgpack.phone.ui.screen.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.wolfensteinButtons
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -24,7 +25,7 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
         "vorbisfile","fluidsynth-assetloader","fluidsynth","GL","SDL2","gme","SDL2_mixer","DoomRPG"),
         doomRPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
     EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so", arrayOf("GL","SDL2","openal","DoomIIRPG"),
-        wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
+        doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
 )
 
 internal val defaultPathToLogcatFile: String = "${Environment.getExternalStorageDirectory().absolutePath}" +
