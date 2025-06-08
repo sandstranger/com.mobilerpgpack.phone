@@ -12,6 +12,7 @@ endif ()
 
 set(OPENAL_LOCATION ${CMAKE_SOURCE_DIR}/openal)
 set(OPENAL_INCLUDE_DIR ${OPENAL_LOCATION}/src/main/jni/openal/include/)
+include_directories(PUBLIC "${OPENAL_INCLUDE_DIR}/AL")
 
 if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
     set(OPENAL_LIBRARY ${OPENAL_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libopenal.so)
@@ -46,3 +47,4 @@ set(FLUIDSYNTH_LIBRARY ${CMAKE_SOURCE_DIR}/fluidsynth/src/main/jniLibs/${ANDROID
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
+add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")
