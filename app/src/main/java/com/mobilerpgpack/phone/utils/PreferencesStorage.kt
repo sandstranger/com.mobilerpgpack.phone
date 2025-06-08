@@ -23,6 +23,7 @@ object PreferencesStorage {
     private val activeEnginePrefsKey = stringPreferencesKey("current_engine")
     private val useCustomFilePickerPrefsKey = booleanPreferencesKey("use_custom_file_picker")
     private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
+    private val pathToDoom2RpgIpaPrefsKey = stringPreferencesKey("doom2_rpg_ipa_file")
     private val pathToDoomRpgZipFilePrefsKey = stringPreferencesKey("doom_rpg_zip_file")
     private val hideScreenControlsPrefsKey = booleanPreferencesKey("hide_screen_controls")
     private val pathToLogFilePrefsKey = stringPreferencesKey("path_to_log_file")
@@ -64,6 +65,11 @@ object PreferencesStorage {
 
     suspend fun setPathToWolfensteinRpgIpaFile(context: Context, valueToSave : String) =
         setStringValue(context, pathToWolfensteinRpgIpaPrefsKey, valueToSave)
+
+    fun getPathToDoom2RpgIpaFile(context: Context) = getStringValue(context, pathToDoom2RpgIpaPrefsKey)
+
+    suspend fun setPathToDoom2RpgIpaFile(context: Context, valueToSave : String) =
+        setStringValue(context, pathToDoom2RpgIpaPrefsKey, valueToSave)
 
     fun getPathToDoomRpgZipFileValue(context: Context) = getStringValue(context, pathToDoomRpgZipFilePrefsKey)
 
