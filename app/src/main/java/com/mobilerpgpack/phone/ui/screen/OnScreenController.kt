@@ -354,7 +354,7 @@ val doomRPGButtons : Collection<ButtonState> = listOf(
     ButtonState(
         "hide_controls",
         EngineTypes.DoomRpg,
-        offsetXPercent = 0.5f,
+        offsetXPercent = 0.3f,
         offsetYPercent = 0.05f,
         sizePercent = 0.06f,
         buttonResId = R.drawable.toggles,
