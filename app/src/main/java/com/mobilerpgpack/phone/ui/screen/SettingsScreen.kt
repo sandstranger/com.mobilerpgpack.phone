@@ -161,6 +161,7 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
 
     when (activeEngine) {
         EngineTypes.WolfensteinRpg -> DrawWolfensteinRpgSettings(context,scope)
+        EngineTypes.DoomRpg -> DrawDoomRpgSettings(context,scope)
         else -> {}
     }
 
@@ -316,6 +317,22 @@ private fun DrawWolfensteinRpgSettings(context: Context, scope: CoroutineScope) 
     requestPathHelper.DrawRequestPathItem(
         context.getString(R.string.wolfenstein_rpg_ipa_file),
         pathToIpaFileState!!
+    )
+
+    HorizontalDivider()
+}
+
+@Composable
+private fun DrawDoomRpgSettings(context: Context, scope: CoroutineScope) {
+    val pathToZipFileState by PreferencesStorage.getPathToDoomRpgZipFileValue(context)
+        .collectAsState(initial = "")
+    val requestPathHelper = RequestPathHelper(context, scope, onPathSelected = { selectedPath ->
+        scope.launch { PreferencesStorage.setPathToDoomRpgZipFile(context, selectedPath) }
+    })
+
+    requestPathHelper.DrawRequestPathItem(
+        context.getString(R.string.doom_rpg_zip_file),
+        pathToZipFileState!!
     )
 
     HorizontalDivider()
