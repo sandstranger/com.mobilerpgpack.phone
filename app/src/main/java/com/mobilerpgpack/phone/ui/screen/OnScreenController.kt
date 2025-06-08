@@ -288,6 +288,108 @@ val wolfensteinButtons : Collection<ButtonState> = listOf(
     )
 )
 
+val doomRPGButtons : Collection<ButtonState> = listOf(
+    ButtonState(
+        dpadId,
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.5f,
+        sizePercent = 0.25f,
+        buttonType = ButtonType.Dpad
+    ),
+    ButtonState(
+        "attack",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.76f,
+        offsetYPercent = 0.45f,
+        sizePercent = 0.13f,
+        buttonResId = R.drawable.attack_button,
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER
+    ),
+    ButtonState(
+        "next_weapon",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.1f,
+        sizePercent = 0.075f,
+        buttonResId = R.drawable.next_weapon,
+        sdlKeyEvent = KeyEvent.KEYCODE_Z
+    ),
+    ButtonState(
+        "prev_weapon",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.26f,
+        sizePercent = 0.075f,
+        buttonResId = R.drawable.prev_weapon,
+        sdlKeyEvent = KeyEvent.KEYCODE_X
+    ),
+    ButtonState(
+        "pass_turn",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.97f,
+        offsetYPercent = 0.65f,
+        sizePercent = 0.085f,
+        buttonResId = R.drawable.pass_turn,
+        sdlKeyEvent = KeyEvent.KEYCODE_C
+    ),
+    ButtonState(
+        "automap",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.78f,
+        offsetYPercent = 0.75f,
+        sizePercent = 0.085f,
+        buttonResId = R.drawable.automap,
+        sdlKeyEvent = KeyEvent.KEYCODE_TAB
+    ),
+    ButtonState(
+        "escape",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.99f,
+        offsetYPercent = 0.05f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.pause,
+        sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
+    ),
+    ButtonState(
+        "hide_controls",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.5f,
+        offsetYPercent = 0.05f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.toggles,
+        buttonType = ButtonType.ControlsHider
+    ),
+    ButtonState(
+        ButtonType.DpadDown.toString().lowercase(),
+        EngineTypes.DoomRpg,
+        sdlKeyEvent = KeyEvent.KEYCODE_DPAD_DOWN,
+        buttonType = ButtonType.DpadDown,
+        buttonResId = R.drawable.dpad_down,
+    ),
+    ButtonState(
+        ButtonType.DpadUp.toString().lowercase(),
+        EngineTypes.DoomRpg,
+        sdlKeyEvent = KeyEvent.KEYCODE_DPAD_UP,
+        buttonType = ButtonType.DpadUp,
+        buttonResId = R.drawable.dpad_up,
+    ),
+    ButtonState(
+        ButtonType.DpadLeft.toString().lowercase(),
+        EngineTypes.DoomRpg,
+        sdlKeyEvent = KeyEvent.KEYCODE_DPAD_LEFT,
+        buttonType = ButtonType.DpadLeft,
+        buttonResId = R.drawable.dpad_left,
+    ),
+    ButtonState(
+        ButtonType.DpadRight.toString().lowercase(),
+        EngineTypes.DoomRpg,
+        sdlKeyEvent = KeyEvent.KEYCODE_DPAD_RIGHT,
+        buttonType = ButtonType.DpadRight,
+        buttonResId = R.drawable.dpad_right,
+    )
+)
+
 @Composable
 fun OnScreenController(
     buttonsToDraw: Collection<ButtonState>,
