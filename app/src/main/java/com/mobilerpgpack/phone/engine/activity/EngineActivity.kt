@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.databinding.EngineActivityBinding
@@ -19,6 +20,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.killEngine
 import com.mobilerpgpack.phone.engine.setFullscreen
+import com.mobilerpgpack.phone.ui.items.BoxGrid2
 import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.OnScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -35,6 +37,8 @@ import org.libsdl.app.SDLSurface
 import java.io.File
 
 private const val RESOLUTION_DELIMITER = "x"
+private const val AndroidGamePathEnvName = "ANDROID_GAME_PATH"
+private const val ResourceFileNameEnvName = "RESOURCE_FILE_NAME"
 
 class EngineActivity : SDLActivity() {
     private val screenControlsVisibilityUpdater = CoroutineScope(Dispatchers.Default)
@@ -43,6 +47,8 @@ class EngineActivity : SDLActivity() {
     private lateinit var pathToLog: String
     private lateinit var logcatProcess: Process
     private var controlsOverlayUI : View? = null
+    private var virtualKeyboardView : View? = null
+    private var showVirtualKeyboardSavedState by mutableStateOf(false)
 
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
@@ -130,11 +136,18 @@ class EngineActivity : SDLActivity() {
         Os.setenv("LIBGL_ES", "2", true)
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
 
+        if (activeEngineType == EngineTypes.DoomRpg){
+            val (width, height) = scaleDoomRpgResolution()
+            Os.setenv("SCREEN_WIDTH", width.toString(), true)
+            Os.setenv("SCREEN_HEIGHT", height.toString(), true)
+            Os.setenv("FORCE_FILE_PATH", "true", true)
+        }
+
         if (pathToEngineResourceFile.isFile) {
-            Os.setenv("ANDROID_GAME_PATH", pathToEngineResourceFile.parent, true)
-            Os.setenv("RESOURCE_FILE_NAME", pathToEngineResourceFile.name, true)
+            Os.setenv(AndroidGamePathEnvName, this@EngineActivity.getExternalFilesDir("")!!.absolutePath, true)
+            Os.setenv(ResourceFileNameEnvName, pathToEngineResourceFile.absolutePath, true)
         } else {
-            Os.setenv("ANDROID_GAME_PATH", pathToEngineResourceFile.absolutePath, true)
+            Os.setenv(AndroidGamePathEnvName, pathToEngineResourceFile.absolutePath, true)
         }
     }
 
@@ -191,6 +204,39 @@ class EngineActivity : SDLActivity() {
         SDLSurface.fixedHeight = screenHeight
     }
 
+    private fun scaleDoomRpgResolution() : Pair<Int, Int>{
+        if (SDLSurface.fixedWidth > 0 && SDLSurface.fixedHeight >0){
+            return scaleDoomRpgResolution(SDLSurface.fixedWidth, SDLSurface.fixedHeight)
+        }
+
+        val displayMetrics = Resources.getSystem().displayMetrics
+        return scaleDoomRpgResolution(displayMetrics.widthPixels, displayMetrics.heightPixels)
+    }
+
+    private fun scaleDoomRpgResolution(
+        screenW: Int,
+        screenH: Int,
+        maxW: Int? = 820,
+        maxH: Int? = 360
+    ): Pair<Int, Int> {
+        if (maxW == null && maxH == null) {
+            return screenW to screenH
+        }
+
+        val scaleW = maxW?.toFloat()?.div(screenW) ?: Float.POSITIVE_INFINITY
+        val scaleH = maxH?.toFloat()?.div(screenH) ?: Float.POSITIVE_INFINITY
+
+        val scale = minOf(scaleW, scaleH)
+
+        if (scale >= 1f) {
+            return screenW to screenH
+        }
+
+        val newW = (screenW * scale).toInt()
+        val newH = (screenH * scale).toInt()
+        return newW to newH
+    }
+
     private fun loadControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
             val binding = EngineActivityBinding.inflate(layoutInflater)
@@ -212,7 +258,10 @@ class EngineActivity : SDLActivity() {
             }
             else{
                 controlsOverlayUI = binding.controlsOverlayUI
+                virtualKeyboardView = binding.keyboardView
             }
+
+            binding.keyboardView.visibility = View.GONE
 
             binding.sdlContainer.post {
                 binding.sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -236,7 +285,15 @@ class EngineActivity : SDLActivity() {
                                     activeEngine = activeEngineType,
                                     allowToEditControls = allowToEditScreenControlsInGame,
                                     drawInSafeArea = displayInSafeArea,
+                                    showVirtualKeyboardEvent = { showVirtualKeyboard ->
+                                        showVirtualKeyboardSavedState = showVirtualKeyboard
+                                        updateVirtualKeyboardVisibility(showVirtualKeyboard)
+                                    }
                                 )
+                            }
+
+                            binding.keyboardView.setContent {
+                                BoxGrid2()
                             }
                         }
 
@@ -290,10 +347,16 @@ class EngineActivity : SDLActivity() {
                     } else {
                         this@EngineActivity.controlsOverlayUI!!.visibility = View.GONE
                     }
+                    updateVirtualKeyboardVisibility(needToShowControls)
                 }
             }
             needToShowControlsLastState = needToShowControls
             delay(200)
         }
+    }
+
+    private fun updateVirtualKeyboardVisibility (showVirtualKeyboard: Boolean){
+        virtualKeyboardView!!.visibility = if (showVirtualKeyboard && showVirtualKeyboardSavedState)
+            View.VISIBLE else View.GONE
     }
 }

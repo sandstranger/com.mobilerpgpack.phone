@@ -6,29 +6,23 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.createChooser
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.Settings
-import android.text.InputType
+import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
-import androidx.compose.runtime.collectAsState
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import androidx.preference.EditTextPreference
-import com.mobilerpgpack.phone.BuildConfig
-import androidx.core.net.toUri
 import com.mobilerpgpack.phone.R
 import com.obsez.android.lib.filechooser.ChooserDialog
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
@@ -40,6 +34,36 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
     startActivity(Intent(this, T::class.java))
 
     if (finishParentActivity && this is Activity) this.finish();
+}
+
+fun copyAssetsFolderToInternalStorage(context: Context, assetsFolder: String, destFolder: File) {
+    val assetManager = context.assets
+    try {
+
+        val files = assetManager.list(assetsFolder)
+        if (files != null) {
+            if (!destFolder.exists()) {
+                destFolder.mkdirs()
+            }
+            for (filename in files) {
+                val assetPath = if (assetsFolder.isEmpty()) filename else "$assetsFolder/$filename"
+                val outFile = File(destFolder, filename)
+
+                val subFiles = assetManager.list(assetPath)
+                if (subFiles != null && subFiles.isNotEmpty()) {
+                    copyAssetsFolderToInternalStorage(context, assetPath, outFile)
+                } else if (!outFile.exists()) {
+                    assetManager.open(assetPath).use { inputStream ->
+                        FileOutputStream(outFile).use { outputStream ->
+                            inputStream.copyTo(outputStream)
+                        }
+                    }
+                }
+            }
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
 }
 
 fun Context.isExternalStoragePermissionGranted () : Boolean {
