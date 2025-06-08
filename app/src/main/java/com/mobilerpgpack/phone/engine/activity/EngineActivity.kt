@@ -132,18 +132,16 @@ class EngineActivity : SDLActivity() {
         Os.setenv("LIBGL_ES", "2", true)
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
 
+        if (activeEngineType == EngineTypes.DoomRpg){
+            val (width, height) = scaleDoomRpgResolution()
+            Os.setenv("SCREEN_WIDTH", width.toString(), true)
+            Os.setenv("SCREEN_HEIGHT", height.toString(), true)
+            Os.setenv("FORCE_FILE_PATH", "true", true)
+        }
+
         if (pathToEngineResourceFile.isFile) {
-            when (activeEngineType) {
-                EngineTypes.DoomRpg -> {
-                    Os.setenv(AndroidGamePathEnvName, this@EngineActivity.getExternalFilesDir("")!!.absolutePath, true)
-                    Os.setenv(ResourceFileNameEnvName, pathToEngineResourceFile.absolutePath, true)
-                    Os.setenv("FORCE_FILE_PATH", "true", true)
-                }
-                else -> {
-                    Os.setenv(AndroidGamePathEnvName, pathToEngineResourceFile.parent, true)
-                    Os.setenv(ResourceFileNameEnvName, pathToEngineResourceFile.name, true)
-                }
-            }
+            Os.setenv(AndroidGamePathEnvName, this@EngineActivity.getExternalFilesDir("")!!.absolutePath, true)
+            Os.setenv(ResourceFileNameEnvName, pathToEngineResourceFile.absolutePath, true)
         } else {
             Os.setenv(AndroidGamePathEnvName, pathToEngineResourceFile.absolutePath, true)
         }
@@ -200,6 +198,39 @@ class EngineActivity : SDLActivity() {
     private fun setScreenResolution(screenWidth: Int, screenHeight: Int) {
         SDLSurface.fixedWidth = screenWidth
         SDLSurface.fixedHeight = screenHeight
+    }
+
+    private fun scaleDoomRpgResolution() : Pair<Int, Int>{
+        if (SDLSurface.fixedWidth > 0 && SDLSurface.fixedHeight >0){
+            return scaleDoomRpgResolution(SDLSurface.fixedWidth, SDLSurface.fixedHeight)
+        }
+
+        val displayMetrics = Resources.getSystem().displayMetrics
+        return scaleDoomRpgResolution(displayMetrics.widthPixels, displayMetrics.heightPixels)
+    }
+
+    private fun scaleDoomRpgResolution(
+        screenW: Int,
+        screenH: Int,
+        maxW: Int? = 820,
+        maxH: Int? = 360
+    ): Pair<Int, Int> {
+        if (maxW == null && maxH == null) {
+            return screenW to screenH
+        }
+
+        val scaleW = maxW?.toFloat()?.div(screenW) ?: Float.POSITIVE_INFINITY
+        val scaleH = maxH?.toFloat()?.div(screenH) ?: Float.POSITIVE_INFINITY
+
+        val scale = minOf(scaleW, scaleH)
+
+        if (scale >= 1f) {
+            return screenW to screenH
+        }
+
+        val newW = (screenW * scale).toInt()
+        val newH = (screenH * scale).toInt()
+        return newW to newH
     }
 
     private fun loadControlsLayout() {
