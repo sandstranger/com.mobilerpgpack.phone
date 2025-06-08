@@ -23,8 +23,8 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
         "gthread-2.0","instpatch-1.0","oboe","ogg","opus","pcre","pcreposix","sndfile","vorbis","vorbisenc",
         "vorbisfile","fluidsynth-assetloader","fluidsynth","GL","SDL2","gme","SDL2_mixer","DoomRPG"),
         doomRPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
-    EngineTypes.Doom2Rpg to EngineInfo("", arrayOf(""),
-        wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) })
+    EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so", arrayOf("GL","SDL2","openal","DoomIIRPG"),
+        wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
 )
 
 internal val defaultPathToLogcatFile: String = "${Environment.getExternalStorageDirectory().absolutePath}" +
