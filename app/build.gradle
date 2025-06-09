@@ -18,7 +18,6 @@ android {
         ndk {
             abiFilters = []
             abiFilters.addAll(abi_filters)
-            debugSymbolLevel = 'FULL'
         }
 
         externalNativeBuild {
@@ -44,6 +43,9 @@ android {
         }
         debug {
             jniDebuggable true
+            ndk {
+                debugSymbolLevel 'FULL' // сохраняет символы
+            }
         }
     }
     compileOptions {
