@@ -2,10 +2,8 @@ package com.mobilerpgpack.phone.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
-import android.view.View
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,20 +17,16 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -40,7 +34,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,12 +46,10 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
@@ -70,7 +61,6 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.items.BoxGrid2
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -129,14 +119,14 @@ class ButtonState(
     var offsetYPercent by mutableFloatStateOf(offsetYPercent)
     var sizePercent by mutableFloatStateOf(sizePercent)
     var alpha by mutableFloatStateOf(alpha)
-    var sdlKeyEvent by mutableIntStateOf(sdlKeyEvent)
+    var sdlKeyCode by mutableIntStateOf(sdlKeyEvent)
 
     suspend fun loadButtonState(context: Context) {
         offsetXPercent = PreferencesStorage.getFloatValue(context, keyX, defaultOffsetXPercent).first()!!
         offsetYPercent = PreferencesStorage.getFloatValue(context, keyY, defaultOffsetYPercent).first()!!
         sizePercent = PreferencesStorage.getFloatValue(context, keySize, defaultSizePercent).first()!!
         alpha = PreferencesStorage.getFloatValue(context, keyAlpha, defaultAlpha).first()!!
-        sdlKeyEvent = PreferencesStorage.getIntValue(context, sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()!!
+        sdlKeyCode = PreferencesStorage.getIntValue(context, sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()!!
     }
 
     suspend fun saveButtonState(context: Context) {
@@ -144,7 +134,7 @@ class ButtonState(
         PreferencesStorage.setFloatValue(context, keyY, offsetYPercent)
         PreferencesStorage.setFloatValue(context, keySize, sizePercent)
         PreferencesStorage.setFloatValue(context, keyAlpha, alpha)
-        PreferencesStorage.setIntValue(context, sdlKeyEventPrefsKey, sdlKeyEvent)
+        PreferencesStorage.setIntValue(context, sdlKeyEventPrefsKey, sdlKeyCode)
     }
 
     suspend fun resetToDefaults(context: Context) {
@@ -152,12 +142,12 @@ class ButtonState(
         offsetYPercent = defaultOffsetYPercent
         sizePercent = defaultSizePercent
         alpha = defaultAlpha
-        sdlKeyEvent = defaultSdlKeyEvent
+        sdlKeyCode = defaultSdlKeyEvent
         saveButtonState(context)
     }
 
     suspend fun resetKeyEvent(context: Context) {
-        sdlKeyEvent = defaultSdlKeyEvent
+        sdlKeyCode = defaultSdlKeyEvent
         saveButtonState(context)
     }
 }
@@ -851,12 +841,12 @@ private fun DraggableImageButton(
                             detectTapGestures(
                                 onPress = {
                                     if (isEditMode || !inGame) return@detectTapGestures
-                                    onTouchDown(state.sdlKeyEvent)
+                                    onTouchDown(state.sdlKeyCode)
                                     try {
                                         awaitRelease()
-                                        onTouchUp(state.sdlKeyEvent)
+                                        onTouchUp(state.sdlKeyCode)
                                     } catch (_: Exception) {
-                                        onTouchUp(state.sdlKeyEvent)
+                                        onTouchUp(state.sdlKeyCode)
                                     }
                                 }
                             )
@@ -1103,14 +1093,14 @@ private fun DPad(
                 dpadButton(
                     button.buttonResId,
                     button.id,
-                    button.sdlKeyEvent,
+                    button.sdlKeyCode,
                     offsetY = offsetYStorage[button.buttonType]!!
                 )
             } else if (button.buttonType in listOf(ButtonType.DpadLeft, ButtonType.DpadRight)) {
                 dpadButton(
                     button.buttonResId,
                     button.id,
-                    button.sdlKeyEvent,
+                    button.sdlKeyCode,
                     offsetX = offsetXStorage[button.buttonType]!!
                 )
             }

@@ -1,10 +1,12 @@
 package com.mobilerpgpack.phone.ui.items
 
+import android.util.Log
 import android.view.KeyEvent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.libsdl.app.SDLActivity
@@ -161,11 +164,20 @@ fun BoxGrid2() {
                         modifier = sizeModifier
                             .background(Color.Black)  // Set the background to black
                             .border(2.dp, animatedColor)  // Set the border to the animated RGB color
-                            .clickable {
-                                keyMap[char]?.let { key ->
-                                    pressed(key.keyCode)
-                                    released(key.keyCode)
-                                }
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onPress = {
+                                        keyMap[char]?.let { key ->
+                                            pressed(key.keyCode)
+                                            try {
+                                                awaitRelease()
+                                                released(key.keyCode)
+                                            } catch (_: Exception) {
+                                                released(key.keyCode)
+                                            }
+                                        }
+                                    }
+                                )
                             }
                     ) {
                         Text(
