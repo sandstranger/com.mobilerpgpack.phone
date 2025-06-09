@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen
 
-import android.util.Log
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -36,7 +35,7 @@ fun KeysEditor(
 
     var selectedButton by remember { mutableStateOf(buttonsToEdit.first()) }
     var selectedButtonId by rememberSaveable { mutableStateOf(selectedButton.id) }
-    var selectedKeyCode by rememberSaveable { mutableIntStateOf(selectedButton.sdlKeyEvent) }
+    var selectedKeyCode by rememberSaveable { mutableIntStateOf(selectedButton.sdlKeyCode) }
     selectedButton = buttonsToEdit.first { it.id == selectedButtonId }
 
     var shouldReset by rememberSaveable { mutableStateOf(false) }
@@ -58,9 +57,9 @@ fun KeysEditor(
         LaunchedEffect(buttonsToEdit) {
             scope.launch {
                 buttonsToEdit.forEach { it.resetKeyEvent(context) }
-                selectedKeyCode = currentButton.value.sdlKeyEvent
+                selectedKeyCode = currentButton.value.sdlKeyCode
             }
-            selectedKeyCode = currentButton.value.sdlKeyEvent
+            selectedKeyCode = currentButton.value.sdlKeyCode
             shouldReset = false
         }
     }
@@ -86,7 +85,7 @@ fun KeysEditor(
                                 .clickable {
                                     selectedButton = button
                                     selectedButtonId = button.id
-                                    selectedKeyCode = button.sdlKeyEvent
+                                    selectedKeyCode = button.sdlKeyCode
                                     showButtonSelectDialog = false
                                 }
                                 .padding(8.dp)
@@ -126,7 +125,7 @@ fun KeysEditor(
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedKeyCode = code
-                                    currentButton.value.sdlKeyEvent = selectedKeyCode
+                                    currentButton.value.sdlKeyCode = selectedKeyCode
                                     scope.launch {
                                         currentButton.value.saveButtonState(context)
                                     }
