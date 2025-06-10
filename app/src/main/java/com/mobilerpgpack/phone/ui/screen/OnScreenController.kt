@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -837,15 +838,16 @@ private fun DraggableImageButton(
                     contentDescription = id,
                     modifier = Modifier
                         .fillMaxSize()
-                        .pointerInput(!isEditMode, inGame) {
+                        .minimumInteractiveComponentSize()
+                        .pointerInput(!isEditMode && inGame) {
+                            if (isEditMode || !inGame) return@pointerInput
+
                             detectTapGestures(
                                 onPress = {
-                                    if (isEditMode || !inGame) return@detectTapGestures
                                     onTouchDown(state.sdlKeyCode)
                                     try {
                                         awaitRelease()
-                                        onTouchUp(state.sdlKeyCode)
-                                    } catch (_: Exception) {
+                                    } finally {
                                         onTouchUp(state.sdlKeyCode)
                                     }
                                 }
@@ -871,7 +873,7 @@ private fun DraggableImageButton(
                         .fillMaxSize()
                         .then(
                             if (!isEditMode && inGame) {
-                                Modifier.clickable(
+                                Modifier.minimumInteractiveComponentSize().clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() }
                                 ) {
@@ -1070,16 +1072,17 @@ private fun DPad(
                 contentDescription = desc,
                 modifier = Modifier
                     .size(buttonSize)
+                    .minimumInteractiveComponentSize()
                     .offset(x = offsetX, y = offsetY)
-                    .pointerInput(!isEditMode, inGame) {
+                    .pointerInput(!isEditMode && inGame) {
+                        if (isEditMode || !inGame) return@pointerInput
+
                         detectTapGestures(
                             onPress = {
-                                if (isEditMode || !inGame) return@detectTapGestures
                                 onTouchDown(sdlKeyEvent)
                                 try {
                                     awaitRelease()
-                                    onTouchUp(sdlKeyEvent)
-                                } catch (_: Exception) {
+                                } finally {
                                     onTouchUp(sdlKeyEvent)
                                 }
                             }
