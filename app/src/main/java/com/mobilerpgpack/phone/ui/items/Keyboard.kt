@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.items
 
 import android.util.Log
 import android.view.KeyEvent
+import android.view.MotionEvent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.libsdl.app.SDLActivity
@@ -166,20 +168,17 @@ fun BoxGrid2() {
                             .background(Color.Black)  // Set the background to black
                             .border(2.dp, animatedColor)  // Set the border to the animated RGB color
                             .minimumInteractiveComponentSize()
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onPress = {
-                                        keyMap[char]?.let { key ->
-                                            pressed(key.keyCode)
-                                            try {
-                                                awaitRelease()
-                                                released(key.keyCode)
-                                            } catch (_: Exception) {
-                                                released(key.keyCode)
-                                            }
-                                        }
+                            .pointerInteropFilter { event ->
+                                keyMap[char]?.let { key ->
+                                    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                                        pressed(key.keyCode)
+                                        return@pointerInteropFilter true
+                                    } else if (event.actionMasked == MotionEvent.ACTION_UP) {
+                                        released(key.keyCode)
+                                        return@pointerInteropFilter true
                                     }
-                                )
+                                }
+                                return@pointerInteropFilter false
                             }
                     ) {
                         Text(
