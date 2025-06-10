@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -32,6 +33,8 @@ object PreferencesStorage {
     private val OFFSET_X_MOUSE = floatPreferencesKey("offset_x_mouse")
     private val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
     private val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
+    val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
+    val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
@@ -121,12 +124,6 @@ object PreferencesStorage {
         }
     }
 
-    fun getIntValue(context: Context, prefsKey : Preferences.Key<Int>, defaultValue : Int = 0 ): Flow<Int?> {
-        return context.dataStore.data.map { preferences ->
-            preferences[prefsKey] ?: defaultValue
-        }
-    }
-
     suspend fun setIntValue(context: Context, prefsKey : Preferences.Key<Int>, valueToSave : Int ) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
@@ -166,6 +163,12 @@ object PreferencesStorage {
     suspend fun setBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, valueToSave : Boolean) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
+        }
+    }
+
+     fun getIntValue(context: Context, prefsKey : Preferences.Key<Int>, defaultValue : Int = 0): Flow<Int?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[prefsKey] ?: defaultValue
         }
     }
 

@@ -6,12 +6,12 @@ buildscript {
             ndk_version : '28.1.13356709',
             build_tools_version : '36.0.0',
             native_android_platform_version : 24,
-            cmake_version : "3.31.6"
+            cmake_version : "4.0.2"
     ]
     ext.build_flags = [
             compiling_arguments : "-j${Runtime.getRuntime().availableProcessors()}",
-            common_c_flags : ["-O3","-flto=thin","-Wno-writable-strings","-w","-fmax-errors=5"],
-            common_cpp_flags : ["-O3" ,"-flto=thin","-Wno-writable-strings","-w","-fmax-errors=5"],
+            common_c_flags : ["-O3","-flto=thin"],
+            common_cpp_flags : ["-O3" ,"-flto=thin"],
             ndk_build_platform : "APP_PLATFORM=android-$versions.native_android_platform_version"
     ]
     ext.abi_filters = ['armeabi-v7a','arm64-v8a',"x86","x86_64"]

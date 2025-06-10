@@ -1,13 +1,13 @@
 package com.mobilerpgpack.phone.engine.activity
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
 import android.os.Bundle
 import android.system.Os
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -41,7 +41,7 @@ private const val AndroidGamePathEnvName = "ANDROID_GAME_PATH"
 private const val ResourceFileNameEnvName = "RESOURCE_FILE_NAME"
 
 class EngineActivity : SDLActivity() {
-    private val screenControlsVisibilityUpdater = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.Default)
 
     private lateinit var activeEngineType: EngineTypes
     private lateinit var pathToLog: String
@@ -57,6 +57,9 @@ class EngineActivity : SDLActivity() {
     private var enableControlsAutoHidingFeature = false
     private var needToShowControlsLastState : Boolean = false
     private var displayInSafeArea : Boolean = false
+    private lateinit var resolution: Pair<Int, Int>
+    private var savedDoomRpgScreenWidth : Int = 0
+    private var savedDoomRpgScreenHeight : Int = 0
 
     private external fun pauseSound()
 
@@ -88,7 +91,7 @@ class EngineActivity : SDLActivity() {
     override fun onDestroy() {
         super.onDestroy()
         logcatProcess.destroy()
-        screenControlsVisibilityUpdater.cancel()
+        scope.cancel()
         killEngine()
     }
 
@@ -98,6 +101,10 @@ class EngineActivity : SDLActivity() {
         var customScreenResolution = ""
 
         runBlocking {
+            savedDoomRpgScreenWidth = PreferencesStorage.getIntValue(this@EngineActivity,
+                PreferencesStorage.savedDoomRpgScreenWidthPrefsKey).first()!!
+            savedDoomRpgScreenHeight= PreferencesStorage.getIntValue(this@EngineActivity,
+                PreferencesStorage.savedDoomRpgScreenHeightPrefsKey).first()!!
             hideScreenControls =
                 PreferencesStorage.getHideScreenControlsValue(this@EngineActivity).first()!!
             activeEngineType = PreferencesStorage.getActiveEngineValue(this@EngineActivity)
@@ -121,6 +128,8 @@ class EngineActivity : SDLActivity() {
             )
         }
 
+        resolution = getRealScreenResolution()
+
         var customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
 
         if (needToPreserveScreenAspectRatio && !customScreenResolutionWasSet) {
@@ -137,7 +146,22 @@ class EngineActivity : SDLActivity() {
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
 
         if (activeEngineType == EngineTypes.DoomRpg){
-            val (width, height) = scaleDoomRpgResolution()
+            val (width, height) = getDefaultDoomRpgResolution()
+            if (savedDoomRpgScreenWidth!=width && savedDoomRpgScreenHeight!=height){
+                scope.launch {
+                    PreferencesStorage.setIntValue(this@EngineActivity,PreferencesStorage.savedDoomRpgScreenWidthPrefsKey,
+                        width)
+
+                    PreferencesStorage.setIntValue(this@EngineActivity,PreferencesStorage.savedDoomRpgScreenHeightPrefsKey,
+                        height)
+
+                }
+
+                Os.setenv("RECALCULATE_RESOLUTION_INDEX","true",true)
+            }
+            else{
+                Os.setenv("RECALCULATE_RESOLUTION_INDEX","false",true)
+            }
             Os.setenv("SCREEN_WIDTH", width.toString(), true)
             Os.setenv("SCREEN_HEIGHT", height.toString(), true)
             Os.setenv("FORCE_FILE_PATH", "true", true)
@@ -165,9 +189,8 @@ class EngineActivity : SDLActivity() {
     }
 
     private fun preserve16x9ScreenAspectRatio() {
-        val displayMetrics = Resources.getSystem().displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
+        val screenWidth = resolution.first
+        val screenHeight = resolution.second
         val targetRatio = 16f / 9f
         val screenRatio = screenWidth.toFloat() / screenHeight
 
@@ -204,37 +227,12 @@ class EngineActivity : SDLActivity() {
         SDLSurface.fixedHeight = screenHeight
     }
 
-    private fun scaleDoomRpgResolution() : Pair<Int, Int>{
+    private fun getDefaultDoomRpgResolution() : Pair<Int, Int>{
         if (SDLSurface.fixedWidth > 0 && SDLSurface.fixedHeight >0){
-            return scaleDoomRpgResolution(SDLSurface.fixedWidth, SDLSurface.fixedHeight)
+            return SDLSurface.fixedWidth to SDLSurface.fixedHeight
         }
 
-        val displayMetrics = Resources.getSystem().displayMetrics
-        return scaleDoomRpgResolution(displayMetrics.widthPixels, displayMetrics.heightPixels)
-    }
-
-    private fun scaleDoomRpgResolution(
-        screenW: Int,
-        screenH: Int,
-        maxW: Int? = 820,
-        maxH: Int? = 360
-    ): Pair<Int, Int> {
-        if (maxW == null && maxH == null) {
-            return screenW to screenH
-        }
-
-        val scaleW = maxW?.toFloat()?.div(screenW) ?: Float.POSITIVE_INFINITY
-        val scaleH = maxH?.toFloat()?.div(screenH) ?: Float.POSITIVE_INFINITY
-
-        val scale = minOf(scaleW, scaleH)
-
-        if (scale >= 1f) {
-            return screenW to screenH
-        }
-
-        val newW = (screenW * scale).toInt()
-        val newH = (screenH * scale).toInt()
-        return newW to newH
+        return resolution
     }
 
     private fun loadControlsLayout() {
@@ -303,12 +301,20 @@ class EngineActivity : SDLActivity() {
 
                 if (enableControlsAutoHidingFeature) {
                     needToShowControlsLastState = true
-                    screenControlsVisibilityUpdater.launch {
+                    scope.launch {
                         changeScreenControlsVisibility()
                     }
                 }
             }
         }
+    }
+
+    private fun getRealScreenResolution(): Pair<Int, Int> {
+        val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        val realSize = android.graphics.Point()
+        display.getRealSize(realSize)
+        return realSize.x to realSize.y
     }
 
     @SuppressLint("CoroutineCreationDuringComposition")
