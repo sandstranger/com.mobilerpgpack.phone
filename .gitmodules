@@ -19,3 +19,6 @@
 [submodule "app/src/main/jni/DoomIIRPG-RE"]
 	path = app/src/main/jni/DoomIIRPG-RE
 	url = https://github.com/sandstranger/DoomIIRPG-RE.git
+[submodule "fluidsynth/src/main/jni/fluidsynth-android"]
+	path = fluidsynth/src/main/jni/fluidsynth-android
+	url = https://github.com/sandstranger/fluidsynth-android.git
