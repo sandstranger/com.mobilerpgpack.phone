@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import androidx.activity.compose.LocalActivity
@@ -840,20 +839,19 @@ private fun DraggableImageButton(
                     modifier = Modifier
                         .fillMaxSize()
                         .minimumInteractiveComponentSize()
-                        .pointerInteropFilter { event ->
-                            if (isEditMode || !inGame) return@pointerInteropFilter false
+                        .pointerInput(!isEditMode && inGame) {
+                            if (isEditMode || !inGame) return@pointerInput
 
-                            when (event.actionMasked) {
-                                MotionEvent.ACTION_DOWN -> {
+                            detectTapGestures(
+                                onPress = {
                                     onTouchDown(state.sdlKeyCode)
-                                    return@pointerInteropFilter true
+                                    try {
+                                        awaitRelease()
+                                    } finally {
+                                        onTouchUp(state.sdlKeyCode)
+                                    }
                                 }
-                                MotionEvent.ACTION_UP -> {
-                                    onTouchUp(state.sdlKeyCode)
-                                    return@pointerInteropFilter true
-                                }
-                                else -> return@pointerInteropFilter false
-                            }
+                            )
                         }
                 )
             }
@@ -1031,7 +1029,7 @@ private fun DrawTouchCamera() {
             .alpha(0f)
             .pointerInteropFilter { motionEvent ->
                 onTouchEvent(motionEvent)
-                return@pointerInteropFilter true
+                true
             }
     )
 }
@@ -1076,20 +1074,19 @@ private fun DPad(
                     .size(buttonSize)
                     .minimumInteractiveComponentSize()
                     .offset(x = offsetX, y = offsetY)
-                    .pointerInteropFilter { event ->
-                        if (isEditMode || !inGame) return@pointerInteropFilter false
+                    .pointerInput(!isEditMode && inGame) {
+                        if (isEditMode || !inGame) return@pointerInput
 
-                        when (event.actionMasked) {
-                            MotionEvent.ACTION_DOWN -> {
+                        detectTapGestures(
+                            onPress = {
                                 onTouchDown(sdlKeyEvent)
-                                return@pointerInteropFilter true
+                                try {
+                                    awaitRelease()
+                                } finally {
+                                    onTouchUp(sdlKeyEvent)
+                                }
                             }
-                            MotionEvent.ACTION_UP -> {
-                                onTouchUp(sdlKeyEvent)
-                                return@pointerInteropFilter true
-                            }
-                            else -> return@pointerInteropFilter false
-                        }
+                        )
                     }
             )
         }
