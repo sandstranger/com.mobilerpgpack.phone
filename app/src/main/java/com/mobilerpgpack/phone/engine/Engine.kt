@@ -20,9 +20,7 @@ const val logcatFileName = "wolfenstein_doom_rpg_log.log"
 internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
     EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so", arrayOf("GL","SDL2","openal","WolfensteinRPG"),
         wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
-    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so", arrayOf("c++_shared","omp","FLAC","gio-2.0","glib-2.0","gmodule-2.0","gobject-2.0",
-        "gthread-2.0","instpatch-1.0","oboe","ogg","opus","pcre","pcreposix","sndfile","vorbis","vorbisenc",
-        "vorbisfile","fluidsynth-assetloader","fluidsynth","GL","SDL2","gme","SDL2_mixer","DoomRPG"),
+    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so", arrayOf("fluidsynth","GL","SDL2","gme","SDL2_mixer","DoomRPG"),
         doomRPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
     EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so", arrayOf("GL","SDL2","openal","DoomIIRPG"),
         doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
