@@ -12,8 +12,8 @@ android {
         applicationId "com.mobilerpgpack.phone"
         minSdk versions.min_sdk
         targetSdk versions.target_sdk
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
 
         ndk {
             abiFilters = []
