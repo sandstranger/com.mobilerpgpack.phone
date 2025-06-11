@@ -1029,7 +1029,7 @@ private fun DrawTouchCamera() {
             .alpha(0f)
             .pointerInteropFilter { motionEvent ->
                 onTouchEvent(motionEvent)
-                true
+                return@pointerInteropFilter false
             }
     )
 }
