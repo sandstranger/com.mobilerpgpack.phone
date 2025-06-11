@@ -18,6 +18,7 @@ android {
             ndkBuild {
                 arguments += build_flags.ndk_build_platform
                 arguments += build_flags.compiling_arguments
+                arguments += build_flags.both_hash_style_flag
                 cFlags  = build_flags.common_c_flags
                 cppFlags = build_flags.common_cpp_flags
             }
