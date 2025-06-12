@@ -56,3 +56,6 @@ suspend fun startEngine(context: Context) {
 
     context.startActivity<EngineActivity>()
 }
+
+internal fun getPathToSDL2ControllerDB (context: Context) =
+    "${context.getExternalFilesDir("")!!.absolutePath}${File.separator}gamecontrollerdb.txt"
