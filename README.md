@@ -18,8 +18,62 @@ This port for Android has the following system requirements:
 ### Recommended
 * Operating system: Android 12 or later (I tested it mostly on my phone with Android 12)
 
-## Gamepads Support
-This Android ports do not supports gamepads yet
+## Controllers Support
+This Android ports support controllers
+
+## Doom RPG Default Controllers controls
+
+| Action           | Button      |
+| ---------------  | ----------- |
+| Move Forward     | D-pad up    |
+| Move Backward    | D-pad down  |
+| Turn Left        | D-pad left  |
+| Turn Right       | D-pad right |
+| Attack/Talk/Use  | A           |
+| Next Weapon      | Y           |
+| Prev Weapon      | B           |
+| Pass Turn        | X           |
+| Automap          | Select      |
+| Menu Open/Back   | Start       |
+
+## Doom 2 RPG Default Controllers controls
+
+| Action           | Button         |
+| ---------------  | -------------  |
+| Move Forward     | D-pad up       |
+| Move Backward    | D-pad down     |
+| Turn Left        | D-pad left     |
+| Turn Right       | D-pad right    |
+| Attack/Talk/Use  | A              |
+| Next Weapon      | Y              |
+| Prev Weapon      | B              |
+| Pass Turn        | X              |
+| Automap          | Select         |
+| Menu Open/Back   | Start          |
+| Menu Open/Back   | Start          |
+| Items Info       | Left stick     |
+| Drinks           | Right stick    |
+| Pda              | Left trigger   |
+| Bot Dis          | Right trigger  |
+
+## Wolfenstein RPG Default Controllers controls
+
+| Action           | Button         |
+| ---------------  | -------------  |
+| Move Forward     | D-pad up       |
+| Move Backward    | D-pad down     |
+| Turn Left        | D-pad left     |
+| Turn Right       | D-pad right    |
+| Attack/Talk/Use  | A              |
+| Next Weapon      | Y              |
+| Prev Weapon      | B              |
+| Pass Turn        | X              |
+| Automap          | Select         |
+| Menu Open/Back   | Start          |
+| Menu Open/Back   | Start          |
+| Items Info       | Left stick     |
+| Syringes         | Right stick    |
+| Journal          | Left trigger   |
 
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse

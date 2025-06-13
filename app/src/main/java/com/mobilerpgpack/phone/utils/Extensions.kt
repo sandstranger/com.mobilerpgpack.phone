@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.createChooser
 import android.content.pm.PackageManager
+import android.content.res.AssetManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Environment
@@ -21,8 +22,11 @@ import com.mobilerpgpack.phone.R
 import com.obsez.android.lib.filechooser.ChooserDialog
 import kotlinx.coroutines.flow.first
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
+import java.security.MessageDigest
 
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
@@ -36,15 +40,16 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
     if (finishParentActivity && this is Activity) this.finish();
 }
 
+
 fun copyAssetsFolderToInternalStorage(context: Context, assetsFolder: String, destFolder: File) {
     val assetManager = context.assets
     try {
-
         val files = assetManager.list(assetsFolder)
         if (files != null) {
             if (!destFolder.exists()) {
                 destFolder.mkdirs()
             }
+
             for (filename in files) {
                 val assetPath = if (assetsFolder.isEmpty()) filename else "$assetsFolder/$filename"
                 val outFile = File(destFolder, filename)
@@ -52,10 +57,13 @@ fun copyAssetsFolderToInternalStorage(context: Context, assetsFolder: String, de
                 val subFiles = assetManager.list(assetPath)
                 if (subFiles != null && subFiles.isNotEmpty()) {
                     copyAssetsFolderToInternalStorage(context, assetPath, outFile)
-                } else if (!outFile.exists()) {
-                    assetManager.open(assetPath).use { inputStream ->
-                        FileOutputStream(outFile).use { outputStream ->
-                            inputStream.copyTo(outputStream)
+                } else {
+                    val shouldCopy = !outFile.exists() || !compareAssetAndFileHash(assetManager, assetPath, outFile)
+                    if (shouldCopy) {
+                        assetManager.open(assetPath).use { inputStream ->
+                            FileOutputStream(outFile).use { outputStream ->
+                                inputStream.copyTo(outputStream)
+                            }
                         }
                     }
                 }
@@ -142,4 +150,28 @@ private fun buildRequestResourceFileIntent () : Intent {
         type = "*/*"
         putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/zip", "application/octet-stream"))
     }
+}
+
+private fun compareAssetAndFileHash(assetManager: AssetManager, assetPath: String, file: File): Boolean {
+    return try {
+        val assetHash = assetManager.open(assetPath).use { inputStream ->
+            computeSHA256(inputStream)
+        }
+        val fileHash = FileInputStream(file).use { inputStream ->
+            computeSHA256(inputStream)
+        }
+        assetHash.contentEquals(fileHash)
+    } catch (e: IOException) {
+        false
+    }
+}
+
+private fun computeSHA256(inputStream: InputStream): ByteArray {
+    val digest = MessageDigest.getInstance("SHA-256")
+    val buffer = ByteArray(4096)
+    var bytesRead: Int
+    while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+        digest.update(buffer, 0, bytesRead)
+    }
+    return digest.digest()
 }
