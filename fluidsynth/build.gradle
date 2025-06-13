@@ -21,7 +21,7 @@ android {
                 arguments"-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DCMAKE_CXX_FLAGS=-O3 -flto=thin -Wno-pointer-sign -Wno-error=unused-but-set-variable -Wno-writable-strings -w -fmax-errors=5",
                         "-DCMAKE_C_FLAGS=-O3 -flto=thin -Wno-pointer-sign -Wno-error=unused-but-set-variable -Wno-writable-strings -w -fmax-errors=5",
-                        "-DCMAKE_SHARED_LINKER_FLAGS=-flto=thin -Wl,-plugin-opt=-emulated-tls -fuse-ld=lld -Wl,--hash-style=both",
+                        "-DCMAKE_SHARED_LINKER_FLAGS=-flto=thin -Wl,-plugin-opt=-emulated-tls -fuse-ld=lld -Wl,--build-id=none",
                         "-DBUILD_SHARED_LIBS=true",
                         "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
                         "-DANDROID_STL=c++_static",

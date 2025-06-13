@@ -27,7 +27,7 @@ android {
                                 "-fno-strict-aliasing -Wno-c++11-narrowing -Wno-writable-strings -w -fmax-errors=5",
                         "-DCMAKE_C_FLAGS=-O3 -fno-stack-protector -fno-builtin -U_FORTIFY_SOURCE -fno-delete-null-pointer-checks " +
                                 "-fno-strict-aliasing -flto=thin -Wno-writable-strings -w -fmax-errors=5",
-                        "-DCMAKE_SHARED_LINKER_FLAGS=-flto=thin -Wl,-plugin-opt=-emulated-tls -fuse-ld=lld",
+                        "-DCMAKE_SHARED_LINKER_FLAGS=-flto=thin -Wl,-plugin-opt=-emulated-tls -fuse-ld=lld -Wl,--build-id=none",
                         "-DCMAKE_VERBOSE_MAKEFILE=OFF"
             }
         }
