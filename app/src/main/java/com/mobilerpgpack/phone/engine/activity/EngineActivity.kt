@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.databinding.EngineActivityBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
+import com.mobilerpgpack.phone.engine.getPathToSDL2ControllerDB
 import com.mobilerpgpack.phone.engine.killEngine
 import com.mobilerpgpack.phone.engine.setFullscreen
 import com.mobilerpgpack.phone.ui.items.BoxGrid2
@@ -144,6 +145,7 @@ class EngineActivity : SDLActivity() {
 
         Os.setenv("LIBGL_ES", "2", true)
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
+        Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", getPathToSDL2ControllerDB(this),true)
 
         if (activeEngineType == EngineTypes.DoomRpg){
             val (width, height) = getDefaultDoomRpgResolution()
