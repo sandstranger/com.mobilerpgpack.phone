@@ -50,6 +50,14 @@ else ()
     set(FLUIDSYNTH_LIBRARY ${CMAKE_SOURCE_DIR}/fluidsynth/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libfluidsynth.so)
 endif ()
 
+include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/sdl2-ttf/src/main/jni/sdl-ttf")
+
+if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+    set(SDL_TTF_LIBRARY ${CMAKE_SOURCE_DIR}/sdl2-ttf/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_ttf.so)
+else ()
+    set(SDL_TTF_LIBRARY ${CMAKE_SOURCE_DIR}/sdl2-ttf/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_ttf.so)
+endif ()
+
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")
