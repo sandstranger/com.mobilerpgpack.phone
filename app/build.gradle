@@ -76,7 +76,7 @@ android {
 }
 
 preBuild.dependsOn ':fluidsynth:build',':sdl2:android-project:app:build', ':openal:build',
-        ':gl4es:build',':sdl2-mixer:build'
+        ':gl4es:build',':sdl2-mixer:build',':sdl2-ttf:build'
 
 dependencies {
     implementation project(':sdl2:android-project:app')
@@ -85,6 +85,7 @@ dependencies {
     implementation(project(":sdl2-mixer"))
     implementation(project(":fluidsynth"))
     implementation (project(":file-picker"))
+    implementation (project(":sdl2-ttf"))
 
     implementation (libs.core)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
