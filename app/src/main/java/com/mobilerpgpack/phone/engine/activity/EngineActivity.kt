@@ -21,6 +21,7 @@ import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.getPathToSDL2ControllerDB
 import com.mobilerpgpack.phone.engine.killEngine
 import com.mobilerpgpack.phone.engine.setFullscreen
+import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.ui.items.BoxGrid2
 import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.OnScreenController
@@ -132,6 +133,8 @@ class EngineActivity : SDLActivity() {
                     .first()!!
             )
         }
+
+        TranslationManager.activeEngine = activeEngineType
 
         resolution = getRealScreenResolution()
 
