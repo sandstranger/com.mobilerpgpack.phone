@@ -22,19 +22,20 @@ import kotlinx.coroutines.tasks.await
 private const val SourceLocale = "en"
 
 object TranslationManager {
-    private val scope = CoroutineScope(Dispatchers.Default)
     private var wasInit = false
     private var _activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
     private var _isModelLoading = false
     private var _allowDownloadingOveMobile = false
+    private var mlKitTranslator : Translator? = null
+    private var loadingTask: Deferred<Boolean>? = null
     private lateinit var currentLocale : String
     private lateinit var db: TranslationDatabase
     private lateinit var languageIdentifier : LanguageIdentifier
-    private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
-    private var mlKitTranslator : Translator? = null
-    private var loadingTask: Deferred<Boolean>? = null
-    private val activeTranslations : HashSet<String> = hashSetOf()
 
+    private val scope = CoroutineScope(Dispatchers.Default)
+    private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
+    private val activeTranslations : HashSet<String> = hashSetOf()
+    
     val isModelLoading : Boolean
         get() {
             return _isModelLoading
@@ -122,8 +123,14 @@ object TranslationManager {
         }
     }
 
-    fun translate (text: String, onTextTranslated : (String) -> Unit  ){
-        if (isTranslated(text) || activeTranslations.contains(text)){
+    fun translate (text: String, onTextTranslated : (String) -> Unit){
+        if (isTranslated(text)){
+            onTextTranslated (getTranslation(text))
+            return
+        }
+
+        if (activeTranslations.contains(text)){
+            onTextTranslated(text)
             return
         }
 
