@@ -33,6 +33,7 @@ object TranslationManager {
     private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
     private var mlKitTranslator : Translator? = null
     private var loadingTask: Deferred<Boolean>? = null
+    private val activeTranslations : HashSet<String> = hashSetOf()
 
     val isModelLoading : Boolean
         get() {
@@ -59,18 +60,19 @@ object TranslationManager {
         setLocale(getSystemLocale())
     }
 
-    fun setLocale (newLocale : String){
-        scope.launch {
-            setLocaleAsync(newLocale)
-        }
-    }
-
     fun terminate(){
         db.close()
+        activeTranslations.clear()
         loadedTranslations.clear()
         cancelDownloadModel()
         mlKitTranslator?.close()
         scope.cancel()
+    }
+
+    fun setLocale (newLocale : String){
+        scope.launch {
+            setLocaleAsync(newLocale)
+        }
     }
 
     suspend fun downloadModelIfNeeded() : Boolean{
@@ -102,27 +104,59 @@ object TranslationManager {
         loadingTask?.cancel()
     }
 
-    fun translateText (text: String, onTextTranslated : (String) -> Unit ){
+    @JvmStatic
+    fun isTranslated (text: String) = loadedTranslations.contains(text)
+
+    @JvmStatic
+    fun getTranslation(key: String) =
+        if (isTranslated(key)) loadedTranslations[key]!!.value else key
+
+    @JvmStatic
+    fun translate (text: String ){
+        if (isTranslated(text) || activeTranslations.contains(text)){
+            return
+        }
+
         scope.launch {
-            onTextTranslated(translateText(text))
+            translateAsync(text)
         }
     }
 
-    suspend fun translateText(text: String): String {
+    fun translate (text: String, onTextTranslated : (String) -> Unit  ){
+        if (isTranslated(text) || activeTranslations.contains(text)){
+            return
+        }
+
+        scope.launch {
+            onTextTranslated(translateAsync(text))
+        }
+    }
+
+    suspend fun translateAsync(text: String): String {
+
+        if (isTranslated(text)){
+            return getTranslation(text)
+        }
+
+        if (activeTranslations.contains(text)){
+            return text
+        }
+
         val langCode = languageIdentifier.identifyLanguage(text).await()
 
         if (currentLocale != langCode){
             setLocaleAsync(langCode)
         }
 
-        if (loadedTranslations.contains(text)){
-            return loadedTranslations[text]!!.value
+        if (isTranslated(text)){
+            return getTranslation(text)
         }
 
         if (mlKitTranslator == null){
             return text
         }
 
+        activeTranslations.add(text)
         downloadModelIfNeeded()
 
         try {
@@ -138,8 +172,9 @@ object TranslationManager {
         } catch (_: Exception) {
             return text
         }
-
-        return text
+        finally {
+            activeTranslations.remove(text)
+        }
     }
 
     private suspend fun loadSavedTranslations (){
@@ -183,6 +218,7 @@ object TranslationManager {
     private suspend fun setLocaleAsync (newLocale : String){
         currentLocale = newLocale
         cancelDownloadModel()
+        activeTranslations.clear()
         mlKitTranslator?.close()
         mlKitTranslator = buildMlkitTranslator()
         loadSavedTranslations()
