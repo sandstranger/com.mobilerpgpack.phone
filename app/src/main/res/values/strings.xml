@@ -1,7 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
-    <string name="app_name">DOOM &amp; Wolf RPG</string>
+    <string name="app_name">DOOM &amp; Wolfenstein RPG</string>
     <string name="access_to_all_files">Allow access to manage all files</string>
+    <string name="use_sdl_ttf_for_rendering">Use SDL TTF for text rendering (Can be used for text translations)</string>
+    <string name="use_mlkit_for_text_translations">Enable machine text translation by ML Kit (It forcibly enables \"Use SDL TTF for text rendering\" option)</string>
     <string name="grant_permission">Grant permission</string>
     <string name="common_settings">Common settings</string>
     <string name="graphics_settings">Graphics</string>
