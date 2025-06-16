@@ -11,8 +11,10 @@ import com.google.mlkit.nl.translate.TranslatorOptions
 import com.mobilerpgpack.phone.engine.EngineTypes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 private const val SourceLocale = "en"
 
@@ -25,6 +27,7 @@ object TranslationManager {
     private lateinit var db: TranslationDatabase
     private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
     private var mlKitTranslator : Translator? = null
+    private var loadingTask: Job? = null
 
     val isModelLoading : Boolean
         get() {
@@ -71,15 +74,24 @@ object TranslationManager {
         val downloadConditions = if (useMobileNetwork) DownloadConditions.Builder().build() else
             DownloadConditions.Builder().requireWifi().build()
 
-        mlKitTranslator?.downloadModelIfNeeded(downloadConditions)
-            ?.addOnSuccessListener {
-                _isModelLoading = false
-                onModelDownloaded()
-            }
-            ?.addOnFailureListener { e ->
-                _isModelLoading = false
-                onModelDownloaded()
-            }
+         loadingTask = scope.launch {
+             mlKitTranslator?.downloadModelIfNeeded(downloadConditions)
+                 ?.addOnSuccessListener {
+                     loadingTask = null
+                     _isModelLoading = false
+                     onModelDownloaded()
+                 }
+                 ?.addOnFailureListener { e ->
+                     loadingTask = null
+                     _isModelLoading = false
+                     onModelDownloaded()
+                 }?.await()
+         }
+    }
+
+    fun cancelDownloadModel() {
+        _isModelLoading = false
+        loadingTask?.cancel()
     }
 
     private suspend fun loadSavedTranslations (){

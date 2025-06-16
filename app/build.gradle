@@ -93,6 +93,7 @@ dependencies {
     implementation (libs.androidx.room.ktx)
     implementation (libs.translate)
     implementation (libs.language.id)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     implementation (libs.core)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
