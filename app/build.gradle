@@ -90,9 +90,9 @@ dependencies {
 
     implementation (libs.androidx.room.runtime)
     ksp libs.androidx.room.compiler
-    implementation libs.androidx.room.ktx
-    implementation libs.translate
-    apply plugin: 'com.google.gms.google-services'
+    implementation (libs.androidx.room.ktx)
+    implementation (libs.translate)
+    implementation (libs.language.id)
 
     implementation (libs.core)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
