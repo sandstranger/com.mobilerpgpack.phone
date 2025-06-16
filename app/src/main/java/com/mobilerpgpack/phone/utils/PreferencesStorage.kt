@@ -33,6 +33,9 @@ object PreferencesStorage {
     private val OFFSET_X_MOUSE = floatPreferencesKey("offset_x_mouse")
     private val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
     private val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
+    private val useSDLTTFForFontsRenderingPrefsKey = booleanPreferencesKey("sdl_ttf_render")
+    private val useMlKitForTextTranslationsPrefsKey = booleanPreferencesKey("use_mlkit_for_translation")
+
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
 
@@ -40,6 +43,18 @@ object PreferencesStorage {
 
     suspend fun setDisplayInSafeAreaValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, displayInSafeAreaPrefsKey, valueToSave)
+
+    fun getUseMlKitForTextTranslationsValue(context: Context) =
+        getBooleanValue(context, useMlKitForTextTranslationsPrefsKey, defaultValue = false)
+
+    suspend fun setUseMlKitForTextTranslationsValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, useMlKitForTextTranslationsPrefsKey, valueToSave)
+
+    fun getUseSDLTTFForFontsRenderingValue(context: Context) =
+        getBooleanValue(context, useSDLTTFForFontsRenderingPrefsKey, defaultValue = false)
+
+    suspend fun setUseSDLTTFForFontsRenderingValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, useSDLTTFForFontsRenderingPrefsKey, valueToSave)
 
     fun getEditCustomScreenControlsInGameValue(context: Context) =
         getBooleanValue(context, editCustomScreenControlsInGamePrefsKey, defaultValue = true)

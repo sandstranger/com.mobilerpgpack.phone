@@ -242,6 +242,32 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
 
     Text(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
 
+    HorizontalDivider()
+
+    SwitchPreferenceItem(
+        context.getString(R.string.use_sdl_ttf_for_rendering),
+        checkedFlow = PreferencesStorage.getUseSDLTTFForFontsRenderingValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setUseSDLTTFForFontsRenderingValue(context, newValue)
+        }
+    }
+
+    HorizontalDivider()
+
+    HorizontalDivider()
+
+    SwitchPreferenceItem(
+        context.getString(R.string.use_mlkit_for_text_translations),
+        checkedFlow = PreferencesStorage.getUseMlKitForTextTranslationsValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setUseMlKitForTextTranslationsValue(context, newValue)
+        }
+    }
+
+    HorizontalDivider()
+
     PreferenceItem(context.getString(R.string.keys_editor)) {
         drawKeysEditor = true
     }
