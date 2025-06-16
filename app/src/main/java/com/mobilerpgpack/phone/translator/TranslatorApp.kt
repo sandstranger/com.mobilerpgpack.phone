@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
 
-sealed class TranslatorApp : Application() {
+class TranslatorApp : Application() {
     override fun onCreate() {
         super.onCreate()
         TranslationManager.init(this)
