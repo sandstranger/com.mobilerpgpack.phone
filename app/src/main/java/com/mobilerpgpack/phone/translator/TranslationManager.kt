@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.translator
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
+import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
@@ -19,10 +20,16 @@ object TranslationManager {
     private val scope = CoroutineScope(Dispatchers.Default)
     private var wasInit = false
     private var _activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
+    private var _isModelLoading = false
     private lateinit var currentLocale : String
     private lateinit var db: TranslationDatabase
     private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
     private var mlKitTranslator : Translator? = null
+
+    val isModelLoading : Boolean
+        get() {
+            return _isModelLoading
+        }
 
     var activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
         set(value) {
@@ -52,6 +59,27 @@ object TranslationManager {
         loadedTranslations.clear()
         mlKitTranslator?.close()
         scope.cancel()
+    }
+
+    fun downloadModel(useMobileNetwork : Boolean = false, onModelDownloaded : () -> Unit = { }){
+        if (mlKitTranslator == null){
+            onModelDownloaded()
+            return
+        }
+
+        _isModelLoading = true
+        val downloadConditions = if (useMobileNetwork) DownloadConditions.Builder().build() else
+            DownloadConditions.Builder().requireWifi().build()
+
+        mlKitTranslator?.downloadModelIfNeeded(downloadConditions)
+            ?.addOnSuccessListener {
+                _isModelLoading = false
+                onModelDownloaded()
+            }
+            ?.addOnFailureListener { e ->
+                _isModelLoading = false
+                onModelDownloaded()
+            }
     }
 
     private suspend fun loadSavedTranslations (){
