@@ -31,6 +31,7 @@ object TranslationManager {
     private lateinit var currentLocale : String
     private lateinit var db: TranslationDatabase
     private lateinit var languageIdentifier : LanguageIdentifier
+    private lateinit var downloadConditions : DownloadConditions
 
     private val scope = CoroutineScope(Dispatchers.Default)
     private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
@@ -48,6 +49,9 @@ object TranslationManager {
 
     var allowDownloadingOveMobile : Boolean = false
         set(value) {
+            if (_allowDownloadingOveMobile!=value){
+                downloadConditions = buildConditions()
+            }
             _allowDownloadingOveMobile = value
         }
 
@@ -56,6 +60,7 @@ object TranslationManager {
             return
         }
         wasInit = true
+        downloadConditions = buildConditions()
         languageIdentifier = LanguageIdentification.getClient()
         db = TranslationDatabase.getInstance(context)
         setLocale(getSystemLocale())
@@ -86,8 +91,6 @@ object TranslationManager {
         }
 
         _isModelLoading = true
-        val downloadConditions = if (_allowDownloadingOveMobile) DownloadConditions.Builder().build() else
-            DownloadConditions.Builder().requireWifi().build()
 
         loadingTask = scope.async {
             _isModelLoading = true
@@ -224,6 +227,13 @@ object TranslationManager {
         }
 
         return null
+    }
+
+    private fun buildConditions(): DownloadConditions {
+        return if (_allowDownloadingOveMobile)
+            DownloadConditions.Builder().build()
+        else
+            DownloadConditions.Builder().requireWifi().build()
     }
 
     private suspend fun setLocaleAsync (newLocale : String){
