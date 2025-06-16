@@ -40,6 +40,7 @@
         android:required="false" />
 
     <application
+        android:name=".translator.TranslatorApp"
         android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
