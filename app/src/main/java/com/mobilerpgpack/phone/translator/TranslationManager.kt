@@ -171,6 +171,16 @@ object TranslationManager {
 
     suspend fun translateAsync(text: String): String {
 
+        suspend fun saveTranslatedText (translatedText : String){
+            val translationEntry = TranslationEntry(
+                key = text,
+                lang = targetLocale,
+                value = translatedText,
+                engine = _activeEngine )
+            db.translationDao().insertTranslation(translationEntry)
+            loadedTranslations[text] = translationEntry
+        }
+
         if (isTranslated(text)){
             return getTranslation(text)
         }
@@ -187,12 +197,7 @@ object TranslationManager {
             sourceLocale = languageIdentifier.identifyLanguage(text).await()
         } catch (_: Exception) {
             activeTranslations.remove(text)
-            val translationEntry = TranslationEntry(
-                key = text,
-                lang = targetLocale,
-                value = text,
-                engine = _activeEngine )
-            loadedTranslations[text] = translationEntry
+            saveTranslatedText(text)
             return text
         }
 
@@ -211,13 +216,7 @@ object TranslationManager {
 
         try {
             val translatedValue = mlKitTranslator!!.translate(text).await()
-            val translationEntry = TranslationEntry(
-                key = text,
-                lang = targetLocale,
-                value = translatedValue,
-                engine = _activeEngine )
-            loadedTranslations[text] = translationEntry
-            db.translationDao().insertTranslation(translationEntry)
+            saveTranslatedText(translatedValue)
             return translatedValue
         } catch (_: Exception) {
             return text
