@@ -60,17 +60,15 @@ object TranslationManager {
     }
 
     fun setLocale (newLocale : String){
-        currentLocale = newLocale
-        mlKitTranslator = buildMlkitTranslator()
-        scope.cancel()
         scope.launch {
-            loadSavedTranslations()
+            setLocaleAsync(newLocale)
         }
     }
 
     fun terminate(){
         db.close()
         loadedTranslations.clear()
+        cancelDownloadModel()
         mlKitTranslator?.close()
         scope.cancel()
     }
@@ -114,10 +112,11 @@ object TranslationManager {
         val langCode = languageIdentifier.identifyLanguage(text).await()
 
         if (currentLocale != langCode){
-            currentLocale = langCode
-            cancelDownloadModel()
-            mlKitTranslator?.close()
-            mlKitTranslator = buildMlkitTranslator()
+            setLocaleAsync(langCode)
+        }
+
+        if (loadedTranslations.contains(text)){
+            return loadedTranslations[text]!!.value
         }
 
         if (mlKitTranslator == null){
@@ -125,7 +124,22 @@ object TranslationManager {
         }
 
         downloadModelIfNeeded()
-        return mlKitTranslator!!.translate(text).await()
+
+        try {
+            val translatedValue = mlKitTranslator!!.translate(text).await()
+            val translationEntry = TranslationEntry(
+                key = text,
+                lang = currentLocale,
+                value = translatedValue,
+                engine = _activeEngine )
+            loadedTranslations[translatedValue] = translationEntry
+            db.translationDao().insertTranslation(translationEntry)
+            return translatedValue
+        } catch (_: Exception) {
+            return text
+        }
+
+        return text
     }
 
     private suspend fun loadSavedTranslations (){
@@ -164,5 +178,13 @@ object TranslationManager {
         }
 
         return null
+    }
+
+    private suspend fun setLocaleAsync (newLocale : String){
+        currentLocale = newLocale
+        cancelDownloadModel()
+        mlKitTranslator?.close()
+        mlKitTranslator = buildMlkitTranslator()
+        loadSavedTranslations()
     }
 }
