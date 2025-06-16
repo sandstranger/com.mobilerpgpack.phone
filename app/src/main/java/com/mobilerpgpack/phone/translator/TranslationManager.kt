@@ -35,7 +35,7 @@ object TranslationManager {
     private val scope = CoroutineScope(Dispatchers.Default)
     private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
     private val activeTranslations : HashSet<String> = hashSetOf()
-    
+
     val isModelLoading : Boolean
         get() {
             return _isModelLoading
@@ -79,6 +79,10 @@ object TranslationManager {
     suspend fun downloadModelIfNeeded() : Boolean{
         if (mlKitTranslator == null){
             return false
+        }
+
+        if (_isModelLoading){
+            return loadingTask!!.await()
         }
 
         _isModelLoading = true
