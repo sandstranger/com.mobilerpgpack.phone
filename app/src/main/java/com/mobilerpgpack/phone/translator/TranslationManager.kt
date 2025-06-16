@@ -33,7 +33,9 @@ object TranslationManager {
     private var _allowDownloadingOveMobile = false
     private var mlKitTranslator : Translator? = null
     private var loadingTask: Deferred<Boolean>? = null
-    private lateinit var currentLocale : String
+    private var sourceLocale : String = SourceLocale
+
+    private lateinit var targetLocale : String
     private lateinit var db: TranslationDatabase
     private lateinit var languageIdentifier : LanguageIdentifier
     private lateinit var downloadConditions : DownloadConditions
@@ -98,18 +100,20 @@ object TranslationManager {
             return loadingTask!!.await()
         }
 
+        _isModelLoading = true
+
         val modelManager = RemoteModelManager.getInstance()
 
-        val isDownloaded = modelManager.isModelDownloaded(getRemoteModel(currentLocale)).await()
+        val isDownloaded = modelManager.isModelDownloaded(getRemoteModel(targetLocale)).await()
         if (isDownloaded) {
+            _isModelLoading = false
             return true
         }
 
         if (!context.isInternetAvailable()){
+            _isModelLoading = false
             return false
         }
-
-        _isModelLoading = true
 
         loadingTask = scope.async {
             _isModelLoading = true
@@ -177,23 +181,24 @@ object TranslationManager {
 
         activeTranslations.add(text)
 
-        var langCode : String = currentLocale
+        var sourceLocale : String = this.sourceLocale
 
         try {
-            langCode = languageIdentifier.identifyLanguage(text).await()
+            sourceLocale = languageIdentifier.identifyLanguage(text).await()
         } catch (_: Exception) {
             activeTranslations.remove(text)
             val translationEntry = TranslationEntry(
                 key = text,
-                lang = currentLocale,
+                lang = targetLocale,
                 value = text,
                 engine = _activeEngine )
             loadedTranslations[text] = translationEntry
             return text
         }
 
-        if (currentLocale != langCode){
-            setLocaleAsync(langCode)
+        if (this.sourceLocale != sourceLocale){
+            this.sourceLocale = sourceLocale
+            rebuildAllContent()
         }
 
         if (isTranslated(text)){
@@ -208,7 +213,7 @@ object TranslationManager {
             val translatedValue = mlKitTranslator!!.translate(text).await()
             val translationEntry = TranslationEntry(
                 key = text,
-                lang = currentLocale,
+                lang = targetLocale,
                 value = translatedValue,
                 engine = _activeEngine )
             loadedTranslations[text] = translationEntry
@@ -227,7 +232,7 @@ object TranslationManager {
         val entries = db.translationDao().getAllTranslations();
 
         entries.forEach {
-            if (it.lang == currentLocale && it.engine == activeEngine){
+            if (it.lang == targetLocale && it.engine == activeEngine){
                 loadedTranslations[it.key] = it
             }
         }
@@ -244,8 +249,8 @@ object TranslationManager {
     private fun buildMlkitTranslator () : Translator? {
         mlKitTranslator?.close()
 
-        val sourceLang = TranslateLanguage.fromLanguageTag(SourceLocale)
-        val targetLang = TranslateLanguage.fromLanguageTag(currentLocale)
+        val sourceLang = TranslateLanguage.fromLanguageTag(sourceLocale)
+        val targetLang = TranslateLanguage.fromLanguageTag(targetLocale)
 
         if (sourceLang != null && targetLang != null) {
 
@@ -268,7 +273,11 @@ object TranslationManager {
     }
 
     private suspend fun setLocaleAsync (newLocale : String){
-        currentLocale = newLocale
+        targetLocale = newLocale
+        rebuildAllContent()
+    }
+
+    private suspend fun rebuildAllContent (){
         cancelDownloadModel()
         activeTranslations.clear()
         mlKitTranslator?.close()
