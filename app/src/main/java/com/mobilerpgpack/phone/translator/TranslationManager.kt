@@ -156,7 +156,22 @@ object TranslationManager {
             return text
         }
 
-        val langCode = languageIdentifier.identifyLanguage(text).await()
+        activeTranslations.add(text)
+
+        var langCode : String = currentLocale
+
+        try {
+            langCode = languageIdentifier.identifyLanguage(text).await()
+        } catch (_: Exception) {
+            activeTranslations.remove(text)
+            val translationEntry = TranslationEntry(
+                key = text,
+                lang = currentLocale,
+                value = text,
+                engine = _activeEngine )
+            loadedTranslations[text] = translationEntry
+            return text
+        }
 
         if (currentLocale != langCode){
             setLocaleAsync(langCode)
@@ -170,7 +185,6 @@ object TranslationManager {
             return text
         }
 
-        activeTranslations.add(text)
         downloadModelIfNeeded()
 
         try {
@@ -180,7 +194,7 @@ object TranslationManager {
                 lang = currentLocale,
                 value = translatedValue,
                 engine = _activeEngine )
-            loadedTranslations[translatedValue] = translationEntry
+            loadedTranslations[text] = translationEntry
             db.translationDao().insertTranslation(translationEntry)
             return translatedValue
         } catch (_: Exception) {
