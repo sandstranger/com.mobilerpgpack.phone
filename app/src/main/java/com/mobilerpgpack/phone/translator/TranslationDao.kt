@@ -12,7 +12,7 @@ interface TranslationDao {
     suspend fun insertTranslation(translation: TranslationEntry)
 
     @Query("SELECT * FROM translations")
-    suspend fun getAllTranslations(): Collection<TranslationEntry>
+    suspend fun getAllTranslations(): List<TranslationEntry>
 
     @Upsert
     suspend fun upsertTranslation(translation: TranslationEntry)
