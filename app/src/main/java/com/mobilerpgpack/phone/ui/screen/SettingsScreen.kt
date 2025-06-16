@@ -242,8 +242,6 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
 
     Text(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
 
-    HorizontalDivider()
-
     SwitchPreferenceItem(
         context.getString(R.string.use_sdl_ttf_for_rendering),
         checkedFlow = PreferencesStorage.getUseSDLTTFForFontsRenderingValue(context),
