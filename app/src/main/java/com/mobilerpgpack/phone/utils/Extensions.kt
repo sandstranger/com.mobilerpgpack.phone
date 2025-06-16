@@ -9,6 +9,8 @@ import android.content.Intent.createChooser
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
 import android.util.Log
@@ -40,6 +42,18 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
     if (finishParentActivity && this is Activity) this.finish();
 }
 
+fun Context.isInternetAvailable(): Boolean {
+    val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    @Suppress("DEPRECATION")
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    } else {
+        val networkInfo = cm.activeNetworkInfo
+        networkInfo != null && networkInfo.isConnected
+    }
+}
 
 fun copyAssetsFolderToInternalStorage(context: Context, assetsFolder: String, destFolder: File) {
     val assetManager = context.assets

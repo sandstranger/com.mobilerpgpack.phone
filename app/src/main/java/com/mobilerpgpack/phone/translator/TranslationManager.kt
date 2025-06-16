@@ -1,16 +1,20 @@
 package com.mobilerpgpack.phone.translator
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.languageid.LanguageIdentifier
 import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.utils.isInternetAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +25,7 @@ import kotlinx.coroutines.tasks.await
 
 private const val SourceLocale = "en"
 
+@SuppressLint("StaticFieldLeak")
 object TranslationManager {
     private var wasInit = false
     private var _activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
@@ -32,10 +37,12 @@ object TranslationManager {
     private lateinit var db: TranslationDatabase
     private lateinit var languageIdentifier : LanguageIdentifier
     private lateinit var downloadConditions : DownloadConditions
+    private lateinit var context: Context
 
     private val scope = CoroutineScope(Dispatchers.Default)
     private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
     private val activeTranslations : HashSet<String> = hashSetOf()
+    private val modelCache = mutableMapOf<String, TranslateRemoteModel>()
 
     val isModelLoading : Boolean
         get() {
@@ -59,6 +66,7 @@ object TranslationManager {
         if (wasInit){
             return
         }
+        this.context = context
         wasInit = true
         downloadConditions = buildConditions()
         languageIdentifier = LanguageIdentification.getClient()
@@ -88,6 +96,17 @@ object TranslationManager {
 
         if (_isModelLoading){
             return loadingTask!!.await()
+        }
+
+        val modelManager = RemoteModelManager.getInstance()
+
+        val isDownloaded = modelManager.isModelDownloaded(getRemoteModel(currentLocale)).await()
+        if (isDownloaded) {
+            return true
+        }
+
+        if (!context.isInternetAvailable()){
+            return false
         }
 
         _isModelLoading = true
@@ -181,11 +200,9 @@ object TranslationManager {
             return getTranslation(text)
         }
 
-        if (mlKitTranslator == null){
+        if (mlKitTranslator == null || !downloadModelIfNeeded()){
             return text
         }
-
-        downloadModelIfNeeded()
 
         try {
             val translatedValue = mlKitTranslator!!.translate(text).await()
@@ -257,5 +274,11 @@ object TranslationManager {
         mlKitTranslator?.close()
         mlKitTranslator = buildMlkitTranslator()
         loadSavedTranslations()
+    }
+
+    private fun getRemoteModel(langCode: String): TranslateRemoteModel {
+        return modelCache.getOrPut(langCode) {
+            TranslateRemoteModel.Builder(langCode).build()
+        }
     }
 }
