@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id 'com.google.devtools.ksp' version '2.1.21-2.0.2'
 }
 
 android {
@@ -86,6 +87,12 @@ dependencies {
     implementation(project(":fluidsynth"))
     implementation (project(":file-picker"))
     implementation (project(":sdl2-ttf"))
+
+    implementation (libs.androidx.room.runtime)
+    ksp libs.androidx.room.compiler
+    implementation libs.androidx.room.ktx
+    implementation libs.translate
+    apply plugin: 'com.google.gms.google-services'
 
     implementation (libs.core)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
