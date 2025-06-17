@@ -35,14 +35,28 @@ object PreferencesStorage {
     private val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
     private val useSDLTTFForFontsRenderingPrefsKey = booleanPreferencesKey("sdl_ttf_render")
     private val useMlKitForTextTranslationsPrefsKey = booleanPreferencesKey("use_mlkit_for_translation")
+    private val enableLauncherTextTranslationPrefsKey = booleanPreferencesKey("enable_launcher_translation")
+    private val allowDownloadingModelsOverMobilePrefsKey = booleanPreferencesKey("allow_downloading_over_mobile")
 
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
+
+    fun getAllowDownloadingModelsOverMobileValue(context: Context) =
+        getBooleanValue(context, allowDownloadingModelsOverMobilePrefsKey)
+
+    suspend fun setAllowDownloadingModelsOverMobileValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, allowDownloadingModelsOverMobilePrefsKey, valueToSave)
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
     suspend fun setDisplayInSafeAreaValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, displayInSafeAreaPrefsKey, valueToSave)
+
+    fun getEnableLauncherTextTranslationValue(context: Context) =
+        getBooleanValue(context, enableLauncherTextTranslationPrefsKey, defaultValue = false)
+
+    suspend fun setEnableLauncherTextTranslationValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, enableLauncherTextTranslationPrefsKey, valueToSave)
 
     fun getUseMlKitForTextTranslationsValue(context: Context) =
         getBooleanValue(context, useMlKitForTextTranslationsPrefsKey, defaultValue = false)
