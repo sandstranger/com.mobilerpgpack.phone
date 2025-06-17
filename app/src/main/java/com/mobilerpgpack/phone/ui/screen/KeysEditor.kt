@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.items.TranslatedText
 import kotlinx.coroutines.launch
 
 @Composable
@@ -71,10 +72,10 @@ fun KeysEditor(
             onDismissRequest = { showButtonSelectDialog = false },
             confirmButton = {
                 TextButton(onClick = { showButtonSelectDialog = false }) {
-                    Text(context.getString(R.string.close_text))
+                    TranslatedText(context.getString(R.string.close_text))
                 }
             },
-            title = { Text(context.getString(R.string.select_button)) },
+            title = { TranslatedText(context.getString(R.string.select_button)) },
             text = {
                 Column (modifier = Modifier.verticalScroll(scrollState)){
                     buttonsToEdit.forEach { button ->
@@ -113,10 +114,10 @@ fun KeysEditor(
             onDismissRequest = { showKeyCodeDialog = false },
             confirmButton = {
                 TextButton(onClick = { showKeyCodeDialog = false }) {
-                    Text("Close")
+                    TranslatedText("Close")
                 }
             },
-            title = { Text("Select Key Code") },
+            title = { TranslatedText("Select Key Code") },
             text = {
                 Column(modifier = Modifier.heightIn(max = 400.dp).verticalScroll(scrollState)) {
                     keyCodeMap.forEach { (code, name) ->
@@ -154,14 +155,14 @@ fun KeysEditor(
             TextButton(onClick = {
                 shouldReset = true
             }) {
-                Text(context.getString(R.string.reset_to_default))
+                TranslatedText(context.getString(R.string.reset_to_default))
             }
         },
-        title = { Text(context.getString(R.string.keys_editor)) },
+        title = { TranslatedText(context.getString(R.string.keys_editor)) },
         text = {
             Column(modifier = modifier.fillMaxWidth()) {
 
-                Text("Selected Button", style = MaterialTheme.typography.labelMedium)
+                TranslatedText(context.getString(R.string.select_button), style = MaterialTheme.typography.labelMedium)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -181,7 +182,7 @@ fun KeysEditor(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(context.getString(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium)
+                TranslatedText(context.getString(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium)
                 Row(
                     modifier = Modifier
                         .clickable { showKeyCodeDialog = true }

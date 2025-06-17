@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
 import android.content.Context
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -22,8 +23,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,17 +44,20 @@ import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.translator.TranslationManager
+import com.mobilerpgpack.phone.translator.TranslatorApp
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
+import com.mobilerpgpack.phone.ui.items.TranslatedText
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getPathFromIntent
 import com.mobilerpgpack.phone.utils.isTelevision
 import com.mobilerpgpack.phone.utils.requestDirectory
 import com.mobilerpgpack.phone.utils.requestResourceFile
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -94,7 +98,7 @@ private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope) {
                 .padding(5.dp)
                 .height(56.dp)
         ) {
-            Text(context.getString(R.string.start_game), fontSize = 25.sp)
+            TranslatedText(context.getString(R.string.start_game), fontSize = 25.sp)
         }
 
         DrawAllSettings(context, scope)
@@ -147,7 +151,7 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
         .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
     val activeEngine = rememberSaveable (activeEngineString) { enumValueOf<EngineTypes>(activeEngineString!!) }
 
-    Text(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
+    TranslatedText(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
 
     ListPreferenceItem(
         context.getString(R.string.active_engine),
@@ -203,33 +207,41 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
 
     HorizontalDivider()
 
-    DrawPreloadModelsSetting(context, scope)
+    DrawPreloadModelsSetting(context)
 }
 
 @Composable
-private fun DrawPreloadModelsSetting(context: Context, scope: CoroutineScope){
-    var isLoading by remember { mutableStateOf(false) }
+private fun DrawPreloadModelsSetting(context: Context){
+    var isLoading by rememberSaveable { mutableStateOf(false) }
+    val downloadJob = remember { mutableStateOf<Job?>(null) }
 
-    PreferenceItem(context.getString(R.string.preload_translation_models)){
-        scope.launch {
-            isLoading = true
-            TranslationManager.downloadModelIfNeeded()
-            isLoading = false
+    PreferenceItem(context.getString(R.string.preload_translation_models)) {
+        isLoading = true
+        downloadJob.value = TranslatorApp.globalScope.launch {
+            try {
+                TranslationManager.downloadModelIfNeeded()
+            } catch (e: Exception) {
+            } finally {
+                isLoading = false
+            }
         }
     }
 
     HorizontalDivider()
 
-    LoadingModelDialogWithCancel(show = isLoading, onCancel = {
-        isLoading = false
-        TranslationManager.cancelDownloadModel()
-    })
+    LoadingModelDialogWithCancel(
+        show = isLoading,
+        onCancel = {
+            isLoading = false
+            downloadJob.value?.cancel()
+        }
+    )
 }
 
 @Composable
 private fun DrawGraphicsSettings(context: Context, scope: CoroutineScope) {
 
-    Text(context.getString(R.string.graphics_settings), style = MaterialTheme.typography.titleLarge)
+    TranslatedText(context.getString(R.string.graphics_settings), style = MaterialTheme.typography.titleLarge)
 
     val customScreenResolution by PreferencesStorage.getCustomScreenResolutionValue(context)
         .collectAsState(initial = defaultPathToLogcatFile)
@@ -275,7 +287,7 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
     val activeEngine = rememberSaveable (engineState) { enumValueOf<EngineTypes>(engineState!!) }
     var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
 
-    Text(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
+    TranslatedText(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
 
     SwitchPreferenceItem(
         context.getString(R.string.use_sdl_ttf_for_rendering),
@@ -376,7 +388,7 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
 
 @Composable
 private fun DrawWolfensteinRpgSettings(context: Context, scope: CoroutineScope) {
-    val pathToIpaFileState by PreferencesStorage.getPathToWolfensteinRpgIpaFileValue(context)
+    val pathToIpaFileFlow by PreferencesStorage.getPathToWolfensteinRpgIpaFileValue(context)
         .collectAsState(initial = "")
     val requestPathHelper = RequestPathHelper(context, scope, onPathSelected = { selectedPath ->
         scope.launch { PreferencesStorage.setPathToWolfensteinRpgIpaFile(context, selectedPath) }
@@ -384,7 +396,7 @@ private fun DrawWolfensteinRpgSettings(context: Context, scope: CoroutineScope) 
 
     requestPathHelper.DrawRequestPathItem(
         context.getString(R.string.wolfenstein_rpg_ipa_file),
-        pathToIpaFileState!!
+        pathToIpaFileFlow!!
     )
 
     HorizontalDivider()
