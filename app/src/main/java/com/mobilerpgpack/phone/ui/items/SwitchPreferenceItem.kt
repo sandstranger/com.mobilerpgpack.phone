@@ -36,7 +36,7 @@ fun SwitchPreferenceItem(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(title, modifier = Modifier.weight(1f))
+        TranslatedText(title, modifier = Modifier.weight(1f))
         Switch(
             checked = checkedState,
             onCheckedChange = null
