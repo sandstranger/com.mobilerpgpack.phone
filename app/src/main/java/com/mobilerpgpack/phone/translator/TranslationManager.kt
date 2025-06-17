@@ -4,45 +4,34 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import com.google.mlkit.common.model.DownloadConditions
-import com.google.mlkit.nl.languageid.LanguageIdentification
-import com.google.mlkit.nl.languageid.LanguageIdentifier
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.mobilerpgpack.phone.engine.EngineTypes
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
-
-private const val DefaultSourceLocale = "en"
 
 object TranslationManager {
     private var wasInit = false
     private var _activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
-    private var _isModelLoading = false
     private var _allowDownloadingOveMobile = false
     private var mlKitTranslator : Translator? = null
-    private var loadingTask: Deferred<Boolean>? = null
-    private var sourceLocale : String = DefaultSourceLocale
+    private var currentDownload: Deferred<Boolean>? = null
 
     private lateinit var targetLocale : String
     private lateinit var db: TranslationDatabase
-    private lateinit var languageIdentifier : LanguageIdentifier
     private lateinit var downloadConditions : DownloadConditions
 
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val downloadMutex = Mutex()
+    private val scope = TranslatorApp.globalScope
     private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
     private val activeTranslations : HashSet<String> = hashSetOf()
-
-    val isModelLoading : Boolean
-        get() {
-            return _isModelLoading
-        }
 
     var activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
         set(value) {
@@ -64,7 +53,6 @@ object TranslationManager {
         this._allowDownloadingOveMobile = allowDownloadingOveMobile
         wasInit = true
         downloadConditions = buildConditions()
-        languageIdentifier = LanguageIdentification.getClient()
         db = TranslationDatabase.getInstance(context)
         setLocale(getSystemLocale())
     }
@@ -75,7 +63,6 @@ object TranslationManager {
         loadedTranslations.clear()
         cancelDownloadModel()
         mlKitTranslator?.close()
-        scope.cancel()
     }
 
     fun setLocale (newLocale : String){
@@ -84,35 +71,38 @@ object TranslationManager {
         }
     }
 
-    suspend fun downloadModelIfNeeded() : Boolean{
-        if (mlKitTranslator == null){
-            return false
+    suspend fun downloadModelIfNeeded(): Boolean {
+        // Быстрый проход без блокировки: если уже скачано или транспортер не настроен
+        val translator = mlKitTranslator ?: return false
+
+        // Получаем (или создаём) Deferred<Boolean> под мьютексом
+        val task: Deferred<Boolean> = downloadMutex.withLock {
+            // Если есть незавершённый таск — переиспользуем
+            currentDownload?.takeIf { !it.isCompleted }?.let { return@withLock it }
+
+            // Иначе создаём новый
+            val newTask = scope.async {
+                try {
+                    // сам вызов ML Kit
+                    translator.downloadModelIfNeeded(downloadConditions).await()
+                    true
+                } catch (_: Exception) {
+                    false
+                }
+            }
+            currentDownload = newTask
+            newTask
         }
 
-        if (_isModelLoading){
-            return loadingTask!!.await()
-        }
-
-        _isModelLoading = true
-
-        loadingTask = scope.async {
-            _isModelLoading = true
-            try {
-                mlKitTranslator?.downloadModelIfNeeded(downloadConditions)?.await()
-                return@async true
-            } catch (_: Exception) {
-                return@async false
-            } finally {
-                _isModelLoading = false
+        return try {
+            task.await()
+        } finally {
+            downloadMutex.withLock {
+                if (currentDownload === task) {
+                    currentDownload = null
+                }
             }
         }
-
-        return loadingTask!!.await()
-    }
-
-    fun cancelDownloadModel() {
-        _isModelLoading = false
-        loadingTask?.cancel()
     }
 
     @JvmStatic
@@ -163,36 +153,17 @@ object TranslationManager {
             return text
         }
 
-        activeTranslations.add(text)
-
-        var sourceLocale : String = this.sourceLocale
-
-        try {
-            sourceLocale = languageIdentifier.identifyLanguage(text).await()
-        } catch (_: Exception) {
-            activeTranslations.remove(text)
-            saveTranslatedText(text)
-            return text
-        }
-
-        if (sourceLocale == targetLocale){
-            activeTranslations.remove(text)
-            saveTranslatedText(text)
-            return text
-        }
-
-        if (this.sourceLocale != sourceLocale){
-            this.sourceLocale = sourceLocale
-            rebuildAllContent()
-        }
-
         if (isTranslated(text)){
             return getTranslation(text)
         }
 
-        if (mlKitTranslator == null || !downloadModelIfNeeded()){
+        if (mlKitTranslator == null){
             return text
         }
+
+        activeTranslations.add(text)
+
+        downloadModelIfNeeded()
 
         try {
             val translatedValue = mlKitTranslator!!.translate(text).await()
@@ -228,7 +199,7 @@ object TranslationManager {
     private fun buildMlkitTranslator () : Translator? {
         mlKitTranslator?.close()
 
-        val sourceLang = TranslateLanguage.fromLanguageTag(sourceLocale)
+        val sourceLang = TranslateLanguage.fromLanguageTag(TranslateLanguage.ENGLISH)
         val targetLang = TranslateLanguage.fromLanguageTag(targetLocale)
 
         if (sourceLang != null && targetLang != null) {
@@ -272,5 +243,10 @@ object TranslationManager {
         scope.launch {
             translateAsync(text)
         }
+    }
+
+    private fun cancelDownloadModel() {
+        currentDownload?.cancel()
+        currentDownload = null
     }
 }

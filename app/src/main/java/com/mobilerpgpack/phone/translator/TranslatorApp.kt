@@ -4,6 +4,10 @@ import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -30,6 +34,11 @@ class TranslatorApp : Application() {
 
     override fun onTerminate() {
         super.onTerminate()
+        globalScope.coroutineContext.cancelChildren()
         TranslationManager.terminate()
+    }
+
+    companion object{
+        val globalScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     }
 }

@@ -92,7 +92,6 @@ dependencies {
     ksp libs.androidx.room.compiler
     implementation (libs.androidx.room.ktx)
     implementation (libs.translate)
-    implementation (libs.language.id)
     implementation(libs.kotlinx.coroutines.play.services)
 
     implementation (libs.core)
