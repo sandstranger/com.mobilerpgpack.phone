@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -41,6 +42,7 @@ import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
 import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
+import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
@@ -189,6 +191,39 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
 
     HorizontalDivider()
 
+    SwitchPreferenceItem(
+        context.getString(R.string.allow_downloading_over_mobile_network),
+        checkedFlow = PreferencesStorage.getAllowDownloadingModelsOverMobileValue(context),
+    ) { newValue ->
+        TranslationManager.allowDownloadingOveMobile = newValue
+        scope.launch {
+            PreferencesStorage.setAllowDownloadingModelsOverMobileValue(context, newValue)
+        }
+    }
+
+    HorizontalDivider()
+
+    DrawPreloadModelsSetting(context, scope)
+}
+
+@Composable
+private fun DrawPreloadModelsSetting(context: Context, scope: CoroutineScope){
+    var isLoading by remember { mutableStateOf(false) }
+
+    PreferenceItem(context.getString(R.string.preload_translation_models)){
+        scope.launch {
+            isLoading = true
+            TranslationManager.downloadModelIfNeeded()
+            isLoading = false
+        }
+    }
+
+    HorizontalDivider()
+
+    LoadingModelDialogWithCancel(show = isLoading, onCancel = {
+        isLoading = false
+        TranslationManager.cancelDownloadModel()
+    })
 }
 
 @Composable
@@ -252,6 +287,15 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
     }
 
     HorizontalDivider()
+
+    SwitchPreferenceItem(
+        context.getString(R.string.enable_launcher_text_translation),
+        checkedFlow = PreferencesStorage.getEnableLauncherTextTranslationValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setEnableLauncherTextTranslationValue(context, newValue)
+        }
+    }
 
     HorizontalDivider()
 

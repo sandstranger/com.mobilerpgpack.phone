@@ -1,20 +1,16 @@
 package com.mobilerpgpack.phone.translator
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import com.google.mlkit.common.model.DownloadConditions
-import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.languageid.LanguageIdentifier
 import com.google.mlkit.nl.translate.TranslateLanguage
-import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.utils.isInternetAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +19,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-private const val SourceLocale = "en"
+private const val DefaultSourceLocale = "en"
 
-@SuppressLint("StaticFieldLeak")
 object TranslationManager {
     private var wasInit = false
     private var _activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
@@ -33,18 +28,16 @@ object TranslationManager {
     private var _allowDownloadingOveMobile = false
     private var mlKitTranslator : Translator? = null
     private var loadingTask: Deferred<Boolean>? = null
-    private var sourceLocale : String = SourceLocale
+    private var sourceLocale : String = DefaultSourceLocale
 
     private lateinit var targetLocale : String
     private lateinit var db: TranslationDatabase
     private lateinit var languageIdentifier : LanguageIdentifier
     private lateinit var downloadConditions : DownloadConditions
-    private lateinit var context: Context
 
     private val scope = CoroutineScope(Dispatchers.Default)
     private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
     private val activeTranslations : HashSet<String> = hashSetOf()
-    private val modelCache = mutableMapOf<String, TranslateRemoteModel>()
 
     val isModelLoading : Boolean
         get() {
@@ -64,11 +57,11 @@ object TranslationManager {
             _allowDownloadingOveMobile = value
         }
 
-    fun init (context: Context){
+    fun init (context: Context, allowDownloadingOveMobile : Boolean = false){
         if (wasInit){
             return
         }
-        this.context = context
+        this._allowDownloadingOveMobile = allowDownloadingOveMobile
         wasInit = true
         downloadConditions = buildConditions()
         languageIdentifier = LanguageIdentification.getClient()
@@ -102,19 +95,6 @@ object TranslationManager {
 
         _isModelLoading = true
 
-        val modelManager = RemoteModelManager.getInstance()
-
-        val isDownloaded = modelManager.isModelDownloaded(getRemoteModel(targetLocale)).await()
-        if (isDownloaded) {
-            _isModelLoading = false
-            return true
-        }
-
-        if (!context.isInternetAvailable()){
-            _isModelLoading = false
-            return false
-        }
-
         loadingTask = scope.async {
             _isModelLoading = true
             try {
@@ -136,22 +116,16 @@ object TranslationManager {
     }
 
     @JvmStatic
-    fun isTranslated (text: String) = loadedTranslations.contains(text)
-
-    @JvmStatic
-    fun getTranslation(key: String) =
-        if (isTranslated(key)) loadedTranslations[key]!!.value else key
-
-    @JvmStatic
-    fun translate (text: String ){
-        if (isTranslated(text) || activeTranslations.contains(text)){
-            return
+    fun getTranslation(text: String ) : String {
+        if (isTranslated(text)) {
+            return loadedTranslations[text]!!.value
         }
 
-        scope.launch {
-            translateAsync(text)
-        }
+        translate(text)
+        return text
     }
+
+    fun isTranslated (text: String) = loadedTranslations.contains(text)
 
     fun translate (text: String, onTextTranslated : (String) -> Unit){
         if (isTranslated(text)){
@@ -196,6 +170,12 @@ object TranslationManager {
         try {
             sourceLocale = languageIdentifier.identifyLanguage(text).await()
         } catch (_: Exception) {
+            activeTranslations.remove(text)
+            saveTranslatedText(text)
+            return text
+        }
+
+        if (sourceLocale == targetLocale){
             activeTranslations.remove(text)
             saveTranslatedText(text)
             return text
@@ -284,9 +264,13 @@ object TranslationManager {
         loadSavedTranslations()
     }
 
-    private fun getRemoteModel(langCode: String): TranslateRemoteModel {
-        return modelCache.getOrPut(langCode) {
-            TranslateRemoteModel.Builder(langCode).build()
+    private fun translate (text: String ){
+        if (isTranslated(text) || activeTranslations.contains(text)){
+            return
+        }
+
+        scope.launch {
+            translateAsync(text)
         }
     }
 }
