@@ -13,7 +13,6 @@ import com.mobilerpgpack.ctranslate2proxy.CTranslate2TranslationProxy
 import com.mobilerpgpack.phone.engine.EngineTypes
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -173,7 +172,7 @@ object TranslationManager {
         if (targetLocale == TranslateLanguage.RUSSIAN) {
             activeTranslations.add(text)
 
-            initProxyIfNeeded()
+            initC2TranslateIfNeeded()
 
             try {
                 val translatedValue = _c2translateProxy!!.translateAsync(text)
@@ -181,6 +180,7 @@ object TranslationManager {
                 return translatedValue
             }
             catch (e : Exception){
+                Log.d("EXCEPTION", e.toString())
                 return text
             }
             finally {
@@ -282,9 +282,10 @@ object TranslationManager {
     }
 
     @Synchronized
-    private fun initProxyIfNeeded() {
+    private fun initC2TranslateIfNeeded() {
         if (_c2translateProxy == null) {
-            _c2translateProxy = CTranslate2TranslationProxy(pathToOptModel, optModelSourceProcessor, optModelTargetProcessor)
+            _c2translateProxy = CTranslate2TranslationProxy(pathToOptModel, optModelSourceProcessor,
+                optModelTargetProcessor)
         }
     }
 }
