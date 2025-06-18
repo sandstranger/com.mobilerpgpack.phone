@@ -3,11 +3,13 @@ package com.mobilerpgpack.phone.translator
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
+import android.util.Log
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
+import com.mobilerpgpack.ctranslate2proxy.CTranslate2TranslationProxy
 import com.mobilerpgpack.phone.engine.EngineTypes
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
+import java.io.File
 
 object TranslationManager {
     private var wasInit = false
@@ -23,10 +26,14 @@ object TranslationManager {
     private var _allowDownloadingOveMobile = false
     private var mlKitTranslator : Translator? = null
     private var currentDownload: Deferred<Boolean>? = null
+    private var _c2translateProxy : CTranslate2TranslationProxy? = null
 
     private lateinit var targetLocale : String
     private lateinit var db: TranslationDatabase
     private lateinit var downloadConditions : DownloadConditions
+    private lateinit var pathToOptModel : String
+    private lateinit var optModelSourceProcessor : String
+    private lateinit var optModelTargetProcessor : String
 
     private val downloadMutex = Mutex()
     private val scope = TranslatorApp.globalScope
@@ -50,6 +57,12 @@ object TranslationManager {
         if (wasInit){
             return
         }
+
+        val filesRootDir = context.getExternalFilesDir("")!!
+        pathToOptModel = "${filesRootDir.absolutePath}${File.separator}opus-ct2-en-ru"
+        optModelSourceProcessor = "${filesRootDir.absolutePath}${File.separator}source.spm"
+        optModelTargetProcessor = "${filesRootDir.absolutePath}${File.separator}target.spm"
+
         this._allowDownloadingOveMobile = allowDownloadingOveMobile
         wasInit = true
         downloadConditions = buildConditions()
@@ -157,6 +170,24 @@ object TranslationManager {
             return getTranslation(text)
         }
 
+        if (targetLocale == TranslateLanguage.RUSSIAN) {
+            activeTranslations.add(text)
+
+            initProxyIfNeeded()
+
+            try {
+                val translatedValue = _c2translateProxy!!.translateAsync(text)
+                saveTranslatedText(translatedValue)
+                return translatedValue
+            }
+            catch (e : Exception){
+                return text
+            }
+            finally {
+                activeTranslations.remove(text)
+            }
+        }
+
         if (mlKitTranslator == null){
             return text
         }
@@ -248,5 +279,12 @@ object TranslationManager {
     private fun cancelDownloadModel() {
         currentDownload?.cancel()
         currentDownload = null
+    }
+
+    @Synchronized
+    private fun initProxyIfNeeded() {
+        if (_c2translateProxy == null) {
+            _c2translateProxy = CTranslate2TranslationProxy(pathToOptModel, optModelSourceProcessor, optModelTargetProcessor)
+        }
     }
 }

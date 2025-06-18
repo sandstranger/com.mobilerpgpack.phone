@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.copyAssetsFolderToInternalStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,6 +20,7 @@ class TranslatorApp : Application() {
             allowDownloadingModelsOverMobile = PreferencesStorage
                 .getAllowDownloadingModelsOverMobileValue(this@TranslatorApp).first()!!
         }
+        copyAssetsContentToInternalStorage()
         TranslationManager.init(this, allowDownloadingModelsOverMobile)
     }
 
@@ -36,6 +38,10 @@ class TranslatorApp : Application() {
         super.onTerminate()
         globalScope.coroutineContext.cancelChildren()
         TranslationManager.terminate()
+    }
+
+    private fun copyAssetsContentToInternalStorage (){
+        copyAssetsFolderToInternalStorage(this, "game_files", this.getExternalFilesDir("")!!)
     }
 
     companion object{
