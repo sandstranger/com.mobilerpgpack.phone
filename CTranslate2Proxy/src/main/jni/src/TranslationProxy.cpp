@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <thread>
+#include <cmath>
 
 static sentencepiece::SentencePieceProcessor sp_source;
 static sentencepiece::SentencePieceProcessor sp_target;
@@ -13,7 +15,6 @@ static bool wasInit = false;
 
 static std::string Translate (std::string input){
     if (input.empty()) return "";
-
     std::vector<std::string> source_tokens;
     sp_source.Encode(input, &source_tokens);
 
@@ -44,12 +45,20 @@ Java_com_mobilerpgpack_ctranslate2proxy_CTranslate2TranslationProxy_initializeTr
     if (wasInit) {
         return;
     }
+    unsigned int num_threads = std::thread::hardware_concurrency();
+    if (num_threads == 0) {
+        num_threads = 1;
+    } else{
+        num_threads = std::lround(num_threads/1.7f);
+    }
 
     sp_source.Load(jstringToStdString(env, pathToSourceProcessor));
     sp_target.Load(jstringToStdString(env, pathToTargetProcessor));
+
     translator = std::make_unique<ctranslate2::Translator>(
             jstringToStdString(env, pathToTranslationModel),
-            ctranslate2::Device::CPU);
+            ctranslate2::Device::CPU,ctranslate2::ComputeType::INT8,
+            std::vector<int>(num_threads, 0));
 
     wasInit = true;
 
