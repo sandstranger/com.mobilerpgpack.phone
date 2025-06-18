@@ -19,7 +19,6 @@ internal class MainActivity : ComponentActivity(){
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         buildScreens()
-        copyAssetsContentToInternalStorage()
     }
 
     private fun buildScreens(){
@@ -47,9 +46,5 @@ internal class MainActivity : ComponentActivity(){
     private sealed class Screen(val route: String) {
         data object Permission : Screen("permission")
         data object Settings : Screen("settings")
-    }
-
-    private fun copyAssetsContentToInternalStorage (){
-        copyAssetsFolderToInternalStorage(this, "game_files", this.getExternalFilesDir("")!!)
     }
 }
