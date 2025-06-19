@@ -18,9 +18,9 @@ static std::string Translate (std::string input){
     std::vector<std::string> source_tokens;
     sp_source.Encode(input, &source_tokens);
 
-    auto results = translator->translate_batch({source_tokens});
+    auto results = translator->translate_batch_async({source_tokens})[0].get();
     std::string output;
-    sp_target.Decode(results[0].output(), &output);
+    sp_target.Decode(results.output(), &output);
     __android_log_print(ANDROID_LOG_INFO, "CTranslate2", "TRANSLATED VALUE = %s", output.c_str());
     return output;
 }
@@ -57,7 +57,7 @@ Java_com_mobilerpgpack_ctranslate2proxy_CTranslate2TranslationProxy_initializeTr
 
     translator = std::make_unique<ctranslate2::Translator>(
             jstringToStdString(env, pathToTranslationModel),
-            ctranslate2::Device::CPU,ctranslate2::ComputeType::INT8,
+            ctranslate2::Device::CPU,ctranslate2::ComputeType::INT8_FLOAT32,
             std::vector<int>(num_threads, 0));
 
     wasInit = true;
