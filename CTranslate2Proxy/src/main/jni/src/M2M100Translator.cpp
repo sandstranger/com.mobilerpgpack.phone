@@ -84,6 +84,7 @@ JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_
         return;
     }
     sp.reset();
+    translator->detach_models();
     translator.reset();
     sp = nullptr;
     translator = nullptr;
