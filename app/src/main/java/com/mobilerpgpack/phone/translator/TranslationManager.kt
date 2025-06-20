@@ -9,7 +9,8 @@ import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
-import com.mobilerpgpack.ctranslate2proxy.CTranslate2TranslationProxy
+import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
+import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.phone.engine.EngineTypes
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -25,7 +26,7 @@ object TranslationManager {
     private var _allowDownloadingOveMobile = false
     private var mlKitTranslator : Translator? = null
     private var currentDownload: Deferred<Boolean>? = null
-    private var _c2translateProxy : CTranslate2TranslationProxy? = null
+    private var _c2translateProxy : OpusMtTranslator? = null
 
     private lateinit var targetLocale : String
     private lateinit var db: TranslationDatabase
@@ -59,8 +60,8 @@ object TranslationManager {
 
         val filesRootDir = context.getExternalFilesDir("")!!
         pathToOptModel = "${filesRootDir.absolutePath}${File.separator}opus-ct2-en-ru"
-        optModelSourceProcessor = "${filesRootDir.absolutePath}${File.separator}source.spm"
-        optModelTargetProcessor = "${filesRootDir.absolutePath}${File.separator}target.spm"
+        optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
+        optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
 
         this._allowDownloadingOveMobile = allowDownloadingOveMobile
         wasInit = true
@@ -175,7 +176,7 @@ object TranslationManager {
             initC2TranslateIfNeeded()
 
             try {
-                val translatedValue = _c2translateProxy!!.translateAsync(text)
+                val translatedValue = _c2translateProxy!!.translate(text)
                 saveTranslatedText(translatedValue)
                 return translatedValue
             }
@@ -284,7 +285,7 @@ object TranslationManager {
     @Synchronized
     private fun initC2TranslateIfNeeded() {
         if (_c2translateProxy == null) {
-            _c2translateProxy = CTranslate2TranslationProxy(pathToOptModel, optModelSourceProcessor,
+            _c2translateProxy = OpusMtTranslator(pathToOptModel, optModelSourceProcessor,
                 optModelTargetProcessor)
         }
     }

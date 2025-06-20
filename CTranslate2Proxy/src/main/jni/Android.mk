@@ -11,7 +11,9 @@ LOCAL_C_INCLUDES :=                                     \
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
 
 LOCAL_SRC_FILES := \
-	src/TranslationProxy.cpp
+	$(LOCAL_PATH)/src/OpusMtTranslator.cpp \
+	$(LOCAL_PATH)/src/M2M100Translator.cpp \
+	$(LOCAL_PATH)/src/Utils.cpp \
 
 ifeq ($(APP_OPTIM),debug)
 	LOCAL_LDLIBS += $(LOCAL_PATH)/../../../../CTranslate2/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/$(TARGET_ARCH_ABI)/libctranslate2.so
