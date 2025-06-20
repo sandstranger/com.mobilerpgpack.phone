@@ -74,6 +74,7 @@ JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_
     }
     sp_target.reset();
     sp_source.reset();
+    translator->detach_models();
     translator.reset();
 
     sp_target = nullptr;
