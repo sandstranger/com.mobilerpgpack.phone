@@ -15,11 +15,8 @@ class Small100Translator (private val modelFile: String, private val spmFile: St
         initializeFromJni(modelFile, spmFile)
     }
 
-    override suspend fun translate(vararg params: String): String = withContext(Dispatchers.IO) {
-        if (params.size< 2){
-            return@withContext ""
-        }
-        return@withContext translateFromJni(params[0],params[1])
+    override suspend fun translate(text: String, sourceLocale: String, targetLocale : String): String = withContext(Dispatchers.IO) {
+        return@withContext translateFromJni(text, targetLocale)
     }
 
     @Synchronized

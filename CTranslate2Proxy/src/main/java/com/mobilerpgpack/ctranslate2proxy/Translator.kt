@@ -4,7 +4,7 @@ abstract class Translator {
 
     abstract fun initialize()
 
-    abstract suspend fun translate (vararg params: String) : String
+    abstract suspend fun translate (text: String, sourceLocale: String, targetLocale : String) : String
 
     abstract fun release()
 

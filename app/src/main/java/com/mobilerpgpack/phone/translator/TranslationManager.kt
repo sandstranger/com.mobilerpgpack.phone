@@ -228,32 +228,6 @@ object TranslationManager {
         }
     }
 
-    private fun buildMlkitTranslator () : Translator? {
-        mlKitTranslator?.close()
-
-        val sourceLang = TranslateLanguage.fromLanguageTag(TranslateLanguage.ENGLISH)
-        val targetLang = TranslateLanguage.fromLanguageTag(targetLocale)
-
-        if (sourceLang != null && targetLang != null) {
-
-            val options = TranslatorOptions.Builder()
-                .setSourceLanguage(sourceLang)
-                .setTargetLanguage(targetLang)
-                .build()
-
-            return Translation.getClient(options)
-        }
-
-        return null
-    }
-
-    private fun buildConditions(): DownloadConditions {
-        return if (_allowDownloadingOveMobile)
-            DownloadConditions.Builder().build()
-        else
-            DownloadConditions.Builder().requireWifi().build()
-    }
-
     private suspend fun setLocaleAsync (newLocale : String){
         targetLocale = newLocale
         rebuildAllContent()
