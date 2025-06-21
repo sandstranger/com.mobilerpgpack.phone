@@ -1,5 +1,9 @@
-package com.mobilerpgpack.phone.translator
+package com.mobilerpgpack.phone.translator.models
 
+import android.content.Context
+import android.util.Log
+import com.mobilerpgpack.phone.translator.TranslationType
+import com.mobilerpgpack.phone.utils.isWifiConnected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -8,7 +12,8 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-abstract class TranslationModel{
+abstract class TranslationModel (private val context : Context,
+                                 private val allowDownloadingOverMobile : Boolean = false ){
     private var currentDownload: Deferred<Boolean>? = null
     private val downloadMutex = Mutex()
 
@@ -18,11 +23,15 @@ abstract class TranslationModel{
 
     open var allowDownloadingOveMobile : Boolean = false
 
-    abstract fun initialize()
+    abstract fun initialize(sourceLocale: String, targetLocale : String)
 
     abstract suspend fun translate(text: String, sourceLocale: String, targetLocale : String) : String
 
     abstract suspend fun needToDownloadModel () : Boolean
+
+    init {
+        this@TranslationModel.allowDownloadingOveMobile = allowDownloadingOverMobile
+    }
 
     open fun release(){
         cancelDownloadingModel()
@@ -35,6 +44,10 @@ abstract class TranslationModel{
     }
 
     suspend fun downloadModelIfNeeded(): Boolean {
+        if (!allowDownloading()){
+            return false
+        }
+
         // Получаем (или создаём) Deferred<Boolean> под мьютексом
         val task: Deferred<Boolean> = downloadMutex.withLock {
             // Если есть незавершённый таск — переиспользуем
@@ -66,4 +79,6 @@ abstract class TranslationModel{
 
     protected open suspend fun downloadModelTask(){
     }
+
+    private fun allowDownloading () = allowDownloadingOverMobile || context.isWifiConnected()
 }
