@@ -8,7 +8,7 @@ import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
-import com.mobilerpgpack.phone.translator.TranslationType
+import com.mobilerpgpack.phone.translator.models.TranslationType
 import kotlinx.coroutines.tasks.await
 
 class MLKitTranslationModel (private val context : Context,
@@ -36,10 +36,15 @@ class MLKitTranslationModel (private val context : Context,
     }
 
     override fun initialize(sourceLocale: String, targetLocale : String) {
+        if (wasInitialize){
+            return
+        }
+
+        release()
         this.sourceLocale = sourceLocale
         this.targetLocale = targetLocale
-        release()
         mlKitTranslator = buildMlkitTranslator()
+        wasInitialize = true
     }
 
     override suspend fun translate(
@@ -48,6 +53,7 @@ class MLKitTranslationModel (private val context : Context,
         targetLocale: String
     ): String {
         if (this.sourceLocale!=sourceLocale || this.targetLocale!=targetLocale){
+            wasInitialize = false
             initialize(sourceLocale, targetLocale)
             super.downloadModelIfNeeded()
         }
@@ -59,9 +65,10 @@ class MLKitTranslationModel (private val context : Context,
         }
     }
 
-    override suspend fun downloadModelTask() {
+    override suspend fun downloadModelTask(): Boolean {
         super.downloadModelTask()
         mlKitTranslator?.downloadModelIfNeeded(downloadConditions)?.await()
+        return true
     }
 
     override suspend fun needToDownloadModel(): Boolean {

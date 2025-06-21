@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.net.DriveDownloader
-import com.mobilerpgpack.phone.translator.TranslationType
+import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
@@ -27,7 +27,6 @@ abstract class BaseM2M100TranslationModel(
     private val pathToModelZipFile : String = "${context.getExternalFilesDir("")}${File.separator}$zipFileName"
 
     private var isModelDownloaded = false
-    override val translationType: TranslationType = TranslationType.M2M100
 
     init {
         runBlocking {
@@ -36,8 +35,9 @@ abstract class BaseM2M100TranslationModel(
     }
 
     override fun initialize(sourceLocale: String, targetLocale: String) {
-        if (isModelDownloaded){
+        if (isModelDownloaded && !wasInitialize){
             translator.initialize()
+            wasInitialize = true
         }
     }
 
@@ -57,10 +57,10 @@ abstract class BaseM2M100TranslationModel(
         return text
     }
 
-    override suspend fun downloadModelTask() {
+    override suspend fun downloadModelTask(): Boolean {
         super.downloadModelTask()
         if (isModelDownloaded){
-            return
+            return true
         }
 
         val modelZipFile = File(pathToModelZipFile)
@@ -75,7 +75,9 @@ abstract class BaseM2M100TranslationModel(
                 PreferencesStorage.setBooleanValue(context, isModelDownloadedPrefsKey, true)
                 isModelDownloaded = true
                 initialize("","")
+                return true
             }
+            return false
         }
         finally {
             modelZipFile.delete()

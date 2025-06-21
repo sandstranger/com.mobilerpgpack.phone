@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.translator
+package com.mobilerpgpack.phone.translator.sql
 
 import androidx.room.TypeConverter
 import com.mobilerpgpack.phone.engine.EngineTypes

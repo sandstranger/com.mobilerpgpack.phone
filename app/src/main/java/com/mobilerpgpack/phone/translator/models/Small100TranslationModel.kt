@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
+import com.mobilerpgpack.phone.translator.models.TranslationType
 
 class Small100TranslationModel (
     private val context: Context,
@@ -20,7 +21,9 @@ class Small100TranslationModel (
 
     override val zipFileName: String = "small100_ct2.zip"
     override val isModelDownloadedPrefsKey: Preferences.Key<Boolean> =
-        booleanPreferencesKey("small_model_downloaded")
+        booleanPreferencesKey("small100_model_downloaded")
 
     override val translator: Translator = Small100Translator(modelFile, spmFile)
+
+    override val translationType: TranslationType = TranslationType.Small100
 }

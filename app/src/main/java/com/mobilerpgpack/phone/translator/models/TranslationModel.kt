@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
 import android.util.Log
-import com.mobilerpgpack.phone.translator.TranslationType
+import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.isWifiConnected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -17,6 +17,7 @@ abstract class TranslationModel (private val context : Context,
     private var currentDownload: Deferred<Boolean>? = null
     private val downloadMutex = Mutex()
 
+    protected var wasInitialize = false
     protected val scope = CoroutineScope(Dispatchers.IO)
 
     abstract val translationType : TranslationType
@@ -34,6 +35,7 @@ abstract class TranslationModel (private val context : Context,
     }
 
     open fun release(){
+        wasInitialize = false
         cancelDownloadingModel()
         scope.coroutineContext.cancelChildren()
     }
@@ -44,6 +46,11 @@ abstract class TranslationModel (private val context : Context,
     }
 
     suspend fun downloadModelIfNeeded(): Boolean {
+
+        if (!needToDownloadModel()){
+            return true
+        }
+
         if (!allowDownloading()){
             return false
         }
@@ -57,7 +64,6 @@ abstract class TranslationModel (private val context : Context,
             val newTask = scope.async {
                 try {
                     downloadModelTask()
-                    true
                 } catch (_: Exception) {
                     false
                 }
@@ -77,7 +83,8 @@ abstract class TranslationModel (private val context : Context,
         }
     }
 
-    protected open suspend fun downloadModelTask(){
+    protected open suspend fun downloadModelTask() : Boolean {
+        return true
     }
 
     private fun allowDownloading () = allowDownloadingOverMobile || context.isWifiConnected()

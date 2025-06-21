@@ -1,13 +1,23 @@
 package com.mobilerpgpack.phone.translator
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translator
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.BaseM2M100TranslationModel
+import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
+import com.mobilerpgpack.phone.translator.models.MLKitTranslationModel
+import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
+import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
+import com.mobilerpgpack.phone.translator.models.TranslationModel
+import com.mobilerpgpack.phone.translator.models.TranslationType
+import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
+import com.mobilerpgpack.phone.translator.sql.TranslationEntry
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -15,107 +25,126 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
 import java.io.File
+import java.util.Collections
+import java.util.concurrent.ConcurrentHashMap
 
 object TranslationManager {
     private var wasInit = false
-    private var _activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
-    private var _allowDownloadingOveMobile = false
-    private var mlKitTranslator : Translator? = null
-    private var currentDownload: Deferred<Boolean>? = null
-    private var _c2translateProxy : OpusMtTranslator? = null
+    private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
-    private lateinit var targetLocale : String
+    private lateinit var targetLocale: String
     private lateinit var db: TranslationDatabase
-    private lateinit var downloadConditions : DownloadConditions
-    private lateinit var pathToOptModel : String
-    private lateinit var optModelSourceProcessor : String
-    private lateinit var optModelTargetProcessor : String
 
-    private val downloadMutex = Mutex()
+    @SuppressLint("StaticFieldLeak")
+    @Volatile
+    private lateinit var translationModel : TranslationModel
+
+    private const val sourceLocale = TranslateLanguage.ENGLISH
     private val scope = TranslatorApp.globalScope
-    private val loadedTranslations : HashMap<String, TranslationEntry> = hashMapOf()
-    private val activeTranslations : HashSet<String> = hashSetOf()
+    private val translationModels = HashMap<TranslationType, TranslationModel>()
+    private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
+    private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
 
-    var activeEngine : EngineTypes = EngineTypes.DefaultActiveEngine
+    val inGame = false
+
+    var activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
         set(value) {
             _activeEngine = value
         }
 
-    var allowDownloadingOveMobile : Boolean = false
+    var allowDownloadingOveMobile: Boolean = false
         set(value) {
-            if (_allowDownloadingOveMobile!=value){
-                downloadConditions = DownloadConditions.Builder().build()
+            translationModels.values.forEach {
+                it.allowDownloadingOveMobile = value
             }
-            _allowDownloadingOveMobile = value
         }
 
-    fun init (context: Context, allowDownloadingOveMobile : Boolean = false){
-        if (wasInit){
+    var activeTranslationType : TranslationType
+        get() {
+            return translationModel.translationType
+        }set(value) {
+            changeTranslationModel(value)
+        }
+
+    fun init( context: Context, activeTranslationType: TranslationType = TranslationType.MLKit,
+        allowDownloadingOveMobile: Boolean = false
+    ) {
+        if (wasInit) {
             return
         }
 
-        val filesRootDir = context.getExternalFilesDir("")!!
-        pathToOptModel = "${filesRootDir.absolutePath}${File.separator}opus-ct2-en-ru"
-        optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
-        optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
+        val targetLocale = getSystemLocale()
 
-        this._allowDownloadingOveMobile = allowDownloadingOveMobile
+        translationModels [TranslationType.MLKit] =
+            MLKitTranslationModel(context,sourceLocale, targetLocale, allowDownloadingOveMobile)
+
+        val filesRootDir = context.getExternalFilesDir("")!!
+
+        val pathToOptModel = "${filesRootDir.absolutePath}${File.separator}opus-ct2-en-ru"
+        val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
+        val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
+
+        translationModels[TranslationType.OpusMt] =
+            OpusMtTranslationModel (context, pathToOptModel, optModelSourceProcessor, optModelTargetProcessor)
+
+        val pathToM2M100Model = "${filesRootDir.absolutePath}${File.separator}m2m100_ct2"
+        val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
+
+        translationModels[TranslationType.M2M100] =
+            M2M100TranslationModel (context, pathToM2M100Model, m2m100smpFile, allowDownloadingOveMobile)
+
+        val pathToSmall100Model = "${filesRootDir.absolutePath}${File.separator}small100_ct2"
+        val small100SmpFile = "${pathToSmall100Model}${File.separator}sentencepiece.model"
+
+        translationModels[TranslationType.Small100] =
+            Small100TranslationModel (context, pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile)
+
+        translationModel = translationModels[activeTranslationType]!!
+
         wasInit = true
-        downloadConditions = DownloadConditions.Builder().build()
         db = TranslationDatabase.getInstance(context)
-        setLocale(getSystemLocale())
+        setLocale(targetLocale)
     }
 
-    fun terminate(){
+    fun terminate() {
         db.close()
         activeTranslations.clear()
         loadedTranslations.clear()
-        cancelDownloadModel()
-        mlKitTranslator?.close()
+        translationModels.values.forEach {
+            it.release()
+        }
+        translationModels.clear()
     }
 
-    fun setLocale (newLocale : String){
+    fun setLocale(newLocale: String) {
+        if (inGame){
+            return
+        }
+
         scope.launch {
             setLocaleAsync(newLocale)
         }
     }
 
     suspend fun downloadModelIfNeeded(): Boolean {
-        // Быстрый проход без блокировки: если уже скачано или транспортер не настроен
-        val translator = mlKitTranslator ?: return false
+        translationModel.initialize(sourceLocale, targetLocale)
+        return translationModel.downloadModelIfNeeded()
+    }
 
-        // Получаем (или создаём) Deferred<Boolean> под мьютексом
-        val task: Deferred<Boolean> = downloadMutex.withLock {
-            // Если есть незавершённый таск — переиспользуем
-            currentDownload?.takeIf { !it.isCompleted }?.let { return@withLock it }
+    suspend fun isModelDownloaded () : Boolean{
+        return !translationModel.needToDownloadModel()
+    }
 
-            // Иначе создаём новый
-            val newTask = scope.async {
-                try {
-                    // сам вызов ML Kit
-                    translator.downloadModelIfNeeded(downloadConditions).await()
-                    true
-                } catch (_: Exception) {
-                    false
-                }
-            }
-            currentDownload = newTask
-            newTask
-        }
+    fun releaseTranslationModel(){
+        translationModel.release()
+    }
 
-        return try {
-            task.await()
-        } finally {
-            downloadMutex.withLock {
-                if (currentDownload === task) {
-                    currentDownload = null
-                }
-            }
-        }
+    fun cancelDownloadModel() {
+        translationModel.cancelDownloadingModel()
     }
 
     @JvmStatic
-    fun getTranslation(text: String ) : String {
+    fun getTranslation(text: String): String {
         if (isTranslated(text)) {
             return loadedTranslations[text]!!.value
         }
@@ -124,15 +153,15 @@ object TranslationManager {
         return text
     }
 
-    fun isTranslated (text: String) = loadedTranslations.contains(text)
+    fun isTranslated(text: String) = loadedTranslations.contains(text)
 
-    fun translate (text: String, onTextTranslated : (String) -> Unit){
-        if (isTranslated(text)){
-            onTextTranslated (getTranslation(text))
+    fun translate(text: String, onTextTranslated: (String) -> Unit) {
+        if (isTranslated(text)) {
+            onTextTranslated(getTranslation(text))
             return
         }
 
-        if (activeTranslations.contains(text)){
+        if (activeTranslations.contains(text)) {
             onTextTranslated(text)
             return
         }
@@ -144,30 +173,28 @@ object TranslationManager {
 
     suspend fun translateAsync(text: String): String {
 
-        suspend fun saveTranslatedText (translatedText : String){
+        suspend fun saveTranslatedText(translatedText: String) {
             val translationEntry = TranslationEntry(
                 key = text,
                 lang = targetLocale,
                 value = translatedText,
-                engine = _activeEngine )
+                engine = _activeEngine,
+                translationModelType = activeTranslationType
+            )
             db.translationDao().insertTranslation(translationEntry)
             loadedTranslations[text] = translationEntry
         }
 
-        if (isTranslated(text)){
+        if (isTranslated(text)) {
             return getTranslation(text)
         }
 
-        if (activeTranslations.contains(text)){
+        if (activeTranslations.contains(text)) {
             return text
         }
 
-        if (isTranslated(text)){
+        if (isTranslated(text)) {
             return getTranslation(text)
-        }
-
-        if (mlKitTranslator == null){
-            return text
         }
 
         activeTranslations.add(text)
@@ -175,23 +202,26 @@ object TranslationManager {
         downloadModelIfNeeded()
 
         try {
-            val translatedValue = mlKitTranslator!!.translate(text).await()
-            saveTranslatedText(translatedValue)
+            translationModel.initialize(sourceLocale, targetLocale)
+            val translatedValue = translationModel.translate(text, sourceLocale, targetLocale)
+            if (translatedValue!=text) {
+                saveTranslatedText(translatedValue)
+            }
             return translatedValue
         } catch (_: Exception) {
             return text
-        }
-        finally {
+        } finally {
             activeTranslations.remove(text)
         }
     }
 
-    private suspend fun loadSavedTranslations (){
+    private suspend fun loadSavedTranslations() {
         loadedTranslations.clear()
         val entries = db.translationDao().getAllTranslations();
 
         entries.forEach {
-            if (it.lang == targetLocale && it.engine == activeEngine){
+            if (it.lang == targetLocale && it.engine == activeEngine &&
+                activeTranslationType == it.translationModelType) {
                 loadedTranslations[it.key] = it
             }
         }
@@ -205,21 +235,24 @@ object TranslationManager {
         }
     }
 
-    private suspend fun setLocaleAsync (newLocale : String){
-        targetLocale = newLocale
-        rebuildAllContent()
+    private suspend fun setLocaleAsync(newLocale: String) {
+        if (targetLocale!=newLocale) {
+            targetLocale = newLocale
+            rebuildAllContent()
+        }
     }
 
-    private suspend fun rebuildAllContent (){
-        cancelDownloadModel()
+    private suspend fun rebuildAllContent() {
         activeTranslations.clear()
-        mlKitTranslator?.close()
-//        mlKitTranslator = buildMlkitTranslator()
         loadSavedTranslations()
+
+        if (activeTranslationType == TranslationType.MLKit){
+            translationModel.release()
+        }
     }
 
-    private fun translate (text: String ){
-        if (isTranslated(text) || activeTranslations.contains(text)){
+    private fun translate(text: String) {
+        if (isTranslated(text) || activeTranslations.contains(text)) {
             return
         }
 
@@ -228,16 +261,10 @@ object TranslationManager {
         }
     }
 
-    private fun cancelDownloadModel() {
-        currentDownload?.cancel()
-        currentDownload = null
-    }
-
-    @Synchronized
-    private fun initC2TranslateIfNeeded() {
-        if (_c2translateProxy == null) {
-            _c2translateProxy = OpusMtTranslator(pathToOptModel, optModelSourceProcessor,
-                optModelTargetProcessor)
+    private fun changeTranslationModel (targetTranslationType : TranslationType){
+        if (translationModel.translationType != targetTranslationType) {
+            translationModel.release()
+            translationModel = translationModels[targetTranslationType]!!
         }
     }
 }

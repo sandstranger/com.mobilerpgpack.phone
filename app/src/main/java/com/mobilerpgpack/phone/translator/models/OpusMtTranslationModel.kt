@@ -3,7 +3,7 @@ package com.mobilerpgpack.phone.translator.models
 import android.content.Context
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.phone.translator.models.TranslationModel
-import com.mobilerpgpack.phone.translator.TranslationType
+import com.mobilerpgpack.phone.translator.models.TranslationType
 
 class OpusMtTranslationModel(
     private val context : Context,
@@ -16,8 +16,13 @@ class OpusMtTranslationModel(
 
     override val translationType: TranslationType = TranslationType.OpusMt
 
-    override fun initialize(sourceLocale: String, targetLocale : String) =
+    override fun initialize(sourceLocale: String, targetLocale : String){
+        if (wasInitialize){
+            return
+        }
+        wasInitialize = true
         opusMtTranslator.initialize()
+    }
 
     override suspend fun translate(
         text: String,
