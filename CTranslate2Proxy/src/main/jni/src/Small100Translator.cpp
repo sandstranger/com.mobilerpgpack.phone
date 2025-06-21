@@ -3,7 +3,7 @@
 #include <vector>
 #include <ctranslate2/translator.h>
 #include "sentencepiece_processor.h"
-
+#include "android/log.h"
 using namespace std;
 using namespace sentencepiece;
 using namespace ctranslate2;
@@ -14,7 +14,7 @@ extern unique_ptr<Translator> create_translator (string model_path);
 static unique_ptr<SentencePieceProcessor> sp = nullptr;
 static std::unique_ptr<ctranslate2::Translator> translator = nullptr;
 
-string translate(string input, string source_locale, string target_locale) {
+string translate(string input, string target_locale) {
     if (input.empty()){
         return "";
     }
@@ -22,23 +22,19 @@ string translate(string input, string source_locale, string target_locale) {
         std::vector<std::string> tokens;
         sp->Encode(input, &tokens);
 
-        string source_prefix = "__" + source_locale + "__";
-        tokens.insert(tokens.begin(), source_prefix);
+        string target_prefix = "__" + target_locale + "__";
+        tokens.insert(tokens.begin(), target_prefix);
+        tokens.insert(tokens.end(), "</s>");
 
         const std::vector<std::vector<std::string>> batch = {tokens};
-        const std::vector<std::vector<std::string>> target_prefix = {
-                {"__" + target_locale + "__"}};
 
-        auto results =translator->translate_batch_async(batch, target_prefix,
-                                                        create_translation_options())[0].get();
+        auto results =
+                translator->translate_batch_async(batch, create_translation_options())[0].get();
 
         const std::vector<std::string> translatedTokens = results.output();
 
         std::string result;
         sp->Decode(translatedTokens, &result);
-
-        result = result.substr(7);
-
         return result;
     }
     catch (...) {
@@ -52,7 +48,7 @@ extern jstring toJString(JNIEnv *env, const std::string &str);
 extern std::string jstringToStdString(JNIEnv *env, jstring jStr);
 
 JNIEXPORT void JNICALL
-Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_initializeFromJni
+Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_initializeFromJni
         (JNIEnv *env, jobject thisObject, jstring pathToTranslationModel,
          jstring pathToSourceProcessor) {
     if (translator!= nullptr) {
@@ -63,22 +59,20 @@ Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_initializeFromJni
     translator = create_translator(jstringToStdString(env, pathToTranslationModel));
 }
 
-JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_translateFromJni
-        (JNIEnv *env, jobject thisObject, jstring text, jstring sourceLocale,
+JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_translateFromJni
+        (JNIEnv *env, jobject thisObject, jstring text,
          jstring targetLocale) {
     if (translator == nullptr){
         return  text;
     }
 
     string textString = jstringToStdString(env,text);
-    string sourceLocaleString = jstringToStdString(env, sourceLocale);
     string targetLocaleString = jstringToStdString(env,targetLocale);
 
-    return toJString(env,translate(textString, sourceLocaleString,
-                                   targetLocaleString));
+    return toJString(env,translate(textString, targetLocaleString));
 }
 
-JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_releaseFromJni
+JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_releaseFromJni
         (JNIEnv *env, jobject thisObject) {
     if (translator == nullptr){
         return;
