@@ -3,11 +3,10 @@ package com.mobilerpgpack.ctranslate2proxy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class M2M100Translator (private val modelFile: String, private val spmFile: String) : Translator() {
-
+class Small100Translator (private val modelFile: String, private val spmFile: String) : Translator() {
     private external fun initializeFromJni (modelFile : String, spmFile : String)
 
-    private external fun translateFromJni (text : String,sourceLocale : String, targetLocale: String) : String
+    private external fun translateFromJni (text : String, targetLocale: String) : String
 
     private external fun releaseFromJni()
 
@@ -17,10 +16,10 @@ class M2M100Translator (private val modelFile: String, private val spmFile: Stri
     }
 
     override suspend fun translate(vararg params: String): String = withContext(Dispatchers.IO) {
-        if (params.size <3){
+        if (params.size< 2){
             return@withContext ""
         }
-        return@withContext translateFromJni(params[0],params[1],params[2])
+        return@withContext translateFromJni(params[0],params[1])
     }
 
     @Synchronized
