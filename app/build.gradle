@@ -96,6 +96,9 @@ dependencies {
     implementation (libs.translate)
     implementation(libs.kotlinx.coroutines.play.services)
 
+//    implementation("com.google.api-client:google-api-client-android:2.0.0")
+  //  implementation("com.google.apis:google-api-services-drive:v3-rev20250420-2.0.0")
+
     implementation (libs.core)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)

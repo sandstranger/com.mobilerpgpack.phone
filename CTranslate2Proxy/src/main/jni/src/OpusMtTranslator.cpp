@@ -11,7 +11,7 @@ using namespace std;
 using namespace sentencepiece;
 using namespace ctranslate2;
 
-extern TranslationOptions options;
+extern TranslationOptions create_translation_options();
 extern unique_ptr<Translator> create_translator (string model_path);
 
 static unique_ptr<SentencePieceProcessor> sp_source = nullptr;
@@ -27,7 +27,8 @@ static std::string Translate (std::string input){
         std::vector<std::string> source_tokens;
         sp_source->Encode(input, &source_tokens);
 
-        auto results = translator->translate_batch_async({source_tokens}, options)[0].get();
+        auto results = translator->translate_batch_async({source_tokens},
+                                                         create_translation_options())[0].get();
         std::string output;
         sp_target->Decode(results.output(), &output);
         __android_log_print(ANDROID_LOG_INFO, "CTranslate2", "TRANSLATED VALUE = %s", output.c_str());

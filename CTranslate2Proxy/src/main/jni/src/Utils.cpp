@@ -12,8 +12,6 @@ TranslationOptions create_translation_options(){
     return options;
 }
 
-TranslationOptions options = create_translation_options();
-
 unique_ptr<Translator> create_translator (string model_path){
     unsigned int num_threads = std::thread::hardware_concurrency();
     if (num_threads == 0) {

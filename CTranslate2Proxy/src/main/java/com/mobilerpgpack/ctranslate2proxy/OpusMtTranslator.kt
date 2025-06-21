@@ -19,7 +19,10 @@ class OpusMtTranslator (private val pathToTranslationModel : String,
         initializeFromJni(pathToTranslationModel, pathToSourceProcessor, pathToTargetProcessor)
 
     override suspend fun translate(vararg params: String): String = withContext(Dispatchers.IO) {
-        translateFromJni(params[0])
+        if (params.isEmpty()){
+            return@withContext ""
+        }
+        return@withContext translateFromJni(params[0])
     }
 
     @Synchronized
