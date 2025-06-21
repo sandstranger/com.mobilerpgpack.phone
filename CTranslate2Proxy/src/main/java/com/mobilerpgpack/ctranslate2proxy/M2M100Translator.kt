@@ -16,11 +16,9 @@ class M2M100Translator (private val modelFile: String, private val spmFile: Stri
         initializeFromJni(modelFile, spmFile)
     }
 
-    override suspend fun translate(vararg params: String): String = withContext(Dispatchers.IO) {
-        if (params.size <3){
-            return@withContext ""
-        }
-        return@withContext translateFromJni(params[0],params[1],params[2])
+    override suspend fun translate(text: String, sourceLocale: String,
+                                   targetLocale : String): String = withContext(Dispatchers.IO) {
+        return@withContext translateFromJni(text, sourceLocale, targetLocale)
     }
 
     @Synchronized
