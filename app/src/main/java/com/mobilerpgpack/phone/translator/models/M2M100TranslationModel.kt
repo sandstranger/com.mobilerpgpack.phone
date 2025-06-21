@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
+import com.mobilerpgpack.phone.translator.models.TranslationType
 
 class M2M100TranslationModel (
     private val context: Context,
@@ -22,4 +23,6 @@ class M2M100TranslationModel (
         booleanPreferencesKey("m2m100_model_downloaded")
 
     override val translator: Translator = M2M100Translator(modelFile,spmFile)
+
+    override val translationType: TranslationType = TranslationType.M2M100
 }

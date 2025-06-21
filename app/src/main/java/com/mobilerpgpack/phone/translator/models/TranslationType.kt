@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.translator
+package com.mobilerpgpack.phone.translator.models
 
 enum class TranslationType {
     MLKit,
