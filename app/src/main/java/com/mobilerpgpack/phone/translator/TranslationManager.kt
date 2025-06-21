@@ -3,15 +3,11 @@ package com.mobilerpgpack.phone.translator
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
-import android.util.Log
 import com.google.mlkit.common.model.DownloadConditions
-import com.google.mlkit.nl.translate.TranslateLanguage
-import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
-import com.google.mlkit.nl.translate.TranslatorOptions
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
-import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.translator.models.BaseM2M100TranslationModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -48,7 +44,7 @@ object TranslationManager {
     var allowDownloadingOveMobile : Boolean = false
         set(value) {
             if (_allowDownloadingOveMobile!=value){
-                downloadConditions = buildConditions()
+                downloadConditions = DownloadConditions.Builder().build()
             }
             _allowDownloadingOveMobile = value
         }
@@ -65,7 +61,7 @@ object TranslationManager {
 
         this._allowDownloadingOveMobile = allowDownloadingOveMobile
         wasInit = true
-        downloadConditions = buildConditions()
+        downloadConditions = DownloadConditions.Builder().build()
         db = TranslationDatabase.getInstance(context)
         setLocale(getSystemLocale())
     }
@@ -170,25 +166,6 @@ object TranslationManager {
             return getTranslation(text)
         }
 
-        if (targetLocale == TranslateLanguage.RUSSIAN) {
-            activeTranslations.add(text)
-
-            initC2TranslateIfNeeded()
-
-            try {
-                val translatedValue = _c2translateProxy!!.translate(text)
-                saveTranslatedText(translatedValue)
-                return translatedValue
-            }
-            catch (e : Exception){
-                Log.d("EXCEPTION", e.toString())
-                return text
-            }
-            finally {
-                activeTranslations.remove(text)
-            }
-        }
-
         if (mlKitTranslator == null){
             return text
         }
@@ -237,7 +214,7 @@ object TranslationManager {
         cancelDownloadModel()
         activeTranslations.clear()
         mlKitTranslator?.close()
-        mlKitTranslator = buildMlkitTranslator()
+//        mlKitTranslator = buildMlkitTranslator()
         loadSavedTranslations()
     }
 
