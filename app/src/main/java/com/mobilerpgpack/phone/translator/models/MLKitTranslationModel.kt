@@ -1,5 +1,6 @@
-package com.mobilerpgpack.phone.translator
+package com.mobilerpgpack.phone.translator.models
 
+import android.content.Context
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.translate.TranslateLanguage
@@ -7,14 +8,18 @@ import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
+import com.mobilerpgpack.phone.translator.TranslationType
 import kotlinx.coroutines.tasks.await
 
-class MLKitTranslationModel (private var sourceLocale: String, private var targetLocale : String) :
-    TranslationModel() {
+class MLKitTranslationModel (private val context : Context,
+                             private var sourceLocale: String,
+                             private var targetLocale : String,
+                             private val allowDownloadingOverMobile : Boolean = false) :
+    TranslationModel(context,allowDownloadingOverMobile) {
 
     private val modelCache = mutableMapOf<String, TranslateRemoteModel>()
 
-    private lateinit var downloadConditions : DownloadConditions
+    private var downloadConditions : DownloadConditions
     private var mlKitTranslator : Translator? = null
 
     override val translationType: TranslationType = TranslationType.MLKit
@@ -30,7 +35,9 @@ class MLKitTranslationModel (private var sourceLocale: String, private var targe
         downloadConditions = buildConditions()
     }
 
-    override fun initialize() {
+    override fun initialize(sourceLocale: String, targetLocale : String) {
+        this.sourceLocale = sourceLocale
+        this.targetLocale = targetLocale
         release()
         mlKitTranslator = buildMlkitTranslator()
     }
@@ -41,9 +48,7 @@ class MLKitTranslationModel (private var sourceLocale: String, private var targe
         targetLocale: String
     ): String {
         if (this.sourceLocale!=sourceLocale || this.targetLocale!=targetLocale){
-            this.sourceLocale = sourceLocale
-            this.targetLocale = targetLocale
-            initialize()
+            initialize(sourceLocale, targetLocale)
             super.downloadModelIfNeeded()
         }
 

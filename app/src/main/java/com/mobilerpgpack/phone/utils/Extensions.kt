@@ -42,17 +42,14 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
     if (finishParentActivity && this is Activity) this.finish();
 }
 
-fun Context.isInternetAvailable(): Boolean {
+fun Context.isWifiConnected(): Boolean {
     val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     @Suppress("DEPRECATION")
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        val network = cm.activeNetwork ?: return false
-        val capabilities = cm.getNetworkCapabilities(network) ?: return false
-        capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    } else {
-        val networkInfo = cm.activeNetworkInfo
-        networkInfo != null && networkInfo.isConnected
-    }
+    val networkInfo = cm.activeNetworkInfo
+    @Suppress("DEPRECATION")
+    return networkInfo != null &&
+            networkInfo.isConnected &&
+            networkInfo.type == ConnectivityManager.TYPE_WIFI
 }
 
 fun copyAssetsFolderToInternalStorage(context: Context, assetsFolder: String, destFolder: File) {
@@ -178,14 +175,4 @@ private fun compareAssetAndFileHash(assetManager: AssetManager, assetPath: Strin
     } catch (e: IOException) {
         false
     }
-}
-
-private fun computeSHA256(inputStream: InputStream): ByteArray {
-    val digest = MessageDigest.getInstance("SHA-256")
-    val buffer = ByteArray(4096)
-    var bytesRead: Int
-    while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-        digest.update(buffer, 0, bytesRead)
-    }
-    return digest.digest()
 }
