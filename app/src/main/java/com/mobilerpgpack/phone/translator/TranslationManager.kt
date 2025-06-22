@@ -146,6 +146,10 @@ object TranslationManager {
 
     @JvmStatic
     fun getTranslation(text: String): String {
+        if (sourceLocale == targetLocale){
+            return text
+        }
+
         if (isTranslated(text)) {
             return loadedTranslations[text]!!.value
         }
@@ -159,13 +163,13 @@ object TranslationManager {
     }
 
     fun translate(text: String, onTextTranslated: (String) -> Unit) {
-        if (isTranslated(text)) {
-            onTextTranslated(getTranslation(text))
+        if (sourceLocale == targetLocale){
+            onTextTranslated(text)
             return
         }
 
-        if (activeTranslations.contains(text)) {
-            onTextTranslated(text)
+        if (isTranslated(text)) {
+            onTextTranslated(getTranslation(text))
             return
         }
 
@@ -175,6 +179,10 @@ object TranslationManager {
     }
 
     suspend fun translateAsync(text: String): String = coroutineScope  {
+        if (sourceLocale == targetLocale){
+            return@coroutineScope text
+        }
+
         val activeTargetLocale = targetLocale
         val activeTranslationType = this@TranslationManager.activeTranslationType
 
@@ -259,13 +267,6 @@ object TranslationManager {
         }
     }
 
-    private suspend fun setLocaleAsync(newLocale: String) {
-        if (targetLocale!=newLocale) {
-            targetLocale = newLocale
-            reloadSavedTranslations()
-        }
-    }
-
     private suspend fun reloadSavedTranslations() {
         activeTranslations.clear()
         activeTranslationsAwaitable.clear()
@@ -273,7 +274,7 @@ object TranslationManager {
     }
 
     private fun translate(text: String) {
-        if (isTranslated(text) || activeTranslations.contains(text)) {
+        if (isTranslated(text) || activeTranslations.contains(text) || activeTranslationsAwaitable.keys.contains(text)) {
             return
         }
 
