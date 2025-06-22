@@ -18,7 +18,9 @@ abstract class TranslationModel (private val context : Context,
     private val downloadMutex = Mutex()
 
     @Volatile
-    protected var wasInitialize = false
+    var wasInitialize = false
+        protected set
+
     protected val lockObject = Any()
     protected val scope = CoroutineScope(Dispatchers.IO)
 
@@ -26,7 +28,7 @@ abstract class TranslationModel (private val context : Context,
 
     open var allowDownloadingOveMobile : Boolean = false
 
-    protected abstract fun initialize(sourceLocale: String, targetLocale : String)
+    abstract fun initialize(sourceLocale: String, targetLocale : String)
 
     abstract suspend fun translate(text: String, sourceLocale: String, targetLocale : String) : String
 

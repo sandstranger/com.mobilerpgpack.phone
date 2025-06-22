@@ -21,8 +21,8 @@ class Small100TranslationModel (
         "b102ebb66e70654d7982b8fd09715baf341b28bb0216ae6b51553c0deb76811b"
 
     override val zipFileName: String = "small100_ct2.zip"
-    override val isModelDownloadedPrefsKey: Preferences.Key<Boolean> =
-        booleanPreferencesKey("small100_model_downloaded")
+    override val needToDownloadModelPrefsKey: Preferences.Key<Boolean> =
+        booleanPreferencesKey("need_to_download_small100_model")
 
     override val translator: Translator = Small100Translator(modelFile, spmFile)
 
