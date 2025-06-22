@@ -142,20 +142,32 @@ object TranslationManager {
 
     @JvmStatic
     fun getTranslation(text: String): String {
-        if (sourceLocale == targetLocale){
+        return if (isTranslated(text)) loadedTranslations[text]!!.value else text
+    }
+
+    @JvmStatic
+    fun isTranslated(text: String) : Boolean {
+        return loadedTranslations.containsKey(text)
+    }
+
+    @JvmStatic
+    fun translate(text: String): String {
+        if (sourceLocale == targetLocale) {
             return text
         }
 
         if (isTranslated(text)) {
-            return loadedTranslations[text]!!.value
+            return getTranslation(text)
         }
 
-        translate(text)
-        return text
-    }
+        if (activeTranslations.contains(text) || activeTranslationsAwaitable.keys.contains(text)) {
+            return text
+        }
 
-    fun isTranslated(text: String) : Boolean {
-        return loadedTranslations.containsKey(text)
+        scope.launch {
+            translateAsync(text)
+        }
+        return text
     }
 
     fun translate(text: String, onTextTranslated: (String) -> Unit) {
@@ -267,16 +279,6 @@ object TranslationManager {
         activeTranslations.clear()
         activeTranslationsAwaitable.clear()
         loadSavedTranslations()
-    }
-
-    private fun translate(text: String) {
-        if (isTranslated(text) || activeTranslations.contains(text) || activeTranslationsAwaitable.keys.contains(text)) {
-            return
-        }
-
-        scope.launch {
-            translateAsync(text)
-        }
     }
 
     private fun changeTranslationModel (targetTranslationType : TranslationType){
