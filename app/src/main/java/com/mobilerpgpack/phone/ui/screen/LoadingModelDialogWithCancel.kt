@@ -18,6 +18,7 @@ import com.mobilerpgpack.phone.R
 @Composable
 fun LoadingModelDialogWithCancel(
     show: Boolean,
+    progress: String = "",
     onClose: () -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
@@ -31,7 +32,7 @@ fun LoadingModelDialogWithCancel(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(context.getString(R.string.wait_text))
+                    Text(context.getString(R.string.wait_text) + "\n$progress")
                 }
             },
             confirmButton = {

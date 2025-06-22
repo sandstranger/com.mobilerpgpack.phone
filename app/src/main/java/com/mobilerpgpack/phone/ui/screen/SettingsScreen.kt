@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
@@ -63,6 +64,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -242,34 +244,22 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
 }
 
 @Composable
-private fun DrawPreloadModelsSetting(context: Context){
-    var isLoading by rememberSaveable { mutableStateOf(false) }
-    val downloadJob = remember { mutableStateOf<Job?>(null) }
+private fun DrawPreloadModelsSetting(context: Context,vm: DownloadViewModel = viewModel()){
 
     PreferenceItem(context.getString(R.string.load_translation_model)) {
-        isLoading = true
-        downloadJob.value = TranslatorApp.globalScope.launch {
-            try {
-                TranslationManager.downloadModelIfNeeded()
-            } catch (e: Exception) {
-            } finally {
-                isLoading = false
-            }
-        }
+        vm.startDownload()
     }
 
     HorizontalDivider()
 
     LoadingModelDialogWithCancel(
-        show = isLoading,
+        show = vm.isLoading,
+        progress = vm.downloadProgress,
         onClose = {
-            isLoading = false
-            downloadJob.value?.cancel()
+            vm.isLoading = false
         },
         onCancel = {
-            isLoading = false
-            downloadJob.value?.cancel()
-            TranslationManager.cancelDownloadModel()
+            vm.cancelDownload()
         }
     )
 }

@@ -24,7 +24,8 @@ abstract class BaseM2M100TranslationModel(
     protected abstract val isModelDownloadedPrefsKey: Preferences.Key<Boolean>
     protected abstract val translator: Translator
 
-    private val pathToModelZipFile: String =
+    private val pathToModelZipFile: String
+        get() =
         "${context.getExternalFilesDir("")}${File.separator}$zipFileName"
 
     @Volatile
@@ -58,8 +59,8 @@ abstract class BaseM2M100TranslationModel(
         return text
     }
 
-    override suspend fun downloadModelTask(): Boolean {
-        super.downloadModelTask()
+    override suspend fun downloadModelTask(onProgress: (String) -> Unit): Boolean {
+        super.downloadModelTask(onProgress)
         if (isModelDownloaded) {
             return true
         }
@@ -70,7 +71,7 @@ abstract class BaseM2M100TranslationModel(
             return true
         }
 
-        modelDownloader.download(zipFileId, pathToModelZipFile)
+        modelDownloader.download(zipFileId, pathToModelZipFile, onProgress)
         return extractDownloadedModel(modelZipFile)
     }
 
