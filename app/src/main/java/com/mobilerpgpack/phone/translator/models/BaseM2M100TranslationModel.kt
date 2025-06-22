@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.net.DriveDownloader
@@ -10,25 +9,36 @@ import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 abstract class BaseM2M100TranslationModel(
     private val context: Context,
+    private val pathToModelFolder: String,
+    private val spmFile: String,
     private val allowDownloadingOverMobile: Boolean = false
 ) : TranslationModel(context, allowDownloadingOverMobile) {
 
     protected abstract val zipFileId: String
     protected abstract val zipFileSha256: String
-    protected abstract val zipFileName: String
-    protected abstract val needToDownloadModelPrefsKey: Preferences.Key<Boolean>
     protected abstract val translator: Translator
 
-    private val pathToModelZipFile: String
-        get() =
-        "${context.getExternalFilesDir("")}${File.separator}$zipFileName"
+    private val pathToModelZipFile by lazy {
+        return@lazy "${context.getExternalFilesDir("")}${File.separator}${File(pathToModelFolder).name}.zip"
+    }
 
     @Volatile
-    protected var isModelDownloaded = false
+    private var isModelDownloaded = false
+
+    private val zipFile by lazy { File(pathToModelZipFile) }
+    private val modelFolder by lazy { File(pathToModelFolder) }
+    private val smpFile by lazy { File(spmFile) }
+
+    init {
+        runBlocking {
+            isModelDownloaded = !needToDownloadModel()
+        }
+    }
 
     override fun initialize(sourceLocale: String, targetLocale: String) {
         if (isModelDownloaded && !wasInitialize) {
@@ -78,15 +88,17 @@ abstract class BaseM2M100TranslationModel(
     }
 
     override suspend fun needToDownloadModel(): Boolean {
-        return PreferencesStorage.getBooleanValue(context, needToDownloadModelPrefsKey, true).first()
+        if (isModelDownloaded){
+            return false
+        }
+        return !modelFolder.exists() || !smpFile.exists() || zipFile.exists()
     }
 
-    private suspend fun extractDownloadedModel(zipFile: File): Boolean {
+    private fun extractDownloadedModel(zipFile: File): Boolean {
         try {
             if (zipFileSha256 == computeSHA256(zipFile) &&
                 unzipArchive(pathToModelZipFile, context.getExternalFilesDir("")!!.absolutePath)
             ) {
-                PreferencesStorage.setBooleanValue(context, needToDownloadModelPrefsKey, false)
                 isModelDownloaded = true
                 return true
             }
