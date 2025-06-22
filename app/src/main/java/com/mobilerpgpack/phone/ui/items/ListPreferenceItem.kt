@@ -33,9 +33,9 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TranslatedText(title)
+        TranslatedText(title, Modifier.weight(0.4f, true))
         Spacer(Modifier.width(8.dp))
-        Text(activeValue, style = MaterialTheme.typography.bodyMedium)
+        Text(activeValue, modifier = Modifier.weight(0.6f), style = MaterialTheme.typography.bodyMedium)
     }
 
     if (showValuesDialog){
