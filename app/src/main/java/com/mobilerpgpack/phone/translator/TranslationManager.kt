@@ -136,10 +136,6 @@ object TranslationManager {
         return !translationModel.needToDownloadModel()
     }
 
-    fun releaseTranslationModel(){
-        translationModel.release()
-    }
-
     fun cancelDownloadModel() {
         translationModel.cancelDownloadingModel()
     }
