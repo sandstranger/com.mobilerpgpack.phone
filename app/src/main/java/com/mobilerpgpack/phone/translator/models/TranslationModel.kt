@@ -91,5 +91,5 @@ abstract class TranslationModel (private val context : Context,
         return true
     }
 
-    private fun allowDownloading () = allowDownloadingOverMobile || context.isWifiConnected()
+    private fun allowDownloading () = this@TranslationModel.allowDownloadingOveMobile || context.isWifiConnected()
 }
