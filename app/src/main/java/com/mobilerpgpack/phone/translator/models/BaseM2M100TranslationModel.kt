@@ -15,35 +15,35 @@ import java.io.File
 
 abstract class BaseM2M100TranslationModel(
     private val context: Context,
-    private val allowDownloadingOverMobile : Boolean = false
-) : TranslationModel(context,allowDownloadingOverMobile) {
+    private val allowDownloadingOverMobile: Boolean = false
+) : TranslationModel(context, allowDownloadingOverMobile) {
 
-    protected abstract val zipFileId : String
-    protected abstract val zipFileSha256 : String
-    protected abstract val zipFileName : String
-    protected abstract val isModelDownloadedPrefsKey : Preferences.Key<Boolean>
-    protected abstract val translator : Translator
+    protected abstract val zipFileId: String
+    protected abstract val zipFileSha256: String
+    protected abstract val zipFileName: String
+    protected abstract val isModelDownloadedPrefsKey: Preferences.Key<Boolean>
+    protected abstract val translator: Translator
 
-    private val pathToModelZipFile : String = "${context.getExternalFilesDir("")}${File.separator}$zipFileName"
+    private val pathToModelZipFile: String =
+        "${context.getExternalFilesDir("")}${File.separator}$zipFileName"
 
-    private var isModelDownloaded = false
-
-    init {
-        runBlocking {
-            isModelDownloaded = !needToDownloadModel()
-        }
-    }
+    @Volatile
+    protected var isModelDownloaded = false
 
     override fun initialize(sourceLocale: String, targetLocale: String) {
-        if (isModelDownloaded && !wasInitialize){
-            translator.initialize()
-            wasInitialize = true
+        if (isModelDownloaded && !wasInitialize) {
+            synchronized(lockObject) {
+                translator.initialize()
+                wasInitialize = true
+            }
         }
     }
 
     override fun release() {
-        super.release()
-        translator.release()
+        synchronized(lockObject) {
+            super.release()
+            translator.release()
+        }
     }
 
     override suspend fun translate(
@@ -52,43 +52,48 @@ abstract class BaseM2M100TranslationModel(
         targetLocale: String
     ): String {
         if (isModelDownloaded) {
-            return translator.translate(text,sourceLocale,targetLocale)
+            initialize(sourceLocale,targetLocale)
+            return translator.translate(text, sourceLocale, targetLocale)
         }
         return text
     }
 
     override suspend fun downloadModelTask(): Boolean {
         super.downloadModelTask()
-        if (isModelDownloaded){
+        if (isModelDownloaded) {
             return true
         }
 
         val modelZipFile = File(pathToModelZipFile)
-        if (modelZipFile.exists()){
-            modelZipFile.delete()
-        }
-        modelDownloader.download(zipFileId, pathToModelZipFile)
 
-        try {
-            if (zipFileSha256 == computeSHA256(pathToModelZipFile) &&
-                unzipArchive(pathToModelZipFile, context.getExternalFilesDir("")!!.absolutePath)){
-                PreferencesStorage.setBooleanValue(context, isModelDownloadedPrefsKey, true)
-                isModelDownloaded = true
-                initialize("","")
-                return true
-            }
-            return false
+        if (extractDownloadedModel(modelZipFile)){
+            return true
         }
-        finally {
-            modelZipFile.delete()
-        }
+
+        modelDownloader.download(zipFileId, pathToModelZipFile)
+        return extractDownloadedModel(modelZipFile)
     }
 
     override suspend fun needToDownloadModel(): Boolean {
-        return PreferencesStorage.getBooleanValue(context,isModelDownloadedPrefsKey, true).first()!!
+        return PreferencesStorage.getBooleanValue(context, isModelDownloadedPrefsKey, true).first()
     }
 
-    private companion object{
+    private suspend fun extractDownloadedModel(zipFile: File): Boolean {
+        try {
+            if (zipFileSha256 == computeSHA256(zipFile) &&
+                unzipArchive(pathToModelZipFile, context.getExternalFilesDir("")!!.absolutePath)
+            ) {
+                PreferencesStorage.setBooleanValue(context, isModelDownloadedPrefsKey, true)
+                isModelDownloaded = true
+                return true
+            }
+            return false
+        } finally {
+            zipFile.delete()
+        }
+    }
+
+    private companion object {
         private val modelDownloader = DriveDownloader("AIzaSyCz-HWRD4hzUHB4aVEj6927ZjgTj-147PE")
     }
 }

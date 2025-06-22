@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.translator
 import android.app.Application
 import android.content.res.Configuration
 import android.os.Build
+import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.copyAssetsFolderToInternalStorage
 import kotlinx.coroutines.CoroutineScope
@@ -15,13 +16,16 @@ import kotlinx.coroutines.runBlocking
 class TranslatorApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        var activeTranslationModelType : TranslationType
         var allowDownloadingModelsOverMobile = false
         runBlocking {
             allowDownloadingModelsOverMobile = PreferencesStorage
-                .getAllowDownloadingModelsOverMobileValue(this@TranslatorApp).first()!!
+                .getAllowDownloadingModelsOverMobileValue(this@TranslatorApp).first()
+            activeTranslationModelType = enumValueOf<TranslationType>(
+                PreferencesStorage.getTranslationModelTypeValue(this@TranslatorApp).first())
         }
         copyAssetsContentToInternalStorage()
-        TranslationManager.init(this, allowDownloadingModelsOverMobile)
+        TranslationManager.init(this,activeTranslationModelType, allowDownloadingModelsOverMobile)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
