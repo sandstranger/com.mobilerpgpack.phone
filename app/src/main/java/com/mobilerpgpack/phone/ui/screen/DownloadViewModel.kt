@@ -45,6 +45,7 @@ class DownloadViewModel(
                 }
             } finally {
                 isLoading = false
+                downloadJob = null
             }
         }
     }
