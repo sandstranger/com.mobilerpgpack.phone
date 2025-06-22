@@ -43,8 +43,7 @@ fun TranslatedText(
 
     var displayText by remember { mutableStateOf(text) }
 
-    LaunchedEffect(allowTranslate, text, isModelDownloaded, activeTranslationType,
-        TranslationManager.targetLocale) {
+    LaunchedEffect(allowTranslate, text, isModelDownloaded, activeTranslationType) {
         displayText = text
 
         if (!allowTranslate || !isModelDownloaded || text.isBlank()) {

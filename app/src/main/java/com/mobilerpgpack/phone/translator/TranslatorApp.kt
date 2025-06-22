@@ -28,16 +28,6 @@ class TranslatorApp : Application() {
         TranslationManager.init(this,activeTranslationModelType, allowDownloadingModelsOverMobile)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val newLang = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            newConfig.locales[0].language
-        else
-            newConfig.locale.language
-
-        TranslationManager.setLocale(newLang)
-    }
-
     override fun onTerminate() {
         super.onTerminate()
         globalScope.coroutineContext.cancelChildren()
