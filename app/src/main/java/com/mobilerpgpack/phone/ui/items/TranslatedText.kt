@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.items
 
-import android.util.Log
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,9 +18,7 @@ import androidx.compose.ui.unit.TextUnit
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 
 @Composable
 fun TranslatedText(
@@ -46,7 +43,8 @@ fun TranslatedText(
 
     var displayText by remember { mutableStateOf(text) }
 
-    LaunchedEffect(allowTranslate, text, isModelDownloaded, activeTranslationType) {
+    LaunchedEffect(allowTranslate, text, isModelDownloaded, activeTranslationType,
+        TranslationManager.targetLocale) {
         displayText = text
 
         if (!allowTranslate || !isModelDownloaded || text.isBlank()) {
@@ -55,8 +53,7 @@ fun TranslatedText(
 
         displayText = try {
                 TranslationManager.translateAsync(text)
-        } catch (e: Exception) {
-            Log.d("TRANSLATION_EXCEPTION", e.toString())
+        } catch (_: Exception) {
             text
         }
     }

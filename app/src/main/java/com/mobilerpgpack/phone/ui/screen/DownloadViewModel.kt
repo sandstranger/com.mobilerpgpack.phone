@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,6 +24,7 @@ class DownloadViewModel(
 
     fun onTranslationTypeChanged(translationModelType : String){
         if (currentTranslationModelType != translationModelType){
+            Log.d("CALLED_EXCEPTIOn", "CALLED CANCEL")
             currentTranslationModelType = translationModelType
             cancelDownload()
         }
@@ -33,19 +35,18 @@ class DownloadViewModel(
 
         isLoading = true
 
-        if (downloadJob!=null){
-            return
-        }
-
-        downloadJob = TranslatorApp.globalScope.launch {
-            try {
-                downloadProgress = ""
-                TranslationManager.downloadModelIfNeeded { newValue ->
-                    downloadProgress = newValue
+        if (downloadJob == null || downloadJob!!.isCompleted || downloadJob!!.isCancelled) {
+            downloadJob = TranslatorApp.globalScope.launch {
+                try {
+                    downloadProgress = ""
+                    TranslationManager.downloadModelIfNeeded { newValue ->
+                        downloadProgress = newValue
+                    }
                 }
-            } finally {
-                isLoading = false
-                downloadJob = null
+                finally {
+                    isLoading = false
+                    downloadJob = null
+                }
             }
         }
     }

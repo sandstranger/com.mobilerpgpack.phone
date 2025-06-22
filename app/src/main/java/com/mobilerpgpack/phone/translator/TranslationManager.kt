@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
@@ -35,7 +38,9 @@ object TranslationManager {
     private var wasInit = false
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
-    private lateinit var targetLocale: String
+    var targetLocale by mutableStateOf("")
+        private set
+
     private lateinit var db: TranslationDatabase
 
     @SuppressLint("StaticFieldLeak")
@@ -78,6 +83,7 @@ object TranslationManager {
         }
 
         targetLocale = getSystemLocale()
+
 
         translationModels [TranslationType.MLKit] =
             MLKitTranslationModel(context,sourceLocale, targetLocale, allowDownloadingOveMobile)
@@ -187,12 +193,13 @@ object TranslationManager {
     }
 
     suspend fun translateAsync(text: String): String = coroutineScope  {
+        val activeTargetLocale = targetLocale
         val activeTranslationType = this@TranslationManager.activeTranslationType
 
         suspend fun saveTranslatedText(translatedText: String) {
             val translationEntry = TranslationEntry(
                 key = text,
-                lang = targetLocale,
+                lang = activeTargetLocale,
                 value = translatedText,
                 engine = _activeEngine,
                 translationModelType = activeTranslationType
@@ -232,7 +239,8 @@ object TranslationManager {
 
         try {
             val translatedValue = translationModel.translate(text, sourceLocale, targetLocale)
-            if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType) {
+            if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType
+                && activeTargetLocale == targetLocale) {
                 saveTranslatedText(translatedValue)
                 return@coroutineScope translatedValue
             }
@@ -281,8 +289,9 @@ object TranslationManager {
         activeTranslations.clear()
         loadSavedTranslations()
 
-        if (activeTranslationType == TranslationType.MLKit){
+        if (activeTranslationType == TranslationType.MLKit && translationModel.wasInitialize ){
             translationModel.release()
+            translationModel.initialize(sourceLocale, targetLocale)
         }
     }
 
