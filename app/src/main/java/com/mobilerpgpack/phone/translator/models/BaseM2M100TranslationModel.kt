@@ -8,6 +8,7 @@ import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import java.io.File
 
@@ -51,8 +52,11 @@ abstract class BaseM2M100TranslationModel(
         targetLocale: String
     ): String {
         if (isModelDownloaded) {
-            initialize(sourceLocale,targetLocale)
-            return translator.translate(text, sourceLocale, targetLocale)
+            val deferred = scope.async {
+                initialize(sourceLocale, targetLocale)
+                translator.translate(text, sourceLocale, targetLocale)
+            }
+            return deferred.await()
         }
         return text
     }
