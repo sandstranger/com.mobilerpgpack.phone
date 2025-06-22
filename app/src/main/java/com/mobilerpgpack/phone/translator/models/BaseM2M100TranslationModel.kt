@@ -1,16 +1,14 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.Preferences
-import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.net.DriveDownloader
-import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import java.io.File
 
 abstract class BaseM2M100TranslationModel(
@@ -21,7 +19,7 @@ abstract class BaseM2M100TranslationModel(
     protected abstract val zipFileId: String
     protected abstract val zipFileSha256: String
     protected abstract val zipFileName: String
-    protected abstract val isModelDownloadedPrefsKey: Preferences.Key<Boolean>
+    protected abstract val needToDownloadModelPrefsKey: Preferences.Key<Boolean>
     protected abstract val translator: Translator
 
     private val pathToModelZipFile: String
@@ -76,7 +74,7 @@ abstract class BaseM2M100TranslationModel(
     }
 
     override suspend fun needToDownloadModel(): Boolean {
-        return PreferencesStorage.getBooleanValue(context, isModelDownloadedPrefsKey, true).first()
+        return PreferencesStorage.getBooleanValue(context, needToDownloadModelPrefsKey, true).first()
     }
 
     private suspend fun extractDownloadedModel(zipFile: File): Boolean {
@@ -84,7 +82,7 @@ abstract class BaseM2M100TranslationModel(
             if (zipFileSha256 == computeSHA256(zipFile) &&
                 unzipArchive(pathToModelZipFile, context.getExternalFilesDir("")!!.absolutePath)
             ) {
-                PreferencesStorage.setBooleanValue(context, isModelDownloadedPrefsKey, true)
+                PreferencesStorage.setBooleanValue(context, needToDownloadModelPrefsKey, false)
                 isModelDownloaded = true
                 return true
             }
@@ -92,6 +90,8 @@ abstract class BaseM2M100TranslationModel(
         } finally {
             zipFile.delete()
         }
+
+        return false
     }
 
     private companion object {

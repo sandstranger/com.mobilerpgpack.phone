@@ -12,6 +12,7 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import kotlin.coroutines.resumeWithException
 
 class DriveDownloader(
@@ -32,7 +33,11 @@ class DriveDownloader(
             cont.invokeOnCancellation { call.cancel() }
             call.enqueue(object : okhttp3.Callback {
                 override fun onFailure(call: Call, e: java.io.IOException) {
-                    if (cont.isCancelled) return
+                    Log.d(TAG, "❌ OkHttp connection failed: ${e.javaClass.simpleName}: ${e.message}", e)
+                    if (cont.isCancelled) {
+                        Log.d(TAG, "🛑 Coroutine already cancelled, dropping error: ${e.message}")
+                        return
+                    }
                     cont.resumeWithException(e)
                 }
 

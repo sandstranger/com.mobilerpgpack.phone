@@ -19,8 +19,8 @@ class M2M100TranslationModel (
     override val zipFileSha256: String = "86178730785f6f250fa60a1aa977585eaa361cc50ce7c3ea9fbe9ebe6016dbd1"
 
     override val zipFileName: String = "m2m100_ct2.zip"
-    override val isModelDownloadedPrefsKey: Preferences.Key<Boolean> =
-        booleanPreferencesKey("m2m100_model_downloaded")
+    override val needToDownloadModelPrefsKey: Preferences.Key<Boolean> =
+        booleanPreferencesKey("need_to_download_m2m100_model")
 
     override val translator: Translator = M2M100Translator(modelFile,spmFile)
 
