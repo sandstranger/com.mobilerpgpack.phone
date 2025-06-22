@@ -35,7 +35,7 @@ object PreferencesStorage {
     private val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
     private val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
     private val useSDLTTFForFontsRenderingPrefsKey = booleanPreferencesKey("sdl_ttf_render")
-    private val useMlKitForTextTranslationsPrefsKey = booleanPreferencesKey("use_mlkit_for_translation")
+    private val gamesMachineTranslationsPrefsKey = booleanPreferencesKey("enable_games_translation")
     private val enableLauncherTextTranslationPrefsKey = booleanPreferencesKey("enable_launcher_translation")
     private val allowDownloadingModelsOverMobilePrefsKey = booleanPreferencesKey("allow_downloading_over_mobile")
     private val translationModelTypePrefsKey = stringPreferencesKey("translation_model_type")
@@ -69,11 +69,11 @@ object PreferencesStorage {
     suspend fun setEnableLauncherTextTranslationValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, enableLauncherTextTranslationPrefsKey, valueToSave)
 
-    fun getUseMlKitForTextTranslationsValue(context: Context) =
-        getBooleanValue(context, useMlKitForTextTranslationsPrefsKey, defaultValue = false)
+    fun getEnableGameMachineTextTranslationValue(context: Context) =
+        getBooleanValue(context, gamesMachineTranslationsPrefsKey, defaultValue = false)
 
-    suspend fun setUseMlKitForTextTranslationsValue(context: Context, valueToSave : Boolean) =
-        setBooleanValue(context, useMlKitForTextTranslationsPrefsKey, valueToSave)
+    suspend fun setEnableGameMachineTextTranslationValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, gamesMachineTranslationsPrefsKey, valueToSave)
 
     fun getUseSDLTTFForFontsRenderingValue(context: Context) =
         getBooleanValue(context, useSDLTTFForFontsRenderingPrefsKey, defaultValue = false)

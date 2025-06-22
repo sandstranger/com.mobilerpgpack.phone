@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
+import android.util.Log
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.translate.TranslateLanguage
@@ -41,7 +42,6 @@ class MLKitTranslationModel (private val context : Context,
         }
 
         synchronized(lockObject) {
-            release()
             this.sourceLocale = sourceLocale
             this.targetLocale = targetLocale
             mlKitTranslator = buildMlkitTranslator()
@@ -57,7 +57,8 @@ class MLKitTranslationModel (private val context : Context,
         initialize(sourceLocale, targetLocale)
         return try {
             mlKitTranslator?.translate(text)?.await() ?: text
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.d("DOWNLOADED_VALUE", "DATADAFA444444444 + ${e.toString()}")
             text
         }
     }
@@ -73,7 +74,7 @@ class MLKitTranslationModel (private val context : Context,
         val modelManager = RemoteModelManager.getInstance()
         val sourceLocaleModelDownloaded = modelManager.isModelDownloaded(getRemoteModel(sourceLocale)).await()
         val targetLocaleModelDownloaded = modelManager.isModelDownloaded(getRemoteModel(targetLocale)).await()
-        return sourceLocaleModelDownloaded && targetLocaleModelDownloaded
+        return !sourceLocaleModelDownloaded || !targetLocaleModelDownloaded
     }
 
     override fun release() {

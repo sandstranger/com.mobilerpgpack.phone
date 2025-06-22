@@ -9,15 +9,24 @@ using namespace sentencepiece;
 using namespace ctranslate2;
 
 extern TranslationOptions create_translation_options();
-extern unique_ptr<Translator> create_translator (string model_path);
+extern shared_ptr<Translator> create_translator (string model_path);
 
-static unique_ptr<SentencePieceProcessor> sp = nullptr;
-static std::unique_ptr<ctranslate2::Translator> translator = nullptr;
+static shared_ptr<SentencePieceProcessor> sp = nullptr;
+static shared_ptr<ctranslate2::Translator> translator = nullptr;
+
+static mutex translator_mutex;
 
 string translate(string input, string source_locale, string target_locale) {
     if (input.empty()){
         return "";
     }
+
+    std::lock_guard<std::mutex> lock(translator_mutex);
+
+    if (!translator || !sp) {
+        return input;
+    }
+
     try {
         std::vector<std::string> tokens;
         sp->Encode(input, &tokens);
@@ -41,6 +50,9 @@ string translate(string input, string source_locale, string target_locale) {
 
         return result;
     }
+    catch (const std::exception& e) {
+        return input;
+    }
     catch (...) {
         return input;
     }
@@ -58,7 +70,7 @@ Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_initializeFromJni
     if (translator!= nullptr) {
         return;
     }
-    sp = make_unique<SentencePieceProcessor>();
+    sp = make_shared<SentencePieceProcessor>();
     sp->Load(jstringToStdString(env, pathToSourceProcessor));
     translator = create_translator(jstringToStdString(env, pathToTranslationModel));
 }
@@ -80,6 +92,7 @@ JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translat
 
 JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_releaseFromJni
         (JNIEnv *env, jobject thisObject) {
+    std::lock_guard<std::mutex> lock(translator_mutex);
     if (translator == nullptr){
         return;
     }

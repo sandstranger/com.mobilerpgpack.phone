@@ -6,21 +6,30 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
+#include <mutex>
 
 using namespace std;
 using namespace sentencepiece;
 using namespace ctranslate2;
 
 extern TranslationOptions create_translation_options();
-extern unique_ptr<Translator> create_translator (string model_path);
+extern shared_ptr<Translator> create_translator (string model_path);
 
-static unique_ptr<SentencePieceProcessor> sp_source = nullptr;
-static unique_ptr<SentencePieceProcessor> sp_target = nullptr;
-static std::unique_ptr<ctranslate2::Translator> translator = nullptr;
+static std::shared_ptr<ctranslate2::Translator> translator = nullptr;
+static std::shared_ptr<SentencePieceProcessor> sp_source = nullptr;
+static std::shared_ptr<SentencePieceProcessor> sp_target = nullptr;
+
+static mutex translator_mutex;
 
 static std::string Translate (std::string input){
     if (input.empty()) {
         return "";
+    }
+
+    std::lock_guard<std::mutex> lock(translator_mutex);
+
+    if (!translator || !sp_source || !sp_target) {
+        return input;
     }
 
     try {
@@ -33,6 +42,9 @@ static std::string Translate (std::string input){
         sp_target->Decode(results.output(), &output);
         __android_log_print(ANDROID_LOG_INFO, "CTranslate2", "TRANSLATED VALUE = %s", output.c_str());
         return output;
+    }
+    catch (const std::exception& e) {
+        return input;
     }
     catch (...) {
         return input;
@@ -51,8 +63,8 @@ Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_initializeFromJni
     if (translator!= nullptr) {
         return;
     }
-    sp_source = make_unique<SentencePieceProcessor>();
-    sp_target = make_unique<SentencePieceProcessor>();
+    sp_source = make_shared<SentencePieceProcessor>();
+    sp_target = make_shared<SentencePieceProcessor>();
 
     sp_source->Load(jstringToStdString(env, pathToSourceProcessor));
     sp_target->Load(jstringToStdString(env, pathToTargetProcessor));
@@ -70,6 +82,7 @@ JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslat
 
 JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_releaseFromJni
         (JNIEnv *env, jobject thisObject) {
+    std::lock_guard<std::mutex> lock(translator_mutex);
     if (translator == nullptr){
         return;
     }

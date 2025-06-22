@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.items
 
+import android.util.Log
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import com.mobilerpgpack.phone.translator.TranslationManager
+import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
@@ -33,6 +35,10 @@ fun TranslatedText(
     ) {
     val context = LocalContext.current
 
+    val isModelDownloaded by TranslationManager.isModelDownloadedAsFlow().collectAsState(initial = false)
+    val activeTranslationType by
+    PreferencesStorage.getTranslationModelTypeValue(context).collectAsState(initial = TranslationType.DefaultTranslationType.toString())
+
     val allowTranslate by PreferencesStorage
         .getEnableLauncherTextTranslationValue(context)
         .map { it == true }
@@ -40,22 +46,17 @@ fun TranslatedText(
 
     var displayText by remember { mutableStateOf(text) }
 
-    LaunchedEffect(allowTranslate, text) {
-        if (!allowTranslate) {
-            displayText = text
-            return@LaunchedEffect
-        }
+    LaunchedEffect(allowTranslate, text, isModelDownloaded, activeTranslationType) {
+        displayText = text
 
-        if (text.isBlank()) {
-            displayText = text
+        if (!allowTranslate || !isModelDownloaded || text.isBlank()) {
             return@LaunchedEffect
         }
 
         displayText = try {
-            withContext(Dispatchers.IO) {
                 TranslationManager.translateAsync(text)
-            }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.d("TRANSLATION_EXCEPTION", e.toString())
             text
         }
     }
