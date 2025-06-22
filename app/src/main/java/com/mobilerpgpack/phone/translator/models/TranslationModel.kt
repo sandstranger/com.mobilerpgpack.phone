@@ -47,7 +47,7 @@ abstract class TranslationModel (private val context : Context,
         currentDownload = null
     }
 
-    suspend fun downloadModelIfNeeded(): Boolean {
+    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }): Boolean {
 
         if (!needToDownloadModel()){
             return true
@@ -65,7 +65,7 @@ abstract class TranslationModel (private val context : Context,
             // Иначе создаём новый
             val newTask = scope.async {
                 try {
-                    downloadModelTask()
+                    downloadModelTask(onProgress)
                 } catch (_: Exception) {
                     false
                 }
@@ -85,7 +85,7 @@ abstract class TranslationModel (private val context : Context,
         }
     }
 
-    protected open suspend fun downloadModelTask() : Boolean {
+    protected open suspend fun downloadModelTask(onProgress: (String) -> Unit = { }) : Boolean {
         return true
     }
 

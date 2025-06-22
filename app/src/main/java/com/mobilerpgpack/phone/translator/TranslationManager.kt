@@ -133,8 +133,8 @@ object TranslationManager {
         }
     }
 
-    suspend fun downloadModelIfNeeded(): Boolean {
-        return translationModel.downloadModelIfNeeded()
+    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }): Boolean {
+        return translationModel.downloadModelIfNeeded(onProgress)
     }
 
     fun isModelDownloadedAsFlow(): Flow<Boolean> = flow {

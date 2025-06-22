@@ -19,11 +19,13 @@ class DriveDownloader(
 ) {
     private val client = OkHttpClient()
 
-    suspend fun download(fileId: String, destPath: String) = withContext(Dispatchers.IO) {
+    suspend fun download(fileId: String, destPath: String, onProgress: (String) -> Unit = { }) = withContext(Dispatchers.IO) {
         val TAG = "DriveDownload"
 
         val url = "https://www.googleapis.com/drive/v3/files/$fileId?alt=media&key=$apiKey"
         val request = Request.Builder().url(url).get().build()
+
+        onProgress("Downloaded: 0 bytes (Unknown size)")
 
         val resp: Response = suspendCancellableCoroutine { cont ->
             val call = client.newCall(request)
@@ -47,6 +49,13 @@ class DriveDownloader(
         }
 
         val contentLength = resp.body?.contentLength() ?: -1L
+
+        if (contentLength > 0) {
+            onProgress("Downloading: 0% (0 / $contentLength bytes)")
+        } else {
+            onProgress("Downloaded: 0 bytes (Unknown size)")
+        }
+
         var downloadedBytes = 0L
         var lastLoggedProgress = 0
 
@@ -61,11 +70,15 @@ class DriveDownloader(
                     if (contentLength > 0) {
                         val progress = (downloadedBytes * 100 / contentLength).toInt()
                         if (progress >= lastLoggedProgress + 5) {
-                            Log.d(TAG, "Downloading: $progress% ($downloadedBytes / $contentLength bytes)")
+                            val downloadProgress = "Downloading: $progress% ($downloadedBytes / $contentLength bytes)"
                             lastLoggedProgress = progress
+                            Log.d(TAG, downloadProgress)
+                            onProgress(downloadProgress)
                         }
                     } else {
-                        Log.d(TAG, "Downloaded: $downloadedBytes bytes (Unknown size)")
+                        val progress = "Downloaded: $downloadedBytes bytes (Unknown size)"
+                        Log.d(TAG, progress)
+                        onProgress(progress)
                     }
                 }
             }
