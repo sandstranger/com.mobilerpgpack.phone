@@ -102,11 +102,11 @@ class EngineActivity : SDLActivity() {
         var needToPreserveScreenAspectRatio = false
         var customScreenResolution = ""
         var useSdlTTFForTextRendering = false
-        var useMlKitForTextTranslations = false
+        var enableMachineTranslation = false
 
         runBlocking {
             useSdlTTFForTextRendering = PreferencesStorage.getUseSDLTTFForFontsRenderingValue(this@EngineActivity).first()!!
-            useMlKitForTextTranslations = PreferencesStorage.getEnableGameMachineTextTranslationValue(this@EngineActivity).first()!!
+            enableMachineTranslation = PreferencesStorage.getEnableGameMachineTextTranslationValue(this@EngineActivity).first()!!
             savedDoomRpgScreenWidth = PreferencesStorage.getIntValue(this@EngineActivity,
                 PreferencesStorage.savedDoomRpgScreenWidthPrefsKey).first()!!
             savedDoomRpgScreenHeight= PreferencesStorage.getIntValue(this@EngineActivity,
@@ -155,7 +155,7 @@ class EngineActivity : SDLActivity() {
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
         Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", getPathToSDL2ControllerDB(this),true)
         Os.setenv("ENABLE_SDL_TTF", useSdlTTFForTextRendering.toString().lowercase(),true)
-        Os.setenv("ENABLE_TEXTS_MACHINE_TRANSLATION", useMlKitForTextTranslations.toString().lowercase(),true)
+        Os.setenv("ENABLE_TEXTS_MACHINE_TRANSLATION", enableMachineTranslation.toString().lowercase(),true)
 
         if (activeEngineType == EngineTypes.DoomRpg){
             val (width, height) = getDefaultDoomRpgResolution()
