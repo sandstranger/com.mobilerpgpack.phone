@@ -4,12 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
-import com.google.mlkit.common.model.DownloadConditions
+import android.util.Log
 import com.google.mlkit.nl.translate.TranslateLanguage
-import com.google.mlkit.nl.translate.Translator
-import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.translator.models.BaseM2M100TranslationModel
 import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
 import com.mobilerpgpack.phone.translator.models.MLKitTranslationModel
 import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
@@ -18,15 +15,21 @@ import com.mobilerpgpack.phone.translator.models.TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.translator.sql.TranslationEntry
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 
 object TranslationManager {
     private var wasInit = false
@@ -44,6 +47,7 @@ object TranslationManager {
     private val translationModels = HashMap<TranslationType, TranslationModel>()
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
     private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
+    private val activeTranslationsAwaitable =  ConcurrentHashMap<String, Job>()
 
     var inGame = false
 
@@ -103,7 +107,10 @@ object TranslationManager {
 
         wasInit = true
         db = TranslationDatabase.getInstance(context)
-        setLocale(targetLocale)
+
+        scope.launch {
+            reloadSavedTranslations()
+        }
     }
 
     fun terminate() {
@@ -130,6 +137,13 @@ object TranslationManager {
         return translationModel.downloadModelIfNeeded()
     }
 
+    fun isModelDownloadedAsFlow(): Flow<Boolean> = flow {
+        while (currentCoroutineContext().isActive) {
+            emit(isModelDownloaded())
+            delay(500)
+        }
+    }.distinctUntilChanged()
+
     suspend fun isModelDownloaded () : Boolean{
         return !translationModel.needToDownloadModel()
     }
@@ -152,7 +166,9 @@ object TranslationManager {
         return text
     }
 
-    fun isTranslated(text: String) = loadedTranslations.contains(text)
+    fun isTranslated(text: String) : Boolean {
+        return loadedTranslations.containsKey(text)
+    }
 
     fun translate(text: String, onTextTranslated: (String) -> Unit) {
         if (isTranslated(text)) {
@@ -170,7 +186,7 @@ object TranslationManager {
         }
     }
 
-    suspend fun translateAsync(text: String): String {
+    suspend fun translateAsync(text: String): String = coroutineScope  {
         val activeTranslationType = this@TranslationManager.activeTranslationType
 
         suspend fun saveTranslatedText(translatedText: String) {
@@ -186,19 +202,30 @@ object TranslationManager {
         }
 
         if (isTranslated(text)) {
-            return getTranslation(text)
-        }
-
-        if (activeTranslations.contains(text)) {
-            return text
-        }
-
-        if (isTranslated(text)) {
-            return getTranslation(text)
+            return@coroutineScope getTranslation(text)
         }
 
         if (!isModelDownloaded()){
-            return text
+            return@coroutineScope text
+        }
+
+        if (inGame) {
+            if (activeTranslations.contains(text)) {
+                return@coroutineScope text
+            }
+            activeTranslations.add(text)
+        }
+        else{
+            val job = coroutineContext.job
+            val existing = activeTranslationsAwaitable.putIfAbsent(text, job)
+            existing?.join()
+            if (isTranslated(text)) {
+                return@coroutineScope getTranslation(text)
+            }
+        }
+
+        if (!isModelDownloaded()){
+            return@coroutineScope text
         }
 
         activeTranslations.add(text)
@@ -207,13 +234,19 @@ object TranslationManager {
             val translatedValue = translationModel.translate(text, sourceLocale, targetLocale)
             if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType) {
                 saveTranslatedText(translatedValue)
-                return translatedValue
+                return@coroutineScope translatedValue
             }
-            return text
-        } catch (_: Exception) {
-            return text
+            return@coroutineScope text
+        }
+        catch (ce: CancellationException) {
+            throw ce
+        }
+        catch (e: Exception) {
+            Log.d("CALLED_SAVED", e.toString())
+            return@coroutineScope text
         } finally {
             activeTranslations.remove(text)
+            activeTranslationsAwaitable.remove(text)
         }
     }
 
@@ -240,11 +273,11 @@ object TranslationManager {
     private suspend fun setLocaleAsync(newLocale: String) {
         if (targetLocale!=newLocale) {
             targetLocale = newLocale
-            rebuildAllContent()
+            reloadSavedTranslations()
         }
     }
 
-    private suspend fun rebuildAllContent() {
+    private suspend fun reloadSavedTranslations() {
         activeTranslations.clear()
         loadSavedTranslations()
 
@@ -267,6 +300,9 @@ object TranslationManager {
         if (translationModel.translationType != targetTranslationType) {
             translationModel.release()
             translationModel = translationModels[targetTranslationType]!!
+            scope.launch {
+                reloadSavedTranslations()
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
 import android.content.Context
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -23,9 +24,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -57,6 +60,13 @@ import com.mobilerpgpack.phone.utils.requestDirectory
 import com.mobilerpgpack.phone.utils.requestResourceFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -208,7 +218,9 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
         translationModelEntries
     ) { newValue ->
         scope.launch {
-            PreferencesStorage.setTranslationModelTypeValue(context, TranslationType.getTranslationType(newValue))
+            val translationModelType = TranslationType.getTranslationType(newValue)
+            TranslationManager.activeTranslationType = translationModelType
+            PreferencesStorage.setTranslationModelTypeValue(context, translationModelType)
         }
     }
 
@@ -310,6 +322,14 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
         EngineTypes.DefaultActiveEngine.toString())
     val activeEngine = rememberSaveable (engineState) { enumValueOf<EngineTypes>(engineState!!) }
     var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
+    val isModelDownloaded by TranslationManager.isModelDownloadedAsFlow().collectAsState(initial = true)
+
+    LaunchedEffect(isModelDownloaded) {
+        if (!isModelDownloaded) {
+            PreferencesStorage.setEnableLauncherTextTranslationValue(context, false)
+            PreferencesStorage.setEnableGameMachineTextTranslationValue(context, false)
+        }
+    }
 
     TranslatedText(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
 
@@ -327,6 +347,7 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
     SwitchPreferenceItem(
         context.getString(R.string.enable_launcher_text_translation),
         checkedFlow = PreferencesStorage.getEnableLauncherTextTranslationValue(context),
+        enabled = isModelDownloaded
     ) { newValue ->
         scope.launch {
             PreferencesStorage.setEnableLauncherTextTranslationValue(context, newValue)
@@ -337,10 +358,11 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
 
     SwitchPreferenceItem(
         context.getString(R.string.use_ai_for_text_translations),
-        checkedFlow = PreferencesStorage.getUseMlKitForTextTranslationsValue(context),
+        checkedFlow = PreferencesStorage.getEnableGameMachineTextTranslationValue(context),
+        enabled = isModelDownloaded
     ) { newValue ->
         scope.launch {
-            PreferencesStorage.setUseMlKitForTextTranslationsValue(context, newValue)
+            PreferencesStorage.setEnableGameMachineTextTranslationValue(context, newValue)
         }
     }
 

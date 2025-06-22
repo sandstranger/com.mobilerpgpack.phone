@@ -106,7 +106,7 @@ class EngineActivity : SDLActivity() {
 
         runBlocking {
             useSdlTTFForTextRendering = PreferencesStorage.getUseSDLTTFForFontsRenderingValue(this@EngineActivity).first()!!
-            useMlKitForTextTranslations = PreferencesStorage.getUseMlKitForTextTranslationsValue(this@EngineActivity).first()!!
+            useMlKitForTextTranslations = PreferencesStorage.getEnableGameMachineTextTranslationValue(this@EngineActivity).first()!!
             savedDoomRpgScreenWidth = PreferencesStorage.getIntValue(this@EngineActivity,
                 PreferencesStorage.savedDoomRpgScreenWidthPrefsKey).first()!!
             savedDoomRpgScreenHeight= PreferencesStorage.getIntValue(this@EngineActivity,
@@ -134,6 +134,7 @@ class EngineActivity : SDLActivity() {
             )
         }
 
+        TranslationManager.inGame = true
         TranslationManager.activeEngine = activeEngineType
 
         resolution = getRealScreenResolution()
