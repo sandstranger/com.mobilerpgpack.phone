@@ -27,12 +27,12 @@ abstract class BaseM2M100TranslationModel(
         return@lazy "${context.getExternalFilesDir("")}${File.separator}${File(pathToModelFolder).name}.zip"
     }
 
-    @Volatile
-    private var isModelDownloaded = false
-
     private val zipFile by lazy { File(pathToModelZipFile) }
     private val modelFolder by lazy { File(pathToModelFolder) }
     private val smpFile by lazy { File(spmFile) }
+
+    @Volatile
+    private var isModelDownloaded = false
 
     init {
         runBlocking {
