@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
 import android.content.Context
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -24,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +43,7 @@ import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.TranslatorApp
+import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
@@ -195,6 +194,26 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
 
     HorizontalDivider()
 
+    val activeTranslationTypeString by PreferencesStorage.getTranslationModelTypeValue(context)
+        .collectAsState(initial = TranslationType.DefaultTranslationType.toString())
+    val activeTranslation = rememberSaveable (enumValueOf<TranslationType>(activeTranslationTypeString)) {
+        enumValueOf<TranslationType>(activeTranslationTypeString) }
+
+    val translationModelEntries = buildTranslationsDescription(context)
+    val initialModelValue = translationModelEntries.first { it.startsWith(activeTranslationTypeString) }
+
+    ListPreferenceItem(
+        context.getString(R.string.translation_model_title),
+        initialModelValue,
+        translationModelEntries
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setTranslationModelTypeValue(context, TranslationType.getTranslationType(newValue))
+        }
+    }
+
+    HorizontalDivider()
+
     SwitchPreferenceItem(
         context.getString(R.string.allow_downloading_over_mobile_network),
         checkedFlow = PreferencesStorage.getAllowDownloadingModelsOverMobileValue(context),
@@ -215,7 +234,7 @@ private fun DrawPreloadModelsSetting(context: Context){
     var isLoading by rememberSaveable { mutableStateOf(false) }
     val downloadJob = remember { mutableStateOf<Job?>(null) }
 
-    PreferenceItem(context.getString(R.string.preload_translation_models)) {
+    PreferenceItem(context.getString(R.string.load_translation_model)) {
         isLoading = true
         downloadJob.value = TranslatorApp.globalScope.launch {
             try {
@@ -231,9 +250,14 @@ private fun DrawPreloadModelsSetting(context: Context){
 
     LoadingModelDialogWithCancel(
         show = isLoading,
+        onClose = {
+            isLoading = false
+            downloadJob.value?.cancel()
+        },
         onCancel = {
             isLoading = false
             downloadJob.value?.cancel()
+            TranslationManager.cancelDownloadModel()
         }
     )
 }
@@ -312,7 +336,7 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
     HorizontalDivider()
 
     SwitchPreferenceItem(
-        context.getString(R.string.use_mlkit_for_text_translations),
+        context.getString(R.string.use_ai_for_text_translations),
         checkedFlow = PreferencesStorage.getUseMlKitForTextTranslationsValue(context),
     ) { newValue ->
         scope.launch {
@@ -432,6 +456,25 @@ private fun DrawDoom2RpgSettings(context: Context, scope: CoroutineScope) {
     )
 
     HorizontalDivider()
+}
+
+private fun buildTranslationsDescription (context: Context) : Collection<String>{
+    val result : MutableList<String> = mutableListOf()
+
+    TranslationType.entries.forEach {
+        when (it) {
+            TranslationType.MLKit ->
+                result.add("${TranslationType.MLKit} ${context.getString(R.string.mlkit_description)}")
+            TranslationType.OpusMt ->
+                result.add("${TranslationType.OpusMt} ${context.getString(R.string.opus_mt_description)}")
+            TranslationType.M2M100 ->
+                result.add("${TranslationType.M2M100} ${context.getString(R.string.m2m_mt_description)}")
+            TranslationType.Small100 ->
+                result.add("${TranslationType.Small100} ${context.getString(R.string.small100_mt_description)}")
+        }
+    }
+
+    return result
 }
 
 private class RequestPathHelper(

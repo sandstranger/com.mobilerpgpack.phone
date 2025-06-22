@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
+import com.mobilerpgpack.phone.translator.models.TranslationType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -37,9 +38,19 @@ object PreferencesStorage {
     private val useMlKitForTextTranslationsPrefsKey = booleanPreferencesKey("use_mlkit_for_translation")
     private val enableLauncherTextTranslationPrefsKey = booleanPreferencesKey("enable_launcher_translation")
     private val allowDownloadingModelsOverMobilePrefsKey = booleanPreferencesKey("allow_downloading_over_mobile")
+    private val translationModelTypePrefsKey = stringPreferencesKey("translation_model_type")
 
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
+
+    fun getTranslationModelTypeValue(context: Context) =
+        getStringValue(context, translationModelTypePrefsKey,TranslationType.DefaultTranslationType.toString())
+
+    suspend fun setTranslationModelTypeValue(context: Context, valueToSave : String) =
+        setStringValue(context, translationModelTypePrefsKey, valueToSave)
+
+    suspend fun setTranslationModelTypeValue(context: Context, valueToSave : TranslationType) =
+        setStringValue(context, translationModelTypePrefsKey, valueToSave.toString())
 
     fun getAllowDownloadingModelsOverMobileValue(context: Context) =
         getBooleanValue(context, allowDownloadingModelsOverMobilePrefsKey)
@@ -159,15 +170,15 @@ object PreferencesStorage {
         }
     }
 
-    fun getOffsetXMouse(context: Context): Flow<Float?> {
+    fun getOffsetXMouse(context: Context): Flow<Float> {
         return context.dataStore.data.map { preferences ->
-            preferences[OFFSET_X_MOUSE]
+            preferences[OFFSET_X_MOUSE] ?: 0.0f
         }
     }
 
-    fun getOffsetYMouse(context: Context): Flow<Float?> {
+    fun getOffsetYMouse(context: Context): Flow<Float> {
         return context.dataStore.data.map { preferences ->
-            preferences[OFFSET_Y_MOUSE]
+            preferences[OFFSET_Y_MOUSE] ?: 0.0f
         }
     }
 
@@ -183,7 +194,7 @@ object PreferencesStorage {
         }
     }
 
-     fun getBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, defaultValue : Boolean = false): Flow<Boolean?> {
+     fun getBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, defaultValue : Boolean = false): Flow<Boolean> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
@@ -195,13 +206,13 @@ object PreferencesStorage {
         }
     }
 
-     fun getIntValue(context: Context, prefsKey : Preferences.Key<Int>, defaultValue : Int = 0): Flow<Int?> {
+     fun getIntValue(context: Context, prefsKey : Preferences.Key<Int>, defaultValue : Int = 0): Flow<Int> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
     }
 
-    private fun getStringValue(context: Context, prefsKey : Preferences.Key<String>, defaultValue : String = ""): Flow<String?> {
+    private fun getStringValue(context: Context, prefsKey : Preferences.Key<String>, defaultValue : String = ""): Flow<String> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }

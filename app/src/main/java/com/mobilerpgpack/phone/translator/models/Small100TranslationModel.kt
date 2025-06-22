@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import kotlinx.coroutines.runBlocking
 
 class Small100TranslationModel (
     private val context: Context,
@@ -26,4 +27,10 @@ class Small100TranslationModel (
     override val translator: Translator = Small100Translator(modelFile, spmFile)
 
     override val translationType: TranslationType = TranslationType.Small100
+
+    init {
+        runBlocking {
+            isModelDownloaded = !needToDownloadModel()
+        }
+    }
 }

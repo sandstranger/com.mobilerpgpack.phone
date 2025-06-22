@@ -40,11 +40,13 @@ class MLKitTranslationModel (private val context : Context,
             return
         }
 
-        release()
-        this.sourceLocale = sourceLocale
-        this.targetLocale = targetLocale
-        mlKitTranslator = buildMlkitTranslator()
-        wasInitialize = true
+        synchronized(lockObject) {
+            release()
+            this.sourceLocale = sourceLocale
+            this.targetLocale = targetLocale
+            mlKitTranslator = buildMlkitTranslator()
+            wasInitialize = true
+        }
     }
 
     override suspend fun translate(
@@ -52,12 +54,7 @@ class MLKitTranslationModel (private val context : Context,
         sourceLocale: String,
         targetLocale: String
     ): String {
-        if (this.sourceLocale!=sourceLocale || this.targetLocale!=targetLocale){
-            wasInitialize = false
-            initialize(sourceLocale, targetLocale)
-            super.downloadModelIfNeeded()
-        }
-
+        initialize(sourceLocale, targetLocale)
         return try {
             mlKitTranslator?.translate(text)?.await() ?: text
         } catch (_: Exception) {
@@ -67,6 +64,7 @@ class MLKitTranslationModel (private val context : Context,
 
     override suspend fun downloadModelTask(): Boolean {
         super.downloadModelTask()
+        initialize(sourceLocale, targetLocale)
         mlKitTranslator?.downloadModelIfNeeded(downloadConditions)?.await()
         return true
     }
@@ -79,9 +77,11 @@ class MLKitTranslationModel (private val context : Context,
     }
 
     override fun release() {
-        super.release()
-        mlKitTranslator?.close()
-        mlKitTranslator = null
+        synchronized(lockObject) {
+            super.release()
+            mlKitTranslator?.close()
+            mlKitTranslator = null
+        }
     }
 
     private fun buildMlkitTranslator () : Translator? {

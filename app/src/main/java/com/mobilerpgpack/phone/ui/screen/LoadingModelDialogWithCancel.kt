@@ -18,7 +18,8 @@ import com.mobilerpgpack.phone.R
 @Composable
 fun LoadingModelDialogWithCancel(
     show: Boolean,
-    onCancel: () -> Unit
+    onClose: () -> Unit = {},
+    onCancel: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -34,8 +35,13 @@ fun LoadingModelDialogWithCancel(
                 }
             },
             confirmButton = {
+                TextButton(onClick = onClose) {
+                    Text(context.getString(R.string.close_text))
+                }
+            },
+            dismissButton = {
                 TextButton(onClick = onCancel) {
-                    Text(context.getString(R.string.cancel_text))
+                    Text(context.getString(R.string.cancel_download))
                 }
             }
         )
