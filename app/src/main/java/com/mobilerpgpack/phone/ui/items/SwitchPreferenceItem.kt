@@ -2,8 +2,10 @@ package com.mobilerpgpack.phone.ui.items
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -43,6 +45,7 @@ fun SwitchPreferenceItem(
         TranslatedText(title,
             modifier = Modifier.weight(1f),
             color = if (enabled) LocalContentColor.current else  LocalContentColor.current.copy(alpha = 0.38f))
+        Spacer(Modifier.width(5.dp))
         Switch(
             checked = checkedState,
             onCheckedChange = null,

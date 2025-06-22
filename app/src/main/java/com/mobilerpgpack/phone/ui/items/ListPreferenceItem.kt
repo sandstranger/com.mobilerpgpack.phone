@@ -18,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -35,7 +36,9 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
     ) {
         TranslatedText(title, Modifier.weight(0.4f, true))
         Spacer(Modifier.width(8.dp))
-        Text(activeValue, modifier = Modifier.weight(0.6f), style = MaterialTheme.typography.bodyMedium)
+        Text(activeValue, modifier = Modifier.weight(0.6f).fillMaxWidth(),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Right)
     }
 
     if (showValuesDialog){
