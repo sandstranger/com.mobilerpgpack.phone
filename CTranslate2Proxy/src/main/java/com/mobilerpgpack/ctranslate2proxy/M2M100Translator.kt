@@ -15,7 +15,6 @@ class M2M100Translator(private val modelFile: String, private val spmFile: Strin
 
     private external fun releaseFromJni()
 
-    @Synchronized
     override fun initialize() {
         synchronized(lockObject) {
             initializeFromJni(modelFile, spmFile)
@@ -31,7 +30,6 @@ class M2M100Translator(private val modelFile: String, private val spmFile: Strin
         }
     }
 
-    @Synchronized
     override fun release() {
         synchronized(lockObject) {
             releaseFromJni()
