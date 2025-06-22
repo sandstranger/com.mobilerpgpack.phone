@@ -246,6 +246,15 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
 @Composable
 private fun DrawPreloadModelsSetting(context: Context,vm: DownloadViewModel = viewModel()){
 
+    val activeTranslationTypeString by PreferencesStorage.getTranslationModelTypeValue(context)
+        .collectAsState(initial = "")
+
+    LaunchedEffect(activeTranslationTypeString) {
+        if (activeTranslationTypeString!="") {
+            vm.onTranslationTypeChanged(activeTranslationTypeString)
+        }
+    }
+
     PreferenceItem(context.getString(R.string.load_translation_model)) {
         vm.startDownload()
     }

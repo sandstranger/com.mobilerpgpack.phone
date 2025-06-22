@@ -17,7 +17,16 @@ class DownloadViewModel(
     var downloadProgress by mutableStateOf("")   // будет хранить, например, "25%"
         private set
 
+    private var currentTranslationModelType : String? = null
+
     private var downloadJob: Job? = null
+
+    fun onTranslationTypeChanged(translationModelType : String){
+        if (currentTranslationModelType != translationModelType){
+            currentTranslationModelType = translationModelType
+            cancelDownload()
+        }
+    }
 
     fun startDownload() {
         if (isLoading) return  // уже идёт
