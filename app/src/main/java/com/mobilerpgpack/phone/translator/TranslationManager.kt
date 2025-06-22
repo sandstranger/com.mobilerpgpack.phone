@@ -4,10 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
-import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
@@ -32,15 +28,12 @@ import java.io.File
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.coroutines.coroutineContext
 
 object TranslationManager {
     private var wasInit = false
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
-    var targetLocale by mutableStateOf("")
-        private set
-
+    private lateinit var targetLocale : String
     private lateinit var db: TranslationDatabase
 
     @SuppressLint("StaticFieldLeak")
@@ -126,16 +119,6 @@ object TranslationManager {
             it.release()
         }
         translationModels.clear()
-    }
-
-    fun setLocale(newLocale: String) {
-        if (inGame){
-            return
-        }
-
-        scope.launch {
-            setLocaleAsync(newLocale)
-        }
     }
 
     suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }): Boolean {
@@ -285,12 +268,8 @@ object TranslationManager {
 
     private suspend fun reloadSavedTranslations() {
         activeTranslations.clear()
+        activeTranslationsAwaitable.clear()
         loadSavedTranslations()
-
-        if (activeTranslationType == TranslationType.MLKit && translationModel.wasInitialize ){
-            translationModel.release()
-            translationModel.initialize(sourceLocale, targetLocale)
-        }
     }
 
     private fun translate(text: String) {
