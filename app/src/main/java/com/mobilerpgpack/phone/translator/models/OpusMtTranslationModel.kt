@@ -20,19 +20,26 @@ class OpusMtTranslationModel(
         if (wasInitialize){
             return
         }
-        wasInitialize = true
-        opusMtTranslator.initialize()
+        synchronized(lockObject) {
+            wasInitialize = true
+            opusMtTranslator.initialize()
+        }
     }
 
     override suspend fun translate(
         text: String,
         sourceLocale: String,
         targetLocale: String
-    ): String = opusMtTranslator.translate(text, sourceLocale, targetLocale)
+    ): String  {
+        initialize(sourceLocale, targetLocale)
+        return opusMtTranslator.translate(text, sourceLocale, targetLocale)
+    }
 
     override fun release() {
-        super.release()
-        opusMtTranslator.release()
+        synchronized(lockObject) {
+            super.release()
+            opusMtTranslator.release()
+        }
     }
 
     override suspend fun needToDownloadModel(): Boolean = false

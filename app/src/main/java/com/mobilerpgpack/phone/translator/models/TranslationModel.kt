@@ -17,14 +17,16 @@ abstract class TranslationModel (private val context : Context,
     private var currentDownload: Deferred<Boolean>? = null
     private val downloadMutex = Mutex()
 
+    @Volatile
     protected var wasInitialize = false
+    protected val lockObject = Any()
     protected val scope = CoroutineScope(Dispatchers.IO)
 
     abstract val translationType : TranslationType
 
     open var allowDownloadingOveMobile : Boolean = false
 
-    abstract fun initialize(sourceLocale: String, targetLocale : String)
+    protected abstract fun initialize(sourceLocale: String, targetLocale : String)
 
     abstract suspend fun translate(text: String, sourceLocale: String, targetLocale : String) : String
 

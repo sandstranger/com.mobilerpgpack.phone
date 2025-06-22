@@ -45,7 +45,7 @@ object TranslationManager {
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
     private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
 
-    val inGame = false
+    var inGame = false
 
     var activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
         set(value) {
@@ -66,14 +66,14 @@ object TranslationManager {
             changeTranslationModel(value)
         }
 
-    fun init( context: Context, activeTranslationType: TranslationType = TranslationType.MLKit,
+    fun init( context: Context, activeTranslationType: TranslationType = TranslationType.DefaultTranslationType,
         allowDownloadingOveMobile: Boolean = false
     ) {
         if (wasInit) {
             return
         }
 
-        val targetLocale = getSystemLocale()
+        targetLocale = getSystemLocale()
 
         translationModels [TranslationType.MLKit] =
             MLKitTranslationModel(context,sourceLocale, targetLocale, allowDownloadingOveMobile)
@@ -127,7 +127,6 @@ object TranslationManager {
     }
 
     suspend fun downloadModelIfNeeded(): Boolean {
-        translationModel.initialize(sourceLocale, targetLocale)
         return translationModel.downloadModelIfNeeded()
     }
 
@@ -172,6 +171,7 @@ object TranslationManager {
     }
 
     suspend fun translateAsync(text: String): String {
+        val activeTranslationType = this@TranslationManager.activeTranslationType
 
         suspend fun saveTranslatedText(translatedText: String) {
             val translationEntry = TranslationEntry(
@@ -197,17 +197,19 @@ object TranslationManager {
             return getTranslation(text)
         }
 
+        if (!isModelDownloaded()){
+            return text
+        }
+
         activeTranslations.add(text)
 
-        downloadModelIfNeeded()
-
         try {
-            translationModel.initialize(sourceLocale, targetLocale)
             val translatedValue = translationModel.translate(text, sourceLocale, targetLocale)
-            if (translatedValue!=text) {
+            if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType) {
                 saveTranslatedText(translatedValue)
+                return translatedValue
             }
-            return translatedValue
+            return text
         } catch (_: Exception) {
             return text
         } finally {

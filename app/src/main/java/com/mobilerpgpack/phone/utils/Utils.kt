@@ -29,8 +29,12 @@ fun getPathFromIntent (intent: Intent?) : String {
     return ""
 }
 
-fun computeSHA256(pathToFile : String): String {
-    return FileInputStream(File(pathToFile)).use { inputStream ->
+fun computeSHA256(file: File): String {
+    if (!file.exists()){
+        return ""
+    }
+
+    return FileInputStream(file).use { inputStream ->
         computeSHA256(inputStream).joinToString("") { "%02x".format(it) }
     }
 }
