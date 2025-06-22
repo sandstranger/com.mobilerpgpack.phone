@@ -12,17 +12,10 @@ TranslationOptions create_translation_options(){
     return options;
 }
 
-shared_ptr<Translator> create_translator (string model_path){
-    unsigned int num_threads = std::thread::hardware_concurrency();
-    if (num_threads == 0) {
-        num_threads = 1;
-    } else if (num_threads > 1){
-        num_threads = std::lround(num_threads/1.7f);
-    }
-    return make_shared<Translator>(
+unique_ptr<Translator> create_translator (string model_path){
+    return make_unique<Translator>(
             model_path,
-            ctranslate2::Device::CPU,ctranslate2::ComputeType::INT8_FLOAT32,
-            std::vector<int>(num_threads, 0));
+            ctranslate2::Device::CPU,ctranslate2::ComputeType::INT8_FLOAT32);
 }
 
 extern "C" {
