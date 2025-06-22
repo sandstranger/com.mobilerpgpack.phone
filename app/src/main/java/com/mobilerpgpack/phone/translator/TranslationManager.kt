@@ -84,7 +84,6 @@ object TranslationManager {
 
         targetLocale = getSystemLocale()
 
-
         translationModels [TranslationType.MLKit] =
             MLKitTranslationModel(context,sourceLocale, targetLocale, allowDownloadingOveMobile)
 
@@ -250,7 +249,6 @@ object TranslationManager {
             throw ce
         }
         catch (e: Exception) {
-            Log.d("CALLED_SAVED", e.toString())
             return@coroutineScope text
         } finally {
             activeTranslations.remove(text)
