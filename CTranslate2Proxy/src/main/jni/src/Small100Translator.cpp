@@ -9,19 +9,15 @@ using namespace sentencepiece;
 using namespace ctranslate2;
 
 extern TranslationOptions create_translation_options();
-extern shared_ptr<Translator> create_translator (string model_path);
+extern unique_ptr<Translator> create_translator (string model_path);
 
-static shared_ptr<SentencePieceProcessor> sp = nullptr;
-static std::shared_ptr<ctranslate2::Translator> translator = nullptr;
-
-static mutex translator_mutex;
+static unique_ptr<SentencePieceProcessor> sp = nullptr;
+static std::unique_ptr<ctranslate2::Translator> translator = nullptr;
 
 string translate(string input, string target_locale) {
     if (input.empty()){
         return "";
     }
-
-    std::lock_guard<std::mutex> lock(translator_mutex);
 
     if (!translator || !sp) {
         return input;
@@ -38,7 +34,7 @@ string translate(string input, string target_locale) {
         const std::vector<std::vector<std::string>> batch = {tokens};
 
         auto results =
-                translator->translate_batch_async(batch, create_translation_options())[0].get();
+                translator->translate_batch(batch, create_translation_options())[0];
 
         const std::vector<std::string> translatedTokens = results.output();
 
@@ -86,7 +82,6 @@ JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Transl
 
 JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_releaseFromJni
         (JNIEnv *env, jobject thisObject) {
-    std::lock_guard<std::mutex> lock(translator_mutex);
     if (translator == nullptr){
         return;
     }

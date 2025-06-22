@@ -2,6 +2,8 @@ package com.mobilerpgpack.ctranslate2proxy
 
 abstract class Translator {
 
+    protected val lockObject = Any()
+    
     abstract fun initialize()
 
     abstract suspend fun translate (text: String, sourceLocale: String, targetLocale : String) : String
