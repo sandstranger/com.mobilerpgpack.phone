@@ -18,7 +18,6 @@ class OpusMtTranslator(
 
     private external fun releaseFromJni()
 
-    @Synchronized
     override fun initialize() {
         synchronized(lockObject) {
             initializeFromJni(pathToTranslationModel, pathToSourceProcessor, pathToTargetProcessor)
@@ -34,7 +33,6 @@ class OpusMtTranslator(
         }
     }
 
-    @Synchronized
     override fun release() {
         synchronized(lockObject) {
             releaseFromJni()

@@ -11,7 +11,6 @@ class Small100Translator(private val modelFile: String, private val spmFile: Str
 
     private external fun releaseFromJni()
 
-    @Synchronized
     override fun initialize() {
         synchronized(lockObject) {
             initializeFromJni(modelFile, spmFile)
@@ -28,7 +27,6 @@ class Small100Translator(private val modelFile: String, private val spmFile: Str
         }
     }
 
-    @Synchronized
     override fun release() {
         synchronized(lockObject) {
             releaseFromJni()
