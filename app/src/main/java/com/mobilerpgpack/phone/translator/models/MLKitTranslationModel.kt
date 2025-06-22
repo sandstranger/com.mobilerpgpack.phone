@@ -63,8 +63,8 @@ class MLKitTranslationModel (private val context : Context,
         }
     }
 
-    override suspend fun downloadModelTask(): Boolean {
-        super.downloadModelTask()
+    override suspend fun downloadModelTask(onProgress: (String) -> Unit): Boolean {
+        super.downloadModelTask(onProgress)
         initialize(sourceLocale, targetLocale)
         mlKitTranslator?.downloadModelIfNeeded(downloadConditions)?.await()
         return true
