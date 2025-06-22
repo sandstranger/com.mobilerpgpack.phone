@@ -8,7 +8,7 @@
     <string name="m2m_mt_description">Multilingual translator. High translation quality. (only for hi-end devices with big amount of RAM)</string>
     <string name="small100_mt_description">Multilingual translator. Middle translation quality. (for middle and hi-end devices with big amount of RAM)</string>
     <string name="loading_model_title">Downloading model for translation</string>
-    <string name="load_translation_model">Load translation model</string>
+    <string name="load_translation_model">Download translation model</string>
     <string name="wait_text">Please, wait… \nModel will continue to download after closing window</string>
     <string name="use_sdl_ttf_for_rendering">Use SDL TTF for text rendering (Can be used for text translations)</string>
     <string name="use_ai_for_text_translations">Enable machine text translation for all games(It forcibly enables \"Use SDL TTF for text rendering\" option)</string>
