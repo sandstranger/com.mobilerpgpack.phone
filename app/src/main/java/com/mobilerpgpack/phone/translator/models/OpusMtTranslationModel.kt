@@ -4,6 +4,7 @@ import android.content.Context
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.phone.translator.models.TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import kotlinx.coroutines.async
 
 class OpusMtTranslationModel(
     private val context : Context,
@@ -31,8 +32,12 @@ class OpusMtTranslationModel(
         sourceLocale: String,
         targetLocale: String
     ): String  {
-        initialize(sourceLocale, targetLocale)
-        return opusMtTranslator.translate(text, sourceLocale, targetLocale)
+        val deferred = scope.async {
+            initialize(sourceLocale, targetLocale)
+            opusMtTranslator.translate(text,sourceLocale,targetLocale)
+        }
+
+        return deferred.await()
     }
 
     override fun release() {
