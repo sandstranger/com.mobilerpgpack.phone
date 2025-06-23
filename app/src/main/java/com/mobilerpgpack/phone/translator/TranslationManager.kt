@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
+import android.util.Log
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
@@ -44,15 +45,19 @@ object TranslationManager {
     private lateinit var translationModel : ITranslationModel
 
     private val scope = TranslatorApp.globalScope
+    private val intervalsTranslator = IntervalMarkerTranslator()
     private val translationModels = HashMap<TranslationType, ITranslationModel>()
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
     private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
-    private val activeTranslationsAwaitable =  ConcurrentHashMap<String, Job>()
+    private val activeTranslationsAwaitable = ConcurrentHashMap<String, Job>()
 
     var inGame = false
 
     var activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
         set(value) {
+            if (_activeEngine == value) {
+                return
+            }
             _activeEngine = value
 
             scope.launch {
@@ -127,8 +132,11 @@ object TranslationManager {
         translationModels.clear()
     }
 
-    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }) =
-        translationModel.downloadModelIfNeeded(onProgress)
+    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }) {
+        if (isTargetLocaleSupported()){
+            translationModel.downloadModelIfNeeded(onProgress)
+        }
+    }
 
     fun isTranslationSupportedAsFlow(): Flow<Boolean> = flow {
         while (currentCoroutineContext().isActive) {
@@ -236,7 +244,9 @@ object TranslationManager {
         }
 
         try {
-            val translatedValue = translationModel.translate(text, sourceLocale, targetLocale)
+            val translatedValue = intervalsTranslator.translateWithFixedInterval (text) {
+                cleanText -> translationModel.translate(cleanText, sourceLocale, targetLocale)
+            }
             if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType) {
                 saveTranslatedText(translatedValue)
                 return@coroutineScope translatedValue
@@ -275,13 +285,14 @@ object TranslationManager {
     }
 
     private suspend fun reloadSavedTranslations() {
+        return
         activeTranslations.clear()
         activeTranslationsAwaitable.clear()
         loadSavedTranslations()
     }
 
     private fun changeTranslationModel (targetTranslationType : TranslationType){
-        if (translationModel.translationType != targetTranslationType) {
+        if (activeTranslationType != targetTranslationType) {
             translationModel.release()
             translationModel = translationModels[targetTranslationType]!!
             scope.launch {

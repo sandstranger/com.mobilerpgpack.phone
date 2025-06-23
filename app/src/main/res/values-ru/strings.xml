@@ -31,9 +31,9 @@
     <string name="use_custom_file_picker">Использовать кастомный проводник для выбора файлов (нужно для Android TV)</string>
     <string name="start_game">Запустить игру</string>
     <string name="wolfenstein_rpg_settings">Настройки Wolfenstein RPG</string>
-    <string name="wolfenstein_rpg_ipa_file">Путь к файлу Wolfenstein RPG IPA</string>
-    <string name="doom2_rpg_ipa_file">Путь к файлу Doom II RPG IPA</string>
-    <string name="doom_rpg_zip_file">Путь к ZIP-файлу Doom RPG</string>
+    <string name="wolfenstein_rpg_ipa_file">Путь к ipa файлу Wolfenstein RPG</string>
+    <string name="doom2_rpg_ipa_file">Путь к ipa файлу Doom II RPG</string>
+    <string name="doom_rpg_zip_file">Путь к zip-файлу Doom RPG</string>
     <string name="configure_screen_controls">Редактор экранного управления</string>
     <string name="hide_custom_screen_controls">Скрыть экранное управление</string>
     <string name="can_not_start_engine">Файл ресурсов игры не найден. Невозможно запустить игру.</string>
