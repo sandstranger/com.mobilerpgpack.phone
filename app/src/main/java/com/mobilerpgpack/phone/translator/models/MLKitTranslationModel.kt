@@ -12,16 +12,24 @@ import com.google.mlkit.nl.translate.TranslatorOptions
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import kotlinx.coroutines.tasks.await
 
-class MLKitTranslationModel (private val context : Context,
-                             private var sourceLocale: String,
-                             private var targetLocale : String,
-                             private val allowDownloadingOverMobile : Boolean = false) :
-    TranslationModel(context,allowDownloadingOverMobile) {
+class MLKitTranslationModel(
+    private val context: Context,
+    private var sourceLocale: String,
+    private var targetLocale: String,
+    private val allowDownloadingOverMobile: Boolean = false,
+) :
+    TranslationModel(context, allowDownloadingOverMobile) {
+
+    override val supportedLocales = hashSetOf("af","am","ar","ar-Latn","az","be","bg","bg-Latn","bn","bs","ca","ceb","co","cs","cy",
+        "da","de","el","el-Latn","en","eo","es","et","eu","fa","fi","fil","fr","fy","ga","gd","gl","gu","ha","haw",
+        "he","hi","hi-Latn","hmn","hr","ht","hu","hy","id","ig","is","it","ja","ja-Latn","jv","ka","kk","km",
+        "kn","ko","ku","ky","la","lb","lo","lt","lv","mg","mi","mk","ml","mn","mr","ms","mt","my","ne","nl","no",
+        "ny","pa","pl","ps","pt","ro","ru","ru-Latn","sd","si","sk","sl","sm","sn","so","sq","sr","st","su","sv","sw",
+        "ta","te","tg","th","tr","uk","ur","uz","vi","xh","yi","yo","zh","zh-Latn","zu")
 
     private val modelCache = mutableMapOf<String, TranslateRemoteModel>()
-
-    private var downloadConditions : DownloadConditions
-    private var mlKitTranslator : Translator? = null
+    private var downloadConditions: DownloadConditions
+    private var mlKitTranslator: Translator? = null
 
     override val translationType: TranslationType = TranslationType.MLKit
 
@@ -36,8 +44,8 @@ class MLKitTranslationModel (private val context : Context,
         downloadConditions = buildConditions()
     }
 
-    override fun initialize(sourceLocale: String, targetLocale : String) {
-        if (wasInitialize){
+    override fun initialize(sourceLocale: String, targetLocale: String) {
+        if (wasInitialize) {
             return
         }
 
@@ -55,10 +63,12 @@ class MLKitTranslationModel (private val context : Context,
         targetLocale: String
     ): String {
         initialize(sourceLocale, targetLocale)
+        if (!isLocaleSupported(targetLocale)){
+            return text
+        }
         return try {
             mlKitTranslator?.translate(text)?.await() ?: text
         } catch (e: Exception) {
-            Log.d("DOWNLOADED_VALUE", "DATADAFA444444444 + ${e.toString()}")
             text
         }
     }
@@ -72,8 +82,10 @@ class MLKitTranslationModel (private val context : Context,
 
     override suspend fun needToDownloadModel(): Boolean {
         val modelManager = RemoteModelManager.getInstance()
-        val sourceLocaleModelDownloaded = modelManager.isModelDownloaded(getRemoteModel(sourceLocale)).await()
-        val targetLocaleModelDownloaded = modelManager.isModelDownloaded(getRemoteModel(targetLocale)).await()
+        val sourceLocaleModelDownloaded =
+            modelManager.isModelDownloaded(getRemoteModel(sourceLocale)).await()
+        val targetLocaleModelDownloaded =
+            modelManager.isModelDownloaded(getRemoteModel(targetLocale)).await()
         return !sourceLocaleModelDownloaded || !targetLocaleModelDownloaded
     }
 
@@ -85,7 +97,7 @@ class MLKitTranslationModel (private val context : Context,
         }
     }
 
-    private fun buildMlkitTranslator () : Translator? {
+    private fun buildMlkitTranslator(): Translator? {
         mlKitTranslator?.close()
 
         val sourceLang = TranslateLanguage.fromLanguageTag(sourceLocale)

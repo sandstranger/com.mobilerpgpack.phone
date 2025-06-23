@@ -24,7 +24,6 @@ class DownloadViewModel(
 
     fun onTranslationTypeChanged(translationModelType : String){
         if (currentTranslationModelType != translationModelType){
-            Log.d("CALLED_EXCEPTIOn", "CALLED CANCEL")
             currentTranslationModelType = translationModelType
             cancelDownload()
         }
