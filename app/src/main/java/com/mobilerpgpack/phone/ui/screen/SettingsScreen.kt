@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
 import android.content.Context
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -28,17 +27,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
@@ -46,7 +45,6 @@ import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.translator.TranslationManager
-import com.mobilerpgpack.phone.translator.TranslatorApp
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
@@ -60,15 +58,6 @@ import com.mobilerpgpack.phone.utils.isTelevision
 import com.mobilerpgpack.phone.utils.requestDirectory
 import com.mobilerpgpack.phone.utils.requestResourceFile
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -107,9 +96,8 @@ private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
-                .height(56.dp)
         ) {
-            TranslatedText(context.getString(R.string.start_game), fontSize = 25.sp)
+            TranslatedText(context.getString(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
         }
 
         DrawAllSettings(context, scope)
@@ -321,9 +309,15 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
         EngineTypes.DefaultActiveEngine.toString())
     val activeEngine = rememberSaveable (engineState) { enumValueOf<EngineTypes>(engineState!!) }
     var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
-    val isModelDownloaded by TranslationManager.isModelDownloadedAsFlow().collectAsState(initial = true)
+    val isModelDownloaded by TranslationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
+    val showLauncherTranslationOption = TranslationManager.targetLocale != TranslationManager.sourceLocale
+            && TranslationManager.targetLocale != TranslateLanguage.RUSSIAN
 
-    LaunchedEffect(isModelDownloaded) {
+    LaunchedEffect(isModelDownloaded, showLauncherTranslationOption) {
+        if (!showLauncherTranslationOption){
+            PreferencesStorage.setEnableLauncherTextTranslationValue(context, false)
+        }
+
         if (!isModelDownloaded) {
             PreferencesStorage.setEnableLauncherTextTranslationValue(context, false)
             PreferencesStorage.setEnableGameMachineTextTranslationValue(context, false)
@@ -341,15 +335,16 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
         }
     }
 
-    HorizontalDivider()
-
-    SwitchPreferenceItem(
-        context.getString(R.string.enable_launcher_text_translation),
-        checkedFlow = PreferencesStorage.getEnableLauncherTextTranslationValue(context),
-        enabled = isModelDownloaded
-    ) { newValue ->
-        scope.launch {
-            PreferencesStorage.setEnableLauncherTextTranslationValue(context, newValue)
+    if (showLauncherTranslationOption) {
+        HorizontalDivider()
+        SwitchPreferenceItem(
+            context.getString(R.string.enable_launcher_text_translation),
+            checkedFlow = PreferencesStorage.getEnableLauncherTextTranslationValue(context),
+            enabled = isModelDownloaded
+        ) { newValue ->
+            scope.launch {
+                PreferencesStorage.setEnableLauncherTextTranslationValue(context, newValue)
+            }
         }
     }
 
@@ -492,6 +487,8 @@ private fun buildTranslationsDescription (context: Context) : Collection<String>
                 result.add("${TranslationType.M2M100} ${context.getString(R.string.m2m_mt_description)}")
             TranslationType.Small100 ->
                 result.add("${TranslationType.Small100} ${context.getString(R.string.small100_mt_description)}")
+            TranslationType.GoogleTranslate ->
+                result.add("${TranslationType.GoogleTranslate} ${context.getString(R.string.google_translate_description)}")
         }
     }
 

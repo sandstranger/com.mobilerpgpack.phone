@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.activity
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.system.Os
+import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
