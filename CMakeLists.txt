@@ -58,6 +58,14 @@ else ()
     set(SDL2_TTF_LIBRARY ${CMAKE_SOURCE_DIR}/sdl2-ttf/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_ttf.so)
 endif ()
 
+include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/Translator/src/main/jni/include")
+
+if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+    set(TRANSLATOR_LIBRARY ${CMAKE_SOURCE_DIR}/Translator/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libTranslator.so)
+else ()
+    set(TRANSLATOR_LIBRARY ${CMAKE_SOURCE_DIR}/Translator/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libTranslator.so)
+endif ()
+
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")

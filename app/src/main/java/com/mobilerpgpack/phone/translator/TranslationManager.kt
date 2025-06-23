@@ -6,11 +6,12 @@ import android.content.res.Resources
 import android.os.Build
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
+import com.mobilerpgpack.phone.translator.models.ITranslationModel
 import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
 import com.mobilerpgpack.phone.translator.models.MLKitTranslationModel
 import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
 import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
-import com.mobilerpgpack.phone.translator.models.TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.translator.sql.TranslationEntry
@@ -30,19 +31,20 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
 
 object TranslationManager {
+    const val sourceLocale = TranslateLanguage.ENGLISH
+    val targetLocale : String = getSystemLocale()
+
     private var wasInit = false
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
-    private lateinit var targetLocale : String
     private lateinit var db: TranslationDatabase
 
     @SuppressLint("StaticFieldLeak")
     @Volatile
-    private lateinit var translationModel : TranslationModel
+    private lateinit var translationModel : ITranslationModel
 
-    private const val sourceLocale = TranslateLanguage.ENGLISH
     private val scope = TranslatorApp.globalScope
-    private val translationModels = HashMap<TranslationType, TranslationModel>()
+    private val translationModels = HashMap<TranslationType, ITranslationModel>()
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
     private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
     private val activeTranslationsAwaitable =  ConcurrentHashMap<String, Job>()
@@ -52,6 +54,10 @@ object TranslationManager {
     var activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
         set(value) {
             _activeEngine = value
+
+            scope.launch {
+                reloadSavedTranslations()
+            }
         }
 
     var allowDownloadingOveMobile: Boolean = false
@@ -75,8 +81,6 @@ object TranslationManager {
             return
         }
 
-        targetLocale = getSystemLocale()
-
         translationModels [TranslationType.MLKit] =
             MLKitTranslationModel(context,sourceLocale, targetLocale, allowDownloadingOveMobile)
 
@@ -87,7 +91,7 @@ object TranslationManager {
         val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
 
         translationModels[TranslationType.OpusMt] =
-            OpusMtTranslationModel (context, pathToOptModel, optModelSourceProcessor, optModelTargetProcessor)
+            OpusMtTranslationModel (pathToOptModel, optModelSourceProcessor, optModelTargetProcessor)
 
         val pathToM2M100Model = "${filesRootDir.absolutePath}${File.separator}m2m100_ct2"
         val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
@@ -100,6 +104,8 @@ object TranslationManager {
 
         translationModels[TranslationType.Small100] =
             Small100TranslationModel (context, pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile)
+
+        translationModels[TranslationType.GoogleTranslate] = GoogleTranslateV2(context)
 
         translationModel = translationModels[activeTranslationType]!!
 
@@ -121,34 +127,30 @@ object TranslationManager {
         translationModels.clear()
     }
 
-    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }): Boolean {
-        return translationModel.downloadModelIfNeeded(onProgress)
-    }
+    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }) =
+        translationModel.downloadModelIfNeeded(onProgress)
 
-    fun isModelDownloadedAsFlow(): Flow<Boolean> = flow {
+    fun isTranslationSupportedAsFlow(): Flow<Boolean> = flow {
         while (currentCoroutineContext().isActive) {
-            emit(isModelDownloaded())
+            emit(isTranslationSupported())
             delay(500)
         }
     }.distinctUntilChanged()
 
-    suspend fun isModelDownloaded () : Boolean{
-        return !translationModel.needToDownloadModel()
-    }
+    fun isTargetLocaleSupported () : Boolean = translationModel.isLocaleSupported(targetLocale)
 
-    fun cancelDownloadModel() {
-        translationModel.cancelDownloadingModel()
-    }
+    suspend fun isTranslationSupported() : Boolean =
+        isModelDownloaded() && isTargetLocaleSupported() && targetLocale != sourceLocale
 
-    @JvmStatic
-    fun getTranslation(text: String): String {
-        return if (isTranslated(text)) loadedTranslations[text]!!.value else text
-    }
+    suspend fun isModelDownloaded () = !translationModel.needToDownloadModel()
+
+    fun cancelDownloadModel() = translationModel.cancelDownloadingModel()
 
     @JvmStatic
-    fun isTranslated(text: String) : Boolean {
-        return loadedTranslations.containsKey(text)
-    }
+    fun getTranslation(text: String) = if (isTranslated(text)) loadedTranslations[text]!!.value else text
+
+    @JvmStatic
+    fun isTranslated(text: String) = loadedTranslations.containsKey(text)
 
     @JvmStatic
     fun translate(text: String): String {
@@ -160,7 +162,7 @@ object TranslationManager {
             return getTranslation(text)
         }
 
-        if (activeTranslations.contains(text) || activeTranslationsAwaitable.keys.contains(text)) {
+        if (activeTranslations.contains(text) || activeTranslationsAwaitable.containsKey(text)) {
             return text
         }
 
@@ -181,6 +183,11 @@ object TranslationManager {
             return
         }
 
+        if (activeTranslations.contains(text) || activeTranslationsAwaitable.containsKey(text)) {
+            return onTextTranslated(text)
+            return
+        }
+
         scope.launch {
             onTextTranslated(translateAsync(text))
         }
@@ -191,13 +198,12 @@ object TranslationManager {
             return@coroutineScope text
         }
 
-        val activeTargetLocale = targetLocale
         val activeTranslationType = this@TranslationManager.activeTranslationType
 
         suspend fun saveTranslatedText(translatedText: String) {
             val translationEntry = TranslationEntry(
                 key = text,
-                lang = activeTargetLocale,
+                lang = targetLocale,
                 value = translatedText,
                 engine = _activeEngine,
                 translationModelType = activeTranslationType
@@ -210,7 +216,7 @@ object TranslationManager {
             return@coroutineScope getTranslation(text)
         }
 
-        if (!isModelDownloaded()){
+        if (!isTranslationSupported()){
             return@coroutineScope text
         }
 
@@ -229,16 +235,9 @@ object TranslationManager {
             }
         }
 
-        if (!isModelDownloaded()){
-            return@coroutineScope text
-        }
-
-        activeTranslations.add(text)
-
         try {
             val translatedValue = translationModel.translate(text, sourceLocale, targetLocale)
-            if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType
-                && activeTargetLocale == targetLocale) {
+            if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType) {
                 saveTranslatedText(translatedValue)
                 return@coroutineScope translatedValue
             }
@@ -247,7 +246,7 @@ object TranslationManager {
         catch (ce: CancellationException) {
             throw ce
         }
-        catch (e: Exception) {
+        catch (_: Exception) {
             return@coroutineScope text
         } finally {
             activeTranslations.remove(text)

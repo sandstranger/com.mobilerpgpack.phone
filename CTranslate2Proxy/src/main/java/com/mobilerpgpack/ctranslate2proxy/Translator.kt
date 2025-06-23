@@ -17,7 +17,7 @@ abstract class Translator {
             System.loadLibrary("ctranslate2")
             System.loadLibrary("sentencepiece_train")
             System.loadLibrary("sentencepiece")
-            System.loadLibrary("TranslationProxy")
+            System.loadLibrary("CTranslate2Proxy")
         }
     }
 }

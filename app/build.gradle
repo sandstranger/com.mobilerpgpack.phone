@@ -76,7 +76,7 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':fluidsynth:build',':CTranslate2Proxy:build',
+preBuild.dependsOn ':fluidsynth:build',':CTranslate2Proxy:build',':Translator:build',
         ':sdl2:android-project:app:build', ':openal:build',
         ':gl4es:build',':sdl2-mixer:build',':sdl2-ttf:build'
 
@@ -89,7 +89,11 @@ dependencies {
     implementation (project(":file-picker"))
     implementation (project(":sdl2-ttf"))
     implementation (project(":CTranslate2Proxy"))
+    implementation (project(":Translator"))
 
+    implementation libs.converter.gson
+    implementation libs.gson
+    implementation(libs.retrofit)
     implementation (libs.androidx.room.runtime)
     ksp libs.androidx.room.compiler
     implementation (libs.androidx.room.ktx)

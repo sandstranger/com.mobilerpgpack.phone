@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import com.mobilerpgpack.phone.translator.TranslationManager
@@ -28,11 +29,12 @@ fun TranslatedText(
     fontSize: TextUnit = TextUnit.Unspecified,
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
-    color: Color = Color.Unspecified
+    color: Color = Color.Unspecified,
+    textAlign: TextAlign? = null
     ) {
     val context = LocalContext.current
 
-    val isModelDownloaded by TranslationManager.isModelDownloadedAsFlow().collectAsState(initial = false)
+    val isModelDownloaded by TranslationManager.isTranslationSupportedAsFlow().collectAsState(initial = false)
     val activeTranslationType by
     PreferencesStorage.getTranslationModelTypeValue(context).collectAsState(initial = TranslationType.DefaultTranslationType.toString())
 
@@ -59,5 +61,5 @@ fun TranslatedText(
 
     Text(text = displayText, modifier = modifier,
         style = style, fontSize = fontSize, maxLines = maxLines,
-        overflow = overflow, color = color)
+        overflow = overflow, color = color, textAlign = textAlign)
 }

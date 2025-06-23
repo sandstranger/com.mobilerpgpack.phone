@@ -23,10 +23,19 @@ abstract class BaseM2M100TranslationModel(
     protected abstract val zipFileSha256: String
     protected abstract val translator: Translator
 
+    override val supportedLocales: Collection<String> = hashSetOf("af", "am", "ar", "ast", "az", "ba", "be", "bg", "bn",
+        "br", "bs", "ca", "ceb", "cs", "cy", "da", "de", "el", "en", "es", "et", "fa", "ff", "fi", "fr",
+        "fy", "ga", "gd", "gl", "gu", "ha", "he", "hi", "hr", "ht", "hu", "hy", "id", "ig", "ilo", "is",
+        "it", "ja", "jv", "ka", "kk", "km", "kn", "ko", "lb", "lg", "ln", "lo", "lt", "lv", "mg", "mk", "ml",
+        "mn", "mr", "ms", "my", "ne", "nl", "no", "ns", "oc", "or", "pa", "pl", "ps", "pt", "ro", "ru", "sd",
+        "si", "sk", "sl", "so", "sq", "sr", "ss", "su", "sv", "sw", "ta", "th", "tl", "tn", "tr", "uk", "ur",
+        "uz", "vi", "wo", "xh", "yi", "yo", "zh", "zu")
+
     private val pathToModelZipFile by lazy {
         return@lazy "${context.getExternalFilesDir("")}${File.separator}${File(pathToModelFolder).name}.zip"
     }
 
+    private val modelDownloader = DriveDownloader(context,"AIzaSyCz-HWRD4hzUHB4aVEj6927ZjgTj-147PE")
     private val zipFile by lazy { File(pathToModelZipFile) }
     private val modelFolder by lazy { File(pathToModelFolder) }
     private val smpFile by lazy { File(spmFile) }
@@ -61,6 +70,10 @@ abstract class BaseM2M100TranslationModel(
         sourceLocale: String,
         targetLocale: String
     ): String {
+        if (!isLocaleSupported(targetLocale)){
+            return text
+        }
+
         if (isModelDownloaded) {
             val deferred = scope.async {
                 initialize(sourceLocale, targetLocale)
@@ -108,9 +121,5 @@ abstract class BaseM2M100TranslationModel(
         }
 
         return false
-    }
-
-    private companion object {
-        private val modelDownloader = DriveDownloader("AIzaSyCz-HWRD4hzUHB4aVEj6927ZjgTj-147PE")
     }
 }

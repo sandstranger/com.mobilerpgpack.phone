@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.ui.text.intl.Locale
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.isWifiConnected
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +14,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 abstract class TranslationModel (private val context : Context,
-                                 private val allowDownloadingOverMobile : Boolean = false ){
+                                 private val allowDownloadingOverMobile : Boolean = false ) : ITranslationModel {
     private var currentDownload: Deferred<Boolean>? = null
     private val downloadMutex = Mutex()
 
@@ -24,32 +25,38 @@ abstract class TranslationModel (private val context : Context,
     protected val lockObject = Any()
     protected val scope = CoroutineScope(Dispatchers.IO)
 
-    abstract val translationType : TranslationType
+    protected abstract val supportedLocales : Collection<String>
 
-    open var allowDownloadingOveMobile : Boolean = false
+    abstract override val translationType : TranslationType
 
-    abstract fun initialize(sourceLocale: String, targetLocale : String)
+    override var allowDownloadingOveMobile : Boolean = false
 
-    abstract suspend fun translate(text: String, sourceLocale: String, targetLocale : String) : String
+    protected abstract fun initialize(sourceLocale: String, targetLocale : String)
 
-    abstract suspend fun needToDownloadModel () : Boolean
+    abstract override suspend fun translate(text: String, sourceLocale: String, targetLocale : String) : String
+
+    abstract override suspend fun needToDownloadModel () : Boolean
 
     init {
         this@TranslationModel.allowDownloadingOveMobile = allowDownloadingOverMobile
     }
 
-    open fun release(){
+    override fun release(){
         wasInitialize = false
         cancelDownloadingModel()
         scope.coroutineContext.cancelChildren()
     }
 
-    fun cancelDownloadingModel(){
+    override fun isLocaleSupported (locale: String) : Boolean{
+        return supportedLocales.contains(locale)
+    }
+
+    override fun cancelDownloadingModel(){
         currentDownload?.cancel()
         currentDownload = null
     }
 
-    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }): Boolean {
+    override suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit): Boolean {
 
         if (!needToDownloadModel()){
             return true

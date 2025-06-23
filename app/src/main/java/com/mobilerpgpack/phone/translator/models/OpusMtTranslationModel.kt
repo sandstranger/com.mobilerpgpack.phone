@@ -1,23 +1,34 @@
 package com.mobilerpgpack.phone.translator.models
 
-import android.content.Context
+import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
-import com.mobilerpgpack.phone.translator.models.TranslationModel
-import com.mobilerpgpack.phone.translator.models.TranslationType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelChildren
 
 class OpusMtTranslationModel(
-    private val context : Context,
     private val pathToTranslationModel: String,
     private val pathToSourceProcessor: String,
-    private val pathToTargetProcessor: String
-) : TranslationModel(context) {
+    private val pathToTargetProcessor: String,
+) : ITranslationModel {
+
+    @Volatile
+    private var wasInitialize = false
+
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private val lockObject = Any()
+
     private val opusMtTranslator : OpusMtTranslator =
         OpusMtTranslator(pathToTranslationModel, pathToSourceProcessor, pathToTargetProcessor)
 
     override val translationType: TranslationType = TranslationType.OpusMt
 
-    override fun initialize(sourceLocale: String, targetLocale : String){
+    override fun isLocaleSupported(locale: String): Boolean {
+        return locale == TranslateLanguage.RUSSIAN
+    }
+
+    private fun initialize(){
         if (wasInitialize){
             return
         }
@@ -32,8 +43,11 @@ class OpusMtTranslationModel(
         sourceLocale: String,
         targetLocale: String
     ): String  {
+        if (!isLocaleSupported(targetLocale)){
+            return text
+        }
         val deferred = scope.async {
-            initialize(sourceLocale, targetLocale)
+            initialize()
             opusMtTranslator.translate(text,sourceLocale,targetLocale)
         }
 
@@ -43,6 +57,7 @@ class OpusMtTranslationModel(
     override fun release() {
         synchronized(lockObject) {
             super.release()
+            scope.coroutineContext.cancelChildren()
             opusMtTranslator.release()
         }
     }

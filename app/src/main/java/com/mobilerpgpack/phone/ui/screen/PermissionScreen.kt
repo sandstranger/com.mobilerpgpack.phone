@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -60,7 +61,7 @@ fun PermissionScreen( onPermissionGranted: () -> Unit ) {
                 }
             }
 
-            Text(text = activity.getString(R.string.access_to_all_files), fontSize = 24.sp)
+            Text(text = activity.getString(R.string.access_to_all_files),textAlign = TextAlign.Center, fontSize = 24.sp)
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
@@ -79,7 +80,8 @@ fun PermissionScreen( onPermissionGranted: () -> Unit ) {
                     }
                 },
             ) {
-                Text(text = activity.getString(R.string.grant_permission), fontSize = 24.sp)
+                Text(text = activity.getString(R.string.grant_permission),
+                    textAlign = TextAlign.Center, fontSize = 21.sp)
             }
         }
     }
