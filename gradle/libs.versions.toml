@@ -4,6 +4,7 @@ converterGson = "3.0.0"
 core = "3.3.0"
 datastorePreferences = "1.1.7"
 gson = "2.11.0"
+icu4j = "77.1"
 kotlin = "2.1.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -42,6 +43,7 @@ androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.afollestad.material-dialogs:core", version.ref = "core" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
