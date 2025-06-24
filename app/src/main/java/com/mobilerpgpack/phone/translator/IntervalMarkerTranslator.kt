@@ -6,6 +6,7 @@ import kotlin.math.roundToInt
 class IntervalMarkerTranslator {
 
     private val pipeSpecialSymbol = "|"
+    private val sentenceSpecialTypes = setOf('.', '!', '?', ',')
 
     suspend fun translateWithFixedInterval(
         sourceText: String,
@@ -69,7 +70,7 @@ class IntervalMarkerTranslator {
 
             if (count >= interval) {
                 var j = i + 1
-                while (j < text.length && text[j] in setOf('.', '!', '?')) {
+                while (j < text.length && text[j] in sentenceSpecialTypes ) {
                     sb.append(text[j])
                     j++
                 }
