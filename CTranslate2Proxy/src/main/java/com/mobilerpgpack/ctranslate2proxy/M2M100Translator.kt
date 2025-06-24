@@ -30,7 +30,7 @@ class M2M100Translator(private val modelFile: String, private val spmFile: Strin
             if (text.isEmpty()){
                 return@withContext text
             }
-            return@withContext translateFromJni(text,splitSentencesRegex(text), sourceLocale, targetLocale)
+            return@withContext translateFromJni(text,splitTextIntoSentences(text), sourceLocale, targetLocale)
         }
     }
 

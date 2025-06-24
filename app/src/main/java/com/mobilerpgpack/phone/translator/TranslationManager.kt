@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
-import android.util.Log
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
@@ -161,7 +160,7 @@ object TranslationManager {
     fun isTranslated(text: String) = loadedTranslations.containsKey(text)
 
     @JvmStatic
-    fun translate(text: String): String {
+    fun translate(text: String, textCameFromDialog : Boolean ): String {
         if (sourceLocale == targetLocale) {
             return text
         }
@@ -175,12 +174,12 @@ object TranslationManager {
         }
 
         scope.launch {
-            translateAsync(text)
+            translateAsync(text, textCameFromDialog)
         }
         return text
     }
 
-    fun translate(text: String, onTextTranslated: (String) -> Unit) {
+    fun translate(text: String, onTextTranslated: (String) -> Unit, textCameFromDialog : Boolean = false) {
         if (sourceLocale == targetLocale){
             onTextTranslated(text)
             return
@@ -197,11 +196,11 @@ object TranslationManager {
         }
 
         scope.launch {
-            onTextTranslated(translateAsync(text))
+            onTextTranslated(translateAsync(text, textCameFromDialog))
         }
     }
 
-    suspend fun translateAsync(text: String): String = coroutineScope  {
+    suspend fun translateAsync(text: String, textCameFromDialog : Boolean = false ): String = coroutineScope  {
         if (sourceLocale == targetLocale){
             return@coroutineScope text
         }
@@ -244,7 +243,7 @@ object TranslationManager {
         }
 
         try {
-            val translatedValue = intervalsTranslator.translateWithFixedInterval (text) {
+            val translatedValue = intervalsTranslator.translateWithFixedInterval (text, textCameFromDialog, _activeEngine) {
                 cleanText -> translationModel.translate(cleanText, sourceLocale, targetLocale)
             }
             if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType) {
@@ -285,7 +284,6 @@ object TranslationManager {
     }
 
     private suspend fun reloadSavedTranslations() {
-        return
         activeTranslations.clear()
         activeTranslationsAwaitable.clear()
         loadSavedTranslations()
