@@ -17,7 +17,7 @@ class IntervalMarkerTranslator {
     ): String {
 
         if (!inGame){
-            return sourceText
+            return translateFn(sourceText)
         }
 
         if (textCameFromDialog){
