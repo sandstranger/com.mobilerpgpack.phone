@@ -10,11 +10,14 @@ using namespace ctranslate2;
 
 extern TranslationOptions create_translation_options();
 extern unique_ptr<Translator> create_translator (string model_path);
+extern vector<vector<string>> tokenize_sentences(SentencePieceProcessor *tokenizer,
+                                                 const vector<string> *sentences);
+extern string decode(SentencePieceProcessor *tokenizer, vector<TranslationResult> results);
 
 static unique_ptr<SentencePieceProcessor> sp = nullptr;
 static std::unique_ptr<ctranslate2::Translator> translator = nullptr;
 
-string translate(string input, string target_locale) {
+string translate(string input,vector<string > *sentences, string target_locale) {
     if (input.empty()){
         return "";
     }
@@ -24,23 +27,23 @@ string translate(string input, string target_locale) {
     }
 
     try {
-        std::vector<std::string> tokens;
-        sp->Encode(input, &tokens);
-
         string target_prefix = "__" + target_locale + "__";
-        tokens.insert(tokens.begin(), target_prefix);
-        tokens.insert(tokens.end(), "</s>");
+        auto tokenized_sentences = tokenize_sentences (sp.get(), sentences);
 
-        const std::vector<std::vector<std::string>> batch = {tokens};
+        auto translation_options = create_translation_options();
+        string full_output;
+        for (auto &sentence: tokenized_sentences){
+            sentence.insert(sentence.begin(), target_prefix);
+            sentence.insert(sentence.end(), "</s>");
 
-        auto results =
-                translator->translate_batch(batch, create_translation_options())[0];
+            const vector<vector<string>> batch = {sentence};
+            auto results = translator->translate_batch(batch, translation_options);
+            auto decode_output = decode(sp.get(), results);
+            full_output += decode_output + " ";
+        }
 
-        const std::vector<std::string> translatedTokens = results.output();
-
-        std::string result;
-        sp->Decode(translatedTokens, &result);
-        return result;
+        full_output.pop_back();
+        return full_output;
     }
     catch (const std::exception& e) {
         return input;
@@ -54,6 +57,7 @@ string translate(string input, string target_locale) {
 extern "C" {
 extern jstring toJString(JNIEnv *env, const std::string &str);
 extern std::string jstringToStdString(JNIEnv *env, jstring jStr);
+extern vector<string> toVectorString (JNIEnv* env, jobject sentences);
 
 JNIEXPORT void JNICALL
 Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_initializeFromJni
@@ -68,7 +72,7 @@ Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_initializeFromJni
 }
 
 JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_translateFromJni
-        (JNIEnv *env, jobject thisObject, jstring text,
+        (JNIEnv *env, jobject thisObject, jstring text, jobject sentences,
          jstring targetLocale) {
     if (translator == nullptr){
         return  text;
@@ -76,8 +80,9 @@ JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Transl
 
     string textString = jstringToStdString(env,text);
     string targetLocaleString = jstringToStdString(env,targetLocale);
+    auto native_sentences = toVectorString(env, sentences);
 
-    return toJString(env,translate(textString, targetLocaleString));
+    return toJString(env,translate(textString,&native_sentences, targetLocaleString));
 }
 
 JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_releaseFromJni

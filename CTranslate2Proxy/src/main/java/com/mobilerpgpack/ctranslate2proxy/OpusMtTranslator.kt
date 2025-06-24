@@ -1,5 +1,6 @@
 package com.mobilerpgpack.ctranslate2proxy
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,7 +15,7 @@ class OpusMtTranslator(
         pathToTargetProcessor: String
     )
 
-    private external fun translateFromJni(text: String): String
+    private external fun translateFromJni( sourceText : String, sentences: List<String>): String
 
     private external fun releaseFromJni()
 
@@ -29,7 +30,10 @@ class OpusMtTranslator(
         targetLocale: String
     ): String = withContext(Dispatchers.IO) {
         synchronized(lockObject) {
-            return@withContext translateFromJni(text)
+            if (text.isEmpty()){
+                return@withContext text
+            }
+            return@withContext translateFromJni(text, splitTextIntoSentences(text))
         }
     }
 

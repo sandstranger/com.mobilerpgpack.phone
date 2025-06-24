@@ -9,6 +9,7 @@ class M2M100Translator(private val modelFile: String, private val spmFile: Strin
 
     private external fun translateFromJni(
         text: String,
+        sentences : List<String>,
         sourceLocale: String,
         targetLocale: String
     ): String
@@ -26,7 +27,10 @@ class M2M100Translator(private val modelFile: String, private val spmFile: Strin
         targetLocale: String
     ): String = withContext(Dispatchers.IO) {
         synchronized(lockObject) {
-            return@withContext translateFromJni(text, sourceLocale, targetLocale)
+            if (text.isEmpty()){
+                return@withContext text
+            }
+            return@withContext translateFromJni(text,splitSentencesRegex(text), sourceLocale, targetLocale)
         }
     }
 

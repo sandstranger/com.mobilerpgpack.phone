@@ -7,7 +7,9 @@ class Small100Translator(private val modelFile: String, private val spmFile: Str
     Translator() {
     private external fun initializeFromJni(modelFile: String, spmFile: String)
 
-    private external fun translateFromJni(text: String, targetLocale: String): String
+    private external fun translateFromJni(text: String,
+                                          sentences : List<String>,
+                                          targetLocale: String): String
 
     private external fun releaseFromJni()
 
@@ -23,7 +25,10 @@ class Small100Translator(private val modelFile: String, private val spmFile: Str
         targetLocale: String
     ): String = withContext(Dispatchers.IO) {
         synchronized(lockObject) {
-            return@withContext translateFromJni(text, targetLocale)
+            if (text.isEmpty()){
+                return@withContext text
+            }
+            return@withContext translateFromJni(text,splitTextIntoSentences(text), targetLocale)
         }
     }
 
