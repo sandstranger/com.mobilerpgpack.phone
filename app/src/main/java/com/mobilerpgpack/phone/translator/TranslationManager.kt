@@ -52,7 +52,8 @@ object TranslationManager {
 
     var inGame = false
 
-    var activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
+    var activeEngine: EngineTypes
+        get() = _activeEngine
         set(value) {
             if (_activeEngine == value) {
                 return
