@@ -1,53 +1,96 @@
 package com.mobilerpgpack.phone.translator
 
-import android.util.Log
+import com.mobilerpgpack.phone.engine.EngineTypes
+import kotlin.math.roundToInt
 
 class IntervalMarkerTranslator {
 
-    private val specialMarkers = hashSetOf("\n", "|")
+    private val pipeSpecialSymbol = "|"
 
     suspend fun translateWithFixedInterval(
-        text: String,
+        sourceText: String,
+        textCameFromDialog : Boolean,
+        engineTypes: EngineTypes,
         translateFn: suspend (String) -> String
     ): String {
 
-        var textCopy = text
+        if (textCameFromDialog){
+            val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol","")
+                .replace(pipeSpecialSymbol, " ").trim()
 
-        val markersIntervals = specialMarkers
-            .mapNotNull { marker ->
-                val idx = text.indexOf(marker)
-                if (idx >= 0) marker to idx else null
-            }
-            .toMap()
-
-        if (!markersIntervals.isEmpty()) {
-            specialMarkers.forEach {
-                textCopy = textCopy.replace(it, " ")
-            }
+            val translatedText = translateFn(cleanedTextToTranslate)
+            return insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 13)
         }
 
-        Log.d("TEXT_TO_TRANSLATE", textCopy)
+        val tokens = tokenizePreserveAll(sourceText)
+        val (withPh, all) = makePlaceholders(tokens)
+        val translatedWithPh = translateFn(withPh)
+        return reinjectPlaceholders(translatedWithPh, all)
+    }
 
-        var translatedText = translateFn(textCopy)
+    private fun tokenizePreserveAll(text: String): List<String> {
+        val regex = Regex("""(\s+|\|+|\S+)""")
+        return regex.findAll(text).map { it.value }.toList()
+    }
 
-        Log.d("TEXT_TO_TRANSLATE", translatedText)
-
-        if (textCopy == translatedText){
-            return text
+    private fun makePlaceholders(tokens: List<String>):
+            Pair<String /*joinedWithPlaceholders*/, List<String> /*allTokens*/> {
+        val placeholders = mutableListOf<String>()
+        val sb = StringBuilder()
+        tokens.forEachIndexed { i, tok ->
+            val ph = if (tok.all { it.isWhitespace() }) "##WS$i##" else "##T$i##"
+            sb.append(ph)
+            placeholders += tok
         }
+        return sb.toString() to placeholders
+    }
 
-        val resultBuilder = StringBuilder(translatedText.length * 2 )
+    private fun reinjectPlaceholders(translatedWithPh: String, tokens: List<String>): String {
+        var result = translatedWithPh
+        tokens.forEachIndexed { i, tok ->
+            val ph = if (tok.all { it.isWhitespace() }) "##WS$i##" else "##T$i##"
+            result = result.replace(ph, tok)
+        }
+        return result
+    }
 
-        translatedText.forEachIndexed { index, c ->
-            resultBuilder.append(c)
+    private fun insertSymbolsWithRules(text: String, symbolToInsert : String, interval: Int): String {
+        val sb = StringBuilder((text.length * 1.5f).roundToInt())
+        var count = 0
+        var i = 0
 
-            for ((marker, interval) in markersIntervals) {
-                if ((index + 1) % interval == 0) {
-                    resultBuilder.append(marker)
+        while (i < text.length) {
+            val c = text[i]
+
+            sb.append(c)
+            if (c != ' ' && c != '\n') {
+                count++
+            }
+
+            if (count >= interval) {
+                var j = i + 1
+                while (j < text.length && text[j] in setOf('.', '!', '?')) {
+                    sb.append(text[j])
+                    j++
                 }
+
+                if (sb.isNotEmpty() && sb.last() == ' ') {
+                    sb.setLength(sb.length - 1)
+                }
+
+                sb.append(symbolToInsert)
+
+                if (j < text.length && text[j] == ' ') {
+                    j++
+                }
+
+                count = 0
+                i = j - 1
             }
+
+            i++
         }
 
-        return resultBuilder.toString()
+        return sb.toString()
     }
 }

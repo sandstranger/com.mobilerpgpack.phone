@@ -40,7 +40,7 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
     g_TranslateMethodID = env->GetStaticMethodID(
             g_TranslationManagerClass,
             "translate",
-            "(Ljava/lang/String;)Ljava/lang/String;"
+            "(Ljava/lang/String;Z)Ljava/lang/String;"
     );
 
     if (!g_IsTranslatedMethodID || !g_GetTranslationMethodID || !g_TranslateMethodID)
@@ -49,7 +49,7 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
     return JNI_VERSION_1_6;
 }
 
-const char *translate(const char *input) {
+const char *translate(const char *input, bool textFromDialog) {
     if (!g_JavaVM || !g_TranslationManagerClass || !g_IsTranslatedMethodID ||
         !g_GetTranslationMethodID || !g_TranslateMethodID) {
         return input; // fallback
@@ -78,10 +78,11 @@ const char *translate(const char *input) {
     );
 
     if (!isTrans) {
+        jboolean isFromDialog = textFromDialog;
         env->CallStaticObjectMethod(
                 g_TranslationManagerClass,
                 g_TranslateMethodID,
-                jInput
+                jInput, isFromDialog
         );
 
         env->DeleteLocalRef(jInput);
