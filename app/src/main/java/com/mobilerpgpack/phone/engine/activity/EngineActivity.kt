@@ -140,7 +140,7 @@ class EngineActivity : SDLActivity() {
 
         resolution = getRealScreenResolution()
 
-        var customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
+        val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
 
         if (needToPreserveScreenAspectRatio && !customScreenResolutionWasSet) {
             preserve16x9ScreenAspectRatio()

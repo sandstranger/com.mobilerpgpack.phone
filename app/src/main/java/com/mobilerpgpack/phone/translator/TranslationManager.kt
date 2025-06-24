@@ -244,7 +244,8 @@ object TranslationManager {
         }
 
         try {
-            val translatedValue = intervalsTranslator.translateWithFixedInterval (text, textCameFromDialog, _activeEngine) {
+            val translatedValue = intervalsTranslator.translateWithFixedInterval (text,
+                textCameFromDialog, inGame, _activeEngine) {
                 cleanText -> translationModel.translate(cleanText, sourceLocale, targetLocale)
             }
             if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType) {
