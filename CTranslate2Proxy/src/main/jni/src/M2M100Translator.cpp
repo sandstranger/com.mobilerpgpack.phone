@@ -9,7 +9,7 @@ using namespace sentencepiece;
 using namespace ctranslate2;
 
 extern TranslationOptions create_translation_options();
-extern unique_ptr<Translator> create_translator (string model_path);
+extern unique_ptr<Translator> create_translator (string model_path, bool multi_thread = false );
 extern vector<vector<string>> tokenize_sentences(SentencePieceProcessor *tokenizer,
                                                  const vector<string> *sentences);
 extern string decode(SentencePieceProcessor *tokenizer, vector<TranslationResult> results);

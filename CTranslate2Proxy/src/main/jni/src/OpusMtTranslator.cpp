@@ -12,7 +12,7 @@ using namespace sentencepiece;
 using namespace ctranslate2;
 
 extern TranslationOptions create_translation_options();
-extern unique_ptr<Translator> create_translator (string model_path);
+extern unique_ptr<Translator> create_translator (string model_path, bool multi_thread = false );
 extern vector<vector<string>> tokenize_sentences(SentencePieceProcessor *tokenizer,
                                                  const vector<string> *sentences);
 extern string decode(SentencePieceProcessor *tokenizer, vector<TranslationResult> results);
@@ -34,7 +34,7 @@ static std::string Translate (string input, const vector<string> *sentences){
     try {
 
         auto tokenized = tokenize_sentences(sp_source.get(), sentences);
-        auto results = translator->translate_batch({tokenized},
+        auto results = translator->translate_batch(tokenized,
                                                    create_translation_options());
 
         return decode(sp_target.get(), results);
@@ -66,7 +66,7 @@ Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_initializeFromJni
     sp_source->Load(jstringToStdString(env, pathToSourceProcessor));
     sp_target->Load(jstringToStdString(env, pathToTargetProcessor));
 
-    translator = create_translator(jstringToStdString(env, pathToTranslationModel));
+    translator = create_translator(jstringToStdString(env, pathToTranslationModel), true);
 }
 
 JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_translateFromJni

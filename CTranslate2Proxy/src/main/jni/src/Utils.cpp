@@ -37,10 +37,24 @@ TranslationOptions create_translation_options(){
     return options;
 }
 
-unique_ptr<Translator> create_translator (string model_path){
+unique_ptr<Translator> create_translator (string model_path, bool multi_thread = false ) {
+    if (multi_thread) {
+        unsigned int num_threads = std::thread::hardware_concurrency();
+        num_threads = num_threads >= 2 ? 2 : 1;
+
+        ReplicaPoolConfig config;
+        config.num_threads_per_replica = num_threads;
+
+        vector<int> vector = {0};
+
+        return make_unique<Translator>(
+                model_path,
+                ctranslate2::Device::CPU, ctranslate2::ComputeType::INT8_FLOAT32, vector, false,
+                config);
+    }
     return make_unique<Translator>(
             model_path,
-            ctranslate2::Device::CPU,ctranslate2::ComputeType::INT8_FLOAT32);
+            ctranslate2::Device::CPU, ctranslate2::ComputeType::INT8_FLOAT32);
 }
 
 extern "C" {
