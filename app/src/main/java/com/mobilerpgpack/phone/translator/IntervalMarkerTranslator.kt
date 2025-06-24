@@ -11,22 +11,28 @@ class IntervalMarkerTranslator {
     suspend fun translateWithFixedInterval(
         sourceText: String,
         textCameFromDialog : Boolean,
+        inGame : Boolean,
         engineTypes: EngineTypes,
         translateFn: suspend (String) -> String
     ): String {
+
+        if (!inGame){
+            return sourceText
+        }
 
         if (textCameFromDialog){
             val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol","")
                 .replace(pipeSpecialSymbol, " ").trim()
 
             val translatedText = translateFn(cleanedTextToTranslate)
-            return insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 13)
+            return if (translatedText == cleanedTextToTranslate) sourceText else
+                insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 13)
         }
 
         val tokens = tokenizePreserveAll(sourceText)
         val (withPh, all) = makePlaceholders(tokens)
         val translatedWithPh = translateFn(withPh)
-        return reinjectPlaceholders(translatedWithPh, all)
+        return if (translatedWithPh == withPh) sourceText else reinjectPlaceholders(translatedWithPh, all)
     }
 
     private fun tokenizePreserveAll(text: String): List<String> {

@@ -8,7 +8,7 @@
     <string name="translation_model_title">Translation model</string>
     <string name="google_translate_description">Online google translation service. Unstable. Can be banned at any moment</string>
     <string name="mlkit_description">Multilingual translator. Fast, but low-quality translations (for low-end devices)</string>
-    <string name="opus_mt_description">EN → RU translator. High-quality translations. Included in build (for mid- and high-end devices)</string>
+    <string name="opus_mt_description">EN -> RU translator. High-quality translations. Included in build (for mid- and high-end devices)</string>
     <string name="m2m_mt_description">Multilingual translator. High-quality translations (for high-end devices with ample RAM)</string>
     <string name="small100_mt_description">Multilingual translator. Medium-quality translations (for mid- and high-end devices with sufficient RAM)</string>
     <string name="loading_model_title">Downloading translation model</string>

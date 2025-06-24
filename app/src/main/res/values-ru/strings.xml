@@ -8,7 +8,7 @@
     <string name="unknown_size">Неизвестный размер</string>
     <string name="google_translate_description">Онлайн сервис перевода Google. Нестабильный. Может быть забанен в любой момент</string>
     <string name="mlkit_description">Многоязычный переводчик. Быстрый, но низкое качество перевода (для устройств низкого класса)</string>
-    <string name="opus_mt_description">EN → RU переводчик. Высокое качество перевода. Включён в сборку (для средних и высокопроизводительных устройств)</string>
+    <string name="opus_mt_description">EN -> RU переводчик. Высокое качество перевода. Включён в сборку (для средних и высокопроизводительных устройств)</string>
     <string name="m2m_mt_description">Многоязычный переводчик. Высокое качество перевода (для мощных устройств с большим объёмом ОЗУ)</string>
     <string name="small100_mt_description">Многоязычный переводчик. Среднее качество перевода (для средних и мощных устройств с достаточным объёмом ОЗУ)</string>
     <string name="loading_model_title">Загрузка модели перевода</string>
