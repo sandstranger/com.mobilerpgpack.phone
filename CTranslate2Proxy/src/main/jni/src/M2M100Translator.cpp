@@ -45,7 +45,7 @@ string translate(string input, vector<string > *sentences, string source_locale,
             full_output += decode_output;
         }
 
-        return full_output;
+        return full_output.substr(1);
     }
     catch (const std::exception& e) {
         return input;
