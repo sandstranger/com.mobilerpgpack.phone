@@ -1,10 +1,12 @@
 package com.mobilerpgpack.phone.translator
 
+import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
 import kotlin.math.roundToInt
 
 class IntervalMarkerTranslator {
 
+    private val symbolsRegex = Regex("[\\p{L}&&[^xX]]")
     private val pipeSpecialSymbol = "|"
     private val sentenceSpecialTypes = setOf('.', '!', '?', ',')
 
@@ -14,9 +16,14 @@ class IntervalMarkerTranslator {
         inGame : Boolean,
         engineTypes: EngineTypes,
         translateFn: suspend (String) -> String
-    ): String {
+    ): Pair <String, Boolean> {
+
+        if (!symbolsRegex.containsMatchIn(sourceText)){
+            return sourceText to true
+        }
+
         if (!inGame){
-            return translateFn(sourceText)
+            return translateFn(sourceText) to false
         }
 
         if (textCameFromDialog){
@@ -24,16 +31,20 @@ class IntervalMarkerTranslator {
                 .replace(pipeSpecialSymbol, " ").trim()
 
             val translatedText = translateFn(cleanedTextToTranslate)
-            return if (translatedText == cleanedTextToTranslate) sourceText else
-                insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 13)
+            return if (translatedText == cleanedTextToTranslate) sourceText to false else
+                insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 13) to false
         }
 
-        return translateFn(sourceText)
+        Log.d("TEXT_TO_TRANSLATE", sourceText)
+        Log.d("TEXT_TO_TRANSLATE", translateFn(sourceText))
+
+        return translateFn(sourceText) to false
 
         val tokens = tokenizePreserveAll(sourceText)
         val (withPh, all) = makePlaceholders(tokens)
         val translatedWithPh = translateFn(withPh)
-        return if (translatedWithPh == withPh) sourceText else reinjectPlaceholders(translatedWithPh, all)
+        return if (translatedWithPh == withPh) sourceText to false else
+            reinjectPlaceholders(translatedWithPh, all) to false
     }
 
     private fun tokenizePreserveAll(text: String): List<String> {
