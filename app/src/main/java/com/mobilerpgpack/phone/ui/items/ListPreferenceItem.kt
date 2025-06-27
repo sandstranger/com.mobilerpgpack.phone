@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -26,6 +28,7 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
     var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
     var activeValue by rememberSaveable (initialValue.toString()) { mutableStateOf(initialValue.toString()) }
     val stringValues: Collection<String> = allValues.map { it.toString() }
+    val scrollState = rememberScrollState()
 
     Row(
         modifier = Modifier
@@ -56,7 +59,8 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
                                     onValueChange(stringValue)
                                     showValuesDialog = false
                                 }
-                                .padding(8.dp),
+                                .padding(8.dp)
+                                .verticalScroll(scrollState),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(selected = activeValue == stringValue, onClick = null)
