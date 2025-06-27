@@ -32,7 +32,7 @@ class IntervalMarkerTranslator {
 
             val translatedText = translateFn(cleanedTextToTranslate)
             return if (translatedText == cleanedTextToTranslate) sourceText to false else
-                insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 13) to false
+                insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 15) to false
         }
 
         val newLineSymbol = "\n"
