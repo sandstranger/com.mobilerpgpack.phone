@@ -9,15 +9,13 @@ using namespace sentencepiece;
 using namespace ctranslate2;
 
 extern TranslationOptions create_translation_options();
-extern unique_ptr<Translator> create_translator (string model_path, bool multi_thread = false );
+extern unique_ptr<Translator> create_translator (string model_path, bool multi_thread = true );
 extern vector<vector<string>> tokenize_sentences(SentencePieceProcessor *tokenizer,
                                                  const vector<string> *sentences);
-extern string decode(SentencePieceProcessor *tokenizer, vector<TranslationResult> results);
-
 static unique_ptr<SentencePieceProcessor> sp = nullptr;
 static std::unique_ptr<ctranslate2::Translator> translator = nullptr;
 
-string translate(string input,vector<string > *sentences, string target_locale) {
+string translate(string input,vector<string > *sentences, const string *target_locale) {
     if (input.empty()){
         return "";
     }
@@ -27,22 +25,31 @@ string translate(string input,vector<string > *sentences, string target_locale) 
     }
 
     try {
-        string target_prefix = "__" + target_locale + "__";
+        string target_prefix = "__" + *target_locale + "__";
         auto tokenized_sentences = tokenize_sentences (sp.get(), sentences);
 
-        auto translation_options = create_translation_options();
-        string full_output;
-        for (auto &sentence: tokenized_sentences){
+        std::vector<std::vector<std::string>> batch;
+        batch.reserve(tokenized_sentences.size());
+        for (auto& sentence : tokenized_sentences) {
             sentence.insert(sentence.begin(), target_prefix);
-            sentence.insert(sentence.end(), "</s>");
-
-            const vector<vector<string>> batch = {sentence};
-            auto results = translator->translate_batch(batch, translation_options);
-            auto decode_output = decode(sp.get(), results);
-            full_output += decode_output + " ";
+            sentence.insert(sentence.end(),"</s>");
+            batch.push_back(std::move(sentence));
         }
 
-        full_output.pop_back();
+        auto results = translator->translate_batch(batch,
+                                                   create_translation_options());
+
+        std::string full_output;
+        for (const auto& result : results) {
+            string decode;
+            sp->Decode(result.output(), &decode);
+            full_output += decode + " ";
+        }
+
+        if (!full_output.empty()) {
+            full_output.pop_back();
+        }
+
         return full_output;
     }
     catch (const std::exception& e) {
@@ -68,7 +75,7 @@ Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_initializeFromJni
     }
     sp = make_unique<SentencePieceProcessor>();
     sp->Load(jstringToStdString(env, pathToSourceProcessor));
-    translator = create_translator(jstringToStdString(env, pathToTranslationModel));
+    translator = create_translator(jstringToStdString(env, pathToTranslationModel), true);
 }
 
 JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_translateFromJni
@@ -82,7 +89,7 @@ JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Transl
     string targetLocaleString = jstringToStdString(env,targetLocale);
     auto native_sentences = toVectorString(env, sentences);
 
-    return toJString(env,translate(textString,&native_sentences, targetLocaleString));
+    return toJString(env,translate(textString,&native_sentences, &targetLocaleString));
 }
 
 JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_releaseFromJni
