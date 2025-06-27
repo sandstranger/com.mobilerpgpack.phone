@@ -155,13 +155,24 @@ object TranslationManager {
     fun cancelDownloadModel() = translationModel.cancelDownloadingModel()
 
     @JvmStatic
-    fun getTranslation(text: String) = if (isTranslated(text)) loadedTranslations[text]!!.value else text
+    fun getTranslation(input: ByteArray) : String {
+        val text = input.sanitizeUtf8BytesToString()
+        return if (isTranslated(text)) loadedTranslations[text]!!.value else text
+    }
+
+    fun getTranslation(text: String) =
+        if (isTranslated(text)) loadedTranslations[text]!!.value else text
 
     @JvmStatic
-    fun isTranslated(text: String) = loadedTranslations.containsKey(text)
+    fun isTranslated(input: ByteArray) =
+        loadedTranslations.containsKey(input.sanitizeUtf8BytesToString())
+
+    fun isTranslated(text : String) = loadedTranslations.containsKey(text)
 
     @JvmStatic
-    fun translate(text: String, textCameFromDialog : Boolean ): String {
+    fun translate(input: ByteArray, textCameFromDialog : Boolean ): String {
+        val text = input.sanitizeUtf8BytesToString()
+
         if (sourceLocale == targetLocale) {
             return text
         }

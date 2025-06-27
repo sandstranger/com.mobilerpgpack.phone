@@ -30,17 +30,17 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
     g_IsTranslatedMethodID = env->GetStaticMethodID(
             g_TranslationManagerClass,
             "isTranslated",
-            "(Ljava/lang/String;)Z"
+            "([B)Z"
     );
     g_GetTranslationMethodID = env->GetStaticMethodID(
             g_TranslationManagerClass,
             "getTranslation",
-            "(Ljava/lang/String;)Ljava/lang/String;"
+            "([B)Ljava/lang/String;"
     );
     g_TranslateMethodID = env->GetStaticMethodID(
             g_TranslationManagerClass,
             "translate",
-            "(Ljava/lang/String;Z)Ljava/lang/String;"
+            "([BZ)Ljava/lang/String;"
     );
 
     if (!g_IsTranslatedMethodID || !g_GetTranslationMethodID || !g_TranslateMethodID)
@@ -70,7 +70,10 @@ const char *translate(const char *input, bool textFromDialog) {
         return translationCache[input].c_str();
     }
 
-    jstring jInput = env->NewStringUTF(input);
+    jsize len = strlen(input);
+    jbyteArray jInput = env->NewByteArray(len);
+    env->SetByteArrayRegion(jInput, 0, len, reinterpret_cast<const jbyte*>(input));
+
     jboolean isTrans = env->CallStaticBooleanMethod(
             g_TranslationManagerClass,
             g_IsTranslatedMethodID,
