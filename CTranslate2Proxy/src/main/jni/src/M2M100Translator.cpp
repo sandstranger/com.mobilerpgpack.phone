@@ -9,15 +9,13 @@ using namespace sentencepiece;
 using namespace ctranslate2;
 
 extern TranslationOptions create_translation_options();
-extern unique_ptr<Translator> create_translator (string model_path, bool multi_thread = false );
+extern unique_ptr<Translator> create_translator (string model_path, bool multi_thread = true );
 extern vector<vector<string>> tokenize_sentences(SentencePieceProcessor *tokenizer,
                                                  const vector<string> *sentences);
-extern string decode(SentencePieceProcessor *tokenizer, vector<TranslationResult> results);
-
 static unique_ptr<SentencePieceProcessor> sp = nullptr;
 static unique_ptr<ctranslate2::Translator> translator = nullptr;
 
-string translate(string input, vector<string > *sentences, string source_locale, string target_locale) {
+string translate(string input, vector<string > *sentences, string *source_locale, string *target_locale) {
     if (input.empty()){
         return "";
     }
@@ -28,23 +26,31 @@ string translate(string input, vector<string > *sentences, string source_locale,
 
     try {
 
-        string source_prefix = "__" + source_locale + "__";
-        const std::vector<std::vector<std::string>> target_prefix = {
-                {"__" + target_locale + "__"}};
+        string source_prefix = "__" + *source_locale + "__";
+        const vector<string> target_prefix = {"__" + *target_locale + "__"};
 
-        auto tokenized_sentences = tokenize_sentences (sp.get(), sentences);
-
-        auto translation_options = create_translation_options();
-        std::string full_output;
-        for (auto &sentence: tokenized_sentences){
-            sentence.insert(sentence.begin(), {source_prefix});
-
-            const std::vector<std::vector<std::string>> batch = {sentence};
-            auto results = translator->translate_batch(batch, target_prefix, translation_options);
-            auto decode_output = decode(sp.get(), results).substr(6);
-            full_output += decode_output;
+        vector<vector<string>> target_prefixes;
+        target_prefixes.reserve(sentences->size());
+        for (size_t i = 0; i < sentences->size(); ++i) {
+            target_prefixes.push_back(target_prefix);
         }
 
+        auto tokenized_sentences = tokenize_sentences(sp.get(), sentences);
+
+        for (auto& sentence : tokenized_sentences) {
+            sentence.insert(sentence.begin(), source_prefix);
+        }
+
+        auto translation_options = create_translation_options();
+        auto results = translator->translate_batch(tokenized_sentences,
+                                                   target_prefixes, translation_options);
+
+        string full_output;
+        for (const auto& result : results) {
+            string decoded;
+            sp->Decode(result.output(),&decoded);
+            full_output += decoded.substr(6);
+        }
         return full_output.substr(1);
     }
     catch (const std::exception& e) {
@@ -70,7 +76,7 @@ Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_initializeFromJni
     }
     sp = make_unique<SentencePieceProcessor>();
     sp->Load(jstringToStdString(env, pathToSourceProcessor));
-    translator = create_translator(jstringToStdString(env, pathToTranslationModel));
+    translator = create_translator(jstringToStdString(env, pathToTranslationModel), true);
 }
 
 JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_translateFromJni
@@ -85,8 +91,8 @@ JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translat
     string targetLocaleString = jstringToStdString(env,targetLocale);
     auto native_sentences = toVectorString(env, sentences);
 
-    return toJString(env,translate(textString,&native_sentences, sourceLocaleString,
-                                   targetLocaleString));
+    return toJString(env,translate(textString,&native_sentences, &sourceLocaleString,
+                                   &targetLocaleString));
 }
 
 JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_M2M100Translator_releaseFromJni
