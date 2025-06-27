@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
+import android.util.Log
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
@@ -203,7 +204,7 @@ object TranslationManager {
         }
 
         if (activeTranslations.contains(text) || activeTranslationsAwaitable.containsKey(text)) {
-            return onTextTranslated(text)
+            onTextTranslated(text)
             return
         }
 
@@ -255,13 +256,14 @@ object TranslationManager {
         }
 
         try {
-            val translatedValue = intervalsTranslator.translateWithFixedInterval (text,
+            val (translatedText, saveTextToSqlForced) = intervalsTranslator.translateWithFixedInterval (text,
                 textCameFromDialog, inGame, _activeEngine) {
                 cleanText -> translationModel.translate(cleanText, sourceLocale, targetLocale)
             }
-            if (translatedValue!=text && activeTranslationType==this@TranslationManager.activeTranslationType) {
-                saveTranslatedText(translatedValue)
-                return@coroutineScope translatedValue
+            if ((translatedText!=text || saveTextToSqlForced) &&
+                activeTranslationType==this@TranslationManager.activeTranslationType) {
+                saveTranslatedText(translatedText)
+                return@coroutineScope translatedText
             }
             return@coroutineScope text
         }

@@ -164,10 +164,8 @@ class EngineActivity : SDLActivity() {
                 scope.launch {
                     PreferencesStorage.setIntValue(this@EngineActivity,PreferencesStorage.savedDoomRpgScreenWidthPrefsKey,
                         width)
-
                     PreferencesStorage.setIntValue(this@EngineActivity,PreferencesStorage.savedDoomRpgScreenHeightPrefsKey,
                         height)
-
                 }
 
                 Os.setenv("RECALCULATE_RESOLUTION_INDEX","true",true)
