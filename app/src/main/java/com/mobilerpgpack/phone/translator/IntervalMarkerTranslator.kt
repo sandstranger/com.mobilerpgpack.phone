@@ -35,42 +35,19 @@ class IntervalMarkerTranslator {
                 insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 13) to false
         }
 
-        Log.d("TEXT_TO_TRANSLATE", sourceText)
-        Log.d("TEXT_TO_TRANSLATE", translateFn(sourceText))
+        val newLineSymbol = "\n"
+        val newLineIndex = sourceText.indexOf(newLineSymbol)
 
-        return translateFn(sourceText) to false
+        val cleanedTextToTranslate = sourceText.replace(" -$newLineSymbol","")
+            .replace("-$newLineSymbol", "").replace(newLineSymbol,"").trim()
 
-        val tokens = tokenizePreserveAll(sourceText)
-        val (withPh, all) = makePlaceholders(tokens)
-        val translatedWithPh = translateFn(withPh)
-        return if (translatedWithPh == withPh) sourceText to false else
-            reinjectPlaceholders(translatedWithPh, all) to false
-    }
+        val translatedText = translateFn(cleanedTextToTranslate)
 
-    private fun tokenizePreserveAll(text: String): List<String> {
-        val regex = Regex("""(\s+|\|+|\S+)""")
-        return regex.findAll(text).map { it.value }.toList()
-    }
-
-    private fun makePlaceholders(tokens: List<String>):
-            Pair<String /*joinedWithPlaceholders*/, List<String> /*allTokens*/> {
-        val placeholders = mutableListOf<String>()
-        val sb = StringBuilder()
-        tokens.forEachIndexed { i, tok ->
-            val ph = if (tok.all { it.isWhitespace() }) "##WS$i##" else "##T$i##"
-            sb.append(ph)
-            placeholders += tok
+        if (newLineIndex>0){
+            return insertSymbolsWithRules(translatedText, newLineSymbol,newLineIndex) to false
         }
-        return sb.toString() to placeholders
-    }
 
-    private fun reinjectPlaceholders(translatedWithPh: String, tokens: List<String>): String {
-        var result = translatedWithPh
-        tokens.forEachIndexed { i, tok ->
-            val ph = if (tok.all { it.isWhitespace() }) "##WS$i##" else "##T$i##"
-            result = result.replace(ph, tok)
-        }
-        return result
+        return translatedText to false
     }
 
     private fun insertSymbolsWithRules(text: String, symbolToInsert : String, interval: Int): String {
