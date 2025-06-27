@@ -15,7 +15,6 @@ class IntervalMarkerTranslator {
         engineTypes: EngineTypes,
         translateFn: suspend (String) -> String
     ): String {
-
         if (!inGame){
             return translateFn(sourceText)
         }
@@ -28,6 +27,8 @@ class IntervalMarkerTranslator {
             return if (translatedText == cleanedTextToTranslate) sourceText else
                 insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 13)
         }
+
+        return translateFn(sourceText)
 
         val tokens = tokenizePreserveAll(sourceText)
         val (withPh, all) = makePlaceholders(tokens)
