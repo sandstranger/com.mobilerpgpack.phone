@@ -13,7 +13,7 @@ import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.utils.copyAssetsFolderToInternalStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
-internal class MainActivity : ComponentActivity(){
+internal class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,18 +21,17 @@ internal class MainActivity : ComponentActivity(){
         buildScreens()
     }
 
-    private fun buildScreens(){
-        val startScreen : String = if (this@MainActivity.isExternalStoragePermissionGranted())
+    private fun buildScreens() {
+        val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
             Screen.Settings.route else Screen.Permission.route
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
-
-                NavHost(navController = navController, startDestination = startScreen ) {
+                NavHost(navController = navController, startDestination = startScreen) {
                     composable(Screen.Permission.route)
                     {
                         PermissionScreen {
-                            navController.navigate(Screen.Settings.route){
+                            navController.navigate(Screen.Settings.route) {
                                 popUpTo(Screen.Permission.route) { inclusive = true }
                             }
                         }

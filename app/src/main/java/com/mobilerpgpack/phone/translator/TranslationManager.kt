@@ -286,6 +286,7 @@ object TranslationManager {
     }
 
     private suspend fun reloadSavedTranslations() {
+        return
         activeTranslations.clear()
         activeTranslationsAwaitable.clear()
         loadSavedTranslations()
