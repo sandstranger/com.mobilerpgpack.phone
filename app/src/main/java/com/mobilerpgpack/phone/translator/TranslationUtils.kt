@@ -33,14 +33,12 @@ fun ByteArray.sanitizeUtf8BytesToString(): String {
 
         if (valid) {
             try {
-                val str = this.copyOfRange(i, i + charLen).toString(Charsets.UTF_8)
+                val str = this.copyOfRange(i, i + charLen).decodeToString()
                 output.append(str)
-            } catch (e: Exception) {
-                output.append(' ')
+            } catch (_: Exception) {
             }
             i += charLen
         } else {
-            output.append(' ')
             i++
         }
     }

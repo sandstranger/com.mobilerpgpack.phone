@@ -297,11 +297,14 @@ object TranslationManager {
             Resources.getSystem().configuration.locale.language
         }
     }
+
     private suspend fun reloadSavedTranslations() {
+        return
         activeTranslations.clear()
         activeTranslationsAwaitable.clear()
         loadSavedTranslations()
     }
+
     private fun changeTranslationModel (targetTranslationType : TranslationType){
         if (activeTranslationType != targetTranslationType) {
             translationModel.release()
