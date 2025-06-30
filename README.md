@@ -23,18 +23,18 @@ This Android ports support controllers
 
 ## Doom RPG Default Controllers controls
 
-| Action           | Button      |
-| ---------------  | ----------- |
-| Move Forward     | D-pad up    |
-| Move Backward    | D-pad down  |
-| Turn Left        | D-pad left  |
-| Turn Right       | D-pad right |
-| Attack/Talk/Use  | A           |
-| Next Weapon      | Y           |
-| Prev Weapon      | B           |
-| Pass Turn        | X           |
-| Automap          | Select      |
-| Menu Open/Back   | Start       |
+| Action           | Button      	|
+| ---------------  | ------------- 	|
+| Move Forward     | D-pad up    	|
+| Move Backward    | D-pad down  	|
+| Turn Left        | D-pad left  	|
+| Turn Right       | D-pad right 	|
+| Attack/Talk/Use  | A           	|
+| Next Weapon      | Right trigger  |
+| Prev Weapon      | Left trigger   |
+| Pass Turn        | X           	|
+| Automap          | Select      	|
+| Menu Open/Back   | Start       	|
 
 ## Doom 2 RPG Default Controllers controls
 
@@ -45,16 +45,16 @@ This Android ports support controllers
 | Turn Left        | D-pad left     |
 | Turn Right       | D-pad right    |
 | Attack/Talk/Use  | A              |
-| Next Weapon      | Y              |
-| Prev Weapon      | B              |
+| Next Weapon      | Right trigger  |
+| Prev Weapon      | Left trigger   |
 | Pass Turn        | X              |
 | Automap          | Select         |
 | Menu Open/Back   | Start          |
 | Menu Open/Back   | Start          |
-| Items Info       | Left stick     |
-| Drinks           | Right stick    |
-| Pda              | Left trigger   |
-| Bot Dis          | Right trigger  |
+| Items Info       | Left shoulder  |
+| Drinks           | Right shoulder |
+| Pda              | B				|
+| Bot Dis          | Y				|
 
 ## Wolfenstein RPG Default Controllers controls
 
@@ -65,15 +65,15 @@ This Android ports support controllers
 | Turn Left        | D-pad left     |
 | Turn Right       | D-pad right    |
 | Attack/Talk/Use  | A              |
-| Next Weapon      | Y              |
-| Prev Weapon      | B              |
+| Next Weapon      | Right trigger  |
+| Prev Weapon      | Left trigger   |
 | Pass Turn        | X              |
 | Automap          | Select         |
 | Menu Open/Back   | Start          |
 | Menu Open/Back   | Start          |
-| Items Info       | Left stick     |
-| Syringes         | Right stick    |
-| Journal          | Left trigger   |
+| Items Info       | Left shoulder  |
+| Syringes         | Right shoulder |
+| Journal          | Y   			|
 
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse

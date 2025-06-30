@@ -16,3 +16,8 @@ local.properties
 .idea/
 .kotlin/
 app/release/
+CTranslate2/build/
+CTranslate2Proxy/build/
+sdl2-ttf/build/
+sentencepiece/build/
+Translator/build/
