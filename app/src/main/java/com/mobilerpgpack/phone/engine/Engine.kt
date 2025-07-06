@@ -24,7 +24,8 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
     EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so", arrayOf("fluidsynth","GL","SDL2","gme","SDL2_mixer",
         "SDL2_ttf","Translator","DoomRPG"), doomRPGButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
-    EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so", arrayOf("GL","SDL2","openal","DoomIIRPG"),
+    EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so",
+        arrayOf("GL","SDL2","openal","SDL2_ttf","Translator","DoomIIRPG"),
         doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
 )
 
