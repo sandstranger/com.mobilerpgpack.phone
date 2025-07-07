@@ -23,7 +23,6 @@ object PreferencesStorage {
     private val preserveScreenAspectRatioPrefsKey = booleanPreferencesKey("preserve_screen_aspect_ratio")
     private val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
     private val activeEnginePrefsKey = stringPreferencesKey("current_engine")
-    private val useCustomFilePickerPrefsKey = booleanPreferencesKey("use_custom_file_picker")
     private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
     private val pathToDoom2RpgIpaPrefsKey = stringPreferencesKey("doom2_rpg_ipa_file")
     private val pathToDoomRpgZipFilePrefsKey = stringPreferencesKey("doom_rpg_zip_file")
@@ -118,12 +117,6 @@ object PreferencesStorage {
 
     suspend fun setPathToDoomRpgZipFile(context: Context, valueToSave : String) =
         setStringValue(context, pathToDoomRpgZipFilePrefsKey, valueToSave)
-
-    fun getUseCustomFilePickerValue(context: Context) =
-        getBooleanValue(context, useCustomFilePickerPrefsKey, defaultValue = context.isTelevision)
-
-    suspend fun setUseCustomFilePickerValue(context: Context, valueToSave : Boolean) =
-        setBooleanValue(context, useCustomFilePickerPrefsKey, valueToSave)
 
     fun getControlsAutoHidingValue(context: Context) =
         getBooleanValue(context, enableControlsAutoHiding, defaultValue = false)
