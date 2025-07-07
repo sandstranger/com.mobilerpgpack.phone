@@ -22,13 +22,6 @@ fun unzipArchive(zipPath: String, destDir: String) : Boolean {
     }
 }
 
-fun getPathFromIntent (intent: Intent?) : String {
-    intent?.data?.also { uri ->
-        return getPathFromUri(uri)
-    }
-    return ""
-}
-
 fun computeSHA256(file: File): String {
     if (!file.exists()){
         return ""
@@ -47,32 +40,4 @@ fun computeSHA256(inputStream: InputStream): ByteArray {
         digest.update(buffer, 0, bytesRead)
     }
     return digest.digest()
-}
-
-private fun getPathFromUri(uri: Uri?): String {
-
-    val isTreeUri = DocumentsContract.isTreeUri(uri)
-    val docId = if (isTreeUri) {
-        DocumentsContract.getTreeDocumentId(uri)
-    } else {
-        DocumentsContract.getDocumentId(uri)
-    }
-
-    val parts = docId.split(":")
-    if (parts.isEmpty()) return ""
-
-    val type = parts[0]
-    val relativePath = if (parts.size > 1) parts[1] else ""
-
-    return when {
-        type.equals("primary", ignoreCase = true) -> {
-            "${Environment.getExternalStorageDirectory()}/$relativePath"
-        }
-        type.startsWith("raw") -> {
-            relativePath
-        }
-        else -> {
-            "/storage/$type/$relativePath"
-        }
-    }
 }

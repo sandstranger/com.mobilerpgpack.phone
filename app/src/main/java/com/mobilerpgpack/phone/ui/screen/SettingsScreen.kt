@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -169,17 +168,6 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
         EngineTypes.DoomRpg -> DrawDoomRpgSettings(context,scope)
         EngineTypes.Doom2Rpg -> DrawDoom2RpgSettings(context,scope)
     }
-
-    SwitchPreferenceItem(
-        context.getString(R.string.use_custom_file_picker),
-        checkedFlow = PreferencesStorage.getUseCustomFilePickerValue(context),
-    ) { newValue ->
-        scope.launch {
-            PreferencesStorage.setUseCustomFilePickerValue(context, newValue)
-        }
-    }
-
-    HorizontalDivider()
 
     val pathToLogFile by PreferencesStorage.getPathToLogFileValue(context)
         .collectAsState(initial = defaultPathToLogcatFile)
@@ -513,22 +501,17 @@ private class RequestPathHelper(
             }
         }
 
-        val systemFilePicker =
-            rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                onPathSelected(getPathFromIntent(it.data))
-            }
-
         PreferenceItem(
             itemName, currentPath,
             onClick = {
                 scope.launch {
                     if (requestDirectory) {
                         context.requestDirectory(
-                            systemFilePicker, onDirectorySelected =
+                            onDirectorySelected =
                                 { selectedPath -> onPathSelected(selectedPath) })
                     } else {
                         context.requestResourceFile(
-                            systemFilePicker, onFileSelected =
+                            onFileSelected =
                                 { selectedPath -> onPathSelected(selectedPath) })
                     }
                 }
