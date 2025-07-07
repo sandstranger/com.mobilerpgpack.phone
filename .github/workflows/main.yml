@@ -3,7 +3,7 @@ name: Android Release Build
 
 on: [push, pull_request]
 
-obs:
+jobs:
   build:
     name: Build Android Project with NDK r28b and CMake 4.0.2
     runs-on: ubuntu-latest
@@ -38,7 +38,7 @@ obs:
         run: |
           "$ANDROID_SDK_ROOT/cmdline-tools/tools/bin/sdkmanager" --sdk_root="$ANDROID_SDK_ROOT" \
             "platform-tools" \
-            "platforms;android-35"
+            "platforms;android-36"
 
       - name: Install NDK r28b
         run: |
