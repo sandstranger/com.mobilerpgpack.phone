@@ -97,7 +97,7 @@ jobs:
     - name: Upload APK artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: doom_wolfenstein_rpg_nightly.apk
+        name: doom_wolfenstein_rpg_nightly
         path: |
           app/build/outputs/apk/release/*.apk
         if-no-files-found: error
