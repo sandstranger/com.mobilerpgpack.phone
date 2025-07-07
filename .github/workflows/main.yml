@@ -9,22 +9,23 @@ jobs:
       ANDROID_NDK_VERSION: r28b
       CMAKE_VERSION: 4.0.2
       ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
 
     steps:
     - name: Checkout code with submodules
-        uses: actions/checkout@v4
-        with:
+      uses: actions/checkout@v4
+      with:
         submodules: 'recursive'
         fetch-depth: 0
 
-    - name: Update submodules (fallback)
-        if: always()
-        run: |
-            git submodule sync --recursive
-            git submodule update --init --force --recursive --depth=1
+    - name: Force update submodules
+      run: |
+        git submodule sync --recursive
+        git submodule update --init --force --recursive
 
     - name: Cache Gradle
       uses: actions/cache@v3
+      id: gradle-cache
       with:
         path: |
           ~/.gradle/caches
@@ -35,9 +36,10 @@ jobs:
 
     - name: Cache Android SDK
       uses: actions/cache@v3
+      id: sdk-cache
       with:
         path: ${{ env.ANDROID_SDK_ROOT }}
-        key: ${{ runner.os }}-android-sdk-${{ hashFiles('**/build.gradle*') }}-${{ env.ANDROID_NDK_VERSION }}
+        key: ${{ runner.os }}-android-sdk-${{ env.ANDROID_NDK_VERSION }}-${{ hashFiles('**/build.gradle*') }}
         restore-keys: |
           ${{ runner.os }}-android-sdk-
 
@@ -47,46 +49,49 @@ jobs:
         java-version: 24
         distribution: 'temurin'
 
-    - name: Install required packages
-      run: sudo apt-get -qq install unzip wget
+    - name: Install system dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install unzip wget
 
     - name: Setup Android SDK
-      if: steps.cache-android-sdk.outputs.cache-hit != 'true'
+      if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
         mkdir -p $ANDROID_SDK_ROOT
-        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-        unzip commandlinetools-linux-*.zip -d $ANDROID_SDK_ROOT/cmdline-tools
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+        unzip -q commandlinetools-linux-*.zip -d $ANDROID_SDK_ROOT/cmdline-tools
         mv $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools $ANDROID_SDK_ROOT/cmdline-tools/latest
         echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
-    - name: Install Android SDK components
-      if: steps.cache-android-sdk.outputs.cache-hit != 'true'
+    - name: Accept licenses and install SDK components
+      if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
-        yes | sdkmanager --licenses
-        sdkmanager "platforms;android-36"
-        sdkmanager "build-tools;36.0.0"
-        sdkmanager "platform-tools"
-        sdkmanager "cmdline-tools;latest"
+        yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "ndk;$ANDROID_NDK_VERSION"
         echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
-
-    # 4. УСТАНОВКА ОСТАЛЬНЫХ КОМПОНЕНТОВ
-    - name: Download and setup NDK
-      run: |
-        wget https://dl.google.com/android/repository/android-ndk-${{ env.ANDROID_NDK_VERSION }}-linux.zip
-        unzip -q android-ndk-*.zip
-        echo "ANDROID_NDK_HOME=$GITHUB_WORKSPACE/android-ndk-${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
 
     - name: Download and setup CMake
       run: |
-        wget https://github.com/Kitware/CMake/releases/download/v${{ env.CMAKE_VERSION }}/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64.tar.gz
-        tar -xzf cmake-*.tar.gz
+        wget -q https://github.com/Kitware/CMake/releases/download/v${{ env.CMAKE_VERSION }}/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64.tar.gz
+        tar -xzf cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64.tar.gz
         echo "$GITHUB_WORKSPACE/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64/bin" >> $GITHUB_PATH
 
-    # 5. СБОРКА ПРОЕКТА
-    - name: Grant execute permission for gradlew
+    - name: Verify NDK installation
+      run: |
+        if [ ! -d "$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION" ]; then
+          wget -q https://dl.google.com/android/repository/android-ndk-${{ env.ANDROID_NDK_VERSION }}-linux.zip
+          unzip -q android-ndk-*.zip
+          echo "ANDROID_NDK_HOME=$GITHUB_WORKSPACE/android-ndk-${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
+        else
+          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION" >> $GITHUB_ENV
+        fi
+        echo "NDK installed at: $ANDROID_NDK_HOME"
+
+    - name: Grant gradlew permissions
       run: chmod +x gradlew
 
-    - name: Build Release with Gradle
-      run: ./gradlew assembleRelease --stacktrace
+    - name: Build with Gradle
+      run: ./gradlew assembleRelease --stacktrace --info
       env:
-        ANDROID_NDK: ${{ env.ANDROID_NDK_HOME }}
+        ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_HOME }}
+        ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
