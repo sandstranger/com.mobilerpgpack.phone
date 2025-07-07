@@ -52,7 +52,6 @@ import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.items.TranslatedText
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.getPathFromIntent
 import com.mobilerpgpack.phone.utils.isTelevision
 import com.mobilerpgpack.phone.utils.requestDirectory
 import com.mobilerpgpack.phone.utils.requestResourceFile
