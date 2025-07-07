@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.createChooser
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.graphics.Color
@@ -13,22 +12,15 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
-import android.util.Log
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.result.ActivityResult
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import com.mobilerpgpack.phone.R
 import com.obsez.android.lib.filechooser.ChooserDialog
-import kotlinx.coroutines.flow.first
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.security.MessageDigest
 
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
@@ -131,29 +123,11 @@ fun Activity.displayInSafeArea() {
     }
 }
 
-suspend fun Context.requestResourceFile (launcher : ManagedActivityResultLauncher<Intent, ActivityResult>, onFileSelected : (String) -> Unit ){
-    val useAlternateFilePicker = PreferencesStorage.getUseCustomFilePickerValue(this).first()!!
-
-    if (!useAlternateFilePicker){
-        launcher.launch(Intent.createChooser(buildRequestResourceFileIntent(), this.getString(R.string.choose_file_request)))
-        return
-    }
-
+fun Context.requestResourceFile (onFileSelected : (String) -> Unit ){
     this.requestResourceFileByAlternateFilePicker ( dirOnly = false, onFileSelected)
 }
 
-suspend fun Context.requestDirectory (launcher : ManagedActivityResultLauncher<Intent, ActivityResult>, onDirectorySelected : (String) -> Unit ){
-    val useAlternateFilePicker = PreferencesStorage.getUseCustomFilePickerValue(this).first()!!
-
-    if (!useAlternateFilePicker){
-        with(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)) {
-            addCategory(Intent.CATEGORY_DEFAULT)
-            launcher.launch(createChooser(this, this@requestDirectory.getString(R.string.choose_directory)))
-        }
-
-        return
-    }
-
+fun Context.requestDirectory (onDirectorySelected : (String) -> Unit ){
     this.requestResourceFileByAlternateFilePicker ( dirOnly = true, onDirectorySelected)
 }
 
