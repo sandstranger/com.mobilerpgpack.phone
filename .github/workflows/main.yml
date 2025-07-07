@@ -6,7 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      ANDROID_NDK_VERSION: r28b
       CMAKE_VERSION: 4.0.2
       ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
       GRADLE_OPTS: -Dorg.gradle.daemon=false
@@ -34,15 +33,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Cache Android SDK
-      uses: actions/cache@v3
-      id: sdk-cache
-      with:
-        path: ${{ env.ANDROID_SDK_ROOT }}
-        key: ${{ runner.os }}-android-sdk-${{ env.ANDROID_NDK_VERSION }}-${{ hashFiles('**/build.gradle*') }}
-        restore-keys: |
-          ${{ runner.os }}-android-sdk-
-
     - name: Set up JDK 24
       uses: actions/setup-java@v3
       with:
@@ -67,31 +57,39 @@ jobs:
       if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
         yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "cmake;4.0.2"
         echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
 
-    - name: Download and setup CMake
+    - name: Download and setup CMake (fallback)
+      if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
         wget -q https://github.com/Kitware/CMake/releases/download/v${{ env.CMAKE_VERSION }}/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64.tar.gz
         tar -xzf cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64.tar.gz
-        echo "$GITHUB_WORKSPACE/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64/bin" >> $GITHUB_PATH
+        echo "FALLBACK_CMAKE_PATH=${{ github.workspace }}/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64" >> $GITHUB_ENV
 
-    - name: Verify NDK installation
+    - name: Configure CMake path
       run: |
-        if [ ! -d "$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION" ]; then
-          wget -q https://dl.google.com/android/repository/android-ndk-${{ env.ANDROID_NDK_VERSION }}-linux.zip
-          unzip -q android-ndk-*.zip
-          echo "ANDROID_NDK_HOME=$GITHUB_WORKSPACE/android-ndk-${{ env.ANDROID_NDK_VERSION }}" >> $GITHUB_ENV
+        if [ -d "$ANDROID_SDK_ROOT/cmake/4.0.2" ]; then
+          echo "Using SDK CMake"
+          echo "cmake.dir=$ANDROID_SDK_ROOT/cmake/4.0.2" >> local.properties
+        elif [ -n "$FALLBACK_CMAKE_PATH" ]; then
+          echo "Using fallback CMake"
+          echo "cmake.dir=$FALLBACK_CMAKE_PATH" >> local.properties
         else
-          echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/$ANDROID_NDK_VERSION" >> $GITHUB_ENV
+          echo "CMake not found! Installing..."
+          wget -q https://github.com/Kitware/CMake/releases/download/v${{ env.CMAKE_VERSION }}/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64.tar.gz
+          tar -xzf cmake-*.tar.gz
+          echo "cmake.dir=${{ github.workspace }}/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64" >> local.properties
         fi
-        echo "NDK installed at: $ANDROID_NDK_HOME"
-
+        
+        CMAKE_PATH=$(grep 'cmake.dir' local.properties | cut -d'=' -f2)
+        echo "$CMAKE_PATH/bin" >> $GITHUB_PATH
+        echo "CMake path: $CMAKE_PATH"
+        
     - name: Grant gradlew permissions
       run: chmod +x gradlew
 
     - name: Build with Gradle
       run: ./gradlew assembleRelease --stacktrace --info
       env:
-        ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_HOME }}
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
