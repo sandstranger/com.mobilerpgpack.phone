@@ -94,10 +94,10 @@ jobs:
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
         
-     - name: Upload APK artifacts
-       uses: actions/upload-artifact@v4
-       with:
+    - name: Upload APK artifacts
+      uses: actions/upload-artifact@v4
+      with:
         name: doom_wolfenstein_rpg_nightly
-         path: |
-            app/release/*.apk
+        path: |
+          app/release/*.apk
         if-no-files-found: error
