@@ -1,63 +1,28 @@
-# .github/workflows/android-build.yml
 name: Android Release Build
 
 on: [push, pull_request]
 
 jobs:
   build:
-    name: Build Android Project with NDK r28b and CMake 4.0.2
     runs-on: ubuntu-latest
-    env:
-      ANDROID_SDK_ROOT: $HOME/android-sdk
-
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: '11'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: 'temurin'
 
-      - name: Install tools
-        run: sudo apt-get update && sudo apt-get install -y wget unzip
+    - name: Install required packages
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install unzip
 
-      - name: Install Android SDK Command-line Tools
-        run: |
-          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
-          unzip -q cmdline-tools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools/tmp"
-          mv "$ANDROID_SDK_ROOT/cmdline-tools/tmp/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
-      - name: Accept Android SDK licenses
-        run: |
-          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses --sdk_root="$ANDROID_SDK_ROOT"
-
-      - name: Install SDK components
-        run: |
-          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_SDK_ROOT" \
-            "platform-tools" \
-            "platforms;android-36"
-
-      - name: Install NDK r28b
-        run: |
-          wget https://dl.google.com/android/repository/android-ndk-r28b-linux.zip -O ndk.zip
-          unzip -q ndk.zip -d "$ANDROID_SDK_ROOT/ndk"
-          mv "$ANDROID_SDK_ROOT/ndk/android-ndk-r28b" "$ANDROID_SDK_ROOT/ndk/r28b"
-
-      - name: Install CMake 4.0.2
-        run: |
-          wget https://cmake.org/files/v4.0/cmake-4.0.2-linux-x86_64.sh -O cmake.sh
-          chmod +x cmake.sh
-          ./cmake.sh --skip-license --prefix="$ANDROID_SDK_ROOT/cmake/4.0.2"
-
-      - name: Configure local properties for NDK and CMake
-        run: |
-          echo "ndk.dir=$ANDROID_SDK_ROOT/ndk/r28b" >> local.properties
-          echo "cmake.dir=$ANDROID_SDK_ROOT/cmake/4.0.2/bin" >> local.properties
-
-      - name: Build Release APK
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleRelease --stacktrace
+    - name: Build Release with Gradle
+      run: ./gradlew assembleRelease
