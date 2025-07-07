@@ -67,7 +67,7 @@ jobs:
       if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
         yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "ndk;$ANDROID_NDK_VERSION"
+        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
         echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
 
     - name: Download and setup CMake
