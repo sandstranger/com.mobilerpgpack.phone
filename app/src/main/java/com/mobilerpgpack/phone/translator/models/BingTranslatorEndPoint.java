@@ -23,7 +23,7 @@ public class BingTranslatorEndPoint {
     @Synchronized
     private void createTranslator (){
         if (translator == null){
-             translator = new BingTranslator(httpClient);
+             translator = new BingTranslator(httpClient, true);
         }
     }
 }
