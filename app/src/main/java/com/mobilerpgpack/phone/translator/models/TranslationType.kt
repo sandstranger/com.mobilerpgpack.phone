@@ -5,7 +5,8 @@ enum class TranslationType {
     OpusMt,
     M2M100,
     Small100,
-    GoogleTranslate;
+    GoogleTranslate,
+    BingTranslate;
 
     companion object{
         val DefaultTranslationType = MLKit

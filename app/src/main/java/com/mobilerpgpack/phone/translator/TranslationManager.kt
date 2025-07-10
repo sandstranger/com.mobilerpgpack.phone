@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Log
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.translator.models.BingTranslatorModel
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
 import com.mobilerpgpack.phone.translator.models.ITranslationModel
 import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
@@ -112,6 +113,7 @@ object TranslationManager {
             Small100TranslationModel (context, pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile)
 
         translationModels[TranslationType.GoogleTranslate] = GoogleTranslateV2(context)
+        translationModels[TranslationType.BingTranslate] = BingTranslatorModel(context)
 
         translationModel = translationModels[activeTranslationType]!!
 

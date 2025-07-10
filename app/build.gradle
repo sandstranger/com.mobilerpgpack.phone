@@ -108,6 +108,9 @@ dependencies {
     implementation (project(":CTranslate2Proxy"))
     implementation (project(":Translator"))
 
+    implementation(libs.slf4j.api)
+    compileOnly libs.lombok
+    annotationProcessor libs.projectlombok.lombok
     implementation libs.converter.gson
     implementation libs.gson
     implementation(libs.retrofit)
