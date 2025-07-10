@@ -476,6 +476,8 @@ private fun buildTranslationsDescription (context: Context) : Collection<String>
                 result.add("${TranslationType.Small100} ${context.getString(R.string.small100_mt_description)}")
             TranslationType.GoogleTranslate ->
                 result.add("${TranslationType.GoogleTranslate} ${context.getString(R.string.google_translate_description)}")
+            TranslationType.BingTranslate ->
+                result.add("${TranslationType.BingTranslate} ${context.getString(R.string.bing_translate_description)}")
         }
     }
 

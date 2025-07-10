@@ -49,7 +49,7 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
             onDismissRequest = { showValuesDialog = false },
             title = { TranslatedText(title) },
             text = {
-                Column {
+                Column (modifier = Modifier.verticalScroll(scrollState)) {
                     stringValues.forEach { stringValue ->
                         Row(
                             modifier = Modifier
@@ -59,8 +59,7 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
                                     onValueChange(stringValue)
                                     showValuesDialog = false
                                 }
-                                .padding(8.dp)
-                                .verticalScroll(scrollState),
+                                .padding(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(selected = activeValue == stringValue, onClick = null)
