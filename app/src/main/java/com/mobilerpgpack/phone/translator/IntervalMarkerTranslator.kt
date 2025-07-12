@@ -38,8 +38,10 @@ class IntervalMarkerTranslator {
         val newLineSymbol = "\n"
         val newLineIndex = sourceText.indexOf(newLineSymbol)
 
-        val cleanedTextToTranslate = sourceText.replace(" -$newLineSymbol","")
-            .replace("-$newLineSymbol", "").replace(newLineSymbol,"").trim()
+        val cleanedTextToTranslate = sourceText.replace(" - $newLineSymbol","")
+            .replace(" -$newLineSymbol", "").replace("-$newLineSymbol", "")
+            .replace(newLineSymbol," ").trim()
+
 
         val translatedText = translateFn(cleanedTextToTranslate)
 
