@@ -6,6 +6,7 @@
     <string name="downloaded_text">Загружено</string>
     <string name="bytes_text">байт</string>
     <string name="unknown_size">Неизвестный размер</string>
+    <string name="nllb200_translate_description">Модель машинного перевода, поддерживающая 200 языков (только для высокопроизводительных устройств с большим объемом оперативной памяти)</string>
     <string name="bing_translate_description">Основан на онлайн-переводчике Bing. Нестабилен. Может быть забанен в любой момент</string>
     <string name="google_translate_description">Онлайн сервис перевода Google. Нестабилен. Может быть забанен в любой момент</string>
     <string name="mlkit_description">Многоязычный переводчик. Быстрый, но низкое качество перевода (для устройств низкого класса)</string>

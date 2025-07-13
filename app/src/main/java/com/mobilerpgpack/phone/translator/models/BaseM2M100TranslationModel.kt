@@ -41,7 +41,7 @@ abstract class BaseM2M100TranslationModel(
     private val smpFile by lazy { File(spmFile) }
 
     @Volatile
-    private var isModelDownloaded = false
+    protected var isModelDownloaded = false
 
     init {
         runBlocking {

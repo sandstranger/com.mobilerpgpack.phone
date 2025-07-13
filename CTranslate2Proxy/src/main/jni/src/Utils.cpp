@@ -34,6 +34,9 @@ string decode(SentencePieceProcessor *tokenizer, vector<TranslationResult> resul
 TranslationOptions create_translation_options(){
     ctranslate2::TranslationOptions options;
     options.beam_size = 5;
+    options.length_penalty = 0.6f;
+    options.sampling_temperature = 0.0f;
+    options.repetition_penalty = 1.2f;
     return options;
 }
 

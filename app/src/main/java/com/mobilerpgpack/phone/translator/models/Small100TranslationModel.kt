@@ -8,12 +8,12 @@ import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import kotlinx.coroutines.runBlocking
 
-class Small100TranslationModel (
+class Small100TranslationModel(
     private val context: Context,
     private val modelFile: String,
     private val spmFile: String,
-    private val allowDownloadingOverMobile : Boolean = false
-) : BaseM2M100TranslationModel(context,modelFile,spmFile, allowDownloadingOverMobile) {
+    private val allowDownloadingOverMobile: Boolean = false
+) : BaseM2M100TranslationModel(context, modelFile, spmFile, allowDownloadingOverMobile) {
 
     override val zipFileId: String = "1Adl4YxrLdSq_sn7kpeixneaof88YAfle"
 
