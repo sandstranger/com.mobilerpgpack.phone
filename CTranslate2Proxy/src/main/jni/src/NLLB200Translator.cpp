@@ -3,7 +3,6 @@
 #include <vector>
 #include <ctranslate2/translator.h>
 #include "sentencepiece_processor.h"
-#include <regex>
 
 using namespace std;
 using namespace sentencepiece;
@@ -15,11 +14,6 @@ extern vector<vector<string>> tokenize_sentences(SentencePieceProcessor *tokeniz
                                                  const vector<string> *sentences);
 static unique_ptr<SentencePieceProcessor> sp = nullptr;
 static unique_ptr<ctranslate2::Translator> translator = nullptr;
-
-string replace_string(string *input, string *old_value, string new_value){
-    string escaped = regex_replace(*old_value, regex(R"([-[\]{}()*+?.,\^$|#\s])"), R"(\$&)");
-    return regex_replace(*input,std::regex(escaped),new_value);
-}
 
 string nllb_200_translate(string input, vector<string > *sentences, string *source_locale, string *target_locale) {
     if (input.empty()){
