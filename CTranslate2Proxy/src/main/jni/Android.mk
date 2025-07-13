@@ -14,6 +14,7 @@ LOCAL_SRC_FILES := \
 	$(LOCAL_PATH)/src/OpusMtTranslator.cpp \
 	$(LOCAL_PATH)/src/M2M100Translator.cpp \
 	$(LOCAL_PATH)/src/Small100Translator.cpp \
+	$(LOCAL_PATH)/src/NLLB200Translator.cpp \
 	$(LOCAL_PATH)/src/Utils.cpp
 
 ifeq ($(APP_OPTIM),debug)

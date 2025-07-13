@@ -12,6 +12,7 @@ import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
 import com.mobilerpgpack.phone.translator.models.ITranslationModel
 import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
 import com.mobilerpgpack.phone.translator.models.MLKitTranslationModel
+import com.mobilerpgpack.phone.translator.models.NLLB200TranslationModel
 import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
 import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
@@ -111,6 +112,14 @@ object TranslationManager {
 
         translationModels[TranslationType.Small100] =
             Small100TranslationModel (context, pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile)
+
+
+        val pathToNLLB200Model = "${filesRootDir.absolutePath}${File.separator}nllb-200-distilled-600M"
+        val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
+
+        translationModels[TranslationType.NLLB200] =
+            NLLB200TranslationModel (context, pathToNLLB200Model, nLLB200SmpFile,
+                allowDownloadingOveMobile)
 
         translationModels[TranslationType.GoogleTranslate] = GoogleTranslateV2(context)
         translationModels[TranslationType.BingTranslate] = BingTranslatorModel(context)
