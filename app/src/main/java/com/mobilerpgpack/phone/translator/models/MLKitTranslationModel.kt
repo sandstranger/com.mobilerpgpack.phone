@@ -61,15 +61,17 @@ class MLKitTranslationModel(
         text: String,
         sourceLocale: String,
         targetLocale: String
-    ): String {
+    ): TranslationResult {
         initialize(sourceLocale, targetLocale)
         if (!isLocaleSupported(targetLocale)){
-            return text
+            return TranslationResult(text,false)
         }
         return try {
-            mlKitTranslator?.translate(text)?.await() ?: text
+            val translatedText = mlKitTranslator?.translate(text)?.await()
+            return if (translatedText == null) TranslationResult(text, false) else
+                TranslationResult(translatedText, true)
         } catch (e: Exception) {
-            text
+            TranslationResult(text,false)
         }
     }
 

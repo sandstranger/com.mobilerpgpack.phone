@@ -151,26 +151,23 @@ class NLLB200TranslationModel(
         text: String,
         sourceLocale: String,
         targetLocale: String
-    ): String {
+    ): TranslationResult {
         if ( !(locales.containsKey(sourceLocale) && locales.containsKey(targetLocale)) ){
-            return text
+            return TranslationResult(text, false)
         }
 
         super.translate(text, locales[sourceLocale]!!, locales[targetLocale]!!)
-        if (!isLocaleSupported(targetLocale)){
-            return text
+        if (!isLocaleSupported(targetLocale) || !isModelDownloaded){
+            return TranslationResult(text, false)
         }
 
         val sourceLocaleNLLB200Code = locales[sourceLocale]!!
         val targetLocaleNLLB200Code = locales[targetLocale]!!
 
-        if (isModelDownloaded) {
-            val deferred = scope.async {
-                initialize(sourceLocaleNLLB200Code, targetLocaleNLLB200Code)
-                translator.translate(text, sourceLocaleNLLB200Code, targetLocaleNLLB200Code)
-            }
-            return deferred.await()
+        val deferred = scope.async {
+            initialize(sourceLocaleNLLB200Code, targetLocaleNLLB200Code)
+            translator.translate(text, sourceLocaleNLLB200Code, targetLocaleNLLB200Code)
         }
-        return text
+        return TranslationResult(deferred.await(),true)
     }
 }

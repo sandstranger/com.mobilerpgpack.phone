@@ -12,7 +12,7 @@ interface ITranslationModel {
 
     fun isLocaleSupported(locale: String): Boolean
 
-    suspend fun translate(text: String, sourceLocale: String, targetLocale: String): String
+    suspend fun translate(text: String, sourceLocale: String, targetLocale: String): TranslationResult
 
     suspend fun needToDownloadModel(): Boolean = false
 
