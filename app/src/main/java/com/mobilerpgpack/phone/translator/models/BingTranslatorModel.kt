@@ -34,15 +34,15 @@ class BingTranslatorModel(private val context: Context) : ITranslationModel {
         text: String,
         sourceLocale: String,
         targetLocale: String
-    ): String {
+    ): TranslationResult {
         if (!isLocaleSupported(targetLocale) || !context.isInternetAvailable()){
-            return text
+            return TranslationResult(text, false)
         }
 
         val deferred = scope.async {
             return@async translator.translate(text, sourceLocale, targetLocale)
         }
 
-        return deferred.await()
+        return TranslationResult(deferred.await(),true)
     }
 }

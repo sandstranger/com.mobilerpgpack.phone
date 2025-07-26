@@ -109,7 +109,7 @@ dependencies {
     implementation (project(":Translator"))
 
     implementation(libs.slf4j.api)
-    compileOnly libs.lombok
+    compileOnly libs.projectlombok.lombok
     annotationProcessor libs.projectlombok.lombok
     implementation libs.converter.gson
     implementation libs.gson

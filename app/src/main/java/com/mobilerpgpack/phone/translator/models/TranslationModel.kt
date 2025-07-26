@@ -1,9 +1,6 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.ui.text.intl.Locale
-import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.isWifiConnected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -33,7 +30,7 @@ abstract class TranslationModel (private val context : Context,
 
     protected abstract fun initialize(sourceLocale: String, targetLocale : String)
 
-    abstract override suspend fun translate(text: String, sourceLocale: String, targetLocale : String) : String
+    abstract override suspend fun translate(text: String, sourceLocale: String, targetLocale : String) : TranslationResult
 
     abstract override suspend fun needToDownloadModel () : Boolean
 

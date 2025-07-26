@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.translator
 
 import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.translator.models.TranslationResult
 import kotlin.math.roundToInt
 
 class IntervalMarkerTranslator {
@@ -15,44 +16,144 @@ class IntervalMarkerTranslator {
         textCameFromDialog : Boolean,
         inGame : Boolean,
         engineTypes: EngineTypes,
-        translateFn: suspend (String) -> String
-    ): Pair <String, Boolean> {
+        translateFn: suspend (String) -> TranslationResult
+    ): TranslationResult {
 
         if (!symbolsRegex.containsMatchIn(sourceText)){
-            return sourceText to true
+            return TranslationResult(sourceText,true)
         }
 
         if (!inGame){
-            return translateFn(sourceText) to false
+            return translateFn(sourceText)
         }
 
-        if (textCameFromDialog){
-            val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol","")
-                .replace(pipeSpecialSymbol, " ").trim()
+        return when (engineTypes) {
+            EngineTypes.WolfensteinRpg -> TODO()
+            EngineTypes.DoomRpg -> translateDoomRpgText(sourceText, textCameFromDialog, translateFn)
+            EngineTypes.Doom2Rpg -> translateDoomRpg2Text(sourceText, translateFn)
+        }
+    }
 
-            val translatedText = translateFn(cleanedTextToTranslate)
-            return if (translatedText == cleanedTextToTranslate) sourceText to false else
-                insertSymbolsWithRules(translatedText, pipeSpecialSymbol, interval = 15) to false
+    private suspend fun translateDoomRpg2Text(
+        sourceText: String,
+        translateFn: suspend (String) -> TranslationResult
+    ): TranslationResult {
+        val defaultPipeSymbolIndex = 30
+
+        var lootMenuText = false;
+        var counter = 0
+
+        if (sourceText.count { it == pipeSpecialSymbol[0] } > 1) {
+            for (i in sourceText.indices) {
+                counter++
+                if (sourceText[i] == pipeSpecialSymbol[0]) {
+                    lootMenuText = counter <= defaultPipeSymbolIndex
+                    counter = 0
+                }
+            }
+        }
+
+        if (lootMenuText) {
+            val splittedTexts = sourceText.split(pipeSpecialSymbol)
+            val buffer = StringBuilder (sourceText.length * 2)
+            for (text in splittedTexts) {
+                val translatedResult = translateFn(text.trim())
+
+                if (!translatedResult.translated){
+                    return TranslationResult(sourceText, false)
+                }
+                buffer.append(translatedResult.text).append(pipeSpecialSymbol)
+            }
+            return TranslationResult(buffer.toString(), true)
+        } else {
+            val dialogBoxText = sourceText.contains(pipeSpecialSymbol)
+            if (dialogBoxText) {
+                val firstPipeSymbolIndex = sourceText.indexOf(pipeSpecialSymbol)
+
+                if (firstPipeSymbolIndex <= defaultPipeSymbolIndex) {
+                    val splittedTexts = sourceText.split(pipeSpecialSymbol)
+                    val title = splittedTexts[0].trim()
+                    val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol", "")
+                        .replace(pipeSpecialSymbol, " ").replace(title, "").trim()
+
+                    val translatedTitleResult = translateFn(title)
+                    val translatedTextResult = translateFn(cleanedTextToTranslate)
+
+                    if (translatedTitleResult.translated && translatedTextResult.translated) {
+                        val result = "${translatedTitleResult.text}$pipeSpecialSymbol${insertSymbolsWithRulesDoom2Rpg(                             translatedTextResult.text,
+                                pipeSpecialSymbol, interval = splittedTexts[1].length)}"
+                        return TranslationResult(result, true)
+                    } else {
+                        return TranslationResult(sourceText, false)
+                    }
+                } else {
+                    val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol", "")
+                        .replace(pipeSpecialSymbol, " ").trim()
+                    val translatedResult = translateFn(cleanedTextToTranslate)
+                    return if (!translatedResult.translated) translatedResult else
+                        TranslationResult(
+                            insertSymbolsWithRulesDoom2Rpg(
+                                translatedResult.text, pipeSpecialSymbol,
+                                interval = sourceText.indexOf(pipeSpecialSymbol)
+                            ), true
+                        )
+                }
+            }
         }
 
         val newLineSymbol = "\n"
         val newLineIndex = sourceText.indexOf(newLineSymbol)
 
-        val cleanedTextToTranslate = sourceText.replace(" - $newLineSymbol","")
+        val cleanedTextToTranslate = sourceText.replace(" - $newLineSymbol", "")
             .replace(" -$newLineSymbol", "").replace("-$newLineSymbol", "")
-            .replace(newLineSymbol," ").trim()
+            .replace(newLineSymbol, " ").trim()
 
+        val translatedResult = translateFn(cleanedTextToTranslate)
 
-        val translatedText = translateFn(cleanedTextToTranslate)
-
-        if (newLineIndex>0){
-            return insertSymbolsWithRules(translatedText, newLineSymbol,newLineIndex) to false
+        if (newLineIndex > 0) {
+            return TranslationResult(
+                insertSymbolsWithRulesDoom2Rpg(
+                    translatedResult.text,
+                    newLineSymbol, newLineIndex
+                ), translatedResult.translated
+            )
         }
 
-        return translatedText to false
+        return translatedResult
     }
 
-    private fun insertSymbolsWithRules(text: String, symbolToInsert : String, interval: Int): String {
+    private suspend fun translateDoomRpgText(
+        sourceText: String, textCameFromDialog: Boolean,
+        translateFn: suspend (String) -> TranslationResult
+    ): TranslationResult {
+        if (textCameFromDialog) {
+            val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol", "")
+                .replace(pipeSpecialSymbol, " ").trim()
+
+            val translatedResult = translateFn(cleanedTextToTranslate)
+            return if (!translatedResult.translated) translatedResult else
+                TranslationResult(insertSymbolsWithRulesDoomRpg(translatedResult.text, pipeSpecialSymbol,
+                    interval = 15), true)
+        }
+
+        val newLineSymbol = "\n"
+        val newLineIndex = sourceText.indexOf(newLineSymbol)
+
+        val cleanedTextToTranslate = sourceText.replace(" - $newLineSymbol", "")
+            .replace(" -$newLineSymbol", "").replace("-$newLineSymbol", "")
+            .replace(newLineSymbol, " ").trim()
+
+        val translatedResult = translateFn(cleanedTextToTranslate)
+
+        if (newLineIndex > 0) {
+            return TranslationResult(insertSymbolsWithRulesDoomRpg( translatedResult.text,
+                newLineSymbol, newLineIndex), translatedResult.translated)
+        }
+
+        return translatedResult
+    }
+
+    private fun insertSymbolsWithRulesDoomRpg(text: String, symbolToInsert : String, interval: Int): String {
         val sb = StringBuilder((text.length * 1.5f).roundToInt())
         var count = 0
         var i = 0
@@ -86,6 +187,24 @@ class IntervalMarkerTranslator {
                 i = j - 1
             }
 
+            i++
+        }
+
+        return sb.toString()
+    }
+
+    private fun insertSymbolsWithRulesDoom2Rpg(text: String, symbolToInsert : String, interval: Int): String {
+        val sb = StringBuilder((text.length * 1.5f).roundToInt())
+        var count = 0
+        var i = 0
+
+        while (i < text.length) {
+            sb.append(text[i])
+            count++
+            if (count >= interval) {
+                sb.append(symbolToInsert)
+                count = 0
+            }
             i++
         }
 

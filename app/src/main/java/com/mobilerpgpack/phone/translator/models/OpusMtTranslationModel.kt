@@ -42,16 +42,16 @@ class OpusMtTranslationModel(
         text: String,
         sourceLocale: String,
         targetLocale: String
-    ): String  {
+    ): TranslationResult {
         if (!isLocaleSupported(targetLocale)){
-            return text
+            return TranslationResult(text,false)
         }
         val deferred = scope.async {
             initialize()
             opusMtTranslator.translate(text,sourceLocale,targetLocale)
         }
 
-        return deferred.await()
+        return TranslationResult(deferred.await(),true)
     }
 
     override fun release() {

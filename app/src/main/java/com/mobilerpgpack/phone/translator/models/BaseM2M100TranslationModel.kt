@@ -1,14 +1,11 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.net.DriveDownloader
-import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
@@ -69,19 +66,15 @@ abstract class BaseM2M100TranslationModel(
         text: String,
         sourceLocale: String,
         targetLocale: String
-    ): String {
-        if (!isLocaleSupported(targetLocale)){
-            return text
-        }
-
-        if (isModelDownloaded) {
+    ): TranslationResult {
+        if (isLocaleSupported(targetLocale) && isModelDownloaded) {
             val deferred = scope.async {
                 initialize(sourceLocale, targetLocale)
                 translator.translate(text, sourceLocale, targetLocale)
             }
-            return deferred.await()
+            return TranslationResult(deferred.await(), true)
         }
-        return text
+        return TranslationResult(text, false)
     }
 
     override suspend fun downloadModelTask(onProgress: (String) -> Unit): Boolean {
