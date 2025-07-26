@@ -113,7 +113,6 @@ object TranslationManager {
         translationModels[TranslationType.Small100] =
             Small100TranslationModel (context, pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile)
 
-
         val pathToNLLB200Model = "${filesRootDir.absolutePath}${File.separator}nllb-200-distilled-600M"
         val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
 
@@ -271,8 +270,7 @@ object TranslationManager {
                 textCameFromDialog, inGame, _activeEngine) {
                 cleanText -> translationModel.translate(cleanText, sourceLocale, targetLocale)
             }
-            if ((translatedText!=text || saveTextToSqlForced) &&
-                activeTranslationType==this@TranslationManager.activeTranslationType) {
+            if (saveTextToSqlForced && activeTranslationType==this@TranslationManager.activeTranslationType) {
                 saveTranslatedText(translatedText)
                 return@coroutineScope translatedText
             }
