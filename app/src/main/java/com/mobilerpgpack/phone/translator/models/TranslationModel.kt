@@ -54,7 +54,6 @@ abstract class TranslationModel (private val context : Context,
     }
 
     override suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit): Boolean {
-
         if (!needToDownloadModel()){
             return true
         }
