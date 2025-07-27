@@ -20,7 +20,6 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 object PreferencesStorage {
     private val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
-    private val preserveScreenAspectRatioPrefsKey = booleanPreferencesKey("preserve_screen_aspect_ratio")
     private val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
     private val activeEnginePrefsKey = stringPreferencesKey("current_engine")
     private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
@@ -29,6 +28,7 @@ object PreferencesStorage {
     private val hideScreenControlsPrefsKey = booleanPreferencesKey("hide_screen_controls")
     private val pathToLogFilePrefsKey = stringPreferencesKey("path_to_log_file")
     private val customScreenResolutionPrefsKey = stringPreferencesKey("custom_screen_resolution")
+    private val customAspectRatioPrefsKey = stringPreferencesKey("custom_aspect_ratio")
     private val editCustomScreenControlsInGamePrefsKey = booleanPreferencesKey("edit_screen_controls_in_game")
     private val OFFSET_X_MOUSE = floatPreferencesKey("offset_x_mouse")
     private val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
@@ -97,6 +97,11 @@ object PreferencesStorage {
     suspend fun setCustomScreenResolution(context: Context, valueToSave : String) =
         setStringValue(context, customScreenResolutionPrefsKey, valueToSave)
 
+    fun getCustomAspectRatioValue(context: Context) = getStringValue(context, customAspectRatioPrefsKey )
+
+    suspend fun setCustomAspectRatio(context: Context, valueToSave : String) =
+        setStringValue(context, customAspectRatioPrefsKey, valueToSave)
+
     fun getPathToLogFileValue(context: Context) = getStringValue(context, pathToLogFilePrefsKey,
         defaultPathToLogcatFile)
 
@@ -123,11 +128,6 @@ object PreferencesStorage {
 
     suspend fun setControlsAutoHidingValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, enableControlsAutoHiding, valueToSave)
-
-    fun getPreserveAspectRatioValue (context: Context) = getBooleanValue(context, preserveScreenAspectRatioPrefsKey)
-
-    suspend fun setPreserveAspectRationValue (context: Context, valueToSave : Boolean) =
-        setBooleanValue(context, preserveScreenAspectRatioPrefsKey, valueToSave)
 
     fun getShowCustomMouseCursorValue (context: Context) = getBooleanValue(context, showCustomMouseCursorPrefsKey)
 
