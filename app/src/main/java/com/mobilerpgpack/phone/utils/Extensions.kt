@@ -57,39 +57,6 @@ fun Context.isWifiConnected(): Boolean {
             networkInfo.type == ConnectivityManager.TYPE_WIFI
 }
 
-fun copyAssetsFolderToInternalStorage(context: Context, assetsFolder: String, destFolder: File) {
-    val assetManager = context.assets
-    try {
-        val files = assetManager.list(assetsFolder)
-        if (files != null) {
-            if (!destFolder.exists()) {
-                destFolder.mkdirs()
-            }
-
-            for (filename in files) {
-                val assetPath = if (assetsFolder.isEmpty()) filename else "$assetsFolder/$filename"
-                val outFile = File(destFolder, filename)
-
-                val subFiles = assetManager.list(assetPath)
-                if (subFiles != null && subFiles.isNotEmpty()) {
-                    copyAssetsFolderToInternalStorage(context, assetPath, outFile)
-                } else {
-                    val shouldCopy = !outFile.exists() || !compareAssetAndFileHash(assetManager, assetPath, outFile)
-                    if (shouldCopy) {
-                        assetManager.open(assetPath).use { inputStream ->
-                            FileOutputStream(outFile).use { outputStream ->
-                                inputStream.copyTo(outputStream)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } catch (e: IOException) {
-        e.printStackTrace()
-    }
-}
-
 fun Context.isExternalStoragePermissionGranted () : Boolean {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         return Environment.isExternalStorageManager()
@@ -147,19 +114,5 @@ private fun buildRequestResourceFileIntent () : Intent {
         addCategory(Intent.CATEGORY_OPENABLE)
         type = "*/*"
         putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/zip", "application/octet-stream"))
-    }
-}
-
-private fun compareAssetAndFileHash(assetManager: AssetManager, assetPath: String, file: File): Boolean {
-    return try {
-        val assetHash = assetManager.open(assetPath).use { inputStream ->
-            computeSHA256(inputStream)
-        }
-        val fileHash = FileInputStream(file).use { inputStream ->
-            computeSHA256(inputStream)
-        }
-        assetHash.contentEquals(fileHash)
-    } catch (e: IOException) {
-        false
     }
 }

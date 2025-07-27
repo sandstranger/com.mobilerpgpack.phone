@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
-import com.mobilerpgpack.phone.utils.copyAssetsFolderToInternalStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
 internal class MainActivity : ComponentActivity() {

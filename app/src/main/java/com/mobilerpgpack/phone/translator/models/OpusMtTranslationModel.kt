@@ -2,10 +2,12 @@ package com.mobilerpgpack.phone.translator.models
 
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
+import com.mobilerpgpack.phone.utils.AssetExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
+import java.io.File
 
 class OpusMtTranslationModel(
     private val pathToTranslationModel: String,
@@ -29,7 +31,7 @@ class OpusMtTranslationModel(
     }
 
     private fun initialize(){
-        if (wasInitialize){
+        if (wasInitialize || !AssetExtractor.assetsCopied){
             return
         }
         synchronized(lockObject) {
@@ -43,7 +45,7 @@ class OpusMtTranslationModel(
         sourceLocale: String,
         targetLocale: String
     ): TranslationResult {
-        if (!isLocaleSupported(targetLocale)){
+        if (!isLocaleSupported(targetLocale) || !AssetExtractor.assetsCopied){
             return TranslationResult(text,false)
         }
         val deferred = scope.async {
