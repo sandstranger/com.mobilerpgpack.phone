@@ -116,4 +116,10 @@ SDL2: https://github.com/libsdl-org/SDL/tree/SDL2
 
 SDL2_mixer: https://github.com/libsdl-org/SDL_mixer
 
+SDL2_TTF: https://github.com/libsdl-org/SDL_ttf
+
 fluidsynth: https://github.com/FluidSynth/fluidsynth
+
+CTranslate2: https://github.com/OpenNMT/CTranslate2
+
+sentencepiece: https://github.com/google/sentencepiece
