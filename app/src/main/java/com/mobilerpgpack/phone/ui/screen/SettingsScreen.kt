@@ -43,6 +43,7 @@ import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
@@ -61,21 +62,23 @@ import java.io.File
 fun SettingsScreen() {
     val context = LocalContext.current;
     val scope = rememberCoroutineScope()
+    val useDarkTheme by PreferencesStorage.getUseDarkThemeValue(context).collectAsState(initial = false)
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Blue)
-            .systemBarsPadding()
-    ) {
-        CustomTopBar(title = context.getString(R.string.app_name))
+    Theme (darkTheme = useDarkTheme ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Blue)
+                .systemBarsPadding()
+        ) {
+            CustomTopBar(title = context.getString(R.string.app_name), useDarkTheme)
 
-        if (context.isTelevision) {
-            DrawTelevisionSettings(context, scope)
-            return
+            if (context.isTelevision) {
+                DrawTelevisionSettings(context, scope)
+            } else {
+                DrawPhoneSettings(context, scope)
+            }
         }
-
-        DrawPhoneSettings(context, scope)
     }
 }
 
@@ -256,6 +259,17 @@ private fun DrawGraphicsSettings(context: Context, scope: CoroutineScope) {
 
     val customAspectRatio by PreferencesStorage.getCustomAspectRatioValue(context)
         .collectAsState(initial = "")
+
+    SwitchPreferenceItem(
+        context.getString(R.string.dark_theme),
+        checkedFlow = PreferencesStorage.getUseDarkThemeValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setUseDarkThemeValue(context, newValue)
+        }
+    }
+
+    HorizontalDivider()
 
     SwitchPreferenceItem(
         context.getString(R.string.display_in_safe_area),

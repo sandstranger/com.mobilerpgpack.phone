@@ -198,42 +198,39 @@ class EngineActivity : SDLActivity() {
     }
 
     private fun preserveCustomScreenAspectRatio(customAspectRatio : String) {
-        if (customAspectRatio.isNotEmpty() && customAspectRatio.contains(RESOLUTION_DELIMITER)) {
-            try {
-                val aspectRatioArray = customAspectRatio.split(RESOLUTION_DELIMITER)
-                val screenWidth = resolution.first
-                val screenHeight = resolution.second
-                val targetRatio = Integer.parseInt( aspectRatioArray[0]).toFloat() /
-                        Integer.parseInt( aspectRatioArray[1]).toFloat()
-                val screenRatio = screenWidth.toFloat() / screenHeight
+        val aspectRatioData = parseString(customAspectRatio)
+        if (aspectRatioData!=null) {
+            val screenWidth = resolution.first
+            val screenHeight = resolution.second
+            val targetRatio = aspectRatioData.first.toFloat() / aspectRatioData.second.toFloat()
+            val screenRatio = screenWidth.toFloat() / screenHeight
 
-                if (screenRatio > targetRatio) {
-                    val newWidth = (screenHeight * targetRatio).toInt()
-                    setScreenResolution(newWidth, screenHeight)
-                } else {
-                    val newHeight = (screenWidth / targetRatio).toInt()
-                    setScreenResolution(screenWidth, newHeight)
-                }
+            if (screenRatio > targetRatio) {
+                val newWidth = (screenHeight * targetRatio).toInt()
+                setScreenResolution(newWidth, screenHeight)
+            } else {
+                val newHeight = (screenWidth / targetRatio).toInt()
+                setScreenResolution(screenWidth, newHeight)
+            }
+        }
+    }
+
+    private fun parseString (input: String) : Pair<Int, Int>?{
+        if (input.isNotEmpty() && input.contains(RESOLUTION_DELIMITER)) {
+            try {
+                val array = input.split(RESOLUTION_DELIMITER)
+                return Integer.parseInt(array[0]) to Integer.parseInt(array[1])
             } catch (_: Exception) {
             }
         }
-
+        return null
     }
 
     private fun setScreenResolution(savedScreenResolution: String): Boolean {
-        if (savedScreenResolution.isNotEmpty() && savedScreenResolution.contains(
-                RESOLUTION_DELIMITER
-            )
-        ) {
-            try {
-                val resolutionsArray = savedScreenResolution.split(RESOLUTION_DELIMITER)
-                setScreenResolution(
-                    Integer.parseInt(resolutionsArray[0]),
-                    Integer.parseInt(resolutionsArray[1])
-                )
-                return true
-            } catch (_: Exception) {
-            }
+        val screenResolutionData = parseString(savedScreenResolution)
+        if (screenResolutionData!=null) {
+            setScreenResolution(screenResolutionData.first,screenResolutionData.second)
+            return true
         }
 
         return false

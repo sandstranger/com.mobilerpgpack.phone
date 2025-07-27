@@ -30,6 +30,7 @@ object PreferencesStorage {
     private val customScreenResolutionPrefsKey = stringPreferencesKey("custom_screen_resolution")
     private val customAspectRatioPrefsKey = stringPreferencesKey("custom_aspect_ratio")
     private val editCustomScreenControlsInGamePrefsKey = booleanPreferencesKey("edit_screen_controls_in_game")
+    private val useDarkThemePrefsKey = booleanPreferencesKey("use_dark_theme")
     private val OFFSET_X_MOUSE = floatPreferencesKey("offset_x_mouse")
     private val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
     private val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
@@ -133,6 +134,11 @@ object PreferencesStorage {
 
     suspend fun setShowCustomMouseCursorValue (context: Context, valueToSave : Boolean) =
         setBooleanValue(context, showCustomMouseCursorPrefsKey, valueToSave)
+
+    fun getUseDarkThemeValue (context: Context) = getBooleanValue(context, useDarkThemePrefsKey, false)
+
+    suspend fun setUseDarkThemeValue (context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, useDarkThemePrefsKey, valueToSave)
 
     suspend fun getActiveEngineValue (context: Context) : EngineTypes{
         val activeEngine = getStringValue(context, activeEnginePrefsKey, EngineTypes.DefaultActiveEngine.toString()).first()
