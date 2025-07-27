@@ -11,12 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomTopBar(title: String) {
+fun CustomTopBar(title: String, useDarkTheme : Boolean = false ) {
+    val topBarColor  = if (useDarkTheme) Color.DarkGray else Color(0xFF6200EE)
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .background(Color(0xFF6200EE)),
+            .background(topBarColor),
         contentAlignment = Alignment.CenterStart
     ) {
         Text(

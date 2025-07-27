@@ -35,7 +35,7 @@ fun EditTextPreferenceItem(
         .clickable { showDialog = true }
         .padding(16.dp)) {
 
-        Text(text = title)
+        TranslatedText(text = title)
 
         Text(
             text = if (value.isNotEmpty()) value else hint,
@@ -55,12 +55,12 @@ fun EditTextPreferenceItem(
                     onValueChange(tempValue)
                     showDialog = false
                 }) {
-                    Text(context.getString(R.string.ok_text))
+                    TranslatedText(context.getString(R.string.ok_text))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDialog = false }) {
-                    Text(context.getString(R.string.cancel_text))
+                    TranslatedText(context.getString(R.string.cancel_text))
                 }
             },
             title = { Text(text = title) },

@@ -10,6 +10,7 @@ import com.mobilerpgpack.phone.engine.activity.EngineActivity
 import com.mobilerpgpack.phone.ui.screen.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.wolfensteinButtons
+import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.startActivity
 import kotlinx.coroutines.flow.first
@@ -18,11 +19,14 @@ import java.io.File
 const val logcatFileName = "wolfenstein_doom_rpg_log.log"
 
 internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
-    EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so", arrayOf("GL","SDL2","openal","WolfensteinRPG"),
-        wolfensteinButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
-    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so", arrayOf("fluidsynth","GL","SDL2","gme","SDL2_mixer","DoomRPG"),
-        doomRPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
-    EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so", arrayOf("GL","SDL2","openal","DoomIIRPG"),
+    EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so",
+        arrayOf("GL","SDL2","openal","SDL2_ttf","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
+            { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
+    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so", arrayOf("fluidsynth","GL","SDL2","gme","SDL2_mixer",
+        "SDL2_ttf","Translator","DoomRPG"), doomRPGButtons,
+        pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
+    EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so",
+        arrayOf("GL","SDL2","openal","SDL2_ttf","Translator","DoomIIRPG"),
         doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
 )
 
@@ -43,6 +47,9 @@ internal fun setFullscreen(decorView: View) {
 fun killEngine() = Process.killProcess(Process.myPid())
 
 suspend fun startEngine(context: Context) {
+    if (!AssetExtractor.assetsCopied){
+        return
+    }
     val activeEngineType = PreferencesStorage.getActiveEngineValue(context)
 
     if (enginesInfo[activeEngineType]!!.pathToResourcesCallback(context).first()!!.isEmpty()){

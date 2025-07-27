@@ -21,9 +21,8 @@ fun PreferenceItem(title: String, initialValue: String = "", onClick : () -> Uni
             .clickable { onClick() }
             .padding(16.dp),
     ) {
-        Text(
+        TranslatedText(
             text = title,
-            maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
 

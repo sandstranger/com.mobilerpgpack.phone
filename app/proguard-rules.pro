@@ -24,3 +24,8 @@
 -keepclassmembers class org.libsdl.app.SDLActivity {
     public static <methods>;
 }
+-keep class com.mobilerpgpack.phone.translator.** { *; }
+-keepclassmembers class com.mobilerpgpack.phone.translator.TranslationManager {
+    public <methods>;
+    public static <methods>;
+}

@@ -62,6 +62,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.items.TranslatedText
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -1140,29 +1141,29 @@ private fun EditControls(
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = { onAlphaChange(+0.1f) }) {
-                Text(context.getString(R.string.increase_controls_alpha))
+                TranslatedText(context.getString(R.string.increase_controls_alpha))
             }
             Button(onClick = { onAlphaChange(-0.1f) }) {
-                Text(context.getString(R.string.decrease_controls_alpha))
+                TranslatedText(context.getString(R.string.decrease_controls_alpha))
             }
         }
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(onClick = { onSizeChange(+0.01f) }) {
-                Text(context.getString(R.string.increase_controls_size))
+                TranslatedText(context.getString(R.string.increase_controls_size))
             }
             Button(onClick = { onSizeChange(-0.01f) }) {
-                Text(context.getString(R.string.decrease_controls_size))
+                TranslatedText(context.getString(R.string.decrease_controls_size))
             }
         }
         Spacer(Modifier.height(8.dp))
         Button(onClick = onReset) {
-            Text(context.getString(R.string.reset_controls_to_default))
+            TranslatedText(context.getString(R.string.reset_controls_to_default))
         }
         Spacer(Modifier.height(8.dp))
         if (!inGame) {
             Button(onClick = onBack) {
-                Text(context.getString(R.string.close_controls_configuration))
+                TranslatedText(context.getString(R.string.close_controls_configuration))
             }
         }
     }

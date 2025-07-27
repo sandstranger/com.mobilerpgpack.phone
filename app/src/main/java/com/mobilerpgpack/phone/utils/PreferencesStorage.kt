@@ -11,6 +11,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
+import com.mobilerpgpack.phone.translator.models.TranslationType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -19,27 +20,66 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 object PreferencesStorage {
     private val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
-    private val preserveScreenAspectRatioPrefsKey = booleanPreferencesKey("preserve_screen_aspect_ratio")
     private val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
     private val activeEnginePrefsKey = stringPreferencesKey("current_engine")
-    private val useCustomFilePickerPrefsKey = booleanPreferencesKey("use_custom_file_picker")
     private val pathToWolfensteinRpgIpaPrefsKey = stringPreferencesKey("wolfenstein_rpg_ipa_file")
     private val pathToDoom2RpgIpaPrefsKey = stringPreferencesKey("doom2_rpg_ipa_file")
     private val pathToDoomRpgZipFilePrefsKey = stringPreferencesKey("doom_rpg_zip_file")
     private val hideScreenControlsPrefsKey = booleanPreferencesKey("hide_screen_controls")
     private val pathToLogFilePrefsKey = stringPreferencesKey("path_to_log_file")
     private val customScreenResolutionPrefsKey = stringPreferencesKey("custom_screen_resolution")
+    private val customAspectRatioPrefsKey = stringPreferencesKey("custom_aspect_ratio")
     private val editCustomScreenControlsInGamePrefsKey = booleanPreferencesKey("edit_screen_controls_in_game")
+    private val useDarkThemePrefsKey = booleanPreferencesKey("use_dark_theme")
     private val OFFSET_X_MOUSE = floatPreferencesKey("offset_x_mouse")
     private val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
     private val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
+    private val useSDLTTFForFontsRenderingPrefsKey = booleanPreferencesKey("sdl_ttf_render")
+    private val gamesMachineTranslationsPrefsKey = booleanPreferencesKey("enable_games_translation")
+    private val enableLauncherTextTranslationPrefsKey = booleanPreferencesKey("enable_launcher_translation")
+    private val allowDownloadingModelsOverMobilePrefsKey = booleanPreferencesKey("allow_downloading_over_mobile")
+    private val translationModelTypePrefsKey = stringPreferencesKey("translation_model_type")
+
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
+
+    fun getTranslationModelTypeValue(context: Context) =
+        getStringValue(context, translationModelTypePrefsKey,TranslationType.DefaultTranslationType.toString())
+
+    suspend fun setTranslationModelTypeValue(context: Context, valueToSave : String) =
+        setStringValue(context, translationModelTypePrefsKey, valueToSave)
+
+    suspend fun setTranslationModelTypeValue(context: Context, valueToSave : TranslationType) =
+        setStringValue(context, translationModelTypePrefsKey, valueToSave.toString())
+
+    fun getAllowDownloadingModelsOverMobileValue(context: Context) =
+        getBooleanValue(context, allowDownloadingModelsOverMobilePrefsKey)
+
+    suspend fun setAllowDownloadingModelsOverMobileValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, allowDownloadingModelsOverMobilePrefsKey, valueToSave)
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
     suspend fun setDisplayInSafeAreaValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, displayInSafeAreaPrefsKey, valueToSave)
+
+    fun getEnableLauncherTextTranslationValue(context: Context) =
+        getBooleanValue(context, enableLauncherTextTranslationPrefsKey, defaultValue = false)
+
+    suspend fun setEnableLauncherTextTranslationValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, enableLauncherTextTranslationPrefsKey, valueToSave)
+
+    fun getEnableGameMachineTextTranslationValue(context: Context) =
+        getBooleanValue(context, gamesMachineTranslationsPrefsKey, defaultValue = false)
+
+    suspend fun setEnableGameMachineTextTranslationValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, gamesMachineTranslationsPrefsKey, valueToSave)
+
+    fun getUseSDLTTFForFontsRenderingValue(context: Context) =
+        getBooleanValue(context, useSDLTTFForFontsRenderingPrefsKey, defaultValue = false)
+
+    suspend fun setUseSDLTTFForFontsRenderingValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, useSDLTTFForFontsRenderingPrefsKey, valueToSave)
 
     fun getEditCustomScreenControlsInGameValue(context: Context) =
         getBooleanValue(context, editCustomScreenControlsInGamePrefsKey, defaultValue = true)
@@ -57,6 +97,11 @@ object PreferencesStorage {
 
     suspend fun setCustomScreenResolution(context: Context, valueToSave : String) =
         setStringValue(context, customScreenResolutionPrefsKey, valueToSave)
+
+    fun getCustomAspectRatioValue(context: Context) = getStringValue(context, customAspectRatioPrefsKey )
+
+    suspend fun setCustomAspectRatio(context: Context, valueToSave : String) =
+        setStringValue(context, customAspectRatioPrefsKey, valueToSave)
 
     fun getPathToLogFileValue(context: Context) = getStringValue(context, pathToLogFilePrefsKey,
         defaultPathToLogcatFile)
@@ -79,27 +124,21 @@ object PreferencesStorage {
     suspend fun setPathToDoomRpgZipFile(context: Context, valueToSave : String) =
         setStringValue(context, pathToDoomRpgZipFilePrefsKey, valueToSave)
 
-    fun getUseCustomFilePickerValue(context: Context) =
-        getBooleanValue(context, useCustomFilePickerPrefsKey, defaultValue = context.isTelevision)
-
-    suspend fun setUseCustomFilePickerValue(context: Context, valueToSave : Boolean) =
-        setBooleanValue(context, useCustomFilePickerPrefsKey, valueToSave)
-
     fun getControlsAutoHidingValue(context: Context) =
         getBooleanValue(context, enableControlsAutoHiding, defaultValue = false)
 
     suspend fun setControlsAutoHidingValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, enableControlsAutoHiding, valueToSave)
 
-    fun getPreserveAspectRatioValue (context: Context) = getBooleanValue(context, preserveScreenAspectRatioPrefsKey)
-
-    suspend fun setPreserveAspectRationValue (context: Context, valueToSave : Boolean) =
-        setBooleanValue(context, preserveScreenAspectRatioPrefsKey, valueToSave)
-
     fun getShowCustomMouseCursorValue (context: Context) = getBooleanValue(context, showCustomMouseCursorPrefsKey)
 
     suspend fun setShowCustomMouseCursorValue (context: Context, valueToSave : Boolean) =
         setBooleanValue(context, showCustomMouseCursorPrefsKey, valueToSave)
+
+    fun getUseDarkThemeValue (context: Context) = getBooleanValue(context, useDarkThemePrefsKey, false)
+
+    suspend fun setUseDarkThemeValue (context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, useDarkThemePrefsKey, valueToSave)
 
     suspend fun getActiveEngineValue (context: Context) : EngineTypes{
         val activeEngine = getStringValue(context, activeEnginePrefsKey, EngineTypes.DefaultActiveEngine.toString()).first()
@@ -130,15 +169,15 @@ object PreferencesStorage {
         }
     }
 
-    fun getOffsetXMouse(context: Context): Flow<Float?> {
+    fun getOffsetXMouse(context: Context): Flow<Float> {
         return context.dataStore.data.map { preferences ->
-            preferences[OFFSET_X_MOUSE]
+            preferences[OFFSET_X_MOUSE] ?: 0.0f
         }
     }
 
-    fun getOffsetYMouse(context: Context): Flow<Float?> {
+    fun getOffsetYMouse(context: Context): Flow<Float> {
         return context.dataStore.data.map { preferences ->
-            preferences[OFFSET_Y_MOUSE]
+            preferences[OFFSET_Y_MOUSE] ?: 0.0f
         }
     }
 
@@ -154,7 +193,7 @@ object PreferencesStorage {
         }
     }
 
-     fun getBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, defaultValue : Boolean = false): Flow<Boolean?> {
+     fun getBooleanValue(context: Context, prefsKey : Preferences.Key<Boolean>, defaultValue : Boolean = false): Flow<Boolean> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
@@ -166,13 +205,13 @@ object PreferencesStorage {
         }
     }
 
-     fun getIntValue(context: Context, prefsKey : Preferences.Key<Int>, defaultValue : Int = 0): Flow<Int?> {
+     fun getIntValue(context: Context, prefsKey : Preferences.Key<Int>, defaultValue : Int = 0): Flow<Int> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
     }
 
-    private fun getStringValue(context: Context, prefsKey : Preferences.Key<String>, defaultValue : String = ""): Flow<String?> {
+    private fun getStringValue(context: Context, prefsKey : Preferences.Key<String>, defaultValue : String = ""): Flow<String> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
