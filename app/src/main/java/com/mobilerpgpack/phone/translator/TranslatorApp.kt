@@ -1,16 +1,15 @@
 package com.mobilerpgpack.phone.translator
 
 import android.app.Application
-import android.content.res.Configuration
-import android.os.Build
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.copyAssetsFolderToInternalStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class TranslatorApp : Application() {
@@ -24,7 +23,9 @@ class TranslatorApp : Application() {
             activeTranslationModelType = enumValueOf<TranslationType>(
                 PreferencesStorage.getTranslationModelTypeValue(this@TranslatorApp).first())
         }
-        copyAssetsContentToInternalStorage()
+        globalScope.launch {
+            AssetExtractor.copyAssetsContentToInternalStorage(this@TranslatorApp)
+        }
         TranslationManager.init(this,activeTranslationModelType, allowDownloadingModelsOverMobile)
     }
 
@@ -32,10 +33,6 @@ class TranslatorApp : Application() {
         super.onTerminate()
         globalScope.coroutineContext.cancelChildren()
         TranslationManager.terminate()
-    }
-
-    private fun copyAssetsContentToInternalStorage (){
-        copyAssetsFolderToInternalStorage(this, "game_files", this.getExternalFilesDir("")!!)
     }
 
     companion object{
