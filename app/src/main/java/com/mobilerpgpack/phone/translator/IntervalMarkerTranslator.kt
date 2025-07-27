@@ -81,20 +81,12 @@ class IntervalMarkerTranslator {
         }
 
         val newLineSymbol = "\n"
-        val newLineIndex = sourceText.indexOf(newLineSymbol)
 
         val cleanedTextToTranslate = sourceText.replace(" - $newLineSymbol", "")
             .replace(" -$newLineSymbol", "").replace("-$newLineSymbol", "")
             .replace(newLineSymbol, " ").trim()
 
-        val translatedResult = translateFn(cleanedTextToTranslate)
-
-        if (translatedResult.translated && newLineIndex > 0) {
-            return TranslationResult(insertSymbolsWithRulesDoom2Rpg(translatedResult.text, newLineSymbol, newLineIndex),
-                true)
-        }
-
-        return translatedResult
+        return translateFn(cleanedTextToTranslate)
     }
 
     private suspend fun translateDoomRpg2Text(
@@ -165,20 +157,12 @@ class IntervalMarkerTranslator {
         }
 
         val newLineSymbol = "\n"
-        val newLineIndex = sourceText.indexOf(newLineSymbol)
 
         val cleanedTextToTranslate = sourceText.replace(" - $newLineSymbol", "")
             .replace(" -$newLineSymbol", "").replace("-$newLineSymbol", "")
             .replace(newLineSymbol, " ").trim()
 
-        val translatedResult = translateFn(cleanedTextToTranslate)
-
-        if (translatedResult.translated && newLineIndex > 0) {
-            return TranslationResult(insertSymbolsWithRulesDoom2Rpg(translatedResult.text,newLineSymbol, newLineIndex),
-                true)
-        }
-
-        return translatedResult
+        return translateFn(cleanedTextToTranslate)
     }
 
     private suspend fun translateDoomRpgText(

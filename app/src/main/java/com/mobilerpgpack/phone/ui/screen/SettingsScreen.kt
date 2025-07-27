@@ -2,8 +2,6 @@ package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
 import android.content.Context
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -254,7 +252,10 @@ private fun DrawGraphicsSettings(context: Context, scope: CoroutineScope) {
     TranslatedText(context.getString(R.string.graphics_settings), style = MaterialTheme.typography.titleLarge)
 
     val customScreenResolution by PreferencesStorage.getCustomScreenResolutionValue(context)
-        .collectAsState(initial = defaultPathToLogcatFile)
+        .collectAsState(initial = "")
+
+    val customAspectRatio by PreferencesStorage.getCustomAspectRatioValue(context)
+        .collectAsState(initial = "")
 
     SwitchPreferenceItem(
         context.getString(R.string.display_in_safe_area),
@@ -267,12 +268,12 @@ private fun DrawGraphicsSettings(context: Context, scope: CoroutineScope) {
 
     HorizontalDivider()
 
-    SwitchPreferenceItem(
-        context.getString(R.string.preserve_aspect_ratio),
-        checkedFlow = PreferencesStorage.getPreserveAspectRatioValue(context),
+    EditTextPreferenceItem(
+        context.getString(R.string.custom_aspect_ratio),
+        customAspectRatio, context.getString(R.string.custom_aspect_ratio_hint)
     ) { newValue ->
         scope.launch {
-            PreferencesStorage.setPreserveAspectRationValue(context, newValue)
+            PreferencesStorage.setCustomAspectRatio(context, newValue)
         }
     }
 
