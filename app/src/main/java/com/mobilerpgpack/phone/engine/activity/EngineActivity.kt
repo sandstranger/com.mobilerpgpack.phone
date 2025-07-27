@@ -21,6 +21,7 @@ import com.mobilerpgpack.phone.engine.enginesInfo
 import com.mobilerpgpack.phone.engine.getPathToSDL2ControllerDB
 import com.mobilerpgpack.phone.engine.killEngine
 import com.mobilerpgpack.phone.engine.setFullscreen
+import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.ui.items.BoxGrid2
 import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.OnScreenController
@@ -98,10 +99,14 @@ class EngineActivity : SDLActivity() {
 
     private fun initializeEngineData() {
         var pathToEngineResourceFile: File
-        var needToPreserveScreenAspectRatio = false
+        var customAspectRatio = ""
         var customScreenResolution = ""
+        var useSdlTTFForTextRendering = false
+        var enableMachineTranslation = false
 
         runBlocking {
+            useSdlTTFForTextRendering = PreferencesStorage.getUseSDLTTFForFontsRenderingValue(this@EngineActivity).first()!!
+            enableMachineTranslation = PreferencesStorage.getEnableGameMachineTextTranslationValue(this@EngineActivity).first()!!
             savedDoomRpgScreenWidth = PreferencesStorage.getIntValue(this@EngineActivity,
                 PreferencesStorage.savedDoomRpgScreenWidthPrefsKey).first()!!
             savedDoomRpgScreenHeight= PreferencesStorage.getIntValue(this@EngineActivity,
@@ -121,20 +126,22 @@ class EngineActivity : SDLActivity() {
                 PreferencesStorage.getCustomScreenResolutionValue(this@EngineActivity).first()!!
             displayInSafeArea =
                 PreferencesStorage.getDisplayInSafeAreaValue(this@EngineActivity).first()!!
-            needToPreserveScreenAspectRatio =
-                PreferencesStorage.getPreserveAspectRatioValue(this@EngineActivity).first()!!
+            customAspectRatio = PreferencesStorage.getCustomAspectRatioValue(this@EngineActivity).first()
             pathToEngineResourceFile = File(
                 enginesInfo[activeEngineType]!!.pathToResourcesCallback(this@EngineActivity)
                     .first()!!
             )
         }
 
+        TranslationManager.inGame = true
+        TranslationManager.activeEngine = activeEngineType
+
         resolution = getRealScreenResolution()
 
-        var customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
+        val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
 
-        if (needToPreserveScreenAspectRatio && !customScreenResolutionWasSet) {
-            preserve16x9ScreenAspectRatio()
+        if (!customAspectRatio.isEmpty() && !customScreenResolutionWasSet) {
+            preserveCustomScreenAspectRatio(customAspectRatio)
         }
 
         if (displayInSafeArea) {
@@ -146,6 +153,8 @@ class EngineActivity : SDLActivity() {
         Os.setenv("LIBGL_ES", "2", true)
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
         Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", getPathToSDL2ControllerDB(this),true)
+        Os.setenv("ENABLE_SDL_TTF", useSdlTTFForTextRendering.toString().lowercase(),true)
+        Os.setenv("ENABLE_TEXTS_MACHINE_TRANSLATION", enableMachineTranslation.toString().lowercase(),true)
 
         if (activeEngineType == EngineTypes.DoomRpg){
             val (width, height) = getDefaultDoomRpgResolution()
@@ -153,10 +162,8 @@ class EngineActivity : SDLActivity() {
                 scope.launch {
                     PreferencesStorage.setIntValue(this@EngineActivity,PreferencesStorage.savedDoomRpgScreenWidthPrefsKey,
                         width)
-
                     PreferencesStorage.setIntValue(this@EngineActivity,PreferencesStorage.savedDoomRpgScreenHeightPrefsKey,
                         height)
-
                 }
 
                 Os.setenv("RECALCULATE_RESOLUTION_INDEX","true",true)
@@ -190,35 +197,40 @@ class EngineActivity : SDLActivity() {
         return processBuilder.start()
     }
 
-    private fun preserve16x9ScreenAspectRatio() {
-        val screenWidth = resolution.first
-        val screenHeight = resolution.second
-        val targetRatio = 16f / 9f
-        val screenRatio = screenWidth.toFloat() / screenHeight
+    private fun preserveCustomScreenAspectRatio(customAspectRatio : String) {
+        val aspectRatioData = parseString(customAspectRatio)
+        if (aspectRatioData!=null) {
+            val screenWidth = resolution.first
+            val screenHeight = resolution.second
+            val targetRatio = aspectRatioData.first.toFloat() / aspectRatioData.second.toFloat()
+            val screenRatio = screenWidth.toFloat() / screenHeight
 
-        if (screenRatio > targetRatio) {
-            val newWidth = (screenHeight * targetRatio).toInt()
-            setScreenResolution(newWidth, screenHeight)
-        } else {
-            val newHeight = (screenWidth / targetRatio).toInt()
-            setScreenResolution(screenWidth, newHeight)
+            if (screenRatio > targetRatio) {
+                val newWidth = (screenHeight * targetRatio).toInt()
+                setScreenResolution(newWidth, screenHeight)
+            } else {
+                val newHeight = (screenWidth / targetRatio).toInt()
+                setScreenResolution(screenWidth, newHeight)
+            }
         }
     }
 
-    private fun setScreenResolution(savedScreenResolution: String): Boolean {
-        if (savedScreenResolution.isNotEmpty() && savedScreenResolution.contains(
-                RESOLUTION_DELIMITER
-            )
-        ) {
+    private fun parseString (input: String) : Pair<Int, Int>?{
+        if (input.isNotEmpty() && input.contains(RESOLUTION_DELIMITER)) {
             try {
-                val resolutionsArray = savedScreenResolution.split(RESOLUTION_DELIMITER)
-                setScreenResolution(
-                    Integer.parseInt(resolutionsArray[0]),
-                    Integer.parseInt(resolutionsArray[1])
-                )
-                return true
+                val array = input.split(RESOLUTION_DELIMITER)
+                return Integer.parseInt(array[0]) to Integer.parseInt(array[1])
             } catch (_: Exception) {
             }
+        }
+        return null
+    }
+
+    private fun setScreenResolution(savedScreenResolution: String): Boolean {
+        val screenResolutionData = parseString(savedScreenResolution)
+        if (screenResolutionData!=null) {
+            setScreenResolution(screenResolutionData.first,screenResolutionData.second)
+            return true
         }
 
         return false

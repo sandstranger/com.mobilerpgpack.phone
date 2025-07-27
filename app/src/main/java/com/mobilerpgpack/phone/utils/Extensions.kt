@@ -5,28 +5,22 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.createChooser
 import android.content.pm.PackageManager
 import android.content.res.AssetManager
 import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
-import android.util.Log
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.result.ActivityResult
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import com.mobilerpgpack.phone.R
 import com.obsez.android.lib.filechooser.ChooserDialog
-import kotlinx.coroutines.flow.first
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.security.MessageDigest
 
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
@@ -40,38 +34,27 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
     if (finishParentActivity && this is Activity) this.finish();
 }
 
-
-fun copyAssetsFolderToInternalStorage(context: Context, assetsFolder: String, destFolder: File) {
-    val assetManager = context.assets
-    try {
-        val files = assetManager.list(assetsFolder)
-        if (files != null) {
-            if (!destFolder.exists()) {
-                destFolder.mkdirs()
-            }
-
-            for (filename in files) {
-                val assetPath = if (assetsFolder.isEmpty()) filename else "$assetsFolder/$filename"
-                val outFile = File(destFolder, filename)
-
-                val subFiles = assetManager.list(assetPath)
-                if (subFiles != null && subFiles.isNotEmpty()) {
-                    copyAssetsFolderToInternalStorage(context, assetPath, outFile)
-                } else {
-                    val shouldCopy = !outFile.exists() || !compareAssetAndFileHash(assetManager, assetPath, outFile)
-                    if (shouldCopy) {
-                        assetManager.open(assetPath).use { inputStream ->
-                            FileOutputStream(outFile).use { outputStream ->
-                                inputStream.copyTo(outputStream)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } catch (e: IOException) {
-        e.printStackTrace()
+fun Context.isInternetAvailable(): Boolean {
+    val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    @Suppress("DEPRECATION")
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    } else {
+        val networkInfo = cm.activeNetworkInfo
+        networkInfo != null && networkInfo.isConnected
     }
+}
+
+fun Context.isWifiConnected(): Boolean {
+    val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    @Suppress("DEPRECATION")
+    val networkInfo = cm.activeNetworkInfo
+    @Suppress("DEPRECATION")
+    return networkInfo != null &&
+            networkInfo.isConnected &&
+            networkInfo.type == ConnectivityManager.TYPE_WIFI
 }
 
 fun Context.isExternalStoragePermissionGranted () : Boolean {
@@ -107,29 +90,11 @@ fun Activity.displayInSafeArea() {
     }
 }
 
-suspend fun Context.requestResourceFile (launcher : ManagedActivityResultLauncher<Intent, ActivityResult>, onFileSelected : (String) -> Unit ){
-    val useAlternateFilePicker = PreferencesStorage.getUseCustomFilePickerValue(this).first()!!
-
-    if (!useAlternateFilePicker){
-        launcher.launch(Intent.createChooser(buildRequestResourceFileIntent(), this.getString(R.string.choose_file_request)))
-        return
-    }
-
+fun Context.requestResourceFile (onFileSelected : (String) -> Unit ){
     this.requestResourceFileByAlternateFilePicker ( dirOnly = false, onFileSelected)
 }
 
-suspend fun Context.requestDirectory (launcher : ManagedActivityResultLauncher<Intent, ActivityResult>, onDirectorySelected : (String) -> Unit ){
-    val useAlternateFilePicker = PreferencesStorage.getUseCustomFilePickerValue(this).first()!!
-
-    if (!useAlternateFilePicker){
-        with(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)) {
-            addCategory(Intent.CATEGORY_DEFAULT)
-            launcher.launch(createChooser(this, this@requestDirectory.getString(R.string.choose_directory)))
-        }
-
-        return
-    }
-
+fun Context.requestDirectory (onDirectorySelected : (String) -> Unit ){
     this.requestResourceFileByAlternateFilePicker ( dirOnly = true, onDirectorySelected)
 }
 
@@ -150,28 +115,4 @@ private fun buildRequestResourceFileIntent () : Intent {
         type = "*/*"
         putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/zip", "application/octet-stream"))
     }
-}
-
-private fun compareAssetAndFileHash(assetManager: AssetManager, assetPath: String, file: File): Boolean {
-    return try {
-        val assetHash = assetManager.open(assetPath).use { inputStream ->
-            computeSHA256(inputStream)
-        }
-        val fileHash = FileInputStream(file).use { inputStream ->
-            computeSHA256(inputStream)
-        }
-        assetHash.contentEquals(fileHash)
-    } catch (e: IOException) {
-        false
-    }
-}
-
-private fun computeSHA256(inputStream: InputStream): ByteArray {
-    val digest = MessageDigest.getInstance("SHA-256")
-    val buffer = ByteArray(4096)
-    var bytesRead: Int
-    while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-        digest.update(buffer, 0, bytesRead)
-    }
-    return digest.digest()
 }
