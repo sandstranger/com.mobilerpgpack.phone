@@ -54,11 +54,11 @@ object AssetExtractor {
 
     private fun compareAssetAndFileSize(assetManager: AssetManager, assetPath: String, file: File): Boolean {
         return try {
-            val assetFileDescriptor = assetManager.openFd(assetPath)
-            val assetFileSize = assetFileDescriptor.length
-            assetFileDescriptor.close()
-            val fileSize = file.length()
-            return assetFileSize == fileSize
+            assetManager.openFd(assetPath).use { assetFileDescriptor ->
+                val assetFileSize = assetFileDescriptor.length
+                val fileSize = file.length()
+                return assetFileSize == fileSize
+            }
         } catch (e: IOException) {
             false
         }
