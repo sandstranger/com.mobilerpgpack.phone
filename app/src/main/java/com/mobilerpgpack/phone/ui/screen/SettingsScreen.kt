@@ -63,32 +63,33 @@ fun SettingsScreen() {
     val context = LocalContext.current;
     val scope = rememberCoroutineScope()
     val useDarkTheme by PreferencesStorage.getUseDarkThemeValue(context).collectAsState(initial = false)
+    val backgroundColor = if (useDarkTheme) Color.Black else Color.White
+    val topBarColor = if (useDarkTheme) Color.Gray else Color.Blue
 
     Theme (darkTheme = useDarkTheme ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Blue)
+                .background(topBarColor)
                 .systemBarsPadding()
         ) {
             CustomTopBar(title = context.getString(R.string.app_name), useDarkTheme)
 
             if (context.isTelevision) {
-                DrawTelevisionSettings(context, scope)
+                DrawTelevisionSettings(context, scope,backgroundColor)
             } else {
-                DrawPhoneSettings(context, scope)
+                DrawPhoneSettings(context, scope,backgroundColor)
             }
         }
     }
 }
 
 @Composable
-private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope) {
-
+private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope, backgroundColor : Color ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(backgroundColor),
     ) {
         Button(
             onClick = { scope.launch { startEngine(context) } },
@@ -104,8 +105,8 @@ private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope) {
 }
 
 @Composable
-private fun DrawPhoneSettings(context: Context, scope: CoroutineScope) {
-    Scaffold(
+private fun DrawPhoneSettings(context: Context, scope: CoroutineScope, backgroundColor: Color) {
+    Scaffold(modifier = Modifier.background(backgroundColor),
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { scope.launch { startEngine(context) } }
