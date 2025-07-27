@@ -28,8 +28,8 @@ android {
         applicationId "com.mobilerpgpack.phone"
         minSdk versions.min_sdk
         targetSdk versions.target_sdk
-        versionCode 6
-        versionName "1.0.4"
+        versionCode 7
+        versionName "1.0.4.1"
 
         ndk {
             abiFilters = []
@@ -60,6 +60,9 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            aaptOptions {
+                noCompress "bin","spm","json","txt","sf2","ttf"
+            }
         }
         debug {
             jniDebuggable true
@@ -67,6 +70,9 @@ android {
                 debugSymbolLevel 'FULL' // сохраняет символы
             }
             signingConfig signingConfigs.debug
+            aaptOptions {
+                noCompress "bin","spm","json","txt","sf2","ttf"
+            }
         }
     }
     compileOptions {
