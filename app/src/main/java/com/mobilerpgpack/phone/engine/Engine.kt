@@ -10,6 +10,7 @@ import com.mobilerpgpack.phone.engine.activity.EngineActivity
 import com.mobilerpgpack.phone.ui.screen.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.wolfensteinButtons
+import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.startActivity
 import kotlinx.coroutines.flow.first
@@ -46,6 +47,9 @@ internal fun setFullscreen(decorView: View) {
 fun killEngine() = Process.killProcess(Process.myPid())
 
 suspend fun startEngine(context: Context) {
+    if (!AssetExtractor.assetsCopied){
+        return
+    }
     val activeEngineType = PreferencesStorage.getActiveEngineValue(context)
 
     if (enginesInfo[activeEngineType]!!.pathToResourcesCallback(context).first()!!.isEmpty()){
