@@ -28,10 +28,73 @@ class IntervalMarkerTranslator {
         }
 
         return when (engineTypes) {
-            EngineTypes.WolfensteinRpg -> TODO()
+            EngineTypes.WolfensteinRpg -> translateWolfensteinRpgText(sourceText, translateFn)
             EngineTypes.DoomRpg -> translateDoomRpgText(sourceText, textCameFromDialog, translateFn)
             EngineTypes.Doom2Rpg -> translateDoomRpg2Text(sourceText, translateFn)
         }
+    }
+
+    private suspend fun translateWolfensteinRpgText(
+        sourceText: String,
+        translateFn: suspend (String) -> TranslationResult
+    ): TranslationResult {
+        val defaultPipeSymbolIndex = 30
+
+        val dialogBoxText = sourceText.contains(pipeSpecialSymbol)
+        if (dialogBoxText) {
+            val firstPipeSymbolIndex = sourceText.indexOf(pipeSpecialSymbol)
+            val splittedTexts = sourceText.split(pipeSpecialSymbol)
+
+            if (firstPipeSymbolIndex <= defaultPipeSymbolIndex) {
+                val title = splittedTexts[0].trim()
+                val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol", "")
+                    .replace(pipeSpecialSymbol, " ").replace(title, "").trim()
+
+                val translatedTitleResult = translateFn(title)
+                val translatedTextResult = translateFn(cleanedTextToTranslate)
+
+                if (translatedTitleResult.translated && translatedTextResult.translated) {
+                    val result = "${translatedTitleResult.text}$pipeSpecialSymbol${
+                        insertSymbolsWithRulesDoom2Rpg(
+                            translatedTextResult.text,
+                            pipeSpecialSymbol, interval = splittedTexts.maxBy { it.length }.length
+                        )
+                    }"
+                    return TranslationResult(result, true)
+                } else {
+                    return TranslationResult(sourceText, false)
+                }
+            } else {
+                val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol", "")
+                    .replace(pipeSpecialSymbol, " ").trim()
+                val translatedResult = translateFn(cleanedTextToTranslate)
+                if (!translatedResult.translated) {
+                    return translatedResult
+                }
+                val spacingSymbol = "     "
+                val sourceTextContainsSpacing = sourceText.startsWith(spacingSymbol)
+                val result = if (sourceTextContainsSpacing) "${spacingSymbol}${translatedResult.text}" else translatedResult.text
+                val symbolToInsert = if (sourceTextContainsSpacing) "$pipeSpecialSymbol$spacingSymbol" else pipeSpecialSymbol
+                return TranslationResult(insertSymbolsWithRulesDoom2Rpg(result, symbolToInsert,
+                            interval = splittedTexts.maxBy { it.length }.length), true)
+            }
+        }
+
+        val newLineSymbol = "\n"
+        val newLineIndex = sourceText.indexOf(newLineSymbol)
+
+        val cleanedTextToTranslate = sourceText.replace(" - $newLineSymbol", "")
+            .replace(" -$newLineSymbol", "").replace("-$newLineSymbol", "")
+            .replace(newLineSymbol, " ").trim()
+
+        val translatedResult = translateFn(cleanedTextToTranslate)
+
+        if (translatedResult.translated && newLineIndex > 0) {
+            return TranslationResult(insertSymbolsWithRulesDoom2Rpg(translatedResult.text, newLineSymbol, newLineIndex),
+                true)
+        }
+
+        return translatedResult
     }
 
     private suspend fun translateDoomRpg2Text(
@@ -69,9 +132,9 @@ class IntervalMarkerTranslator {
             val dialogBoxText = sourceText.contains(pipeSpecialSymbol)
             if (dialogBoxText) {
                 val firstPipeSymbolIndex = sourceText.indexOf(pipeSpecialSymbol)
+                val splittedTexts = sourceText.split(pipeSpecialSymbol)
 
                 if (firstPipeSymbolIndex <= defaultPipeSymbolIndex) {
-                    val splittedTexts = sourceText.split(pipeSpecialSymbol)
                     val title = splittedTexts[0].trim()
                     val cleanedTextToTranslate = sourceText.replace("-$pipeSpecialSymbol", "")
                         .replace(pipeSpecialSymbol, " ").replace(title, "").trim()
@@ -81,7 +144,7 @@ class IntervalMarkerTranslator {
 
                     if (translatedTitleResult.translated && translatedTextResult.translated) {
                         val result = "${translatedTitleResult.text}$pipeSpecialSymbol${insertSymbolsWithRulesDoom2Rpg(                             translatedTextResult.text,
-                                pipeSpecialSymbol, interval = splittedTexts[1].length)}"
+                                pipeSpecialSymbol, interval = splittedTexts.maxBy { it.length }.length)}"
                         return TranslationResult(result, true)
                     } else {
                         return TranslationResult(sourceText, false)
@@ -94,7 +157,7 @@ class IntervalMarkerTranslator {
                         TranslationResult(
                             insertSymbolsWithRulesDoom2Rpg(
                                 translatedResult.text, pipeSpecialSymbol,
-                                interval = sourceText.indexOf(pipeSpecialSymbol)
+                                interval = splittedTexts.maxBy { it.length }.length
                             ), true
                         )
                 }
@@ -110,13 +173,9 @@ class IntervalMarkerTranslator {
 
         val translatedResult = translateFn(cleanedTextToTranslate)
 
-        if (newLineIndex > 0) {
-            return TranslationResult(
-                insertSymbolsWithRulesDoom2Rpg(
-                    translatedResult.text,
-                    newLineSymbol, newLineIndex
-                ), translatedResult.translated
-            )
+        if (translatedResult.translated && newLineIndex > 0) {
+            return TranslationResult(insertSymbolsWithRulesDoom2Rpg(translatedResult.text,newLineSymbol, newLineIndex),
+                true)
         }
 
         return translatedResult
