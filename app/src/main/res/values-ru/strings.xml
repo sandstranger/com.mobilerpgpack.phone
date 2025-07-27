@@ -26,7 +26,8 @@
     <string name="graphics_settings">Настройки графики</string>
     <string name="user_interface_settings">Настройки интерфейса</string>
     <string name="display_in_safe_area">Отображать в безопасной зоне</string>
-    <string name="preserve_aspect_ratio">Сохранять соотношение сторон 16:9 (полезно на телефонах)</string>
+    <string name="custom_aspect_ratio">Пользовательское соотношение сторон экрана</string>
+    <string name="custom_aspect_ratio_hint">16x9</string>
     <string name="show_custom_mouse_cursor">Показывать кастомный курсор мыши (только для Wolfenstein и Doom 2)</string>
     <string name="allow_to_edit_controls_in_game">Включить редактирование экранного управления в игре</string>
     <string name="active_engine">Активная игра</string>
@@ -45,7 +46,7 @@
     <string name="choose_file_request">Выберите ZIP- или IPA-файл для игры</string>
     <string name="path_to_log">Путь к файлу лога</string>
     <string name="choose_directory">Выберите директорию</string>
-    <string name="custom_resolution">Пользовательское разрешение экрана (заменяет «Сохранять соотношение сторон 16:9»)</string>
+    <string name="custom_resolution">Пользовательское разрешение экрана (заменяет «Пользовательское соотношение сторон экрана»)</string>
     <string name="custom_resolution_hint">1920x1080</string>
     <string name="increase_controls_size">Размер+</string>
     <string name="decrease_controls_size">Размер-</string>

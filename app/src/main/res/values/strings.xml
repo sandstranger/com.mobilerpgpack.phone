@@ -26,7 +26,8 @@
     <string name="graphics_settings">Graphics settings</string>
     <string name="user_interface_settings">User interface settings</string>
     <string name="display_in_safe_area">Display within safe area</string>
-    <string name="preserve_aspect_ratio">Preserve 16:9 aspect ratio (useful on phones)</string>
+    <string name="custom_aspect_ratio">Custom screen aspect ratio</string>
+    <string name="custom_aspect_ratio_hint">16x9</string>
     <string name="show_custom_mouse_cursor">Show custom mouse cursor (for Wolfenstein &amp; Doom 2 only)</string>
     <string name="allow_to_edit_controls_in_game">Enable in-game control editing</string>
     <string name="active_engine">Active engine</string>
@@ -45,7 +46,7 @@
     <string name="choose_file_request">Select ZIP or IPA file for engine</string>
     <string name="path_to_log">Log file path</string>
     <string name="choose_directory">Select directory</string>
-    <string name="custom_resolution">Custom screen resolution (overrides “Preserve 16:9 aspect ratio”)</string>
+    <string name="custom_resolution">Custom screen resolution (overrides “Custom screen aspect ratio”)</string>
     <string name="custom_resolution_hint">1920x1080</string>
     <string name="increase_controls_size">Size-</string>
     <string name="decrease_controls_size">Size+</string>

@@ -3,7 +3,6 @@ package com.mobilerpgpack.phone.engine.activity
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.system.Os
-import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -100,7 +99,7 @@ class EngineActivity : SDLActivity() {
 
     private fun initializeEngineData() {
         var pathToEngineResourceFile: File
-        var needToPreserveScreenAspectRatio = false
+        var customAspectRatio = ""
         var customScreenResolution = ""
         var useSdlTTFForTextRendering = false
         var enableMachineTranslation = false
@@ -127,8 +126,7 @@ class EngineActivity : SDLActivity() {
                 PreferencesStorage.getCustomScreenResolutionValue(this@EngineActivity).first()!!
             displayInSafeArea =
                 PreferencesStorage.getDisplayInSafeAreaValue(this@EngineActivity).first()!!
-            needToPreserveScreenAspectRatio =
-                PreferencesStorage.getPreserveAspectRatioValue(this@EngineActivity).first()!!
+            customAspectRatio = PreferencesStorage.getCustomAspectRatioValue(this@EngineActivity).first()
             pathToEngineResourceFile = File(
                 enginesInfo[activeEngineType]!!.pathToResourcesCallback(this@EngineActivity)
                     .first()!!
@@ -142,8 +140,8 @@ class EngineActivity : SDLActivity() {
 
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
 
-        if (needToPreserveScreenAspectRatio && !customScreenResolutionWasSet) {
-            preserve16x9ScreenAspectRatio()
+        if (!customAspectRatio.isEmpty() && !customScreenResolutionWasSet) {
+            preserveCustomScreenAspectRatio(customAspectRatio)
         }
 
         if (displayInSafeArea) {
@@ -199,19 +197,27 @@ class EngineActivity : SDLActivity() {
         return processBuilder.start()
     }
 
-    private fun preserve16x9ScreenAspectRatio() {
-        val screenWidth = resolution.first
-        val screenHeight = resolution.second
-        val targetRatio = 16f / 9f
-        val screenRatio = screenWidth.toFloat() / screenHeight
+    private fun preserveCustomScreenAspectRatio(customAspectRatio : String) {
+        if (customAspectRatio.isNotEmpty() && customAspectRatio.contains(RESOLUTION_DELIMITER)) {
+            try {
+                val aspectRatioArray = customAspectRatio.split(RESOLUTION_DELIMITER)
+                val screenWidth = resolution.first
+                val screenHeight = resolution.second
+                val targetRatio = Integer.parseInt( aspectRatioArray[0]).toFloat() /
+                        Integer.parseInt( aspectRatioArray[1]).toFloat()
+                val screenRatio = screenWidth.toFloat() / screenHeight
 
-        if (screenRatio > targetRatio) {
-            val newWidth = (screenHeight * targetRatio).toInt()
-            setScreenResolution(newWidth, screenHeight)
-        } else {
-            val newHeight = (screenWidth / targetRatio).toInt()
-            setScreenResolution(screenWidth, newHeight)
+                if (screenRatio > targetRatio) {
+                    val newWidth = (screenHeight * targetRatio).toInt()
+                    setScreenResolution(newWidth, screenHeight)
+                } else {
+                    val newHeight = (screenWidth / targetRatio).toInt()
+                    setScreenResolution(screenWidth, newHeight)
+                }
+            } catch (_: Exception) {
+            }
         }
+
     }
 
     private fun setScreenResolution(savedScreenResolution: String): Boolean {
