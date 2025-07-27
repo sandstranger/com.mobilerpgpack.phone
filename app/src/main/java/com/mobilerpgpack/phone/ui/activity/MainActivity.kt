@@ -10,30 +10,27 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
-import com.mobilerpgpack.phone.utils.copyAssetsFolderToInternalStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
-internal class MainActivity : ComponentActivity(){
+internal class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         buildScreens()
-        copyAssetsContentToInternalStorage()
     }
 
-    private fun buildScreens(){
-        val startScreen : String = if (this@MainActivity.isExternalStoragePermissionGranted())
+    private fun buildScreens() {
+        val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
             Screen.Settings.route else Screen.Permission.route
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
-
-                NavHost(navController = navController, startDestination = startScreen ) {
+                NavHost(navController = navController, startDestination = startScreen) {
                     composable(Screen.Permission.route)
                     {
                         PermissionScreen {
-                            navController.navigate(Screen.Settings.route){
+                            navController.navigate(Screen.Settings.route) {
                                 popUpTo(Screen.Permission.route) { inclusive = true }
                             }
                         }
@@ -47,9 +44,5 @@ internal class MainActivity : ComponentActivity(){
     private sealed class Screen(val route: String) {
         data object Permission : Screen("permission")
         data object Settings : Screen("settings")
-    }
-
-    private fun copyAssetsContentToInternalStorage (){
-        copyAssetsFolderToInternalStorage(this, "game_files", this.getExternalFilesDir("")!!)
     }
 }

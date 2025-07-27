@@ -2,18 +2,34 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id 'com.google.devtools.ksp' version '2.2.0-2.0.2'
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('release-keystore.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
     namespace 'com.mobilerpgpack.phone'
     compileSdk versions.target_sdk
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     defaultConfig {
         applicationId "com.mobilerpgpack.phone"
         minSdk versions.min_sdk
         targetSdk versions.target_sdk
-        versionCode 5
-        versionName "1.0.3.1"
+        versionCode 6
+        versionName "1.0.4"
 
         ndk {
             abiFilters = []
@@ -43,12 +59,14 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             jniDebuggable true
             ndk {
                 debugSymbolLevel 'FULL' // сохраняет символы
             }
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -75,8 +93,9 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':fluidsynth:build',':sdl2:android-project:app:build', ':openal:build',
-        ':gl4es:build',':sdl2-mixer:build'
+preBuild.dependsOn ':fluidsynth:build',':CTranslate2Proxy:build',':Translator:build',
+        ':sdl2:android-project:app:build', ':openal:build',
+        ':gl4es:build',':sdl2-mixer:build',':sdl2-ttf:build'
 
 dependencies {
     implementation project(':sdl2:android-project:app')
@@ -85,8 +104,24 @@ dependencies {
     implementation(project(":sdl2-mixer"))
     implementation(project(":fluidsynth"))
     implementation (project(":file-picker"))
+    implementation (project(":sdl2-ttf"))
+    implementation (project(":CTranslate2Proxy"))
+    implementation (project(":Translator"))
 
+    implementation(libs.slf4j.api)
+    compileOnly libs.projectlombok.lombok
+    annotationProcessor libs.projectlombok.lombok
+    implementation libs.converter.gson
+    implementation libs.gson
+    implementation(libs.retrofit)
+    implementation (libs.androidx.room.runtime)
+    ksp libs.androidx.room.compiler
+    implementation (libs.androidx.room.ktx)
+    implementation (libs.translate)
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.okhttp)
     implementation (libs.core)
+    implementation(libs.zip4j)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.material3)
