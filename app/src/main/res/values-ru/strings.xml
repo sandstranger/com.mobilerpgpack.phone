@@ -48,6 +48,7 @@
     <string name="choose_directory">Выберите директорию</string>
     <string name="custom_resolution">Пользовательское разрешение экрана (заменяет «Пользовательское соотношение сторон экрана»)</string>
     <string name="custom_resolution_hint">1920x1080</string>
+    <string name="dark_theme">Включить темную тему для лаунчера</string>
     <string name="increase_controls_size">Размер+</string>
     <string name="decrease_controls_size">Размер-</string>
     <string name="decrease_controls_alpha">Альфа-</string>
