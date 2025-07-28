@@ -1,13 +1,12 @@
 package com.mobilerpgpack.phone.translator.models
 
-import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
+import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
-import java.io.File
 
 class OpusMtTranslationModel(
     private val pathToTranslationModel: String,
@@ -27,7 +26,7 @@ class OpusMtTranslationModel(
     override val translationType: TranslationType = TranslationType.OpusMt
 
     override fun isLocaleSupported(locale: String): Boolean {
-        return locale == TranslateLanguage.RUSSIAN
+        return locale == TranslationManager.RUSSIAN_LOCALE
     }
 
     private fun initialize(){

@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
-import android.util.Log
-import com.google.mlkit.nl.translate.TranslateLanguage
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.BingTranslatorModel
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
@@ -32,9 +30,13 @@ import java.io.File
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
+import com.mobilerpgpack.phone.BuildConfig
 
 object TranslationManager {
-    const val sourceLocale = TranslateLanguage.ENGLISH
+    const val RUSSIAN_LOCALE = "ru"
+    const val ENGLISH_LOCALE = "en"
+    const val sourceLocale = ENGLISH_LOCALE
+
     val targetLocale : String = getSystemLocale()
 
     private var wasInit = false
@@ -89,8 +91,10 @@ object TranslationManager {
             return
         }
 
-        translationModels [TranslationType.MLKit] =
-            MLKitTranslationModel(context,sourceLocale, targetLocale, allowDownloadingOveMobile)
+        if (!BuildConfig.FDROID_BUILD) {
+            translationModels[TranslationType.MLKit] =
+                MLKitTranslationModel(context, sourceLocale, targetLocale, allowDownloadingOveMobile)
+        }
 
         val filesRootDir = context.getExternalFilesDir("")!!
 

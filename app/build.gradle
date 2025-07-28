@@ -15,6 +15,18 @@ android {
     namespace 'com.mobilerpgpack.phone'
     compileSdk versions.target_sdk
 
+    flavorDimensions "store"
+    productFlavors {
+        google {
+            dimension "store"
+            buildConfigField "boolean", "FDROID_BUILD", "false"
+        }
+        fdroid {
+            dimension "store"
+            buildConfigField "boolean", "FDROID_BUILD", "true"
+        }
+    }
+
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
@@ -28,8 +40,8 @@ android {
         applicationId "com.mobilerpgpack.phone"
         minSdk versions.min_sdk
         targetSdk versions.target_sdk
-        versionCode 7
-        versionName "1.0.4.1"
+        versionCode 8
+        versionName "1.0.4.2"
 
         ndk {
             abiFilters = []
@@ -123,8 +135,10 @@ dependencies {
     implementation (libs.androidx.room.runtime)
     ksp libs.androidx.room.compiler
     implementation (libs.androidx.room.ktx)
-    implementation (libs.translate)
-    implementation(libs.kotlinx.coroutines.play.services)
+    googleImplementation (libs.translate)
+    implementation(libs.kotlinx.coroutines.play.services) {
+        exclude group: 'com.google.android.gms'
+    }
     implementation(libs.okhttp)
     implementation (libs.core)
     implementation(libs.zip4j)
