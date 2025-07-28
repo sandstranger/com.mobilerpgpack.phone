@@ -17,3 +17,4 @@ local.properties
 .kotlin/
 app/release/
 sdl2-ttf/build/
+app/google/
