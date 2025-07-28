@@ -136,9 +136,7 @@ dependencies {
     ksp libs.androidx.room.compiler
     implementation (libs.androidx.room.ktx)
     googleImplementation (libs.translate)
-    implementation(libs.kotlinx.coroutines.play.services) {
-        exclude group: 'com.google.android.gms'
-    }
+    googleImplementation (libs.kotlinx.coroutines.play.services)
     implementation(libs.okhttp)
     implementation (libs.core)
     implementation(libs.zip4j)
