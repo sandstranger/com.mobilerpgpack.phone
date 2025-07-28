@@ -17,8 +17,7 @@ class MLKitTranslationModel(
     private var sourceLocale: String,
     private var targetLocale: String,
     private val allowDownloadingOverMobile: Boolean = false,
-) :
-    TranslationModel(context, allowDownloadingOverMobile) {
+) : TranslationModel(context, allowDownloadingOverMobile) {
 
     override val supportedLocales = hashSetOf("af","am","ar","ar-Latn","az","be","bg","bg-Latn","bn","bs","ca","ceb","co","cs","cy",
         "da","de","el","el-Latn","en","eo","es","et","eu","fa","fi","fil","fr","fy","ga","gd","gl","gu","ha","haw",
