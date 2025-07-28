@@ -90,7 +90,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew assembleRelease --stacktrace --info
+      run: ./gradlew assembleGoogleRelease --stacktrace --info
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
         
