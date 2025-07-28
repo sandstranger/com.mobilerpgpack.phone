@@ -99,5 +99,5 @@ jobs:
       with:
         name: doom_wolfenstein_rpg_nightly
         path: |
-          app/build/outputs/apk/release/*.apk
+          app/build/outputs/apk/google/release/*.apk
         if-no-files-found: error
