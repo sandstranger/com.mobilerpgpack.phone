@@ -1,0 +1,1 @@
+fix texts showing in Doom2Rpg and WolfensteinRpg below android 14 for devices lower than 8 gen 3 (including ARMV7) - instead wchar_t char32_t now using
