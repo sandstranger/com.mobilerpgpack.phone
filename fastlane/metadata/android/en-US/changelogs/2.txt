@@ -1,1 +1,11 @@
-First release
+Texts machine translation by AI for all three games at more than 200 languages by (opusMT, Small100, M2M100, GoogleTranslate, BingTranslate, NLLB200)
+SDL2, SDL2_mixer were updated to latest sources
+Doom2Rpg was updated to latest sources
+Added opportunity to set custom screen aspect ratio
+Launcher now supports dark theme
+DoomRpg, Doom2Rpg, WolfensteinRpg now support unicode
+launcher russian translation
+Fixed character selection screen bug in doom2rpg where on-screen controls became unresponsive after app pause/resume
+Assets from apk now copied in a separate thread, so it is not blocking the launcher's ui anymore
+Final bugfix for Doom2rpg and WolfensteinRpg, that these games couldn't be restarted after starting a new game
+other minor improvements and bugfixes
