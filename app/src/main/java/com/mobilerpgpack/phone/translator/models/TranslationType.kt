@@ -1,5 +1,7 @@
 package com.mobilerpgpack.phone.translator.models
 
+import com.mobilerpgpack.phone.BuildConfig
+
 enum class TranslationType {
     MLKit,
     OpusMt,
@@ -10,7 +12,7 @@ enum class TranslationType {
     NLLB200;
 
     companion object{
-        val DefaultTranslationType = MLKit
+        val DefaultTranslationType = if (!BuildConfig.FDROID_BUILD) MLKit else Small100
 
         fun getTranslationType (inputText : String) : TranslationType{
             TranslationType.entries.forEach {

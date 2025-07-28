@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.mlkit.nl.translate.TranslateLanguage
+import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
@@ -314,7 +314,7 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
     var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
     val isModelDownloaded by TranslationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
     val showLauncherTranslationOption = TranslationManager.targetLocale != TranslationManager.sourceLocale
-            && TranslationManager.targetLocale != TranslateLanguage.RUSSIAN
+            && TranslationManager.targetLocale != TranslationManager.RUSSIAN_LOCALE
 
     LaunchedEffect(isModelDownloaded, showLauncherTranslationOption) {
         if (!showLauncherTranslationOption){
@@ -480,8 +480,12 @@ private fun DrawDoom2RpgSettings(context: Context, scope: CoroutineScope) {
 private fun buildTranslationsDescription (context: Context) : Collection<String>{
     val result : MutableList<String> = mutableListOf()
 
-    TranslationType.entries.forEach {
-        when (it) {
+    for (type in TranslationType.entries) {
+        if (BuildConfig.FDROID_BUILD && type == TranslationType.MLKit){
+            continue
+        }
+
+        when (type) {
             TranslationType.MLKit ->
                 result.add("${TranslationType.MLKit} ${context.getString(R.string.mlkit_description)}")
             TranslationType.OpusMt ->
