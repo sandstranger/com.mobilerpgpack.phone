@@ -1,0 +1,1 @@
+SDL ttf fonts outline colors in wolfenstein RPG as it was in original texts
