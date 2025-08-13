@@ -80,7 +80,11 @@ This Android ports support keyboard and mouse
 
 ## Building
 
-To get an APK file, clone this repository, open the `doom-wolf-rpg-android-port ` directory in Android Studio and run the project.
+To build the APK file, clone this repository, open the `doom-wolf-rpg-android-port ` directory in Android Studio and run the project.
+
+## Download
+
+To download a working APK file, either do it from F-Droid [here](https://f-droid.org/packages/com.mobilerpgpack.phone/), or in the [Releases Section](https://github.com/sandstranger/doom-wolf-rpg-android-port/releases/latest).
 
 # How to run this engines
 1. For running Wolfenstein rpg get wolfenstein rpg ipa file.
