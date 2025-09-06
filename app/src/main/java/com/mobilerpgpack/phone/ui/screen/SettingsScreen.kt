@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen
 import CustomTopBar
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -63,7 +64,9 @@ import java.io.File
 fun SettingsScreen() {
     val context = LocalContext.current;
     val scope = rememberCoroutineScope()
-    val useDarkTheme by PreferencesStorage.getUseDarkThemeValue(context).collectAsState(initial = false)
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val useDarkTheme by PreferencesStorage.getUseDarkThemeValue(context,isSystemInDarkTheme)
+        .collectAsState(initial = isSystemInDarkTheme)
     val backgroundColor = if (useDarkTheme) Color.Black else Color.White
     val topBarColor = if (useDarkTheme) Color.Gray else Color.Blue
 
@@ -266,7 +269,7 @@ private fun DrawGraphicsSettings(context: Context, scope: CoroutineScope) {
 
     SwitchPreferenceItem(
         context.getString(R.string.dark_theme),
-        checkedFlow = PreferencesStorage.getUseDarkThemeValue(context),
+        checkedFlow = PreferencesStorage.getUseDarkThemeValue(context, isSystemInDarkTheme()),
     ) { newValue ->
         scope.launch {
             PreferencesStorage.setUseDarkThemeValue(context, newValue)

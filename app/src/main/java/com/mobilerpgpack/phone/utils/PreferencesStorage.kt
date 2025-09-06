@@ -135,7 +135,8 @@ object PreferencesStorage {
     suspend fun setShowCustomMouseCursorValue (context: Context, valueToSave : Boolean) =
         setBooleanValue(context, showCustomMouseCursorPrefsKey, valueToSave)
 
-    fun getUseDarkThemeValue (context: Context) = getBooleanValue(context, useDarkThemePrefsKey, false)
+    fun getUseDarkThemeValue (context: Context, initialValue : Boolean = false ) =
+        getBooleanValue(context, useDarkThemePrefsKey, initialValue)
 
     suspend fun setUseDarkThemeValue (context: Context, valueToSave : Boolean) =
         setBooleanValue(context, useDarkThemePrefsKey, valueToSave)
