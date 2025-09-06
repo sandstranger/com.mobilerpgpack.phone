@@ -50,7 +50,6 @@ private val keyCodeToNameMap = mapOf(
 
 // Define the keys and their corresponding key codes
 private val keyMap = mapOf(
-    "~" to Key("~", KeyEvent.KEYCODE_GRAVE),
     "1" to Key("1", KeyEvent.KEYCODE_1),
     "2" to Key("2", KeyEvent.KEYCODE_2),
     "3" to Key("3", KeyEvent.KEYCODE_3),
@@ -162,7 +161,7 @@ fun BoxGrid2() {
                         targetValue = getCurrentColor(offset)
                     )
                     Box(
-                        modifier = sizeModifier
+                        modifier = sizeModifier.offset(y = 68.dp)
                             .background(Color.Black)  // Set the background to black
                             .border(2.dp, animatedColor)  // Set the border to the animated RGB color
                             .minimumInteractiveComponentSize()
@@ -196,86 +195,18 @@ fun BoxGrid2() {
 
 
 
-        val topRowChars = listOf("~", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace")
-        val topRowSizes = List(13) {
+        val topRowChars = listOf( "1", "2", "3", "4", "5", "6", "7", "8", "9", "0")
+        val topRowSizes = List(10) {
             Modifier
                 .padding(all = 2.dp)
-                .size(40.dp)
+                .size(60.dp)
         } + listOf(
             Modifier
                 .padding(all = 2.dp)
-                .height(40.dp)
+                .height(60.dp)
                 .weight(1f)
         )
         createRow(topRowChars, topRowSizes)
-
-        val secondRowChars = listOf("q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\")
-        val secondRowSizes = listOf(
-            Modifier.width(25.dp) // Space before the first box
-        ) + List(13) {
-            Modifier
-                .padding(all = 2.dp)
-                .size(40.dp)
-        }
-        createRow(secondRowChars, secondRowSizes)
-
-        val thirdRowChars = listOf("a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'")
-        val thirdRowSizes = listOf(
-            Modifier
-                .padding(all = 2.dp)
-                .height(40.dp)
-                .width(55.dp)
-        ) + List(11) {
-            Modifier
-                .padding(all = 2.dp)
-                .size(40.dp)
-        } + listOf(
-            Modifier
-                .padding(all = 2.dp)
-                .height(40.dp)
-                .weight(1f)
-        )
-        createRow(thirdRowChars, thirdRowSizes)
-
-        val fourthRowChars = listOf("z", "x", "c", "v", "b", "n", "m", ",", ".", "/")
-        val fourthRowSizes = listOf(
-            Modifier
-                .padding(all = 2.dp)
-                .height(40.dp)
-                .width(80.dp)
-        ) + List(11) {
-            Modifier
-                .padding(all = 2.dp)
-                .size(40.dp)
-        } + listOf(
-            Modifier.width(5.dp),
-            Modifier
-                .padding(all = 2.dp)
-                .height(40.dp)
-                .width(40.dp)
-        )
-        createRow(fourthRowChars, fourthRowSizes)
-
-        val fifthRowChars = listOf("L-CTRL", "SPACE", "LEFT", "DOWN", "RIGHT")
-        val fifthRowSizes = listOf(
-            Modifier
-                .padding(all = 2.dp)
-                .height(40.dp)
-                .width(80.dp),
-            Modifier.width(75.dp)
-        ) + listOf(
-            Modifier
-                .padding(all = 2.dp)
-                .height(40.dp)
-                .width(300.dp),
-            Modifier.width(75.dp)
-        ) + List(3) {
-            Modifier
-                .padding(all = 2.dp)
-                .height(40.dp)
-                .width(40.dp)
-        }
-        createRow(fifthRowChars, fifthRowSizes)
     }
 }
 
