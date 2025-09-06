@@ -184,7 +184,7 @@ fun BoxGrid2() {
                         Text(
                             text = char,
                             color = animatedColor,  // Set the text color to the animated RGB color
-                            fontSize = 16.sp,  // Set the text size
+                            fontSize = 18.sp,  // Set the text size
                             fontWeight = FontWeight.Bold,  // Set the text style to bold
                             modifier = Modifier.align(Alignment.Center)  // Center the text in the box
                         )
