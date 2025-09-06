@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -70,6 +71,7 @@ class EngineActivity : SDLActivity() {
     private external fun needToShowScreenControls () : Boolean
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         setFullscreen(window.decorView)
         initializeEngineData()
         super.onCreate(savedInstanceState)
