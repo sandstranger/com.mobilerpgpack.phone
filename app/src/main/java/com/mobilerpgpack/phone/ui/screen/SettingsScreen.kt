@@ -48,6 +48,7 @@ import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
+import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.items.TranslatedText
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -82,6 +83,8 @@ fun SettingsScreen() {
             }
         }
     }
+
+    SetupNavigationBar(useDarkTheme)
 }
 
 @Composable
