@@ -10,22 +10,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
-import com.mobilerpgpack.phone.engine.setFullscreen
 import com.mobilerpgpack.phone.ui.screen.OnScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import com.mobilerpgpack.phone.utils.hideSystemBars
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 class ScreenControlsEditorActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
-        setFullscreen(window.decorView)
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        hideSystemBars()
 
         var displayInSafeArea = false
-
         runBlocking {
             displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this@ScreenControlsEditorActivity).first()!!
         }

@@ -1,9 +1,13 @@
 package com.mobilerpgpack.phone.engine
 
+import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.os.Environment
 import android.os.Process
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.activity.EngineActivity
@@ -32,17 +36,6 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
 
 internal val defaultPathToLogcatFile: String = "${Environment.getExternalStorageDirectory().absolutePath}" +
         "${File.separator}$logcatFileName"
-
-@Suppress("DEPRECATION")
-internal fun setFullscreen(decorView: View) {
-    val uiOptions = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_FULLSCREEN
-            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-    decorView.systemUiVisibility = uiOptions
-}
 
 fun killEngine() = Process.killProcess(Process.myPid())
 
