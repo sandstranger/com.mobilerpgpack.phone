@@ -706,6 +706,7 @@ fun OnScreenController(
                         ) {
                             isEditMode = !isEditMode
                             showVirtualKeyboard = false
+                            showVirtualKeyboardEvent(false)
                         }
                     )
             )
