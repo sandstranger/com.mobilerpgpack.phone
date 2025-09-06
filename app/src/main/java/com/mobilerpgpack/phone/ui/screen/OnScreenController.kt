@@ -724,8 +724,7 @@ fun OnScreenController(
                 val renderOffsetX = state.offsetXPercent * screenWidthPx
                 val renderOffsetY = state.offsetYPercent * screenHeightPx
 
-                val renderButton = state.buttonType == ButtonType.ControlsHider || state.buttonType == ButtonType.Keyboard ||
-                        !hideScreenControls || isEditMode
+                val renderButton = state.buttonType == ButtonType.ControlsHider || !hideScreenControls || isEditMode
                 if (renderButton) {
                     DraggableImageButton(
                         id = id,
