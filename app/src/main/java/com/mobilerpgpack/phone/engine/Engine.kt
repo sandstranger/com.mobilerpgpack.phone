@@ -1,13 +1,8 @@
 package com.mobilerpgpack.phone.engine
 
-import android.app.Activity
 import android.content.Context
-import android.os.Build
 import android.os.Environment
 import android.os.Process
-import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.activity.EngineActivity
