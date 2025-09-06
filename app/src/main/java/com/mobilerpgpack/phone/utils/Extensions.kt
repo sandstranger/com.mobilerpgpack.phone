@@ -12,6 +12,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -32,6 +35,28 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
     startActivity(Intent(this, T::class.java))
 
     if (finishParentActivity && this is Activity) this.finish();
+}
+
+fun Activity.hideSystemBars() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        window.decorView.post {
+            this.window.insetsController?.let {
+                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+    } else {
+        window.decorView.post {
+            @Suppress("DEPRECATION")
+            this.window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+        }
+    }
 }
 
 fun Context.isInternetAvailable(): Boolean {
