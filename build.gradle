@@ -4,7 +4,7 @@ buildscript {
             min_sdk  : 21,
             target_sdk : 36,
             ndk_version : '28.2.13676358',
-            build_tools_version : '36.0.0',
+            build_tools_version : '36.1.0',
             native_android_platform_version : 21,
             cmake_version : "4.0.2"
     ]

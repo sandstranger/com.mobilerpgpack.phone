@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id 'com.google.devtools.ksp' version '2.2.10-2.0.2'
+    id 'com.google.devtools.ksp' version '2.2.20-2.0.3'
 }
 
 def keystoreProperties = new Properties()
@@ -126,6 +126,8 @@ dependencies {
     implementation (project(":CTranslate2Proxy"))
     implementation (project(":Translator"))
 
+    implementation libs.androidx.compose.material.icons.core.android
+    implementation libs.androidx.compose.material.icons.extended.android
     implementation(libs.slf4j.api)
     compileOnly libs.projectlombok.lombok
     annotationProcessor libs.projectlombok.lombok
