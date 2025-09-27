@@ -51,7 +51,7 @@ fun PermissionScreen( onPermissionGranted: () -> Unit ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(backgroundColor).padding(5.dp),
+                    .background(backgroundColor),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 val launcher =

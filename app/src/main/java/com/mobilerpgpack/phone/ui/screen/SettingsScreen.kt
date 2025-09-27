@@ -101,7 +101,6 @@ private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope, back
             onClick = { scope.launch { startEngine(context) } },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(5.dp)
         ) {
             TranslatedText(context.getString(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
         }
@@ -141,7 +140,6 @@ private fun DrawAllSettings(context: Context, innerPadding: PaddingValues, scope
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .padding(5.dp)
             .verticalScroll(scrollState),
     ) {
         DrawCommonSettings(context, scope)
