@@ -114,7 +114,8 @@ android {
 preBuild.dependsOn ':fluidsynth:build',':CTranslate2Proxy:build',':Translator:build',
         ':sdl2:android-project:app:build', ':openal:build',
         ':sdl2-mixer:build',':sdl2-ttf:build', ':NG-GL4ES:build',
-        ':libpng:build',':sdl3:android-project:app:build'
+        ':libpng:build',':sdl3:android-project:app:build',
+        ':fmod:build'
 
 dependencies {
     implementation project(':sdl2:android-project:app')
@@ -128,6 +129,7 @@ dependencies {
     implementation (project(":NG-GL4ES"))
     implementation (project(":libpng"))
     implementation (project(":sdl3:android-project:app"))
+    implementation (project(":fmod"))
 
     implementation libs.androidx.compose.material.icons.core.android
     implementation libs.androidx.compose.material.icons.extended.android
