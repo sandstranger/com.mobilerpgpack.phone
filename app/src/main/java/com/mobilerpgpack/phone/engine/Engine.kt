@@ -5,7 +5,7 @@ import android.os.Environment
 import android.os.Process
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.engine.activity.EngineActivity
+import com.mobilerpgpack.phone.engine.activity.DoomRpgSeriesGameActivity
 import com.mobilerpgpack.phone.ui.screen.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.wolfensteinButtons
@@ -34,7 +34,7 @@ internal val defaultPathToLogcatFile: String = "${Environment.getExternalStorage
 
 fun killEngine() = Process.killProcess(Process.myPid())
 
-suspend fun startEngine(context: Context) {
+suspend fun startEngine(context: Context, engineToPlay : EngineTypes) {
     if (!AssetExtractor.assetsCopied){
         return
     }
@@ -49,7 +49,10 @@ suspend fun startEngine(context: Context) {
         return
     }
 
-    context.startActivity<EngineActivity>()
+    when (engineToPlay) {
+        EngineTypes.Doom64ExPlus -> {}
+        else -> context.startActivity<DoomRpgSeriesGameActivity>()
+    }
 }
 
 internal fun getPathToSDL2ControllerDB (context: Context) =
