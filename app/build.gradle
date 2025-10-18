@@ -130,6 +130,7 @@ dependencies {
     implementation (project(":libpng"))
     implementation (project(":sdl3:android-project:app"))
     implementation (project(":fmod"))
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation libs.androidx.compose.material.icons.core.android
     implementation libs.androidx.compose.material.icons.extended.android

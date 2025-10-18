@@ -22,7 +22,7 @@ const val logcatFileName = "wolfenstein_doom_rpg_log.log"
 
 internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
     EngineTypes.Doom64ExPlus to EngineInfo("libDOOM64.so",
-        arrayOf("spirv-cross-c-shared","ng_gl4es","SDL3","png","DOOM64"), wolfensteinButtons,
+        arrayOf("spirv-cross-c-shared","ng_gl4es","SDL3","png","fmod","DOOM64"), wolfensteinButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom64MainWadsFolder (context) }),
     EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so",
         arrayOf("spirv-cross-c-shared","ng_gl4es","SDL2","openal","SDL2_ttf","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
