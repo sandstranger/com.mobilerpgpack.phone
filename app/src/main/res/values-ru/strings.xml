@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
-    <string name="app_name">DOOM &amp; Wolfenstein RPG</string>
     <string name="access_to_all_files">Разрешить полный доступ к файлам</string>
     <string name="translation_model_title">Модель перевода</string>
     <string name="downloaded_text">Загружено</string>
@@ -24,6 +23,7 @@
     <string name="selected_button">Выбранная кнопка</string>
     <string name="common_settings">Общие настройки</string>
     <string name="graphics_settings">Настройки графики</string>
+    <string name="translation_settings">Настройки перевода</string>
     <string name="user_interface_settings">Настройки интерфейса</string>
     <string name="display_in_safe_area">Отображать в безопасной зоне</string>
     <string name="custom_aspect_ratio">Пользовательское соотношение сторон экрана</string>
