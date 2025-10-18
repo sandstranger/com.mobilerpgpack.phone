@@ -65,6 +65,12 @@ fun SettingsScreen() {
         .collectAsState(initial = isSystemInDarkTheme)
     val backgroundColor = if (useDarkTheme) Color.Black else Color.White
     val topBarColor = if (useDarkTheme) Color.Gray else Color.Blue
+    val activeEngineString by PreferencesStorage.getActiveEngineValueAsFlowString(context)
+        .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
+
+    val activeEngine = rememberSaveable (activeEngineString) {
+        enumValueOf<EngineTypes>(activeEngineString)
+    }
 
     Theme (darkTheme = useDarkTheme ) {
         Column(
@@ -76,9 +82,9 @@ fun SettingsScreen() {
             CustomTopBar(title = context.getString(R.string.app_name), useDarkTheme)
 
             if (context.isTelevision) {
-                DrawTelevisionSettings(context, scope,backgroundColor)
+                DrawTelevisionSettings(context, scope,backgroundColor, activeEngine)
             } else {
-                DrawPhoneSettings(context, scope,backgroundColor)
+                DrawPhoneSettings(context, scope,backgroundColor, activeEngine)
             }
         }
     }
@@ -87,30 +93,32 @@ fun SettingsScreen() {
 }
 
 @Composable
-private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope, backgroundColor : Color ) {
+private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope,
+                                   backgroundColor : Color, activeEngine : EngineTypes ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor),
     ) {
         Button(
-            onClick = { scope.launch { startEngine(context) } },
+            onClick = { scope.launch { startEngine(context, activeEngine) } },
             modifier = Modifier
                 .fillMaxWidth()
         ) {
             TranslatedText(context.getString(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
         }
 
-        DrawAllSettings(context, scope)
+        DrawAllSettings(context, scope,activeEngine)
     }
 }
 
 @Composable
-private fun DrawPhoneSettings(context: Context, scope: CoroutineScope, backgroundColor: Color) {
+private fun DrawPhoneSettings(context: Context, scope: CoroutineScope,
+                              backgroundColor: Color, activeEngine: EngineTypes) {
     Scaffold(modifier = Modifier.background(backgroundColor),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { scope.launch { startEngine(context) } }
+                onClick = { scope.launch { startEngine(context,activeEngine) } }
             ) {
                 Icon(
                     Icons.Default.PlayArrow,
@@ -119,18 +127,20 @@ private fun DrawPhoneSettings(context: Context, scope: CoroutineScope, backgroun
             }
         }
     ) { innerPadding ->
-        DrawAllSettings(context, innerPadding, scope)
+        DrawAllSettings(context, innerPadding, scope, activeEngine)
     }
 }
 
 @Composable
-private fun DrawAllSettings(context: Context, scope: CoroutineScope) {
-    DrawAllSettings(context, PaddingValues(), scope)
+private fun DrawAllSettings(context: Context, scope: CoroutineScope,activeEngine : EngineTypes) {
+    DrawAllSettings(context, PaddingValues(), scope,activeEngine)
 }
 
 @Composable
-private fun DrawAllSettings(context: Context, innerPadding: PaddingValues, scope: CoroutineScope) {
+private fun DrawAllSettings(context: Context, innerPadding: PaddingValues,
+                            scope: CoroutineScope,activeEngine : EngineTypes) {
     val scrollState = rememberScrollState()
+
 
     Column(
         modifier = Modifier

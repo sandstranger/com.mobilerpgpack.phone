@@ -43,7 +43,7 @@ private const val RESOLUTION_DELIMITER = "x"
 private const val AndroidGamePathEnvName = "ANDROID_GAME_PATH"
 private const val ResourceFileNameEnvName = "RESOURCE_FILE_NAME"
 
-class EngineActivity : SDLActivity() {
+class DoomRpgSeriesGameActivity : SDLActivity() {
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private lateinit var activeEngineType: EngineTypes
@@ -107,30 +107,30 @@ class EngineActivity : SDLActivity() {
         var enableMachineTranslation = false
 
         runBlocking {
-            useSdlTTFForTextRendering = PreferencesStorage.getUseSDLTTFForFontsRenderingValue(this@EngineActivity).first()!!
-            enableMachineTranslation = PreferencesStorage.getEnableGameMachineTextTranslationValue(this@EngineActivity).first()!!
-            savedDoomRpgScreenWidth = PreferencesStorage.getIntValue(this@EngineActivity,
+            useSdlTTFForTextRendering = PreferencesStorage.getUseSDLTTFForFontsRenderingValue(this@DoomRpgSeriesGameActivity).first()!!
+            enableMachineTranslation = PreferencesStorage.getEnableGameMachineTextTranslationValue(this@DoomRpgSeriesGameActivity).first()!!
+            savedDoomRpgScreenWidth = PreferencesStorage.getIntValue(this@DoomRpgSeriesGameActivity,
                 PreferencesStorage.savedDoomRpgScreenWidthPrefsKey).first()!!
-            savedDoomRpgScreenHeight= PreferencesStorage.getIntValue(this@EngineActivity,
+            savedDoomRpgScreenHeight= PreferencesStorage.getIntValue(this@DoomRpgSeriesGameActivity,
                 PreferencesStorage.savedDoomRpgScreenHeightPrefsKey).first()!!
             hideScreenControls =
-                PreferencesStorage.getHideScreenControlsValue(this@EngineActivity).first()!!
-            activeEngineType = PreferencesStorage.getActiveEngineValue(this@EngineActivity)
-            enableControlsAutoHidingFeature = PreferencesStorage.getControlsAutoHidingValue(this@EngineActivity)
+                PreferencesStorage.getHideScreenControlsValue(this@DoomRpgSeriesGameActivity).first()!!
+            activeEngineType = PreferencesStorage.getActiveEngineValue(this@DoomRpgSeriesGameActivity)
+            enableControlsAutoHidingFeature = PreferencesStorage.getControlsAutoHidingValue(this@DoomRpgSeriesGameActivity)
                 .first()!! && activeEngineType!= EngineTypes.DoomRpg && !hideScreenControls
             allowToEditScreenControlsInGame =
-                PreferencesStorage.getEditCustomScreenControlsInGameValue(this@EngineActivity)
+                PreferencesStorage.getEditCustomScreenControlsInGameValue(this@DoomRpgSeriesGameActivity)
                     .first()!!
             showCustomMouseCursor =
-                PreferencesStorage.getShowCustomMouseCursorValue(this@EngineActivity).first()!!
-            pathToLog = PreferencesStorage.getPathToLogFileValue(this@EngineActivity).first()!!
+                PreferencesStorage.getShowCustomMouseCursorValue(this@DoomRpgSeriesGameActivity).first()!!
+            pathToLog = PreferencesStorage.getPathToLogFileValue(this@DoomRpgSeriesGameActivity).first()!!
             customScreenResolution =
-                PreferencesStorage.getCustomScreenResolutionValue(this@EngineActivity).first()!!
+                PreferencesStorage.getCustomScreenResolutionValue(this@DoomRpgSeriesGameActivity).first()!!
             displayInSafeArea =
-                PreferencesStorage.getDisplayInSafeAreaValue(this@EngineActivity).first()!!
-            customAspectRatio = PreferencesStorage.getCustomAspectRatioValue(this@EngineActivity).first()
+                PreferencesStorage.getDisplayInSafeAreaValue(this@DoomRpgSeriesGameActivity).first()!!
+            customAspectRatio = PreferencesStorage.getCustomAspectRatioValue(this@DoomRpgSeriesGameActivity).first()
             pathToEngineResourceFile = File(
-                enginesInfo[activeEngineType]!!.pathToResourcesCallback(this@EngineActivity)
+                enginesInfo[activeEngineType]!!.pathToResourcesCallback(this@DoomRpgSeriesGameActivity)
                     .first()!!
             )
         }
@@ -166,9 +166,9 @@ class EngineActivity : SDLActivity() {
             val (width, height) = getDefaultDoomRpgResolution()
             if (savedDoomRpgScreenWidth!=width && savedDoomRpgScreenHeight!=height){
                 scope.launch {
-                    PreferencesStorage.setIntValue(this@EngineActivity,PreferencesStorage.savedDoomRpgScreenWidthPrefsKey,
+                    PreferencesStorage.setIntValue(this@DoomRpgSeriesGameActivity,PreferencesStorage.savedDoomRpgScreenWidthPrefsKey,
                         width)
-                    PreferencesStorage.setIntValue(this@EngineActivity,PreferencesStorage.savedDoomRpgScreenHeightPrefsKey,
+                    PreferencesStorage.setIntValue(this@DoomRpgSeriesGameActivity,PreferencesStorage.savedDoomRpgScreenHeightPrefsKey,
                         height)
                 }
 
@@ -183,7 +183,7 @@ class EngineActivity : SDLActivity() {
         }
 
         if (pathToEngineResourceFile.isFile) {
-            Os.setenv(AndroidGamePathEnvName, this@EngineActivity.getExternalFilesDir("")!!.absolutePath, true)
+            Os.setenv(AndroidGamePathEnvName, this@DoomRpgSeriesGameActivity.getExternalFilesDir("")!!.absolutePath, true)
             Os.setenv(ResourceFileNameEnvName, pathToEngineResourceFile.absolutePath, true)
         } else {
             Os.setenv(AndroidGamePathEnvName, pathToEngineResourceFile.absolutePath, true)
@@ -360,18 +360,18 @@ class EngineActivity : SDLActivity() {
     }
 
     private suspend fun changeScreenControlsVisibility(){
-        if (this@EngineActivity.controlsOverlayUI == null){
+        if (this@DoomRpgSeriesGameActivity.controlsOverlayUI == null){
             return
         }
 
         while (true){
             val needToShowControls = needToShowScreenControls()
             if (needToShowControls != needToShowControlsLastState){
-                this@EngineActivity.runOnUiThread {
+                this@DoomRpgSeriesGameActivity.runOnUiThread {
                     if (needToShowControls) {
-                        this@EngineActivity.controlsOverlayUI!!.visibility = View.VISIBLE
+                        this@DoomRpgSeriesGameActivity.controlsOverlayUI!!.visibility = View.VISIBLE
                     } else {
-                        this@EngineActivity.controlsOverlayUI!!.visibility = View.GONE
+                        this@DoomRpgSeriesGameActivity.controlsOverlayUI!!.visibility = View.GONE
                     }
                     updateVirtualKeyboardVisibility(needToShowControls)
                 }
