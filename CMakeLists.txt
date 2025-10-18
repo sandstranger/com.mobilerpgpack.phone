@@ -66,6 +66,8 @@ else ()
     set(TRANSLATOR_LIBRARY ${CMAKE_SOURCE_DIR}/Translator/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libTranslator.so)
 endif ()
 
+include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/fmod/src/main/include")
+
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")
