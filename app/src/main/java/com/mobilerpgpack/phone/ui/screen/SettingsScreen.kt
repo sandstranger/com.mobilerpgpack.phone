@@ -141,14 +141,13 @@ private fun DrawAllSettings(context: Context, innerPadding: PaddingValues,
                             scope: CoroutineScope,activeEngine : EngineTypes) {
     val scrollState = rememberScrollState()
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
             .verticalScroll(scrollState),
     ) {
-        DrawCommonSettings(context, scope)
+        DrawCommonSettings(context, scope, activeEngine)
         DrawTranslationModelSettings(context,scope)
         DrawGraphicsSettings(context,scope)
         DrawUserInterfaceSettings(context,scope)
@@ -156,15 +155,8 @@ private fun DrawAllSettings(context: Context, innerPadding: PaddingValues,
 }
 
 @Composable
-private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
+private fun DrawCommonSettings(context: Context, scope: CoroutineScope,activeEngine : EngineTypes) {
     TranslatedText(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
-
-    val activeEngineString by PreferencesStorage.getActiveEngineValueAsFlowString(context)
-        .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
-
-    val activeEngine = rememberSaveable (activeEngineString) {
-        enumValueOf<EngineTypes>(activeEngineString)
-    }
 
     ListPreferenceItem(
         context.getString(R.string.active_engine),
