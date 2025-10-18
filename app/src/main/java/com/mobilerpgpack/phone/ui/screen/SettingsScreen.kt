@@ -175,7 +175,7 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope,activeEng
         EngineTypes.WolfensteinRpg -> DrawWolfensteinRpgSettings(context,scope)
         EngineTypes.DoomRpg -> DrawDoomRpgSettings(context,scope)
         EngineTypes.Doom2Rpg -> DrawDoom2RpgSettings(context,scope)
-        EngineTypes.Doom64ExPlus -> { }
+        EngineTypes.Doom64ExPlus -> DrawDoom64Settings(context,scope)
     }
 
     HorizontalDivider()
@@ -461,3 +461,25 @@ private fun DrawDoom2RpgSettings(context: Context, scope: CoroutineScope) {
             scope.launch { PreferencesStorage.setPathToDoom2RpgIpaFile(context, selectedPath) } },
         previousPathToDoom2RpgIpa )
 }
+
+@Composable
+private fun DrawDoom64Settings(context: Context, scope: CoroutineScope) {
+    val previousPathToDoom64WadsFolder by PreferencesStorage.getPathToDoom64MainWadsFolder(context)
+        .collectAsState(initial = "")
+
+    RequestPath( context.getString(R.string.path_to_doom64_folder),
+        onPathSelected = { selectedPath ->
+            scope.launch { PreferencesStorage.setPathToDoom64MainWadsFolder(context, selectedPath) } },
+        previousPathToDoom64WadsFolder, requestOnlyDirectory = true )
+
+    HorizontalDivider()
+
+    val previousPathToDoom64ModsFolder by PreferencesStorage.getPathToDoom64ModsFolder(context)
+        .collectAsState(initial = "")
+
+    RequestPath( context.getString(R.string.path_to_doom64_mods_folder),
+        onPathSelected = { selectedPath ->
+            scope.launch { PreferencesStorage.setPathToDoom64ModsFolder(context, selectedPath) } },
+        previousPathToDoom64ModsFolder, requestOnlyDirectory = true )
+}
+
