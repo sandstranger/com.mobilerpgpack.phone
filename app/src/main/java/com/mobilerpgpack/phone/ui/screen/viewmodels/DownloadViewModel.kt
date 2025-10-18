@@ -1,6 +1,5 @@
-package com.mobilerpgpack.phone.ui.screen
+package com.mobilerpgpack.phone.ui.screen.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,7 +14,7 @@ class DownloadViewModel(
 
     var isLoading by mutableStateOf(false)
 
-    var downloadProgress by mutableStateOf("")   // будет хранить, например, "25%"
+    var downloadProgress by mutableStateOf("")
         private set
 
     private var currentTranslationModelType : String? = null
@@ -30,12 +29,12 @@ class DownloadViewModel(
     }
 
     fun startDownload() {
-        if (isLoading) return  // уже идёт
+        if (isLoading) return
 
         isLoading = true
 
         if (downloadJob == null || downloadJob!!.isCompleted || downloadJob!!.isCancelled) {
-            downloadJob = TranslatorApp.globalScope.launch {
+            downloadJob = TranslatorApp.Companion.globalScope.launch {
                 try {
                     downloadProgress = ""
                     TranslationManager.downloadModelIfNeeded { newValue ->
