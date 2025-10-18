@@ -19,7 +19,7 @@ import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.databinding.EngineActivityBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.enginesInfo
-import com.mobilerpgpack.phone.engine.getPathToSDL2ControllerDB
+import com.mobilerpgpack.phone.engine.initializeCommonEngineData
 import com.mobilerpgpack.phone.engine.killEngine
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.ui.items.BoxGrid2
@@ -70,8 +70,8 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
     private external fun needToShowScreenControls () : Boolean
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initializeEngineData()
         super.onCreate(savedInstanceState)
+        initializeEngineData()
         enableEdgeToEdge()
         hideSystemBars()
         loadControlsLayout()
@@ -148,13 +148,7 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
             this.displayInSafeArea()
         }
 
-        Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
-        Os.setenv("LIBGL_DXTMIPMAP", "1", true)
-        Os.setenv("LIBGL_ES","3",true)
-        Os.setenv("LIBGL_GL","32", true)
-        Os.setenv("LIBGL_DXT", "1", true)
-        Os.setenv("SDL_VIDEO_GL_DRIVER", "libng_gl4es.so", true)
-        Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", getPathToSDL2ControllerDB(this),true)
+        initializeCommonEngineData(this)
         Os.setenv("ENABLE_SDL_TTF", useSdlTTFForTextRendering.toString().lowercase(),true)
         Os.setenv("ENABLE_TEXTS_MACHINE_TRANSLATION", enableMachineTranslation.toString().lowercase(),true)
 

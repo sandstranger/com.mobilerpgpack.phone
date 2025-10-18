@@ -9,6 +9,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 object AssetExtractor {
+
+    internal const val GAME_FILES_ASSETS_FOLDER = "game_files"
     var assetsCopied = false
         private set
 
@@ -16,7 +18,7 @@ object AssetExtractor {
         if (assetsCopied){
             return@withContext
         }
-        copyAssetsFolderToInternalStorage(context, "game_files", context.getExternalFilesDir("")!!)
+        copyAssetsFolderToInternalStorage(context, GAME_FILES_ASSETS_FOLDER, context.getExternalFilesDir("")!!)
         assetsCopied = true
     }
 
