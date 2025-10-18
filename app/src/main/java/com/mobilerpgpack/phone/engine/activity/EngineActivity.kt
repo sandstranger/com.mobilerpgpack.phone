@@ -152,6 +152,7 @@ class EngineActivity : SDLActivity() {
 
         logcatProcess = enableLogcat()
 
+        Os.setenv("LIBGL_GL","32", true)
         Os.setenv("LIBGL_DXT", "1", true)
         Os.setenv("SDL_VIDEO_GL_DRIVER", "libng_gl4es.so", true)
         Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", getPathToSDL2ControllerDB(this),true)
