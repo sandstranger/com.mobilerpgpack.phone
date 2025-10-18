@@ -66,7 +66,27 @@ else ()
     set(TRANSLATOR_LIBRARY ${CMAKE_SOURCE_DIR}/Translator/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libTranslator.so)
 endif ()
 
+
 include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/fmod/src/main/include")
+set(FMOD_STUDIO_SDK_ROOT "${CMAKE_SOURCE_DIR}/fmod/src/main")
+set(FMOD_INC_DIR "${CMAKE_SOURCE_DIR}/fmod/src/main/include")
+set(FMOD_LIB "${CMAKE_SOURCE_DIR}/fmod/src/main/jniLibs/${ANDROID_ABI}/libfmod.so")
+
+set(libpng_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/libpng/src/main/jni/libpng")
+if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+    set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/libpng/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libpng.so)
+else ()
+    set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/libpng/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libpng.so)
+endif ()
+
+set(SDL3_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/sdl3/include")
+if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+    set(SDL3_LIBRARY ${CMAKE_SOURCE_DIR}/sdl3/android-project/app/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL3.so)
+else()
+    set(SDL3_LIBRARY ${CMAKE_SOURCE_DIR}/sdl3/android-project/app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL3.so)
+endif ()
+
+include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/app/src/main/jni/include")
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
