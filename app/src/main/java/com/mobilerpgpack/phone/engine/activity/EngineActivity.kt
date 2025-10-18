@@ -152,6 +152,8 @@ class EngineActivity : SDLActivity() {
 
         logcatProcess = enableLogcat()
 
+        Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
+        Os.setenv("LIBGL_DXTMIPMAP", "1", true)
         Os.setenv("LIBGL_ES","3",true)
         Os.setenv("LIBGL_GL","32", true)
         Os.setenv("LIBGL_DXT", "1", true)
