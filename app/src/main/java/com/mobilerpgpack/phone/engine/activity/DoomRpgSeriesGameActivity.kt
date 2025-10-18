@@ -48,7 +48,6 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
 
     private lateinit var activeEngineType: EngineTypes
     private lateinit var pathToLog: String
-    private lateinit var logcatProcess: Process
     private var controlsOverlayUI : View? = null
     private var virtualKeyboardView : View? = null
     private var showVirtualKeyboardSavedState by mutableStateOf(false)
@@ -94,7 +93,6 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        logcatProcess.destroy()
         scope.cancel()
         killEngine()
     }
@@ -150,8 +148,6 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
             this.displayInSafeArea()
         }
 
-        logcatProcess = enableLogcat()
-
         Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
         Os.setenv("LIBGL_DXTMIPMAP", "1", true)
         Os.setenv("LIBGL_ES","3",true)
@@ -188,19 +184,6 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
         } else {
             Os.setenv(AndroidGamePathEnvName, pathToEngineResourceFile.absolutePath, true)
         }
-    }
-
-    private fun enableLogcat(): Process {
-        val logcatFile = File(pathToLog)
-        if (logcatFile.exists()) {
-            logcatFile.delete()
-        }
-
-        val processBuilder = ProcessBuilder()
-        val commandToExecute = arrayOf("/system/bin/sh", "-c", "logcat *:W -d -f $pathToLog")
-        processBuilder.command(*commandToExecute)
-        processBuilder.redirectErrorStream(true)
-        return processBuilder.start()
     }
 
     private fun preserveCustomScreenAspectRatio(customAspectRatio : String) {

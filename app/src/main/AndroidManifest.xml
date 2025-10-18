@@ -40,7 +40,7 @@
         android:required="false" />
 
     <application
-        android:name=".translator.TranslatorApp"
+        android:name=".CustomApp"
         android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:largeHeap="true"
