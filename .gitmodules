@@ -34,3 +34,6 @@ url=https://github.com/sandstranger/CTranslate2.git
 [submodule "libpng/src/main/jni/libpng"]
 	path = libpng/src/main/jni/libpng
 	url = https://github.com/pnggroup/libpng.git
+[submodule "sdl3"]
+	path = sdl3
+	url = https://github.com/sandstranger/SDL.git

@@ -23,6 +23,7 @@ rootProject.name = "DOOM & Wolfenstein RPG"
 include ':app'
 include ':openal'
 include ':sdl2:android-project:app'
+include ':sdl3:android-project:app'
 
 include ':file-picker'
 include ':sdl2-mixer'
