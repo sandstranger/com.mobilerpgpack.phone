@@ -37,3 +37,6 @@ url=https://github.com/sandstranger/CTranslate2.git
 [submodule "sdl3"]
 	path = sdl3
 	url = https://github.com/sandstranger/SDL.git
+[submodule "app/src/main/jni/Doom64EX-Plus"]
+	path = app/src/main/jni/Doom64EX-Plus
+	url = https://github.com/sandstranger/Doom64EX-Plus.git
