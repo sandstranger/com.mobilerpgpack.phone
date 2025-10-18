@@ -37,6 +37,8 @@
     <string name="wolfenstein_rpg_ipa_file">Путь к ipa файлу Wolfenstein RPG</string>
     <string name="doom2_rpg_ipa_file">Путь к ipa файлу Doom II RPG</string>
     <string name="doom_rpg_zip_file">Путь к zip-файлу Doom RPG</string>
+    <string name="path_to_doom64_folder">Путь к папке Doom 64 с главными WAD-файлами</string>
+    <string name="path_to_doom64_mods_folder">Путь к папке Doom 64 с модами</string>
     <string name="configure_screen_controls">Редактор экранного управления</string>
     <string name="hide_custom_screen_controls">Скрыть экранное управление</string>
     <string name="can_not_start_engine">Файл ресурсов игры не найден. Невозможно запустить игру.</string>

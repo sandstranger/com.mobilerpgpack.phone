@@ -1,6 +1,7 @@
-package com.mobilerpgpack.phone.translator
+package com.mobilerpgpack.phone
 
 import android.app.Application
+import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -12,19 +13,20 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class TranslatorApp : Application() {
+class CustomApp : Application() {
     override fun onCreate() {
         super.onCreate()
         var activeTranslationModelType : TranslationType
         var allowDownloadingModelsOverMobile = false
         runBlocking {
             allowDownloadingModelsOverMobile = PreferencesStorage
-                .getAllowDownloadingModelsOverMobileValue(this@TranslatorApp).first()
+                .getAllowDownloadingModelsOverMobileValue(this@CustomApp).first()
             activeTranslationModelType = enumValueOf<TranslationType>(
-                PreferencesStorage.getTranslationModelTypeValue(this@TranslatorApp).first())
+                PreferencesStorage.getTranslationModelTypeValue(this@CustomApp).first()
+            )
         }
         globalScope.launch {
-            AssetExtractor.copyAssetsContentToInternalStorage(this@TranslatorApp)
+            AssetExtractor.copyAssetsContentToInternalStorage(this@CustomApp)
         }
         TranslationManager.init(this,activeTranslationModelType, allowDownloadingModelsOverMobile)
     }

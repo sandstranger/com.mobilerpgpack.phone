@@ -37,6 +37,8 @@
     <string name="wolfenstein_rpg_settings">Wolfenstein RPG settings</string>
     <string name="wolfenstein_rpg_ipa_file">Path to Wolfenstein RPG IPA file</string>
     <string name="doom2_rpg_ipa_file">Path to Doom II RPG IPA file</string>
+    <string name="path_to_doom64_folder">Path to Doom 64 folder with main wads</string>
+    <string name="path_to_doom64_mods_folder">Path to Doom 64 folder with mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>
     <string name="configure_screen_controls">Screen controls editor</string>
     <string name="hide_custom_screen_controls">Hide screen controls</string>
