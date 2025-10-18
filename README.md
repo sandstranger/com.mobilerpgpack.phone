@@ -11,8 +11,8 @@ https://github.com/Erick194/WolfensteinRPG-RE
 
 This port for Android has the following system requirements:
 ### Minimum
-* Operating system: Android 5.0 or later
-* Graphics: videocard, which supports GLES 2 render
+* Operating system: Android 7.0 or later
+* Graphics: videocard, which supports GLES 3.2 render
 * Memory: 1GB system RAM
 
 ### Recommended
