@@ -49,16 +49,31 @@ internal class Doom64GameActivity : SDLActivity() {
         runBlocking {
             pathToDoom64MainWadsFolder = PreferencesStorage
                 .getPathToDoom64MainWadsFolder(this@Doom64GameActivity).first()
-            pathToDoom64ModsFolder = PreferencesStorage
-                .getPathToDoom64ModsFolder(this@Doom64GameActivity).first()
+            pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
         }
 
         Os.setenv("PATH_TO_DOOM64_MAIN_WADS_FOLDER", pathToDoom64MainWadsFolder, true)
         Os.setenv("PATH_TO_DOOM64_MODS_FOLDER", pathToDoom64ModsFolder, true)
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER",getPathToDoom64UserFolder(), true)
+        Os.setenv("PATH_TO_ROOT_USER_FOLDER",getRootPathToUserFolder(), true)
         initializeCommonEngineData(this)
     }
 
-    private fun getPathToDoom64UserFolder () = this.getExternalFilesDir("")!!.absolutePath + File.separator +
-            AssetExtractor.GAME_FILES_ASSETS_FOLDER + File.separator + "doom64ex-plus"
+    private fun getRootPathToUserFolder() = this.getExternalFilesDir("")!!.absolutePath + File.separator +
+            AssetExtractor.GAME_FILES_ASSETS_FOLDER
+
+    private fun getPathToDoom64UserFolder () = getRootPathToUserFolder() + File.separator + "doom64ex-plus"
+
+    private suspend fun getPathToDoom64ModsFolder () : String {
+        var pathToDoom64ModsFolder = PreferencesStorage
+            .getPathToDoom64ModsFolder(this@Doom64GameActivity).first()
+
+        val pathToDoom64ModsFolderExists = File(pathToDoom64ModsFolder).exists()
+
+        if (!pathToDoom64ModsFolderExists){
+            pathToDoom64ModsFolder = ""
+        }
+
+        return pathToDoom64ModsFolder
+    }
 }
