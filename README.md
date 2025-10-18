@@ -112,7 +112,7 @@ To download a working APK file, either do it from F-Droid [here](https://f-droid
 ## Credits
 This port using
 
-gl4es: https://github.com/ptitSeb/gl4es
+NG-GL4ES android openmw fork: https://github.com/Sisah2/NG-GL4ES
 
 openal: https://github.com/kcat/openal-soft
 
