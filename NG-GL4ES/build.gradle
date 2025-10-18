@@ -1,10 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
-    namespace 'com.mobilerpgpack.fluidsynth'
+    namespace 'com.mobilerpgpack.phone.ng_gl4es'
     compileSdkVersion versions.target_sdk
 
     defaultConfig {
@@ -15,30 +14,28 @@ android {
             abiFilters = []
             abiFilters.addAll(abi_filters)
         }
-
         externalNativeBuild {
             cmake {
-                arguments"-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
-                        "-DCMAKE_CXX_FLAGS=-O3 -flto=thin -Wno-pointer-sign -Wno-error=unused-but-set-variable -Wno-writable-strings -w -fmax-errors=5",
-                        "-DCMAKE_C_FLAGS=-O3 -flto=thin -Wno-pointer-sign -Wno-error=unused-but-set-variable -Wno-writable-strings -w -fmax-errors=5",
+                arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
+                        "-DCMAKE_CXX_FLAGS=-O3 -flto=thin -Wno-writable-strings -w -fmax-errors=5",
+                        "-DCMAKE_C_FLAGS=-O3 -flto=thin -Wno-writable-strings -w -fmax-errors=5",
                         "-DCMAKE_SHARED_LINKER_FLAGS=-flto=thin -Wl,-plugin-opt=-emulated-tls -fuse-ld=lld -Wl,--build-id=none",
-                        "-DBUILD_SHARED_LIBS=true",
-                        "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
-                        "-DANDROID_STL=c++_static",
                         "-DCMAKE_VERBOSE_MAKEFILE=OFF"
             }
         }
-    }
 
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
     externalNativeBuild {
         cmake {
-            path "src/main/jni/fluidsynth-android/CMakeLists.txt"
+            path "src/main/jni/NG-GL4ES/CMakeLists.txt"
             version versions.cmake_version
         }
     }
-
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version
+
     buildTypes {
         release {
             minifyEnabled false
@@ -49,14 +46,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
 }
 
 dependencies {
-
-    implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

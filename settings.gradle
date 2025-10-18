@@ -19,10 +19,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "DOOM & Wolf RPG"
+rootProject.name = "DOOM & Wolfenstein RPG"
 include ':app'
 include ':openal'
-include ':gl4es'
 include ':sdl2:android-project:app'
 
 include ':file-picker'
@@ -33,3 +32,4 @@ include ':CTranslate2'
 include ':sentencepiece'
 include ':CTranslate2Proxy'
 include ':Translator'
+include ':NG-GL4ES'

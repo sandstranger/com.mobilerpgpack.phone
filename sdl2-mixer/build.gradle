@@ -42,7 +42,7 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version

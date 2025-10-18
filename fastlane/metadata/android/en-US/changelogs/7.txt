@@ -1,0 +1,1 @@
+switch from legacy gl4es to ng_gl4es openmw fork with Open GL ES 3.2

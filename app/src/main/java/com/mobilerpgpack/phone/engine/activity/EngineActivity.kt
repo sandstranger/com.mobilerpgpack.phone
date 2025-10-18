@@ -152,8 +152,8 @@ class EngineActivity : SDLActivity() {
 
         logcatProcess = enableLogcat()
 
-        Os.setenv("LIBGL_ES", "2", true)
-        Os.setenv("SDL_VIDEO_GL_DRIVER", "libGL.so", true)
+        Os.setenv("LIBGL_DXT", "1", true)
+        Os.setenv("SDL_VIDEO_GL_DRIVER", "libng_gl4es.so", true)
         Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", getPathToSDL2ControllerDB(this),true)
         Os.setenv("ENABLE_SDL_TTF", useSdlTTFForTextRendering.toString().lowercase(),true)
         Os.setenv("ENABLE_TEXTS_MACHINE_TRANSLATION", enableMachineTranslation.toString().lowercase(),true)
