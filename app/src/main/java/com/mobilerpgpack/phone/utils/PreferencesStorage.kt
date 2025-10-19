@@ -42,6 +42,8 @@ object PreferencesStorage {
     private val pathToDoom64FolderWithMainWads = stringPreferencesKey("path_to_doom64_folder_wads")
     private val pathToDoom64FolderWithMods = stringPreferencesKey("path_to_doom64_folder_mods")
 
+    private val enableDoom64Mods = booleanPreferencesKey("enable_doom64_mods")
+
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
 
@@ -59,6 +61,11 @@ object PreferencesStorage {
 
     suspend fun setAllowDownloadingModelsOverMobileValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, allowDownloadingModelsOverMobilePrefsKey, valueToSave)
+
+    fun getEnableDoom64ModsValue(context: Context) = getBooleanValue(context, enableDoom64Mods)
+
+    suspend fun setEnableDoom64ModsValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, enableDoom64Mods, valueToSave)
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 

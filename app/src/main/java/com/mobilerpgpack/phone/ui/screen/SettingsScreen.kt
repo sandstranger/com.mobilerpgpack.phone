@@ -474,12 +474,28 @@ private fun DrawDoom64Settings(context: Context, scope: CoroutineScope) {
 
     HorizontalDivider()
 
+    val enableDoom64Mods by PreferencesStorage.getEnableDoom64ModsValue(context)
+        .collectAsState(initial = false)
+
+    SwitchPreferenceItem(
+        context.getString(R.string.enable_doom64_mods),
+        checkedFlow = PreferencesStorage.getEnableDoom64ModsValue(context),
+    ) { newValue ->
+        scope.launch {
+            PreferencesStorage.setEnableDoom64ModsValue(context, newValue)
+        }
+    }
+
     val previousPathToDoom64ModsFolder by PreferencesStorage.getPathToDoom64ModsFolder(context)
         .collectAsState(initial = "")
 
-    RequestPath( context.getString(R.string.path_to_doom64_mods_folder),
-        onPathSelected = { selectedPath ->
-            scope.launch { PreferencesStorage.setPathToDoom64ModsFolder(context, selectedPath) } },
-        previousPathToDoom64ModsFolder, requestOnlyDirectory = true )
+    if (enableDoom64Mods) {
+        HorizontalDivider()
+
+        RequestPath( context.getString(R.string.path_to_doom64_mods_folder),
+            onPathSelected = { selectedPath ->
+                scope.launch { PreferencesStorage.setPathToDoom64ModsFolder(context, selectedPath) } },
+            previousPathToDoom64ModsFolder, requestOnlyDirectory = true )
+    }
 }
 
