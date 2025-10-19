@@ -59,7 +59,7 @@ internal class Doom64GameActivity : SDLActivity() {
         initializeCommonEngineData(this)
     }
 
-    private fun getRootPathToUserFolder() = this.getExternalFilesDir("")!!.absolutePath + File.separator
+    private fun getRootPathToUserFolder() = this.getExternalFilesDir("")!!.absolutePath
 
     private fun getPathToDoom64UserFolder () = getRootPathToUserFolder() + File.separator + "doom64ex-plus" + File.separator
 
