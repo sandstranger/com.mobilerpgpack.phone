@@ -59,10 +59,9 @@ internal class Doom64GameActivity : SDLActivity() {
         initializeCommonEngineData(this)
     }
 
-    private fun getRootPathToUserFolder() = this.getExternalFilesDir("")!!.absolutePath + File.separator +
-            AssetExtractor.GAME_FILES_ASSETS_FOLDER
+    private fun getRootPathToUserFolder() = this.getExternalFilesDir("")!!.absolutePath + File.separator
 
-    private fun getPathToDoom64UserFolder () = getRootPathToUserFolder() + File.separator + "doom64ex-plus"
+    private fun getPathToDoom64UserFolder () = getRootPathToUserFolder() + File.separator + "doom64ex-plus" + File.separator
 
     private suspend fun getPathToDoom64ModsFolder () : String {
         val enableDoom64Mods = PreferencesStorage
