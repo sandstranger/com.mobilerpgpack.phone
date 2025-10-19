@@ -65,6 +65,13 @@ internal class Doom64GameActivity : SDLActivity() {
     private fun getPathToDoom64UserFolder () = getRootPathToUserFolder() + File.separator + "doom64ex-plus"
 
     private suspend fun getPathToDoom64ModsFolder () : String {
+        val enableDoom64Mods = PreferencesStorage
+            .getEnableDoom64ModsValue(this@Doom64GameActivity).first()
+
+        if (!enableDoom64Mods){
+            return ""
+        }
+
         var pathToDoom64ModsFolder = PreferencesStorage
             .getPathToDoom64ModsFolder(this@Doom64GameActivity).first()
 
