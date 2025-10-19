@@ -74,9 +74,9 @@ set(FMOD_LIB "${CMAKE_SOURCE_DIR}/fmod/src/main/jniLibs/${ANDROID_ABI}/libfmod.s
 
 set(libpng_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/libpng/src/main/jni/libpng")
 if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
-    set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/libpng/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libpng.so)
+    set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/libpng/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libpng16d.so)
 else ()
-    set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/libpng/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libpng.so)
+    set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/libpng/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libpng16.so)
 endif ()
 
 set(SDL3_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/sdl3/include")
