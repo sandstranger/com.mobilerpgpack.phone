@@ -19,8 +19,8 @@ import java.io.File
 internal class Doom64GameActivity : SDLActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         initializeGameData()
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         hideSystemBars()
     }
