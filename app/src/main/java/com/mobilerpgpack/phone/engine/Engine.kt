@@ -66,6 +66,9 @@ internal fun initializeCommonEngineData (context: Context){
     Os.setenv("LIBGL_ES","3",true)
     Os.setenv("LIBGL_GL","21", true)
     Os.setenv("LIBGL_DXT", "1", true)
+    Os.setenv("LIBGL_NOTEXARRAY","0",true)
+    Os.setenv("LIBGL_NOPSA", "0",true)
+    Os.setenv("LIBGL_PSA_FOLDER",context.getExternalFilesDir("")!!.absolutePath,true)
     Os.setenv("SDL_VIDEO_GL_DRIVER", "libng_gl4es.so", true)
     Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", getPathToSDL2ControllerDB(context),true)
 }
