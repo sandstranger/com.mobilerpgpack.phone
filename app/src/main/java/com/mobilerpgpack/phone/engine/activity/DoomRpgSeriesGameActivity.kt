@@ -70,8 +70,8 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
     private external fun needToShowScreenControls () : Boolean
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         initializeEngineData()
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         hideSystemBars()
         loadControlsLayout()
