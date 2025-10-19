@@ -9,8 +9,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 object AssetExtractor {
-
-    internal const val GAME_FILES_ASSETS_FOLDER = "game_files"
+    private const val GAME_FILES_ASSETS_FOLDER = "game_files"
     var assetsCopied = false
         private set
 
