@@ -18,3 +18,5 @@ local.properties
 app/release/
 sdl2-ttf/build/
 app/google/
+fmod/build/
+libpng/build/

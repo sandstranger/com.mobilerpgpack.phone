@@ -30,4 +30,4 @@ url=https://github.com/sandstranger/CTranslate2.git
 	url = https://github.com/google/sentencepiece.git
 [submodule "NG-GL4ES/src/main/jni/NG-GL4ES"]
 	path = NG-GL4ES/src/main/jni/NG-GL4ES
-	url = https://github.com/Sisah2/NG-GL4ES.git
+url=https://github.com/sandstranger/NG-GL4ES.git
