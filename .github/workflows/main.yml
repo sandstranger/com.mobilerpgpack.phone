@@ -21,6 +21,8 @@ jobs:
       run: |
         git submodule sync --recursive
         git submodule update --init --force --recursive
+        git lfs install
+        git lfs fetch --all && git lfs checkout
 
     - name: Cache Gradle
       uses: actions/cache@v3
@@ -42,7 +44,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get -qq update
-        sudo apt-get -qq install unzip wget
+        sudo apt-get -qq install unzip wget git git-lfs
 
     - name: Setup Android SDK
       if: steps.sdk-cache.outputs.cache-hit != 'true'
