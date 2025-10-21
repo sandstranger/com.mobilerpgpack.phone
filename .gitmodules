@@ -25,8 +25,8 @@
 [submodule "third_party/CTranslate2/src/main/jni/CTranslate2"]
 	path = third_party/CTranslate2/src/main/jni/CTranslate2
 url=https://github.com/sandstranger/CTranslate2.git
-[submodule "sentencepiece/src/main/jni/sentencepiece"]
-	path = sentencepiece/src/main/jni/sentencepiece
+[submodule "third_party/sentencepiece/src/main/jni/sentencepiece"]
+	path = third_party/sentencepiece/src/main/jni/sentencepiece
 	url = https://github.com/google/sentencepiece.git
 [submodule "third_party/NG-GL4ES/src/main/jni/NG-GL4ES"]
 	path = third_party/NG-GL4ES/src/main/jni/NG-GL4ES
