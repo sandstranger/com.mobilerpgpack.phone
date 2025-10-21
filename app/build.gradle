@@ -122,7 +122,7 @@ dependencies {
     implementation (project(":third_party:openal"))
     implementation(project(":third_party:sdl2-mixer"))
     implementation(project(":third_party:fluidsynth"))
-    implementation (project(":third_party:file-picker"))
+    implementation (project(":third_party:android-file-chooser"))
     implementation (project(":third_party:sdl2-ttf"))
     implementation (project(":machine_translator:CTranslate2Proxy"))
     implementation (project(":machine_translator:Translator"))

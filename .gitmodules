@@ -40,3 +40,6 @@ url=https://github.com/sandstranger/NG-GL4ES.git
 [submodule "app/src/main/jni/Doom64EX-Plus"]
 	path = app/src/main/jni/Doom64EX-Plus
 	url = https://github.com/sandstranger/Doom64EX-Plus.git
+[submodule "third_party/android-file-chooser"]
+	path = third_party/android-file-chooser
+	url = https://github.com/sandstranger/android-file-chooser.git
