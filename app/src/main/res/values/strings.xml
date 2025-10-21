@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
-    <string name="app_name">Doom Source Ports</string>
+    <string name="app_name">Engines Nexus</string>
     <string name="access_to_all_files">Allow full file management access</string>
     <string name="downloaded_text">Downloaded</string>
     <string name="bytes_text">bytes</string>
