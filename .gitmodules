@@ -1,8 +1,8 @@
 [submodule "third_party/openal/src/main/jni/openal"]
 	path = third_party/openal/src/main/jni/openal
 	url = https://github.com/kcat/openal-soft.git
-[submodule "sdl2"]
-	path = sdl2
+[submodule "third_party/sdl2"]
+	path = third_party/sdl2
 	url = https://github.com/sandstranger/SDL.git
 [submodule "app/src/main/jni/WolfensteinRPG-RE"]
 	path = app/src/main/jni/WolfensteinRPG-RE
