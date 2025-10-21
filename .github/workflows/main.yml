@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      CMAKE_VERSION: 4.0.2
+      CMAKE_VERSION: 4.1.2
       ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
       GRADLE_OPTS: -Dorg.gradle.daemon=false
 
@@ -57,7 +57,7 @@ jobs:
       if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
         yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
-        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools" "cmake;4.0.2"
+        $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.1.0" "platform-tools" "cmake;4.1.2"
         echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
 
     - name: Download and setup CMake (fallback)
@@ -69,9 +69,9 @@ jobs:
 
     - name: Configure CMake path
       run: |
-        if [ -d "$ANDROID_SDK_ROOT/cmake/4.0.2" ]; then
+        if [ -d "$ANDROID_SDK_ROOT/cmake/4.1.2" ]; then
           echo "Using SDK CMake"
-          echo "cmake.dir=$ANDROID_SDK_ROOT/cmake/4.0.2" >> local.properties
+          echo "cmake.dir=$ANDROID_SDK_ROOT/cmake/4.1.2" >> local.properties
         elif [ -n "$FALLBACK_CMAKE_PATH" ]; then
           echo "Using fallback CMake"
           echo "cmake.dir=$FALLBACK_CMAKE_PATH" >> local.properties
@@ -97,7 +97,7 @@ jobs:
     - name: Upload APK artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: doom_wolfenstein_rpg_nightly
+        name: engines_nexus_nightly
         path: |
           app/build/outputs/apk/google/release/*.apk
         if-no-files-found: error
