@@ -38,8 +38,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = '17'
@@ -48,9 +48,10 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':sdl2:android-project:app:build'
+preBuild.dependsOn ':third_party:sdl2:android-project:app:build'
 
 dependencies {
+    implementation(project(":third_party:sdl2:android-project:app"))
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material

@@ -19,7 +19,6 @@ android {
                 arguments += build_flags.ndk_build_platform
                 arguments += build_flags.compiling_arguments
                 arguments += "APP_STL=c++_static"
-                arguments += build_flags.ndk_build_flags
                 cFlags  = build_flags.common_c_flags
                 cppFlags = build_flags.common_cpp_flags
             }
@@ -44,10 +43,10 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':sdl2:android-project:app:build'
+preBuild.dependsOn ':third_party:sdl2:android-project:app:build'
 
 dependencies {
-
+    implementation(project(":third_party:sdl2:android-project:app"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
