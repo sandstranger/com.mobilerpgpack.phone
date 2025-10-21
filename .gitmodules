@@ -28,8 +28,8 @@ url=https://github.com/sandstranger/CTranslate2.git
 [submodule "sentencepiece/src/main/jni/sentencepiece"]
 	path = sentencepiece/src/main/jni/sentencepiece
 	url = https://github.com/google/sentencepiece.git
-[submodule "NG-GL4ES/src/main/jni/NG-GL4ES"]
-	path = NG-GL4ES/src/main/jni/NG-GL4ES
+[submodule "third_party/NG-GL4ES/src/main/jni/NG-GL4ES"]
+	path = third_party/NG-GL4ES/src/main/jni/NG-GL4ES
 url=https://github.com/sandstranger/NG-GL4ES.git
 [submodule "third_party/libpng/src/main/jni/libpng"]
 	path = third_party/libpng/src/main/jni/libpng
