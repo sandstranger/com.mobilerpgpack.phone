@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "DOOM & Wolfenstein RPG"
+rootProject.name = "Engines Nexus"
 include ':app'
 include ':openal'
 include ':sdl2:android-project:app'
