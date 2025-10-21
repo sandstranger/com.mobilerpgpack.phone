@@ -111,26 +111,25 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':fluidsynth:build',':CTranslate2Proxy:build',':Translator:build',
-        ':sdl2:android-project:app:build', ':openal:build',
-        ':sdl2-mixer:build',':sdl2-ttf:build', ':NG-GL4ES:build',
-        ':libpng:build',':sdl3:android-project:app:build',
-        ':fmod:build'
+preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTranslate2Proxy:build',
+        ':machine_translator:Translator:build', ':third_party:sdl2:android-project:app:build', ':third_party:openal:build',
+        ':third_party:sdl2-mixer:build',':third_party:sdl2-ttf:build', ':third_party:NG-GL4ES:build',
+        ':third_party:libpng:build',':third_party:sdl3:android-project:app:build',
+        ':third_party:fmod:build'
 
 dependencies {
-    implementation project(':sdl2:android-project:app')
-    implementation (project(":openal"))
-    implementation(project(":sdl2-mixer"))
-    implementation(project(":fluidsynth"))
-    implementation (project(":file-picker"))
-    implementation (project(":sdl2-ttf"))
-    implementation (project(":CTranslate2Proxy"))
-    implementation (project(":Translator"))
-    implementation (project(":NG-GL4ES"))
-    implementation (project(":libpng"))
-    implementation (project(":sdl3:android-project:app"))
-    implementation (project(":fmod"))
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':third_party:sdl2:android-project:app')
+    implementation (project(":third_party:openal"))
+    implementation(project(":third_party:sdl2-mixer"))
+    implementation(project(":third_party:fluidsynth"))
+    implementation (project(":third_party:file-picker"))
+    implementation (project(":third_party:sdl2-ttf"))
+    implementation (project(":machine_translator:CTranslate2Proxy"))
+    implementation (project(":machine_translator:Translator"))
+    implementation (project(":third_party:NG-GL4ES"))
+    implementation (project(":third_party:libpng"))
+    implementation (project(":third_party:sdl3:android-project:app"))
+    implementation (project(":third_party:fmod"))
 
     implementation libs.androidx.compose.material.icons.core.android
     implementation libs.androidx.compose.material.icons.extended.android
