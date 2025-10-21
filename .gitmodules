@@ -31,8 +31,8 @@ url=https://github.com/sandstranger/CTranslate2.git
 [submodule "NG-GL4ES/src/main/jni/NG-GL4ES"]
 	path = NG-GL4ES/src/main/jni/NG-GL4ES
 url=https://github.com/sandstranger/NG-GL4ES.git
-[submodule "libpng/src/main/jni/libpng"]
-	path = libpng/src/main/jni/libpng
+[submodule "third_party/libpng/src/main/jni/libpng"]
+	path = third_party/libpng/src/main/jni/libpng
 	url = https://github.com/pnggroup/libpng.git
 [submodule "sdl3"]
 	path = sdl3
