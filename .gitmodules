@@ -7,8 +7,8 @@
 [submodule "app/src/main/jni/WolfensteinRPG-RE"]
 	path = app/src/main/jni/WolfensteinRPG-RE
 	url = https://github.com/sandstranger/WolfensteinRPG-RE.git
-[submodule "sdl2-mixer/src/main/jni/SDL_mixer"]
-	path = sdl2-mixer/src/main/jni/SDL_mixer
+[submodule "third_party/sdl2-mixer/src/main/jni/SDL_mixer"]
+	path = third_party/sdl2-mixer/src/main/jni/SDL_mixer
 	url = https://github.com/sandstranger/SDL_mixer.git
 [submodule "app/src/main/jni/DoomRPG-RE"]
 	path = app/src/main/jni/DoomRPG-RE
