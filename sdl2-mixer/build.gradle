@@ -20,7 +20,7 @@ android {
                 arguments += build_flags.ndk_build_platform
                 arguments += build_flags.compiling_arguments
                 arguments += "APP_STL=c++_static"
-                arguments += build_flags.none_build_id_flag
+                arguments += build_flags.ndk_build_flags
                 cFlags  = build_flags.common_c_flags
                 cppFlags = build_flags.common_cpp_flags
             }

@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(doom-wolf-rpg)
 
-add_link_options("LINKER:--build-id=none")
-
 set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/sdl2)
 set(SDL2_INCLUDE_DIR ${SDL_LOCATION}/include)
 
