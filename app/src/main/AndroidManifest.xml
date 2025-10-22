@@ -41,6 +41,7 @@
 
     <application
         android:name=".CustomApp"
+        android:gwpAsanMode="always"
         android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:largeHeap="true"
