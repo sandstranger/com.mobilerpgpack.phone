@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Engines Nexus"
+rootProject.name = "Engines Hub"
 include ':app'
 include ':third_party:openal'
 include ':third_party:sdl2:android-project:app'

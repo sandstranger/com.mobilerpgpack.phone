@@ -1,4 +1,4 @@
-name: Android Release Build
+name: Android Nightly Build
 
 on: [push, pull_request]
 
@@ -99,7 +99,7 @@ jobs:
     - name: Upload APK artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: engines_nexus_nightly
+        name: engines_hub_nightly
         path: |
           app/build/outputs/apk/google/release/*.apk
         if-no-files-found: error
