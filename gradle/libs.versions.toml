@@ -3,6 +3,7 @@ agp = "8.13.0"
 converterGson = "3.0.0"
 core = "3.3.0"
 datastorePreferences = "1.1.7"
+firebaseBom = "34.4.0"
 gson = "2.13.2"
 icu4j = "77.1"
 kotlin = "2.2.20"
@@ -48,6 +49,9 @@ androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "ui" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.afollestad.material-dialogs:core", version.ref = "core" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-crashlytics-ndk = { module = "com.google.firebase:firebase-crashlytics-ndk" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
