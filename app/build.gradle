@@ -122,7 +122,6 @@ dependencies {
     implementation (project(":third_party:openal"))
     implementation(project(":third_party:sdl2-mixer"))
     implementation(project(":third_party:fluidsynth"))
-    implementation (project(":third_party:android-file-chooser"))
     implementation (project(":third_party:sdl2-ttf"))
     implementation (project(":machine_translator:CTranslate2Proxy"))
     implementation (project(":machine_translator:Translator"))
@@ -130,6 +129,7 @@ dependencies {
     implementation (project(":third_party:libpng"))
     implementation (project(":third_party:sdl3:android-project:app"))
     implementation (project(":third_party:fmod"))
+    implementation (project(":third_party:storage-chooser:storagechooser"))
 
     implementation libs.androidx.compose.material.icons.core.android
     implementation libs.androidx.compose.material.icons.extended.android
