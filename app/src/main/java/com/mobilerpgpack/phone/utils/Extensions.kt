@@ -6,7 +6,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.AssetManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -19,11 +18,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import com.obsez.android.lib.filechooser.ChooserDialog
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
 
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
@@ -112,32 +106,5 @@ fun Activity.displayInSafeArea() {
         }
 
         WindowInsetsCompat.CONSUMED
-    }
-}
-
-fun Context.requestResourceFile (onFileSelected : (String) -> Unit ){
-    this.requestResourceFileByAlternateFilePicker ( dirOnly = false, onFileSelected)
-}
-
-fun Context.requestDirectory (onDirectorySelected : (String) -> Unit ){
-    this.requestResourceFileByAlternateFilePicker ( dirOnly = true, onDirectorySelected)
-}
-
-private fun Context.requestResourceFileByAlternateFilePicker ( dirOnly : Boolean, onFileSelected : (String) -> Unit ){
-    ChooserDialog(this)
-        .withFilter(dirOnly, false, "ipa", "zip")
-        .withStartFile(Environment.getExternalStorageDirectory().absolutePath)
-        .withChosenListener { path, _ ->
-            onFileSelected(path)
-        }
-        .build()
-        .show()
-}
-
-private fun buildRequestResourceFileIntent () : Intent {
-    return Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-        addCategory(Intent.CATEGORY_OPENABLE)
-        type = "*/*"
-        putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/zip", "application/octet-stream"))
     }
 }

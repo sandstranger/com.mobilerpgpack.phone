@@ -1,20 +1,19 @@
 package com.mobilerpgpack.phone.ui.items
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import com.mobilerpgpack.phone.utils.requestDirectory
-import com.mobilerpgpack.phone.utils.requestResourceFile
+import com.codekidlabs.storagechooser.StorageChooser
 
 @Composable
 fun RequestPath(explorerItemTitle: String,
                 onPathSelected: (String) -> Unit,
                 previousSavedPath: String = "",
                 requestOnlyDirectory: Boolean = false) {
-    val context = LocalContext.current
+    val activity = LocalActivity.current
     var currentPath by rememberSaveable(previousSavedPath)
     {
         mutableStateOf(previousSavedPath)
@@ -23,12 +22,23 @@ fun RequestPath(explorerItemTitle: String,
     PreferenceItem(
         explorerItemTitle, currentPath,
         onClick = {
-            if (requestOnlyDirectory) {
-                context.requestDirectory(
-                    onDirectorySelected = { selectedPath -> onPathSelected(selectedPath) })
-            } else {
-                context.requestResourceFile(onFileSelected =
-                    { selectedPath -> onPathSelected(selectedPath) })
+            val storageChooserBuilder = StorageChooser.Builder()
+                .withActivity(activity)
+                .withFragmentManager(activity!!.fragmentManager)
+                .withMemoryBar(true)
+                .allowCustomPath(true)
+
+            if (requestOnlyDirectory){
+                storageChooserBuilder.setType(StorageChooser.DIRECTORY_CHOOSER)
             }
+            else{
+                storageChooserBuilder
+                    .setType(StorageChooser.FILE_PICKER)
+                    .filter(StorageChooser.FileType.ARCHIVE)
+            }
+
+            val chooser = storageChooserBuilder.build();
+            chooser.setOnSelectListener { path -> onPathSelected(path) }
+            chooser.show()
         })
 }
