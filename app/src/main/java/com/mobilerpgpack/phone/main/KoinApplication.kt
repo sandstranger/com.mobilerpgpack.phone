@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone
+package com.mobilerpgpack.phone.main
 
 import android.app.Application
 import com.mobilerpgpack.phone.translator.TranslationManager
@@ -12,23 +12,32 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.koin.androix.startup.KoinStartup
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.dsl.KoinConfiguration
 
-class CustomApp : Application() {
+@OptIn(KoinExperimentalAPI::class)
+class KoinApplication : Application(), KoinStartup {
+
     override fun onCreate() {
         super.onCreate()
         var activeTranslationModelType : TranslationType
         var allowDownloadingModelsOverMobile = false
         runBlocking {
             allowDownloadingModelsOverMobile = PreferencesStorage
-                .getAllowDownloadingModelsOverMobileValue(this@CustomApp).first()
+                .getAllowDownloadingModelsOverMobileValue(this@KoinApplication).first()
             activeTranslationModelType = enumValueOf<TranslationType>(
-                PreferencesStorage.getTranslationModelTypeValue(this@CustomApp).first()
+                PreferencesStorage.getTranslationModelTypeValue(this@KoinApplication).first()
             )
         }
         globalScope.launch {
-            AssetExtractor.copyAssetsContentToInternalStorage(this@CustomApp)
+            AssetExtractor.copyAssetsContentToInternalStorage(this@KoinApplication)
         }
         TranslationManager.init(this,activeTranslationModelType, allowDownloadingModelsOverMobile)
+    }
+
+    override fun onKoinStartup(): KoinConfiguration {
+        TODO("Not yet implemented")
     }
 
     override fun onTerminate() {
