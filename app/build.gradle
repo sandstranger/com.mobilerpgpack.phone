@@ -160,8 +160,8 @@ dependencies {
     implementation (libs.androidx.room.runtime)
     ksp libs.androidx.room.compiler
     implementation (libs.androidx.room.ktx)
-    googleImplementation (libs.translate)
-    googleImplementation (libs.kotlinx.coroutines.play.services)
+    implementation (libs.translate)
+    implementation (libs.kotlinx.coroutines.play.services)
     implementation(libs.okhttp)
     implementation (libs.core)
     implementation(libs.zip4j)

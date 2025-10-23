@@ -9,10 +9,6 @@ fun buildTranslationsDescription (context: Context) : Collection<String>{
     val result : MutableList<String> = mutableListOf()
 
     for (type in TranslationType.entries) {
-        if (BuildConfig.FDROID_BUILD && type == TranslationType.MLKit){
-            continue
-        }
-
         when (type) {
             TranslationType.MLKit ->
                 result.add("${TranslationType.MLKit} ${context.getString(R.string.mlkit_description)}")
