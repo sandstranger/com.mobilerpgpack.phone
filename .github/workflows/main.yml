@@ -92,7 +92,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew assembleGoogleRelease -PdisableGoogleServices --stacktrace --info
+      run: ./gradlew assembleGoogleRelease -PdisableCrashlytics --stacktrace --info
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
         

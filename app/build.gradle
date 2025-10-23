@@ -6,13 +6,18 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id 'com.google.devtools.ksp' version '2.2.20-2.0.3'
     id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics") version "3.0.6"
+    id("com.google.firebase.crashlytics") version "3.0.6" apply(false)
 }
 
+def enableCrashlytics = !project.hasProperty("disableCrashlytics")
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('release-keystore.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+if (enableCrashlytics){
+    apply plugin: 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -53,8 +58,7 @@ android {
         versionName "1.1.0"
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
 
         externalNativeBuild {
@@ -84,9 +88,11 @@ android {
             aaptOptions {
                 noCompress "bin","spm","json","txt","sf2","ttf"
             }
+            if (enableCrashlytics){
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
             }
+                }
         }
         debug {
             jniDebuggable true
@@ -143,9 +149,11 @@ dependencies {
     implementation (project(":third_party:fmod"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
 
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.crashlytics.ndk)
-    implementation(libs.firebase.analytics)
+    if (enableCrashlytics) {
+        implementation(platform(libs.firebase.bom))
+        implementation(libs.firebase.crashlytics.ndk)
+        implementation(libs.firebase.analytics)
+    }
     implementation libs.androidx.compose.material.icons.core.android
     implementation libs.androidx.compose.material.icons.extended.android
     implementation(libs.slf4j.api)
