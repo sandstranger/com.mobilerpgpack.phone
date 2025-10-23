@@ -101,5 +101,5 @@ jobs:
       with:
         name: engines_hub_nightly
         path: |
-          app/build/outputs/apk/google/release/*.apk
+          app/build/outputs/apk/fdroid/release/*.apk
         if-no-files-found: error
