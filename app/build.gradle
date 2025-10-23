@@ -3,14 +3,20 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id 'com.google.devtools.ksp' version '2.2.20-2.0.3'
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics") version "3.0.6"
+    id("com.google.gms.google-services") version("4.4.4") apply(false)
+    id("com.google.firebase.crashlytics") version "3.0.6" apply(false)
 }
 
+def enableGoogleServices = !project.hasProperty("disableGoogleServices")
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('release-keystore.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+if (enableGoogleServices){
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -42,7 +48,7 @@ android {
         applicationId "com.mobilerpgpack.phone"
         minSdk versions.min_sdk
         targetSdk versions.target_sdk
-        versionCode 14
+        versionCode 15
         versionName "1.1.0"
 
         ndk {
@@ -77,8 +83,10 @@ android {
             aaptOptions {
                 noCompress "bin","spm","json","txt","sf2","ttf"
             }
-            firebaseCrashlytics {
-                nativeSymbolUploadEnabled true
+            if (enableGoogleServices) {
+                firebaseCrashlytics {
+                    nativeSymbolUploadEnabled true
+                }
             }
         }
         debug {
@@ -136,9 +144,12 @@ dependencies {
     implementation (project(":third_party:fmod"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
 
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.crashlytics.ndk)
-    implementation(libs.firebase.analytics)
+    if (enableGoogleServices){
+        implementation(platform(libs.firebase.bom))
+        implementation(libs.firebase.crashlytics.ndk)
+        implementation(libs.firebase.analytics)
+    }
+
     implementation libs.androidx.compose.material.icons.core.android
     implementation libs.androidx.compose.material.icons.extended.android
     implementation(libs.slf4j.api)
