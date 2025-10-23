@@ -92,10 +92,8 @@ object TranslationManager {
             return
         }
 
-        if (!BuildConfig.FDROID_BUILD) {
-            translationModels[TranslationType.MLKit] =
-                MLKitTranslationModel(context, sourceLocale, targetLocale, allowDownloadingOveMobile)
-        }
+        translationModels[TranslationType.MLKit] =
+            MLKitTranslationModel(context, sourceLocale, targetLocale, allowDownloadingOveMobile)
 
         val filesRootDir = context.getExternalFilesDir("")!!
 

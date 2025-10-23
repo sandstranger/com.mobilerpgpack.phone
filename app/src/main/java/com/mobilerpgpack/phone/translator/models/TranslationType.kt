@@ -12,8 +12,7 @@ enum class TranslationType {
     NLLB200;
 
     companion object{
-        val DefaultTranslationType = if (!BuildConfig.FDROID_BUILD) MLKit else Small100
-
+        val DefaultTranslationType = MLKit
         fun getTranslationType (inputText : String) : TranslationType{
             TranslationType.entries.forEach {
                 if (inputText.startsWith(it.toString())){
