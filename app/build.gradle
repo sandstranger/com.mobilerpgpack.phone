@@ -28,6 +28,9 @@ android {
         fdroid {
             dimension "store"
             buildConfigField "boolean", "FDROID_BUILD", "true"
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
         }
     }
 

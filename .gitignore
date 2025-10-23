@@ -19,3 +19,4 @@ app/release/
 sdl2-ttf/build/
 app/google/
 app/google-services.json
+app/fdroid/release
