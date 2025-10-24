@@ -74,11 +74,11 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         initializeEngineData()
         super.onCreate(savedInstanceState)
+        Native.register(DoomRpgSeriesGameActivity::class.java,
+            enginesInfo[activeEngineType]!!.mainEngineLibNameForJna)
         enableEdgeToEdge()
         hideSystemBars()
         loadControlsLayout()
-        Native.register(DoomRpgSeriesGameActivity::class.java,
-            enginesInfo[activeEngineType]!!.mainEngineLibNameForJna)
     }
 
     override fun getMainSharedObject() = enginesInfo[activeEngineType]!!.mainEngineLib
