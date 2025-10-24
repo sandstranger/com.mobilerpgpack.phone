@@ -25,11 +25,11 @@ const char *translate(const char *input, bool textFromDialog) {
         g_TranslateMethodID = g_TranslationManagerClass->getStaticMethod<JString (alias_ref<JArrayByte>,jboolean)>("translate");
     }
 
-    const jsize len = static_cast<jsize>(strlen(input));
-    auto jInput = JArrayByte::newArray(len);
+    const auto len = static_cast<jsize>(strlen(input));
+    const auto jInput = JArrayByte::newArray(len);
 
     Environment::current()->SetByteArrayRegion(jInput.get(),0,len,reinterpret_cast<const jbyte*>(input));
-    jboolean isTrans = g_IsTranslatedMethodID(g_TranslationManagerClass,jInput);
+    const auto isTrans = g_IsTranslatedMethodID(g_TranslationManagerClass,jInput);
 
     if (!isTrans) {
         jboolean isFromDialog = textFromDialog;
@@ -37,13 +37,13 @@ const char *translate(const char *input, bool textFromDialog) {
         return input;
     }
 
-    auto jOutput = g_GetTranslationMethodID(g_TranslationManagerClass,jInput);
+    const auto jOutput = g_GetTranslationMethodID(g_TranslationManagerClass,jInput);
 
     if (jOutput == nullptr) {
         return input;
     }
 
-    translationCache[input] = std::move(jOutput->toStdString());
+    translationCache[input] = jOutput->toStdString();
     return translationCache[input].c_str();
 }
 #ifdef __cplusplus
