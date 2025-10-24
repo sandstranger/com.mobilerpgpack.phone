@@ -66,34 +66,13 @@ unique_ptr<Translator> create_translator (string model_path, bool multi_thread =
             ctranslate2::Device::CPU, ctranslate2::ComputeType::INT8_FLOAT32);
 }
 
-extern "C" {
-jstring toJString(JNIEnv *env, const std::string &str) {
-    return env->NewStringUTF(str.c_str());
-}
-
-std::string jstringToStdString(JNIEnv *env, jstring jStr) {
-    const char *chars = env->GetStringUTFChars(jStr, nullptr);
-    std::string result(chars);
-    env->ReleaseStringUTFChars(jStr, chars);
-    return result;
-}
-
-vector<std::string> toVectorString (JNIEnv* env, jobject sentences){
+extern "C"{
+vector<std::string> toVectorString (char** sentences){
     std::vector<std::string> nativeSentences;
-
-    jclass listClass = env->GetObjectClass(sentences);
-    jmethodID sizeMethod = env->GetMethodID(listClass, "size", "()I");
-    jmethodID getMethod  = env->GetMethodID(listClass, "get", "(I)Ljava/lang/Object;");
-
-    jint size = env->CallIntMethod(sentences, sizeMethod);
-
-    for (jint i = 0; i < size; ++i) {
-        jstring word = (jstring) env->CallObjectMethod(sentences, getMethod, i);
-        const char* utfChars = env->GetStringUTFChars(word, nullptr);
-        nativeSentences.emplace_back(utfChars);
-        env->ReleaseStringUTFChars(word, utfChars);
-        env->DeleteLocalRef(word);
+    for (int i = 0; sentences[i] != nullptr; ++i) {
+        nativeSentences.emplace_back(sentences[i]);
     }
     return nativeSentences;
 }
 }
+
