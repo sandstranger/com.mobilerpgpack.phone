@@ -24,8 +24,28 @@
 -keepclassmembers class org.libsdl.app.SDLActivity {
     public static <methods>;
 }
+-keep class org.libsdl3.app.** { *; }
+-keepclassmembers class org.libsdl3.app.SDLActivity {
+    public static <methods>;
+}
 -keep class com.mobilerpgpack.phone.translator.** { *; }
 -keepclassmembers class com.mobilerpgpack.phone.translator.TranslationManager {
     public <methods>;
     public static <methods>;
 }
+
+-dontwarn java.awt.*
+-keep class com.sun.jna.* { *; }
+-keep class * extends com.sun.jna.* { *; }
+-keepclassmembers class * extends com.sun.jna.* { public *; }
+
+-dontwarn com.facebook.jni.*
+-keep class com.facebook.jni.* { *; }
+-keep class * extends com.facebook.jni.* { *; }
+-keepclassmembers class * extends com.facebook.jni.* { public *; public static *;}
+
+-dontwarn org.fmod.*
+-keep class org.fmod.* { *; }
+-keep class * extends org.fmod.* { *; }
+-keepclassmembers class * extends org.fmod.* { public *; public static *;}
+
