@@ -1,6 +1,7 @@
 package com.mobilerpgpack.ctranslate2proxy
 
 import com.ibm.icu.text.BreakIterator
+import com.sun.jna.StringArray
 import java.util.Locale
 
 abstract class Translator {
@@ -13,7 +14,7 @@ abstract class Translator {
 
     abstract fun release()
 
-    protected fun splitTextIntoSentences(text: String): List<String> {
+    protected fun splitTextIntoSentences(text: String): StringArray {
         val replacedText = text.replace(dotsWithSpacingRegex,"$0 ")
         val iterator = BreakIterator.getSentenceInstance(Locale.US)
         iterator.setText(text)
@@ -33,24 +34,17 @@ abstract class Translator {
         if (sentences.isEmpty()){
             sentences.add(text)
         }
-        return sentences
+        return StringArray(sentences.toTypedArray())
     }
 
     private fun splitSentencesRegex(text: String): List<String> {
         return text.split(dotsRegex).map { it.trim() }.filter { it.isNotEmpty() }
     }
 
-    private companion object{
+    protected companion object{
+        @JvmStatic
+        protected val C2TRANSLATE_PROXY_NATIVE_LIB_NAME = "CTranslate2Proxy"
         private val dotsRegex = Regex("(?<=[.!?])[\"')\\]]*\\s+(?=[A-Z0-9\\-])")
         private val dotsWithSpacingRegex = Regex("[.!?](?=\\p{L})")
-
-        init {
-            System.loadLibrary("omp")
-            System.loadLibrary(if (BuildConfig.DEBUG) "spdlogd" else "spdlog")
-            System.loadLibrary("ctranslate2")
-            System.loadLibrary("sentencepiece_train")
-            System.loadLibrary("sentencepiece")
-            System.loadLibrary("CTranslate2Proxy")
-        }
     }
 }
