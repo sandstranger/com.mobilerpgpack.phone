@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.translator.TranslationManager
-import com.mobilerpgpack.phone.main.KoinApplication
+import com.mobilerpgpack.phone.CustomApp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -34,7 +34,7 @@ class DownloadViewModel(
         isLoading = true
 
         if (downloadJob == null || downloadJob!!.isCompleted || downloadJob!!.isCancelled) {
-            downloadJob = KoinApplication.Companion.globalScope.launch {
+            downloadJob = CustomApp.Companion.globalScope.launch {
                 try {
                     downloadProgress = ""
                     TranslationManager.downloadModelIfNeeded { newValue ->

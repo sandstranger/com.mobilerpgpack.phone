@@ -27,13 +27,13 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
             "fmod","DOOM64"), wolfensteinButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom64MainWadsFolder (context) }),
     EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so",
-        arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
+        arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
             { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
     EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so", arrayOf("fluidsynth","ng_gl4es","SDL2","gme","SDL2_mixer",
-        "SDL2_ttf","Translator","DoomRPG"), doomRPGButtons,
+        "SDL2_ttf","c++_shared","fbjni","Translator","DoomRPG"), doomRPGButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
     EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so",
-        arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","Translator","DoomIIRPG"),
+        arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","DoomIIRPG"),
         doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
 )
 

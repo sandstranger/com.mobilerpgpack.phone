@@ -30,7 +30,8 @@ import java.io.File
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
-import com.mobilerpgpack.phone.main.KoinApplication
+import com.mobilerpgpack.phone.BuildConfig
+import com.mobilerpgpack.phone.CustomApp
 
 object TranslationManager {
     const val RUSSIAN_LOCALE = "ru"
@@ -48,7 +49,7 @@ object TranslationManager {
     @Volatile
     private lateinit var translationModel : ITranslationModel
 
-    private val scope = KoinApplication.globalScope
+    private val scope = CustomApp.globalScope
     private val intervalsTranslator = IntervalMarkerTranslator()
     private val translationModels = HashMap<TranslationType, ITranslationModel>()
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
