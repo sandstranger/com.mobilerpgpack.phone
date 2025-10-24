@@ -94,7 +94,7 @@ android {
         debug {
             jniDebuggable true
             ndk {
-                debugSymbolLevel 'FULL' // сохраняет символы
+                debugSymbolLevel 'FULL'
             }
             signingConfig signingConfigs.debug
             aaptOptions {
@@ -144,7 +144,7 @@ dependencies {
     implementation (project(":third_party:libpng"))
     implementation (project(":third_party:sdl3:android-project:app"))
     implementation (project(":third_party:fmod"))
-    implementation (project(":third_party:fbjni"))
+    implementation (project(":third_party:jna"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
 
     implementation(platform(libs.firebase.bom))
