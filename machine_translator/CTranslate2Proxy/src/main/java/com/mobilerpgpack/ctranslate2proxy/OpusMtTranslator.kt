@@ -47,12 +47,6 @@ class OpusMtTranslator(
     private companion object{
         init {
             Native.register(OpusMtTranslator::class.java,"CTranslate2Proxy")
-            // System.loadLibrary("omp")
-            //  System.loadLibrary(if (BuildConfig.DEBUG) "spdlogd" else "spdlog")
-            // System.loadLibrary("ctranslate2")
-            //System.loadLibrary("sentencepiece_train")
-            // System.loadLibrary("sentencepiece")
-            //   System.loadLibrary("CTranslate2Proxy")
         }
     }
 }
