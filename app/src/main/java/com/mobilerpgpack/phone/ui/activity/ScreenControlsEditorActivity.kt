@@ -16,8 +16,12 @@ import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.hideSystemBars
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.inject
+import org.koin.core.component.KoinComponent
 
-class ScreenControlsEditorActivity : ComponentActivity() {
+class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
+
+    private val preferencesStorage : PreferencesStorage by inject ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +30,7 @@ class ScreenControlsEditorActivity : ComponentActivity() {
 
         var displayInSafeArea = false
         runBlocking {
-            displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this@ScreenControlsEditorActivity).first()!!
+            displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
         }
 
         if (displayInSafeArea){

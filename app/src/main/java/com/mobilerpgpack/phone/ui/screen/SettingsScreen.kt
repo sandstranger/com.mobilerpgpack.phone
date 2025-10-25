@@ -135,7 +135,7 @@ class SettingsScreen : KoinComponent {
             modifier = Modifier.background(backgroundColor),
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { scope.launch { startEngine( activeEngine) } }
+                    onClick = { scope.launch { engine.startEngine( activeEngine) } }
                 ) {
                     Icon(
                         Icons.Default.PlayArrow,
