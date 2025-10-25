@@ -8,12 +8,10 @@ import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
-import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.tasks.await
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.get
 
 class MLKitTranslationModel(
     private val context: Context,
@@ -39,11 +37,11 @@ class MLKitTranslationModel(
         get() = super.allowDownloadingOveMobile
         set(value) {
             super.allowDownloadingOveMobile = value
-            downloadConditions = getKoin().get { parametersOf(super.allowDownloadingOveMobile) }
+            downloadConditions = get { parametersOf(super.allowDownloadingOveMobile) }
         }
 
     init {
-        downloadConditions = getKoin().get { parametersOf(super.allowDownloadingOveMobile) }
+        downloadConditions = get { parametersOf(super.allowDownloadingOveMobile) }
     }
 
     override fun initialize(sourceLocale: String, targetLocale: String) {
@@ -54,7 +52,7 @@ class MLKitTranslationModel(
             this.sourceLocale = sourceLocale
             this.targetLocale = targetLocale
             mlKitTranslator?.close()
-            mlKitTranslator = getKoin().get { parametersOf(sourceLocale, targetLocale) }
+            mlKitTranslator = get { parametersOf(sourceLocale, targetLocale) }
             wasInitialize = true
         }
     }
@@ -87,10 +85,10 @@ class MLKitTranslationModel(
     override suspend fun needToDownloadModel(): Boolean {
         val modelManager = RemoteModelManager.getInstance()
         val sourceLocaleModelDownloaded =
-            modelManager.isModelDownloaded(getKoin().get { parametersOf(modelCache,
+            modelManager.isModelDownloaded(get { parametersOf(modelCache,
                 sourceLocale) }).await()
         val targetLocaleModelDownloaded =
-            modelManager.isModelDownloaded(getKoin().get { parametersOf(modelCache,
+            modelManager.isModelDownloaded(get { parametersOf(modelCache,
                 targetLocale) }).await()
         return !sourceLocaleModelDownloaded || !targetLocaleModelDownloaded
     }

@@ -15,13 +15,13 @@ class M2M100TranslationModel (
     private val modelFile: String,
     private val spmFile: String,
     private val allowDownloadingOverMobile : Boolean = false
-) : BaseM2M100TranslationModel(context,modelFile,spmFile, allowDownloadingOverMobile) {
+) : BaseM2M100TranslationModel(context,modelFile,spmFile, allowDownloadingOverMobile), KoinComponent {
 
     override val zipFileId: String = "1mUR8czA7-f-FK-Gw2orMNMTt9p0MgBYN"
 
     override val zipFileSha256: String = "86178730785f6f250fa60a1aa977585eaa361cc50ce7c3ea9fbe9ebe6016dbd1"
 
-    override val translator: Translator = get(M2M100Translator::class.java)
+    override val translator: Translator = get<M2M100Translator>()
 
     override val translationType: TranslationType = TranslationType.M2M100
 }
