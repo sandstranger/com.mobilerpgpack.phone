@@ -7,6 +7,7 @@ import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import kotlinx.coroutines.runBlocking
+import org.koin.java.KoinJavaComponent.get
 
 class Small100TranslationModel(
     private val context: Context,
@@ -20,7 +21,7 @@ class Small100TranslationModel(
     override val zipFileSha256: String =
         "b102ebb66e70654d7982b8fd09715baf341b28bb0216ae6b51553c0deb76811b"
 
-    override val translator: Translator = Small100Translator(modelFile, spmFile)
+    override val translator: Translator = get(Small100Translator::class.java)
 
     override val translationType: TranslationType = TranslationType.Small100
 }

@@ -1,21 +1,15 @@
 package com.mobilerpgpack.phone.translator
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.translator.models.BingTranslatorModel
-import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
+import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.ACTIVE_TRANSLATION_MODEL_KEY
+import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.TARGET_LOCALE_NAMES_KEY
 import com.mobilerpgpack.phone.translator.models.ITranslationModel
-import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
-import com.mobilerpgpack.phone.translator.models.MLKitTranslationModel
-import com.mobilerpgpack.phone.translator.models.NLLB200TranslationModel
-import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
-import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.translator.sql.TranslationEntry
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
@@ -26,33 +20,35 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import java.io.File
+import org.koin.core.qualifier.named
+import org.koin.java.KoinJavaComponent.get
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
-import com.mobilerpgpack.phone.main.MainApplication
 
-object TranslationManager {
-    const val RUSSIAN_LOCALE = "ru"
-    const val ENGLISH_LOCALE = "en"
-    const val sourceLocale = ENGLISH_LOCALE
+class TranslationManager {
 
-    val targetLocale : String = getSystemLocale()
-
-    private var wasInit = false
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
-    private lateinit var db: TranslationDatabase
-
-    @SuppressLint("StaticFieldLeak")
     @Volatile
-    private lateinit var translationModel : ITranslationModel
+    private var translationModel : ITranslationModel = get (ITranslationModel::class.java,
+        named(ACTIVE_TRANSLATION_MODEL_KEY))
 
-    private val scope = MainApplication.globalScope
-    private val intervalsTranslator = IntervalMarkerTranslator()
-    private val translationModels = HashMap<TranslationType, ITranslationModel>()
+    private val targetLocale : String = get(String::class.java, named(TARGET_LOCALE_NAMES_KEY))
+
+    private val db: TranslationDatabase = get(TranslationDatabase::class.java)
+
+    private val scope : CoroutineScope = get (CoroutineScope::class.java)
+
+    private val intervalsTranslator : IntervalMarkerTranslator = get(IntervalMarkerTranslator::class.java)
+
+    private val translationModels : HashMap<TranslationType, ITranslationModel> =
+        get(HashMap<TranslationType, ITranslationModel>()::class.java)
+
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
+
     private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
+
     private val activeTranslationsAwaitable = ConcurrentHashMap<String, Job>()
 
     var inGame = false
@@ -84,52 +80,7 @@ object TranslationManager {
             changeTranslationModel(value)
         }
 
-    fun init( context: Context, activeTranslationType: TranslationType = TranslationType.DefaultTranslationType,
-        allowDownloadingOveMobile: Boolean = false
-    ) {
-        if (wasInit) {
-            return
-        }
-
-        translationModels[TranslationType.MLKit] =
-            MLKitTranslationModel(context, sourceLocale, targetLocale, allowDownloadingOveMobile)
-
-        val filesRootDir = context.getExternalFilesDir("")!!
-
-        val pathToOptModel = "${filesRootDir.absolutePath}${File.separator}opus-ct2-en-ru"
-        val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
-        val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
-
-        translationModels[TranslationType.OpusMt] =
-            OpusMtTranslationModel (pathToOptModel, optModelSourceProcessor, optModelTargetProcessor)
-
-        val pathToM2M100Model = "${filesRootDir.absolutePath}${File.separator}m2m100_ct2"
-        val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
-
-        translationModels[TranslationType.M2M100] =
-            M2M100TranslationModel (context, pathToM2M100Model, m2m100smpFile, allowDownloadingOveMobile)
-
-        val pathToSmall100Model = "${filesRootDir.absolutePath}${File.separator}small100_ct2"
-        val small100SmpFile = "${pathToSmall100Model}${File.separator}sentencepiece.model"
-
-        translationModels[TranslationType.Small100] =
-            Small100TranslationModel (context, pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile)
-
-        val pathToNLLB200Model = "${filesRootDir.absolutePath}${File.separator}nllb-200-distilled-600M"
-        val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
-
-        translationModels[TranslationType.NLLB200] =
-            NLLB200TranslationModel (context, pathToNLLB200Model, nLLB200SmpFile,
-                allowDownloadingOveMobile)
-
-        translationModels[TranslationType.GoogleTranslate] = GoogleTranslateV2(context)
-        translationModels[TranslationType.BingTranslate] = BingTranslatorModel(context)
-
-        translationModel = translationModels[activeTranslationType]!!
-
-        wasInit = true
-        db = TranslationDatabase.getInstance(context)
-
+    init {
         scope.launch {
             reloadSavedTranslations()
         }
@@ -301,14 +252,6 @@ object TranslationManager {
         }
     }
 
-    private fun getSystemLocale(): String {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Resources.getSystem().configuration.locales.get(0).language
-        } else {
-            Resources.getSystem().configuration.locale.language
-        }
-    }
-
     private suspend fun reloadSavedTranslations() {
         activeTranslations.clear()
         activeTranslationsAwaitable.clear()
@@ -321,6 +264,22 @@ object TranslationManager {
             translationModel = translationModels[targetTranslationType]!!
             scope.launch {
                 reloadSavedTranslations()
+            }
+        }
+    }
+
+    companion object{
+        const val RUSSIAN_LOCALE = "ru"
+
+        const val ENGLISH_LOCALE = "en"
+
+        const val sourceLocale = ENGLISH_LOCALE
+
+        fun getSystemLocale(): String {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Resources.getSystem().configuration.locales.get(0).language
+            } else {
+                Resources.getSystem().configuration.locale.language
             }
         }
     }

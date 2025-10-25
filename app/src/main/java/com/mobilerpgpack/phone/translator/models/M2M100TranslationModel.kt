@@ -6,6 +6,9 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.java.KoinJavaComponent.get
 
 class M2M100TranslationModel (
     private val context: Context,
@@ -18,7 +21,7 @@ class M2M100TranslationModel (
 
     override val zipFileSha256: String = "86178730785f6f250fa60a1aa977585eaa361cc50ce7c3ea9fbe9ebe6016dbd1"
 
-    override val translator: Translator = M2M100Translator(modelFile,spmFile)
+    override val translator: Translator = get(M2M100Translator::class.java)
 
     override val translationType: TranslationType = TranslationType.M2M100
 }

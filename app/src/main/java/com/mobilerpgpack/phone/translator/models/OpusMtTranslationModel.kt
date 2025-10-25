@@ -1,27 +1,26 @@
 package com.mobilerpgpack.phone.translator.models
 
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
+import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.COROUTINES_TRANSLATION_SCOPE
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
+import org.koin.core.qualifier.named
+import org.koin.java.KoinJavaComponent.get
 
-class OpusMtTranslationModel(
-    private val pathToTranslationModel: String,
-    private val pathToSourceProcessor: String,
-    private val pathToTargetProcessor: String,
-) : ITranslationModel {
-
+class OpusMtTranslationModel() : ITranslationModel {
     @Volatile
     private var wasInitialize = false
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope : CoroutineScope = get(CoroutineScope::class.java,
+        named(COROUTINES_TRANSLATION_SCOPE))
+
     private val lockObject = Any()
 
-    private val opusMtTranslator : OpusMtTranslator =
-        OpusMtTranslator(pathToTranslationModel, pathToSourceProcessor, pathToTargetProcessor)
+    private val opusMtTranslator : OpusMtTranslator = get(OpusMtTranslator::class.java)
 
     override val translationType: TranslationType = TranslationType.OpusMt
 

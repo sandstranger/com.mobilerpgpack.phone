@@ -12,16 +12,18 @@ import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.koin.compose.koinInject
+import org.koin.java.KoinJavaComponent.inject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import kotlin.coroutines.resumeWithException
 
-class DriveDownloader(
-    private val context: Context,
-    private val apiKey: String
-) {
-    private val client = OkHttpClient()
+class DriveDownloader(private val apiKey: String) {
+
+    private val context: Context by inject(Context::class.java)
+
+    private val client : OkHttpClient by inject (OkHttpClient::class.java)
 
     suspend fun download(fileId: String, destPath: String, onProgress: (String) -> Unit = { }) =
         withContext(Dispatchers.IO) {

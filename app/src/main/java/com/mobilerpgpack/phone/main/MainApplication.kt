@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.main
 
 import android.app.Application
+import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -9,9 +10,11 @@ import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.context.GlobalContext.startKoin
 
-class MainApplication : Application() {
+class MainApplication : Application(), KoinComponent {
 
     private lateinit var assetsExtractor : AssetExtractor
 
@@ -25,6 +28,8 @@ class MainApplication : Application() {
     override fun onTerminate() {
         super.onTerminate()
         globalScope.coroutineContext.cancelChildren()
+        val translationManager : TranslationManager = get()
+        translationManager.terminate()
     }
 
     private fun initializeKoin(){
@@ -32,7 +37,8 @@ class MainApplication : Application() {
         startKoin{
             androidLogger()
             androidContext(this@MainApplication)
-            modules(koinModulesProvider.mainModule)
+            modules(koinModulesProvider.mainModule,koinModulesProvider.httpModule,
+                koinModulesProvider.translationModule)
         }
     }
 
