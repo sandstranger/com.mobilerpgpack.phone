@@ -94,7 +94,7 @@ android {
         debug {
             jniDebuggable true
             ndk {
-                debugSymbolLevel 'FULL' // сохраняет символы
+                debugSymbolLevel 'FULL'
             }
             signingConfig signingConfigs.debug
             aaptOptions {
@@ -144,17 +144,9 @@ dependencies {
     implementation (project(":third_party:libpng"))
     implementation (project(":third_party:sdl3:android-project:app"))
     implementation (project(":third_party:fmod"))
+    implementation (project(":third_party:jna"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
 
-    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
-    implementation(libs.koin.core)
-    implementation(libs.koin.annotations)
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.androidx.compose.navigation)
-    implementation(libs.koin.core.coroutines)
-    implementation(libs.koin.androidx.startup)
-    ksp(libs.koin.ksp.compiler)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ndk)
     implementation(libs.firebase.analytics)

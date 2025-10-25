@@ -28,6 +28,8 @@ import com.mobilerpgpack.phone.ui.screen.OnScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.hideSystemBars
+import com.sun.jna.Native
+import com.sun.jna.Platform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -72,6 +74,8 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         initializeEngineData()
         super.onCreate(savedInstanceState)
+        Native.register(DoomRpgSeriesGameActivity::class.java,
+            enginesInfo[activeEngineType]!!.mainEngineLibNameForJna)
         enableEdgeToEdge()
         hideSystemBars()
         loadControlsLayout()

@@ -48,38 +48,31 @@ static std::string Translate (string input, const vector<string> *sentences){
 }
 
 extern "C" {
-extern jstring toJString(JNIEnv *env, const std::string &str);
-extern std::string jstringToStdString(JNIEnv *env, jstring jStr);
-extern vector<string> toVectorString (JNIEnv* env, jobject sentences);
+extern vector<string> toVectorString (char** sentences);
 
-JNIEXPORT void JNICALL
-Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_initializeFromJni
-        (JNIEnv *env, jobject thisObject, jstring pathToTranslationModel,
-         jstring pathToSourceProcessor,
-         jstring pathToTargetProcessor) {
+void OpusMtTranslator_initializeFromJni(const char* pathToTranslationModel,const char* pathToSourceProcessor,
+                                        const char* pathToTargetProcessor) {
     if (translator!= nullptr) {
         return;
     }
     sp_source = make_unique<SentencePieceProcessor>();
     sp_target = make_unique<SentencePieceProcessor>();
 
-    sp_source->Load(jstringToStdString(env, pathToSourceProcessor));
-    sp_target->Load(jstringToStdString(env, pathToTargetProcessor));
+    sp_source->Load(pathToSourceProcessor);
+    sp_target->Load(pathToTargetProcessor);
 
-    translator = create_translator(jstringToStdString(env, pathToTranslationModel), true);
+    translator = create_translator(pathToTranslationModel, true);
 }
 
-JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_translateFromJni
-        (JNIEnv *env, jobject thisObject,jstring text, jobject sentences) {
+const char* OpusMtTranslator_translateFromJni (const char* text, char** sentences) {
     if (translator == nullptr){
         return text;
     }
-    vector<string> nativeSentences = toVectorString(env,sentences);
-    return toJString(env,Translate(jstringToStdString(env, text), &nativeSentences));
+    vector<string> nativeSentences = toVectorString(sentences);
+    return Translate( text, &nativeSentences).c_str();
 }
 
-JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_releaseFromJni
-        (JNIEnv *env, jobject thisObject) {
+void OpusMtTranslator_releaseFromJni() {
     if (translator == nullptr){
         return;
     }
