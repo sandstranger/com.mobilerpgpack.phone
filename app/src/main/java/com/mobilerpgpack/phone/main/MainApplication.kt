@@ -15,12 +15,8 @@ import org.koin.core.component.get
 import org.koin.core.context.GlobalContext.startKoin
 
 class MainApplication : Application(), KoinComponent {
-
-    private lateinit var assetsExtractor : AssetExtractor
-
     override fun onCreate() {
         super.onCreate()
-        assetsExtractor = AssetExtractor(this)
         copyAllAssetsFromApk()
         initializeKoin()
     }
@@ -37,12 +33,12 @@ class MainApplication : Application(), KoinComponent {
         startKoin{
             androidLogger()
             androidContext(this@MainApplication)
-            modules(koinModulesProvider.mainModule,koinModulesProvider.httpModule,
-                koinModulesProvider.translationModule)
+            modules(koinModulesProvider.allModules)
         }
     }
 
     private fun copyAllAssetsFromApk(){
+        val assetsExtractor = get <AssetExtractor>()
         globalScope.launch {
             assetsExtractor.copyAssetsContentToInternalStorage()
         }

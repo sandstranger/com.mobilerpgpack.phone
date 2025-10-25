@@ -8,9 +8,12 @@ import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.main.MainApplication
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
-class DownloadViewModel(
-) : ViewModel() {
+class DownloadViewModel() : ViewModel(), KoinComponent {
+
+    private val translationManager : TranslationManager = get()
 
     var isLoading by mutableStateOf(false)
 
@@ -37,7 +40,7 @@ class DownloadViewModel(
             downloadJob = MainApplication.Companion.globalScope.launch {
                 try {
                     downloadProgress = ""
-                    TranslationManager.downloadModelIfNeeded { newValue ->
+                    translationManager.downloadModelIfNeeded { newValue ->
                         downloadProgress = newValue
                     }
                 }
@@ -53,6 +56,6 @@ class DownloadViewModel(
         isLoading = false
         downloadJob?.cancel()
         downloadJob = null
-        TranslationManager.cancelDownloadModel()
+        translationManager.cancelDownloadModel()
     }
 }
