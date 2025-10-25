@@ -550,6 +550,11 @@ val doom2RPGButtons : Collection<ButtonState> = listOf(
     )
 )
 
+class ScreenController {
+
+    
+}
+
 @Composable
 fun OnScreenController(
     buttonsToDraw: Collection<ButtonState>,
