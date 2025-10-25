@@ -7,6 +7,8 @@ import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
 import java.io.File
@@ -16,7 +18,7 @@ abstract class BaseM2M100TranslationModel(
     private val pathToModelFolder: String,
     private val spmFile: String,
     private val allowDownloadingOverMobile: Boolean = false
-) : TranslationModel(context, allowDownloadingOverMobile) {
+) : TranslationModel(context, allowDownloadingOverMobile), KoinComponent {
 
     protected abstract val zipFileId: String
     protected abstract val zipFileSha256: String
@@ -34,7 +36,7 @@ abstract class BaseM2M100TranslationModel(
         return@lazy "${context.getExternalFilesDir("")}${File.separator}${File(pathToModelFolder).name}.zip"
     }
 
-    private val modelDownloader : DriveDownloader = getKoin().get { parametersOf("AIzaSyCz-HWRD4hzUHB4aVEj6927ZjgTj-147PE") }
+    private val modelDownloader : DriveDownloader = get { parametersOf("AIzaSyCz-HWRD4hzUHB4aVEj6927ZjgTj-147PE") }
 
     private val zipFile by lazy { File(pathToModelZipFile) }
 
