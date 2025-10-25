@@ -4,6 +4,7 @@ import android.content.Context
 import com.mobilerpgpack.ctranslate2proxy.NLLB200Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import kotlinx.coroutines.async
+import org.koin.java.KoinJavaComponent.get
 
 class NLLB200TranslationModel(
     private val context: Context,
@@ -143,7 +144,7 @@ class NLLB200TranslationModel(
     override val zipFileSha256: String =
         "112f9f615eb89b0ad093d4e17e58f10d5298a031fac4ed96b0ad71a22633f125"
 
-    override val translator: Translator = NLLB200Translator(modelFile, spmFile)
+    override val translator: Translator = get(NLLB200Translator::class.java)
 
     override val translationType: TranslationType = TranslationType.NLLB200
 
