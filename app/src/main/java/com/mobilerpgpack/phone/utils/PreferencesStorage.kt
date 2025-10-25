@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.utils
 
 import android.content.Context
-import androidx.compose.runtime.collectAsState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -11,17 +10,10 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import lombok.Value
-import org.koin.compose.koinInject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import org.koin.java.KoinJavaComponent.get
-import org.koin.java.KoinJavaComponent.inject
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences_storage")
 
@@ -55,13 +47,13 @@ class PreferencesStorage(private val context: Context) {
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
 
-    val translationModelTypeValue
+    val translationModelType
         get() = getStringValue(
             translationModelTypePrefsKey,
             TranslationType.DefaultTranslationType.toString()
         )
 
-    val allowDownloadingModelsOverMobileValue
+    val allowDownloadingModelsOverMobile
         get() = getBooleanValue(allowDownloadingModelsOverMobilePrefsKey)
 
     val enableDoom64Mods get() = getBooleanValue(enableDoom64ModsPrefsKey)

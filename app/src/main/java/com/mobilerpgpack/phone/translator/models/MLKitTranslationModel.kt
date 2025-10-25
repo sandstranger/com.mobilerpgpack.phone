@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import android.util.Log
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.translate.TranslateLanguage
@@ -9,15 +8,19 @@ import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
-import com.mobilerpgpack.phone.translator.models.TranslationType
+import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.tasks.await
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.get
 
 class MLKitTranslationModel(
     private val context: Context,
     private var sourceLocale: String,
     private var targetLocale: String,
     private val allowDownloadingOverMobile: Boolean = false,
-) : TranslationModel(context, allowDownloadingOverMobile) {
+) : TranslationModel(context, allowDownloadingOverMobile), KoinComponent {
 
     override val supportedLocales = hashSetOf("af","am","ar","ar-Latn","az","be","bg","bg-Latn","bn","bs","ca","ceb","co","cs","cy",
         "da","de","el","el-Latn","en","eo","es","et","eu","fa","fi","fil","fr","fy","ga","gd","gl","gu","ha","haw",
@@ -36,22 +39,22 @@ class MLKitTranslationModel(
         get() = super.allowDownloadingOveMobile
         set(value) {
             super.allowDownloadingOveMobile = value
-            downloadConditions = buildConditions()
+            downloadConditions = getKoin().get { parametersOf(super.allowDownloadingOveMobile) }
         }
 
     init {
-        downloadConditions = buildConditions()
+        downloadConditions = getKoin().get { parametersOf(super.allowDownloadingOveMobile) }
     }
 
     override fun initialize(sourceLocale: String, targetLocale: String) {
         if (wasInitialize) {
             return
         }
-
         synchronized(lockObject) {
             this.sourceLocale = sourceLocale
             this.targetLocale = targetLocale
-            mlKitTranslator = buildMlkitTranslator()
+            mlKitTranslator?.close()
+            mlKitTranslator = getKoin().get { parametersOf(sourceLocale, targetLocale) }
             wasInitialize = true
         }
     }
@@ -84,9 +87,11 @@ class MLKitTranslationModel(
     override suspend fun needToDownloadModel(): Boolean {
         val modelManager = RemoteModelManager.getInstance()
         val sourceLocaleModelDownloaded =
-            modelManager.isModelDownloaded(getRemoteModel(sourceLocale)).await()
+            modelManager.isModelDownloaded(getKoin().get { parametersOf(modelCache,
+                sourceLocale) }).await()
         val targetLocaleModelDownloaded =
-            modelManager.isModelDownloaded(getRemoteModel(targetLocale)).await()
+            modelManager.isModelDownloaded(getKoin().get { parametersOf(modelCache,
+                targetLocale) }).await()
         return !sourceLocaleModelDownloaded || !targetLocaleModelDownloaded
     }
 
@@ -98,35 +103,37 @@ class MLKitTranslationModel(
         }
     }
 
-    private fun buildMlkitTranslator(): Translator? {
-        mlKitTranslator?.close()
+     companion object{
 
-        val sourceLang = TranslateLanguage.fromLanguageTag(sourceLocale)
-        val targetLang = TranslateLanguage.fromLanguageTag(targetLocale)
+         fun buildMlkitTranslator(sourceLocale: String, targetLocale: String): Translator? {
+             val sourceLang = TranslateLanguage.fromLanguageTag(sourceLocale)
+             val targetLang = TranslateLanguage.fromLanguageTag(targetLocale)
 
-        if (sourceLang != null && targetLang != null) {
+             if (sourceLang != null && targetLang != null) {
 
-            val options = TranslatorOptions.Builder()
-                .setSourceLanguage(sourceLang)
-                .setTargetLanguage(targetLang)
-                .build()
+                 val options = TranslatorOptions.Builder()
+                     .setSourceLanguage(sourceLang)
+                     .setTargetLanguage(targetLang)
+                     .build()
 
-            return Translation.getClient(options)
-        }
+                 return Translation.getClient(options)
+             }
 
-        return null
-    }
+             return null
+         }
 
-    private fun buildConditions(): DownloadConditions {
-        return if (super.allowDownloadingOveMobile)
-            DownloadConditions.Builder().build()
-        else
-            DownloadConditions.Builder().requireWifi().build()
-    }
+         fun buildConditions(allowDownloadingOveMobile: Boolean): DownloadConditions {
+             return if (allowDownloadingOveMobile)
+                 DownloadConditions.Builder().build()
+             else
+                 DownloadConditions.Builder().requireWifi().build()
+         }
 
-    private fun getRemoteModel(langCode: String): TranslateRemoteModel {
-        return modelCache.getOrPut(langCode) {
-            TranslateRemoteModel.Builder(langCode).build()
-        }
-    }
+         fun getRemoteModel(modelCache : MutableMap<String, TranslateRemoteModel>,langCode: String):
+                 TranslateRemoteModel {
+             return modelCache.getOrPut(langCode) {
+                 TranslateRemoteModel.Builder(langCode).build()
+             }
+         }
+     }
 }
