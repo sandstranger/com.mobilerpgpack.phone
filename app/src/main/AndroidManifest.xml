@@ -40,7 +40,7 @@
         android:required="false" />
 
     <application
-        android:name=".main.KoinApplication"
+        android:name=".CustomApp"
         android:gwpAsanMode="always"
         android:requestLegacyExternalStorage="true"
         android:allowBackup="true"

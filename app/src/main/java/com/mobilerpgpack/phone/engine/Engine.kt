@@ -22,18 +22,18 @@ import java.io.File
 const val logcatFileName = "wolfenstein_doom_rpg_log.log"
 
 internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
-    EngineTypes.Doom64ExPlus to EngineInfo("libDOOM64.so",
+    EngineTypes.Doom64ExPlus to EngineInfo("libDOOM64.so","DOOM64",
         arrayOf("ng_gl4es","SDL3",if (BuildConfig.DEBUG) "png16d" else "png16",
             "fmod","DOOM64"), wolfensteinButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom64MainWadsFolder (context) }),
-    EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so",
-        arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
+    EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so","WolfensteinRPG",
+        arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
             { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
-    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so", arrayOf("fluidsynth","ng_gl4es","SDL2","gme","SDL2_mixer",
-        "SDL2_ttf","Translator","DoomRPG"), doomRPGButtons,
+    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so","DoomRPG", arrayOf("fluidsynth","ng_gl4es","SDL2","gme","SDL2_mixer",
+        "SDL2_ttf","c++_shared","fbjni","Translator","DoomRPG"), doomRPGButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
-    EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so",
-        arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","Translator","DoomIIRPG"),
+    EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so","DoomIIRPG",
+        arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","DoomIIRPG"),
         doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
 )
 

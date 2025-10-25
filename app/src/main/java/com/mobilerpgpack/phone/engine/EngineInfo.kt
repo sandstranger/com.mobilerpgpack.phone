@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 
 class EngineInfo(val mainEngineLib: String,
+                 val mainEngineLibNameForJna: String,
                  val allLibs : Array<String>,
                  val buttonsToDraw : Collection<ButtonState>,
                  val pathToResourcesCallback: (Context) ->Flow<String?> = { EmptyFlow.defaultInstance })

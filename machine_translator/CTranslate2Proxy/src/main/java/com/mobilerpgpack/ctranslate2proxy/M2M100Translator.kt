@@ -1,24 +1,26 @@
 package com.mobilerpgpack.ctranslate2proxy
 
+import com.sun.jna.Native
+import com.sun.jna.StringArray
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class M2M100Translator(private val modelFile: String, private val spmFile: String) : Translator() {
 
-    private external fun initializeFromJni(modelFile: String, spmFile: String)
+    private external fun M2M100Translator_initializeFromJni(modelFile: String, spmFile: String)
 
-    private external fun translateFromJni(
+    private external fun M2M100Translator_translateFromJni(
         text: String,
-        sentences : List<String>,
+        sentences : StringArray,
         sourceLocale: String,
         targetLocale: String
     ): String
 
-    private external fun releaseFromJni()
+    private external fun M2M100Translator_releaseFromJni()
 
     override fun initialize() {
         synchronized(lockObject) {
-            initializeFromJni(modelFile, spmFile)
+            M2M100Translator_initializeFromJni(modelFile, spmFile)
         }
     }
 
@@ -30,13 +32,19 @@ class M2M100Translator(private val modelFile: String, private val spmFile: Strin
             if (text.isEmpty()){
                 return@withContext text
             }
-            return@withContext translateFromJni(text,splitTextIntoSentences(text), sourceLocale, targetLocale)
+            return@withContext M2M100Translator_translateFromJni(text,splitTextIntoSentences(text), sourceLocale, targetLocale)
         }
     }
 
     override fun release() {
         synchronized(lockObject) {
-            releaseFromJni()
+            M2M100Translator_releaseFromJni()
+        }
+    }
+
+    private companion object{
+        init {
+            Native.register(M2M100Translator::class.java, C2TRANSLATE_PROXY_NATIVE_LIB_NAME)
         }
     }
 }

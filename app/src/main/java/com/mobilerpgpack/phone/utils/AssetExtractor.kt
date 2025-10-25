@@ -8,19 +8,20 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-private const val GAME_FILES_ASSETS_FOLDER = "game_files"
+object AssetExtractor {
+    private const val GAME_FILES_ASSETS_FOLDER = "game_files"
+    var assetsCopied = false
+        private set
 
-class AssetExtractor (private val context: Context) {
-
-    suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
+    suspend fun copyAssetsContentToInternalStorage (context: Context ) = withContext(Dispatchers.IO){
         if (assetsCopied){
             return@withContext
         }
-        copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, context.getExternalFilesDir("")!!)
+        copyAssetsFolderToInternalStorage(context, GAME_FILES_ASSETS_FOLDER, context.getExternalFilesDir("")!!)
         assetsCopied = true
     }
 
-    private fun copyAssetsFolderToInternalStorage(assetsFolder: String, destFolder: File) {
+    private fun copyAssetsFolderToInternalStorage(context: Context, assetsFolder: String, destFolder: File) {
         val assetManager = context.assets
         try {
             val files = assetManager.list(assetsFolder)
@@ -34,7 +35,7 @@ class AssetExtractor (private val context: Context) {
 
                     val subFiles = assetManager.list(assetPath)
                     if (subFiles != null && subFiles.isNotEmpty()) {
-                        copyAssetsFolderToInternalStorage( assetPath, outFile)
+                        copyAssetsFolderToInternalStorage(context, assetPath, outFile)
                     } else {
                         val shouldCopy = !outFile.exists() || !compareAssetAndFileSize(assetManager, assetPath, outFile)
                         if (shouldCopy) {
@@ -62,10 +63,5 @@ class AssetExtractor (private val context: Context) {
         } catch (e: IOException) {
             false
         }
-    }
-
-    companion object{
-        var assetsCopied = false
-            private set
     }
 }
