@@ -53,7 +53,7 @@ class TranslationManager : KoinComponent {
 
     private val activeTranslationsAwaitable = ConcurrentHashMap<String, Job>()
 
-    private external fun registerTranslationMangerInstance()
+    private external fun registerTranslationManagerInstance()
 
     var inGame = false
 
@@ -85,7 +85,7 @@ class TranslationManager : KoinComponent {
         }
 
     init {
-        registerTranslationMangerInstance()
+        registerTranslationManagerInstance()
         scope.launch {
             reloadSavedTranslations()
         }

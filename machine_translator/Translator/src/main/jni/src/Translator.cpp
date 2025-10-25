@@ -18,7 +18,7 @@ static global_ref<jobject> g_Instance;
 static std::unordered_map<std::string, std::string> translationCache;
 
 JNIEXPORT void JNICALL
-Java_com_mobilerpgpack_phone_translator_TranslationManager_registerTranslationMangerInstance (JNIEnv* env,jobject obj) {
+Java_com_mobilerpgpack_phone_translator_TranslationManager_registerTranslationManagerInstance (JNIEnv* env, jobject obj) {
     g_Instance = make_global(obj);
     const auto g_TranslationManagerClass = g_Instance->getClass();
     g_IsTranslatedMethodID = g_TranslationManagerClass->getMethod<jboolean(alias_ref<JArrayByte>)>("isTranslated");
@@ -27,7 +27,6 @@ Java_com_mobilerpgpack_phone_translator_TranslationManager_registerTranslationMa
 }
 
 const char *translate(const char *input, bool textFromDialog) {
-
     const auto len = static_cast<jsize>(strlen(input));
     const auto jInput = JArrayByte::newArray(len);
     const auto classInstance = g_Instance.get();
