@@ -4,13 +4,13 @@ import android.content.Context
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.COROUTINES_TRANSLATION_SCOPE
 import com.mobilerpgpack.phone.utils.isInternetAvailable
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.qualifier.named
-import org.koin.java.KoinJavaComponent.get
 
-class BingTranslatorModel(private val context: Context) : ITranslationModel {
+class BingTranslatorModel(private val context: Context) : ITranslationModel, KoinComponent {
     private val supportedLocales = hashSetOf(
         "auto-detect", "af", "ar", "bn", "bs", "bg", "yue", "ca", "zh-Hans", "zh-Hant", "hr", "cs", "da", "nl", "en",
         "et", "fj", "fil", "fi", "fr", "de", "el", "ht", "he", "hi", "mww", "hu", "is", "id", "it", "ja", "sw", "tlh",
@@ -18,9 +18,9 @@ class BingTranslatorModel(private val context: Context) : ITranslationModel {
         "sr-Latn", "sk", "sl", "es", "sv", "ty", "ta", "te", "th", "to", "tr", "uk", "ur", "vi", "cy", "yua"
     )
 
-    private val scope : CoroutineScope = get(CoroutineScope::class.java, named(COROUTINES_TRANSLATION_SCOPE))
+    private val scope : CoroutineScope = get<CoroutineScope>( named(COROUTINES_TRANSLATION_SCOPE))
 
-    private val translator : BingTranslatorEndPoint = get (BingTranslatorEndPoint::class.java)
+    private val translator : BingTranslatorEndPoint = get<BingTranslatorEndPoint> ()
 
     override val translationType: TranslationType
         get() = TranslationType.BingTranslate

@@ -3,8 +3,11 @@ package com.mobilerpgpack.phone.translator
 import android.content.res.Resources
 import android.os.Build
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.main.FACEBOOK_JNI_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.ACTIVE_TRANSLATION_MODEL_KEY
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.TARGET_LOCALE_NAMES_KEY
+import com.mobilerpgpack.phone.main.SHARED_C_PLUS_PLUS_NATIVE_LIB_NAME
+import com.mobilerpgpack.phone.main.TRANSLATOR_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.translator.models.ITranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
@@ -20,36 +23,37 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.qualifier.named
-import org.koin.java.KoinJavaComponent.get
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
 
-class TranslationManager {
+class TranslationManager : KoinComponent {
 
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
     @Volatile
-    private var translationModel : ITranslationModel = get (ITranslationModel::class.java,
-        named(ACTIVE_TRANSLATION_MODEL_KEY))
+    private var translationModel : ITranslationModel = get (named(ACTIVE_TRANSLATION_MODEL_KEY))
 
-    private val targetLocale : String = get(String::class.java, named(TARGET_LOCALE_NAMES_KEY))
+    private val targetLocale : String = get(named(TARGET_LOCALE_NAMES_KEY))
 
-    private val db: TranslationDatabase = get(TranslationDatabase::class.java)
+    private val db: TranslationDatabase = get()
 
-    private val scope : CoroutineScope = get (CoroutineScope::class.java)
+    private val scope : CoroutineScope = get ()
 
-    private val intervalsTranslator : IntervalMarkerTranslator = get(IntervalMarkerTranslator::class.java)
+    private val intervalsTranslator : IntervalMarkerTranslator = get()
 
-    private val translationModels : HashMap<TranslationType, ITranslationModel> =
-        get(HashMap<TranslationType, ITranslationModel>()::class.java)
+    private val translationModels : Map<TranslationType, ITranslationModel> = get()
 
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
 
     private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
 
     private val activeTranslationsAwaitable = ConcurrentHashMap<String, Job>()
+
+    private external fun registerTranslationMangerInstance()
 
     var inGame = false
 
@@ -81,6 +85,7 @@ class TranslationManager {
         }
 
     init {
+        registerTranslationMangerInstance()
         scope.launch {
             reloadSavedTranslations()
         }
@@ -93,7 +98,6 @@ class TranslationManager {
         translationModels.values.forEach {
             it.release()
         }
-        translationModels.clear()
     }
 
     suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }) {
@@ -118,7 +122,6 @@ class TranslationManager {
 
     fun cancelDownloadModel() = translationModel.cancelDownloadingModel()
 
-    @JvmStatic
     fun getTranslation(input: ByteArray) : String {
         val text = input.sanitizeUtf8BytesToString()
         return if (isTranslated(text)) loadedTranslations[text]!!.value else text
@@ -127,13 +130,11 @@ class TranslationManager {
     fun getTranslation(text: String) =
         if (isTranslated(text)) loadedTranslations[text]!!.value else text
 
-    @JvmStatic
     fun isTranslated(input: ByteArray) =
         loadedTranslations.containsKey(input.sanitizeUtf8BytesToString())
 
     fun isTranslated(text : String) = loadedTranslations.containsKey(text)
 
-    @JvmStatic
     fun translate(input: ByteArray, textCameFromDialog : Boolean ): String {
         val text = input.sanitizeUtf8BytesToString()
 
@@ -274,6 +275,12 @@ class TranslationManager {
         const val ENGLISH_LOCALE = "en"
 
         const val sourceLocale = ENGLISH_LOCALE
+
+        init {
+            System.loadLibrary(SHARED_C_PLUS_PLUS_NATIVE_LIB_NAME)
+            System.loadLibrary(FACEBOOK_JNI_NATIVE_LIB_NAME)
+            System.loadLibrary(TRANSLATOR_NATIVE_LIB_NAME)
+        }
 
         fun getSystemLocale(): String {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

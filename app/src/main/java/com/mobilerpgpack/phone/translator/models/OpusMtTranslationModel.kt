@@ -8,19 +8,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.qualifier.named
-import org.koin.java.KoinJavaComponent.get
 
-class OpusMtTranslationModel() : ITranslationModel {
+class OpusMtTranslationModel() : ITranslationModel, KoinComponent {
     @Volatile
     private var wasInitialize = false
 
-    private val scope : CoroutineScope = get(CoroutineScope::class.java,
-        named(COROUTINES_TRANSLATION_SCOPE))
+    private val scope : CoroutineScope = get(named(COROUTINES_TRANSLATION_SCOPE))
 
     private val lockObject = Any()
 
-    private val opusMtTranslator : OpusMtTranslator = get(OpusMtTranslator::class.java)
+    private val opusMtTranslator : OpusMtTranslator = get()
 
     override val translationType: TranslationType = TranslationType.OpusMt
 

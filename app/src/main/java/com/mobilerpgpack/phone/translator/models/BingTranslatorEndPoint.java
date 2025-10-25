@@ -5,7 +5,7 @@ import com.zxw.bingtranslateapi.entity.TranslationParams;
 import org.koin.java.KoinJavaComponent;
 import lombok.Synchronized;
 
-public class BingTranslatorEndPoint {
+public class BingTranslatorEndPoint  {
     private BingTranslator translator;
 
     public String translate(String text, String sourceLocale,String targetLocale){

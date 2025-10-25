@@ -19,8 +19,6 @@ import com.mobilerpgpack.phone.utils.startActivity
 import kotlinx.coroutines.flow.first
 import java.io.File
 
-const val logcatFileName = "wolfenstein_doom_rpg_log.log"
-
 internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
     EngineTypes.Doom64ExPlus to EngineInfo("libDOOM64.so","DOOM64",
         arrayOf("ng_gl4es","SDL3",if (BuildConfig.DEBUG) "png16d" else "png16",
@@ -36,9 +34,6 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = hashMapOf(
         arrayOf("ng_gl4es","SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","DoomIIRPG"),
         doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
 )
-
-internal val defaultPathToLogcatFile: String = "${Environment.getExternalStorageDirectory().absolutePath}" +
-        "${File.separator}$logcatFileName"
 
 fun killEngine() = Process.killProcess(Process.myPid())
 

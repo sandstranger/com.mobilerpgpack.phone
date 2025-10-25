@@ -5,29 +5,27 @@ import com.google.gson.annotations.SerializedName
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.COROUTINES_TRANSLATION_SCOPE
 import com.mobilerpgpack.phone.utils.isInternetAvailable
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
-import org.koin.java.KoinJavaComponent.get
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
-import org.koin.java.KoinJavaComponent.getKoin
 
-class GoogleTranslateV2 (private val context : Context) : ITranslationModel {
+class GoogleTranslateV2 (private val context : Context) : ITranslationModel,KoinComponent {
     private val supportedLocales = hashSetOf("af","sq","am","ar","hy","az","eu","be","bn","bs","bg","ca","ceb", "zh",
         "zh-CN","zh-TW","co","hr","cs","da","nl","en","eo","et","fi","fr","fy","gl","ka","de","el","gu","ht","ha","haw","he",
         "hi","hmn","hu","is","ig","id","ga","it","ja","jw","kn","kk","km","ko","ku","ky","lo","la","lv","lt","lb","mk","mg",
         "ms","ml","mt","mi","mr","mn","my","ne","no","ny","ps","fa","pl","pt","pa","ro","ru","sm","gd","sr","st","sn","sd",
         "si","sk","sl","so","es","su","sw","sv","tl","tg","ta","te","th","tr","uk","ur","uz","vi","cy","xh","yi","yo","zu")
 
-    private val scope : CoroutineScope = get(CoroutineScope::class.java,
-        named(COROUTINES_TRANSLATION_SCOPE))
+    private val scope : CoroutineScope = get<CoroutineScope>(named(COROUTINES_TRANSLATION_SCOPE))
 
-    private val retrofit : Retrofit = getKoin().get { parametersOf("https://translate.googleapis.com/") }
+    private val retrofit : Retrofit = get { parametersOf("https://translate.googleapis.com/") }
 
     private val translateService = retrofit.create(GoogleTranslateApi::class.java)
 

@@ -8,6 +8,7 @@ import com.mobilerpgpack.ctranslate2proxy.NLLB200Translator
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.phone.net.DriveDownloader
+import com.mobilerpgpack.phone.translator.IntervalMarkerTranslator
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.BingTranslatorModel
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
@@ -26,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
+import org.koin.core.component.KoinComponent
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.createdAtStart
 import org.koin.core.module.dsl.named
@@ -42,7 +44,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.Boolean
 
-class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) {
+class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
 
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
     private val preferencesStorage: PreferencesStorage = PreferencesStorage(context)
@@ -51,7 +53,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single<Context> { context }.withOptions { createdAtStart() }
         single<CoroutineScope> { scope }.withOptions { createdAtStart() }
         single<PreferencesStorage> { preferencesStorage }.withOptions { createdAtStart() }
-        single <TranslationDatabase> { TranslationDatabase.createInstance(context) }
+        single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
         single<String> { pathToUserFolder }.withOptions {
             named(USER_ROOT_FOLDER_NAMED_KEY)
             createdAtStart()
@@ -94,7 +96,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         factory { (modelCache : MutableMap<String, TranslateRemoteModel>,langCode: String) ->
             MLKitTranslationModel.getRemoteModel(modelCache,langCode) }
 
-        single <MLKitTranslationModel> {  MLKitTranslationModel(context,
+        single <MLKitTranslationModel> {  MLKitTranslationModel(get(),
             TranslationManager.sourceLocale, targetLocale, allowDownloadingModelsOverMobile) }
 
         val pathToOptModel = "${pathToUserFolder}${File.separator}opus-ct2-en-ru"
@@ -111,7 +113,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single <M2M100Translator> { M2M100Translator(pathToM2M100Model,m2m100smpFile) }
 
-        single<M2M100TranslationModel> { M2M100TranslationModel (context, pathToM2M100Model, m2m100smpFile,
+        single<M2M100TranslationModel> { M2M100TranslationModel (get(), pathToM2M100Model, m2m100smpFile,
             allowDownloadingModelsOverMobile) }
 
         val pathToSmall100Model = "${pathToUserFolder}${File.separator}small100_ct2"
@@ -119,7 +121,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single<Small100Translator> { Small100Translator(pathToSmall100Model,small100SmpFile) }
 
-        single <Small100TranslationModel> { Small100TranslationModel (context, pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile) }
+        single <Small100TranslationModel> { Small100TranslationModel (get(), pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile) }
 
         single <BingTranslator> { BingTranslator(get ()) }
         singleOf(::BingTranslatorModel).bind()
@@ -129,24 +131,30 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single<NLLB200Translator> { NLLB200Translator(pathToNLLB200Model,nLLB200SmpFile) }
 
-        single<NLLB200TranslationModel> { NLLB200TranslationModel (context, pathToNLLB200Model, nLLB200SmpFile,
+        single<NLLB200TranslationModel> { NLLB200TranslationModel (get(), pathToNLLB200Model, nLLB200SmpFile,
             allowDownloadingModelsOverMobile) }
 
         singleOf(::GoogleTranslateV2).bind()
 
-        val translationModels = HashMap<TranslationType, ITranslationModel>()
-        translationModels[TranslationType.MLKit] = get(MLKitTranslationModel::class.java)
-        translationModels[TranslationType.OpusMt] = get(OpusMtTranslationModel::class.java)
-        translationModels[TranslationType.M2M100] = get(M2M100TranslationModel::class.java)
-        translationModels[TranslationType.Small100] = get(Small100TranslationModel::class.java)
-        translationModels[TranslationType.NLLB200] = get(NLLB200TranslationModel::class.java)
-        translationModels[TranslationType.BingTranslate] = get(BingTranslatorModel::class.java)
-        translationModels[TranslationType.GoogleTranslate] = get(GoogleTranslateV2::class.java)
-
-        single <ITranslationModel> { translationModels[activeTranslationModelType]!! }.withOptions {
+        single<Map<TranslationType, ITranslationModel>> {
+            mutableMapOf<TranslationType, ITranslationModel>().apply {
+                this[TranslationType.MLKit] = get<MLKitTranslationModel>()
+                this[TranslationType.OpusMt] = get<OpusMtTranslationModel>()
+                this[TranslationType.M2M100] = get<M2M100TranslationModel>()
+                this[TranslationType.Small100] = get<Small100TranslationModel>()
+                this[TranslationType.NLLB200] = get<NLLB200TranslationModel>()
+                this[TranslationType.BingTranslate] = get<BingTranslatorModel>()
+                this[TranslationType.GoogleTranslate] = get<GoogleTranslateV2>()
+            }
+        }.withOptions {
             named(ACTIVE_TRANSLATION_MODEL_KEY)
         }
-        single { translationModels }.bind()
+
+        single <ITranslationModel> { get<Map<TranslationType, ITranslationModel>>()[activeTranslationModelType]!! }
+            .withOptions {
+            named(ACTIVE_TRANSLATION_MODEL_KEY)
+        }
+        singleOf(::IntervalMarkerTranslator).bind()
         singleOf(::TranslationManager).bind()
     }
 
