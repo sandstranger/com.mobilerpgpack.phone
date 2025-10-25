@@ -46,7 +46,7 @@ android {
 }
 
 dependencies {
-
+    implementation (project(":third_party:fbjni"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

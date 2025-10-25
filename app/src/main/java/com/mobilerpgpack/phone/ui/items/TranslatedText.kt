@@ -40,7 +40,7 @@ fun TranslatedText(
 
     val allowTranslate by PreferencesStorage
         .getEnableLauncherTextTranslationValue(context)
-        .map { it }
+        .map { it == true }
         .collectAsState(initial = false)
 
     var displayText by remember { mutableStateOf(text) }

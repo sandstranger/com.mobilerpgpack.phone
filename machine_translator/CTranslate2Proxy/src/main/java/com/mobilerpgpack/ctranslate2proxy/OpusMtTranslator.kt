@@ -1,5 +1,7 @@
 package com.mobilerpgpack.ctranslate2proxy
 
+import com.sun.jna.Native
+import com.sun.jna.StringArray
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -9,18 +11,18 @@ class OpusMtTranslator(
     private val pathToTargetProcessor: String
 ) : Translator() {
 
-    private external fun initializeFromJni(
+    private external fun OpusMtTranslator_initializeFromJni(
         pathToTranslationModel: String, pathToSourceProcessor: String,
         pathToTargetProcessor: String
     )
 
-    private external fun translateFromJni( sourceText : String, sentences: List<String>): String
+    private external fun OpusMtTranslator_translateFromJni( sourceText : String, sentences: StringArray): String
 
-    private external fun releaseFromJni()
+    private external fun OpusMtTranslator_releaseFromJni()
 
     override fun initialize() {
         synchronized(lockObject) {
-            initializeFromJni(pathToTranslationModel, pathToSourceProcessor, pathToTargetProcessor)
+            OpusMtTranslator_initializeFromJni(pathToTranslationModel, pathToSourceProcessor, pathToTargetProcessor)
         }
     }
 
@@ -32,13 +34,19 @@ class OpusMtTranslator(
             if (text.isEmpty()){
                 return@withContext text
             }
-            return@withContext translateFromJni(text, splitTextIntoSentences(text))
+            return@withContext OpusMtTranslator_translateFromJni(text, splitTextIntoSentences(text))
         }
     }
 
     override fun release() {
         synchronized(lockObject) {
-            releaseFromJni()
+            OpusMtTranslator_releaseFromJni()
+        }
+    }
+
+    private companion object{
+        init {
+            Native.register(OpusMtTranslator::class.java,"CTranslate2Proxy")
         }
     }
 }

@@ -62,38 +62,31 @@ string translate(string input,vector<string > *sentences, const string *target_l
 
 
 extern "C" {
-extern jstring toJString(JNIEnv *env, const std::string &str);
-extern std::string jstringToStdString(JNIEnv *env, jstring jStr);
-extern vector<string> toVectorString (JNIEnv* env, jobject sentences);
+extern vector<string> toVectorString (char** sentences);
 
-JNIEXPORT void JNICALL
-Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_initializeFromJni
-        (JNIEnv *env, jobject thisObject, jstring pathToTranslationModel,
-         jstring pathToSourceProcessor) {
+ void Small100Translator_initializeFromJni  (const char* pathToTranslationModel,
+                                             const char* pathToSourceProcessor) {
     if (translator!= nullptr) {
         return;
     }
     sp = make_unique<SentencePieceProcessor>();
-    sp->Load(jstringToStdString(env, pathToSourceProcessor));
-    translator = create_translator(jstringToStdString(env, pathToTranslationModel), true);
+    sp->Load(pathToSourceProcessor);
+    translator = create_translator( pathToTranslationModel, true);
 }
 
-JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_translateFromJni
-        (JNIEnv *env, jobject thisObject, jstring text, jobject sentences,
-         jstring targetLocale) {
+const char* Small100Translator_translateFromJni (const char* text, char** sentences,const char* targetLocale) {
     if (translator == nullptr){
         return  text;
     }
 
-    string textString = jstringToStdString(env,text);
-    string targetLocaleString = jstringToStdString(env,targetLocale);
-    auto native_sentences = toVectorString(env, sentences);
+    string textString = text;
+    string targetLocaleString = targetLocale;
+    auto native_sentences = toVectorString(sentences);
 
-    return toJString(env,translate(textString,&native_sentences, &targetLocaleString));
+    return translate(textString,&native_sentences, &targetLocaleString).c_str();
 }
 
-JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_Small100Translator_releaseFromJni
-        (JNIEnv *env, jobject thisObject) {
+void Small100Translator_releaseFromJni() {
     if (translator == nullptr){
         return;
     }
