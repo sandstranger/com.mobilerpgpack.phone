@@ -64,11 +64,7 @@ class PreferencesStorage(private val context: Context) {
         get() =
             getBooleanValue(useSDLTTFForFontsRenderingPrefsKey, defaultValue = false)
 
-    val enableLauncherTextTranslation
-        get() =
-            getBooleanValue(enableLauncherTextTranslationPrefsKey, defaultValue = false)
-
-    val hideScreenControlsValue
+    val hideScreenControls
         get() =
             getBooleanValue(hideScreenControlsPrefsKey, defaultValue = false)
 
@@ -90,13 +86,13 @@ class PreferencesStorage(private val context: Context) {
         get() =
             getStringValue(pathToDoom64FolderWithMods)
 
-    val getPathToDoom64MainWadsFolder get() = getStringValue(pathToDoom64FolderWithMainWads)
+    val pathToDoom64MainWadsFolder get() = getStringValue(pathToDoom64FolderWithMainWads)
 
     val pathToDoom2RpgIpaFile get() = getStringValue(pathToDoom2RpgIpaPrefsKey)
 
     val pathToDoomRpgZipFile get() = getStringValue(pathToDoomRpgZipFilePrefsKey)
 
-    val autoHideControls get() = getBooleanValue(enableControlsAutoHiding, defaultValue = false)
+    val autoHideScreenControls get() = getBooleanValue(enableControlsAutoHiding, defaultValue = false)
 
     val showCustomMouseCursor get() = getBooleanValue(showCustomMouseCursorPrefsKey)
 

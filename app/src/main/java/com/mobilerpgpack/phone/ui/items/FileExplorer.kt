@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.codekidlabs.storagechooser.StorageChooser
+import org.koin.compose.koinInject
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RequestPath(explorerItemTitle: String,
@@ -19,14 +21,12 @@ fun RequestPath(explorerItemTitle: String,
         mutableStateOf(previousSavedPath)
     }
 
+    val storageChooserBuilder = koinInject<StorageChooser.Builder>(parameters = {
+        parametersOf(activity ) })
+
     PreferenceItem(
         explorerItemTitle, currentPath,
         onClick = {
-            val storageChooserBuilder = StorageChooser.Builder()
-                .withActivity(activity)
-                .withFragmentManager(activity!!.fragmentManager)
-                .withMemoryBar(true)
-                .allowCustomPath(true)
 
             if (requestOnlyDirectory){
                 storageChooserBuilder.setType(StorageChooser.DIRECTORY_CHOOSER)
