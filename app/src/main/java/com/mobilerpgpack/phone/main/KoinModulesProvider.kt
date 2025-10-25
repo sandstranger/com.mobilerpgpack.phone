@@ -1,12 +1,14 @@
 package com.mobilerpgpack.phone.main
 
+import android.app.Activity
 import android.content.Context
+import com.codekidlabs.storagechooser.StorageChooser
 import com.google.mlkit.nl.translate.TranslateRemoteModel
-import com.google.mlkit.nl.translate.Translator
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.NLLB200Translator
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
+import com.mobilerpgpack.phone.engine.Engine
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.translator.IntervalMarkerTranslator
 import com.mobilerpgpack.phone.translator.TranslationManager
@@ -20,6 +22,9 @@ import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
 import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
+import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
+import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.CoroutineScope
@@ -28,28 +33,26 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.koin.core.component.KoinComponent
-import org.koin.core.module.dsl.bind
+import org.koin.core.module.Module
 import org.koin.core.module.dsl.createdAtStart
 import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
-import org.koin.core.parameter.parametersOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.koin.java.KoinJavaComponent
-import java.io.File
-import kotlin.collections.set
-import org.koin.java.KoinJavaComponent.get
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.Boolean
+import java.io.File
 
 class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
 
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
     private val preferencesStorage: PreferencesStorage = PreferencesStorage(context)
 
-    val mainModule = module {
+    val allModules : List<Module>
+
+    private val mainModule = module {
         single<Context> { context }.withOptions { createdAtStart() }
         single<CoroutineScope> { scope }.withOptions { createdAtStart() }
         single<PreferencesStorage> { preferencesStorage }.withOptions { createdAtStart() }
@@ -58,9 +61,11 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(USER_ROOT_FOLDER_NAMED_KEY)
             createdAtStart()
         }
+        singleOf(::AssetExtractor).bind()
+        singleOf(::Engine).bind()
     }
 
-    val httpModule = module {
+    private val httpModule = module {
         factory { (retrofitKey : String) -> Retrofit.Builder()
             .baseUrl(retrofitKey )
             .addConverterFactory(GsonConverterFactory.create())
@@ -70,7 +75,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         factory { (apiKey: String) -> DriveDownloader(apiKey) }
     }
 
-    val translationModule = module {
+    private val translationModule = module {
         var activeTranslationModelType : TranslationType
         var allowDownloadingModelsOverMobile = false
 
@@ -158,13 +163,25 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         singleOf(::TranslationManager).bind()
     }
 
+    val composeModule = module {
+        factory { (activity : Activity) -> StorageChooser.Builder()
+            .withActivity(activity)
+            .withFragmentManager(activity!!.fragmentManager)
+            .withMemoryBar(true)
+            .allowCustomPath(true) }.bind()
+
+        viewModelOf(::DownloadViewModel)
+        singleOf(::SettingsScreen).bind()
+    }
+
+    init {
+        allModules = listOf<Module>(mainModule,httpModule,translationModule, composeModule)
+    }
+
     companion object{
         const val USER_ROOT_FOLDER_NAMED_KEY = "user_root_folder"
-
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"
-
         const val COROUTINES_TRANSLATION_SCOPE = "courotines_translation_scope"
-
         const val ACTIVE_TRANSLATION_MODEL_KEY = "active_translation_model"
     }
 }

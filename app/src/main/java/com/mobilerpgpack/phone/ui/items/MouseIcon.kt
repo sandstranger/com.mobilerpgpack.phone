@@ -21,16 +21,17 @@ import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.delay
+import org.koin.compose.koinInject
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
 import kotlin.math.roundToInt
 
 @Composable
 fun MouseIcon() {
-    val context = LocalContext.current
+    val preferencesStorage = koinInject<PreferencesStorage>()
     var iconOffset by remember { mutableStateOf(IntOffset.Zero) }
-    val offsetXMouse by PreferencesStorage.getOffsetXMouse(context).collectAsState(initial = 0f)
-    val offsetYMouse by PreferencesStorage.getOffsetYMouse(context).collectAsState(initial = 0f)
+    val offsetXMouse by preferencesStorage.offsetXMouse.collectAsState(initial = 0f)
+    val offsetYMouse by preferencesStorage.offsetYMouse.collectAsState(initial = 0f)
     val displayMetrics = Resources.getSystem().displayMetrics
     val screenWidth = displayMetrics.widthPixels
     val screenHeight = displayMetrics.heightPixels

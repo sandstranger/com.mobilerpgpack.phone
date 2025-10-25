@@ -12,6 +12,9 @@ private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
 class AssetExtractor (private val context: Context) {
 
+    var assetsCopied = false
+        private set
+
     suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
         if (assetsCopied){
             return@withContext
@@ -62,10 +65,5 @@ class AssetExtractor (private val context: Context) {
         } catch (e: IOException) {
             false
         }
-    }
-
-    companion object{
-        var assetsCopied = false
-            private set
     }
 }
