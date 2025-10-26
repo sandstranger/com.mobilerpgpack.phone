@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22.1)
-project(doom-wolf-rpg)
+project(Engines_Hub)
 
 set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/sdl2)
 set(SDL2_INCLUDE_DIR ${SDL_LOCATION}/include)
