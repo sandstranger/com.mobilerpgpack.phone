@@ -199,6 +199,8 @@ dependencies {
     implementation libs.androidx.compose.material.icons.extended.android
     implementation libs.converter.gson
     implementation libs.gson
+    compileOnly libs.projectlombok.lombok
+    annotationProcessor libs.projectlombok.lombok
     implementation(libs.retrofit)
     implementation (libs.androidx.room.runtime)
     ksp libs.androidx.room.compiler
