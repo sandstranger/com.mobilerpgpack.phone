@@ -103,6 +103,18 @@ android {
             }
         }
     }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def appName = "Engines_Hub"
+            def versionName = variant.versionName
+            def versionCode = variant.versionCode
+            def buildType = variant.buildType.name
+            def flavor = variant.flavorName
+            outputFileName = "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}.apk"
+        }
+    }
+
     externalNativeBuild {
         cmake {
             path "$rootProject.rootDir/CMakeLists.txt"
