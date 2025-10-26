@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.mobilerpgpack.translator'
+    namespace 'com.mobilerpgpack.phone.legacy_gl4es'
     compileSdkVersion versions.target_sdk
 
     defaultConfig {
@@ -11,25 +11,30 @@ android {
         targetSdk versions.target_sdk
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
         externalNativeBuild {
-            ndkBuild {
-                arguments += build_flags.ndk_build_platform
-                arguments += build_flags.compiling_arguments
-                arguments += build_flags.ndk_build_flags
-                cFlags  = build_flags.common_c_flags
-                cppFlags = build_flags.common_cpp_flags
+            cmake {
+                arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
+                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
+                        "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
+                        "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
+                        "-DBUILD_SHARED_LIBS=true",
+                        "-DANDROID_STL=c++_static"
             }
         }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     externalNativeBuild {
-        ndkBuild {
-            path 'src/main/jni/Android.mk'
+        cmake {
+            path "src/main/jni/gl4es/CMakeLists.txt"
+            version versions.cmake_version
         }
     }
+    buildToolsVersion versions.build_tools_version
+    ndkVersion versions.ndk_version
 
     buildTypes {
         release {
@@ -41,18 +46,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    buildToolsVersion versions.build_tools_version
-    ndkVersion versions.ndk_version
 }
 
 dependencies {
-    implementation (project(":third_party:fbjni"))
-    compileOnly libs.projectlombok.lombok
-    annotationProcessor libs.projectlombok.lombok
-    implementation(libs.slf4j.api)
-    implementation(libs.okhttp)
-    implementation libs.converter.gson
-    implementation libs.gson
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
