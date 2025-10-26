@@ -1,0 +1,20 @@
+name: Cleanup old runs and caches
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch: 
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old workflow runs
+        run: |
+          gh run list --limit 1000 --json databaseId | jq -r '.[].databaseId' | xargs -I{} gh run delete {}
+      - name: Delete old caches
+        run: |
+          gh cache list --limit 1000 | awk '{print $1}' | xargs -I{} gh cache delete {}
