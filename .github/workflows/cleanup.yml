@@ -1,7 +1,8 @@
 name: Cleanup old runs and caches
 
-workflow_dispatch:
-
+on:
+  workflow_dispatch:
+  
 permissions:
   actions: write
   contents: read
