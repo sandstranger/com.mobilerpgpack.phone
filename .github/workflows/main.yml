@@ -1,4 +1,4 @@
-name: Android Nightly Build
+name: Android Open GL ES 3.2 Build
 
 on: [push, pull_request]
 
@@ -90,19 +90,6 @@ jobs:
         
     - name: Grant gradlew permissions
       run: chmod +x gradlew
-
-    - name: Build OpenGL ES 2.0 with Gradle
-      run: ./gradlew assembleFdroidOpenGLES2_0Release --stacktrace --info
-      env:
-        ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
-        
-    - name: Upload OpenGL ES 2.0 APK artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: engines_hub_open_gles_2_0_nightly
-        path: |
-          app/build/outputs/apk/fdroidOpenGLES2_0/release/*.apk
-        if-no-files-found: error
         
     - name: Build OpenGL ES 3.2 with Gradle
       run: ./gradlew assembleFdroidOpenGLES3_2Release --stacktrace --info
