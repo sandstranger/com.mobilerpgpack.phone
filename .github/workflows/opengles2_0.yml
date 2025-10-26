@@ -101,4 +101,6 @@ jobs:
         name: engines_hub_open_gles_2_0_nightly
         path: |
           app/build/outputs/apk/fdroidOpenGLES2_0/release/*.apk
+        retention-days: 7
         if-no-files-found: error
+        
