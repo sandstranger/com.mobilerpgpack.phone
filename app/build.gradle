@@ -197,9 +197,6 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation libs.androidx.compose.material.icons.core.android
     implementation libs.androidx.compose.material.icons.extended.android
-    implementation(libs.slf4j.api)
-    compileOnly libs.projectlombok.lombok
-    annotationProcessor libs.projectlombok.lombok
     implementation libs.converter.gson
     implementation libs.gson
     implementation(libs.retrofit)
