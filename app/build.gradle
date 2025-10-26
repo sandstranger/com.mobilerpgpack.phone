@@ -111,7 +111,8 @@ android {
             def versionCode = variant.versionCode
             def buildType = variant.buildType.name
             def flavor = variant.flavorName
-            outputFileName = "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}.apk"
+            def date = new Date().format("yyyy_MM_dd_HH_mm")
+            outputFileName = "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}_${date}.apk"
         }
     }
 
