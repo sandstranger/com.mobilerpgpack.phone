@@ -1,4 +1,4 @@
-name: Android Nightly Build
+name: Android Open GL ES 3.2 Build
 
 on: [push, pull_request]
 
@@ -24,17 +24,6 @@ jobs:
         git lfs install
         git lfs fetch --all && git lfs checkout
 
-    - name: Cache Gradle
-      uses: actions/cache@v3
-      id: gradle-cache
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-
     - name: Set up JDK 24
       uses: actions/setup-java@v3
       with:
@@ -47,7 +36,6 @@ jobs:
         sudo apt-get -qq install unzip wget git git-lfs
 
     - name: Setup Android SDK
-      if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
         mkdir -p $ANDROID_SDK_ROOT
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
@@ -56,14 +44,12 @@ jobs:
         echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
     - name: Accept licenses and install SDK components
-      if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
         yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
         $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;36.1.0" "platform-tools" "cmake;4.1.2"
         echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
 
     - name: Download and setup CMake (fallback)
-      if: steps.sdk-cache.outputs.cache-hit != 'true'
       run: |
         wget -q https://github.com/Kitware/CMake/releases/download/v${{ env.CMAKE_VERSION }}/cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64.tar.gz
         tar -xzf cmake-${{ env.CMAKE_VERSION }}-Linux-x86_64.tar.gz
@@ -90,16 +76,30 @@ jobs:
         
     - name: Grant gradlew permissions
       run: chmod +x gradlew
-
-    - name: Build with Gradle
-      run: ./gradlew assembleFdroidRelease --stacktrace --info
+        
+    - name: Build OpenGL ES 3.2 with Gradle
+      run: ./gradlew assembleFdroidOpenGLES3_2Release --stacktrace --info
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+
+    - name: Cleanup caches
+      run: |
+        sudo apt-get clean
+        rm -rf ~/.cache/*
+        rm -rf $RUNNER_TEMP/*
+        ./gradlew --stop
+        rm -rf ~/.gradle/caches \
+            ~/.gradle/wrapper/dists \
+            ~/.gradle/native \
+            ~/.gradle/tmp \
+            ~/.gradle/daemon
+        rm -rf ~/.gradle/caches
         
-    - name: Upload APK artifacts
+    - name: Upload OpenGL ES 3.2 APK artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: engines_hub_nightly
+        name: engines_hub_open_gles_3_2_nightly
         path: |
-          app/build/outputs/apk/fdroid/release/*.apk
+          app/build/outputs/apk/fdroidOpenGLES3_2/release/*.apk
+        retention-days: 7
         if-no-files-found: error

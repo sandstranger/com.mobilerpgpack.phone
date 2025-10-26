@@ -21,13 +21,44 @@ android {
 
     flavorDimensions "store"
     productFlavors {
-        google {
+        googleOpenGLES3_2 {
             dimension "store"
-            buildConfigField "boolean", "FDROID_BUILD", "false"
+            buildConfigField "boolean", "LEGACY_GLES2", "false"
+            externalNativeBuild {
+                cmake {
+                    arguments "-DLEGACY_GLES2=false"
+                }
+            }
         }
-        fdroid {
+        fdroidOpenGLES3_2 {
             dimension "store"
-            buildConfigField "boolean", "FDROID_BUILD", "true"
+            buildConfigField "boolean", "LEGACY_GLES2", "false"
+            externalNativeBuild {
+                cmake {
+                    arguments "-DLEGACY_GLES2=false"
+                }
+            }
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
+        }
+        googleOpenGLES2_0 {
+            dimension "store"
+            buildConfigField "boolean", "LEGACY_GLES2", "true"
+            externalNativeBuild {
+                cmake {
+                    arguments "-DLEGACY_GLES2=true"
+                }
+            }
+        }
+        fdroidOpenGLES2_0 {
+            dimension "store"
+            buildConfigField "boolean", "LEGACY_GLES2", "true"
+            externalNativeBuild {
+                cmake {
+                    arguments "-DLEGACY_GLES2=true"
+                }
+            }
             firebaseCrashlytics {
                 mappingFileUploadEnabled false
             }
@@ -72,6 +103,19 @@ android {
             }
         }
     }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def appName = "Engines_Hub"
+            def versionName = variant.versionName
+            def versionCode = variant.versionCode
+            def buildType = variant.buildType.name
+            def flavor = variant.flavorName
+            def date = new Date().format("yyyy_MM_dd_HH_mm")
+            outputFileName = "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}_${date}.apk"
+        }
+    }
+
     externalNativeBuild {
         cmake {
             path "$rootProject.rootDir/CMakeLists.txt"
@@ -85,7 +129,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             aaptOptions {
-                noCompress "bin","spm","json","txt","sf2","ttf"
+                noCompress "bin","spm","json","txt","sf2","ttf","wad"
             }
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
@@ -98,7 +142,7 @@ android {
             }
             signingConfig signingConfigs.debug
             aaptOptions {
-                noCompress "bin","spm","json","txt","sf2","ttf"
+                noCompress "bin","spm","json","txt","sf2","ttf", "wad"
             }
         }
     }
@@ -130,7 +174,7 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':machine_translator:Translator:build', ':third_party:sdl2:android-project:app:build', ':third_party:openal:build',
         ':third_party:sdl2-mixer:build',':third_party:sdl2-ttf:build', ':third_party:NG-GL4ES:build',
         ':third_party:libpng:build',':third_party:sdl3:android-project:app:build',
-        ':third_party:fmod:build'
+        ':third_party:fmod:build',':third_party:legacy_gl4es:build'
 
 dependencies {
     implementation project(':third_party:sdl2:android-project:app')
@@ -145,6 +189,7 @@ dependencies {
     implementation (project(":third_party:sdl3:android-project:app"))
     implementation (project(":third_party:fmod"))
     implementation (project(":third_party:jna"))
+    implementation (project(":third_party:legacy_gl4es"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
@@ -161,11 +206,10 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation libs.androidx.compose.material.icons.core.android
     implementation libs.androidx.compose.material.icons.extended.android
-    implementation(libs.slf4j.api)
-    compileOnly libs.projectlombok.lombok
-    annotationProcessor libs.projectlombok.lombok
     implementation libs.converter.gson
     implementation libs.gson
+    compileOnly libs.projectlombok.lombok
+    annotationProcessor libs.projectlombok.lombok
     implementation(libs.retrofit)
     implementation (libs.androidx.room.runtime)
     ksp libs.androidx.room.compiler
