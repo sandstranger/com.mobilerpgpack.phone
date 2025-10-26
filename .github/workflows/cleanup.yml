@@ -1,9 +1,6 @@
 name: Cleanup old runs and caches
 
-on:
-  schedule:
-    - cron: '0 0 * * 0'
-  workflow_dispatch:
+workflow_dispatch:
 
 permissions:
   actions: write
@@ -18,8 +15,11 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gh jq
+          sudo apt-get install -y gh jq git
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
       - name: Delete old workflow runs
         run: |
           gh run list --limit 1000 --json databaseId | jq -r '.[].databaseId' | xargs -I{} gh run delete {}
