@@ -10,11 +10,11 @@ buildscript {
     ]
     ext.build_flags = [
             compiling_arguments : "-j${Runtime.getRuntime().availableProcessors()}",
-            common_c_flags : ["-O3","-flto=thin","-Wno-writable-strings","-w","-fmax-errors=5"],
-            common_cpp_flags : ["-O3" ,"-flto=thin","-Wno-writable-strings","-w","-fmax-errors=5"],
+            common_c_flags : ["-O3","-flto=thin"],
+            common_cpp_flags : ["-O3" ,"-flto=thin"],
             ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=thin -Wl,-plugin-opt=-emulated-tls",
-            CMAKE_CFLAGS : "-O3 -flto=thin -Wno-writable-strings -w -fmax-errors=5",
-            CMAKE_CXXFLAGS : "-O3 -flto=thin -Wno-writable-strings -w -fmax-errors=5",
+            CMAKE_CFLAGS : "-O3 -flto=thin",
+            CMAKE_CXXFLAGS : "-O3 -flto=thin",
             CMAKE_SHADERLINKER_FLAGS :"-flto=thin -Wl,-plugin-opt=-emulated-tls -fuse-ld=lld",
             ndk_build_platform : "APP_PLATFORM=android-$versions.native_android_platform_version"
     ]
