@@ -1,6 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext.versions = [
+            app_package_name : "com.mobilerpgpack.phone",
+            app_version_code : 15,
+            app_version_name : "1.1.0",
             min_sdk  : 24,
             target_sdk : 36,
             ndk_version : '29.0.14206865',

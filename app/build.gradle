@@ -80,20 +80,19 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mobilerpgpack.phone"
+        applicationId versions.app_package_name
         minSdk versions.min_sdk
         targetSdk versions.target_sdk
-        versionCode 15
-        versionName "1.1.0"
+        versionCode versions.app_version_code
+        versionName versions.app_version_name
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
 
         externalNativeBuild {
             cmake {
-                arguments"-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
+                arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS -fno-stack-protector -fno-builtin -U_FORTIFY_SOURCE -fno-delete-null-pointer-checks " +
                                 "-fno-strict-aliasing -Wno-c++11-narrowing",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS -fno-stack-protector -fno-builtin -U_FORTIFY_SOURCE -fno-delete-null-pointer-checks " +
