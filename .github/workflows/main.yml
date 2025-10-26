@@ -91,15 +91,28 @@ jobs:
     - name: Grant gradlew permissions
       run: chmod +x gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew assembleFdroidRelease --stacktrace --info
+    - name: Build OpenGL ES 2.0 with Gradle
+      run: ./gradlew assembleFdroidOpenGLES2_0Release --stacktrace --info
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
         
-    - name: Upload APK artifacts
+    - name: Upload OpenGL ES 2.0 APK artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: engines_hub_nightly
+        name: engines_hub_open_gles_2_0_nightly
         path: |
-          app/build/outputs/apk/fdroid/release/*.apk
+          app/build/outputs/apk/fdroidOpenGLES2_0/release/*.apk
+        if-no-files-found: error
+        
+    - name: Build OpenGL ES 3.2 with Gradle
+      run: ./gradlew assembleFdroidOpenGLES3_2Release --stacktrace --info
+      env:
+        ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
+        
+    - name: Upload OpenGL ES 3.2 APK artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: engines_hub_open_gles_3_2_nightly
+        path: |
+          app/build/outputs/apk/fdroidOpenGLES3_2/release/*.apk
         if-no-files-found: error
