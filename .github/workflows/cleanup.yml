@@ -1,8 +1,9 @@
 name: Cleanup old runs and caches
+
 on:
   schedule:
     - cron: '0 0 * * 0'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 permissions:
   actions: write
@@ -11,10 +12,30 @@ permissions:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Delete old workflow runs
+      - name: Install dependencies
         run: |
-          gh run list --limit 1000 --json databaseId | jq -r '.[].databaseId' | xargs -I{} gh run delete {}
+          sudo apt-get update
+          sudo apt-get install -y gh jq
+
+      - name: Delete old workflow runs (keep last 10)
+        run: |
+          echo "Listing all workflow runs..."
+          RUN_IDS=$(gh run list --limit 1000 --json databaseId,createdAt --jq '. | sort_by(.createdAt) | .[].databaseId')         
+          TOTAL=$(echo "$RUN_IDS" | wc -l)
+          KEEP=10          
+          if [ "$TOTAL" -gt "$KEEP" ]; then
+            TO_DELETE=$(echo "$RUN_IDS" | head -n $(($TOTAL - $KEEP)))
+            for id in $TO_DELETE; do
+              echo "Deleting workflow run $id..."
+              gh run delete $id --confirm
+            done
+          else
+            echo "Nothing to delete, total runs ($TOTAL) <= $KEEP"
+          fi
+
       - name: Delete old caches
         run: |
           gh cache list --limit 1000 | awk '{print $1}' | xargs -I{} gh cache delete {}
