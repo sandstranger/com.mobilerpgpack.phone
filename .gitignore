@@ -20,3 +20,7 @@ sdl2-ttf/build/
 app/google/
 app/google-services.json
 app/fdroid/release
+app/googleOpenGLES2_0
+app/fdroidOpenGLES2_0
+app/fdroidOpenGLES3_2
+app/googleOpenGLES3_2
