@@ -27,6 +27,11 @@ Java_com_mobilerpgpack_phone_translator_TranslationManager_registerTranslationMa
 }
 
 const char *translate(const char *input, bool textFromDialog) {
+
+    if (translationCache.contains(input)) {
+        return translationCache[input].c_str();
+    }
+
     const auto len = static_cast<jsize>(strlen(input));
     const auto jInput = JArrayByte::newArray(len);
     const auto classInstance = g_Instance.get();
