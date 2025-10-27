@@ -28,7 +28,7 @@ Java_com_mobilerpgpack_phone_translator_TranslationManager_registerTranslationMa
 
 const char *translate(const char *input, bool textFromDialog) {
 
-    if (g_Instance == nullptr){
+    if (!g_Instance){
         return input;
     }
 
@@ -51,7 +51,7 @@ const char *translate(const char *input, bool textFromDialog) {
 
     const auto jOutput = g_GetTranslationMethodID(classInstance,jInput);
 
-    if (jOutput == nullptr) {
+    if (!jOutput) {
         return input;
     }
 
