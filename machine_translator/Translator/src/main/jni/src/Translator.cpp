@@ -28,6 +28,10 @@ Java_com_mobilerpgpack_phone_translator_TranslationManager_registerTranslationMa
 
 const char *translate(const char *input, bool textFromDialog) {
 
+    if (g_Instance == nullptr){
+        return input;
+    }
+
     if (translationCache.contains(input)) {
         return translationCache[input].c_str();
     }
