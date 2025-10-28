@@ -24,6 +24,7 @@ android {
         googleOpenGLES3_2 {
             dimension "store"
             buildConfigField "boolean", "LEGACY_GLES2", "false"
+            manifestPlaceholders = [gles3Required: "true"]
             externalNativeBuild {
                 cmake {
                     arguments "-DLEGACY_GLES2=false"
@@ -33,6 +34,7 @@ android {
         fdroidOpenGLES3_2 {
             dimension "store"
             buildConfigField "boolean", "LEGACY_GLES2", "false"
+            manifestPlaceholders = [gles3Required: "true"]
             externalNativeBuild {
                 cmake {
                     arguments "-DLEGACY_GLES2=false"
@@ -45,6 +47,7 @@ android {
         googleOpenGLES2_0 {
             dimension "store"
             buildConfigField "boolean", "LEGACY_GLES2", "true"
+            manifestPlaceholders = [gles3Required: "false"]
             externalNativeBuild {
                 cmake {
                     arguments "-DLEGACY_GLES2=true"
@@ -54,6 +57,7 @@ android {
         fdroidOpenGLES2_0 {
             dimension "store"
             buildConfigField "boolean", "LEGACY_GLES2", "true"
+            manifestPlaceholders = [gles3Required: "false"]
             externalNativeBuild {
                 cmake {
                     arguments "-DLEGACY_GLES2=true"
