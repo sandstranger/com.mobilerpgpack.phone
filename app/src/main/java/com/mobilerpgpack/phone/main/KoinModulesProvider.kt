@@ -164,11 +164,24 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     val composeModule = module {
-        factory { (activity : Activity) -> StorageChooser.Builder()
+        factory { (requestOnlyDirectory : Boolean,activity : Activity) -> {
+            val builder = StorageChooser.Builder()
             .withActivity(activity)
             .withFragmentManager(activity!!.fragmentManager)
             .withMemoryBar(true)
-            .allowCustomPath(true) }.bind()
+            .allowCustomPath(true)
+
+            if (requestOnlyDirectory){
+                builder.setType(StorageChooser.DIRECTORY_CHOOSER)
+            }
+            else{
+                builder
+                    .setType(StorageChooser.FILE_PICKER)
+                    .filter(StorageChooser.FileType.ARCHIVE)
+            }
+
+            builder.build()
+        } }.bind()
 
         viewModelOf(::DownloadViewModel)
         singleOf(::SettingsScreen).bind()

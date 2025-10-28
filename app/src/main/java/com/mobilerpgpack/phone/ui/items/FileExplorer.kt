@@ -21,24 +21,13 @@ fun RequestPath(explorerItemTitle: String,
         mutableStateOf(previousSavedPath)
     }
 
-    val storageChooserBuilder = koinInject<StorageChooser.Builder>(parameters = {
-        parametersOf(activity ) })
+    val fileChooser = koinInject<StorageChooser>(parameters = {
+        parametersOf(requestOnlyDirectory,activity ) })
 
     PreferenceItem(
         explorerItemTitle, currentPath,
         onClick = {
-
-            if (requestOnlyDirectory){
-                storageChooserBuilder.setType(StorageChooser.DIRECTORY_CHOOSER)
-            }
-            else{
-                storageChooserBuilder
-                    .setType(StorageChooser.FILE_PICKER)
-                    .filter(StorageChooser.FileType.ARCHIVE)
-            }
-
-            val chooser = storageChooserBuilder.build();
-            chooser.setOnSelectListener { path -> onPathSelected(path) }
-            chooser.show()
+            fileChooser.setOnSelectListener { path -> onPathSelected(path) }
+            fileChooser.show()
         })
 }
