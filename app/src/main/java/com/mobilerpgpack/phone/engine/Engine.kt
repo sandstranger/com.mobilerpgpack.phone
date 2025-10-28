@@ -89,6 +89,7 @@ suspend fun startEngine(context: Context, engineToPlay : EngineTypes) {
 internal fun initializeCommonEngineData (context: Context){
     Os.setenv("LIBGL_SIMPLE_SHADERCONV", "0", true)
     Os.setenv("LIBGL_DXTMIPMAP", "1", true)
+    Os.setenv("ENABLE_ANGLE", "0", true)
     Os.setenv("LIBGL_ES",if (BuildConfig.LEGACY_GLES2) "2" else "3",true)
     Os.setenv("LIBGL_GL","21", true)
     Os.setenv("LIBGL_DXT", "1", true)
