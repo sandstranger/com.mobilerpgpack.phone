@@ -7,9 +7,9 @@
 extern "C" {
 #endif
 
-typedef bool (*is_translated_delegate)(const char *input, int inputLength);
-typedef const char *(*translate_delegate)(const char *input, int inputLength, bool textFromDialog);
-typedef const char *(*get_translation_delegate)(const char *input, int inputLength);
+typedef const bool (*is_translated_delegate)(const char *input, const int inputLength);
+typedef void (*translate_delegate)(const char *input, const int inputLength, const bool textFromDialog);
+typedef const char *(*get_translation_delegate)(const char *input, const int inputLength);
 
 static is_translated_delegate is_translated_instance = nullptr;
 static translate_delegate translate_instance = nullptr;
