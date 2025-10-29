@@ -22,10 +22,6 @@ import androidx.core.view.updatePadding
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
 @Suppress("UNCHECKED_CAST")
-fun <T> com.sun.jna.Function.callAs(returnType: Class<T>, vararg args: Any?): T  =
-    this.invoke(returnType, args) as T
-
-@Suppress("UNCHECKED_CAST")
 fun <T> com.sun.jna.Function.callAs(returnType: Class<T>): T  = this.invoke(returnType, null) as T
 
 inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity {
