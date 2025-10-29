@@ -349,8 +349,7 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
         }
 
         while (true){
-            val needToShowControls : Boolean = needToShowScreenControlsNativeDelegate.callAs(
-                Int::class.java)!=0
+            val needToShowControls : Boolean = needToShowScreenControlsNativeDelegate.callAs(Boolean::class.java)
 
             if (needToShowControls != needToShowControlsLastState){
                 this@DoomRpgSeriesGameActivity.runOnUiThread {
