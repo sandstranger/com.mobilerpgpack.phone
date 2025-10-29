@@ -191,7 +191,7 @@ dependencies {
     implementation (project(":third_party:libpng"))
     implementation (project(":third_party:sdl3:android-project:app"))
     implementation (project(":third_party:fmod"))
-    implementation (project(":third_party:jna"))
+    implementation (project(":third_party:bing_translator"))
     implementation (project(":third_party:legacy_gl4es"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
 
@@ -204,6 +204,7 @@ dependencies {
     implementation(libs.koin.core.coroutines)
     implementation(libs.koin.androidx.startup)
     ksp(libs.koin.ksp.compiler)
+    implementation(libs.jna){ artifact { type = "aar" } }
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ndk)
     implementation(libs.firebase.analytics)
