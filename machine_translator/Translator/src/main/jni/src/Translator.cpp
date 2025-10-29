@@ -2,48 +2,59 @@
 #include <jni.h>
 #include <string>
 #include <unordered_map>
-#include "fbjni/fbjni.h"
-#include "fbjni/ByteBuffer.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-using namespace facebook::jni;
 
-static alias_ref<JClass> g_TranslationManagerClass = nullptr;
-static JStaticMethod<jboolean(alias_ref<JArrayByte>)> g_IsTranslatedMethodID;
-static JStaticMethod<JString (alias_ref<JArrayByte>)> g_GetTranslationMethodID;
-static JStaticMethod<JString (alias_ref<JArrayByte>,jboolean)> g_TranslateMethodID;
+typedef bool (*is_translated_delegate)(const char *input, int inputLength);
+typedef const char *(*translate_delegate)(const char *input, int inputLength, bool textFromDialog);
+typedef const char *(*get_translation_delegate)(const char *input, int inputLength);
+
+static is_translated_delegate is_translated_instance = nullptr;
+static translate_delegate translate_instance = nullptr;
+static get_translation_delegate get_translation_instance = nullptr;
 
 static std::unordered_map<std::string, std::string> translationCache;
 
+void registerTranslateDelegate(translate_delegate instance) {
+    translate_instance = instance;
+}
+
+void registerIsTranslatedDelegate(is_translated_delegate instance) {
+    is_translated_instance = instance;
+}
+
+void registerGetTranslationDelegate(get_translation_delegate instance) {
+    get_translation_instance = instance;
+}
+
 const char *translate(const char *input, bool textFromDialog) {
-    if (g_TranslationManagerClass == nullptr){
-        g_TranslationManagerClass = findClassStatic("com/mobilerpgpack/phone/translator/TranslationManager");
-        g_IsTranslatedMethodID = g_TranslationManagerClass->getStaticMethod<jboolean(alias_ref<JArrayByte>)>("isTranslated");
-        g_GetTranslationMethodID = g_TranslationManagerClass->getStaticMethod<JString (alias_ref<JArrayByte>)>("getTranslation");
-        g_TranslateMethodID = g_TranslationManagerClass->getStaticMethod<JString (alias_ref<JArrayByte>,jboolean)>("translate");
-    }
 
-    const auto len = static_cast<jsize>(strlen(input));
-    const auto jInput = JArrayByte::newArray(len);
-
-    Environment::current()->SetByteArrayRegion(jInput.get(),0,len,reinterpret_cast<const jbyte*>(input));
-    const auto isTrans = g_IsTranslatedMethodID(g_TranslationManagerClass,jInput);
-
-    if (!isTrans) {
-        jboolean isFromDialog = textFromDialog;
-        g_TranslateMethodID(g_TranslationManagerClass,jInput, isFromDialog);
+    if (is_translated_instance == nullptr || translate_instance == nullptr ||
+        get_translation_instance == nullptr) {
         return input;
     }
 
-    const auto jOutput = g_GetTranslationMethodID(g_TranslationManagerClass,jInput);
+    if (translationCache.contains(input)) {
+        return translationCache[input].c_str();
+    }
 
-    if (jOutput == nullptr) {
+    const int inputLength = strlen(input);
+    const auto isTranslated = is_translated_instance(input, inputLength);
+
+    if (!isTranslated) {
+        translate_instance(input, inputLength, textFromDialog);
         return input;
     }
 
-    translationCache[input] = jOutput->toStdString();
+    std::string translatedText = get_translation_instance(input, inputLength);
+
+    if (translatedText.empty()) {
+        return input;
+    }
+
+    translationCache[input] = std::move(translatedText);
     return translationCache[input].c_str();
 }
 #ifdef __cplusplus

@@ -46,13 +46,6 @@ android {
 }
 
 dependencies {
-    implementation (project(":third_party:fbjni"))
-    compileOnly libs.projectlombok.lombok
-    annotationProcessor libs.projectlombok.lombok
-    implementation(libs.slf4j.api)
-    implementation(libs.okhttp)
-    implementation libs.converter.gson
-    implementation libs.gson
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

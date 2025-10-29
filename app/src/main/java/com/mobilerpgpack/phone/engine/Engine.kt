@@ -35,13 +35,13 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = if (BuildConfig.LE
             "fmod","DOOM64"), wolfensteinButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom64MainWadsFolder (context) }),
     EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so","WolfensteinRPG",
-        arrayOf(gl4esLibraryName,"SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
+        arrayOf(gl4esLibraryName,"SDL2","openal","SDL2_ttf","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
             { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
     EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so","DoomRPG", arrayOf(gl4esLibraryName,"fluidsynth","SDL2","gme","SDL2_mixer",
-        "SDL2_ttf","c++_shared","fbjni","Translator","DoomRPG"), doomRPGButtons,
+        "SDL2_ttf","Translator","DoomRPG"), doomRPGButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
     EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so","DoomIIRPG",
-        arrayOf(gl4esLibraryName,"SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","DoomIIRPG"),
+        arrayOf(gl4esLibraryName,"SDL2","openal","SDL2_ttf","Translator","DoomIIRPG"),
         doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
 )
 else
@@ -51,13 +51,13 @@ else
                 "fmod","DOOM64"), wolfensteinButtons,
             pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom64MainWadsFolder (context) }),
         EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so","WolfensteinRPG",
-            arrayOf("spirv-cross-c-shared",gl4esLibraryName,"SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
+            arrayOf("spirv-cross-c-shared",gl4esLibraryName,"SDL2","openal","SDL2_ttf","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
                 { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
         EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so","DoomRPG", arrayOf("spirv-cross-c-shared",gl4esLibraryName,"fluidsynth","SDL2","gme","SDL2_mixer",
-            "SDL2_ttf","c++_shared","fbjni","Translator","DoomRPG"), doomRPGButtons,
+            "SDL2_ttf","Translator","DoomRPG"), doomRPGButtons,
             pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
         EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so","DoomIIRPG",
-            arrayOf("spirv-cross-c-shared",gl4esLibraryName,"SDL2","openal","SDL2_ttf","c++_shared","fbjni","Translator","DoomIIRPG"),
+            arrayOf("spirv-cross-c-shared",gl4esLibraryName,"SDL2","openal","SDL2_ttf","Translator","DoomIIRPG"),
             doom2RPGButtons, pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom2RpgIpaFile (context) })
     )
 
