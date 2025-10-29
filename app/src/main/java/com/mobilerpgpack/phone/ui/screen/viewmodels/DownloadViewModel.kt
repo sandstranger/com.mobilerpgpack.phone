@@ -5,13 +5,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.translator.TranslationManager
-import com.mobilerpgpack.phone.main.MainApplication
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
 class DownloadViewModel() : ViewModel(), KoinComponent {
+
+    private val scope : CoroutineScope = get()
 
     private val translationManager : TranslationManager = get()
 
@@ -37,7 +39,7 @@ class DownloadViewModel() : ViewModel(), KoinComponent {
         isLoading = true
 
         if (downloadJob == null || downloadJob!!.isCompleted || downloadJob!!.isCancelled) {
-            downloadJob = MainApplication.Companion.globalScope.launch {
+            downloadJob = scope.launch {
                 try {
                     downloadProgress = ""
                     translationManager.downloadModelIfNeeded { newValue ->
