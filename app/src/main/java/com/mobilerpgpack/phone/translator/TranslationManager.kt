@@ -3,10 +3,8 @@ package com.mobilerpgpack.phone.translator
 import android.content.res.Resources
 import android.os.Build
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.main.FACEBOOK_JNI_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.ACTIVE_TRANSLATION_MODEL_KEY
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.TARGET_LOCALE_NAMES_KEY
-import com.mobilerpgpack.phone.main.SHARED_C_PLUS_PLUS_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.TRANSLATOR_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.translator.models.ITranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
@@ -29,6 +27,30 @@ import org.koin.core.qualifier.named
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
+import com.mobilerpgpack.phone.BuildConfig
+import com.mobilerpgpack.phone.CustomApp
+import com.sun.jna.Library
+import com.sun.jna.Callback
+import com.sun.jna.Native
+import com.sun.jna.Pointer
+
+private fun interface IsTextTranslatedCallback : Callback {
+    fun getTextPtr(ptr: Pointer, length: Int): Boolean
+}
+
+private fun interface TranslateTextCallback : Callback {
+    fun translate(ptr: Pointer, length: Int, isTextFromDialogBox: Boolean)
+}
+
+private fun interface GetTranslatedTextCallback : Callback {
+    fun getTranslation(ptr: Pointer, length: Int): String
+}
+
+private interface TranslationNativeBridge : Library {
+    fun registerIsTranslatedDelegate(cb: IsTextTranslatedCallback)
+    fun registerTranslateDelegate(cb: TranslateTextCallback)
+    fun registerGetTranslationDelegate(cb: GetTranslatedTextCallback)
+}
 
 class TranslationManager : KoinComponent {
 
@@ -53,7 +75,9 @@ class TranslationManager : KoinComponent {
 
     private val activeTranslationsAwaitable = ConcurrentHashMap<String, Job>()
 
-    private external fun registerTranslationManagerInstance()
+    private lateinit var isTranslatedCb : IsTextTranslatedCallback
+    private lateinit var translateCb : TranslateTextCallback
+    private lateinit var getTranslationCb : GetTranslatedTextCallback
 
     var inGame = false
 
@@ -85,10 +109,10 @@ class TranslationManager : KoinComponent {
         }
 
     init {
-        registerTranslationManagerInstance()
-        scope.launch {
-            reloadSavedTranslations()
-        }
+        val translatorLib = Native.load(TRANSLATOR_NATIVE_LIB_NAME, TranslationNativeBridge::class.java)
+        translatorLib.registerIsTranslatedDelegate (isTranslatedCb)
+        translatorLib.registerTranslateDelegate (translateCb)
+        translatorLib.registerGetTranslationDelegate (getTranslationCb)
     }
 
     fun terminate() {
@@ -275,12 +299,6 @@ class TranslationManager : KoinComponent {
         const val ENGLISH_LOCALE = "en"
 
         const val sourceLocale = ENGLISH_LOCALE
-
-        init {
-            System.loadLibrary(SHARED_C_PLUS_PLUS_NATIVE_LIB_NAME)
-            System.loadLibrary(FACEBOOK_JNI_NATIVE_LIB_NAME)
-            System.loadLibrary(TRANSLATOR_NATIVE_LIB_NAME)
-        }
 
         fun getSystemLocale(): String {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

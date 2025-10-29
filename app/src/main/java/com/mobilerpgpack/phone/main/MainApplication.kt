@@ -17,6 +17,7 @@ import org.koin.core.context.GlobalContext.startKoin
 class MainApplication : Application(), KoinComponent {
     override fun onCreate() {
         super.onCreate()
+        setupJna()
         copyAllAssetsFromApk()
         initializeKoin()
     }
@@ -46,5 +47,10 @@ class MainApplication : Application(), KoinComponent {
 
     private companion object{
         val globalScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+        private fun setupJna(){
+            System.setProperty("jna.nosys", "true")
+            System.setProperty("jna.nounpack", "true")
+        }
     }
 }
