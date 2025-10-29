@@ -2,6 +2,8 @@ package com.mobilerpgpack.phone.main
 
 import android.app.Activity
 import android.content.Context
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.codekidlabs.storagechooser.StorageChooser
 import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
@@ -9,6 +11,7 @@ import com.mobilerpgpack.ctranslate2proxy.NLLB200Translator
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.phone.engine.Engine
+import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.translator.IntervalMarkerTranslator
 import com.mobilerpgpack.phone.translator.TranslationManager
@@ -47,6 +50,7 @@ import java.io.File
 
 class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
 
+    private val clampButtonsMap = HashMap<EngineTypes, Preferences.Key<Boolean>>()
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
     private val preferencesStorage: PreferencesStorage = PreferencesStorage(context)
 
@@ -183,12 +187,18 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             builder.build()
         } }.bind()
 
+        factory { (engineType : EngineTypes) -> getClampButtonPrefsKey(engineType) }.bind()
+
         viewModelOf(::DownloadViewModel)
         singleOf(::SettingsScreen).bind()
     }
 
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule, composeModule)
+    }
+
+    private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {
+        booleanPreferencesKey("clamp_${engineType.toString().lowercase()}_buttons")
     }
 
     companion object{

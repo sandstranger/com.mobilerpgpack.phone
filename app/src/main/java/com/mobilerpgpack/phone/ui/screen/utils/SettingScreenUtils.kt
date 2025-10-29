@@ -7,7 +7,7 @@ import org.koin.java.KoinJavaComponent.get
 
 fun buildTranslationsDescription () : Collection<String>{
     val result : MutableList<String> = mutableListOf()
-    val context = get(Context::class.java)
+    val context : Context = get(Context::class.java)
 
     for (type in TranslationType.entries) {
         when (type) {

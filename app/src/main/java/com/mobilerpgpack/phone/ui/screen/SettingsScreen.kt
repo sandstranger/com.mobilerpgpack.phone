@@ -42,6 +42,8 @@ import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
+import com.mobilerpgpack.phone.ui.getBackgroundColor
+import com.mobilerpgpack.phone.ui.getTopBarColor
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
@@ -60,13 +62,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class SettingsScreen : KoinComponent {
-
     private val context : Context by inject()
-
     private val preferencesStorage : PreferencesStorage by inject()
-
     private val translationManager : TranslationManager by inject ()
-
     private val engine : Engine by inject ()
 
     @Composable
@@ -75,8 +73,8 @@ class SettingsScreen : KoinComponent {
         val isSystemInDarkTheme = isSystemInDarkTheme()
         val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
             .collectAsState(initial = isSystemInDarkTheme)
-        val backgroundColor = if (useDarkTheme) Color.Black else Color.White
-        val topBarColor = if (useDarkTheme) Color.Gray else Color.Blue
+        val backgroundColor = getBackgroundColor(useDarkTheme)
+        val topBarColor = getTopBarColor(useDarkTheme)
         val activeEngineString by preferencesStorage.activeEngineAsFlowString
             .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
 
