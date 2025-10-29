@@ -192,10 +192,10 @@ dependencies {
     implementation (project(":third_party:libpng"))
     implementation (project(":third_party:sdl3:android-project:app"))
     implementation (project(":third_party:fmod"))
-    implementation (project(":third_party:jna"))
     implementation (project(":third_party:legacy_gl4es"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
 
+    implementation(libs.jna)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ndk)
     implementation(libs.firebase.analytics)
