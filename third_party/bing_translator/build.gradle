@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.mobilerpgpack.phone.fbjni'
+    namespace 'com.mobilerpgpack.phone.bing_translator'
     compileSdkVersion versions.target_sdk
 
     defaultConfig {
@@ -24,15 +24,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['src/main/jniLibs']
-        }
-    }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly libs.projectlombok.lombok
+    annotationProcessor libs.projectlombok.lombok
+    implementation(libs.slf4j.api)
+    implementation(libs.okhttp)
+    implementation libs.converter.gson
+    implementation libs.gson
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
