@@ -26,6 +26,7 @@ import com.mobilerpgpack.phone.ui.items.BoxGrid2
 import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.OnScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.callAs
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.hideSystemBars
 import com.sun.jna.Native
@@ -42,7 +43,6 @@ import org.libsdl.app.SDLSurface
 import java.io.File
 
 private const val RESOLUTION_DELIMITER = "x"
-private const val AndroidGamePathEnvName = "ANDROID_GAME_PATH"
 private const val ResourceFileNameEnvName = "RESOURCE_FILE_NAME"
 
 class DoomRpgSeriesGameActivity : SDLActivity() {
@@ -65,17 +65,16 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
     private var savedDoomRpgScreenWidth : Int = 0
     private var savedDoomRpgScreenHeight : Int = 0
 
+    private lateinit var needToShowScreenControlsNativeDelegate : com.sun.jna.Function
+
     private external fun pauseSound()
 
     private external fun resumeSound()
 
-    private external fun needToShowScreenControls () : Boolean
-
     override fun onCreate(savedInstanceState: Bundle?) {
         initializeEngineData()
+        initJna()
         super.onCreate(savedInstanceState)
-        Native.register(DoomRpgSeriesGameActivity::class.java,
-            enginesInfo[activeEngineType]!!.mainEngineLibNameForJna)
         enableEdgeToEdge()
         hideSystemBars()
         loadControlsLayout()
@@ -99,6 +98,13 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
         super.onDestroy()
         scope.cancel()
         killEngine()
+    }
+
+    private fun initJna(){
+        val nativeLibraryNameToLoad = enginesInfo[activeEngineType]!!.mainEngineLibNameForJna
+        needToShowScreenControlsNativeDelegate = com.sun.jna.Function.getFunction(nativeLibraryNameToLoad,
+            "needToShowScreenControls")
+        Native.register(DoomRpgSeriesGameActivity::class.java, nativeLibraryNameToLoad)
     }
 
     private fun initializeEngineData() {
@@ -177,10 +183,7 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
         }
 
         if (pathToEngineResourceFile.isFile) {
-            Os.setenv(AndroidGamePathEnvName, this@DoomRpgSeriesGameActivity.getExternalFilesDir("")!!.absolutePath, true)
             Os.setenv(ResourceFileNameEnvName, pathToEngineResourceFile.absolutePath, true)
-        } else {
-            Os.setenv(AndroidGamePathEnvName, pathToEngineResourceFile.absolutePath, true)
         }
     }
 
@@ -346,7 +349,9 @@ class DoomRpgSeriesGameActivity : SDLActivity() {
         }
 
         while (true){
-            val needToShowControls = needToShowScreenControls()
+            val needToShowControls : Boolean = needToShowScreenControlsNativeDelegate.callAs(
+                Int::class.java)!=0
+
             if (needToShowControls != needToShowControlsLastState){
                 this@DoomRpgSeriesGameActivity.runOnUiThread {
                     if (needToShowControls) {

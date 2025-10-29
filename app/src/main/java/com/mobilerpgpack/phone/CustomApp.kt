@@ -16,6 +16,7 @@ import kotlinx.coroutines.runBlocking
 class CustomApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        setupJna()
         var activeTranslationModelType : TranslationType
         var allowDownloadingModelsOverMobile = false
         runBlocking {
@@ -35,6 +36,11 @@ class CustomApp : Application() {
         super.onTerminate()
         globalScope.coroutineContext.cancelChildren()
         TranslationManager.terminate()
+    }
+
+    private fun setupJna(){
+        System.setProperty("jna.nosys", "true")
+        System.setProperty("jna.nounpack", "true")
     }
 
     companion object{
