@@ -11,8 +11,7 @@ android {
         targetSdk versions.target_sdk
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
         externalNativeBuild {
             cmake {
@@ -22,7 +21,8 @@ android {
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                        "-DCMAKE_VERBOSE_MAKEFILE=OFF"
+                        "-DCMAKE_VERBOSE_MAKEFILE=OFF", "$build_flags.CMAKE_ANDROID_STL"
+
             }
         }
     }
@@ -44,6 +44,14 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        prefabPublishing true
+    }
+    prefab{
+        OpenAL {
+            headers "src/main/jni/openal/include/AL"
+        }
     }
 }
 
