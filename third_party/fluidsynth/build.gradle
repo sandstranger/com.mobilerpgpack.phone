@@ -54,7 +54,7 @@ android {
         prefabPublishing true
     }
     prefab{
-        libfluidsynth {
+        fluidsynth {
             headers "src/main/jni/fluidsynth-android/include"
         }
     }
