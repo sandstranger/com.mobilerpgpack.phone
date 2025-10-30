@@ -77,12 +77,6 @@ else ()
     set(TRANSLATOR_LIBRARY ${CMAKE_SOURCE_DIR}/machine_translator/Translator/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libTranslator.so)
 endif ()
 
-
-#add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
-#add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
-#add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")
-add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/Doom64EX-Plus")
-
 add_library(FMOD INTERFACE IMPORTED GLOBAL)
 get_target_property(FMOD_IMPORTED_LOCATION fmod::fmod IMPORTED_LOCATION)
 get_filename_component(FMOD_IMPORTED_LOCATION ${FMOD_IMPORTED_LOCATION} DIRECTORY)
@@ -93,8 +87,14 @@ get_target_property(SDL3_IMPORTED_LOCATION sdl3::SDL3-shared IMPORTED_LOCATION)
 get_filename_component(SDL3_IMPORTED_LOCATION ${SDL3_IMPORTED_LOCATION} DIRECTORY)
 target_link_libraries(SDL3 INTERFACE ${SDL3_IMPORTED_LOCATION}/libSDL3-shared.so)
 
+#add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
+#add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
+#add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")
+add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/Doom64EX-Plus")
+
 target_link_libraries(
         "DOOM64"
+        PRIVATE
         sdl3::SDL3-shared
         SDL3
         OPENGL_LIBRARY
