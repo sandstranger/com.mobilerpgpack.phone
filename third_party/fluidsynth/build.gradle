@@ -12,8 +12,7 @@ android {
         targetSdk versions.target_sdk
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
 
         externalNativeBuild {
@@ -24,8 +23,7 @@ android {
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
                         "-DBUILD_SHARED_LIBS=true",
                         "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
-                        "-DANDROID_STL=c++_static",
-                        "-DCMAKE_VERBOSE_MAKEFILE=OFF"
+                        "-DCMAKE_VERBOSE_MAKEFILE=OFF", "$build_flags.CMAKE_ANDROID_STL"
             }
         }
     }
@@ -51,6 +49,14 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+    }
+    buildFeatures {
+        prefabPublishing true
+    }
+    prefab{
+        libfluidsynth {
+            headers "src/main/jni/fluidsynth-android/include"
+        }
     }
 }
 
