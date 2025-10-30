@@ -76,7 +76,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build OpenGL ES 2.0 with Gradle
-      run: ./gradlew assembleFdroidOpenGLES2_0Release --stacktrace --info --enable-native-access=ALL-UNNAMED
+      run: ./gradlew assembleFdroidOpenGLES2_0Release --stacktrace --info
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
 
