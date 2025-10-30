@@ -22,8 +22,8 @@ dependencyResolutionManagement {
 rootProject.name = "Engines Hub"
 include ':app'
 include ':third_party:openal'
-include ':third_party:sdl2:android-project:app'
-include ':third_party:sdl3:android-project:app'
+include ':third_party:sdl2:android-project:sdl2'
+include ':third_party:sdl3:android-project:sdl3'
 include ':third_party:sdl2-mixer'
 include ':third_party:fluidsynth'
 include ':third_party:sdl2-ttf'

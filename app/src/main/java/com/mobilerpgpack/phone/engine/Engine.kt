@@ -31,7 +31,7 @@ val gl4esFullLibraryName get() = "lib${gl4esLibraryName}.so"
 
 internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = if (BuildConfig.LEGACY_GLES2) hashMapOf(
     EngineTypes.Doom64ExPlus to EngineInfo("libDOOM64.so","DOOM64",
-        arrayOf(gl4esLibraryName,"SDL3",if (BuildConfig.DEBUG) "png16d" else "png16",
+        arrayOf(gl4esLibraryName,"SDL3-shared","png_shared",
             "fmod","DOOM64"), wolfensteinButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom64MainWadsFolder (context) }),
     EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so","WolfensteinRPG",
@@ -47,7 +47,7 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = if (BuildConfig.LE
 else
     hashMapOf(
         EngineTypes.Doom64ExPlus to EngineInfo("libDOOM64.so","DOOM64",
-            arrayOf("spirv-cross-c-shared",gl4esLibraryName,"SDL3",if (BuildConfig.DEBUG) "png16d" else "png16",
+            arrayOf("spirv-cross-c-shared",gl4esLibraryName,"SDL3-shared","png_shared",
                 "fmod","DOOM64"), wolfensteinButtons,
             pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoom64MainWadsFolder (context) }),
         EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so","WolfensteinRPG",
