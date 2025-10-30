@@ -183,13 +183,16 @@ dependencies {
     implementation (project(":third_party:sdl2-ttf"))
     implementation (project(":machine_translator:CTranslate2Proxy"))
     implementation (project(":machine_translator:Translator"))
-    implementation (project(":third_party:NG-GL4ES"))
     implementation (project(":third_party:libpng"))
     implementation (project(":third_party:sdl3:android-project:sdl3"))
     implementation (project(":third_party:fmod"))
     implementation (project(":third_party:bing_translator"))
-    implementation (project(":third_party:legacy_gl4es"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
+
+    googleOpenGLES3_2Implementation (project(":third_party:NG-GL4ES"))
+    fdroidOpenGLES3_2Implementation (project(":third_party:NG-GL4ES"))
+    fdroidOpenGLES2_0Implementation (project(":third_party:legacy_gl4es"))
+    googleOpenGLES2_0Implementation (project(":third_party:legacy_gl4es"))
 
     implementation(libs.jna){ artifact { type = "aar" } }
     implementation(platform(libs.firebase.bom))
