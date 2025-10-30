@@ -15,61 +15,12 @@ find_package(ZLIB REQUIRED)
 set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/sdl2)
 set(SDL2_INCLUDE_DIR ${SDL_LOCATION}/include)
 
-if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
-    set(SDL2_LIBRARY ${SDL_LOCATION}/android-project/app/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL2.so)
-else()
-    set(SDL2_LIBRARY ${SDL_LOCATION}/android-project/app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2.so)
-endif ()
-
-set(OPENAL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/openal)
-set(OPENAL_INCLUDE_DIR ${OPENAL_LOCATION}/src/main/jni/openal/include/)
-include_directories(PUBLIC "${OPENAL_INCLUDE_DIR}/AL")
-
-if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
-    set(OPENAL_LIBRARY ${OPENAL_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libopenal.so)
-else ()
-    set(OPENAL_LIBRARY ${OPENAL_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libopenal.so)
-endif ()
-
 if (NOT DEFINED LEGACY_GLES2 OR LEGACY_GLES2 STREQUAL "false")
     find_package(NG-GL4ES REQUIRED CONFIG)
     add_library(OPENGL_LIBRARY ALIAS NG-GL4ES::ng_gl4es)
 else ()
     find_package(legacy_gl4es REQUIRED CONFIG)
     add_library(OPENGL_LIBRARY ALIAS legacy_gl4es::gl4es)
-endif ()
-
-set(SDL2_MIXER_DIR ${CMAKE_SOURCE_DIR}/third_party/sdl2-mixer/src/main/jni/SDL_mixer)
-set(SDL2_MIXER_INCLUDE_DIR ${SDL2_MIXER_DIR}/include)
-if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
-    set(SDL2_MIXER_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl2-mixer/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_mixer.so)
-else ()
-    set(SDL2_MIXER_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl2-mixer/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_mixer.so)
-endif ()
-
-
-include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/third_party/fluidsynth/src/main/jni/fluidsynth-android/include")
-
-if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
-    set(FLUIDSYNTH_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/fluidsynth/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libfluidsynth.so)
-else ()
-    set(FLUIDSYNTH_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/fluidsynth/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libfluidsynth.so)
-endif ()
-
-include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/third_party/sdl2-ttf/src/main/jni/sdl-ttf")
-
-if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
-    set(SDL2_TTF_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl2-ttf/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_ttf.so)
-else ()
-    set(SDL2_TTF_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl2-ttf/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_ttf.so)
-endif ()
-
-include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/machine_translator/Translator/src/main/jni/include")
-
-if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
-    set(TRANSLATOR_LIBRARY ${CMAKE_SOURCE_DIR}/machine_translator/Translator/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libTranslator.so)
-else ()
-    set(TRANSLATOR_LIBRARY ${CMAKE_SOURCE_DIR}/machine_translator/Translator/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libTranslator.so)
 endif ()
 
 add_library(FMOD INTERFACE IMPORTED GLOBAL)
@@ -82,10 +33,18 @@ get_target_property(SDL3_IMPORTED_LOCATION sdl3::SDL3-shared IMPORTED_LOCATION)
 get_filename_component(SDL3_IMPORTED_LOCATION ${SDL3_IMPORTED_LOCATION} DIRECTORY)
 target_link_libraries(SDL3 INTERFACE ${SDL3_IMPORTED_LOCATION}/libSDL3-shared.so)
 
+add_library(FLUIDSYNTH INTERFACE IMPORTED GLOBAL)
+get_target_property(FLUIDSYNTH_IMPORTED_LOCATION fluidsynth::fluidsynth IMPORTED_LOCATION)
+get_filename_component(FLUIDSYNTH_IMPORTED_LOCATION ${FLUIDSYNTH_IMPORTED_LOCATION} DIRECTORY)
+target_link_libraries(FLUIDSYNTH INTERFACE ${FLUIDSYNTH_IMPORTED_LOCATION}/libfluidsynth.so)
+
 #add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
-#add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
+add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
 #add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/Doom64EX-Plus")
+
+target_link_libraries("DoomRPG" PRIVATE sdl2::SDL2 sdl2-mixer::SDL2_mixer
+        sdl2-ttf::SDL2_ttf ZLIB::ZLIB Translator::Translator fluidsynth::fluidsynth FLUIDSYNTH)
 
 target_link_libraries(
         "DOOM64"
@@ -96,7 +55,7 @@ target_link_libraries(
         libpng::png_shared
         fmod::fmod
         FMOD
-        z
+        ZLIB::ZLIB
         m
         log
 )
