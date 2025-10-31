@@ -1,6 +1,7 @@
 name: Android Open GL ES 2.0 Build
 
 on: [push, pull_request]
+  workflow_dispatch: 
 
 jobs:
   build:
@@ -76,7 +77,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build OpenGL ES 2.0 with Gradle
-      run: ./gradlew assembleFdroidOpenGLES2_0Release --stacktrace --info
+      run: ./gradlew assembleFdroidOpenGLES2_0Release --stacktrace --info --enable-native-access=ALL-UNNAMED
       env:
         ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
 
