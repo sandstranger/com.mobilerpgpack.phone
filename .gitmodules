@@ -1,6 +1,6 @@
 [submodule "third_party/openal/src/main/jni/openal"]
 	path = third_party/openal/src/main/jni/openal
-url=https://github.com/sandstranger/openal-soft.git
+url=https://github.com/kcat/openal-soft.git
 [submodule "third_party/sdl2"]
 	path = third_party/sdl2
 	url = https://github.com/sandstranger/SDL.git
@@ -33,7 +33,7 @@ url=https://github.com/sandstranger/CTranslate2.git
 url=https://github.com/sandstranger/NG-GL4ES.git
 [submodule "third_party/libpng/src/main/jni/libpng"]
 	path = third_party/libpng/src/main/jni/libpng
-url=https://github.com/sandstranger/libpng.git
+url=https://github.com/pnggroup/libpng.git
 [submodule "third_party/sdl3"]
 	path = third_party/sdl3
 	url = https://github.com/sandstranger/SDL.git
