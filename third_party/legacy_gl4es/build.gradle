@@ -46,14 +46,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    buildFeatures {
-        prefabPublishing true
-    }
-    prefab{
-        gl4es {
-            headers "src/main/jni/gl4es/include"
-        }
-    }
 }
 
 dependencies {

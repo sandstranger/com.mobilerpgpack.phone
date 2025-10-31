@@ -50,18 +50,9 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    buildFeatures {
-        prefabPublishing true
-    }
-    prefab{
-        fluidsynth {
-            headers "src/main/jni/fluidsynth-android/include"
-        }
-    }
 }
 
 dependencies {
-
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
