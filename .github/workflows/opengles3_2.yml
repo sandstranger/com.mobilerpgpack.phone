@@ -1,7 +1,6 @@
 name: Android Open GL ES 3.2 Build
 
 on: [push, pull_request]
-  workflow_dispatch: 
 
 jobs:
   build:
