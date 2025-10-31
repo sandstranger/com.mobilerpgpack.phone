@@ -1,7 +1,6 @@
 name: Android Open GL ES 2.0 Build
 
 on: [push, pull_request]
-  workflow_dispatch: 
 
 jobs:
   build:
