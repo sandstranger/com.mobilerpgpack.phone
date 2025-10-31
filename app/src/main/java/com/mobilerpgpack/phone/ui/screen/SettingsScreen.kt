@@ -32,15 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.defaultPathToLogcatFile
 import com.mobilerpgpack.phone.engine.enginesInfo
-import com.mobilerpgpack.phone.engine.logcatFileName
 import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.TranslationType
@@ -49,16 +45,16 @@ import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
+import com.mobilerpgpack.phone.ui.items.RequestPath
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.items.TranslatedText
+import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
+import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isTelevision
-import com.mobilerpgpack.phone.utils.requestDirectory
-import com.mobilerpgpack.phone.utils.requestResourceFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.io.File
 
 @Composable
 fun SettingsScreen() {
@@ -69,6 +65,12 @@ fun SettingsScreen() {
         .collectAsState(initial = isSystemInDarkTheme)
     val backgroundColor = if (useDarkTheme) Color.Black else Color.White
     val topBarColor = if (useDarkTheme) Color.Gray else Color.Blue
+    val activeEngineString by PreferencesStorage.getActiveEngineValueAsFlowString(context)
+        .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
+
+    val activeEngine = rememberSaveable (activeEngineString) {
+        enumValueOf<EngineTypes>(activeEngineString)
+    }
 
     Theme (darkTheme = useDarkTheme ) {
         Column(
@@ -80,9 +82,9 @@ fun SettingsScreen() {
             CustomTopBar(title = context.getString(R.string.app_name), useDarkTheme)
 
             if (context.isTelevision) {
-                DrawTelevisionSettings(context, scope,backgroundColor)
+                DrawTelevisionSettings(context, scope,backgroundColor, activeEngine)
             } else {
-                DrawPhoneSettings(context, scope,backgroundColor)
+                DrawPhoneSettings(context, scope,backgroundColor, activeEngine)
             }
         }
     }
@@ -91,30 +93,32 @@ fun SettingsScreen() {
 }
 
 @Composable
-private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope, backgroundColor : Color ) {
+private fun DrawTelevisionSettings(context: Context, scope: CoroutineScope,
+                                   backgroundColor : Color, activeEngine : EngineTypes ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor),
     ) {
         Button(
-            onClick = { scope.launch { startEngine(context) } },
+            onClick = { scope.launch { startEngine(context, activeEngine) } },
             modifier = Modifier
                 .fillMaxWidth()
         ) {
             TranslatedText(context.getString(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
         }
 
-        DrawAllSettings(context, scope)
+        DrawAllSettings(context, scope,activeEngine)
     }
 }
 
 @Composable
-private fun DrawPhoneSettings(context: Context, scope: CoroutineScope, backgroundColor: Color) {
+private fun DrawPhoneSettings(context: Context, scope: CoroutineScope,
+                              backgroundColor: Color, activeEngine: EngineTypes) {
     Scaffold(modifier = Modifier.background(backgroundColor),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { scope.launch { startEngine(context) } }
+                onClick = { scope.launch { startEngine(context,activeEngine) } }
             ) {
                 Icon(
                     Icons.Default.PlayArrow,
@@ -123,17 +127,18 @@ private fun DrawPhoneSettings(context: Context, scope: CoroutineScope, backgroun
             }
         }
     ) { innerPadding ->
-        DrawAllSettings(context, innerPadding, scope)
+        DrawAllSettings(context, innerPadding, scope, activeEngine)
     }
 }
 
 @Composable
-private fun DrawAllSettings(context: Context, scope: CoroutineScope) {
-    DrawAllSettings(context, PaddingValues(), scope)
+private fun DrawAllSettings(context: Context, scope: CoroutineScope,activeEngine : EngineTypes) {
+    DrawAllSettings(context, PaddingValues(), scope,activeEngine)
 }
 
 @Composable
-private fun DrawAllSettings(context: Context, innerPadding: PaddingValues, scope: CoroutineScope) {
+private fun DrawAllSettings(context: Context, innerPadding: PaddingValues,
+                            scope: CoroutineScope,activeEngine : EngineTypes) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -142,18 +147,15 @@ private fun DrawAllSettings(context: Context, innerPadding: PaddingValues, scope
             .padding(innerPadding)
             .verticalScroll(scrollState),
     ) {
-        DrawCommonSettings(context, scope)
+        DrawCommonSettings(context, scope, activeEngine)
+        DrawTranslationModelSettings(context,scope)
         DrawGraphicsSettings(context,scope)
         DrawUserInterfaceSettings(context,scope)
     }
 }
 
 @Composable
-private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
-    val activeEngineString by PreferencesStorage.getActiveEngineValueAsFlowString(context)
-        .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
-    val activeEngine = rememberSaveable (activeEngineString) { enumValueOf<EngineTypes>(activeEngineString!!) }
-
+private fun DrawCommonSettings(context: Context, scope: CoroutineScope,activeEngine : EngineTypes) {
     TranslatedText(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
 
     ListPreferenceItem(
@@ -162,7 +164,8 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
         EngineTypes.entries
     ) { newValue ->
         scope.launch {
-            PreferencesStorage.setActiveEngineValue(context, enumValueOf<EngineTypes>(newValue))
+            PreferencesStorage.setActiveEngineValue(context,
+                enumValueOf<EngineTypes>(newValue))
         }
     }
 
@@ -172,25 +175,18 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
         EngineTypes.WolfensteinRpg -> DrawWolfensteinRpgSettings(context,scope)
         EngineTypes.DoomRpg -> DrawDoomRpgSettings(context,scope)
         EngineTypes.Doom2Rpg -> DrawDoom2RpgSettings(context,scope)
+        EngineTypes.Doom64ExPlus -> DrawDoom64Settings(context,scope)
     }
 
-    val pathToLogFile by PreferencesStorage.getPathToLogFileValue(context)
-        .collectAsState(initial = defaultPathToLogcatFile)
-    val requestPathHelper = RequestPathHelper(context, scope, onPathSelected = { selectedPath ->
-        scope.launch { PreferencesStorage.setPathToLogFile(context, selectedPath) }
-    }, requestDirectory = true)
-
-    requestPathHelper.DrawRequestPathItem(
-        context.getString(R.string.path_to_log), pathToLogFile!!,
-        logcatFileName
-    )
-
     HorizontalDivider()
+}
+
+@Composable
+private fun DrawTranslationModelSettings(context: Context, scope: CoroutineScope){
+    TranslatedText(context.getString(R.string.translation_settings), style = MaterialTheme.typography.titleLarge)
 
     val activeTranslationTypeString by PreferencesStorage.getTranslationModelTypeValue(context)
         .collectAsState(initial = TranslationType.DefaultTranslationType.toString())
-    val activeTranslation = rememberSaveable (enumValueOf<TranslationType>(activeTranslationTypeString)) {
-        enumValueOf<TranslationType>(activeTranslationTypeString) }
 
     val translationModelEntries = buildTranslationsDescription(context)
     val initialModelValue = translationModelEntries.first { it.startsWith(activeTranslationTypeString) }
@@ -222,6 +218,8 @@ private fun DrawCommonSettings(context: Context, scope: CoroutineScope) {
     HorizontalDivider()
 
     DrawPreloadModelsSetting(context)
+
+    HorizontalDivider()
 }
 
 @Composable
@@ -239,8 +237,6 @@ private fun DrawPreloadModelsSetting(context: Context,vm: DownloadViewModel = vi
     PreferenceItem(context.getString(R.string.load_translation_model)) {
         vm.startDownload()
     }
-
-    HorizontalDivider()
 
     LoadingModelDialogWithCancel(
         show = vm.isLoading,
@@ -435,119 +431,71 @@ private fun DrawUserInterfaceSettings(context: Context, scope: CoroutineScope){
 
 @Composable
 private fun DrawWolfensteinRpgSettings(context: Context, scope: CoroutineScope) {
-    val pathToIpaFileFlow by PreferencesStorage.getPathToWolfensteinRpgIpaFileValue(context)
+    val previousPathToWolfensteinRpgIPa by PreferencesStorage.getPathToWolfensteinRpgIpaFileValue(context)
         .collectAsState(initial = "")
-    val requestPathHelper = RequestPathHelper(context, scope, onPathSelected = { selectedPath ->
-        scope.launch { PreferencesStorage.setPathToWolfensteinRpgIpaFile(context, selectedPath) }
-    })
 
-    requestPathHelper.DrawRequestPathItem(
-        context.getString(R.string.wolfenstein_rpg_ipa_file),
-        pathToIpaFileFlow!!
-    )
-
-    HorizontalDivider()
+    RequestPath(context.getString(R.string.wolfenstein_rpg_ipa_file),onPathSelected = { selectedPath ->
+        scope.launch { PreferencesStorage.setPathToWolfensteinRpgIpaFile(context, selectedPath) }},
+        previousPathToWolfensteinRpgIPa )
 }
 
 @Composable
 private fun DrawDoomRpgSettings(context: Context, scope: CoroutineScope) {
-    val pathToZipFileState by PreferencesStorage.getPathToDoomRpgZipFileValue(context)
+    val savedPathToDoomRpgZip by PreferencesStorage.getPathToDoomRpgZipFileValue(context)
         .collectAsState(initial = "")
-    val requestPathHelper = RequestPathHelper(context, scope, onPathSelected = { selectedPath ->
-        scope.launch { PreferencesStorage.setPathToDoomRpgZipFile(context, selectedPath) }
-    })
 
-    requestPathHelper.DrawRequestPathItem(
-        context.getString(R.string.doom_rpg_zip_file),
-        pathToZipFileState!!
+    RequestPath(context.getString(R.string.doom_rpg_zip_file),
+        onPathSelected = { selectedPath ->
+            scope.launch { PreferencesStorage.setPathToDoomRpgZipFile(context, selectedPath) } },
+        savedPathToDoomRpgZip,
     )
-
-    HorizontalDivider()
 }
 
 @Composable
 private fun DrawDoom2RpgSettings(context: Context, scope: CoroutineScope) {
-    val pathToIpaFileState by PreferencesStorage.getPathToDoom2RpgIpaFile(context)
+    val previousPathToDoom2RpgIpa by PreferencesStorage.getPathToDoom2RpgIpaFile(context)
         .collectAsState(initial = "")
-    val requestPathHelper = RequestPathHelper(context, scope, onPathSelected = { selectedPath ->
-        scope.launch { PreferencesStorage.setPathToDoom2RpgIpaFile(context, selectedPath) }
-    })
 
-    requestPathHelper.DrawRequestPathItem(
-        context.getString(R.string.doom2_rpg_ipa_file),
-        pathToIpaFileState!!
-    )
+    RequestPath( context.getString(R.string.doom2_rpg_ipa_file),
+        onPathSelected = { selectedPath ->
+            scope.launch { PreferencesStorage.setPathToDoom2RpgIpaFile(context, selectedPath) } },
+        previousPathToDoom2RpgIpa )
+}
+
+@Composable
+private fun DrawDoom64Settings(context: Context, scope: CoroutineScope) {
+    val previousPathToDoom64WadsFolder by PreferencesStorage.getPathToDoom64MainWadsFolder(context)
+        .collectAsState(initial = "")
+
+    RequestPath( context.getString(R.string.path_to_doom64_folder),
+        onPathSelected = { selectedPath ->
+            scope.launch { PreferencesStorage.setPathToDoom64MainWadsFolder(context, selectedPath) } },
+        previousPathToDoom64WadsFolder, requestOnlyDirectory = true )
 
     HorizontalDivider()
-}
 
-private fun buildTranslationsDescription (context: Context) : Collection<String>{
-    val result : MutableList<String> = mutableListOf()
+    val enableDoom64Mods by PreferencesStorage.getEnableDoom64ModsValue(context)
+        .collectAsState(initial = false)
 
-    for (type in TranslationType.entries) {
-        if (BuildConfig.FDROID_BUILD && type == TranslationType.MLKit){
-            continue
-        }
-
-        when (type) {
-            TranslationType.MLKit ->
-                result.add("${TranslationType.MLKit} ${context.getString(R.string.mlkit_description)}")
-            TranslationType.OpusMt ->
-                result.add("${TranslationType.OpusMt} ${context.getString(R.string.opus_mt_description)}")
-            TranslationType.M2M100 ->
-                result.add("${TranslationType.M2M100} ${context.getString(R.string.m2m_mt_description)}")
-            TranslationType.Small100 ->
-                result.add("${TranslationType.Small100} ${context.getString(R.string.small100_mt_description)}")
-            TranslationType.GoogleTranslate ->
-                result.add("${TranslationType.GoogleTranslate} ${context.getString(R.string.google_translate_description)}")
-            TranslationType.BingTranslate ->
-                result.add("${TranslationType.BingTranslate} ${context.getString(R.string.bing_translate_description)}")
-            TranslationType.NLLB200 ->
-                result.add("${TranslationType.NLLB200} ${context.getString(R.string.nllb200_translate_description)}")
-        }
-    }
-
-    return result
-}
-
-private class RequestPathHelper(
-    private val context: Context, val scope: CoroutineScope,
-    private val onPathSelected: (String) -> Unit,
-    private val requestDirectory: Boolean = false
-) {
-
-    @Composable
-    fun DrawRequestPathItem(itemName: String, savedPath: String, selectedPathPostFix: String = "") {
-        var currentPath by rememberSaveable(savedPath) { mutableStateOf(savedPath) }
-
-        fun onPathSelected(selectedPath: String) {
-            if (selectedPath.isNotEmpty()) {
-                currentPath =
-                    selectedPath + if (selectedPathPostFix.isNotEmpty()) File.separator + selectedPathPostFix else ""
-                saveSelectedPath(currentPath)
-            }
-        }
-
-        PreferenceItem(
-            itemName, currentPath,
-            onClick = {
-                scope.launch {
-                    if (requestDirectory) {
-                        context.requestDirectory(
-                            onDirectorySelected =
-                                { selectedPath -> onPathSelected(selectedPath) })
-                    } else {
-                        context.requestResourceFile(
-                            onFileSelected =
-                                { selectedPath -> onPathSelected(selectedPath) })
-                    }
-                }
-            })
-    }
-
-    private fun saveSelectedPath(pathToFile: String) {
+    SwitchPreferenceItem(
+        context.getString(R.string.enable_doom64_mods),
+        checkedFlow = PreferencesStorage.getEnableDoom64ModsValue(context),
+    ) { newValue ->
         scope.launch {
-            onPathSelected(pathToFile)
+            PreferencesStorage.setEnableDoom64ModsValue(context, newValue)
         }
     }
+
+    val previousPathToDoom64ModsFolder by PreferencesStorage.getPathToDoom64ModsFolder(context)
+        .collectAsState(initial = "")
+
+    if (enableDoom64Mods) {
+        HorizontalDivider()
+
+        RequestPath( context.getString(R.string.path_to_doom64_mods_folder),
+            onPathSelected = { selectedPath ->
+                scope.launch { PreferencesStorage.setPathToDoom64ModsFolder(context, selectedPath) } },
+            previousPathToDoom64ModsFolder, requestOnlyDirectory = true )
+    }
 }
+

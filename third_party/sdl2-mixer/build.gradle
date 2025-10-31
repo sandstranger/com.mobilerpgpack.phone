@@ -1,0 +1,60 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
+}
+
+android {
+    namespace 'com.mobilerpgpack.sdl2_mixer'
+    compileSdk versions.target_sdk
+
+    defaultConfig {
+        targetSdk versions.target_sdk
+        minSdk versions.min_sdk
+
+        ndk {
+            abiFilters = abi_filters
+        }
+        externalNativeBuild {
+            ndkBuild {
+                arguments += build_flags.ndk_build_platform
+                arguments += build_flags.compiling_arguments
+                arguments += build_flags.ndk_build_flags
+                arguments += build_flags.ndk_build_android_stl
+                cFlags  = build_flags.common_c_flags
+                cppFlags = build_flags.common_cpp_flags
+            }
+        }
+    }
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/SDL_mixer/Android.mk'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildToolsVersion versions.build_tools_version
+    ndkVersion versions.ndk_version
+}
+
+preBuild.dependsOn ':third_party:sdl2:android-project:app:build'
+
+dependencies {
+    implementation(project(":third_party:sdl2:android-project:app"))
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+}

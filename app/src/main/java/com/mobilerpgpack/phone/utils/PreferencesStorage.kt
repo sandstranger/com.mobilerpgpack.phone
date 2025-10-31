@@ -39,6 +39,10 @@ object PreferencesStorage {
     private val enableLauncherTextTranslationPrefsKey = booleanPreferencesKey("enable_launcher_translation")
     private val allowDownloadingModelsOverMobilePrefsKey = booleanPreferencesKey("allow_downloading_over_mobile")
     private val translationModelTypePrefsKey = stringPreferencesKey("translation_model_type")
+    private val pathToDoom64FolderWithMainWads = stringPreferencesKey("path_to_doom64_folder_wads")
+    private val pathToDoom64FolderWithMods = stringPreferencesKey("path_to_doom64_folder_mods")
+
+    private val enableDoom64Mods = booleanPreferencesKey("enable_doom64_mods")
 
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
@@ -57,6 +61,11 @@ object PreferencesStorage {
 
     suspend fun setAllowDownloadingModelsOverMobileValue(context: Context, valueToSave : Boolean) =
         setBooleanValue(context, allowDownloadingModelsOverMobilePrefsKey, valueToSave)
+
+    fun getEnableDoom64ModsValue(context: Context) = getBooleanValue(context, enableDoom64Mods)
+
+    suspend fun setEnableDoom64ModsValue(context: Context, valueToSave : Boolean) =
+        setBooleanValue(context, enableDoom64Mods, valueToSave)
 
     fun getDisplayInSafeAreaValue(context: Context) = getBooleanValue(context, displayInSafeAreaPrefsKey)
 
@@ -110,6 +119,17 @@ object PreferencesStorage {
         setStringValue(context, pathToLogFilePrefsKey, valueToSave)
 
     fun getPathToWolfensteinRpgIpaFileValue(context: Context) = getStringValue(context, pathToWolfensteinRpgIpaPrefsKey)
+
+    fun getPathToDoom64ModsFolder(context: Context) = getStringValue(context, pathToDoom64FolderWithMods)
+
+    suspend fun setPathToDoom64ModsFolder(context: Context, valueToSave : String) =
+        setStringValue(context, pathToDoom64FolderWithMods, valueToSave)
+
+    fun getPathToDoom64MainWadsFolder(context: Context) =
+        getStringValue(context, pathToDoom64FolderWithMainWads)
+
+    suspend fun setPathToDoom64MainWadsFolder(context: Context, valueToSave : String) =
+        setStringValue(context, pathToDoom64FolderWithMainWads, valueToSave)
 
     suspend fun setPathToWolfensteinRpgIpaFile(context: Context, valueToSave : String) =
         setStringValue(context, pathToWolfensteinRpgIpaPrefsKey, valueToSave)

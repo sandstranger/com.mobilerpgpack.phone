@@ -31,6 +31,7 @@ class IntervalMarkerTranslator {
             EngineTypes.WolfensteinRpg -> translateWolfensteinRpgText(sourceText, translateFn)
             EngineTypes.DoomRpg -> translateDoomRpgText(sourceText, textCameFromDialog, translateFn)
             EngineTypes.Doom2Rpg -> translateDoomRpg2Text(sourceText, translateFn)
+            else -> TranslationResult(sourceText,false)
         }
     }
 
