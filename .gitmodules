@@ -1,6 +1,6 @@
 [submodule "third_party/openal/src/main/jni/openal"]
 	path = third_party/openal/src/main/jni/openal
-	url = https://github.com/kcat/openal-soft.git
+url=https://github.com/sandstranger/openal-soft.git
 [submodule "third_party/sdl2"]
 	path = third_party/sdl2
 	url = https://github.com/sandstranger/SDL.git
@@ -49,3 +49,6 @@ url=https://github.com/sandstranger/libpng.git
 [submodule "third_party/bing_translator/src/main/java"]
 	path = third_party/bing_translator/src/main/java
 	url = https://github.com/sandstranger/bing-translate-api-java.git
+[submodule "third_party/mimalloc/src/main/jni/mimalloc"]
+	path = third_party/mimalloc/src/main/jni/mimalloc
+	url = https://github.com/microsoft/mimalloc.git
