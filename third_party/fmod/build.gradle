@@ -10,20 +10,6 @@ android {
     defaultConfig {
         minSdk versions.min_sdk
         targetSdk versions.target_sdk
-
-        ndk {
-            abiFilters = abi_filters
-        }
-        externalNativeBuild {
-            cmake {
-                arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
-                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
-                        "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
-                        "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                        "$build_flags.CMAKE_ANDROID_STL"
-            }
-        }
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -41,20 +27,12 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-            version versions.cmake_version
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
-    buildFeatures {
-        prefabPublishing true
-    }
-    prefab{
-        fmod {
-            headers "src/main/include"
-        }
-    }
+
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version
 }

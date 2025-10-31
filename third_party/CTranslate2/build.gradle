@@ -45,14 +45,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    buildFeatures {
-        prefabPublishing true
-    }
-    prefab{
-        ctranslate2 {
-            headers "src/main/jni/CTranslate2/include"
-        }
-    }
 }
 
 dependencies {

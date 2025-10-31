@@ -17,11 +17,12 @@ android {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DALSOFT_EXAMPLES=OFF" ,"-DALSOFT_TESTS=OFF" ,"-DALSOFT_UTILS=OFF",
-                        "-DALSOFT_NO_CONFIG_UTIL=ON", "-DALSOFT_BACKEND_OPENSL=ON" ,"-DALSOFT_BACKEND_WAVE=OFF",
+                        "-DALSOFT_NO_CONFIG_UTIL=ON", "-DALSOFT_BACKEND_OPENSL=ON",
+                        "-DALSOFT_BACKEND_WAVE=OFF",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                        "-DCMAKE_VERBOSE_MAKEFILE=OFF", "$build_flags.CMAKE_ANDROID_STL"
+                         "$build_flags.CMAKE_ANDROID_STL"
 
             }
         }
@@ -45,18 +46,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    buildFeatures {
-        prefabPublishing true
-    }
-    prefab{
-        OpenAL {
-            headers "src/main/jni/openal/include/AL"
-        }
-    }
 }
 
 dependencies {
-
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
