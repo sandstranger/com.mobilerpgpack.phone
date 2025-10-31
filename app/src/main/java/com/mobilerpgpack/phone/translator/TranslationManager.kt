@@ -31,6 +31,29 @@ import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
 import com.mobilerpgpack.phone.BuildConfig
+import com.mobilerpgpack.phone.CustomApp
+import com.sun.jna.Library
+import com.sun.jna.Callback
+import com.sun.jna.Native
+import com.sun.jna.Pointer
+
+private fun interface IsTextTranslatedCallback : Callback {
+    fun getTextPtr(ptr: Pointer, length: Int): Boolean
+}
+
+private fun interface TranslateTextCallback : Callback {
+    fun translate(ptr: Pointer, length: Int, isTextFromDialogBox: Boolean)
+}
+
+private fun interface GetTranslatedTextCallback : Callback {
+    fun getTranslation(ptr: Pointer, length: Int): String
+}
+
+private interface TranslationNativeBridge : Library {
+    fun registerIsTranslatedDelegate(cb: IsTextTranslatedCallback)
+    fun registerTranslateDelegate(cb: TranslateTextCallback)
+    fun registerGetTranslationDelegate(cb: GetTranslatedTextCallback)
+}
 
 object TranslationManager {
     const val RUSSIAN_LOCALE = "ru"
@@ -48,12 +71,16 @@ object TranslationManager {
     @Volatile
     private lateinit var translationModel : ITranslationModel
 
-    private val scope = TranslatorApp.globalScope
+    private val scope = CustomApp.globalScope
     private val intervalsTranslator = IntervalMarkerTranslator()
     private val translationModels = HashMap<TranslationType, ITranslationModel>()
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
     private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
     private val activeTranslationsAwaitable = ConcurrentHashMap<String, Job>()
+
+    private lateinit var isTranslatedCb : IsTextTranslatedCallback
+    private lateinit var translateCb : TranslateTextCallback
+    private lateinit var getTranslationCb : GetTranslatedTextCallback
 
     var inGame = false
 
@@ -91,10 +118,8 @@ object TranslationManager {
             return
         }
 
-        if (!BuildConfig.FDROID_BUILD) {
-            translationModels[TranslationType.MLKit] =
-                MLKitTranslationModel(context, sourceLocale, targetLocale, allowDownloadingOveMobile)
-        }
+        translationModels[TranslationType.MLKit] =
+            MLKitTranslationModel(context, sourceLocale, targetLocale, allowDownloadingOveMobile)
 
         val filesRootDir = context.getExternalFilesDir("")!!
 
@@ -131,6 +156,18 @@ object TranslationManager {
 
         wasInit = true
         db = TranslationDatabase.getInstance(context)
+
+        isTranslatedCb = IsTextTranslatedCallback { input,length ->
+            isTranslated(input.getByteArray(0,length)) }
+        translateCb = TranslateTextCallback { input,length, isTextFromDialogBox -> translate(
+            input.getByteArray(0,length), isTextFromDialogBox) }
+        getTranslationCb = GetTranslatedTextCallback { input,length ->
+            getTranslation(input.getByteArray(0,length)) }
+
+        val translatorLib = Native.load("Translator", TranslationNativeBridge::class.java)
+        translatorLib.registerIsTranslatedDelegate (isTranslatedCb)
+        translatorLib.registerTranslateDelegate (translateCb)
+        translatorLib.registerGetTranslationDelegate (getTranslationCb)
 
         scope.launch {
             reloadSavedTranslations()

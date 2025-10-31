@@ -18,5 +18,9 @@ local.properties
 app/release/
 sdl2-ttf/build/
 app/google/
-fmod/build/
-libpng/build/
+app/google-services.json
+app/fdroid/release
+app/googleOpenGLES2_0
+app/fdroidOpenGLES2_0
+app/fdroidOpenGLES3_2
+app/googleOpenGLES3_2

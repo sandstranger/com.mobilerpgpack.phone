@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
-    <string name="app_name">DOOM &amp; Wolfenstein RPG</string>
     <string name="access_to_all_files">Разрешить полный доступ к файлам</string>
     <string name="translation_model_title">Модель перевода</string>
     <string name="downloaded_text">Загружено</string>
@@ -24,6 +23,7 @@
     <string name="selected_button">Выбранная кнопка</string>
     <string name="common_settings">Общие настройки</string>
     <string name="graphics_settings">Настройки графики</string>
+    <string name="translation_settings">Настройки перевода</string>
     <string name="user_interface_settings">Настройки интерфейса</string>
     <string name="display_in_safe_area">Отображать в безопасной зоне</string>
     <string name="custom_aspect_ratio">Пользовательское соотношение сторон экрана</string>
@@ -37,6 +37,9 @@
     <string name="wolfenstein_rpg_ipa_file">Путь к ipa файлу Wolfenstein RPG</string>
     <string name="doom2_rpg_ipa_file">Путь к ipa файлу Doom II RPG</string>
     <string name="doom_rpg_zip_file">Путь к zip-файлу Doom RPG</string>
+    <string name="path_to_doom64_folder">Путь к папке Doom 64 с главными WAD-файлами</string>
+    <string name="path_to_doom64_mods_folder">Путь к папке Doom 64 с модами</string>
+    <string name="enable_doom64_mods">Включить моды для Doom 64</string>
     <string name="configure_screen_controls">Редактор экранного управления</string>
     <string name="hide_custom_screen_controls">Скрыть экранное управление</string>
     <string name="can_not_start_engine">Файл ресурсов игры не найден. Невозможно запустить игру.</string>
