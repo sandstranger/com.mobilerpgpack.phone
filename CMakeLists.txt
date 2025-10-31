@@ -81,8 +81,9 @@ endif ()
 set(FMOD_INC_DIR "${CMAKE_SOURCE_DIR}/third_party/fmod/src/main/include")
 set(FMOD_LIB "${CMAKE_SOURCE_DIR}/third_party/fmod/src/main/jniLibs/${ANDROID_ABI}/libfmod.so")
 
-set(libpng_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/libpng")
-set(libpng_CONF_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni/include")
+set(libpng_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/libpng"
+        "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/include")
+
 if (DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/libpng/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libpng18d.so)
 else ()
@@ -120,7 +121,7 @@ target_link_libraries(WolfensteinRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY}
         ${OPENGL_opengl_LIBRARY} ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
 
 target_include_directories(DOOM64 PRIVATE  ${SDL3_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
-    ${libpng_CONF_INCLUDE_DIR} ${FMOD_INC_DIR} ${OPENGL_INCLUDE_DIR})
+        ${FMOD_INC_DIR} ${OPENGL_INCLUDE_DIR})
 
 target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${OPENGL_opengl_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
