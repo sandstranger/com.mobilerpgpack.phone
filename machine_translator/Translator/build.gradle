@@ -43,14 +43,6 @@ android {
     }
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version
-    buildFeatures {
-        prefabPublishing true
-    }
-    prefab{
-        Translator {
-            headers "src/main/jni/include"
-        }
-    }
 }
 
 dependencies {

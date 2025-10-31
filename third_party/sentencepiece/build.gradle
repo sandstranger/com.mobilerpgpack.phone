@@ -45,18 +45,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    buildFeatures {
-        prefabPublishing true
-    }
-    prefab{
-        sentencepiece {
-            headers "src/main/jni/sentencepiece/src"
-        }
-    }
 }
 
 dependencies {
-
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

@@ -11,8 +11,7 @@ android {
         targetSdk versions.target_sdk
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
         externalNativeBuild {
             cmake {
@@ -48,14 +47,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-    buildFeatures {
-        prefabPublishing true
-    }
-    prefab{
-        "png_shared" {
-            headers "src/main/jni/libpng"
-        }
     }
 }
 
