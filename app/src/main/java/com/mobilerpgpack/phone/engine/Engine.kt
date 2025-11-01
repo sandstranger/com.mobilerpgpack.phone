@@ -38,7 +38,7 @@ internal val enginesInfo : HashMap<EngineTypes, EngineInfo> = if (BuildConfig.LE
     EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so","WolfensteinRPG",
         arrayOf(gl4esLibraryName,"SDL2","oboe","openal","SDL2_ttf","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
             { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
-    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so","DoomRPG", arrayOf(gl4esLibraryName,"fluidsynth","SDL2","gme","SDL2_mixer",
+    EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so","DoomRPG", arrayOf(gl4esLibraryName,"oboe","fluidsynth","SDL2","gme","SDL2_mixer",
         "SDL2_ttf","Translator","DoomRPG"), doomRPGButtons,
         pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
     EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so","DoomIIRPG",
@@ -54,7 +54,7 @@ else
         EngineTypes.WolfensteinRpg to EngineInfo("libWolfensteinRPG.so","WolfensteinRPG",
             arrayOf("spirv-cross-c-shared",gl4esLibraryName,"SDL2","oboe","openal","SDL2_ttf","Translator","WolfensteinRPG"), wolfensteinButtons, pathToResourcesCallback =
                 { context -> PreferencesStorage.getPathToWolfensteinRpgIpaFileValue (context) } ),
-        EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so","DoomRPG", arrayOf("spirv-cross-c-shared",gl4esLibraryName,"fluidsynth","SDL2","gme","SDL2_mixer",
+        EngineTypes.DoomRpg to EngineInfo("libDoomRPG.so","DoomRPG", arrayOf("spirv-cross-c-shared",gl4esLibraryName,"oboe","fluidsynth","SDL2","gme","SDL2_mixer",
             "SDL2_ttf","Translator","DoomRPG"), doomRPGButtons,
             pathToResourcesCallback = { context -> PreferencesStorage.getPathToDoomRpgZipFileValue (context) }),
         EngineTypes.Doom2Rpg to EngineInfo("libDoomIIRPG.so","DoomIIRPG",
