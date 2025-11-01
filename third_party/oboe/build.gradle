@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.mobilerpgpack.openal'
+    namespace 'com.mobilerpgpack.phone.oboe'
     compileSdkVersion versions.target_sdk
 
     defaultConfig {
@@ -17,15 +17,25 @@ android {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DALSOFT_EXAMPLES=OFF" ,"-DALSOFT_TESTS=OFF" ,"-DALSOFT_UTILS=OFF",
-                        "-DALSOFT_NO_CONFIG_UTIL=ON", "-DALSOFT_BACKEND_OPENSL=OFF",
-                        "-DALSOFT_BACKEND_WAVE=OFF", "-DALSOFT_BACKEND_OBOE=ON",
-                        "-DALSOFT_REQUIRE_OBOE=ON",
+                        "-DALSOFT_NO_CONFIG_UTIL=ON", "-DALSOFT_BACKEND_OPENSL=ON",
+                        "-DALSOFT_BACKEND_WAVE=OFF",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                         "$build_flags.CMAKE_ANDROID_STL"
+                        "$build_flags.CMAKE_ANDROID_STL"
             }
         }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     externalNativeBuild {
         cmake {
@@ -35,23 +45,9 @@ android {
     }
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
 }
 
-preBuild.dependsOn ':third_party:oboe:build'
-
 dependencies {
-    implementation(project(":third_party:oboe"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
