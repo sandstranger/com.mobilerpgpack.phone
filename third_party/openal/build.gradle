@@ -11,24 +11,25 @@ android {
         targetSdk versions.target_sdk
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DALSOFT_EXAMPLES=OFF" ,"-DALSOFT_TESTS=OFF" ,"-DALSOFT_UTILS=OFF",
-                        "-DALSOFT_NO_CONFIG_UTIL=ON", "-DALSOFT_BACKEND_OPENSL=ON" ,"-DALSOFT_BACKEND_WAVE=OFF",
+                        "-DALSOFT_NO_CONFIG_UTIL=ON", "-DALSOFT_BACKEND_OPENSL=OFF",
+                        "-DALSOFT_BACKEND_WAVE=OFF", "-DALSOFT_BACKEND_OBOE=ON",
+                        "-DALSOFT_REQUIRE_OBOE=ON",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                        "-DCMAKE_VERBOSE_MAKEFILE=OFF"
+                         "$build_flags.CMAKE_ANDROID_STL"
             }
         }
     }
     externalNativeBuild {
         cmake {
-            path "src/main/jni/openal/CMakeLists.txt"
+            path "CMakeLists.txt"
             version versions.cmake_version
         }
     }
@@ -47,8 +48,10 @@ android {
     }
 }
 
-dependencies {
+preBuild.dependsOn ':third_party:oboe:build'
 
+dependencies {
+    implementation(project(":third_party:oboe"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

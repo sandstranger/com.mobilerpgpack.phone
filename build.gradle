@@ -16,10 +16,12 @@ buildscript {
             common_c_flags : ["-O3","-flto=thin"],
             common_cpp_flags : ["-O3" ,"-flto=thin"],
             ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=thin -Wl,-plugin-opt=-emulated-tls",
+            ndk_build_android_stl : "APP_STL=c++_static",
             CMAKE_CFLAGS : "-O3 -flto=thin",
             CMAKE_CXXFLAGS : "-O3 -flto=thin",
+            CMAKE_ANDROID_STL : "-DANDROID_STL=c++_static",
             CMAKE_SHADERLINKER_FLAGS :"-flto=thin -Wl,-plugin-opt=-emulated-tls -fuse-ld=lld",
-            ndk_build_platform : "APP_PLATFORM=android-$versions.native_android_platform_version"
+            ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
     ]
     ext.abi_filters = ['armeabi-v7a','arm64-v8a',"x86","x86_64"]
     ext.rootDir = rootProject.rootDir

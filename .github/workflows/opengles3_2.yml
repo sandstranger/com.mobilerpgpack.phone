@@ -21,13 +21,11 @@ jobs:
       run: |
         git submodule sync --recursive
         git submodule update --init --force --recursive
-        git lfs install
-        git lfs fetch --all && git lfs checkout
 
-    - name: Set up JDK 24
+    - name: Set up JDK 21
       uses: actions/setup-java@v3
       with:
-        java-version: 24
+        java-version: 21
         distribution: 'temurin'
 
     - name: Install system dependencies

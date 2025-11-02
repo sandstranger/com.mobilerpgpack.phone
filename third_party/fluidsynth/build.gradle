@@ -12,20 +12,18 @@ android {
         targetSdk versions.target_sdk
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
 
         externalNativeBuild {
             cmake {
                 arguments"-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
-                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS -Wno-pointer-sign -Wno-error=unused-but-set-variable",
+                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS -std=c++20 -Wno-pointer-sign -Wno-error=unused-but-set-variable",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS -Wno-pointer-sign -Wno-error=unused-but-set-variable",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                        "-DBUILD_SHARED_LIBS=true",
+                        "-DBUILD_SHARED_LIBS=true", "-Denable-oboe=on",
                         "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
-                        "-DANDROID_STL=c++_static",
-                        "-DCMAKE_VERBOSE_MAKEFILE=OFF"
+                        "-DCMAKE_VERBOSE_MAKEFILE=OFF", "$build_flags.CMAKE_ANDROID_STL"
             }
         }
     }
@@ -54,8 +52,10 @@ android {
     }
 }
 
-dependencies {
+preBuild.dependsOn ':third_party:oboe:build'
 
+dependencies {
+    implementation(project(":third_party:oboe"))
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
