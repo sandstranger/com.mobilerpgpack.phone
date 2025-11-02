@@ -24,12 +24,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    buildToolsVersion versions.build_tools_version
 }
 
 dependencies {
+    implementation(libs.slf4j.api)
     compileOnly libs.projectlombok.lombok
     annotationProcessor libs.projectlombok.lombok
-    implementation(libs.slf4j.api)
     implementation(libs.okhttp)
     implementation libs.converter.gson
     implementation libs.gson

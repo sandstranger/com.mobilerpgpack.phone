@@ -114,6 +114,16 @@ This port using
 
 NG-GL4ES android openmw fork: https://github.com/Sisah2/NG-GL4ES
 
+gl4es fork from minecraft devs: https://github.com/Uniaball/gl4es
+
+fmod: https://www.fmod.com/
+
+libpng: https://github.com/pnggroup/libpng
+
+jna: https://github.com/java-native-access/jna
+
+file picker: https://github.com/codekidX/storage-chooser
+
 openal: https://github.com/kcat/openal-soft
 
 SDL2: https://github.com/libsdl-org/SDL/tree/SDL2

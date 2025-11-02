@@ -20,7 +20,7 @@ android {
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
                         "-DBUILD_SHARED_LIBS=true",
-                        "-DANDROID_STL=c++_static"
+                        "$build_flags.CMAKE_ANDROID_STL"
             }
         }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

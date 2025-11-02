@@ -11,16 +11,17 @@ android {
         targetSdk versions.target_sdk
 
         ndk {
-            abiFilters = []
-            abiFilters.addAll(abi_filters)
+            abiFilters = abi_filters
         }
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DPNG_STATIC=OFF","-DPNG_TESTS=OFF","-DPNG_EXECUTABLES=OFF",
+                        "-DPNG_FRAMEWORK=OFF",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
-                        "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS"
+                        "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
+                        "$build_flags.CMAKE_ANDROID_STL"
             }
         }
 
