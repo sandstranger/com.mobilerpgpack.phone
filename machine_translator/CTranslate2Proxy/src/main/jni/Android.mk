@@ -29,7 +29,6 @@ else
 	LOCAL_LDLIBS += $(LOCAL_PATH)/../../../../../third_party/sentencepiece/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/$(TARGET_ARCH_ABI)/libsentencepiece.so
 endif
 
-LOCAL_CPPFLAGS += -O3 -flto=thin -std=c++20 -fexceptions -frtti
-LOCAL_LDFLAGS += -flto=thin -Wl,-plugin-opt=-emulated-tls -fuse-ld=lld
+LOCAL_CPPFLAGS += -O3 -std=c++20 -fexceptions -frtti
 LOCAL_LDLIBS += -llog
 include $(BUILD_SHARED_LIBRARY)
