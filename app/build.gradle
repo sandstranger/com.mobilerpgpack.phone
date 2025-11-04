@@ -84,11 +84,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mobilerpgpack.phone"
+        applicationId versions.app_package_name
         minSdk versions.min_sdk
         targetSdk versions.target_sdk
-        versionCode 15
-        versionName "1.1.0"
+        versionCode versions.app_version_code
+        versionName versions.app_version_name
 
         ndk {
             abiFilters = abi_filters
@@ -160,7 +160,6 @@ android {
         compose true
         buildConfig true
         viewBinding true
-        prefab true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.15'
@@ -179,9 +178,10 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':machine_translator:Translator:build', ':third_party:sdl2:android-project:app:build', ':third_party:openal:build',
         ':third_party:sdl2-mixer:build',':third_party:sdl2-ttf:build', ':third_party:NG-GL4ES:build',
         ':third_party:libpng:build',':third_party:sdl3:android-project:app:build',
-        ':third_party:fmod:build',':third_party:legacy_gl4es:build'
+        ':third_party:fmod:build',':third_party:legacy_gl4es:build',':third_party:oboe:build'
 
 dependencies {
+    implementation(project(":third_party:oboe"))
     implementation project(':third_party:sdl2:android-project:app')
     implementation (project(":third_party:openal"))
     implementation(project(":third_party:sdl2-mixer"))
@@ -194,9 +194,17 @@ dependencies {
     implementation (project(":third_party:fmod"))
     implementation (project(":third_party:bing_translator"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
-
     implementation (project(":third_party:NG-GL4ES"))
     implementation (project(":third_party:legacy_gl4es"))
+
+    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+    implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.compose.navigation)
+    implementation(libs.koin.core.coroutines)
+    ksp(libs.koin.ksp.compiler)
 
     implementation(libs.jna){ artifact { type = "aar" } }
     implementation(platform(libs.firebase.bom))
