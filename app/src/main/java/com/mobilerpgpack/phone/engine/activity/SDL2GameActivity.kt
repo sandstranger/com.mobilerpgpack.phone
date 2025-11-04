@@ -9,18 +9,17 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import org.libsdl.app.SDLActivity
 
 class SDL2GameActivity : SDLActivity(), KoinComponent {
-    private val preferencesStorage : PreferencesStorage = get()
-
     private lateinit var engineInfo : IEngineInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         runBlocking {
+            val preferencesStorage : PreferencesStorage = get()
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()
-            engineInfo = get { parametersOf(activeEngineType) }
+            engineInfo =  get (named(activeEngineType))
             engineInfo.initialize(this@SDL2GameActivity)
         }
         super.onCreate(savedInstanceState)

@@ -8,13 +8,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.context.GlobalContext.startKoin
 
-class MainApplication : Application(), KoinComponent {
+class MainApplication : Application() {
+
+    private lateinit var assetExtractor: AssetExtractor
+
     override fun onCreate() {
         super.onCreate()
         setupJna()
@@ -25,12 +27,12 @@ class MainApplication : Application(), KoinComponent {
     override fun onTerminate() {
         super.onTerminate()
         globalScope.coroutineContext.cancelChildren()
-        val translationManager : TranslationManager = get()
+        val translationManager : TranslationManager = getKoin().get ()
         translationManager.terminate()
     }
 
     private fun initializeKoin(){
-        val koinModulesProvider = KoinModulesProvider(this@MainApplication, globalScope)
+        val koinModulesProvider = KoinModulesProvider(this@MainApplication, assetExtractor,globalScope)
         startKoin{
             androidLogger()
             androidContext(this@MainApplication)
@@ -39,9 +41,9 @@ class MainApplication : Application(), KoinComponent {
     }
 
     private fun copyAllAssetsFromApk(){
-        val assetsExtractor = get <AssetExtractor>()
+        assetExtractor = AssetExtractor(this)
         globalScope.launch {
-            assetsExtractor.copyAssetsContentToInternalStorage()
+            assetExtractor.copyAssetsContentToInternalStorage()
         }
     }
 

@@ -9,7 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.enginesInfo
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -18,6 +18,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
@@ -30,20 +33,23 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         enableEdgeToEdge()
         hideSystemBars()
 
+        val selectedEngine = getSelectedEngineType()
+
         var displayInSafeArea = false
+        var activeEngineInfo : IEngineInfo
+
         runBlocking {
             displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
+            activeEngineInfo = get (named(selectedEngine.toString()))
         }
 
         if (displayInSafeArea){
             this.displayInSafeArea()
         }
 
-        val selectedEngine = getSelectedEngineType()
-
         setContent {
             MaterialTheme {
-                screenController.DrawScreenControls(enginesInfo[selectedEngine]!!.buttonsToDraw,
+                screenController.DrawScreenControls(activeEngineInfo.screenButtonsToDraw,
                     inGame = false,
                     activeEngine = selectedEngine,
                     drawInSafeArea = displayInSafeArea, onBack = {

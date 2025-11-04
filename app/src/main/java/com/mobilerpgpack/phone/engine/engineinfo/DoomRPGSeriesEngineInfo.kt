@@ -8,6 +8,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.inject
+import java.io.File
 
 open class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
                                    private val allLibs : Array<String>,
@@ -28,9 +29,10 @@ open class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
         Os.setenv("ENABLE_TEXTS_MACHINE_TRANSLATION",
             enableMachineTranslation.toString().lowercase(),true)
 
+        Os.setenv( "RESOURCE_FILE_NAME",
+            File (super.pathToResource).absolutePath, true)
+
         translationManager.inGame = true
         translationManager.activeEngine = engineType
-
-
     }
 }
