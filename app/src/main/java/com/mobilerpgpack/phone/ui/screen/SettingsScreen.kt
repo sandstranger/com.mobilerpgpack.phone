@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
 import android.content.Context
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -330,6 +331,7 @@ class SettingsScreen : KoinComponent {
 
     @Composable
     private fun DrawUserInterfaceSettings(scope: CoroutineScope) {
+        val activity = LocalActivity.current!!
         val engineState by preferencesStorage.activeEngineAsFlowString.collectAsState(
             initial =
                 EngineTypes.DefaultActiveEngine.toString()
@@ -370,7 +372,7 @@ class SettingsScreen : KoinComponent {
         HorizontalDivider()
 
         PreferenceItem(context.getString(R.string.configure_screen_controls)) {
-            ScreenControlsEditorActivity.editControls( context,activeEngine)
+            ScreenControlsEditorActivity.editControls( activity,activeEngine)
         }
 
         HorizontalDivider()

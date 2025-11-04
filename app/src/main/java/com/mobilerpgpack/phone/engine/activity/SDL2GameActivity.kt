@@ -19,7 +19,7 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
         runBlocking {
             val preferencesStorage : PreferencesStorage = get()
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()
-            engineInfo =  get (named(activeEngineType))
+            engineInfo = get (named(activeEngineType))
             engineInfo.initialize(this@SDL2GameActivity)
         }
         super.onCreate(savedInstanceState)
