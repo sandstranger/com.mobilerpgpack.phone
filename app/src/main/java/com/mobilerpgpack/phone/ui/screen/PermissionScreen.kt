@@ -29,6 +29,9 @@ import androidx.core.net.toUri
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.Theme
+import com.mobilerpgpack.phone.ui.getBackgroundColor
+import com.mobilerpgpack.phone.ui.getTextColor
+import com.mobilerpgpack.phone.ui.getTopBarColor
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
@@ -36,9 +39,9 @@ import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 fun PermissionScreen( onPermissionGranted: () -> Unit ) {
     val activity = LocalActivity.current!!
     val isSystemInDarkTheme = isSystemInDarkTheme()
-    val backgroundColor = if (isSystemInDarkTheme) Color.Black else Color.White
-    val topBarColor = if (isSystemInDarkTheme) Color.Gray else Color.Blue
-    val textColor = if (isSystemInDarkTheme) Color.White else Color.Black
+    val backgroundColor = getBackgroundColor(isSystemInDarkTheme)
+    val topBarColor = getTopBarColor(isSystemInDarkTheme)
+    val textColor = getTextColor(isSystemInDarkTheme)
 
     Theme (darkTheme = isSystemInDarkTheme ) {
         Column(

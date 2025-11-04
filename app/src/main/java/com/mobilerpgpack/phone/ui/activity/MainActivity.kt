@@ -13,8 +13,12 @@ import androidx.navigation.compose.rememberNavController
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-internal class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity(), KoinComponent {
+
+    private val settingsScreenProvider : SettingsScreen by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +41,9 @@ internal class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    composable(Screen.Settings.route) { SettingsScreen() }
+                    composable(Screen.Settings.route) {
+                        settingsScreenProvider.DrawSettingsScreen()
+                    }
                 }
             }
         }

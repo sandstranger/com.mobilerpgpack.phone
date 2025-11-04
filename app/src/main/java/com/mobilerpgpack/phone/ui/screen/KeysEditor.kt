@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.TranslatedText
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -30,7 +31,7 @@ fun KeysEditor(
 
     LaunchedEffect(buttonsToEdit) {
         scope.launch {
-            buttonsToEdit.forEach { it.loadButtonState(context) }
+            buttonsToEdit.forEach { it.loadButtonState() }
         }
     }
 
@@ -57,7 +58,7 @@ fun KeysEditor(
     if (shouldReset) {
         LaunchedEffect(buttonsToEdit) {
             scope.launch {
-                buttonsToEdit.forEach { it.resetKeyEvent(context) }
+                buttonsToEdit.forEach { it.resetKeyEvent() }
                 selectedKeyCode = currentButton.value.sdlKeyCode
             }
             selectedKeyCode = currentButton.value.sdlKeyCode
@@ -128,7 +129,7 @@ fun KeysEditor(
                                     selectedKeyCode = code
                                     currentButton.value.sdlKeyCode = selectedKeyCode
                                     scope.launch {
-                                        currentButton.value.saveButtonState(context)
+                                        currentButton.value.saveButtonState()
                                     }
                                     showKeyCodeDialog = false
                                 }

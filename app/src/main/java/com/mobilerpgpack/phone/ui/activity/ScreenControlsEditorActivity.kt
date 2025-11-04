@@ -9,35 +9,47 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.enginesInfo
-import com.mobilerpgpack.phone.ui.screen.OnScreenController
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.hideSystemBars
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
-class ScreenControlsEditorActivity : ComponentActivity() {
+class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
+
+    private val screenController : ScreenController by inject ()
+
+    private val preferencesStorage : PreferencesStorage by inject ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         hideSystemBars()
 
+        val selectedEngine = getSelectedEngineType()
+
         var displayInSafeArea = false
+        var activeEngineInfo : IEngineInfo
+
         runBlocking {
-            displayInSafeArea = PreferencesStorage.getDisplayInSafeAreaValue(this@ScreenControlsEditorActivity).first()!!
+            displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
+            activeEngineInfo = get (named(selectedEngine.toString()))
         }
 
         if (displayInSafeArea){
             this.displayInSafeArea()
         }
 
-        val selectedEngine = getSelectedEngineType()
-
         setContent {
             MaterialTheme {
-                OnScreenController(enginesInfo[selectedEngine]!!.buttonsToDraw,
+                screenController.DrawScreenControls(activeEngineInfo.screenButtonsToDraw,
                     inGame = false,
                     activeEngine = selectedEngine,
                     drawInSafeArea = displayInSafeArea, onBack = {

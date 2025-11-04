@@ -1,21 +1,20 @@
 package com.mobilerpgpack.phone.translator
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.translator.models.BingTranslatorModel
-import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
+import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.ACTIVE_TRANSLATION_MODEL_KEY
+import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.TARGET_LOCALE_NAMES_KEY
+import com.mobilerpgpack.phone.main.TRANSLATOR_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.translator.models.ITranslationModel
-import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
-import com.mobilerpgpack.phone.translator.models.MLKitTranslationModel
-import com.mobilerpgpack.phone.translator.models.NLLB200TranslationModel
-import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
-import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.translator.sql.TranslationEntry
+import com.sun.jna.Callback
+import com.sun.jna.Library
+import com.sun.jna.Native
+import com.sun.jna.Pointer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
@@ -26,16 +25,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import java.io.File
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
-import com.mobilerpgpack.phone.BuildConfig
-import com.mobilerpgpack.phone.CustomApp
-import com.sun.jna.Library
-import com.sun.jna.Callback
-import com.sun.jna.Native
-import com.sun.jna.Pointer
 
 private fun interface IsTextTranslatedCallback : Callback {
     fun getTextPtr(ptr: Pointer, length: Int): Boolean
@@ -55,32 +50,32 @@ private interface TranslationNativeBridge : Library {
     fun registerGetTranslationDelegate(cb: GetTranslatedTextCallback)
 }
 
-object TranslationManager {
-    const val RUSSIAN_LOCALE = "ru"
-    const val ENGLISH_LOCALE = "en"
-    const val sourceLocale = ENGLISH_LOCALE
+class TranslationManager : KoinComponent {
 
-    val targetLocale : String = getSystemLocale()
-
-    private var wasInit = false
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
-    private lateinit var db: TranslationDatabase
-
-    @SuppressLint("StaticFieldLeak")
     @Volatile
-    private lateinit var translationModel : ITranslationModel
+    private var translationModel : ITranslationModel = get (named(ACTIVE_TRANSLATION_MODEL_KEY))
 
-    private val scope = CustomApp.globalScope
-    private val intervalsTranslator = IntervalMarkerTranslator()
-    private val translationModels = HashMap<TranslationType, ITranslationModel>()
+    private val targetLocale : String = get(named(TARGET_LOCALE_NAMES_KEY))
+
+    private val db: TranslationDatabase = get()
+
+    private val scope : CoroutineScope = get ()
+
+    private val intervalsTranslator : IntervalMarkerTranslator = get()
+
+    private val translationModels : Map<TranslationType, ITranslationModel> = get()
+
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
+
     private val activeTranslations: MutableSet<String> = Collections.newSetFromMap(ConcurrentHashMap())
+
     private val activeTranslationsAwaitable = ConcurrentHashMap<String, Job>()
 
-    private lateinit var isTranslatedCb : IsTextTranslatedCallback
-    private lateinit var translateCb : TranslateTextCallback
-    private lateinit var getTranslationCb : GetTranslatedTextCallback
+    private val isTranslatedCb : IsTextTranslatedCallback
+    private val translateCb : TranslateTextCallback
+    private val getTranslationCb : GetTranslatedTextCallback
 
     var inGame = false
 
@@ -111,52 +106,7 @@ object TranslationManager {
             changeTranslationModel(value)
         }
 
-    fun init( context: Context, activeTranslationType: TranslationType = TranslationType.DefaultTranslationType,
-        allowDownloadingOveMobile: Boolean = false
-    ) {
-        if (wasInit) {
-            return
-        }
-
-        translationModels[TranslationType.MLKit] =
-            MLKitTranslationModel(context, sourceLocale, targetLocale, allowDownloadingOveMobile)
-
-        val filesRootDir = context.getExternalFilesDir("")!!
-
-        val pathToOptModel = "${filesRootDir.absolutePath}${File.separator}opus-ct2-en-ru"
-        val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
-        val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
-
-        translationModels[TranslationType.OpusMt] =
-            OpusMtTranslationModel (pathToOptModel, optModelSourceProcessor, optModelTargetProcessor)
-
-        val pathToM2M100Model = "${filesRootDir.absolutePath}${File.separator}m2m100_ct2"
-        val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
-
-        translationModels[TranslationType.M2M100] =
-            M2M100TranslationModel (context, pathToM2M100Model, m2m100smpFile, allowDownloadingOveMobile)
-
-        val pathToSmall100Model = "${filesRootDir.absolutePath}${File.separator}small100_ct2"
-        val small100SmpFile = "${pathToSmall100Model}${File.separator}sentencepiece.model"
-
-        translationModels[TranslationType.Small100] =
-            Small100TranslationModel (context, pathToSmall100Model, small100SmpFile, allowDownloadingOveMobile)
-
-        val pathToNLLB200Model = "${filesRootDir.absolutePath}${File.separator}nllb-200-distilled-600M"
-        val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
-
-        translationModels[TranslationType.NLLB200] =
-            NLLB200TranslationModel (context, pathToNLLB200Model, nLLB200SmpFile,
-                allowDownloadingOveMobile)
-
-        translationModels[TranslationType.GoogleTranslate] = GoogleTranslateV2(context)
-        translationModels[TranslationType.BingTranslate] = BingTranslatorModel(context)
-
-        translationModel = translationModels[activeTranslationType]!!
-
-        wasInit = true
-        db = TranslationDatabase.getInstance(context)
-
+    init {
         isTranslatedCb = IsTextTranslatedCallback { input,length ->
             isTranslated(input.getByteArray(0,length)) }
         translateCb = TranslateTextCallback { input,length, isTextFromDialogBox -> translate(
@@ -164,14 +114,10 @@ object TranslationManager {
         getTranslationCb = GetTranslatedTextCallback { input,length ->
             getTranslation(input.getByteArray(0,length)) }
 
-        val translatorLib = Native.load("Translator", TranslationNativeBridge::class.java)
+        val translatorLib = Native.load(TRANSLATOR_NATIVE_LIB_NAME, TranslationNativeBridge::class.java)
         translatorLib.registerIsTranslatedDelegate (isTranslatedCb)
         translatorLib.registerTranslateDelegate (translateCb)
         translatorLib.registerGetTranslationDelegate (getTranslationCb)
-
-        scope.launch {
-            reloadSavedTranslations()
-        }
     }
 
     fun terminate() {
@@ -181,7 +127,6 @@ object TranslationManager {
         translationModels.values.forEach {
             it.release()
         }
-        translationModels.clear()
     }
 
     suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }) {
@@ -206,7 +151,6 @@ object TranslationManager {
 
     fun cancelDownloadModel() = translationModel.cancelDownloadingModel()
 
-    @JvmStatic
     fun getTranslation(input: ByteArray) : String {
         val text = input.sanitizeUtf8BytesToString()
         return if (isTranslated(text)) loadedTranslations[text]!!.value else text
@@ -215,13 +159,11 @@ object TranslationManager {
     fun getTranslation(text: String) =
         if (isTranslated(text)) loadedTranslations[text]!!.value else text
 
-    @JvmStatic
     fun isTranslated(input: ByteArray) =
         loadedTranslations.containsKey(input.sanitizeUtf8BytesToString())
 
     fun isTranslated(text : String) = loadedTranslations.containsKey(text)
 
-    @JvmStatic
     fun translate(input: ByteArray, textCameFromDialog : Boolean ): String {
         val text = input.sanitizeUtf8BytesToString()
 
@@ -340,14 +282,6 @@ object TranslationManager {
         }
     }
 
-    private fun getSystemLocale(): String {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Resources.getSystem().configuration.locales.get(0).language
-        } else {
-            Resources.getSystem().configuration.locale.language
-        }
-    }
-
     private suspend fun reloadSavedTranslations() {
         activeTranslations.clear()
         activeTranslationsAwaitable.clear()
@@ -360,6 +294,22 @@ object TranslationManager {
             translationModel = translationModels[targetTranslationType]!!
             scope.launch {
                 reloadSavedTranslations()
+            }
+        }
+    }
+
+    companion object{
+        const val RUSSIAN_LOCALE = "ru"
+
+        const val ENGLISH_LOCALE = "en"
+
+        const val sourceLocale = ENGLISH_LOCALE
+
+        fun getSystemLocale(): String {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Resources.getSystem().configuration.locales.get(0).language
+            } else {
+                Resources.getSystem().configuration.locale.language
             }
         }
     }
