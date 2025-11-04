@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.TranslatedText
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import kotlinx.coroutines.launch
 
 @Composable

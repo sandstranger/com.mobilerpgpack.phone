@@ -25,6 +25,7 @@ import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
 import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
@@ -191,6 +192,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         viewModelOf(::DownloadViewModel)
         singleOf(::SettingsScreen).bind()
+        singleOf(::ScreenController).bind()
     }
 
     init {
