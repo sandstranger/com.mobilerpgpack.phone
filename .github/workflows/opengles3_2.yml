@@ -11,10 +11,16 @@ jobs:
       GRADLE_OPTS: -Dorg.gradle.daemon=false
 
     steps:
+    - name: Clean workspace
+      run: |
+        rm -rf ${{ github.workspace }}/.git/modules || true
+        rm -rf ${{ github.workspace }}/.git/config || true
+
     - name: Checkout code with submodules
       uses: actions/checkout@v4
       with:
         submodules: 'recursive'
+        clean: true        
         fetch-depth: 0
 
     - name: Force update submodules
