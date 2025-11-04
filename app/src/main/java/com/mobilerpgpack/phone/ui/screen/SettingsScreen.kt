@@ -33,11 +33,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.engine.Engine
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.enginesInfo
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.TranslationType
@@ -59,8 +57,12 @@ import com.mobilerpgpack.phone.utils.isTelevision
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class SettingsScreen : KoinComponent {
     private val context : Context by inject()
@@ -131,11 +133,12 @@ class SettingsScreen : KoinComponent {
         scope: CoroutineScope,
         backgroundColor: Color, activeEngine: EngineTypes
     ) {
+        val context = LocalContext.current
         Scaffold(
             modifier = Modifier.background(backgroundColor),
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { scope.launch { engine.startEngine( activeEngine) } }
+                    onClick = { scope.launch { startEngine( context,activeEngine) } }
                 ) {
                     Icon(
                         Icons.Default.PlayArrow,
@@ -237,7 +240,7 @@ class SettingsScreen : KoinComponent {
 
         HorizontalDivider()
 
-        DrawPreloadModelsSetting(context)
+        DrawPreloadModelsSetting()
 
         HorizontalDivider()
     }
@@ -333,7 +336,7 @@ class SettingsScreen : KoinComponent {
         )
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState!!) }
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
-        val isModelDownloaded by TranslationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
+        val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
         TranslatedText(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
 
@@ -367,7 +370,7 @@ class SettingsScreen : KoinComponent {
         HorizontalDivider()
 
         PreferenceItem(context.getString(R.string.configure_screen_controls)) {
-            ScreenControlsEditorActivity.editControls( activeEngine)
+            ScreenControlsEditorActivity.editControls( context,activeEngine)
         }
 
         HorizontalDivider()
@@ -417,8 +420,8 @@ class SettingsScreen : KoinComponent {
         HorizontalDivider()
 
         if (drawKeysEditor) {
-            val buttonsToDraw = enginesInfo[activeEngine]!!.buttonsToDraw
-            KeysEditor(buttonsToDraw) {
+            val engineInfo : IEngineInfo = get (named(activeEngine.toString()))
+            KeysEditor(engineInfo.screenButtonsToDraw) {
                 drawKeysEditor = false
             }
         }

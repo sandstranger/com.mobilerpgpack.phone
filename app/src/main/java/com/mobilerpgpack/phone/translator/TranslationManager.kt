@@ -10,6 +10,10 @@ import com.mobilerpgpack.phone.translator.models.ITranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.translator.sql.TranslationEntry
+import com.sun.jna.Callback
+import com.sun.jna.Library
+import com.sun.jna.Native
+import com.sun.jna.Pointer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
@@ -27,12 +31,6 @@ import org.koin.core.qualifier.named
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
-import com.mobilerpgpack.phone.BuildConfig
-import com.mobilerpgpack.phone.CustomApp
-import com.sun.jna.Library
-import com.sun.jna.Callback
-import com.sun.jna.Native
-import com.sun.jna.Pointer
 
 private fun interface IsTextTranslatedCallback : Callback {
     fun getTextPtr(ptr: Pointer, length: Int): Boolean
@@ -75,9 +73,9 @@ class TranslationManager : KoinComponent {
 
     private val activeTranslationsAwaitable = ConcurrentHashMap<String, Job>()
 
-    private lateinit var isTranslatedCb : IsTextTranslatedCallback
-    private lateinit var translateCb : TranslateTextCallback
-    private lateinit var getTranslationCb : GetTranslatedTextCallback
+    private val isTranslatedCb : IsTextTranslatedCallback
+    private val translateCb : TranslateTextCallback
+    private val getTranslationCb : GetTranslatedTextCallback
 
     var inGame = false
 
@@ -109,6 +107,13 @@ class TranslationManager : KoinComponent {
         }
 
     init {
+        isTranslatedCb = IsTextTranslatedCallback { input,length ->
+            isTranslated(input.getByteArray(0,length)) }
+        translateCb = TranslateTextCallback { input,length, isTextFromDialogBox -> translate(
+            input.getByteArray(0,length), isTextFromDialogBox) }
+        getTranslationCb = GetTranslatedTextCallback { input,length ->
+            getTranslation(input.getByteArray(0,length)) }
+
         val translatorLib = Native.load(TRANSLATOR_NATIVE_LIB_NAME, TranslationNativeBridge::class.java)
         translatorLib.registerIsTranslatedDelegate (isTranslatedCb)
         translatorLib.registerTranslateDelegate (translateCb)

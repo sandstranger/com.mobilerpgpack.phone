@@ -10,20 +10,29 @@ import android.view.WindowManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
+import com.mobilerpgpack.phone.main.buildFullLibraryName
+import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.callAs
 import com.sun.jna.Function
 import com.sun.jna.Native
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import java.io.File
+import kotlin.getValue
 
 abstract class EngineInfo(private val mainEngineLib: String,
                           private val allLibs : Array<String>,
@@ -31,6 +40,11 @@ abstract class EngineInfo(private val mainEngineLib: String,
                           private val activeEngineType : EngineTypes,
                           private val pathToResourceFlow : Flow<String?>
 ) : KoinComponent, IEngineInfo {
+
+    protected val preferencesStorage : PreferencesStorage by inject()
+
+    protected val scope = CoroutineScope(Dispatchers.Default)
+
 
     protected lateinit var resolution: Pair<Int, Int>
         private set
@@ -46,11 +60,8 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     protected var needToShowControlsLastState : Boolean = false
 
-    private val pathToRootUserFolder : String = get {
-        parametersOf(
-            KoinModulesProvider.Companion.USER_ROOT_FOLDER_NAMED_KEY
-        )
-    }
+    protected val pathToRootUserFolder : String = get (named(
+        KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
 
     private lateinit var needToShowScreenControlsNativeDelegate : Function
 
@@ -62,6 +73,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     override val engineType: EngineTypes get() = activeEngineType
 
+
     override val pathToResource: String
         get() {
             var path : String
@@ -71,7 +83,9 @@ abstract class EngineInfo(private val mainEngineLib: String,
             return path
         }
 
-    override val mainSharedObject: String get() = mainEngineLib
+    override val screenButtonsToDraw: Collection<ButtonState> get() = buttonsToDraw
+
+    override val mainSharedObject: String get() = buildFullLibraryName(mainEngineLib)
 
     override val nativeLibraries: Array<String> get() = allLibs
 
@@ -133,6 +147,13 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     private fun initializeCommonEngineData (){
         val pathToSDL2ControllerDB = "${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt"
+        val pathToPsaFolder = getPathToPsaFolder()
+        val psaFolder = File(pathToPsaFolder)
+
+        if (!psaFolder.exists()){
+            psaFolder.mkdirs()
+        }
+
         Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
         Os.setenv("LIBGL_DXTMIPMAP", "1", true)
         Os.setenv("LIBGL_ES","3",true)
@@ -140,10 +161,13 @@ abstract class EngineInfo(private val mainEngineLib: String,
         Os.setenv("LIBGL_DXT", "1", true)
         Os.setenv("LIBGL_NOTEXARRAY","0",true)
         Os.setenv("LIBGL_NOPSA", "0",true)
-        Os.setenv("LIBGL_PSA_FOLDER",pathToRootUserFolder,true)
-        Os.setenv("SDL_VIDEO_GL_DRIVER", "libng_gl4es.so", true)
+        Os.setenv("LIBGL_PSA_FOLDER",pathToPsaFolder,true)
+        Os.setenv("SDL_VIDEO_GL_DRIVER", gl4esFullLibraryName, true)
         Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", pathToSDL2ControllerDB,true)
     }
+
+    private fun getPathToPsaFolder () =
+        pathToRootUserFolder + File.separator + if (BuildConfig.LEGACY_GLES2) "gles2" else "gles3"
 
     private fun killEngine() = Process.killProcess(Process.myPid())
 

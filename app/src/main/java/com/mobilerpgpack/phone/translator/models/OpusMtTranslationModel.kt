@@ -10,6 +10,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 class OpusMtTranslationModel() : ITranslationModel, KoinComponent {
@@ -22,6 +23,8 @@ class OpusMtTranslationModel() : ITranslationModel, KoinComponent {
 
     private val opusMtTranslator : OpusMtTranslator = get()
 
+    private val assetExtractor : AssetExtractor by inject()
+
     override val translationType: TranslationType = TranslationType.OpusMt
 
     override fun isLocaleSupported(locale: String): Boolean {
@@ -29,7 +32,7 @@ class OpusMtTranslationModel() : ITranslationModel, KoinComponent {
     }
 
     private fun initialize(){
-        if (wasInitialize || !AssetExtractor.assetsCopied){
+        if (wasInitialize || !assetExtractor.assetsCopied){
             return
         }
         synchronized(lockObject) {
@@ -43,7 +46,7 @@ class OpusMtTranslationModel() : ITranslationModel, KoinComponent {
         sourceLocale: String,
         targetLocale: String
     ): TranslationResult {
-        if (!isLocaleSupported(targetLocale) || !AssetExtractor.assetsCopied){
+        if (!isLocaleSupported(targetLocale) || !assetExtractor.assetsCopied){
             return TranslationResult(text,false)
         }
         val deferred = scope.async {

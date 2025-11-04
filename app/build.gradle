@@ -204,7 +204,6 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.androidx.compose.navigation)
     implementation(libs.koin.core.coroutines)
-    implementation(libs.koin.androidx.startup)
     ksp(libs.koin.ksp.compiler)
 
     implementation(libs.jna){ artifact { type = "aar" } }

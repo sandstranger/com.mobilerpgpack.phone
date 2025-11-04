@@ -40,10 +40,6 @@ open class SDL2EngineInfo(private val mainEngineLib: String,
                      private val pathToResourceFlow : Flow<String?>) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType,pathToResourceFlow ) {
 
-    protected val preferencesStorage : PreferencesStorage by inject()
-
-    protected val scope = CoroutineScope(Dispatchers.Default)
-
     private val screenControls : ScreenController by inject ()
 
     private var hideScreenControls: Boolean = false
@@ -76,9 +72,6 @@ open class SDL2EngineInfo(private val mainEngineLib: String,
         if (displayInSafeArea) {
             activity.displayInSafeArea()
         }
-
-        Os.setenv( "PATH_TO_RESOURCES",
-            File (super.pathToResource).absolutePath, true)
     }
 
     override fun onDestroy() {
