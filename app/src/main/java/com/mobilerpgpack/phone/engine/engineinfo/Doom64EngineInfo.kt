@@ -1,0 +1,49 @@
+package com.mobilerpgpack.phone.engine.engineinfo
+
+import android.app.Activity
+import android.system.Os
+import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import java.io.File
+
+class Doom64EngineInfo(
+    private val mainEngineLib: String,
+    private val allLibs: Array<String>,
+    private val buttonsToDraw: Collection<ButtonState>,
+    private val pathToResourceFlow: Flow<String?>) : SDL3EngineInfo(
+    mainEngineLib, allLibs,
+    buttonsToDraw, EngineTypes.Doom64ExPlus, pathToResourceFlow) {
+
+    override suspend fun initialize(activity: Activity) {
+        super.initialize(activity)
+
+        val pathToDoom64MainWadsFolder = preferencesStorage.pathToDoom64MainWadsFolder.first()
+        val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
+
+        Os.setenv("PATH_TO_DOOM64_MAIN_WADS_FOLDER", pathToDoom64MainWadsFolder, true)
+        Os.setenv("PATH_TO_DOOM64_MODS_FOLDER", pathToDoom64ModsFolder, true)
+        Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
+    }
+
+    private fun getPathToDoom64UserFolder() = pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
+
+    private suspend fun getPathToDoom64ModsFolder(): String {
+        val enableDoom64Mods = preferencesStorage.enableDoom64Mods.first()
+
+        if (!enableDoom64Mods) {
+            return ""
+        }
+
+        var pathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder.first()
+
+        val pathToDoom64ModsFolderExists = File(pathToDoom64ModsFolder).exists()
+
+        if (!pathToDoom64ModsFolderExists) {
+            pathToDoom64ModsFolder = ""
+        }
+
+        return pathToDoom64ModsFolder
+    }
+}
