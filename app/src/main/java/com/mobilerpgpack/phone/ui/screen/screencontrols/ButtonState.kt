@@ -1,9 +1,7 @@
-package com.mobilerpgpack.phone.ui.screen
+package com.mobilerpgpack.phone.ui.screen.screencontrols
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -22,7 +20,7 @@ class ButtonState(
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = 0,
     val buttonResId: Int = NOT_EXISTING_RES,
-    val buttonType: ButtonType = ButtonType.Default) : KoinComponent  {
+    val buttonType: ButtonType = ButtonType.Default) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent

@@ -30,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -65,7 +66,6 @@ class SettingsScreen : KoinComponent {
     private val context : Context by inject()
     private val preferencesStorage : PreferencesStorage by inject()
     private val translationManager : TranslationManager by inject ()
-    private val engine : Engine by inject ()
 
     @Composable
     fun DrawSettingsScreen() {
@@ -107,13 +107,15 @@ class SettingsScreen : KoinComponent {
         scope: CoroutineScope,
         backgroundColor: Color, activeEngine: EngineTypes
     ) {
+        val context = LocalContext.current
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundColor),
         ) {
             Button(
-                onClick = { scope.launch { engine.startEngine( activeEngine) } },
+                onClick = { scope.launch { startEngine( context,activeEngine) } },
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
