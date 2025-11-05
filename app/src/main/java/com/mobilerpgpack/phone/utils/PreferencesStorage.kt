@@ -47,6 +47,8 @@ class PreferencesStorage(private val context: Context) {
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
 
+    val dataStore : DataStore<Preferences> = context.dataStore
+
     val translationModelType
         get() = getStringValue(
             translationModelTypePrefsKey,
