@@ -50,6 +50,7 @@ import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getTopBarColor
+import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
@@ -189,7 +190,6 @@ class SettingsScreen : KoinComponent {
                 .verticalScroll(scrollState),
         ) {
             DrawCommonSettings( scope, activeEngine)
-            DrawTranslationModelSettings( scope)
             DrawGraphicsSettings( scope)
             DrawUserInterfaceSettings( scope)
         }
@@ -197,7 +197,7 @@ class SettingsScreen : KoinComponent {
 
     @Composable
     private fun DrawCommonSettings(scope: CoroutineScope, activeEngine: EngineTypes) {
-        Text(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
+        DrawTitleText(context.getString(R.string.common_settings))
 
         ListPreferenceItem(
             context.getString(R.string.active_engine),
@@ -213,83 +213,16 @@ class SettingsScreen : KoinComponent {
 
         HorizontalDivider()
 
-        when (activeEngine) {
-            EngineTypes.WolfensteinRpg -> DrawWolfensteinRpgSettings( scope)
-            EngineTypes.DoomRpg -> DrawDoomRpgSettings( scope)
-            EngineTypes.Doom2Rpg -> DrawDoom2RpgSettings( scope)
-            EngineTypes.Doom64ExPlus -> DrawDoom64Settings( scope)
-        }
+        val engineInfo : IEngineInfo = koinInject(named(activeEngine.toString()))
+        engineInfo.DrawSettings()
 
         HorizontalDivider()
-    }
-
-    @Composable
-    private fun DrawTranslationModelSettings(scope: CoroutineScope) {
-        Text(context.getString(R.string.translation_settings), style = MaterialTheme.typography.titleLarge)
-
-        val activeTranslationTypeString by preferencesStorage.translationModelType
-            .collectAsState(initial = TranslationType.DefaultTranslationType.toString())
-
-        val translationModelEntries = buildTranslationsDescription()
-        val initialModelValue = translationModelEntries.first { it.startsWith(activeTranslationTypeString) }
-
-        ListPreferenceItem(
-            context.getString(R.string.translation_model_title),
-            initialModelValue,
-            translationModelEntries
-        ) { newValue ->
-            scope.launch {
-                val translationModelType = TranslationType.getTranslationType(newValue)
-                translationManager.activeTranslationType = translationModelType
-                preferencesStorage.setTranslationModelTypeValue( translationModelType)
-            }
-        }
-
-        HorizontalDivider()
-
-        SwitchPreferenceItem(
-            context.getString(R.string.allow_downloading_over_mobile_network),
-            preferencesStorage.allowDownloadingModelsOverMobile,
-            preferencesStorage.allowDownloadingModelsOverMobilePrefsKey.name)
-
-        HorizontalDivider()
-
-        DrawPreloadModelsSetting()
-
-        HorizontalDivider()
-    }
-
-    @Composable
-    private fun DrawPreloadModelsSetting(vm: DownloadViewModel = koinViewModel()) {
-        val activeTranslationTypeString by preferencesStorage.translationModelType
-            .collectAsState(initial = "")
-
-        LaunchedEffect(activeTranslationTypeString) {
-            if (activeTranslationTypeString != "") {
-                vm.onTranslationTypeChanged(activeTranslationTypeString)
-            }
-        }
-
-        PreferenceItem(context.getString(R.string.load_translation_model)) {
-            vm.startDownload()
-        }
-
-        LoadingModelDialogWithCancel(
-            show = vm.isLoading,
-            progress = vm.downloadProgress,
-            onClose = {
-                vm.isLoading = false
-            },
-            onCancel = {
-                vm.cancelDownload()
-            }
-        )
     }
 
     @Composable
     private fun DrawGraphicsSettings(scope: CoroutineScope) {
 
-        Text(context.getString(R.string.graphics_settings), style = MaterialTheme.typography.titleLarge)
+        DrawTitleText(context.getString(R.string.graphics_settings))
 
         val customScreenResolution by preferencesStorage.customScreenResolution
             .collectAsState(initial = "")
@@ -345,7 +278,7 @@ class SettingsScreen : KoinComponent {
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
         val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
-        Text(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
+        DrawTitleText(context.getString(R.string.user_interface_settings))
 
         SwitchPreferenceItem(
             context.getString(R.string.use_sdl_ttf_for_rendering),
@@ -407,86 +340,6 @@ class SettingsScreen : KoinComponent {
             KeysEditor(engineInfo.screenButtonsToDraw) {
                 drawKeysEditor = false
             }
-        }
-    }
-
-    @Composable
-    private fun DrawWolfensteinRpgSettings(scope: CoroutineScope) {
-        val previousPathToWolfensteinRpgIPa by preferencesStorage.pathToWolfensteinRpgIpaFile
-            .collectAsState(initial = "")
-
-        RequestPath(
-            context.getString(R.string.wolfenstein_rpg_ipa_file), onPathSelected = { selectedPath ->
-                scope.launch { preferencesStorage.setPathToWolfensteinRpgIpaFile( selectedPath) }
-            },
-            previousPathToWolfensteinRpgIPa
-        )
-    }
-
-    @Composable
-    private fun DrawDoomRpgSettings(scope: CoroutineScope) {
-        val savedPathToDoomRpgZip by preferencesStorage.pathToDoomRpgZipFile
-            .collectAsState(initial = "")
-
-        RequestPath(
-            context.getString(R.string.doom_rpg_zip_file),
-            onPathSelected = { selectedPath ->
-                scope.launch { preferencesStorage.setPathToDoomRpgZipFile( selectedPath) }
-            },
-            savedPathToDoomRpgZip,
-        )
-    }
-
-    @Composable
-    private fun DrawDoom2RpgSettings(scope: CoroutineScope) {
-        val previousPathToDoom2RpgIpa by preferencesStorage.pathToDoom2RpgIpaFile
-            .collectAsState(initial = "")
-
-        RequestPath(
-            context.getString(R.string.doom2_rpg_ipa_file),
-            onPathSelected = { selectedPath ->
-                scope.launch { preferencesStorage.setPathToDoom2RpgIpaFile( selectedPath) }
-            },
-            previousPathToDoom2RpgIpa
-        )
-    }
-
-    @Composable
-    private fun DrawDoom64Settings(scope: CoroutineScope) {
-        val previousPathToDoom64WadsFolder by preferencesStorage.pathToDoom64MainWadsFolder
-            .collectAsState(initial = "")
-
-        RequestPath(
-            context.getString(R.string.path_to_doom64_folder),
-            onPathSelected = { selectedPath ->
-                scope.launch { preferencesStorage.setPathToDoom64MainWadsFolder( selectedPath) }
-            },
-            previousPathToDoom64WadsFolder, requestOnlyDirectory = true
-        )
-
-        HorizontalDivider()
-
-        val enableDoom64ModsFlow = preferencesStorage.enableDoom64Mods
-        val enableDoom64Mods by enableDoom64ModsFlow.collectAsState(initial = false)
-
-        SwitchPreferenceItem(
-            context.getString(R.string.enable_doom64_mods),
-            initialValue = enableDoom64Mods,
-            preferencesStorage.enableDoom64ModsPrefsKey.name)
-
-        val previousPathToDoom64ModsFolder by preferencesStorage.pathToDoom64ModsFolder
-            .collectAsState(initial = "")
-
-        if (enableDoom64Mods) {
-            HorizontalDivider()
-
-            RequestPath(
-                context.getString(R.string.path_to_doom64_mods_folder),
-                onPathSelected = { selectedPath ->
-                    scope.launch { preferencesStorage.setPathToDoom64ModsFolder( selectedPath) }
-                },
-                previousPathToDoom64ModsFolder, requestOnlyDirectory = true
-            )
         }
     }
 }

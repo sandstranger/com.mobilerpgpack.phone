@@ -37,14 +37,11 @@ import kotlin.getValue
 abstract class EngineInfo(private val mainEngineLib: String,
                           private val allLibs : Array<String>,
                           private val buttonsToDraw : Collection<ButtonState>,
-                          private val activeEngineType : EngineTypes,
-                          private val pathToResourceFlow : Flow<String>
-) : KoinComponent, IEngineInfo {
+                          private val activeEngineType : EngineTypes) : KoinComponent, IEngineInfo {
 
     protected val preferencesStorage : PreferencesStorage by inject()
 
     protected val scope = CoroutineScope(Dispatchers.Default)
-
 
     protected lateinit var resolution: Pair<Int, Int>
         private set
@@ -72,8 +69,6 @@ abstract class EngineInfo(private val mainEngineLib: String,
     protected open val engineInfoClazz : Class<*> get() = EngineInfo::class.java
 
     override val engineType: EngineTypes get() = activeEngineType
-
-    override val pathToResource: Flow<String>  get() = pathToResourceFlow
 
     override val screenButtonsToDraw: Collection<ButtonState> get() = buttonsToDraw
 

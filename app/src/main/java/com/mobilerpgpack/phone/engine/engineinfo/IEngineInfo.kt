@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.app.Activity
+import androidx.compose.runtime.Composable
 import androidx.viewbinding.ViewBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
@@ -23,6 +24,9 @@ interface IEngineInfo {
     suspend fun initialize(activity: Activity)
 
     fun loadControlsLayout()
+
+    @Composable
+    fun DrawSettings()
 
     fun onPause()
 
