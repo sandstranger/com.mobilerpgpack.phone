@@ -38,7 +38,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
                           private val allLibs : Array<String>,
                           private val buttonsToDraw : Collection<ButtonState>,
                           private val activeEngineType : EngineTypes,
-                          private val pathToResourceFlow : Flow<String?>
+                          private val pathToResourceFlow : Flow<String>
 ) : KoinComponent, IEngineInfo {
 
     protected val preferencesStorage : PreferencesStorage by inject()
@@ -73,15 +73,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     override val engineType: EngineTypes get() = activeEngineType
 
-
-    override val pathToResource: String
-        get() {
-            var path : String
-            runBlocking {
-                path = pathToResourceFlow.first()!!
-            }
-            return path
-        }
+    override val pathToResource: Flow<String>  get() = pathToResourceFlow
 
     override val screenButtonsToDraw: Collection<ButtonState> get() = buttonsToDraw
 
@@ -94,6 +86,9 @@ abstract class EngineInfo(private val mainEngineLib: String,
         initJna()
         initializeCommonEngineData()
         resolution = getRealScreenResolution()
+
+        Os.setenv( "PATH_TO_RESOURCES",
+            File (pathToResource.first()).absolutePath, true)
     }
 
     override fun onPause() {

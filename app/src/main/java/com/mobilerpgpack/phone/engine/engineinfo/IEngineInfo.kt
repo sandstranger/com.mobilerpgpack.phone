@@ -4,12 +4,13 @@ import android.app.Activity
 import androidx.viewbinding.ViewBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import kotlinx.coroutines.flow.Flow
 
 interface IEngineInfo {
 
     val engineType : EngineTypes
 
-    val pathToResource: String
+    val pathToResource: Flow<String>
 
     val mainSharedObject : String
 
