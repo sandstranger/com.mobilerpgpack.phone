@@ -202,8 +202,8 @@ class SettingsScreen : KoinComponent {
 
         ListPreferenceItem(
             context.getString(R.string.active_engine),
-            activeEngine,
-            EngineTypes.entries
+            activeEngine.toString(),
+            EngineTypes.entries.map { it.toString() }.toList()
         ) { newValue ->
             scope.launch {
                 preferencesStorage.setActiveEngineValue(

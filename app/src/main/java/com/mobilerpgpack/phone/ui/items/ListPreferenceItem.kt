@@ -24,10 +24,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collection<T>, onValueChange : (String) -> Unit) {
+fun ListPreferenceItem(title: String,
+                       initialValue: String,
+                       entries : Collection<String>,
+                       onValueChange : (String) -> Unit){
     var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
-    var activeValue by rememberSaveable (initialValue.toString()) { mutableStateOf(initialValue.toString()) }
-    val stringValues: Collection<String> = allValues.map { it.toString() }
+    var activeValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
     val scrollState = rememberScrollState()
 
     Row(
@@ -50,7 +52,7 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
             title = { TranslatedText(title) },
             text = {
                 Column (modifier = Modifier.verticalScroll(scrollState)) {
-                    stringValues.forEach { stringValue ->
+                    entries.forEach { stringValue ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
