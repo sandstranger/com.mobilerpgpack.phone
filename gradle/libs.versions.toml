@@ -38,6 +38,7 @@ ui = "1.9.4"
 navigationCompose = "2.9.5"
 zip4j = "2.11.5"
 settings = "1.3.0"
+runtime = "1.9.4"
 
 [libraries]
 androidx-compose-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
@@ -92,6 +93,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
 translate = { module = "com.google.mlkit:translate", version.ref = "translate" }
 zip4j = { module = "net.lingala.zip4j:zip4j", version.ref = "zip4j" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
