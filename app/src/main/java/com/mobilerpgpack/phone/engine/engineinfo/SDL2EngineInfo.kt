@@ -28,12 +28,11 @@ import org.koin.core.component.inject
 import org.libsdl.app.SDLActivity.isMouseShown
 import org.libsdl.app.SDLSurface
 
-open class SDL2EngineInfo(private val mainEngineLib: String,
+abstract class SDL2EngineInfo(private val mainEngineLib: String,
                      private val allLibs : Array<String>,
                      private val buttonsToDraw : Collection<ButtonState>,
-                          private val activeEngineType : EngineTypes,
-                     private val pathToResourceFlow : Flow<String>) :
-    EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType,pathToResourceFlow ) {
+                              private val activeEngineType : EngineTypes) :
+    EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType ) {
 
     private val screenControls : ScreenController by inject ()
 
