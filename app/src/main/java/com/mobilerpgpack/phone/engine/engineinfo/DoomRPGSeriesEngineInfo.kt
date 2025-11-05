@@ -14,7 +14,7 @@ open class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
                                    private val allLibs : Array<String>,
                                    private val buttonsToDraw : Collection<ButtonState>,
                                    private val activeEngineType : EngineTypes,
-                                   private val pathToResourceFlow : Flow<String?>
+                                   private val pathToResourceFlow : Flow<String>
 ) : SDL2EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType,pathToResourceFlow) {
 
     private val translationManager : TranslationManager by inject ()
@@ -28,9 +28,6 @@ open class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
         Os.setenv("ENABLE_SDL_TTF", useSdlTTFForTextRendering.toString().lowercase(),true)
         Os.setenv("ENABLE_TEXTS_MACHINE_TRANSLATION",
             enableMachineTranslation.toString().lowercase(),true)
-
-        Os.setenv( "RESOURCE_FILE_NAME",
-            File (super.pathToResource).absolutePath, true)
 
         translationManager.inGame = true
         translationManager.activeEngine = engineType

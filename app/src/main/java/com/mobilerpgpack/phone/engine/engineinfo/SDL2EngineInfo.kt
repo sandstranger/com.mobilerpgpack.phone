@@ -37,7 +37,7 @@ open class SDL2EngineInfo(private val mainEngineLib: String,
                      private val allLibs : Array<String>,
                      private val buttonsToDraw : Collection<ButtonState>,
                           private val activeEngineType : EngineTypes,
-                     private val pathToResourceFlow : Flow<String?>) :
+                     private val pathToResourceFlow : Flow<String>) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType,pathToResourceFlow ) {
 
     private val screenControls : ScreenController by inject ()

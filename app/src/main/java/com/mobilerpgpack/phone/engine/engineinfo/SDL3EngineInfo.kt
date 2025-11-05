@@ -9,7 +9,7 @@ open class SDL3EngineInfo (private val mainEngineLib: String,
                       private val allLibs : Array<String>,
                       private val buttonsToDraw : Collection<ButtonState>,
                       private val activeEngineType : EngineTypes,
-                      private val pathToResourceFlow : Flow<String?>) :
+                      private val pathToResourceFlow : Flow<String>) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType,pathToResourceFlow ) {
 
     override val gameActivityClazz: Class<*> = SDL3GameActivity::class.java
