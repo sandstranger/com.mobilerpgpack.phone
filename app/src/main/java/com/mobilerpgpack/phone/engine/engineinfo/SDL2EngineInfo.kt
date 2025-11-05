@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.system.Os
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +12,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.mobilerpgpack.phone.databinding.EngineActivityBinding
+import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL2GameActivity
 import com.mobilerpgpack.phone.ui.items.BoxGrid2
 import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
-import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -31,7 +27,6 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.libsdl.app.SDLActivity.isMouseShown
 import org.libsdl.app.SDLSurface
-import java.io.File
 
 open class SDL2EngineInfo(private val mainEngineLib: String,
                      private val allLibs : Array<String>,
@@ -81,7 +76,7 @@ open class SDL2EngineInfo(private val mainEngineLib: String,
 
     override fun loadControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
-            val binding = EngineActivityBinding.inflate(activity.layoutInflater)
+            val binding = GameLayoutBinding.inflate(activity.layoutInflater)
 
             activity.window.addContentView(
                 binding.root,
