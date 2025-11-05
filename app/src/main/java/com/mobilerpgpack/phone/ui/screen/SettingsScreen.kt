@@ -22,6 +22,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
+import com.github.sproctor.composepreferences.SwitchPreference
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
@@ -65,6 +67,7 @@ import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -247,13 +250,8 @@ class SettingsScreen : KoinComponent {
 
         SwitchPreferenceItem(
             context.getString(R.string.allow_downloading_over_mobile_network),
-            checkedFlow = preferencesStorage.allowDownloadingModelsOverMobile,
-        ) { newValue ->
-            translationManager.allowDownloadingOveMobile = newValue
-            scope.launch {
-                preferencesStorage.setAllowDownloadingModelsOverMobileValue( newValue)
-            }
-        }
+            preferencesStorage.allowDownloadingModelsOverMobile,
+            preferencesStorage.allowDownloadingModelsOverMobilePrefsKey.name)
 
         HorizontalDivider()
 
@@ -302,23 +300,15 @@ class SettingsScreen : KoinComponent {
 
         SwitchPreferenceItem(
             context.getString(R.string.dark_theme),
-            checkedFlow = preferencesStorage.getUseDarkThemeValue( isSystemInDarkTheme()),
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setUseDarkThemeValue( newValue)
-            }
-        }
+            preferencesStorage.getUseDarkThemeValue( isSystemInDarkTheme()),
+            preferencesStorage.useDarkThemePrefsKey.name)
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
             context.getString(R.string.display_in_safe_area),
-            checkedFlow = preferencesStorage.enableDisplayInSafeArea,
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setDisplayInSafeAreaValue( newValue)
-            }
-        }
+            preferencesStorage.enableDisplayInSafeArea,
+            preferencesStorage.displayInSafeAreaPrefsKey.name)
 
         HorizontalDivider()
 
@@ -360,24 +350,16 @@ class SettingsScreen : KoinComponent {
 
         SwitchPreferenceItem(
             context.getString(R.string.use_sdl_ttf_for_rendering),
-            checkedFlow = preferencesStorage.useSDLTTFForFontsRendering,
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setUseSDLTTFForFontsRenderingValue( newValue)
-            }
-        }
+            preferencesStorage.useSDLTTFForFontsRendering,
+            preferencesStorage.useSDLTTFForFontsRenderingPrefsKey.name)
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
             context.getString(R.string.use_ai_for_text_translations),
-            checkedFlow = preferencesStorage.enableGameMachineTextTranslation,
-            enabled = isModelDownloaded
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setEnableGameMachineTextTranslationValue( newValue)
-            }
-        }
+            preferencesStorage.enableGameMachineTextTranslation,
+            preferencesStorage.gamesMachineTranslationsPrefsKey.name,
+            enabled = isModelDownloaded)
 
         HorizontalDivider()
 
@@ -395,45 +377,29 @@ class SettingsScreen : KoinComponent {
 
         SwitchPreferenceItem(
             context.getString(R.string.show_custom_mouse_cursor),
-            checkedFlow = preferencesStorage.showCustomMouseCursor,
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setShowCustomMouseCursorValue( newValue)
-            }
-        }
+             preferencesStorage.showCustomMouseCursor,
+            preferencesStorage.showCustomMouseCursorPrefsKey.name)
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
             context.getString(R.string.allow_to_edit_controls_in_game),
-            checkedFlow = preferencesStorage.editCustomScreenControlsInGame,
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setEditCustomScreenControlsInGameValue( newValue)
-            }
-        }
+            preferencesStorage.editCustomScreenControlsInGame,
+            preferencesStorage.editCustomScreenControlsInGamePrefsKey.name)
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
             context.getString(R.string.hide_custom_screen_controls),
-            checkedFlow = preferencesStorage.hideScreenControls,
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setHideControlsValue( newValue)
-            }
-        }
+            preferencesStorage.hideScreenControls,
+            preferencesStorage.hideScreenControlsPrefsKey.name)
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
             context.getString(R.string.controls_autohing),
-            checkedFlow = preferencesStorage.autoHideScreenControls,
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setControlsAutoHidingValue( newValue)
-            }
-        }
+            preferencesStorage.autoHideScreenControls,
+            preferencesStorage.enableControlsAutoHiding.name)
 
         HorizontalDivider()
 
@@ -506,12 +472,8 @@ class SettingsScreen : KoinComponent {
 
         SwitchPreferenceItem(
             context.getString(R.string.enable_doom64_mods),
-            checkedFlow = enableDoom64ModsFlow,
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setEnableDoom64ModsValue( newValue)
-            }
-        }
+            initialValue = enableDoom64Mods,
+            preferencesStorage.enableDoom64ModsPrefsKey.name)
 
         val previousPathToDoom64ModsFolder by preferencesStorage.pathToDoom64ModsFolder
             .collectAsState(initial = "")
