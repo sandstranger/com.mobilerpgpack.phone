@@ -39,7 +39,7 @@ fun ListPreferenceItem(title: String,
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TranslatedText(title, Modifier.weight(0.4f, true))
+        Text(title, Modifier.weight(0.4f, true))
         Spacer(Modifier.width(8.dp))
         Text(activeValue, modifier = Modifier.weight(0.6f).fillMaxWidth(),
             style = MaterialTheme.typography.bodyMedium,
@@ -49,7 +49,7 @@ fun ListPreferenceItem(title: String,
     if (showValuesDialog){
         AlertDialog(
             onDismissRequest = { showValuesDialog = false },
-            title = { TranslatedText(title) },
+            title = { Text(title) },
             text = {
                 Column (modifier = Modifier.verticalScroll(scrollState)) {
                     entries.forEach { stringValue ->

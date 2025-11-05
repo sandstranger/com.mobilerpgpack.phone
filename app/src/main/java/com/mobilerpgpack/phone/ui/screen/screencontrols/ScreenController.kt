@@ -56,7 +56,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.items.TranslatedText
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -661,29 +660,29 @@ class ScreenController : KoinComponent {
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { onAlphaChange(+0.1f) }) {
-                    TranslatedText(context.getString(R.string.increase_controls_alpha))
+                    Text(context.getString(R.string.increase_controls_alpha))
                 }
                 Button(onClick = { onAlphaChange(-0.1f) }) {
-                    TranslatedText(context.getString(R.string.decrease_controls_alpha))
+                    Text(context.getString(R.string.decrease_controls_alpha))
                 }
             }
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { onSizeChange(+0.01f) }) {
-                    TranslatedText(context.getString(R.string.increase_controls_size))
+                    Text(context.getString(R.string.increase_controls_size))
                 }
                 Button(onClick = { onSizeChange(-0.01f) }) {
-                    TranslatedText(context.getString(R.string.decrease_controls_size))
+                    Text(context.getString(R.string.decrease_controls_size))
                 }
             }
             Spacer(Modifier.height(8.dp))
             Button(onClick = onReset) {
-                TranslatedText(context.getString(R.string.reset_controls_to_default))
+                Text(context.getString(R.string.reset_controls_to_default))
             }
             Spacer(Modifier.height(8.dp))
             if (!inGame) {
                 Button(onClick = onBack) {
-                    TranslatedText(context.getString(R.string.close_controls_configuration))
+                    Text(context.getString(R.string.close_controls_configuration))
                 }
             }
         }
