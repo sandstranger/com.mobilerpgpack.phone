@@ -1,5 +1,6 @@
 [versions]
 agp = "8.13.0"
+composePreferences = "2.0.0-beta02"
 converterGson = "3.0.0"
 core = "3.3.0"
 googleServices = "4.4.4"
@@ -36,6 +37,7 @@ translate = "17.0.3"
 ui = "1.9.4"
 navigationCompose = "2.9.5"
 zip4j = "2.11.5"
+settings = "1.3.0"
 
 [libraries]
 androidx-compose-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
@@ -51,6 +53,7 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRunt
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "ui" }
+compose-preferences = { module = "com.seanproctor:compose-preferences", version.ref = "composePreferences" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.afollestad.material-dialogs:core", version.ref = "core" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
@@ -74,6 +77,9 @@ koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref =
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
+settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "settings" }
+settings-coroutines = { group = "com.russhwolf", name = "multiplatform-settings-coroutines", version.ref = "settings" }
+settings-datastore = { group = "com.russhwolf", name = "multiplatform-settings-datastore", version.ref = "settings" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
