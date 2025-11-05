@@ -204,6 +204,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.androidx.compose.navigation)
     implementation(libs.koin.core.coroutines)
+    implementation libs.androidx.compose.runtime
     ksp(libs.koin.ksp.compiler)
 
     implementation(libs.compose.preferences)

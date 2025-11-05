@@ -1,7 +1,7 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.COROUTINES_TRANSLATION_SCOPE
+import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.COROUTINES_SCOPE
 import com.mobilerpgpack.phone.utils.isInternetAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -18,7 +18,7 @@ class BingTranslatorModel(private val context: Context) : ITranslationModel, Koi
         "sr-Latn", "sk", "sl", "es", "sv", "ty", "ta", "te", "th", "to", "tr", "uk", "ur", "vi", "cy", "yua"
     )
 
-    private val scope : CoroutineScope = get<CoroutineScope>( named(COROUTINES_TRANSLATION_SCOPE))
+    private val scope : CoroutineScope = get<CoroutineScope>( named(COROUTINES_SCOPE))
 
     private val translator : BingTranslatorEndPoint = get<BingTranslatorEndPoint> ()
 

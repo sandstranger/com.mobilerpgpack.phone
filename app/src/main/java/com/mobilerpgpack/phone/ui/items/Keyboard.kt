@@ -1,52 +1,40 @@
 package com.mobilerpgpack.phone.ui.items
 
-import android.util.Log
 import android.view.KeyEvent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import org.libsdl.app.SDLActivity
 import kotlin.random.Random
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 
 private data class Key(val label: String, val keyCode: Int)
-
-private val keyCodeToNameMap = mapOf(
-    4 to "A", 5 to "B", 6 to "C", 7 to "D", 8 to "E", 9 to "F", 10 to "G", 11 to "H", 12 to "I", 13 to "J",
-    14 to "K", 15 to "L", 16 to "M", 17 to "N", 18 to "O", 19 to "P", 20 to "Q", 21 to "R", 22 to "S", 23 to "T",
-    24 to "U", 25 to "V", 26 to "W", 27 to "X", 28 to "Y", 29 to "Z",
-    30 to "1", 31 to "2", 32 to "3", 33 to "4", 34 to "5", 35 to "6", 36 to "7", 37 to "8", 38 to "9", 39 to "0",
-    40 to "ENTER", 41 to "ESCAPE", 42 to "BACKSPACE", 43 to "TAB", 44 to "SPACE",
-    45 to "MINUS", 46 to "EQUALS", 47 to "LEFTBRACKET", 48 to "RIGHTBRACKET", 49 to "BACKSLASH",
-    50 to "NONUSHASH", 51 to "SEMICOLON", 52 to "APOSTROPHE", 53 to "GRAVE", 54 to "COMMA", 55 to "PERIOD",
-    56 to "SLASH", 57 to "CAPSLOCK",
-    58 to "F1", 59 to "F2", 60 to "F3", 61 to "F4", 62 to "F5", 63 to "F6", 64 to "F7", 65 to "F8", 66 to "F9",
-    67 to "F10", 68 to "F11", 69 to "F12",
-    70 to "PRINTSCREEN", 71 to "SCROLLLOCK", 72 to "PAUSE", 73 to "INSERT", 74 to "HOME", 75 to "PAGEUP",
-    76 to "DELETE", 77 to "END", 78 to "PAGEDOWN", 79 to "RIGHT", 80 to "LEFT", 81 to "DOWN", 82 to "UP",
-    83 to "NUMLOCKCLEAR", 84 to "KP_DIVIDE", 85 to "KP_MULTIPLY", 86 to "KP_MINUS", 87 to "KP_PLUS",
-    88 to "KP_ENTER", 89 to "KP_1", 90 to "KP_2", 91 to "KP_3", 92 to "KP_4", 93 to "KP_5", 94 to "KP_6",
-    95 to "KP_7", 96 to "KP_8", 97 to "KP_9", 98 to "KP_0", 99 to "KP_PERIOD",
-    100 to "NONUSBACKSLASH", 101 to "APPLICATION", 102 to "POWER", 103 to "KP_EQUALS", 104 to "F13",
-    105 to "F14", 106 to "F15", 107 to "F16", 108 to "F17", 109 to "F18", 110 to "F19", 111 to "F20",
-    112 to "F21", 113 to "F22", 114 to "F23", 115 to "F24", 116 to "EXECUTE",
-    224 to "LEFT CTRL", 225 to "LEFT SHIFT", 226 to "LEFT ALT", 227 to "LIGHT GUI", 228 to "RIGHT CTRL", 229 to "RIGHT SHIFT",
-    230 to "RIGHT ALT", 231 to "RIGHT GUI"
-)
 
 // Define the keys and their corresponding key codes
 private val keyMap = mapOf(
