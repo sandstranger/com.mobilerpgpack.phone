@@ -56,7 +56,6 @@ import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.RequestPath
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
-import com.mobilerpgpack.phone.ui.items.TranslatedText
 import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.CustomPreferenceHandler
@@ -141,7 +140,7 @@ class SettingsScreen : KoinComponent {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                TranslatedText(context.getString(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
+                Text(context.getString(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
             }
 
             DrawAllSettings( scope, activeEngine)
@@ -198,7 +197,7 @@ class SettingsScreen : KoinComponent {
 
     @Composable
     private fun DrawCommonSettings(scope: CoroutineScope, activeEngine: EngineTypes) {
-        TranslatedText(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
+        Text(context.getString(R.string.common_settings), style = MaterialTheme.typography.titleLarge)
 
         ListPreferenceItem(
             context.getString(R.string.active_engine),
@@ -226,7 +225,7 @@ class SettingsScreen : KoinComponent {
 
     @Composable
     private fun DrawTranslationModelSettings(scope: CoroutineScope) {
-        TranslatedText(context.getString(R.string.translation_settings), style = MaterialTheme.typography.titleLarge)
+        Text(context.getString(R.string.translation_settings), style = MaterialTheme.typography.titleLarge)
 
         val activeTranslationTypeString by preferencesStorage.translationModelType
             .collectAsState(initial = TranslationType.DefaultTranslationType.toString())
@@ -290,7 +289,7 @@ class SettingsScreen : KoinComponent {
     @Composable
     private fun DrawGraphicsSettings(scope: CoroutineScope) {
 
-        TranslatedText(context.getString(R.string.graphics_settings), style = MaterialTheme.typography.titleLarge)
+        Text(context.getString(R.string.graphics_settings), style = MaterialTheme.typography.titleLarge)
 
         val customScreenResolution by preferencesStorage.customScreenResolution
             .collectAsState(initial = "")
@@ -346,7 +345,7 @@ class SettingsScreen : KoinComponent {
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
         val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
-        TranslatedText(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
+        Text(context.getString(R.string.user_interface_settings), style = MaterialTheme.typography.titleLarge)
 
         SwitchPreferenceItem(
             context.getString(R.string.use_sdl_ttf_for_rendering),
