@@ -16,12 +16,15 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +37,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.github.sproctor.composepreferences.LocalPreferenceHandler
+import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
@@ -52,21 +57,30 @@ import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.items.TranslatedText
 import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
+import com.mobilerpgpack.phone.utils.CustomPreferenceHandler
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isTelevision
 import com.mobilerpgpack.phone.utils.startGame
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.ExperimentalSettingsImplementation
+import com.russhwolf.settings.datastore.DataStoreSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.parameter.parameterSetOf
 import org.koin.core.qualifier.named
 
+@OptIn(ExperimentalSettingsImplementation::class, ExperimentalSettingsApi::class)
 class SettingsScreen : KoinComponent {
+
     private val context : Context by inject()
-    private val preferencesStorage : PreferencesStorage by inject()
+    private val preferencesStorage : PreferencesStorage = get ()
     private val translationManager : TranslationManager by inject ()
+    private val settings = DataStoreSettings(preferencesStorage.dataStore)
 
     @Composable
     fun DrawSettingsScreen() {
@@ -83,6 +97,8 @@ class SettingsScreen : KoinComponent {
             enumValueOf<EngineTypes>(activeEngineString)
         }
 
+        val prerefencesHandler : PreferenceHandler = koinInject {parameterSetOf(settings) }
+
         Theme(darkTheme = useDarkTheme) {
             Column(
                 modifier = Modifier
@@ -92,10 +108,12 @@ class SettingsScreen : KoinComponent {
             ) {
                 CustomTopBar(title = context.getString(R.string.app_name), useDarkTheme)
 
-                if (context.isTelevision) {
-                    DrawTelevisionSettings( scope, backgroundColor, activeEngine)
-                } else {
-                    DrawPhoneSettings( scope, backgroundColor, activeEngine)
+                CompositionLocalProvider(LocalPreferenceHandler provides prerefencesHandler) {
+                    if (context.isTelevision) {
+                        DrawTelevisionSettings( scope, backgroundColor, activeEngine)
+                    } else {
+                        DrawPhoneSettings( scope, backgroundColor, activeEngine)
+                    }
                 }
             }
         }

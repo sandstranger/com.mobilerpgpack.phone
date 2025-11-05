@@ -1,11 +1,10 @@
 package com.mobilerpgpack.phone.translator.models
 
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
-import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.COROUTINES_TRANSLATION_SCOPE
+import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.COROUTINES_SCOPE
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
 import org.koin.core.component.KoinComponent
@@ -17,7 +16,7 @@ class OpusMtTranslationModel() : ITranslationModel, KoinComponent {
     @Volatile
     private var wasInitialize = false
 
-    private val scope : CoroutineScope = get(named(COROUTINES_TRANSLATION_SCOPE))
+    private val scope : CoroutineScope = get(named(COROUTINES_SCOPE))
 
     private val lockObject = Any()
 

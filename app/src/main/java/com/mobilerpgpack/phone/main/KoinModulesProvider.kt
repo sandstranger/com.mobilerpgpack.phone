@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.codekidlabs.storagechooser.StorageChooser
+import com.github.sproctor.composepreferences.PreferenceHandler
 import com.google.mlkit.common.model.RemoteModel
 import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
@@ -38,7 +39,11 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
+import com.mobilerpgpack.phone.utils.CustomPreferenceHandler
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.ExperimentalSettingsImplementation
+import com.russhwolf.settings.datastore.DataStoreSettings
 import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +57,7 @@ import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
+import org.koin.core.parameter.ParametersHolder
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -106,7 +112,7 @@ class KoinModulesProvider(private val context: Context,
             createdAtStart()
         }
 
-        factory { CoroutineScope(Dispatchers.IO) }.withOptions { named(COROUTINES_TRANSLATION_SCOPE) }
+        factory { CoroutineScope(Dispatchers.IO) }.withOptions { named(COROUTINES_SCOPE) }
 
         factory { (sourceLocale: String, targetLocale: String) ->
             MLKitTranslationModel.buildMlkitTranslator(sourceLocale, targetLocale) }
@@ -178,6 +184,7 @@ class KoinModulesProvider(private val context: Context,
         singleOf(::TranslationManager).bind()
     }
 
+    @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     val composeModule = module {
         factory <StorageChooser> { (requestOnlyDirectory: Boolean, activity: Activity) ->
             val builder = StorageChooser.Builder()
@@ -201,6 +208,8 @@ class KoinModulesProvider(private val context: Context,
         viewModelOf(::DownloadViewModel)
         singleOf(::SettingsScreen)
         singleOf(::ScreenController)
+
+        factory <PreferenceHandler> { (settings : DataStoreSettings) -> CustomPreferenceHandler(settings) }
     }
 
     val enginesModule = module {
@@ -290,7 +299,7 @@ class KoinModulesProvider(private val context: Context,
     companion object{
         const val USER_ROOT_FOLDER_NAMED_KEY = "user_root_folder"
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"
-        const val COROUTINES_TRANSLATION_SCOPE = "courotines_translation_scope"
+        const val COROUTINES_SCOPE = "courotines_scope"
         const val ACTIVE_TRANSLATION_MODEL_KEY = "active_translation_model"
     }
 }
