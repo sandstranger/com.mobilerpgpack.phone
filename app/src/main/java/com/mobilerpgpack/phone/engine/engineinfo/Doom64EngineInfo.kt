@@ -12,17 +12,15 @@ class Doom64EngineInfo(
     private val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val buttonsToDraw: Collection<ButtonState>,
-    private val pathToResourceFlow: Flow<String?>) : SDL3EngineInfo(
+    private val pathToResourceFlow: Flow<String>) : SDL3EngineInfo(
     mainEngineLib, allLibs,
     buttonsToDraw, EngineTypes.Doom64ExPlus, pathToResourceFlow) {
 
     override suspend fun initialize(activity: Activity) {
         super.initialize(activity)
 
-        val pathToDoom64MainWadsFolder = preferencesStorage.pathToDoom64MainWadsFolder.first()
         val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
 
-        Os.setenv("PATH_TO_DOOM64_MAIN_WADS_FOLDER", pathToDoom64MainWadsFolder, true)
         Os.setenv("PATH_TO_DOOM64_MODS_FOLDER", pathToDoom64ModsFolder, true)
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
     }

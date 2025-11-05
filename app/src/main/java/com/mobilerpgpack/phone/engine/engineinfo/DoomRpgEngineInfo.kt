@@ -13,7 +13,7 @@ class DoomRpgEngineInfo(
     private val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val buttonsToDraw: Collection<ButtonState>,
-    private val pathToResourceFlow: Flow<String?>
+    private val pathToResourceFlow: Flow<String>
 ) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.DoomRpg,pathToResourceFlow) {
 
     private var savedDoomRpgScreenWidth: Int = 0

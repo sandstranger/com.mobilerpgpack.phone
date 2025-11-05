@@ -24,14 +24,21 @@ val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageMan
 @Suppress("UNCHECKED_CAST")
 fun <T> com.sun.jna.Function.callAs(returnType: Class<T>): T  = this.invoke(returnType, null) as T
 
-inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity {
-    val i = Intent(this, T::class.java)
+inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
+    this.startActivity(T::class.java, finishParentActivity)
 
-    if (this is Application) i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
+    val i = Intent(this, activityClazz)
 
-    startActivity(Intent(this, T::class.java))
+    if (this is Application) {
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
 
-    if (finishParentActivity && this is Activity) this.finish();
+    startActivity(i)
+
+    if (finishParentActivity && this is Activity) {
+        this.finish()
+    }
 }
 
 fun Activity.hideSystemBars() {

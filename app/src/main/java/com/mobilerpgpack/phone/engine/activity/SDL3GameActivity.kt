@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.engine.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -10,7 +9,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.libsdl3.app.SDLActivity
 
@@ -19,8 +17,9 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     private lateinit var engineInfo : IEngineInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val preferencesStorage : PreferencesStorage = get()
+
         runBlocking {
-            val preferencesStorage : PreferencesStorage = get()
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()
             engineInfo = get (named(activeEngineType))
             engineInfo.initialize(this@SDL3GameActivity)

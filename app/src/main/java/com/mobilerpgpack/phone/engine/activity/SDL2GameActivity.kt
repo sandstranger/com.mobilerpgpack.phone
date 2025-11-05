@@ -16,8 +16,9 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
     private lateinit var engineInfo : IEngineInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val preferencesStorage : PreferencesStorage = get()
+
         runBlocking {
-            val preferencesStorage : PreferencesStorage = get()
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()
             engineInfo = get (named(activeEngineType))
             engineInfo.initialize(this@SDL2GameActivity)

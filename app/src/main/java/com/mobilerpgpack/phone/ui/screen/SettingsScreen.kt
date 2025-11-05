@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import com.mobilerpgpack.phone.engine.startEngine
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.Theme
@@ -55,14 +54,13 @@ import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isTelevision
+import com.mobilerpgpack.phone.utils.startGame
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 
 class SettingsScreen : KoinComponent {
@@ -118,7 +116,7 @@ class SettingsScreen : KoinComponent {
                 .background(backgroundColor),
         ) {
             Button(
-                onClick = { scope.launch { startEngine( context,activeEngine) } },
+                onClick = { scope.launch { startGame( context,activeEngine) } },
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
@@ -139,7 +137,7 @@ class SettingsScreen : KoinComponent {
             modifier = Modifier.background(backgroundColor),
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { scope.launch { startEngine( context,activeEngine) } }
+                    onClick = { scope.launch { startGame( context,activeEngine) } }
                 ) {
                     Icon(
                         Icons.Default.PlayArrow,
