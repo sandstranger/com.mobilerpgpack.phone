@@ -16,17 +16,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,12 +36,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
-import com.github.sproctor.composepreferences.SwitchPreference
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.translator.TranslationManager
-import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.getBackgroundColor
@@ -54,12 +49,8 @@ import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
-import com.mobilerpgpack.phone.ui.items.RequestPath
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
-import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
-import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
-import com.mobilerpgpack.phone.utils.CustomPreferenceHandler
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isTelevision
 import com.mobilerpgpack.phone.utils.startGame
@@ -67,9 +58,7 @@ import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -191,7 +180,7 @@ class SettingsScreen : KoinComponent {
         ) {
             DrawCommonSettings( scope, activeEngine)
             DrawGraphicsSettings( scope)
-            DrawUserInterfaceSettings( scope)
+            DrawUserInterfaceSettings()
         }
     }
 
@@ -213,7 +202,7 @@ class SettingsScreen : KoinComponent {
 
         HorizontalDivider()
 
-        val engineInfo : IEngineInfo = koinInject(named(activeEngine.toString()))
+        val engineInfo : IEngineUIController = koinInject(named(activeEngine.toString()))
         engineInfo.DrawSettings()
 
         HorizontalDivider()
@@ -268,7 +257,7 @@ class SettingsScreen : KoinComponent {
     }
 
     @Composable
-    private fun DrawUserInterfaceSettings(scope: CoroutineScope) {
+    private fun DrawUserInterfaceSettings() {
         val activity = LocalActivity.current!!
         val engineState by preferencesStorage.activeEngineAsFlowString.collectAsState(
             initial =
@@ -336,7 +325,7 @@ class SettingsScreen : KoinComponent {
         HorizontalDivider()
 
         if (drawKeysEditor) {
-            val engineInfo : IEngineInfo = get (named(activeEngine.toString()))
+            val engineInfo : IEngineUIController = get (named(activeEngine.toString()))
             KeysEditor(engineInfo.screenButtonsToDraw) {
                 drawKeysEditor = false
             }
