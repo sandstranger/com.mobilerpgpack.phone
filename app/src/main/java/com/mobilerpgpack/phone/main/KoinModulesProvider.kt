@@ -91,12 +91,12 @@ class KoinModulesProvider(private val context: Context,
     }
 
     private val httpModule = module {
-        factory { (retrofitKey : String) -> Retrofit.Builder()
+        factory <Retrofit> { (retrofitKey : String) -> Retrofit.Builder()
             .baseUrl(retrofitKey )
             .addConverterFactory(GsonConverterFactory.create())
             .build() }
 
-        factory { OkHttpClient }
+        factory <OkHttpClient> { OkHttpClient() }
         factory { (apiKey: String) -> DriveDownloader(apiKey) }
     }
 
