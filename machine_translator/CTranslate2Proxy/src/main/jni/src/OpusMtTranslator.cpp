@@ -48,31 +48,38 @@ static std::string Translate (string input, const vector<string> *sentences){
 }
 
 extern "C" {
-extern vector<string> toVectorString (char** sentences);
+extern jstring toJString(JNIEnv *env, const std::string &str);
+extern std::string jstringToStdString(JNIEnv *env, jstring jStr);
+extern vector<string> toVectorString (JNIEnv* env, jobject sentences);
 
-void OpusMtTranslator_initializeFromJni(const char* pathToTranslationModel,const char* pathToSourceProcessor,
-                                        const char* pathToTargetProcessor) {
+JNIEXPORT void JNICALL
+Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_initializeFromJni
+        (JNIEnv *env, jobject thisObject, jstring pathToTranslationModel,
+         jstring pathToSourceProcessor,
+         jstring pathToTargetProcessor) {
     if (translator!= nullptr) {
         return;
     }
     sp_source = make_unique<SentencePieceProcessor>();
     sp_target = make_unique<SentencePieceProcessor>();
 
-    sp_source->Load(pathToSourceProcessor);
-    sp_target->Load(pathToTargetProcessor);
+    sp_source->Load(jstringToStdString(env, pathToSourceProcessor));
+    sp_target->Load(jstringToStdString(env, pathToTargetProcessor));
 
-    translator = create_translator(pathToTranslationModel, true);
+    translator = create_translator(jstringToStdString(env, pathToTranslationModel), true);
 }
 
-const char* OpusMtTranslator_translateFromJni (const char* text, char** sentences) {
+JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_translateFromJni
+        (JNIEnv *env, jobject thisObject,jstring text, jobject sentences) {
     if (translator == nullptr){
         return text;
     }
-    vector<string> nativeSentences = toVectorString(sentences);
-    return Translate( text, &nativeSentences).c_str();
+    vector<string> nativeSentences = toVectorString(env,sentences);
+    return toJString(env,Translate(jstringToStdString(env, text), &nativeSentences));
 }
 
-void OpusMtTranslator_releaseFromJni() {
+JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_OpusMtTranslator_releaseFromJni
+        (JNIEnv *env, jobject thisObject) {
     if (translator == nullptr){
         return;
     }
