@@ -15,8 +15,8 @@
     <string name="loading_model_title">Загрузка модели перевода</string>
     <string name="load_translation_model">Скачать модель перевода</string>
     <string name="wait_text">Пожалуйста, подождите…\nМодель продолжит загрузку после закрытия окна</string>
-    <string name="use_sdl_ttf_for_rendering">Использовать SDL TTF для отображения текста в игре(требуется для перевода текста)</string>
-    <string name="use_ai_for_text_translations">Включить машинный перевод текста во всех играх (также включает «Использовать SDL TTF для отображения текста»)</string>
+    <string name="use_sdl_ttf_for_rendering">Использовать SDL TTF для отображения текста в играх серии DoomRPG (требуется для перевода текста)</string>
+    <string name="use_ai_for_text_translations">Включить машинный перевод текста в играх серии DoomRPG (также включает «Использовать SDL TTF для отображения текста»)</string>
     <string name="enable_launcher_text_translation">Включить перевод текста лаунчера</string>
     <string name="allow_downloading_over_mobile_network">Разрешить загрузку моделей перевода по мобильной сети</string>
     <string name="grant_permission">Предоставить разрешение</string>
