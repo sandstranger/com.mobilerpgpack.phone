@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.TextPreference
 import com.mobilerpgpack.phone.R
 
@@ -15,16 +16,21 @@ import com.mobilerpgpack.phone.R
 fun EditTextPreferenceItem(
     title: String,
     value: String,
+    key : String,
     hint: String = "",
-    onValueChange: (String) -> Unit) {
+    onValueChanged: (String) -> Unit = {}) {
     val context = LocalContext.current
     val cancelString = context.getString(R.string.cancel_text)
     val positiveString = context.getString(R.string.ok_text)
+    val preferences = LocalPreferenceHandler.current
 
     TextPreference(
         title = { Text(title) },
         value = value,
-        onValueChanged = onValueChange,
+        onValueChanged = { newValue : String ->
+            preferences.putString(key, newValue)
+            onValueChanged(newValue)
+        },
         summary = {  Text(
             text = value.ifEmpty { hint },
             style = MaterialTheme.typography.bodyMedium,

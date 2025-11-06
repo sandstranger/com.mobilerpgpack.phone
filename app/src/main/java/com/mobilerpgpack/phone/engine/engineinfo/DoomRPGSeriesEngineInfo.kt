@@ -88,7 +88,9 @@ abstract class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
         SwitchPreferenceItem(
             context.getString(R.string.allow_downloading_over_mobile_network),
             preferencesStorage.allowDownloadingModelsOverMobile,
-            preferencesStorage.allowDownloadingModelsOverMobilePrefsKey.name)
+            preferencesStorage.allowDownloadingModelsOverMobilePrefsKey.name){
+            translationManager.allowDownloadingOveMobile = it
+        }
 
         HorizontalDivider()
 

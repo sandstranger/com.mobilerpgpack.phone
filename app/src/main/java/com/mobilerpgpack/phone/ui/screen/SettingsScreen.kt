@@ -233,25 +233,13 @@ class SettingsScreen : KoinComponent {
 
         HorizontalDivider()
 
-        EditTextPreferenceItem(
-            context.getString(R.string.custom_aspect_ratio),
-            customAspectRatio, context.getString(R.string.custom_aspect_ratio_hint)
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setCustomAspectRatio( newValue)
-            }
-        }
+        EditTextPreferenceItem(context.getString(R.string.custom_aspect_ratio), customAspectRatio,
+            preferencesStorage.customAspectRatioPrefsKey.name, context.getString(R.string.custom_aspect_ratio_hint))
 
         HorizontalDivider()
 
-        EditTextPreferenceItem(
-            context.getString(R.string.custom_resolution),
-            customScreenResolution!!, context.getString(R.string.custom_resolution_hint)
-        ) { newValue ->
-            scope.launch {
-                preferencesStorage.setCustomScreenResolution( newValue)
-            }
-        }
+        EditTextPreferenceItem(context.getString(R.string.custom_resolution),
+            customScreenResolution,preferencesStorage.customScreenResolutionPrefsKey.name, context.getString(R.string.custom_resolution_hint))
 
         HorizontalDivider()
     }

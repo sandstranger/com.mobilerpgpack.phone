@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.SwitchPreference
 import kotlinx.coroutines.flow.Flow
 
@@ -13,12 +14,17 @@ fun SwitchPreferenceItem(
     title: String,
     initialValue: Boolean,
     key: String,
-    enabled: Boolean = true) {
+    enabled: Boolean = true,
+    onValueChanged : (Boolean) -> Unit = { } ) {
+    val preferences = LocalPreferenceHandler.current
     val titleColor = if (enabled) LocalContentColor.current else LocalContentColor.current.copy(alpha = 0.38f)
     SwitchPreference(
         title = { Text(title, color = titleColor) },
-        initialValue = initialValue,
-        key = key,
+        onValueChanged = { newValue : Boolean ->
+            preferences.putBoolean(key, newValue)
+            onValueChanged(newValue)
+        },
+        value = initialValue,
         enabled = enabled)
 }
 
@@ -27,7 +33,8 @@ fun SwitchPreferenceItem(
     title: String,
     initialValueFlow: Flow<Boolean>,
     key: String,
-    enabled: Boolean = true) {
+    enabled: Boolean = true,
+    onValueChanged : (Boolean) -> Unit = { } ) {
     val initialValue by initialValueFlow.collectAsState(initial = false)
-    SwitchPreferenceItem(title, initialValue, key, enabled)
+    SwitchPreferenceItem(title, initialValue, key, enabled, onValueChanged)
 }
