@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -36,7 +37,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         val selectedEngine = getSelectedEngineType()
 
         var displayInSafeArea = false
-        var activeEngineInfo : IEngineInfo
+        var activeEngineInfo : IEngineUIController
 
         runBlocking {
             displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()

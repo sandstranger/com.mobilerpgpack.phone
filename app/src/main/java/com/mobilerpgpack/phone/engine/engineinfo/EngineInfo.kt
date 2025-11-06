@@ -37,7 +37,8 @@ import kotlin.getValue
 abstract class EngineInfo(private val mainEngineLib: String,
                           private val allLibs : Array<String>,
                           private val buttonsToDraw : Collection<ButtonState>,
-                          private val activeEngineType : EngineTypes) : KoinComponent, IEngineInfo {
+                          private val activeEngineType : EngineTypes) :
+    KoinComponent, IEngineInfo, IEngineUIController {
 
     protected val preferencesStorage : PreferencesStorage by inject()
 
