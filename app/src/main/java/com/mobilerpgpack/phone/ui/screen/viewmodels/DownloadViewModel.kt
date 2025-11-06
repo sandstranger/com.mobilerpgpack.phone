@@ -1,16 +1,22 @@
 package com.mobilerpgpack.phone.ui.screen.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.translator.TranslationManager
-import com.mobilerpgpack.phone.CustomApp
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
-class DownloadViewModel(
-) : ViewModel() {
+class DownloadViewModel() : ViewModel(), KoinComponent {
+
+    private val scope : CoroutineScope = get()
+
+    private val translationManager : TranslationManager = get()
 
     var isLoading by mutableStateOf(false)
 
@@ -34,12 +40,14 @@ class DownloadViewModel(
         isLoading = true
 
         if (downloadJob == null || downloadJob!!.isCompleted || downloadJob!!.isCancelled) {
-            downloadJob = CustomApp.Companion.globalScope.launch {
+            downloadJob = scope.launch {
                 try {
                     downloadProgress = ""
-                    TranslationManager.downloadModelIfNeeded { newValue ->
+                    translationManager.downloadModelIfNeeded { newValue ->
                         downloadProgress = newValue
                     }
+                }
+                catch (e : Exception){
                 }
                 finally {
                     isLoading = false
@@ -53,6 +61,6 @@ class DownloadViewModel(
         isLoading = false
         downloadJob?.cancel()
         downloadJob = null
-        TranslationManager.cancelDownloadModel()
+        translationManager.cancelDownloadModel()
     }
 }

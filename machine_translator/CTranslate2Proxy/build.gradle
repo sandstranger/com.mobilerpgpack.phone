@@ -15,23 +15,21 @@ android {
             abiFilters = abi_filters
         }
         externalNativeBuild {
-            ndkBuild {
-                arguments += build_flags.ndk_build_platform
-                arguments += build_flags.compiling_arguments
-                arguments += build_flags.ndk_build_flags
-                arguments += build_flags.ndk_build_android_stl
-                cFlags  = build_flags.common_c_flags
-                cppFlags = build_flags.common_cpp_flags
+            cmake {
+                arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
+                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
+                        "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
+                        "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
+                        "$build_flags.CMAKE_ANDROID_STL"
             }
         }
     }
-
     externalNativeBuild {
-        ndkBuild {
-            path 'src/main/jni/Android.mk'
+        cmake {
+            path "CMakeLists.txt"
+            version versions.cmake_version
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -47,6 +45,9 @@ android {
     }
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 preBuild.dependsOn ':third_party:CTranslate2:build', ':third_party:sentencepiece:build'

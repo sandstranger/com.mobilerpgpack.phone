@@ -1,12 +1,13 @@
 package com.mobilerpgpack.phone.ui.screen.utils
 
 import android.content.Context
-import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import org.koin.java.KoinJavaComponent.get
 
-fun buildTranslationsDescription (context: Context) : Collection<String>{
+fun buildTranslationsDescription () : Collection<String>{
     val result : MutableList<String> = mutableListOf()
+    val context : Context = get(Context::class.java)
 
     for (type in TranslationType.entries) {
         when (type) {

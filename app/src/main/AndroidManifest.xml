@@ -41,7 +41,7 @@
         android:required="false" />
 
     <application
-        android:name=".CustomApp"
+        android:name=".main.MainApplication"
         android:gwpAsanMode="always"
         android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
@@ -73,7 +73,7 @@
             tools:ignore="DiscouragedApi">
         </activity>
 
-        <activity android:name=".engine.activity.DoomRpgSeriesGameActivity"
+        <activity android:name=".engine.activity.SDL2GameActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="sensorLandscape"
             android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
@@ -87,7 +87,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".engine.activity.Doom64GameActivity"
+        <activity android:name=".engine.activity.SDL3GameActivity"
             android:alwaysRetainTaskState="true"
             android:screenOrientation="sensorLandscape"
             android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
