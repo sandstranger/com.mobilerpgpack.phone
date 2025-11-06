@@ -31,9 +31,8 @@ import org.libsdl.app.SDLSurface
 
 abstract class SDL2EngineInfo(private val mainEngineLib: String,
                      private val allLibs : Array<String>,
-                     private val buttonsToDraw : Collection<IScreenControlsView>,
-                              private val activeEngineType : EngineTypes) :
-    EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType ) {
+                     private val buttonsToDraw : Collection<IScreenControlsView> ) :
+    EngineInfo(mainEngineLib, allLibs, buttonsToDraw ) {
 
     private val screenControls : SDL2ScreenController by inject ()
 
@@ -51,7 +50,7 @@ abstract class SDL2EngineInfo(private val mainEngineLib: String,
 
         hideScreenControls = preferencesStorage.hideScreenControls.first()
         enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls.first()
-                && activeEngineType!= EngineTypes.DoomRpg && !hideScreenControls
+                && engineType!= EngineTypes.DoomRpg && !hideScreenControls
 
         allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame.first()
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
@@ -119,7 +118,7 @@ abstract class SDL2EngineInfo(private val mainEngineLib: String,
                                 screenControls.DrawScreenControls(
                                     buttonsToDraw,
                                     inGame = true,
-                                    activeEngine = activeEngineType,
+                                    activeEngine = engineType,
                                     allowToEditControls = allowToEditScreenControlsInGame,
                                     drawInSafeArea = displayInSafeArea,
                                     showVirtualKeyboardEvent = { showVirtualKeyboard ->
