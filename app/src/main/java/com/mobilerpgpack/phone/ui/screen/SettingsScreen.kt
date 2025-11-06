@@ -38,7 +38,6 @@ import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.ui.Theme
@@ -314,7 +313,7 @@ class SettingsScreen : KoinComponent {
 
         if (drawKeysEditor) {
             val engineInfo : IEngineUIController = get (named(activeEngine.toString()))
-            KeysEditor(engineInfo.screenButtonsToDraw) {
+            KeysEditor(engineInfo.screenViewsToDraw) {
                 drawKeysEditor = false
             }
         }
