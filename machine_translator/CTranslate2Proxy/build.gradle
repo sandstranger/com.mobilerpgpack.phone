@@ -45,6 +45,9 @@ android {
     }
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 preBuild.dependsOn ':third_party:CTranslate2:build', ':third_party:sentencepiece:build'
