@@ -37,9 +37,8 @@ import kotlin.collections.first
 
 abstract class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
                                    private val allLibs : Array<String>,
-                                   private val buttonsToDraw : Collection<IScreenControlsView>,
-                                   private val activeEngineType : EngineTypes) :
-    SDL2EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType) {
+                                   private val buttonsToDraw : Collection<IScreenControlsView>) :
+    SDL2EngineInfo(mainEngineLib, allLibs, buttonsToDraw) {
 
     private val translationManager : TranslationManager by inject ()
 

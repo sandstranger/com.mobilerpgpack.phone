@@ -13,13 +13,14 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class WolfensteinRpgEngineInfo(
-    private val mainEngineLib: String,
+class WolfensteinRpgEngineInfo(private val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val buttonsToDraw: Collection<IScreenControlsView>) :
-    DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.WolfensteinRpg) {
+    DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw) {
 
     override val pathToResource: Flow<String> = preferencesStorage.pathToWolfensteinRpgIpaFile
+
+    override val engineType: EngineTypes = EngineTypes.WolfensteinRpg
 
     @Composable
     override fun DrawSettings() {
