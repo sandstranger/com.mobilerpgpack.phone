@@ -12,6 +12,7 @@ import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
+import java.nio.charset.Charset
 
 class MainApplication : Application() {
 
@@ -53,6 +54,7 @@ class MainApplication : Application() {
         private fun setupJna(){
             System.setProperty("jna.nosys", "true")
             System.setProperty("jna.nounpack", "true")
+            System.setProperty("jna.encoding", "UTF-8")
         }
     }
 }
