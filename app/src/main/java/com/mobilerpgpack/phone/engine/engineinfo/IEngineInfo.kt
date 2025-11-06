@@ -19,14 +19,9 @@ interface IEngineInfo {
 
     val gameActivityClazz: Class<*>
 
-    val screenButtonsToDraw : Collection<ButtonState>
-
     suspend fun initialize(activity: Activity)
 
     fun loadControlsLayout()
-
-    @Composable
-    fun DrawSettings()
 
     fun onPause()
 

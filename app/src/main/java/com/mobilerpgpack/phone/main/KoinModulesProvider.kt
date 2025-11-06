@@ -19,6 +19,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.DoomRPGSeriesEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.translator.IntervalMarkerTranslator
@@ -54,6 +55,7 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.koin.core.component.KoinComponent
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.createdAtStart
 import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
@@ -215,7 +217,7 @@ class KoinModulesProvider(private val context: Context,
     }
 
     val enginesModule = module {
-        single<IEngineInfo>  {
+        single  {
             val nativeLibs = createNativeLibsList()
             nativeLibs.add(SDL3_NATIVE_LIB_NAME)
             nativeLibs.add(PNG_NATIVE_LIB_NAME)
@@ -225,9 +227,13 @@ class KoinModulesProvider(private val context: Context,
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
                 wolfensteinButtons
-        ) }.withOptions { named(EngineTypes.Doom64ExPlus.toString()) }
+        ) }.withOptions {
+            named(EngineTypes.Doom64ExPlus.toString())
+            bind<IEngineInfo>()
+            bind<IEngineUIController>()
+        }
 
-        single<IEngineInfo>  {
+        single {
             val nativeLibs = createNativeLibsList()
             nativeLibs.add(OBOE_NATIVE_LUB_NAME)
             nativeLibs.add(FLUIDSYNTH_NATIVE_LIB_NAME)
@@ -241,9 +247,13 @@ class KoinModulesProvider(private val context: Context,
             DoomRpgEngineInfo(DOOMRPG_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
                 doomRPGButtons
-        ) }.withOptions { named(EngineTypes.DoomRpg.toString()) }
+        ) }.withOptions {
+            named(EngineTypes.DoomRpg.toString())
+            bind<IEngineInfo>()
+            bind<IEngineUIController>()
+        }
 
-        single<IEngineInfo>  {
+        single {
             val nativeLibs = createNativeLibsList()
             nativeLibs.add(OBOE_NATIVE_LUB_NAME)
             nativeLibs.add(OPENAL_NATIVE_LIB_NAME)
@@ -255,9 +265,13 @@ class KoinModulesProvider(private val context: Context,
             Doom2RpgEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
                 doom2RPGButtons)
-        }.withOptions { named(EngineTypes.Doom2Rpg.toString()) }
+        }.withOptions {
+            named(EngineTypes.Doom2Rpg.toString())
+            bind<IEngineInfo>()
+            bind<IEngineUIController>()
+        }
 
-        single<IEngineInfo>  {
+        single {
             val nativeLibs = createNativeLibsList()
             nativeLibs.add(OBOE_NATIVE_LUB_NAME)
             nativeLibs.add(OPENAL_NATIVE_LIB_NAME)
@@ -269,7 +283,11 @@ class KoinModulesProvider(private val context: Context,
             WolfensteinRpgEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
                 wolfensteinButtons)
-        }.withOptions { named(EngineTypes.WolfensteinRpg.toString()) }
+        }.withOptions {
+            named(EngineTypes.WolfensteinRpg.toString())
+            bind<IEngineInfo>()
+            bind<IEngineUIController>()
+        }
     }
 
     init {
