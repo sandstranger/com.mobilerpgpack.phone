@@ -15,13 +15,14 @@ import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL2GameActivity
-import com.mobilerpgpack.phone.ui.items.BoxGrid2
+import com.mobilerpgpack.phone.ui.screen.screencontrols.DrawDoomRpgSeriesKeyboard
 import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -30,11 +31,11 @@ import org.libsdl.app.SDLSurface
 
 abstract class SDL2EngineInfo(private val mainEngineLib: String,
                      private val allLibs : Array<String>,
-                     private val buttonsToDraw : Collection<ButtonState>,
+                     private val buttonsToDraw : Collection<IScreenControlsView>,
                               private val activeEngineType : EngineTypes) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType ) {
 
-    private val screenControls : ScreenController by inject ()
+    private val screenControls : SDL2ScreenController by inject ()
 
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
@@ -129,7 +130,7 @@ abstract class SDL2EngineInfo(private val mainEngineLib: String,
                             }
 
                             binding.keyboardView.setContent {
-                                BoxGrid2()
+                                DrawVirtualKeyboard()
                             }
                         }
 

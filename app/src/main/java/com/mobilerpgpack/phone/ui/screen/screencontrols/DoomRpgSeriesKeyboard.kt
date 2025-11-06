@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.ui.items
+package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.view.KeyEvent
 import androidx.compose.animation.animateColorAsState
@@ -101,7 +101,7 @@ private fun released(keyCode: Int) {
 }
 
 @Composable
-fun BoxGrid2() {
+fun DrawDoomRpgSeriesKeyboard() {
     Column(
         modifier = Modifier
             .width(700.dp)

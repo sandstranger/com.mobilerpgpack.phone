@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.app.Activity
 import android.system.Os
+import android.util.Log
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +22,8 @@ import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.LoadingModelDialogWithCancel
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.DrawDoomRpgSeriesKeyboard
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -34,7 +37,7 @@ import kotlin.collections.first
 
 abstract class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
                                    private val allLibs : Array<String>,
-                                   private val buttonsToDraw : Collection<ButtonState>,
+                                   private val buttonsToDraw : Collection<IScreenControlsView>,
                                    private val activeEngineType : EngineTypes) :
     SDL2EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType) {
 
@@ -57,6 +60,12 @@ abstract class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
     @Composable
     override fun DrawSettings() {
         DrawTranslationModelSettings()
+    }
+
+    @Composable
+    override fun DrawVirtualKeyboard(){
+        super.DrawVirtualKeyboard()
+        DrawDoomRpgSeriesKeyboard()
     }
 
     @Composable

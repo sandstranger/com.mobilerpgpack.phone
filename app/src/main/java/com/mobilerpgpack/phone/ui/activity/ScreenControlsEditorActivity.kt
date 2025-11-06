@@ -9,7 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -20,7 +19,6 @@ import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 
 class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
@@ -50,7 +48,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
         setContent {
             MaterialTheme {
-                screenController.DrawScreenControls(activeEngineInfo.screenButtonsToDraw,
+                screenController.DrawScreenControls(activeEngineInfo.screenViewsToDraw,
                     inGame = false,
                     activeEngine = selectedEngine,
                     drawInSafeArea = displayInSafeArea, onBack = {

@@ -12,6 +12,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.items.RequestPath
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -20,7 +21,7 @@ import java.io.File
 class Doom64EngineInfo(
     private val mainEngineLib: String,
     private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<ButtonState>) : SDL3EngineInfo(
+    private val buttonsToDraw: Collection<IScreenControlsView>) : SDL3EngineInfo(
     mainEngineLib, allLibs,
     buttonsToDraw, EngineTypes.Doom64ExPlus) {
 

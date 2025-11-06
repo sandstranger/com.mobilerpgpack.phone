@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -45,6 +46,8 @@ class DownloadViewModel() : ViewModel(), KoinComponent {
                     translationManager.downloadModelIfNeeded { newValue ->
                         downloadProgress = newValue
                     }
+                }
+                catch (e : Exception){
                 }
                 finally {
                     isLoading = false

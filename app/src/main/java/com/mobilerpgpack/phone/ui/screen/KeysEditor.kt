@@ -11,16 +11,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.ui.screen.screencontrols.allowToEditKeyEvent
 import kotlinx.coroutines.launch
 
 @Composable
 fun KeysEditor(
-    buttonStates: Collection<ButtonState>,
+    buttonStates: Collection<IScreenControlsView>,
     onDismiss: () -> Unit,
 ) {
     val modifier = Modifier
@@ -30,14 +31,14 @@ fun KeysEditor(
 
     LaunchedEffect(buttonsToEdit) {
         scope.launch {
-            buttonsToEdit.forEach { it.loadButtonState() }
+            buttonsToEdit.forEach { it.buttonState.loadButtonState() }
         }
     }
 
     var selectedButton by remember { mutableStateOf(buttonsToEdit.first()) }
-    var selectedButtonId by rememberSaveable { mutableStateOf(selectedButton.id) }
-    var selectedKeyCode by rememberSaveable { mutableIntStateOf(selectedButton.sdlKeyCode) }
-    selectedButton = buttonsToEdit.first { it.id == selectedButtonId }
+    var selectedButtonId by rememberSaveable { mutableStateOf(selectedButton.buttonState.id) }
+    var selectedKeyCode by rememberSaveable { mutableIntStateOf(selectedButton.buttonState.sdlKeyCode) }
+    selectedButton = buttonsToEdit.first { it.buttonState.id == selectedButtonId }
 
     var shouldReset by rememberSaveable { mutableStateOf(false) }
     var showButtonSelectDialog by rememberSaveable { mutableStateOf(false) }
@@ -57,10 +58,10 @@ fun KeysEditor(
     if (shouldReset) {
         LaunchedEffect(buttonsToEdit) {
             scope.launch {
-                buttonsToEdit.forEach { it.resetKeyEvent() }
-                selectedKeyCode = currentButton.value.sdlKeyCode
+                buttonsToEdit.forEach { it.buttonState.resetKeyEvent() }
+                selectedKeyCode = currentButton.value.buttonState.sdlKeyCode
             }
-            selectedKeyCode = currentButton.value.sdlKeyCode
+            selectedKeyCode = currentButton.value.buttonState.sdlKeyCode
             shouldReset = false
         }
     }
@@ -85,21 +86,21 @@ fun KeysEditor(
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedButton = button
-                                    selectedButtonId = button.id
-                                    selectedKeyCode = button.sdlKeyCode
+                                    selectedButtonId = button.buttonState.id
+                                    selectedKeyCode = button.buttonState.sdlKeyCode
                                     showButtonSelectDialog = false
                                 }
                                 .padding(8.dp)
                         ) {
-                            if (button.buttonResId != 0) {
+                            if (button.buttonState.buttonResId != 0) {
                                 Image(
-                                    painter = painterResource(id = button.buttonResId),
-                                    contentDescription = button.id,
+                                    painter = painterResource(id = button.buttonState.buttonResId),
+                                    contentDescription = button.buttonState.id,
                                     modifier = Modifier.size(32.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                             }
-                            Text(button.id)
+                            Text(button.buttonState.id)
                         }
                     }
                 }
@@ -126,9 +127,9 @@ fun KeysEditor(
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedKeyCode = code
-                                    currentButton.value.sdlKeyCode = selectedKeyCode
+                                    currentButton.value.buttonState.sdlKeyCode = selectedKeyCode
                                     scope.launch {
-                                        currentButton.value.saveButtonState()
+                                        currentButton.value.buttonState.saveButtonState()
                                     }
                                     showKeyCodeDialog = false
                                 }
@@ -169,15 +170,15 @@ fun KeysEditor(
                         .clickable { showButtonSelectDialog = true }
                         .padding(8.dp)
                 ) {
-                    if (selectedButton.buttonResId != 0) {
+                    if (selectedButton.buttonState.buttonResId != 0) {
                         Image(
-                            painter = painterResource(id = selectedButton.buttonResId),
-                            contentDescription = selectedButton.id,
+                            painter = painterResource(id = selectedButton.buttonState.buttonResId),
+                            contentDescription = selectedButton.buttonState.id,
                             modifier = Modifier.size(32.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                     }
-                    Text(selectedButton.id)
+                    Text(selectedButton.buttonState.id)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

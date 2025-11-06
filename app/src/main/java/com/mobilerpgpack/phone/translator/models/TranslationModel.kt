@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
+import android.util.Log
 import com.mobilerpgpack.phone.utils.isWifiConnected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -71,7 +72,8 @@ abstract class TranslationModel (private val context : Context,
             val newTask = scope.async {
                 try {
                     downloadModelTask(onProgress)
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    Log.d("CALLED_PITUD", e.toString())
                     false
                 }
             }

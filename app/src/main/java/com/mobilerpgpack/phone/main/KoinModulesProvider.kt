@@ -36,6 +36,7 @@ import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
@@ -211,7 +212,8 @@ class KoinModulesProvider(private val context: Context,
 
         viewModelOf(::DownloadViewModel)
         singleOf(::SettingsScreen)
-        singleOf(::ScreenController)
+        singleOf <SDL2ScreenController>(::SDL2ScreenController)
+        singleOf <ScreenController>(::ScreenController)
 
         factory <PreferenceHandler> { (settings : DataStoreSettings) -> CustomPreferenceHandler(settings) }
     }
