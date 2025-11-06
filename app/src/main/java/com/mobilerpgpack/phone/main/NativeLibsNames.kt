@@ -32,7 +32,7 @@ const val SDL2_MIXER_NATIVE_LIB_NAME = "SDL2_mixer"
 
 const val SPIRV_NATIVE_LIB_NAME = "spirv-cross-c-shared"
 
-val PNG_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "png18d" else "png18"
+val PNG_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "png16d" else "png16"
 
 val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else "ng_gl4es"
 
