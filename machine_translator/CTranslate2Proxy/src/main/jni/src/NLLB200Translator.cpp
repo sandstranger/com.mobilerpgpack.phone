@@ -63,33 +63,40 @@ string nllb_200_translate(string input, vector<string > *sentences, string *sour
 
 
 extern "C" {
-extern vector<string> toVectorString (char** sentences);
+extern jstring toJString(JNIEnv *env, const std::string &str);
+extern std::string jstringToStdString(JNIEnv *env, jstring jStr);
+extern vector<string> toVectorString (JNIEnv* env, jobject sentences);
 
-void NLLB200Translator_initializeFromJni(const char* pathToTranslationModel,const char* pathToSourceProcessor) {
+JNIEXPORT void JNICALL
+Java_com_mobilerpgpack_ctranslate2proxy_NLLB200Translator_initializeFromJni
+        (JNIEnv *env, jobject thisObject, jstring pathToTranslationModel,
+         jstring pathToSourceProcessor) {
     if (translator!= nullptr) {
         return;
     }
     sp = make_unique<SentencePieceProcessor>();
-    sp->Load( pathToSourceProcessor);
-    translator = create_translator( pathToTranslationModel, true);
+    sp->Load(jstringToStdString(env, pathToSourceProcessor));
+    translator = create_translator(jstringToStdString(env, pathToTranslationModel), true);
 }
 
-const char* NLLB200Translator_translateFromJni (const char* text, char** sentences,
-                                                const char* sourceLocale,const char* targetLocale) {
+JNIEXPORT jstring JNICALL Java_com_mobilerpgpack_ctranslate2proxy_NLLB200Translator_translateFromJni
+        (JNIEnv *env, jobject thisObject, jstring text, jobject sentences, jstring sourceLocale,
+         jstring targetLocale) {
     if (translator == nullptr){
         return  text;
     }
 
-    string textString = text;
-    string sourceLocaleString = sourceLocale;
-    string targetLocaleString = targetLocale;
-    auto native_sentences = toVectorString(sentences);
+    string textString = jstringToStdString(env,text);
+    string sourceLocaleString = jstringToStdString(env, sourceLocale);
+    string targetLocaleString = jstringToStdString(env,targetLocale);
+    auto native_sentences = toVectorString(env, sentences);
 
-    return nllb_200_translate(textString,&native_sentences, &sourceLocaleString,
-                                   &targetLocaleString).c_str();
+    return toJString(env,nllb_200_translate(textString,&native_sentences, &sourceLocaleString,
+                                   &targetLocaleString));
 }
 
-void NLLB200Translator_releaseFromJni() {
+JNIEXPORT void JNICALL Java_com_mobilerpgpack_ctranslate2proxy_NLLB200Translator_releaseFromJni
+        (JNIEnv *env, jobject thisObject) {
     if (translator == nullptr){
         return;
     }
