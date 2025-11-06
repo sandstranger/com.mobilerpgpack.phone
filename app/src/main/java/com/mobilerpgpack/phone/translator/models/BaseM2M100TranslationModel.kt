@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
+import android.util.Log
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.utils.computeSHA256
@@ -97,6 +98,7 @@ abstract class BaseM2M100TranslationModel(
         }
 
         modelDownloader.download(zipFileId, pathToModelZipFile, onProgress)
+
         return extractDownloadedModel(modelZipFile)
     }
 

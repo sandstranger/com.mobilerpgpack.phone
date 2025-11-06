@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -25,6 +26,8 @@ fun LoadingModelDialogWithCancel(
     val context = LocalContext.current
 
     if (show) {
+        Log.d("CALLED_PITUD", "PITUD")
+
         AlertDialog(
             onDismissRequest = { },
             title = { Text(context.getString(R.string.loading_model_title)) },

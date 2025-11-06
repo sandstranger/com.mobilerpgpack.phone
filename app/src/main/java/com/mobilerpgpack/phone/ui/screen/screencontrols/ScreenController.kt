@@ -2,17 +2,14 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.MotionEvent
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,11 +37,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.pointerInteropFilter
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -62,18 +55,18 @@ import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
-import org.libsdl.app.SDLActivity
-import org.libsdl.app.SDLSurface
 import kotlin.math.roundToInt
 
-class ScreenController : KoinComponent {
+open class ScreenController : KoinComponent {
 
     private val context : Context = get ()
+
     private val preferencesStorage : PreferencesStorage = get ()
 
+    @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     fun DrawScreenControls(
-        buttonsToDraw: Collection<ButtonState>,
+        views: Collection<IScreenControlsView>,
         activeEngine : EngineTypes,
         inGame: Boolean,
         allowToEditControls: Boolean = true,
@@ -87,7 +80,7 @@ class ScreenController : KoinComponent {
 
         val clampButtonsPrefsKey = koinInject<Preferences.Key<Boolean>> { parametersOf(activeEngine) }
 
-        var buttonStates by remember { mutableStateOf(mapOf<String, ButtonState>()) }
+        var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
@@ -111,18 +104,17 @@ class ScreenController : KoinComponent {
         }
 
         suspend fun preloadButtons() {
-            val loadedMap = buttonsToDraw.associateBy { it.id }
-            loadedMap.values.forEach { state ->
-                state.loadButtonState()
+            val loadedMap = views.associateBy { it.buttonState.id }
+            loadedMap.values.forEach { view ->
+                view.buttonState.loadButtonState()
             }
-            loadedMap.values.forEach { state ->
-                clampButton(state)
-                coroutineScope.launch { state.saveButtonState() }
+            loadedMap.values.forEach { view ->
+                clampButton(view.buttonState)
+                coroutineScope.launch { view.buttonState.saveButtonState() }
             }
-            buttonStates = loadedMap
+            viewsToDraw = loadedMap
         }
 
-        // костыль на отрисовку игровых контролов в safearea в игре и редакторе контролов
         if (drawInSafeArea) {
             val activity = LocalActivity.current!!
             activity.window.decorView.post {
@@ -173,7 +165,7 @@ class ScreenController : KoinComponent {
                     inGame,
                     onAlphaChange = { delta ->
                         selectedButtonId?.let { id ->
-                            val state = buttonStates[id] ?: return@let
+                            val state = viewsToDraw[id]!!.buttonState
                             state.alpha = (state.alpha + delta).coerceIn(0.0f, 1f)
                             coroutineScope.launch {
                                 state.saveButtonState()
@@ -182,7 +174,7 @@ class ScreenController : KoinComponent {
                     },
                     onSizeChange = { deltaPercent ->
                         selectedButtonId?.let { id ->
-                            val state = buttonStates[id] ?: return@let
+                            val state = viewsToDraw[id]!!.buttonState
                             state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(0f, 1f)
                             coroutineScope.launch {
                                 state.saveButtonState()
@@ -191,13 +183,13 @@ class ScreenController : KoinComponent {
                     },
                     onReset = {
                         coroutineScope.launch {
-                            buttonStates.values.forEach { state ->
-                                state.resetToDefaults()
+                            viewsToDraw.values.forEach { view ->
+                                view.buttonState.resetToDefaults()
                             }
                             preferencesStorage.setBooleanValue( clampButtonsPrefsKey, true)
-                            buttonStates.values.forEach { state ->
-                                clampButton(state)
-                                state.saveButtonState()
+                            viewsToDraw.values.forEach { view ->
+                                clampButton(view.buttonState)
+                                view.buttonState.saveButtonState()
                             }
                             selectedButtonId = null
                         }
@@ -233,22 +225,18 @@ class ScreenController : KoinComponent {
             }
 
             if (readyToDrawControls) {
-                buttonStates.forEach { (id, state) ->
-                    if (state.buttonType.ordinal in ButtonType.DpadUp.ordinal..ButtonType.DpadRight.ordinal) {
-                        return@forEach
-                    }
+                viewsToDraw.forEach { (id, view) ->
 
-                    val sizePx: Float = screenWidthPx * state.sizePercent
+                    val sizePx: Float = screenWidthPx * view.buttonState.sizePercent
                     val sizeDp: Dp = (sizePx / density).dp
 
-                    val renderOffsetX = state.offsetXPercent * screenWidthPx
-                    val renderOffsetY = state.offsetYPercent * screenHeightPx
+                    val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
+                    val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
 
-                    val renderButton = state.buttonType == ButtonType.ControlsHider || !hideScreenControls || isEditMode
+                    val renderButton = view.isHideControlsButton || !hideScreenControls || isEditMode
                     if (renderButton) {
                         DraggableImageButton(
-                            id = id,
-                            state = state,
+                            viewToDraw = view,
                             offset = Offset(renderOffsetX, renderOffsetY),
                             sizeDp = sizeDp,
                             isEditMode = isEditMode,
@@ -263,26 +251,25 @@ class ScreenController : KoinComponent {
                                     }
                                 }
 
-                                if (state.buttonType == ButtonType.ControlsHider && inGame && !isEditMode) {
+                                if (view.isHideControlsButton && inGame && !isEditMode) {
                                     hideScreenControls = !hideScreenControls
                                     showVirtualKeyboard = false
                                     showVirtualKeyboardEvent(false)
                                 }
 
-                                if (state.buttonType == ButtonType.Keyboard && inGame && !isEditMode){
+                                if (view.isKeyboardButton && inGame && !isEditMode){
                                     showVirtualKeyboard = !showVirtualKeyboard
                                     showVirtualKeyboardEvent(showVirtualKeyboard)
                                 }
                             },
                             onDragEnd = { newX, newY ->
-                                state.offsetXPercent = (newX / screenWidthPx)
-                                state.offsetYPercent = (newY / screenHeightPx)
+                                view.buttonState.offsetXPercent = (newX / screenWidthPx)
+                                view.buttonState.offsetYPercent = (newY / screenHeightPx)
                                 coroutineScope.launch {
-                                    state.saveButtonState()
+                                    view.buttonState.saveButtonState()
                                 }
                             },
                             inGame = inGame,
-                            buttonsToDraw = buttonsToDraw
                         )
                     }
                 }
@@ -291,19 +278,21 @@ class ScreenController : KoinComponent {
     }
 
     @Composable
+    protected open fun DrawTouchCamera(){
+
+    }
+
+    @Composable
     private fun DraggableImageButton(
-        id: String,
-        state: ButtonState,
+        viewToDraw: IScreenControlsView,
         offset: Offset,
         sizeDp: Dp,
         isEditMode: Boolean,
         inGame: Boolean,
         isSelected: Boolean,
         onClick: () -> Unit,
-        onDragEnd: (x: Float, y: Float) -> Unit,
-        buttonsToDraw: Collection<ButtonState>
-    ) {
-        var position by remember(id) { mutableStateOf(offset) }
+        onDragEnd: (x: Float, y: Float) -> Unit) {
+        var position by remember(viewToDraw.buttonState.id) { mutableStateOf(offset) }
 
         LaunchedEffect(offset) {
             position = offset
@@ -313,7 +302,7 @@ class ScreenController : KoinComponent {
             modifier = Modifier
                 .offset { IntOffset(position.x.roundToInt(), position.y.roundToInt()) }
                 .size(sizeDp)
-                .alpha(state.alpha)
+                .alpha(viewToDraw.buttonState.alpha)
                 .background(
                     if (isSelected && isEditMode) Color.Red.copy(alpha = 0.5f)
                     else Color.Transparent,
@@ -350,65 +339,7 @@ class ScreenController : KoinComponent {
                 },
             contentAlignment = Alignment.Center
         ) {
-            when (state.buttonType) {
-                ButtonType.Default -> {
-                    Image(
-                        painter = painterResource(id = state.buttonResId),
-                        contentDescription = id,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .minimumInteractiveComponentSize()
-                            .pointerInput(!isEditMode && inGame) {
-                                if (isEditMode || !inGame) return@pointerInput
-
-                                detectTapGestures(
-                                    onPress = {
-                                        onTouchDown(state.sdlKeyCode)
-                                        try {
-                                            awaitRelease()
-                                        } finally {
-                                            onTouchUp(state.sdlKeyCode)
-                                        }
-                                    }
-                                )
-                            }
-                    )
-                }
-                ButtonType.Dpad -> {
-                    DPad(
-                        modifier = Modifier.fillMaxSize(),
-                        isEditMode = isEditMode,
-                        inGame = inGame,
-                        buttonsToDraw = buttonsToDraw,
-                        dpadSize = sizeDp
-                    )
-                }
-                ButtonType.ControlsHider,
-                ButtonType.Keyboard -> {
-                    Image(
-                        painter = painterResource(id = state.buttonResId),
-                        contentDescription = id,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .then(
-                                if (!isEditMode && inGame) {
-                                    Modifier
-                                        .minimumInteractiveComponentSize()
-                                        .clickable(
-                                            indication = null,
-                                            interactionSource = remember { MutableInteractionSource() }
-                                        ) {
-                                            onClick()
-                                        }
-                                } else {
-                                    Modifier
-                                }
-                            )
-                    )
-                }
-                else -> {
-                }
-            }
+            viewToDraw.DrawView(isEditMode,inGame,sizeDp)
         }
     }
 
@@ -425,211 +356,6 @@ class ScreenController : KoinComponent {
                     }
                 }
         )
-    }
-
-    @Composable
-    private fun DrawTouchCamera() {
-        var mWidth by remember { mutableFloatStateOf(0.0f) }
-        var mHeight by remember { mutableFloatStateOf(0.0f) }
-        var isActionDownActive by remember { mutableStateOf(false) }
-        var widthSize = 0
-        var heightSize = 0
-
-        fun onTouchEvent(event: MotionEvent): Boolean {
-            var touchDevId = event.deviceId
-            val pointerCount = event.pointerCount
-            var action = event.actionMasked
-            var pointerFingerId: Int
-            var i = -1
-            var x: Float
-            var y: Float
-            var p: Float
-
-            if (touchDevId < 0) {
-                touchDevId -= 1
-            }
-
-            when (action) {
-                MotionEvent.ACTION_MOVE -> {
-                    i = 0
-                    while (i < pointerCount) {
-                        pointerFingerId = if (isActionDownActive) event.getPointerId(i) else (event.getPointerId(i) - 1)
-                        if (pointerFingerId < 0) pointerFingerId = 0
-                        x = event.getX(i) / mWidth
-                        y = event.getY(i) / mHeight
-                        p = event.getPressure(i)
-                        if (p > 1.0f) p = 1.0f
-                        SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p)
-                        i++
-                    }
-                }
-
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_DOWN -> {
-                    isActionDownActive = event.actionMasked == MotionEvent.ACTION_DOWN
-                    i = 0
-                    if (i == -1) i = event.actionIndex
-                    pointerFingerId = event.getPointerId(i)
-                    x = event.getX(i) / mWidth
-                    y = event.getY(i) / mHeight
-                    p = event.getPressure(i)
-                    if (p > 1.0f) p = 1.0f
-                    SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p)
-                }
-
-                MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_POINTER_DOWN -> {
-                    if (i == -1) i = event.actionIndex
-                    pointerFingerId = if (isActionDownActive) event.getPointerId(i) else (event.getPointerId(i) - 1)
-                    if (pointerFingerId < 0) pointerFingerId = 0
-                    if (!isActionDownActive && pointerFingerId == 0) {
-                        action = if (action == MotionEvent.ACTION_POINTER_DOWN) MotionEvent.ACTION_DOWN else MotionEvent.ACTION_UP
-                    }
-                    x = event.getX(i) / mWidth
-                    y = event.getY(i) / mHeight
-                    p = event.getPressure(i)
-                    if (p > 1.0f) p = 1.0f
-                    SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p)
-                }
-
-                MotionEvent.ACTION_CANCEL -> {
-                    isActionDownActive = false
-                    i = 0
-                    while (i < pointerCount) {
-                        pointerFingerId = event.getPointerId(i)
-                        x = event.getX(i) / mWidth
-                        y = event.getY(i) / mHeight
-                        p = event.getPressure(i)
-                        if (p > 1.0f) p = 1.0f
-                        SDLActivity.onNativeTouch(
-                            touchDevId,
-                            pointerFingerId,
-                            MotionEvent.ACTION_UP,
-                            x,
-                            y,
-                            p
-                        )
-                        i++
-                    }
-                }
-
-                else -> {}
-            }
-
-            return true
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .layout { measurable, constraints ->
-                    widthSize = constraints.maxWidth
-                    heightSize = constraints.maxHeight
-
-                    if (SDLSurface.fixedWidth > 0) {
-                        val myAspect = 1.0f * SDLSurface.fixedWidth / SDLSurface.fixedHeight
-                        var resultWidth = widthSize.toFloat()
-                        var resultHeight = resultWidth / myAspect
-                        if (resultHeight > heightSize) {
-                            resultHeight = heightSize.toFloat()
-                            resultWidth = resultHeight * myAspect
-                        }
-                        mWidth = resultWidth
-                        mHeight = resultHeight
-                    } else {
-                        mWidth = widthSize.toFloat()
-                        mHeight = heightSize.toFloat()
-                    }
-
-                    val placeable = measurable.measure(
-                        Constraints.fixed(mWidth.roundToInt(), mHeight.roundToInt())
-                    )
-
-                    layout(mWidth.roundToInt(), mHeight.roundToInt()) {
-                        placeable.place(0, 0)
-                    }
-                }
-                .alpha(0f)
-                .pointerInteropFilter { motionEvent ->
-                    onTouchEvent(motionEvent)
-                    return@pointerInteropFilter true
-                }
-        )
-    }
-
-    @SuppressLint("UnusedBoxWithConstraintsScope")
-    @Composable
-    private fun DPad(
-        modifier: Modifier = Modifier,
-        isEditMode: Boolean,
-        inGame: Boolean,
-        buttonsToDraw: Collection<ButtonState>,
-        dpadSize: Dp
-    ) {
-        BoxWithConstraints(
-            modifier = modifier,
-            contentAlignment = Alignment.Center
-        ) {
-            val buttonSize = dpadSize * 0.4f
-            val offsetAmount = dpadSize * 0.33f
-
-            val offsetYStorage = hashMapOf<ButtonType, Dp>(
-                ButtonType.DpadUp to -offsetAmount,
-                ButtonType.DpadDown to offsetAmount
-            )
-            val offsetXStorage = hashMapOf<ButtonType, Dp>(
-                ButtonType.DpadLeft to -offsetAmount,
-                ButtonType.DpadRight to offsetAmount
-            )
-
-            @Composable
-            fun dpadButton(
-                painterId: Int,
-                desc: String,
-                sdlKeyEvent: Int = 0,
-                offsetX: Dp = 0.dp,
-                offsetY: Dp = 0.dp
-            ) {
-                Image(
-                    painter = painterResource(painterId),
-                    contentDescription = desc,
-                    modifier = Modifier
-                        .size(buttonSize)
-                        .minimumInteractiveComponentSize()
-                        .offset(x = offsetX, y = offsetY)
-                        .pointerInput(!isEditMode && inGame) {
-                            if (isEditMode || !inGame) return@pointerInput
-
-                            detectTapGestures(
-                                onPress = {
-                                    onTouchDown(sdlKeyEvent)
-                                    try {
-                                        awaitRelease()
-                                    } finally {
-                                        onTouchUp(sdlKeyEvent)
-                                    }
-                                }
-                            )
-                        }
-                )
-            }
-
-            for (button in buttonsToDraw) {
-                if (button.buttonType in listOf(ButtonType.DpadUp, ButtonType.DpadDown)) {
-                    dpadButton(
-                        button.buttonResId,
-                        button.id,
-                        button.sdlKeyCode,
-                        offsetY = offsetYStorage[button.buttonType]!!
-                    )
-                } else if (button.buttonType in listOf(ButtonType.DpadLeft, ButtonType.DpadRight)) {
-                    dpadButton(
-                        button.buttonResId,
-                        button.id,
-                        button.sdlKeyCode,
-                        offsetX = offsetXStorage[button.buttonType]!!
-                    )
-                }
-            }
-        }
     }
 
     @Composable
@@ -687,8 +413,5 @@ class ScreenController : KoinComponent {
             }
         }
     }
-
-    private fun onTouchDown(keyCode: Int) = SDLActivity.onNativeKeyDown(keyCode)
-    private fun onTouchUp(keyCode: Int) = SDLActivity.onNativeKeyUp(keyCode)
 }
 

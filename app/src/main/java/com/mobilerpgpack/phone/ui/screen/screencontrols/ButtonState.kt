@@ -39,8 +39,7 @@ class ButtonState(
 
     private val preferencesStorage : PreferencesStorage = get()
 
-    val allowToEditKeyEvent
-        get() = buttonResId != NOT_EXISTING_RES && buttonType != ButtonType.Dpad && buttonType != ButtonType.ControlsHider
+    val allowToEditKeyEvent get() = buttonResId != NOT_EXISTING_RES
 
     var offsetXPercent by mutableFloatStateOf(offsetXPercent)
     var offsetYPercent by mutableFloatStateOf(offsetYPercent)
@@ -78,7 +77,7 @@ class ButtonState(
         saveButtonState()
     }
 
-    private companion object{
-        private const val NOT_EXISTING_RES = android.R.drawable.ic_menu_add
+    internal companion object{
+        internal const val NOT_EXISTING_RES = android.R.drawable.ic_menu_add
     }
 }
