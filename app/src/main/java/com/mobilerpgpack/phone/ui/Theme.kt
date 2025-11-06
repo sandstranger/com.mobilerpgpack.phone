@@ -46,6 +46,12 @@ val LightColorScheme = lightColorScheme(
     onSurface = Color.White
 )
 
+fun getBackgroundColor (useDarkTheme : Boolean ) = if (useDarkTheme) Color.Black else Color.White
+
+fun getTopBarColor (useDarkTheme : Boolean) = if (useDarkTheme) Color.Gray else Color.Blue
+
+fun getTextColor (useDarkTheme : Boolean) =  if (useDarkTheme) Color.White else Color.Black
+
 @Composable
 fun Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),

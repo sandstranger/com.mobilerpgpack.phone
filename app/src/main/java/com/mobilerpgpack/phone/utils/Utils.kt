@@ -1,15 +1,42 @@
 package com.mobilerpgpack.phone.utils
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Environment
-import android.provider.DocumentsContract
+import android.content.Context
+import com.afollestad.materialdialogs.MaterialDialog
+import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import kotlinx.coroutines.flow.first
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
+import org.koin.core.qualifier.named
+import org.koin.java.KoinJavaComponent.get
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.security.MessageDigest
+
+suspend fun startGame(context: Context, engineToPlay: EngineTypes) {
+
+    val assetsExtractor: AssetExtractor = get(AssetExtractor::class.java)
+
+    if (!assetsExtractor.assetsCopied) {
+        return
+    }
+
+    val activeEngineInfo: IEngineInfo = get (IEngineInfo::class.java,
+        named(engineToPlay.toString()))
+
+    if (activeEngineInfo.pathToResource.first().isEmpty()) {
+        MaterialDialog(context).show {
+            title(R.string.error)
+            message(R.string.can_not_start_engine)
+            positiveButton(R.string.ok_text)
+        }
+        return
+    }
+
+    context.startActivity(activeEngineInfo.gameActivityClazz)
+}
 
 fun unzipArchive(zipPath: String, destDir: String) : Boolean {
     try {

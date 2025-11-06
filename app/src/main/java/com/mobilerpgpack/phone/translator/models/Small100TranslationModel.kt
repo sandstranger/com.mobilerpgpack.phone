@@ -1,26 +1,24 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
-import com.mobilerpgpack.phone.translator.models.TranslationType
-import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
 class Small100TranslationModel(
     private val context: Context,
     private val modelFile: String,
     private val spmFile: String,
     private val allowDownloadingOverMobile: Boolean = false
-) : BaseM2M100TranslationModel(context, modelFile, spmFile, allowDownloadingOverMobile) {
+) : BaseM2M100TranslationModel(context, modelFile, spmFile, allowDownloadingOverMobile),KoinComponent {
 
     override val zipFileId: String = "1Adl4YxrLdSq_sn7kpeixneaof88YAfle"
 
     override val zipFileSha256: String =
         "b102ebb66e70654d7982b8fd09715baf341b28bb0216ae6b51553c0deb76811b"
 
-    override val translator: Translator = Small100Translator(modelFile, spmFile)
+    override val translator: Translator = get<Small100Translator>()
 
     override val translationType: TranslationType = TranslationType.Small100
 }

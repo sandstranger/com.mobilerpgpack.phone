@@ -24,10 +24,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collection<T>, onValueChange : (String) -> Unit) {
+fun ListPreferenceItem(title: String,
+                       initialValue: String,
+                       entries : Collection<String>,
+                       onValueChange : (String) -> Unit){
     var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
-    var activeValue by rememberSaveable (initialValue.toString()) { mutableStateOf(initialValue.toString()) }
-    val stringValues: Collection<String> = allValues.map { it.toString() }
+    var activeValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
     val scrollState = rememberScrollState()
 
     Row(
@@ -37,7 +39,7 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TranslatedText(title, Modifier.weight(0.4f, true))
+        Text(title, Modifier.weight(0.4f, true))
         Spacer(Modifier.width(8.dp))
         Text(activeValue, modifier = Modifier.weight(0.6f).fillMaxWidth(),
             style = MaterialTheme.typography.bodyMedium,
@@ -47,10 +49,10 @@ fun <T> ListPreferenceItem(title: String, initialValue: T, allValues : Collectio
     if (showValuesDialog){
         AlertDialog(
             onDismissRequest = { showValuesDialog = false },
-            title = { TranslatedText(title) },
+            title = { Text(title) },
             text = {
                 Column (modifier = Modifier.verticalScroll(scrollState)) {
-                    stringValues.forEach { stringValue ->
+                    entries.forEach { stringValue ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
