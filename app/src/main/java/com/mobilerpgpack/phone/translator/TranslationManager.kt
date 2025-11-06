@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.translator
 
 import android.content.res.Resources
 import android.os.Build
+import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.ACTIVE_TRANSLATION_MODEL_KEY
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.TARGET_LOCALE_NAMES_KEY
@@ -151,20 +152,20 @@ class TranslationManager : KoinComponent {
 
     fun cancelDownloadModel() = translationModel.cancelDownloadingModel()
 
-    fun getTranslation(input: ByteArray) : String {
+    private fun getTranslation(input: ByteArray) : String {
         val text = input.sanitizeUtf8BytesToString()
         return if (isTranslated(text)) loadedTranslations[text]!!.value else text
     }
 
-    fun getTranslation(text: String) =
+    private fun getTranslation(text: String) =
         if (isTranslated(text)) loadedTranslations[text]!!.value else text
 
-    fun isTranslated(input: ByteArray) =
+    private fun isTranslated(input: ByteArray) =
         loadedTranslations.containsKey(input.sanitizeUtf8BytesToString())
 
-    fun isTranslated(text : String) = loadedTranslations.containsKey(text)
+    private fun isTranslated(text : String) = loadedTranslations.containsKey(text)
 
-    fun translate(input: ByteArray, textCameFromDialog : Boolean ): String {
+    private fun translate(input: ByteArray, textCameFromDialog : Boolean ): String {
         val text = input.sanitizeUtf8BytesToString()
 
         if (sourceLocale == targetLocale) {
@@ -185,7 +186,7 @@ class TranslationManager : KoinComponent {
         return text
     }
 
-    fun translate(text: String, onTextTranslated: (String) -> Unit, textCameFromDialog : Boolean = false) {
+    private fun translate(text: String, onTextTranslated: (String) -> Unit, textCameFromDialog : Boolean = false) {
         if (sourceLocale == targetLocale){
             onTextTranslated(text)
             return
@@ -206,7 +207,7 @@ class TranslationManager : KoinComponent {
         }
     }
 
-    suspend fun translateAsync(text: String, textCameFromDialog : Boolean = false ): String = coroutineScope  {
+    private suspend fun translateAsync(text: String, textCameFromDialog : Boolean = false ): String = coroutineScope  {
         if (sourceLocale == targetLocale){
             return@coroutineScope text
         }
