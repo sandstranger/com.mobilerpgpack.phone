@@ -252,24 +252,8 @@ class SettingsScreen : KoinComponent {
         )
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState!!) }
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
-        val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
         DrawTitleText(context.getString(R.string.user_interface_settings))
-
-        SwitchPreferenceItem(
-            context.getString(R.string.use_sdl_ttf_for_rendering),
-            preferencesStorage.useSDLTTFForFontsRendering,
-            preferencesStorage.useSDLTTFForFontsRenderingPrefsKey.name)
-
-        HorizontalDivider()
-
-        SwitchPreferenceItem(
-            context.getString(R.string.use_ai_for_text_translations),
-            preferencesStorage.enableGameMachineTextTranslation,
-            preferencesStorage.gamesMachineTranslationsPrefsKey.name,
-            enabled = isModelDownloaded)
-
-        HorizontalDivider()
 
         PreferenceItem(context.getString(R.string.keys_editor)) {
             drawKeysEditor = true

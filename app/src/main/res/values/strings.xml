@@ -16,8 +16,8 @@
     <string name="loading_model_title">Downloading translation model</string>
     <string name="load_translation_model">Download translation model</string>
     <string name="wait_text">Please wait…\nThe model will continue downloading after the window is closed</string>
-    <string name="use_sdl_ttf_for_rendering">Use SDL TTF for text rendering in games (required for text translation)</string>
-    <string name="use_ai_for_text_translations">Enable machine text translation for all games (this also enables “Use SDL TTF for text rendering”)</string>
+    <string name="use_sdl_ttf_for_rendering">Use SDL TTF for text rendering in DoomRPG series(required for text translation)</string>
+    <string name="use_ai_for_text_translations">Enable machine text translation for DoomRpg series(this also enables “Use SDL TTF for text rendering”)</string>
     <string name="enable_launcher_text_translation">Enable launcher text translation</string>
     <string name="allow_downloading_over_mobile_network">Allow translation model downloads over mobile networks</string>
     <string name="grant_permission">Grant permission</string>

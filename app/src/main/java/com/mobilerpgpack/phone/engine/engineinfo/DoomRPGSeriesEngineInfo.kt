@@ -72,13 +72,15 @@ abstract class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
     private fun DrawTranslationModelSettings() {
         val scope= rememberCoroutineScope ()
         val context = LocalContext.current
-        DrawTitleText(context.getString(R.string.translation_settings))
 
         val activeTranslationTypeString by preferencesStorage.translationModelType
             .collectAsState(initial = TranslationType.DefaultTranslationType.toString())
 
         val translationModelEntries = buildTranslationsDescription()
         val initialModelValue = translationModelEntries.first { it.startsWith(activeTranslationTypeString) }
+        val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
+
+        DrawTitleText(context.getString(R.string.translation_settings))
 
         ListPreferenceItem(
             context.getString(R.string.translation_model_title),
@@ -104,6 +106,21 @@ abstract class DoomRPGSeriesEngineInfo(private val mainEngineLib: String,
         HorizontalDivider()
 
         DrawPreloadModelsSetting()
+
+        HorizontalDivider()
+
+        SwitchPreferenceItem(
+            context.getString(R.string.use_sdl_ttf_for_rendering),
+            preferencesStorage.useSDLTTFForFontsRendering,
+            preferencesStorage.useSDLTTFForFontsRenderingPrefsKey.name)
+
+        HorizontalDivider()
+
+        SwitchPreferenceItem(
+            context.getString(R.string.use_ai_for_text_translations),
+            preferencesStorage.enableGameMachineTextTranslation,
+            preferencesStorage.gamesMachineTranslationsPrefsKey.name,
+            enabled = isModelDownloaded)
     }
 
     @Composable
