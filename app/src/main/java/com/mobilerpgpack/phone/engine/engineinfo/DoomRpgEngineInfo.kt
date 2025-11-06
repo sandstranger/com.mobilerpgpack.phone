@@ -21,12 +21,14 @@ class DoomRpgEngineInfo(
     private val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val buttonsToDraw: Collection<IScreenControlsView>,
-) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.DoomRpg) {
+) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw) {
 
     private var savedDoomRpgScreenWidth: Int = 0
     private var savedDoomRpgScreenHeight: Int = 0
 
     override val pathToResource: Flow<String> = super.preferencesStorage.pathToDoomRpgZipFile
+
+    override val engineType: EngineTypes = EngineTypes.DoomRpg
 
     override suspend fun initialize(activity: Activity) {
         super.initialize(activity)

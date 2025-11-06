@@ -18,14 +18,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 
-class Doom64EngineInfo(
-    private val mainEngineLib: String,
+class Doom64EngineInfo(private val mainEngineLib: String,
     private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<IScreenControlsView>) : SDL3EngineInfo(
-    mainEngineLib, allLibs,
-    buttonsToDraw, EngineTypes.Doom64ExPlus) {
+    private val buttonsToDraw: Collection<IScreenControlsView>) :
+    SDL3EngineInfo(mainEngineLib, allLibs,buttonsToDraw) {
 
     override val pathToResource: Flow<String> = preferencesStorage.pathToDoom64MainWadsFolder
+
+    override val engineType: EngineTypes = EngineTypes.Doom64ExPlus
 
     override suspend fun initialize(activity: Activity) {
         super.initialize(activity)

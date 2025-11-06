@@ -33,13 +33,9 @@ import org.koin.core.qualifier.named
 import java.io.File
 import kotlin.getValue
 
-abstract class EngineInfo(
-    private val mainEngineLib: String,
+abstract class EngineInfo(private val mainEngineLib: String,
     private val allLibs: Array<String>,
-    private val viewsToDraw: Collection<IScreenControlsView>,
-    private val activeEngineType: EngineTypes
-) :
-    KoinComponent, IEngineInfo, IEngineUIController {
+    private val viewsToDraw: Collection<IScreenControlsView>) : KoinComponent, IEngineInfo, IEngineUIController {
 
     protected val preferencesStorage: PreferencesStorage by inject()
 
@@ -72,8 +68,6 @@ abstract class EngineInfo(
     private external fun resumeSound()
 
     protected open val engineInfoClazz: Class<*> get() = EngineInfo::class.java
-
-    override val engineType: EngineTypes get() = activeEngineType
 
     override val screenViewsToDraw: Collection<IScreenControlsView> get() = viewsToDraw
 
