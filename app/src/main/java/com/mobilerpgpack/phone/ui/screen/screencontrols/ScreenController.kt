@@ -127,14 +127,16 @@ open class ScreenController : KoinComponent {
                 screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
                 screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
 
-                coroutineScope.launch {
-                    preloadButtons()
-                    readyToDrawControls = true
-                }
+                readyToDrawControls = true
+            }
+
+            LaunchedEffect(Unit) {
+                preloadButtons()
             }
         } else {
             screenWidthPx = configuration.screenWidthDp * density
             screenHeightPx = configuration.screenHeightDp * density
+
             LaunchedEffect(Unit) {
                 preloadButtons()
                 readyToDrawControls = true
@@ -339,7 +341,7 @@ open class ScreenController : KoinComponent {
                 },
             contentAlignment = Alignment.Center
         ) {
-            viewToDraw.DrawView(isEditMode,inGame,sizeDp)
+            viewToDraw.DrawView(isEditMode,inGame,sizeDp, onClick)
         }
     }
 

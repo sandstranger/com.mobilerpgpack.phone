@@ -92,7 +92,7 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    SDL2ImageButton(
+    ToggleImageButton(
         ToggleImageButton.SHOW_KEYBOARD_BUTTON_ID,
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.75f,
@@ -100,7 +100,7 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard
     ),
-    SDL2ImageButton(
+    ToggleImageButton(
         ToggleImageButton.HIDE_CONTROLS_BUTTON_ID,
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.5f,
@@ -171,16 +171,16 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    SDL2ImageButton(
-        "hide_controls",
+    ToggleImageButton(
+        ToggleImageButton.HIDE_CONTROLS_BUTTON_ID,
         EngineTypes.DoomRpg,
         offsetXPercent = 0.3f,
         offsetYPercent = 0.05f,
         sizePercent = 0.06f,
         buttonResId = R.drawable.toggles
     ),
-    SDL2ImageButton(
-        "keyboard",
+    ToggleImageButton(
+        ToggleImageButton.SHOW_KEYBOARD_BUTTON_ID,
         EngineTypes.DoomRpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
@@ -286,7 +286,7 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.bot,
         sdlKeyEvent = KeyEvent.KEYCODE_B
     ),
-    SDL2ImageButton(
+    ToggleImageButton(
         ToggleImageButton.SHOW_KEYBOARD_BUTTON_ID,
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.75f,
@@ -294,7 +294,7 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard
     ),
-    SDL2ImageButton(
+    ToggleImageButton(
         ToggleImageButton.HIDE_CONTROLS_BUTTON_ID,
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.5f,
