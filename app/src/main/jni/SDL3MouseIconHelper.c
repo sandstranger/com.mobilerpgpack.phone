@@ -18,4 +18,4 @@ float getMouseY() {
 }
 
 __attribute__((used))
-bool isMouseShown() {return SDL_CursorVisible();}
+bool isMouseShown() { return SDL_CursorVisible(); }
