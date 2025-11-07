@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.translator.TranslationManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -16,7 +17,7 @@ class DownloadViewModel() : ViewModel(), KoinComponent {
 
     private val scope : CoroutineScope = get()
 
-    private val translationManager : TranslationManager = get()
+    private val translationManager : ITranslationManager = get()
 
     var isLoading by mutableStateOf(false)
 

@@ -35,7 +35,7 @@ import kotlin.getValue
 
 abstract class EngineInfo(private val mainEngineLib: String,
     private val allLibs: Array<String>,
-    private val viewsToDraw: Collection<IScreenControlsView>) : KoinComponent, IEngineInfo, IEngineUIController {
+    private val viewsToDraw: Collection<IScreenControlsView>) : KoinComponent, IEngineInfo {
 
     protected val preferencesStorage: PreferencesStorage by inject()
 
@@ -68,8 +68,6 @@ abstract class EngineInfo(private val mainEngineLib: String,
     private external fun resumeSound()
 
     protected open val engineInfoClazz: Class<*> get() = EngineInfo::class.java
-
-    override val screenViewsToDraw: Collection<IScreenControlsView> get() = viewsToDraw
 
     override val mainSharedObject: String get() = buildFullLibraryName(mainEngineLib)
 
