@@ -28,6 +28,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.translator.ITranslationManager
+import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.IntervalMarkerTranslator
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.translator.models.BingTranslatorEndPoint
@@ -201,7 +202,10 @@ class KoinModulesProvider(private val context: Context,
             named(ACTIVE_TRANSLATION_MODEL_KEY)
         }
         singleOf(::IntervalMarkerTranslator).bind()
-        singleOf<ITranslationManager>(::TranslationManager)
+        singleOf(::TranslationManager).withOptions {
+            bind<ITranslationManager>()
+            bind<ITranslationModelsDownloader>()
+        }
     }
 
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)

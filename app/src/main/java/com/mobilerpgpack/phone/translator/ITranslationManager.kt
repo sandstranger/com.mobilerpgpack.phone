@@ -15,9 +15,5 @@ interface ITranslationManager{
 
     fun terminate()
 
-    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { })
-
     fun isTranslationSupportedAsFlow(): Flow<Boolean>
-
-    fun cancelDownloadModel()
 }
