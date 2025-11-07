@@ -15,17 +15,16 @@ import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL2GameActivity
-import com.mobilerpgpack.phone.ui.screen.screencontrols.DrawDoomRpgSeriesKeyboard
 import com.mobilerpgpack.phone.ui.items.MouseIcon
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 import org.libsdl.app.SDLActivity.isMouseShown
 import org.libsdl.app.SDLSurface
 
@@ -34,7 +33,8 @@ abstract class SDL2EngineInfo(private val mainEngineLib: String,
                      private val buttonsToDraw : Collection<IScreenControlsView> ) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw ) {
 
-    private val screenControls : SDL2ScreenController by inject ()
+    private val screenControls : IScreenController by inject (
+        named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME))
 
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false

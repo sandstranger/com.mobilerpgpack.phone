@@ -10,17 +10,18 @@ import java.io.IOException
 
 private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
-class AssetExtractor (private val context: Context) {
+class AssetExtractor (private val context: Context) : IAssetExtractor {
 
-    var assetsCopied = false
-        private set
+    override val assetsCopied get() = _assetsCopied
+
+    private var _assetsCopied = false
 
     suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
-        if (assetsCopied){
+        if (_assetsCopied){
             return@withContext
         }
         copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, context.getExternalFilesDir("")!!)
-        assetsCopied = true
+        _assetsCopied = true
     }
 
     private fun copyAssetsFolderToInternalStorage(assetsFolder: String, destFolder: File) {

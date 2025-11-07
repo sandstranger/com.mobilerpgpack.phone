@@ -18,13 +18,13 @@ import java.io.File
 import java.io.FileOutputStream
 import kotlin.coroutines.resumeWithException
 
-class DriveDownloader(private val apiKey: String) : KoinComponent {
+class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloader {
 
     private val context: Context by inject<Context>()
 
     private val client : OkHttpClient by inject<OkHttpClient> ()
 
-    suspend fun download(fileId: String, destPath: String, onProgress: (String) -> Unit = { }) =
+    override suspend fun download(fileId: String, destPath: String, onProgress: (String) -> Unit) {
         withContext(Dispatchers.IO) {
             val bytesText = context.getString(R.string.bytes_text)
             val downloadedText = context.getString(R.string.downloaded_text)
@@ -114,4 +114,5 @@ class DriveDownloader(private val apiKey: String) : KoinComponent {
                 Log.i(TAG, "✅ Downloaded to: $destPath")
             }
         }
+    }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.net.DriveDownloader
+import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
 import kotlinx.coroutines.async
@@ -37,7 +38,7 @@ abstract class BaseM2M100TranslationModel(
         return@lazy "${context.getExternalFilesDir("")}${File.separator}${File(pathToModelFolder).name}.zip"
     }
 
-    private val modelDownloader : DriveDownloader = get { parametersOf("AIzaSyCz-HWRD4hzUHB4aVEj6927ZjgTj-147PE") }
+    private val modelDownloader : IDriveDownloader = get { parametersOf("AIzaSyCz-HWRD4hzUHB4aVEj6927ZjgTj-147PE") }
 
     private val zipFile by lazy { File(pathToModelZipFile) }
 
