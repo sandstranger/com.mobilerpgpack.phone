@@ -128,3 +128,8 @@ target_include_directories(DOOM64 PRIVATE  ${SDL3_INCLUDE_DIR} ${OPENGL_INCLUDE_
 
 target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${OPENGL_opengl_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
+
+add_library(SDL3MouseHelper SHARED)
+target_sources(SDL3MouseHelper PRIVATE app/src/main/jni/SDL3MouseIconHelper.c)
+target_include_directories(SDL3MouseHelper PRIVATE ${SDL3_INCLUDE_DIR})
+target_link_libraries(SDL3MouseHelper PRIVATE ${SDL3_LIBRARY})
