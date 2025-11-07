@@ -43,7 +43,9 @@ import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
@@ -234,6 +236,9 @@ class KoinModulesProvider(private val context: Context,
         singleOf <IScreenController>(::SDL3ScreenController).withOptions {
             named(SDL3ScreenController.SDL3_SCREEN_CONTROLLER_NAME)
         }
+
+        singleOf<SDL2MouseIcon>(::SDL2MouseIcon)
+        singleOf<SDL3MouseIcon>(::SDL3MouseIcon)
 
         factory <PreferenceHandler> { (settings : DataStoreSettings) -> CustomPreferenceHandler(settings) }
     }

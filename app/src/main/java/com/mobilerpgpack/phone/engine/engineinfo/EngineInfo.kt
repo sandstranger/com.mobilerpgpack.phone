@@ -24,7 +24,6 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.buildFullLibraryName
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
-import com.mobilerpgpack.phone.ui.items.MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -42,8 +41,6 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import org.libsdl.app.SDLActivity.isMouseShown
-import org.libsdl.app.SDLSurface
 import java.io.File
 
 abstract class EngineInfo(private val mainEngineLib: String,
@@ -76,10 +73,6 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     private lateinit var needToShowScreenControlsNativeDelegate: Function
 
-    private external fun pauseSound()
-
-    private external fun resumeSound()
-
     protected open val engineInfoClazz: Class<*> get() = EngineInfo::class.java
 
     protected abstract val screenController : IScreenController
@@ -94,6 +87,10 @@ abstract class EngineInfo(private val mainEngineLib: String,
     private var isCursorVisible by mutableIntStateOf(0)
     private var enableControlsAutoHidingFeature = false
     private var displayInSafeArea : Boolean = false
+
+    private external fun pauseSound()
+
+    private external fun resumeSound()
 
     override suspend fun initialize(activity: Activity) {
         this.activity = activity
@@ -214,6 +211,9 @@ abstract class EngineInfo(private val mainEngineLib: String,
     }
 
     protected abstract fun setScreenResolution(screenWidth: Int, screenHeight: Int)
+
+    protected open fun isMouseShown() : Int = 1
+
 
     @Composable
     protected open fun DrawVirtualKeyboard(){
