@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -23,7 +24,8 @@ import org.koin.core.qualifier.named
 
 class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
-    private val screenController : ScreenController by inject ()
+    private val screenController : IScreenController by inject (
+        named(ScreenController.COMMON_SCREEN_CONTROLLER_NAME))
 
     private val preferencesStorage : PreferencesStorage by inject ()
 

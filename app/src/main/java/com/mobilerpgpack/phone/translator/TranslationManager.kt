@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.translator
 
 import android.content.res.Resources
 import android.os.Build
-import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.ACTIVE_TRANSLATION_MODEL_KEY
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.TARGET_LOCALE_NAMES_KEY
@@ -51,7 +50,7 @@ private interface TranslationNativeBridge : Library {
     fun registerGetTranslationDelegate(cb: GetTranslatedTextCallback)
 }
 
-class TranslationManager : KoinComponent {
+class TranslationManager : KoinComponent, ITranslationManager {
 
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
@@ -78,9 +77,9 @@ class TranslationManager : KoinComponent {
     private val translateCb : TranslateTextCallback
     private val getTranslationCb : GetTranslatedTextCallback
 
-    var inGame = false
+    override var inGame = false
 
-    var activeEngine: EngineTypes
+    override var activeEngine: EngineTypes
         get() = _activeEngine
         set(value) {
             if (_activeEngine == value) {
@@ -93,14 +92,14 @@ class TranslationManager : KoinComponent {
             }
         }
 
-    var allowDownloadingOveMobile: Boolean = false
+    override var allowDownloadingOveMobile: Boolean = false
         set(value) {
             translationModels.values.forEach {
                 it.allowDownloadingOveMobile = value
             }
         }
 
-    var activeTranslationType : TranslationType
+    override var activeTranslationType : TranslationType
         get() {
             return translationModel.translationType
         }set(value) {
@@ -121,7 +120,7 @@ class TranslationManager : KoinComponent {
         translatorLib.registerGetTranslationDelegate (getTranslationCb)
     }
 
-    fun terminate() {
+    override fun terminate() {
         db.close()
         activeTranslations.clear()
         loadedTranslations.clear()
@@ -130,27 +129,28 @@ class TranslationManager : KoinComponent {
         }
     }
 
-    suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit = { }) {
+    override suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit) {
         if (isTargetLocaleSupported()){
             translationModel.downloadModelIfNeeded(onProgress)
         }
     }
 
-    fun isTranslationSupportedAsFlow(): Flow<Boolean> = flow {
+    override fun isTranslationSupportedAsFlow(): Flow<Boolean> = flow {
         while (currentCoroutineContext().isActive) {
             emit(isTranslationSupported())
             delay(500)
         }
     }.distinctUntilChanged()
 
-    fun isTargetLocaleSupported () : Boolean = translationModel.isLocaleSupported(targetLocale)
 
-    suspend fun isTranslationSupported() : Boolean =
+    override fun cancelDownloadModel() = translationModel.cancelDownloadingModel()
+
+    private suspend fun isModelDownloaded () = !translationModel.needToDownloadModel()
+
+    private fun isTargetLocaleSupported () : Boolean = translationModel.isLocaleSupported(targetLocale)
+
+    private suspend fun isTranslationSupported() : Boolean =
         isModelDownloaded() && isTargetLocaleSupported() && targetLocale != sourceLocale
-
-    suspend fun isModelDownloaded () = !translationModel.needToDownloadModel()
-
-    fun cancelDownloadModel() = translationModel.cancelDownloadingModel()
 
     private fun getTranslation(input: ByteArray) : String {
         val text = input.sanitizeUtf8BytesToString()

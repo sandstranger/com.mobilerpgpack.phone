@@ -17,7 +17,7 @@ import java.security.MessageDigest
 
 suspend fun startGame(context: Context, engineToPlay: EngineTypes) {
 
-    val assetsExtractor: AssetExtractor = get(AssetExtractor::class.java)
+    val assetsExtractor: IAssetExtractor = get(IAssetExtractor::class.java)
 
     if (!assetsExtractor.assetsCopied) {
         return
