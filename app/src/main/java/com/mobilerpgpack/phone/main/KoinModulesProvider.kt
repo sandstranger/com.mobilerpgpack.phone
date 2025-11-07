@@ -47,6 +47,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
+import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
@@ -247,7 +248,7 @@ class KoinModulesProvider(private val context: Context,
 
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
-                wolfensteinButtons
+                doom64Buttons
         ) }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
             bind<IEngineInfo>()
