@@ -50,7 +50,7 @@ private interface TranslationNativeBridge : Library {
     fun registerGetTranslationDelegate(cb: GetTranslatedTextCallback)
 }
 
-class TranslationManager : KoinComponent, ITranslationManager {
+class TranslationManager : KoinComponent, ITranslationManager, ITranslationModelsDownloader {
 
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
