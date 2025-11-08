@@ -1,17 +1,12 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.graphics.Point
 import android.os.Process
 import android.system.Os
-import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
@@ -34,7 +29,7 @@ import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.callAs
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.getScreenResolution
-import com.mobilerpgpack.phone.utils.hideSystemBars
+import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
@@ -91,6 +86,8 @@ abstract class EngineInfo(
 
     override val nativeLibraries: Array<String> get() = allLibs
 
+    private var safeAreaWasApplied = false
+    
     private lateinit var needToShowScreenControlsNativeDelegate: Function
 
     private var hideScreenControls: Boolean = false
@@ -144,11 +141,14 @@ abstract class EngineInfo(
 
     override fun loadLayout(){
         activity.enableEdgeToEdge()
-        activity.hideSystemBars()
-        if (displayInSafeArea) {
-            activity.displayInSafeArea {
-                onSafeAreaApplied(it)
+        activity.hideSystemBarsAndWait  {
+            if (displayInSafeArea && !safeAreaWasApplied) {
+                onSafeAreaApplied(activity.getScreenResolution(true))
+                safeAreaWasApplied = true
             }
+        }
+        if (displayInSafeArea) {
+            activity.displayInSafeArea()
         }
         inflateControlsLayout()
     }
