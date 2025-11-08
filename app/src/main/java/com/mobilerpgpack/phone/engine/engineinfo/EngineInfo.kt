@@ -229,7 +229,7 @@ abstract class EngineInfo(
         }
     }
 
-    protected abstract fun setScreenResolution(screenWidth: Int, screenHeight: Int)
+    protected abstract fun setScreenResolution(screenResolution: ScreenResolution)
 
     protected open fun isMouseShown(): Int = 1
 
@@ -288,10 +288,10 @@ abstract class EngineInfo(
 
             if (screenRatio > targetRatio) {
                 val newWidth = (screenHeight * targetRatio).toInt()
-                setScreenResolution(newWidth, screenHeight)
+                setScreenResolution(ScreenResolution(newWidth, screenHeight))
             } else {
                 val newHeight = (screenWidth / targetRatio).toInt()
-                setScreenResolution(screenWidth, newHeight)
+                setScreenResolution(ScreenResolution(screenWidth, newHeight))
             }
         }
     }
@@ -310,7 +310,7 @@ abstract class EngineInfo(
     private fun setScreenResolution(savedScreenResolution: String): Boolean {
         val screenResolutionData = parseString(savedScreenResolution)
         if (screenResolutionData != null) {
-            setScreenResolution(screenResolutionData.first, screenResolutionData.second)
+            setScreenResolution(ScreenResolution(screenResolutionData.first, screenResolutionData.second))
             return true
         }
 

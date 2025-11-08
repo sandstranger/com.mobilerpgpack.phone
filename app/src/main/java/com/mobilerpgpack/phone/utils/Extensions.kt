@@ -80,7 +80,7 @@ fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
         }
     })
 
-     hideSystemBars()
+    hideSystemBars()
 }
 
 fun Context.isInternetAvailable(): Boolean {
