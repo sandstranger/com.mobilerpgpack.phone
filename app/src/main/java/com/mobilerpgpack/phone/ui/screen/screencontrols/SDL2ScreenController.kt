@@ -150,4 +150,8 @@ class SDL2ScreenController : ScreenController() {
                 }
         )
     }
+
+    companion object{
+        const val SDL2_SCREEN_CONTROLLER_NAME = "SDL2_SCREEN_CONTROLLER"
+    }
 }

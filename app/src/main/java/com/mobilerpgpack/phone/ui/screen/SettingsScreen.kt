@@ -39,6 +39,7 @@ import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
@@ -70,7 +71,7 @@ class SettingsScreen : KoinComponent {
 
     private val context : Context by inject()
     private val preferencesStorage : PreferencesStorage = get ()
-    private val translationManager : TranslationManager by inject ()
+    private val translationManager : ITranslationManager by inject ()
     private val settings = DataStoreSettings(preferencesStorage.dataStore)
 
     @Composable

@@ -1,11 +1,10 @@
 package com.mobilerpgpack.phone.ui.screen.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.mobilerpgpack.phone.translator.TranslationManager
+import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -16,7 +15,7 @@ class DownloadViewModel() : ViewModel(), KoinComponent {
 
     private val scope : CoroutineScope = get()
 
-    private val translationManager : TranslationManager = get()
+    private val translationModelsDownloader : ITranslationModelsDownloader = get()
 
     var isLoading by mutableStateOf(false)
 
@@ -43,11 +42,9 @@ class DownloadViewModel() : ViewModel(), KoinComponent {
             downloadJob = scope.launch {
                 try {
                     downloadProgress = ""
-                    translationManager.downloadModelIfNeeded { newValue ->
+                    translationModelsDownloader.downloadModelIfNeeded { newValue ->
                         downloadProgress = newValue
                     }
-                }
-                catch (e : Exception){
                 }
                 finally {
                     isLoading = false
@@ -61,6 +58,6 @@ class DownloadViewModel() : ViewModel(), KoinComponent {
         isLoading = false
         downloadJob?.cancel()
         downloadJob = null
-        translationManager.cancelDownloadModel()
+        translationModelsDownloader.cancelDownloadModel()
     }
 }
