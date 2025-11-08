@@ -5,6 +5,7 @@ import android.system.Os
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.libsdl.app.SDLSurface
@@ -13,7 +14,8 @@ class DoomRpgEngineInfo(
     private val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val buttonsToDraw: Collection<IScreenControlsView>,
-) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw) {
+) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.DoomRpg,
+    emptyFlow()) {
 
     private var savedDoomRpgScreenWidth: Int = 0
     private var savedDoomRpgScreenHeight: Int = 0

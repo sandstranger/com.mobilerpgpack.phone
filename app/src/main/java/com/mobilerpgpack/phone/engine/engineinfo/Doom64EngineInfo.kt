@@ -5,13 +5,17 @@ import android.system.Os
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import java.io.File
 
-class Doom64EngineInfo(private val mainEngineLib: String,
+class Doom64EngineInfo(
+    private val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val buttonsToDraw: Collection<IScreenControlsView>) :
-    SDL3EngineInfo(mainEngineLib, allLibs,buttonsToDraw) {
+    SDL3EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
+        EngineTypes.Doom64ExPlus,
+        emptyFlow()) {
 
     override val pathToResource: Flow<String> = preferencesStorage.pathToDoom64MainWadsFolder
 
@@ -26,7 +30,8 @@ class Doom64EngineInfo(private val mainEngineLib: String,
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
     }
 
-    private fun getPathToDoom64UserFolder() = pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
+    private fun getPathToDoom64UserFolder() =
+        pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
 
     private suspend fun getPathToDoom64ModsFolder(): String {
         val enableDoom64Mods = preferencesStorage.enableDoom64Mods.first()
