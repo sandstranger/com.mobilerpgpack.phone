@@ -35,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -43,9 +44,12 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
-abstract class EngineInfo(private val mainEngineLib: String,
+abstract class EngineInfo(
+    private val mainEngineLib: String,
     private val allLibs: Array<String>,
-    private val viewsToDraw: Collection<IScreenControlsView>) : KoinComponent, IEngineInfo {
+    private val viewsToDraw: Collection<IScreenControlsView>,
+    private val activeEngineType: EngineTypes,
+    private val pathToResourceFlow: Flow<String>) : KoinComponent, IEngineInfo {
 
     protected val preferencesStorage: PreferencesStorage by inject()
 
@@ -71,22 +75,26 @@ abstract class EngineInfo(private val mainEngineLib: String,
         )
     )
 
-    private lateinit var needToShowScreenControlsNativeDelegate: Function
-
     protected open val engineInfoClazz: Class<*> get() = EngineInfo::class.java
 
-    protected abstract val screenController : IScreenController
+    protected abstract val screenController: IScreenController
+
+    override val engineType: EngineTypes = activeEngineType
+
+    override val pathToResource: Flow<String> = pathToResourceFlow
 
     override val mainSharedObject: String get() = buildFullLibraryName(mainEngineLib)
 
     override val nativeLibraries: Array<String> get() = allLibs
+
+    private lateinit var needToShowScreenControlsNativeDelegate: Function
 
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
     private var allowToEditScreenControlsInGame = false
     private var isCursorVisible by mutableIntStateOf(0)
     private var enableControlsAutoHidingFeature = false
-    private var displayInSafeArea : Boolean = false
+    private var displayInSafeArea: Boolean = false
 
     private external fun pauseSound()
 
@@ -98,14 +106,12 @@ abstract class EngineInfo(private val mainEngineLib: String,
         initializeCommonEngineData()
         resolution = getRealScreenResolution()
 
-        Os.setenv(
-            "PATH_TO_RESOURCES",
-            File(pathToResource.first()).absolutePath, true
-        )
+        Os.setenv("PATH_TO_RESOURCES",
+            File(pathToResource.first()).absolutePath, true)
 
         hideScreenControls = preferencesStorage.hideScreenControls.first()
         enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls.first()
-                && engineType!= EngineTypes.DoomRpg && !hideScreenControls
+                && engineType != EngineTypes.DoomRpg && !hideScreenControls
 
         allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame.first()
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
@@ -148,14 +154,13 @@ abstract class EngineInfo(private val mainEngineLib: String,
                 )
             )
 
-            if (!showCustomMouseCursor){
+            if (!showCustomMouseCursor) {
                 binding.mouseOverlayUI.visibility = View.GONE
             }
 
-            if (hideScreenControls){
+            if (hideScreenControls) {
                 binding.controlsOverlayUI.visibility = View.GONE
-            }
-            else{
+            } else {
                 controlsOverlayUI = binding.controlsOverlayUI
                 virtualKeyboardView = binding.keyboardView
             }
@@ -167,7 +172,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
 
-                        if (showCustomMouseCursor){
+                        if (showCustomMouseCursor) {
                             binding.mouseOverlayUI.setContent {
                                 AutoMouseModeComposable()
                                 if (isCursorVisible == 1) {
@@ -212,17 +217,25 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     protected abstract fun setScreenResolution(screenWidth: Int, screenHeight: Int)
 
-    protected open fun isMouseShown() : Int = 1
+    protected open fun isMouseShown(): Int = 1
 
 
     @Composable
-    protected open fun DrawVirtualKeyboard(){
+    protected open fun DrawVirtualKeyboard() {
 
     }
 
     @Composable
-    protected open fun DrawMouseIcon(){
+    protected open fun DrawMouseIcon() {
 
+    }
+
+    protected open fun initJna() {
+        needToShowScreenControlsNativeDelegate = Function.getFunction(
+            mainEngineLib,
+            "needToShowScreenControls"
+        )
+        Native.register(engineInfoClazz, mainEngineLib)
     }
 
     protected fun getRealScreenResolution(): Pair<Int, Int> {
@@ -262,9 +275,9 @@ abstract class EngineInfo(private val mainEngineLib: String,
             View.VISIBLE else View.GONE
     }
 
-    private fun preserveCustomScreenAspectRatio(customAspectRatio : String) {
+    private fun preserveCustomScreenAspectRatio(customAspectRatio: String) {
         val aspectRatioData = parseString(customAspectRatio)
-        if (aspectRatioData!=null) {
+        if (aspectRatioData != null) {
             val screenWidth = resolution.first
             val screenHeight = resolution.second
             val targetRatio = aspectRatioData.first.toFloat() / aspectRatioData.second.toFloat()
@@ -280,7 +293,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
         }
     }
 
-    private fun parseString (input: String) : Pair<Int, Int>?{
+    private fun parseString(input: String): Pair<Int, Int>? {
         if (input.isNotEmpty() && input.contains(RESOLUTION_DELIMITER)) {
             try {
                 val array = input.split(RESOLUTION_DELIMITER)
@@ -293,8 +306,8 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     private fun setScreenResolution(savedScreenResolution: String): Boolean {
         val screenResolutionData = parseString(savedScreenResolution)
-        if (screenResolutionData!=null) {
-            setScreenResolution(screenResolutionData.first,screenResolutionData.second)
+        if (screenResolutionData != null) {
+            setScreenResolution(screenResolutionData.first, screenResolutionData.second)
             return true
         }
 
@@ -349,15 +362,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     private fun killEngine() = Process.killProcess(Process.myPid())
 
-    private fun initJna() {
-        needToShowScreenControlsNativeDelegate = Function.getFunction(
-            mainEngineLib,
-            "needToShowScreenControls"
-        )
-        Native.register(engineInfoClazz, mainEngineLib)
-    }
-
-    private companion object{
+    private companion object {
         private const val RESOLUTION_DELIMITER = "x"
     }
 }
