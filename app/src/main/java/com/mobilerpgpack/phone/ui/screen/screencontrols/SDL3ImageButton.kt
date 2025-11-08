@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
-import org.libsdl.app.SDLActivity.onNativeKeyUp
+import org.libsdl3.app.SDLActivity.onNativeKeyUp
 import org.libsdl3.app.SDLActivity.onNativeKeyDown
 
 class SDL3ImageButton(private val id: String,

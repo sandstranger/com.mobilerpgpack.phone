@@ -4,6 +4,7 @@ import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.COROUTINES_SCOPE
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.utils.AssetExtractor
+import com.mobilerpgpack.phone.utils.IAssetExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
@@ -22,7 +23,7 @@ class OpusMtTranslationModel() : ITranslationModel, KoinComponent {
 
     private val opusMtTranslator : OpusMtTranslator = get()
 
-    private val assetExtractor : AssetExtractor by inject()
+    private val assetExtractor : IAssetExtractor by inject()
 
     override val translationType: TranslationType = TranslationType.OpusMt
 

@@ -2,15 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.app.Activity
 import android.system.Os
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
-import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.items.RequestPath
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -21,34 +13,18 @@ class DoomRpgEngineInfo(
     private val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val buttonsToDraw: Collection<IScreenControlsView>,
-) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.DoomRpg) {
+) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw) {
 
     private var savedDoomRpgScreenWidth: Int = 0
     private var savedDoomRpgScreenHeight: Int = 0
 
     override val pathToResource: Flow<String> = super.preferencesStorage.pathToDoomRpgZipFile
 
+    override val engineType: EngineTypes = EngineTypes.DoomRpg
+
     override suspend fun initialize(activity: Activity) {
         super.initialize(activity)
         recalculateGameScreenResolution()
-    }
-
-    @Composable
-    override fun DrawSettings() {
-        val context = LocalContext.current
-
-        val savedPathToDoomRpgZip by preferencesStorage.pathToDoomRpgZipFile
-            .collectAsState(initial = "")
-
-        RequestPath(
-            context.getString(R.string.doom_rpg_zip_file),
-            onPathSelected = { selectedPath ->
-                scope.launch { preferencesStorage.setPathToDoomRpgZipFile( selectedPath) }
-            },
-            savedPathToDoomRpgZip,
-        )
-        HorizontalDivider()
-        super.DrawSettings()
     }
 
     private suspend fun recalculateGameScreenResolution() {
@@ -80,3 +56,4 @@ class DoomRpgEngineInfo(
         return resolution
     }
 }
+
