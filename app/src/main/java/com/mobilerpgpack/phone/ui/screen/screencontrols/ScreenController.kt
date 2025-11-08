@@ -50,7 +50,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.getSafeAreaScreenResolution
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -117,23 +116,22 @@ open class ScreenController : KoinComponent, IScreenController {
 
         if (drawInSafeArea) {
             val activity = LocalActivity.current!!
-            activity.window.decorView.post {
-                val safeAreaScreenResolution = activity.getSafeAreaScreenResolution()
-                screenWidthPx = safeAreaScreenResolution.screenWidth.toFloat()
-                screenHeightPx = safeAreaScreenResolution.screenHeight.toFloat()
-                readyToDrawControls = true
-            }
-            LaunchedEffect(Unit) {
-                preloadButtons()
-            }
+            val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
+            val metrics = activity.window.decorView.resources.displayMetrics
+            val systemBarsInsets = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+
+            screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
+            screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
         } else {
             screenWidthPx = configuration.screenWidthDp * density
             screenHeightPx = configuration.screenHeightDp * density
+        }
 
-            LaunchedEffect(Unit) {
-                preloadButtons()
-                readyToDrawControls = true
-            }
+        LaunchedEffect(Unit) {
+            preloadButtons()
+            readyToDrawControls = true
         }
 
         backgroundColor = if (!inGame) {

@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.WindowManager
+import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -30,7 +32,8 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.callAs
 import com.mobilerpgpack.phone.utils.displayInSafeArea
-import com.mobilerpgpack.phone.utils.getSafeAreaScreenResolution
+import com.mobilerpgpack.phone.utils.getScreenResolution
+import com.mobilerpgpack.phone.utils.hideSystemBars
 import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
@@ -47,7 +50,7 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 abstract class EngineInfo(
-    private val mainEngineLib: String,
+    protected val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val viewsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
@@ -57,7 +60,7 @@ abstract class EngineInfo(
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 
-    protected lateinit var resolution: Pair<Int, Int>
+    protected lateinit var resolution: ScreenResolution
         private set
 
     protected var controlsOverlayUI: View? = null
@@ -66,7 +69,7 @@ abstract class EngineInfo(
 
     protected var showVirtualKeyboardSavedState by mutableStateOf(false)
 
-    protected lateinit var activity: Activity
+    protected lateinit var activity: ComponentActivity
         private set
 
     protected var needToShowControlsLastState: Boolean = false
@@ -76,8 +79,6 @@ abstract class EngineInfo(
             KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY
         )
     )
-
-    protected open val engineInfoClazz: Class<*> get() = EngineInfo::class.java
 
     protected abstract val screenController: IScreenController
 
@@ -102,11 +103,11 @@ abstract class EngineInfo(
 
     private external fun resumeSound()
 
-    override suspend fun initialize(activity: Activity) {
+    override suspend fun initialize(activity: ComponentActivity) {
         this.activity = activity
         initJna()
         initializeCommonEngineData()
-        resolution = getRealScreenResolution()
+        resolution = activity.getScreenResolution()
 
         Os.setenv("PATH_TO_RESOURCES",
             File(pathToResource.first()).absolutePath, true)
@@ -125,13 +126,6 @@ abstract class EngineInfo(
         if (!customAspectRatio.isEmpty() && !customScreenResolutionWasSet) {
             preserveCustomScreenAspectRatio(customAspectRatio)
         }
-
-        if (displayInSafeArea) {
-            activity.displayInSafeArea()
-            activity.window.decorView.post {
-                onSafeAreaApplied(activity.getSafeAreaScreenResolution())
-            }
-        }
     }
 
     override fun onPause() {
@@ -147,7 +141,19 @@ abstract class EngineInfo(
         killEngine()
     }
 
-    override fun loadControlsLayout() {
+    override fun loadLayout(){
+        activity.window.decorView.post {
+            activity.enableEdgeToEdge()
+            activity.hideSystemBars()
+            if (displayInSafeArea) {
+                activity.displayInSafeArea()
+                onSafeAreaApplied(activity.getScreenResolution(true))
+            }
+            inflateControlsLayout()
+        }
+    }
+
+    private fun inflateControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
             val binding = GameLayoutBinding.inflate(activity.layoutInflater)
 
@@ -237,15 +243,7 @@ abstract class EngineInfo(
             mainEngineLib,
             "needToShowScreenControls"
         )
-        Native.register(engineInfoClazz, mainEngineLib)
-    }
-
-    protected fun getRealScreenResolution(): Pair<Int, Int> {
-        val wm = activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = wm.defaultDisplay
-        val realSize = Point()
-        display.getRealSize(realSize)
-        return realSize.x to realSize.y
+        Native.register(EngineInfo::class.java, mainEngineLib)
     }
 
     protected suspend fun changeScreenControlsVisibility() {
@@ -280,8 +278,8 @@ abstract class EngineInfo(
     private fun preserveCustomScreenAspectRatio(customAspectRatio: String) {
         val aspectRatioData = parseString(customAspectRatio)
         if (aspectRatioData != null) {
-            val screenWidth = resolution.first
-            val screenHeight = resolution.second
+            val screenWidth = resolution.screenWidth
+            val screenHeight = resolution.screenHeight
             val targetRatio = aspectRatioData.first.toFloat() / aspectRatioData.second.toFloat()
             val screenRatio = screenWidth.toFloat() / screenHeight
 
