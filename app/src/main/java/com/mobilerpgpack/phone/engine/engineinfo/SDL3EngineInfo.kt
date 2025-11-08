@@ -8,6 +8,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIconHelper
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
+import com.mobilerpgpack.phone.utils.ScreenResolution
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -37,8 +38,8 @@ abstract class SDL3EngineInfo(
         mouseIcon.DrawMouseIcon()
     }
 
-    override fun setScreenResolution(screenWidth: Int, screenHeight: Int) {
-        SDLSurface.fixedWidth = screenWidth
-        SDLSurface.fixedHeight = screenHeight
+    override fun setScreenResolution(screenResolution: ScreenResolution) {
+        SDLSurface.fixedWidth = screenResolution.screenWidth
+        SDLSurface.fixedHeight = screenResolution.screenHeight
     }
 }
