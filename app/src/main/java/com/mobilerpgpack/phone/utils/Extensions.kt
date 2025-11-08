@@ -135,7 +135,6 @@ fun Activity.displayInSafeArea() {
             v.setBackgroundColor(Color.BLACK)
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(v, null)
         WindowInsetsCompat.CONSUMED
     }
 }
