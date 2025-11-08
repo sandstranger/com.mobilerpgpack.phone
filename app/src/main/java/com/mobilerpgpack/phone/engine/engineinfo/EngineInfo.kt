@@ -87,7 +87,7 @@ abstract class EngineInfo(
     override val nativeLibraries: Array<String> get() = allLibs
 
     private var safeAreaWasApplied = false
-    
+
     private lateinit var needToShowScreenControlsNativeDelegate: Function
 
     private var hideScreenControls: Boolean = false
@@ -141,14 +141,17 @@ abstract class EngineInfo(
 
     override fun loadLayout(){
         activity.enableEdgeToEdge()
-        activity.hideSystemBarsAndWait  {
-            if (displayInSafeArea && !safeAreaWasApplied) {
-                onSafeAreaApplied(activity.getScreenResolution(true))
-                safeAreaWasApplied = true
+
+        activity.window.decorView.post {
+            if (displayInSafeArea){
+                activity.displayInSafeArea()
             }
-        }
-        if (displayInSafeArea) {
-            activity.displayInSafeArea()
+            activity.hideSystemBarsAndWait  {
+                if (displayInSafeArea && !safeAreaWasApplied) {
+                    onSafeAreaApplied(activity.getScreenResolution(true))
+                    safeAreaWasApplied = true
+                }
+            }
         }
         inflateControlsLayout()
     }

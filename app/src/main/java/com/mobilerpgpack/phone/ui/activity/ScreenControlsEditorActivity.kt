@@ -14,7 +14,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
-import com.mobilerpgpack.phone.utils.hideSystemBars
+import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
@@ -43,7 +43,10 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         }
 
         enableEdgeToEdge()
-        hideSystemBars()
+
+        window.decorView.post {
+            hideSystemBarsAndWait ()
+        }
 
         if (displayInSafeArea) {
             displayInSafeArea()
