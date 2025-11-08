@@ -44,6 +44,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
         enableEdgeToEdge()
         hideSystemBars()
+
         if (displayInSafeArea) {
             displayInSafeArea()
         }
