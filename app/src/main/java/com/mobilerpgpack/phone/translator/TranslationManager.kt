@@ -50,12 +50,12 @@ private interface TranslationNativeBridge : Library {
     fun registerGetTranslationDelegate(cb: GetTranslatedTextCallback)
 }
 
-class TranslationManager : KoinComponent, ITranslationManager, ITranslationModelsDownloader {
+class TranslationManager : KoinComponent, ITranslationManager {
 
     private var _activeEngine: EngineTypes = EngineTypes.DefaultActiveEngine
 
     @Volatile
-    private var translationModel : ITranslationModel = get (named(ACTIVE_TRANSLATION_MODEL_KEY))
+    private var _translationModel : ITranslationModel = get (named(ACTIVE_TRANSLATION_MODEL_KEY))
 
     private val targetLocale : String = get(named(TARGET_LOCALE_NAMES_KEY))
 
@@ -76,6 +76,8 @@ class TranslationManager : KoinComponent, ITranslationManager, ITranslationModel
     private val isTranslatedCb : IsTextTranslatedCallback
     private val translateCb : TranslateTextCallback
     private val getTranslationCb : GetTranslatedTextCallback
+
+    override val translationModel: ITranslationModel get() = _translationModel
 
     override var inGame = false
 
@@ -101,7 +103,7 @@ class TranslationManager : KoinComponent, ITranslationManager, ITranslationModel
 
     override var activeTranslationType : TranslationType
         get() {
-            return translationModel.translationType
+            return _translationModel.translationType
         }set(value) {
             changeTranslationModel(value)
         }
@@ -129,25 +131,16 @@ class TranslationManager : KoinComponent, ITranslationManager, ITranslationModel
         }
     }
 
-    override suspend fun downloadModelIfNeeded(onProgress: (String) -> Unit) {
-        if (isTargetLocaleSupported()){
-            translationModel.downloadModelIfNeeded(onProgress)
-        }
-    }
-
     override fun isTranslationSupportedAsFlow(): Flow<Boolean> = flow {
         while (currentCoroutineContext().isActive) {
             emit(isTranslationSupported())
             delay(500)
         }
     }.distinctUntilChanged()
+    
+    override fun isTargetLocaleSupported () : Boolean = _translationModel.isLocaleSupported(targetLocale)
 
-
-    override fun cancelDownloadModel() = translationModel.cancelDownloadingModel()
-
-    private suspend fun isModelDownloaded () = !translationModel.needToDownloadModel()
-
-    private fun isTargetLocaleSupported () : Boolean = translationModel.isLocaleSupported(targetLocale)
+    private suspend fun isModelDownloaded () = !_translationModel.needToDownloadModel()
 
     private suspend fun isTranslationSupported() : Boolean =
         isModelDownloaded() && isTargetLocaleSupported() && targetLocale != sourceLocale
@@ -252,7 +245,7 @@ class TranslationManager : KoinComponent, ITranslationManager, ITranslationModel
         try {
             val (translatedText, saveTextToSqlForced) = intervalsTranslator.translateWithFixedInterval (text,
                 textCameFromDialog, inGame, _activeEngine) {
-                cleanText -> translationModel.translate(cleanText, sourceLocale, targetLocale)
+                cleanText -> _translationModel.translate(cleanText, sourceLocale, targetLocale)
             }
             if (saveTextToSqlForced && activeTranslationType==this@TranslationManager.activeTranslationType) {
                 saveTranslatedText(translatedText)
@@ -291,8 +284,8 @@ class TranslationManager : KoinComponent, ITranslationManager, ITranslationModel
 
     private fun changeTranslationModel (targetTranslationType : TranslationType){
         if (activeTranslationType != targetTranslationType) {
-            translationModel.release()
-            translationModel = translationModels[targetTranslationType]!!
+            _translationModel.release()
+            _translationModel = translationModels[targetTranslationType]!!
             scope.launch {
                 reloadSavedTranslations()
             }
