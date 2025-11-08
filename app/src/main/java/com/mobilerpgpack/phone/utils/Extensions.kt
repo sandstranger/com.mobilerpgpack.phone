@@ -61,8 +61,9 @@ fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolu
         bounds.height() - insets.top - insets.bottom)
 }
 
-fun Activity.hideSystemBarsAndWait(callback: () -> Unit) {
+fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
     val decorView = window.decorView
+    var callbackWasCalled = false
 
     decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
@@ -70,31 +71,16 @@ fun Activity.hideSystemBarsAndWait(callback: () -> Unit) {
                 val rootInsets = ViewCompat.getRootWindowInsets(decorView)
                 if (rootInsets != null && !rootInsets.isVisible(WindowInsetsCompat.Type.systemBars())) {
                     decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    callback()
+                    if (!callbackWasCalled) {
+                        callbackWasCalled = true
+                        callback()
+                    }
                 }
             }, 50)
         }
     })
 
-    hideSystemBars()
-}
-
-fun Activity.hideSystemBars() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            this.window.insetsController?.let {
-                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-    } else {
-            @Suppress("DEPRECATION")
-            this.window.decorView.systemUiVisibility = (
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            or View.SYSTEM_UI_FLAG_FULLSCREEN
-                            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
-        }
+     hideSystemBars()
 }
 
 fun Context.isInternetAvailable(): Boolean {
@@ -149,6 +135,25 @@ fun Activity.displayInSafeArea() {
             v.setBackgroundColor(Color.BLACK)
         }
 
+        ViewCompat.setOnApplyWindowInsetsListener(v, null)
         WindowInsetsCompat.CONSUMED
+    }
+}
+
+private fun Activity.hideSystemBars() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        this.window.insetsController?.let {
+            it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+            it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    } else {
+        @Suppress("DEPRECATION")
+        this.window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
     }
 }
