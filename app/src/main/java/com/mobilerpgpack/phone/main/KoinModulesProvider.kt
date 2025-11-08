@@ -31,6 +31,7 @@ import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.IntervalMarkerTranslator
 import com.mobilerpgpack.phone.translator.TranslationManager
+import com.mobilerpgpack.phone.translator.TranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.models.BingTranslatorEndPoint
 import com.mobilerpgpack.phone.translator.models.BingTranslatorModel
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
@@ -202,10 +203,8 @@ class KoinModulesProvider(private val context: Context,
             named(ACTIVE_TRANSLATION_MODEL_KEY)
         }
         singleOf(::IntervalMarkerTranslator).bind()
-        singleOf(::TranslationManager).withOptions {
-            bind<ITranslationManager>()
-            bind<ITranslationModelsDownloader>()
-        }
+        singleOf<ITranslationManager>(::TranslationManager)
+        singleOf<ITranslationModelsDownloader>(::TranslationModelsDownloader)
     }
 
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
