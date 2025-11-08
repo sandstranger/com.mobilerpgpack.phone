@@ -1,23 +1,30 @@
 package com.mobilerpgpack.phone.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Point
+import android.graphics.Rect
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
+import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.window.layout.WindowMetricsCalculator
 
 data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
@@ -43,28 +50,29 @@ fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boole
     }
 }
 
-fun Activity.getSafeAreaScreenResolution () : ScreenResolution {
-    val insets = ViewCompat.getRootWindowInsets(this.window.decorView)!!
-    val metrics = this.window.decorView.resources.displayMetrics
-    val systemBarsInsets = insets.getInsets(
-        WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-    )
+fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolution {
+    val windowMetrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(this)
+    val insets = ViewCompat.getRootWindowInsets(window.decorView)?.getInsets(
+        WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+        ?: androidx.core.graphics.Insets.NONE
 
-    val screenWidthPx = metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right
-    val screenHeightPx = metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom
-    return ScreenResolution(screenWidthPx, screenHeightPx)
+    val bounds = windowMetrics.bounds
+
+    if (!drawInSafeArea){
+        return ScreenResolution(bounds.width(), bounds.height())
+    }
+
+    return ScreenResolution(bounds.width() - insets.left - insets.right,
+        bounds.height() - insets.top - insets.bottom)
 }
 
 fun Activity.hideSystemBars() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        window.decorView.post {
             this.window.insetsController?.let {
                 it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
                 it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
-        }
     } else {
-        window.decorView.post {
             @Suppress("DEPRECATION")
             this.window.decorView.systemUiVisibility = (
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -74,7 +82,6 @@ fun Activity.hideSystemBars() {
                             or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                             or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
         }
-    }
 }
 
 fun Context.isInternetAvailable(): Boolean {

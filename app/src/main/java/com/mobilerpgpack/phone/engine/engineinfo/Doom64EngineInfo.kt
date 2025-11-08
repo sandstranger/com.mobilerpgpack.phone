@@ -3,9 +3,11 @@ package com.mobilerpgpack.phone.engine.engineinfo
 import android.app.Activity
 import android.system.Os
 import android.util.Log
+import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.ScreenResolution
+import com.sun.jna.Native
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -23,7 +25,11 @@ class Doom64EngineInfo(
 
     override val engineType: EngineTypes = EngineTypes.Doom64ExPlus
 
-    override suspend fun initialize(activity: Activity) {
+    private var customScreenResolutionWasApplied = false
+
+    private external fun RecalculateScreenResolution (screenWidth : Int, screenHeight : Int)
+
+    override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
 
         val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
@@ -32,8 +38,28 @@ class Doom64EngineInfo(
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
     }
 
+    override fun initJna() {
+        super.initJna()
+        Native.register(Doom64EngineInfo::class.java, mainEngineLib)
+    }
+
+    override fun setScreenResolution(screenWidth: Int, screenHeight: Int) {
+        super.setScreenResolution(screenWidth, screenHeight)
+        setupScreenResolutionToEnv(screenWidth, screenHeight)
+        customScreenResolutionWasApplied = true
+    }
+
     override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
         super.onSafeAreaApplied(screenResolution)
+        if (!customScreenResolutionWasApplied) {
+            setupScreenResolutionToEnv(screenResolution.screenWidth, screenResolution.screenHeight)
+            RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
+        }
+    }
+
+    private fun setupScreenResolutionToEnv (screenWidth: Int, screenHeight: Int){
+        Os.setenv("SCREEN_WIDTH", screenWidth.toString(), true)
+        Os.setenv("SCREEN_HEIGHT", screenHeight.toString(), true)
     }
 
     private fun getPathToDoom64UserFolder() =

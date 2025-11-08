@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.app.Activity
 import android.system.Os
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.ITranslationManager
@@ -22,7 +23,7 @@ open class DoomRPGSeriesEngineInfo(
 
     private val translationManager: ITranslationManager by inject()
 
-    override suspend fun initialize(activity: Activity) {
+    override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
 
         val useSdlTTFForTextRendering = preferencesStorage.useSDLTTFForFontsRendering.first()
