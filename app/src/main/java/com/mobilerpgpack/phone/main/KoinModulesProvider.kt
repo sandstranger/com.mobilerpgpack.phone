@@ -14,16 +14,24 @@ import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.Doom2RpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.Doom2RpgEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.DoomRPGSeriesEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
+import com.mobilerpgpack.phone.net.IDriveDownloader
+import com.mobilerpgpack.phone.translator.ITranslationManager
+import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.IntervalMarkerTranslator
 import com.mobilerpgpack.phone.translator.TranslationManager
+import com.mobilerpgpack.phone.translator.TranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.models.BingTranslatorEndPoint
 import com.mobilerpgpack.phone.translator.models.BingTranslatorModel
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
@@ -36,14 +44,20 @@ import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIcon
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
+import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.CustomPreferenceHandler
+import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
@@ -70,7 +84,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class KoinModulesProvider(private val context: Context,
-                          private val assetExtractor: AssetExtractor,
+                          private val assetExtractor: IAssetExtractor,
                           private val scope: CoroutineScope) : KoinComponent  {
 
     private val clampButtonsMap = HashMap<EngineTypes, Preferences.Key<Boolean>>()
@@ -81,7 +95,10 @@ class KoinModulesProvider(private val context: Context,
 
     private val mainModule = module {
         single<Context> { context }.withOptions { createdAtStart() }
-        single<CoroutineScope> { scope }.withOptions { createdAtStart() }
+        single<CoroutineScope> { scope }.withOptions {
+            createdAtStart()
+            named(COROUTINES_SCOPE)
+        }
         single<PreferencesStorage> { preferencesStorage }.withOptions { createdAtStart() }
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
         single<String> { pathToUserFolder }.withOptions {
@@ -98,7 +115,7 @@ class KoinModulesProvider(private val context: Context,
             .build() }
 
         factory <OkHttpClient> { OkHttpClient() }
-        factory { (apiKey: String) -> DriveDownloader(apiKey) }
+        factory <IDriveDownloader> { (apiKey: String) -> DriveDownloader(apiKey) }
     }
 
     private val translationModule = module {
@@ -186,7 +203,8 @@ class KoinModulesProvider(private val context: Context,
             named(ACTIVE_TRANSLATION_MODEL_KEY)
         }
         singleOf(::IntervalMarkerTranslator).bind()
-        singleOf(::TranslationManager).bind()
+        singleOf<ITranslationManager>(::TranslationManager)
+        singleOf<ITranslationModelsDownloader>(::TranslationModelsDownloader)
     }
 
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
@@ -212,8 +230,18 @@ class KoinModulesProvider(private val context: Context,
 
         viewModelOf(::DownloadViewModel)
         singleOf(::SettingsScreen)
-        singleOf <SDL2ScreenController>(::SDL2ScreenController)
-        singleOf <ScreenController>(::ScreenController)
+        singleOf <IScreenController>(::SDL2ScreenController).withOptions {
+            named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
+        }
+        singleOf <IScreenController>(::ScreenController).withOptions {
+            named(ScreenController.COMMON_SCREEN_CONTROLLER_NAME)
+        }
+        singleOf <IScreenController>(::SDL3ScreenController).withOptions {
+            named(SDL3ScreenController.SDL3_SCREEN_CONTROLLER_NAME)
+        }
+
+        singleOf<SDL2MouseIcon>(::SDL2MouseIcon)
+        singleOf<SDL3MouseIcon>(::SDL3MouseIcon)
 
         factory <PreferenceHandler> { (settings : DataStoreSettings) -> CustomPreferenceHandler(settings) }
     }
@@ -228,12 +256,14 @@ class KoinModulesProvider(private val context: Context,
 
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
-                wolfensteinButtons
+                doom64Buttons
         ) }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
             bind<IEngineInfo>()
-            bind<IEngineUIController>()
         }
+
+        single<IEngineUIController> { Doom64ComposeSettings(wolfensteinButtons) }
+            .withOptions { named(EngineTypes.Doom64ExPlus.toString()) }
 
         single {
             val nativeLibs = createNativeLibsList()
@@ -252,8 +282,10 @@ class KoinModulesProvider(private val context: Context,
         ) }.withOptions {
             named(EngineTypes.DoomRpg.toString())
             bind<IEngineInfo>()
-            bind<IEngineUIController>()
         }
+
+        single<IEngineUIController> { DoomRpgComposeSettings(wolfensteinButtons) }
+            .withOptions { named(EngineTypes.DoomRpg.toString()) }
 
         single {
             val nativeLibs = createNativeLibsList()
@@ -270,8 +302,10 @@ class KoinModulesProvider(private val context: Context,
         }.withOptions {
             named(EngineTypes.Doom2Rpg.toString())
             bind<IEngineInfo>()
-            bind<IEngineUIController>()
         }
+
+        single<IEngineUIController> { Doom2RpgComposeSettings(doom2RPGButtons) }
+            .withOptions { named(EngineTypes.Doom2Rpg.toString()) }
 
         single {
             val nativeLibs = createNativeLibsList()
@@ -288,8 +322,10 @@ class KoinModulesProvider(private val context: Context,
         }.withOptions {
             named(EngineTypes.WolfensteinRpg.toString())
             bind<IEngineInfo>()
-            bind<IEngineUIController>()
         }
+
+        single<IEngineUIController> { WolfensteinRpgComposeSettings(wolfensteinButtons) }
+            .withOptions { named(EngineTypes.WolfensteinRpg.toString()) }
     }
 
     init {

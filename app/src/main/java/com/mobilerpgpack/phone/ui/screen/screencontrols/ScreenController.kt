@@ -57,7 +57,7 @@ import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
-open class ScreenController : KoinComponent {
+open class ScreenController : KoinComponent, IScreenController {
 
     private val context : Context = get ()
 
@@ -65,15 +65,14 @@ open class ScreenController : KoinComponent {
 
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
-    fun DrawScreenControls(
+    override fun DrawScreenControls(
         views: Collection<IScreenControlsView>,
         activeEngine : EngineTypes,
         inGame: Boolean,
-        allowToEditControls: Boolean = true,
-        drawInSafeArea : Boolean = false,
-        onBack: () -> Unit = { },
-        showVirtualKeyboardEvent : (Boolean) -> Unit = { }
-    ) {
+        allowToEditControls: Boolean,
+        drawInSafeArea : Boolean,
+        onBack: () -> Unit,
+        showVirtualKeyboardEvent : (Boolean) -> Unit) {
         val configuration = LocalConfiguration.current
         val density = context.resources.displayMetrics.density
         val coroutineScope = rememberCoroutineScope()
@@ -414,6 +413,10 @@ open class ScreenController : KoinComponent {
                 }
             }
         }
+    }
+
+    companion object {
+        const val COMMON_SCREEN_CONTROLLER_NAME = "COMMON_SCREEN_CONTROLLER"
     }
 }
 

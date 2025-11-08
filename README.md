@@ -124,6 +124,12 @@ jna: https://github.com/java-native-access/jna
 
 file picker: https://github.com/codekidX/storage-chooser
 
+code from Android OMW - https://gitlab.com/cavebros/openmw-android-docker
+
+koin for DI - https://insert-koin.io/
+
+oboe for audio - https://github.com/google/oboe 
+
 openal: https://github.com/kcat/openal-soft
 
 SDL2: https://github.com/libsdl-org/SDL/tree/SDL2
@@ -137,3 +143,5 @@ fluidsynth: https://github.com/FluidSynth/fluidsynth
 CTranslate2: https://github.com/OpenNMT/CTranslate2
 
 sentencepiece: https://github.com/google/sentencepiece
+
+and many others open source libs.
