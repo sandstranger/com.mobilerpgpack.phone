@@ -14,11 +14,11 @@ import org.koin.core.qualifier.named
 import org.libsdl3.app.SDLSurface
 
 abstract class SDL3EngineInfo(
-    private val mainEngineLib: String,
-    private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<IScreenControlsView>,
-    private val activeEngineType: EngineTypes,
-    private val pathToResourceFlow: Flow<String>) :
+    mainEngineLib: String,
+    allLibs: Array<String>,
+    buttonsToDraw: Collection<IScreenControlsView>,
+    activeEngineType: EngineTypes,
+    pathToResourceFlow: Flow<String>) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType, pathToResourceFlow) {
 
     private val mouseIcon: SDL3MouseIcon by inject()

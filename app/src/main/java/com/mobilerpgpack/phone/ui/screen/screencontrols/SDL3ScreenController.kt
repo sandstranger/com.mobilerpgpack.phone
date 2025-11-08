@@ -34,7 +34,7 @@ class SDL3ScreenController : ScreenController() {
             /* Ref: http://developer.android.com/training/gestures/multi.html */
             val touchDevId = event.deviceId
             val pointerCount = event.pointerCount
-            var action = event.actionMasked
+            val action = event.actionMasked
             var pointerId: Int
             var i = 0
             var x: Float

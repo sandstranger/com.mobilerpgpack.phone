@@ -13,11 +13,11 @@ import org.koin.core.component.inject
 import kotlin.getValue
 
 open class DoomRPGSeriesEngineInfo(
-    private val mainEngineLib: String,
-    private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<IScreenControlsView>,
-    private val activeEngineType: EngineTypes,
-    private val pathToResourceFlow: Flow<String>) :
+    mainEngineLib: String,
+    allLibs: Array<String>,
+    buttonsToDraw: Collection<IScreenControlsView>,
+    activeEngineType: EngineTypes,
+    pathToResourceFlow: Flow<String>) :
     SDL2EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType, pathToResourceFlow) {
 
     private val translationManager: ITranslationManager by inject()
