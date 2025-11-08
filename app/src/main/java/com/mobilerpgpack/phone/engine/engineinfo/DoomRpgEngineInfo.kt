@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 import org.libsdl.app.SDLSurface
 
 class DoomRpgEngineInfo(
-    private val mainEngineLib: String,
-    private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<IScreenControlsView>,
+    mainEngineLib: String,
+    allLibs: Array<String>,
+    buttonsToDraw: Collection<IScreenControlsView>,
 ) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.DoomRpg,
     emptyFlow()) {
 

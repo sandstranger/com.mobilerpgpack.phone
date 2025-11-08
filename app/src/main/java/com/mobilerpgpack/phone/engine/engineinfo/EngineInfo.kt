@@ -27,8 +27,10 @@ import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.callAs
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import com.mobilerpgpack.phone.utils.getSafeAreaScreenResolution
 import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
@@ -48,8 +50,8 @@ abstract class EngineInfo(
     private val mainEngineLib: String,
     private val allLibs: Array<String>,
     private val viewsToDraw: Collection<IScreenControlsView>,
-    private val activeEngineType: EngineTypes,
-    private val pathToResourceFlow: Flow<String>) : KoinComponent, IEngineInfo {
+    activeEngineType: EngineTypes,
+    pathToResourceFlow: Flow<String>) : KoinComponent, IEngineInfo {
 
     protected val preferencesStorage: PreferencesStorage by inject()
 
@@ -126,6 +128,9 @@ abstract class EngineInfo(
 
         if (displayInSafeArea) {
             activity.displayInSafeArea()
+            activity.window.decorView.post {
+                onSafeAreaApplied(activity.getSafeAreaScreenResolution())
+            }
         }
     }
 
@@ -219,16 +224,13 @@ abstract class EngineInfo(
 
     protected open fun isMouseShown(): Int = 1
 
+    protected open fun onSafeAreaApplied (screenResolution : ScreenResolution){}
 
     @Composable
-    protected open fun DrawVirtualKeyboard() {
-
-    }
+    protected open fun DrawVirtualKeyboard() {}
 
     @Composable
-    protected open fun DrawMouseIcon() {
-
-    }
+    protected open fun DrawMouseIcon() {}
 
     protected open fun initJna() {
         needToShowScreenControlsNativeDelegate = Function.getFunction(

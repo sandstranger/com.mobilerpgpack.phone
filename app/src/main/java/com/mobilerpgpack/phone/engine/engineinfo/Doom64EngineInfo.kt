@@ -2,17 +2,19 @@ package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.app.Activity
 import android.system.Os
+import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.utils.ScreenResolution
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import java.io.File
 
 class Doom64EngineInfo(
-    private val mainEngineLib: String,
-    private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<IScreenControlsView>) :
+    mainEngineLib: String,
+    allLibs: Array<String>,
+    buttonsToDraw: Collection<IScreenControlsView>) :
     SDL3EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
         EngineTypes.Doom64ExPlus,
         emptyFlow()) {
@@ -28,6 +30,10 @@ class Doom64EngineInfo(
 
         Os.setenv("PATH_TO_DOOM64_MODS_FOLDER", pathToDoom64ModsFolder, true)
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
+    }
+
+    override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
+        super.onSafeAreaApplied(screenResolution)
     }
 
     private fun getPathToDoom64UserFolder() =
