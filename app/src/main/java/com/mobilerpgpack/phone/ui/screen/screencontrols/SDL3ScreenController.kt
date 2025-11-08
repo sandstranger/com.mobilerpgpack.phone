@@ -41,6 +41,15 @@ class SDL3ScreenController : ScreenController() {
             var y: Float
             var p: Float
 
+            fun getPointerId () : Int{
+                var pointerId = if (isActionDownActive) event.getPointerId(i) else
+                    (event.getPointerId(i) - 1)
+                if (pointerId < 0) {
+                    pointerId = 0
+                }
+                return pointerId
+            }
+
             if (action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_POINTER_DOWN) i =
                 event.actionIndex
 
@@ -63,7 +72,7 @@ class SDL3ScreenController : ScreenController() {
                     }
 
                     MotionEvent.TOOL_TYPE_STYLUS, MotionEvent.TOOL_TYPE_ERASER -> {
-                        pointerId = event.getPointerId(i)
+                        pointerId = getPointerId()
                         x = event.getX(i)
                         y = event.getY(i)
                         p = event.getPressure(i)
@@ -90,13 +99,7 @@ class SDL3ScreenController : ScreenController() {
                     }
 
                     else -> { // MotionEvent.TOOL_TYPE_FINGER or MotionEvent.TOOL_TYPE_UNKNOWN
-                        pointerId =
-                            if (isActionDownActive) event.getPointerId(i) else (event.getPointerId(i) - 1)
-                        if (pointerId < 0) pointerId = 0
-                        if (!isActionDownActive && pointerId == 0) {
-                            action =
-                                if (action == MotionEvent.ACTION_POINTER_DOWN) MotionEvent.ACTION_DOWN else MotionEvent.ACTION_UP
-                        }
+                        pointerId = getPointerId()
                         x = getNormalizedX(event.getX(i))
                         y = getNormalizedY(event.getY(i))
                         p = event.getPressure(i)
