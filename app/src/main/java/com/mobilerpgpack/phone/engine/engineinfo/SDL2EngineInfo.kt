@@ -15,11 +15,11 @@ import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
 
 abstract class SDL2EngineInfo(
-    private val mainEngineLib: String,
-    private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<IScreenControlsView>,
-    private val activeEngineType: EngineTypes,
-    private val pathToResourceFlow: Flow<String>) :
+    mainEngineLib: String,
+    allLibs: Array<String>,
+    buttonsToDraw: Collection<IScreenControlsView>,
+    activeEngineType: EngineTypes,
+    pathToResourceFlow: Flow<String>) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType, pathToResourceFlow) {
 
     private val mouseIcon: SDL2MouseIcon by inject()

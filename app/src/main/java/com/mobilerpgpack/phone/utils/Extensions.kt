@@ -19,6 +19,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 
+data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
+
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
 @Suppress("UNCHECKED_CAST")
@@ -39,6 +41,18 @@ fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boole
     if (finishParentActivity && this is Activity) {
         this.finish()
     }
+}
+
+fun Activity.getSafeAreaScreenResolution () : ScreenResolution {
+    val insets = ViewCompat.getRootWindowInsets(this.window.decorView)!!
+    val metrics = this.window.decorView.resources.displayMetrics
+    val systemBarsInsets = insets.getInsets(
+        WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+    )
+
+    val screenWidthPx = metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right
+    val screenHeightPx = metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom
+    return ScreenResolution(screenWidthPx, screenHeightPx)
 }
 
 fun Activity.hideSystemBars() {

@@ -27,7 +27,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-open class CommonDoomRpgComposeSettings (private val buttonsToDraw: Collection<IScreenControlsView>) :
+open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
     KoinComponent, IEngineUIController{
 
     private val translationManager : ITranslationManager by inject()
