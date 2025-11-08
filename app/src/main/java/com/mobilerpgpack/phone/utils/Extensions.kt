@@ -50,29 +50,22 @@ fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boole
     }
 }
 
-fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolution {
+fun Activity.getScreenResolution(): ScreenResolution {
     val windowMetrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(this)
-    val insets = ViewCompat.getRootWindowInsets(window.decorView)?.getInsets(
-        WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-        ?: androidx.core.graphics.Insets.NONE
-
     val bounds = windowMetrics.bounds
-
-    if (!drawInSafeArea){
-        return ScreenResolution(bounds.width(), bounds.height())
-    }
-
-    return ScreenResolution(bounds.width() - insets.left - insets.right,
-        bounds.height() - insets.top - insets.bottom)
+    return ScreenResolution(bounds.width(), bounds.height())
 }
 
 fun Activity.hideSystemBars() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        this.window.decorView.post {
             this.window.insetsController?.let {
                 it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
                 it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
+        }
     } else {
+        this.window.decorView.post {
             @Suppress("DEPRECATION")
             this.window.decorView.systemUiVisibility = (
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -82,6 +75,7 @@ fun Activity.hideSystemBars() {
                             or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                             or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
         }
+    }
 }
 
 fun Context.isInternetAvailable(): Boolean {
@@ -118,7 +112,7 @@ fun Context.isExternalStoragePermissionGranted () : Boolean {
     ) == PackageManager.PERMISSION_GRANTED
 }
 
-fun Activity.displayInSafeArea() {
+fun Activity.displayInSafeArea(onSafeAreaApplied : (screenResolution : ScreenResolution) -> Unit = {}) {
     ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
         val bars = insets.getInsets(
             WindowInsetsCompat.Type.systemBars()
@@ -134,6 +128,12 @@ fun Activity.displayInSafeArea() {
         val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
         if (cutout.top > 0 || cutout.left > 0 || cutout.right > 0) {
             v.setBackgroundColor(Color.BLACK)
+        }
+
+        v.post {
+            val realWidth = v.width - v.paddingLeft - v.paddingRight
+            val realHeight = v.height - v.paddingTop - v.paddingBottom
+            onSafeAreaApplied(ScreenResolution(realWidth, realHeight))
         }
 
         WindowInsetsCompat.CONSUMED

@@ -42,23 +42,20 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
             activeEngineInfo = get (named(selectedEngine.toString()))
         }
 
-        window.decorView.post {
-            enableEdgeToEdge()
-            hideSystemBars()
+        enableEdgeToEdge()
+        hideSystemBars()
+        if (displayInSafeArea) {
+            displayInSafeArea()
+        }
 
-            if (displayInSafeArea){
-                this.displayInSafeArea()
-            }
-
-            setContent {
-                MaterialTheme {
-                    screenController.DrawScreenControls(activeEngineInfo.screenViewsToDraw,
-                        inGame = false,
-                        activeEngine = selectedEngine,
-                        drawInSafeArea = displayInSafeArea, onBack = {
-                            this@ScreenControlsEditorActivity.finish()
-                        }){
-                    }
+        setContent {
+            MaterialTheme {
+                screenController.DrawScreenControls(activeEngineInfo.screenViewsToDraw,
+                    inGame = false,
+                    activeEngine = selectedEngine,
+                    drawInSafeArea = displayInSafeArea, onBack = {
+                        this@ScreenControlsEditorActivity.finish()
+                    }){
                 }
             }
         }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Point
 import android.os.Process
 import android.system.Os
+import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -142,15 +143,14 @@ abstract class EngineInfo(
     }
 
     override fun loadLayout(){
-        activity.window.decorView.post {
-            activity.enableEdgeToEdge()
-            activity.hideSystemBars()
-            if (displayInSafeArea) {
-                activity.displayInSafeArea()
-                onSafeAreaApplied(activity.getScreenResolution(true))
+        activity.enableEdgeToEdge()
+        activity.hideSystemBars()
+        if (displayInSafeArea) {
+            activity.displayInSafeArea {
+                onSafeAreaApplied(it)
             }
-            inflateControlsLayout()
         }
+        inflateControlsLayout()
     }
 
     private fun inflateControlsLayout() {
