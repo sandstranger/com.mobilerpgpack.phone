@@ -43,23 +43,23 @@ class Doom64EngineInfo(
         Native.register(Doom64EngineInfo::class.java, mainEngineLib)
     }
 
-    override fun setScreenResolution(screenWidth: Int, screenHeight: Int) {
-        super.setScreenResolution(screenWidth, screenHeight)
-        setupScreenResolutionToEnv(screenWidth, screenHeight)
+    override fun setScreenResolution(screenResolution: ScreenResolution) {
+        super.setScreenResolution(screenResolution)
+        setupScreenResolutionToEnv(screenResolution)
         customScreenResolutionWasApplied = true
     }
 
     override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
         super.onSafeAreaApplied(screenResolution)
         if (!customScreenResolutionWasApplied) {
-            setupScreenResolutionToEnv(screenResolution.screenWidth, screenResolution.screenHeight)
+            setupScreenResolutionToEnv(screenResolution)
             RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
         }
     }
 
-    private fun setupScreenResolutionToEnv (screenWidth: Int, screenHeight: Int){
-        Os.setenv("SCREEN_WIDTH", screenWidth.toString(), true)
-        Os.setenv("SCREEN_HEIGHT", screenHeight.toString(), true)
+    private fun setupScreenResolutionToEnv (screenResolution: ScreenResolution){
+        Os.setenv("SCREEN_WIDTH", screenResolution.screenWidth.toString(), true)
+        Os.setenv("SCREEN_HEIGHT", screenResolution.screenHeight.toString(), true)
     }
 
     private fun getPathToDoom64UserFolder() =
