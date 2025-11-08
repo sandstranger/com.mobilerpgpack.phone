@@ -116,22 +116,32 @@ open class ScreenController : KoinComponent, IScreenController {
 
         if (drawInSafeArea) {
             val activity = LocalActivity.current!!
-            val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
-            val metrics = activity.window.decorView.resources.displayMetrics
-            val systemBarsInsets = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            )
+            var screenResolutionCalculated by remember { mutableStateOf(false) }
+            var allContentLoaded by remember { mutableStateOf(false) }
+            activity.window.decorView.post {
+                val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
+                val metrics = activity.window.decorView.resources.displayMetrics
+                val systemBarsInsets = insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+                )
 
-            screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
-            screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
+                screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
+                screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
+                screenResolutionCalculated = true
+                readyToDrawControls = allContentLoaded
+            }
+            LaunchedEffect(Unit) {
+                preloadButtons()
+                allContentLoaded = true
+                readyToDrawControls = screenResolutionCalculated
+            }
         } else {
             screenWidthPx = configuration.screenWidthDp * density
             screenHeightPx = configuration.screenHeightDp * density
-        }
-
-        LaunchedEffect(Unit) {
-            preloadButtons()
-            readyToDrawControls = true
+            LaunchedEffect(Unit) {
+                preloadButtons()
+                readyToDrawControls = true
+            }
         }
 
         backgroundColor = if (!inGame) {
