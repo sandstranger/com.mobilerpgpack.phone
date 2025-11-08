@@ -31,8 +31,6 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        hideSystemBars()
 
         val selectedEngine = getSelectedEngineType()
 
@@ -44,18 +42,23 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
             activeEngineInfo = get (named(selectedEngine.toString()))
         }
 
-        if (displayInSafeArea){
-            this.displayInSafeArea()
-        }
+        window.decorView.post {
+            enableEdgeToEdge()
+            hideSystemBars()
 
-        setContent {
-            MaterialTheme {
-                screenController.DrawScreenControls(activeEngineInfo.screenViewsToDraw,
-                    inGame = false,
-                    activeEngine = selectedEngine,
-                    drawInSafeArea = displayInSafeArea, onBack = {
-                        this@ScreenControlsEditorActivity.finish()
-                    }){
+            if (displayInSafeArea){
+                this.displayInSafeArea()
+            }
+
+            setContent {
+                MaterialTheme {
+                    screenController.DrawScreenControls(activeEngineInfo.screenViewsToDraw,
+                        inGame = false,
+                        activeEngine = selectedEngine,
+                        drawInSafeArea = displayInSafeArea, onBack = {
+                            this@ScreenControlsEditorActivity.finish()
+                        }){
+                    }
                 }
             }
         }

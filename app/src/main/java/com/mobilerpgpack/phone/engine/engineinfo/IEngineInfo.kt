@@ -1,10 +1,8 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.app.Activity
-import androidx.compose.runtime.Composable
-import androidx.viewbinding.ViewBinding
+import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import kotlinx.coroutines.flow.Flow
 
 interface IEngineInfo {
@@ -19,9 +17,9 @@ interface IEngineInfo {
 
     val gameActivityClazz: Class<*>
 
-    suspend fun initialize(activity: Activity)
+    suspend fun initialize(activity: ComponentActivity)
 
-    fun loadControlsLayout()
+    fun loadLayout()
 
     fun onPause()
 

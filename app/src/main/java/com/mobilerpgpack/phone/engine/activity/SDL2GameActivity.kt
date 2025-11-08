@@ -17,16 +17,13 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val preferencesStorage : PreferencesStorage = get()
-
         runBlocking {
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()
             engineInfo = get (named(activeEngineType))
             engineInfo.initialize(this@SDL2GameActivity)
         }
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        hideSystemBars()
-        engineInfo.loadControlsLayout()
+        engineInfo.loadLayout()
     }
 
     override fun getMainSharedObject() = engineInfo.mainSharedObject
