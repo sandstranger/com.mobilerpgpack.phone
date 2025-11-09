@@ -34,6 +34,16 @@ abstract class SDLScreenController : ScreenController() {
             val action = event.actionMasked
             val actionIndex = event.actionIndex
 
+            fun onPointerMoved (){
+                for (pid in trackedPointerIds) {
+                    val idx = event.findPointerIndex(pid)
+                    if (idx >= 0) {
+                        handlePointerAtIndex(idx, pid,
+                            mWidth,mHeight,event)
+                    }
+                }
+            }
+
             when (action) {
                 MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                     val pid = event.getPointerId(actionIndex)
@@ -46,15 +56,7 @@ abstract class SDLScreenController : ScreenController() {
                     }
                 }
 
-                MotionEvent.ACTION_MOVE -> {
-                    for (pid in trackedPointerIds) {
-                        val idx = event.findPointerIndex(pid)
-                        if (idx >= 0) {
-                            handlePointerAtIndex(idx, pid,
-                                mWidth,mHeight,event)
-                        }
-                    }
-                }
+                MotionEvent.ACTION_MOVE -> onPointerMoved()
 
                 MotionEvent.ACTION_POINTER_UP -> {
                     val upPid = event.getPointerId(actionIndex)
@@ -65,13 +67,7 @@ abstract class SDLScreenController : ScreenController() {
                 }
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    for (pid in trackedPointerIds) {
-                        val idx = event.findPointerIndex(pid)
-                        if (idx >= 0) {
-                            handlePointerAtIndex(idx, pid,
-                                mWidth,mHeight,event)
-                        }
-                    }
+                    onPointerMoved()
                     trackedPointerIds.clear()
                 }
             }
