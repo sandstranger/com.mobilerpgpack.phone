@@ -1,8 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
-import android.app.Activity
 import android.system.Os
-import android.util.Log
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
@@ -16,10 +14,10 @@ import java.io.File
 class Doom64EngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    buttonsToDraw: Collection<IScreenControlsView>) :
+    buttonsToDraw: Collection<IScreenControlsView>,
+    activeEngineType: EngineTypes) :
     SDL3EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
-        EngineTypes.Doom64ExPlus,
-        emptyFlow()) {
+        activeEngineType, emptyFlow()) {
 
     override val pathToResource: Flow<String> = preferencesStorage.pathToDoom64MainWadsFolder
 

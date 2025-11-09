@@ -132,16 +132,13 @@ fun Activity.displayInSafeArea() {
             WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
         )
 
-        v.updatePadding(
-            left = bars.left,
-            top = bars.top,
-            right = bars.right,
-            bottom = bars.bottom,
-        )
-
-        val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-        if (cutout.top > 0 || cutout.left > 0 || cutout.right > 0) {
-            v.setBackgroundColor(Color.BLACK)
+        v.also {
+            it.updatePadding(
+                left = bars.left,
+                top = bars.top,
+                right = bars.right,
+                bottom = bars.bottom)
+            it.setBackgroundColor(Color.BLACK)
         }
     }
 }
