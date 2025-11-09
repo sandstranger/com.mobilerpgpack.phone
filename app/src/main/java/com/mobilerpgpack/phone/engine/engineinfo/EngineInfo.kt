@@ -141,16 +141,11 @@ abstract class EngineInfo(
 
     override fun loadLayout(){
         activity.enableEdgeToEdge()
-
-        activity.window.decorView.post {
-            if (displayInSafeArea){
+        activity.hideSystemBarsAndWait  {
+            if (displayInSafeArea && !safeAreaWasApplied) {
                 activity.displayInSafeArea()
-            }
-            activity.hideSystemBarsAndWait  {
-                if (displayInSafeArea && !safeAreaWasApplied) {
-                    onSafeAreaApplied(activity.getScreenResolution(true))
-                    safeAreaWasApplied = true
-                }
+                onSafeAreaApplied(activity.getScreenResolution(true))
+                safeAreaWasApplied = true
             }
         }
         inflateControlsLayout()

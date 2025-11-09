@@ -45,11 +45,11 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         enableEdgeToEdge()
 
         window.decorView.post {
-            hideSystemBarsAndWait ()
-        }
-
-        if (displayInSafeArea) {
-            displayInSafeArea()
+            hideSystemBarsAndWait {
+                if (displayInSafeArea) {
+                    displayInSafeArea()
+                }
+            }
         }
 
         setContent {

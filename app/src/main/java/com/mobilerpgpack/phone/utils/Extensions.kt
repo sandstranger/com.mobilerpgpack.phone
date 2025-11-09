@@ -65,22 +65,23 @@ fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
     val decorView = window.decorView
     var callbackWasCalled = false
 
-    decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-        override fun onGlobalLayout() {
-            decorView.postDelayed({
-                val rootInsets = ViewCompat.getRootWindowInsets(decorView)
-                if (rootInsets != null && !rootInsets.isVisible(WindowInsetsCompat.Type.systemBars())) {
-                    decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    if (!callbackWasCalled) {
-                        callbackWasCalled = true
-                        callback()
+    decorView.post{
+        decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                decorView.postDelayed({
+                    val rootInsets = ViewCompat.getRootWindowInsets(decorView)
+                    if (rootInsets != null && !rootInsets.isVisible(WindowInsetsCompat.Type.systemBars())) {
+                        decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        if (!callbackWasCalled) {
+                            callbackWasCalled = true
+                            callback()
+                        }
                     }
-                }
-            }, 50)
-        }
-    })
-
-    hideSystemBars()
+                }, 50)
+            }
+        })
+        hideSystemBars()
+    }
 }
 
 fun Context.isInternetAvailable(): Boolean {
@@ -118,24 +119,22 @@ fun Context.isExternalStoragePermissionGranted () : Boolean {
 }
 
 fun Activity.displayInSafeArea() {
-    ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
-        val bars = insets.getInsets(
-            WindowInsetsCompat.Type.systemBars()
-                    or WindowInsetsCompat.Type.displayCutout()
-        )
-        v.updatePadding(
-            left = bars.left,
-            top = bars.top,
-            right = bars.right,
-            bottom = bars.bottom,
-        )
+    val v = window.decorView.rootView
+    val bars = ViewCompat.getRootWindowInsets(v)!!.getInsets(
+        WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
 
-        val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-        if (cutout.top > 0 || cutout.left > 0 || cutout.right > 0) {
-            v.setBackgroundColor(Color.BLACK)
-        }
+    v.updatePadding(
+        left = bars.left,
+        top = bars.top,
+        right = bars.right,
+        bottom = bars.bottom,
+    )
 
-        WindowInsetsCompat.CONSUMED
+    val cutout = ViewCompat.getRootWindowInsets(v)!!
+        .getInsets(WindowInsetsCompat.Type.displayCutout())
+
+    if (cutout.top > 0 || cutout.left > 0 || cutout.right > 0) {
+        v.setBackgroundColor(Color.BLACK)
     }
 }
 
