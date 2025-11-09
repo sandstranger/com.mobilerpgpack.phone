@@ -13,7 +13,7 @@ class SDL2ScreenController : SDLScreenController() {
     override fun handlePointerAtIndex(i: Int, pointerId: Int, viewWidth : Float,
                                       viewHeight : Float, event: MotionEvent) {
 
-        if (i < 0 || i >= event.pointerCount) {
+        if (!super.evenCanBeUsed(i, event)) {
             return
         }
 
