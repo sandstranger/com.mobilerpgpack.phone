@@ -23,8 +23,6 @@ class DoomRpgEngineInfo(
 
     override val pathToResource: Flow<String> = super.preferencesStorage.pathToDoomRpgZipFile
 
-    override val engineType: EngineTypes = EngineTypes.DoomRpg
-
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         recalculateGameScreenResolution()
