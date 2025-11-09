@@ -116,4 +116,6 @@ abstract class SDLScreenController : ScreenController() {
                                                 viewWidth : Float, viewHeight : Float, event: MotionEvent)
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
+
+    protected fun evenCanBeUsed (i: Int, event: MotionEvent) = i >= 0 && i < event.pointerCount
 }
