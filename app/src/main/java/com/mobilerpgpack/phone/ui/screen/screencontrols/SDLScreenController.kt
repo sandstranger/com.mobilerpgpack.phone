@@ -47,14 +47,11 @@ abstract class SDLScreenController : ScreenController() {
                 }
 
                 MotionEvent.ACTION_MOVE -> {
-                    if (trackedPointerIds.isNotEmpty()) {
-                        val toProcess = trackedPointerIds.toList()
-                        for (pid in toProcess) {
-                            val idx = event.findPointerIndex(pid)
-                            if (idx >= 0) {
-                                handlePointerAtIndex(idx, pid, MotionEvent.ACTION_MOVE,
-                                    mWidth,mHeight,event)
-                            }
+                    for (pid in trackedPointerIds) {
+                        val idx = event.findPointerIndex(pid)
+                        if (idx >= 0) {
+                            handlePointerAtIndex(idx, pid, MotionEvent.ACTION_MOVE,
+                                mWidth,mHeight,event)
                         }
                     }
                 }
@@ -68,8 +65,7 @@ abstract class SDLScreenController : ScreenController() {
                 }
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    val toProcess = trackedPointerIds.toList()
-                    for (pid in toProcess) {
+                    for (pid in trackedPointerIds) {
                         val idx = event.findPointerIndex(pid)
                         if (idx >= 0) {
                             handlePointerAtIndex(idx, pid, MotionEvent.ACTION_UP,
