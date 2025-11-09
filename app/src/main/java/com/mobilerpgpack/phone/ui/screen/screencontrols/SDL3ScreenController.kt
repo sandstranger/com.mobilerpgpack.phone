@@ -12,12 +12,14 @@ class SDL3ScreenController : SDLScreenController() {
 
     override val viewHeight: Int get() = SDLSurface.fixedHeight
 
-    override fun handlePointerAtIndex(i: Int, pointerId: Int, actionForSDL: Int,
-                                      viewWidth : Float, viewHeight : Float, event: MotionEvent) {
+    override fun handlePointerAtIndex(i: Int, pointerId: Int, viewWidth : Float,
+                                      viewHeight : Float, event: MotionEvent) {
 
         if (i < 0 || i >= event.pointerCount) {
             return
         }
+
+        val eventAction = event.actionMasked
 
         when (event.getToolType(i)) {
             MotionEvent.TOOL_TYPE_MOUSE -> {
@@ -25,7 +27,7 @@ class SDL3ScreenController : SDLScreenController() {
                 val x = motionListener.getEventX(event, i)
                 val y = motionListener.getEventY(event, i)
                 val relative = motionListener.inRelativeMode()
-                SDLActivity.onNativeMouse(event.buttonState, actionForSDL, x, y, relative)
+                SDLActivity.onNativeMouse(event.buttonState, eventAction, x, y, relative)
             }
 
             MotionEvent.TOOL_TYPE_STYLUS, MotionEvent.TOOL_TYPE_ERASER -> {
@@ -37,11 +39,10 @@ class SDL3ScreenController : SDLScreenController() {
                     pointerId,
                     SDLActivity.getMotionListener().getPenDeviceType(event.device),
                     buttonState,
-                    actionForSDL,
+                    eventAction,
                     event.getX(i),
                     event.getY(i),
-                    p
-                )
+                    p)
             }
 
             else -> {
@@ -49,14 +50,8 @@ class SDL3ScreenController : SDLScreenController() {
                 val y = getNormalizedY(event.getY(i))
                 val p = event.getPressure(i).coerceAtMost(1.0f)
 
-                SDLActivity.onNativeTouch(
-                    event.deviceId,
-                    pointerId,
-                    actionForSDL,
-                    x,
-                    y,
-                    p
-                )
+                SDLActivity.onNativeTouch(event.deviceId, pointerId,
+                    eventAction, x, y, p)
             }
         }
     }
