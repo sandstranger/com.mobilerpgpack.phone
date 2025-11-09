@@ -42,7 +42,7 @@ abstract class SDLScreenController : ScreenController() {
                     if (xRaw in 0f..mWidth && yRaw >= 0f && yRaw <= mHeight) {
                         trackedPointerIds.add(pid)
                         handlePointerAtIndex(actionIndex, pid,
-                            action,mWidth,mHeight, event)
+                            mWidth,mHeight, event)
                     }
                 }
 
@@ -50,7 +50,7 @@ abstract class SDLScreenController : ScreenController() {
                     for (pid in trackedPointerIds) {
                         val idx = event.findPointerIndex(pid)
                         if (idx >= 0) {
-                            handlePointerAtIndex(idx, pid, MotionEvent.ACTION_MOVE,
+                            handlePointerAtIndex(idx, pid,
                                 mWidth,mHeight,event)
                         }
                     }
@@ -59,7 +59,7 @@ abstract class SDLScreenController : ScreenController() {
                 MotionEvent.ACTION_POINTER_UP -> {
                     val upPid = event.getPointerId(actionIndex)
                     if (trackedPointerIds.remove(upPid)) {
-                        handlePointerAtIndex(actionIndex, upPid, MotionEvent.ACTION_UP,
+                        handlePointerAtIndex(actionIndex, upPid,
                             mWidth,mHeight,event)
                     }
                 }
@@ -68,7 +68,7 @@ abstract class SDLScreenController : ScreenController() {
                     for (pid in trackedPointerIds) {
                         val idx = event.findPointerIndex(pid)
                         if (idx >= 0) {
-                            handlePointerAtIndex(idx, pid, MotionEvent.ACTION_UP,
+                            handlePointerAtIndex(idx, pid,
                                 mWidth,mHeight,event)
                         }
                     }
@@ -116,7 +116,7 @@ abstract class SDLScreenController : ScreenController() {
         )
     }
 
-    protected abstract fun handlePointerAtIndex(i: Int, pointerId: Int, actionForSDL: Int,
+    protected abstract fun handlePointerAtIndex(i: Int, pointerId: Int,
                                                 viewWidth : Float, viewHeight : Float, event: MotionEvent)
 
     protected open fun onMotionEventFinished (event: MotionEvent){}

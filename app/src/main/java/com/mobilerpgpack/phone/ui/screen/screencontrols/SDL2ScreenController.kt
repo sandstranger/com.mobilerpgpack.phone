@@ -10,8 +10,8 @@ class SDL2ScreenController : SDLScreenController() {
 
     override val viewHeight: Int get() = SDLSurface.fixedHeight
 
-    override fun handlePointerAtIndex(i: Int, pointerId: Int, actionForSDL: Int,
-                                      viewWidth : Float, viewHeight : Float, event: MotionEvent) {
+    override fun handlePointerAtIndex(i: Int, pointerId: Int, viewWidth : Float,
+                                      viewHeight : Float, event: MotionEvent) {
 
         if (i < 0 || i >= event.pointerCount) {
             return
@@ -20,7 +20,8 @@ class SDL2ScreenController : SDLScreenController() {
         val x = event.getX(i) / viewWidth
         val y = event.getY(i) / viewHeight
         val p = event.getPressure(i).coerceAtMost(1.0f)
-        SDLActivity.onNativeTouch(event.deviceId, pointerId, actionForSDL, x, y, p)
+        SDLActivity.onNativeTouch(event.deviceId, pointerId,
+            event.actionMasked, x, y, p)
     }
 
     companion object{
