@@ -47,9 +47,6 @@ fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boole
 
 fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolution {
     val windowMetrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(this)
-    val insets = ViewCompat.getRootWindowInsets(window.decorView)?.getInsets(
-        WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-        ?: androidx.core.graphics.Insets.NONE
 
     val bounds = windowMetrics.bounds
 
@@ -57,8 +54,15 @@ fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolu
         return ScreenResolution(bounds.width(), bounds.height())
     }
 
-    return ScreenResolution(bounds.width() - insets.left - insets.right,
-        bounds.height() - insets.top - insets.bottom)
+    ViewCompat.getRootWindowInsets(window.decorView)?.let { insets ->
+        val bars = insets.getInsets(
+            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+
+        return ScreenResolution(bounds.width() - bars.left - bars.right,
+            bounds.height() - bars.top - bars.bottom)
+    }
+
+    return ScreenResolution(bounds.width(), bounds.height())
 }
 
 fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
@@ -69,13 +73,16 @@ fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
         decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 decorView.postDelayed({
-                    val rootInsets = ViewCompat.getRootWindowInsets(decorView)
-                    if (rootInsets != null && !rootInsets.isVisible(WindowInsetsCompat.Type.systemBars())) {
-                        decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                        if (!callbackWasCalled) {
-                            callbackWasCalled = true
-                            callback()
+                    ViewCompat.getRootWindowInsets(decorView)?.let {
+                        if (!it.isVisible(WindowInsetsCompat.Type.systemBars())) {
+                            decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            if (!callbackWasCalled) {
+                                callbackWasCalled = true
+                                callback()
+                            }
                         }
+                    } ?: run {
+                        decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
                 }, 50)
             }
@@ -120,21 +127,22 @@ fun Context.isExternalStoragePermissionGranted () : Boolean {
 
 fun Activity.displayInSafeArea() {
     val v = window.decorView.rootView
-    val bars = ViewCompat.getRootWindowInsets(v)!!.getInsets(
-        WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+    ViewCompat.getRootWindowInsets(v)?.let { insets ->
+        val bars = insets.getInsets(
+            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+        )
 
-    v.updatePadding(
-        left = bars.left,
-        top = bars.top,
-        right = bars.right,
-        bottom = bars.bottom,
-    )
+        v.updatePadding(
+            left = bars.left,
+            top = bars.top,
+            right = bars.right,
+            bottom = bars.bottom,
+        )
 
-    val cutout = ViewCompat.getRootWindowInsets(v)!!
-        .getInsets(WindowInsetsCompat.Type.displayCutout())
-
-    if (cutout.top > 0 || cutout.left > 0 || cutout.right > 0) {
-        v.setBackgroundColor(Color.BLACK)
+        val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+        if (cutout.top > 0 || cutout.left > 0 || cutout.right > 0) {
+            v.setBackgroundColor(Color.BLACK)
+        }
     }
 }
 
