@@ -11,17 +11,14 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import java.io.File
 
-class Doom64EngineInfo(
+open class Doom64EngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    buttonsToDraw: Collection<IScreenControlsView>,
-    activeEngineType: EngineTypes) :
+    buttonsToDraw: Collection<IScreenControlsView>) :
     SDL3EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
-        activeEngineType, emptyFlow()) {
+        EngineTypes.Doom64ExPlus,emptyFlow()) {
 
     override val pathToResource: Flow<String> = preferencesStorage.pathToDoom64MainWadsFolder
-
-    override val engineType: EngineTypes = EngineTypes.Doom64ExPlus
 
     private var customScreenResolutionWasApplied = false
 
@@ -55,13 +52,13 @@ class Doom64EngineInfo(
         }
     }
 
+    protected open fun getPathToDoom64UserFolder() =
+        pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
+
     private fun setupScreenResolutionToEnv (screenResolution: ScreenResolution){
         Os.setenv("SCREEN_WIDTH", screenResolution.screenWidth.toString(), true)
         Os.setenv("SCREEN_HEIGHT", screenResolution.screenHeight.toString(), true)
     }
-
-    private fun getPathToDoom64UserFolder() =
-        pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
 
     private suspend fun getPathToDoom64ModsFolder(): String {
         val enableDoom64Mods = preferencesStorage.enableDoom64Mods.first()
