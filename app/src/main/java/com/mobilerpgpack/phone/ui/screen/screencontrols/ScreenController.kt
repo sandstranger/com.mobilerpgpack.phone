@@ -238,7 +238,7 @@ open class ScreenController : KoinComponent, IScreenController {
 
                     val renderButton = view.isHideControlsButton || !hideScreenControls || isEditMode
                     if (renderButton) {
-                        DraggableImageButton(
+                        DrawView(
                             viewToDraw = view,
                             offset = Offset(renderOffsetX, renderOffsetY),
                             sizeDp = sizeDp,
@@ -286,7 +286,7 @@ open class ScreenController : KoinComponent, IScreenController {
     }
 
     @Composable
-    private fun DraggableImageButton(
+    private fun DrawView(
         viewToDraw: IScreenControlsView,
         offset: Offset,
         sizeDp: Dp,
@@ -342,7 +342,8 @@ open class ScreenController : KoinComponent, IScreenController {
                 },
             contentAlignment = Alignment.Center
         ) {
-            viewToDraw.DrawView(isEditMode,inGame,sizeDp, onClick)
+            viewToDraw.onClick = onClick
+            viewToDraw.DrawView(isEditMode,inGame,sizeDp)
         }
     }
 

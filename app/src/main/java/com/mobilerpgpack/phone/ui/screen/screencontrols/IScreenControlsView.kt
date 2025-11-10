@@ -8,15 +8,17 @@ interface IScreenControlsView {
 
     val buttonState : ButtonState
 
+    var onClick : (() -> Unit)?
+
     @Composable
-    fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp = 10.dp, onClick : () -> Unit = { })
+    fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp = 10.dp)
 }
 
-val IScreenControlsView.isKeyboardButton get() = this is ToggleImageButton &&
-        this.buttonState.id == ToggleImageButton.SHOW_KEYBOARD_BUTTON_ID
+val IScreenControlsView.isKeyboardButton get() = this is ImageButton &&
+        this.buttonState.id == ImageButton.SHOW_KEYBOARD_BUTTON_ID
 
-val IScreenControlsView.isHideControlsButton get() = this is ToggleImageButton &&
-        this.buttonState.id == ToggleImageButton.HIDE_CONTROLS_BUTTON_ID
+val IScreenControlsView.isHideControlsButton get() = this is ImageButton &&
+        this.buttonState.id == ImageButton.HIDE_CONTROLS_BUTTON_ID
 
 val IScreenControlsView.isDpad get() = this is Dpad && this.buttonState.id == Dpad.dpadId
 

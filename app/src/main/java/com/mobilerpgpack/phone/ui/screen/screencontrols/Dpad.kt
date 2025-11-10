@@ -31,6 +31,10 @@ abstract class Dpad(private val engineType: EngineTypes,
 
     override val buttonState: ButtonState get() = dpadButtonState
 
+    override var onClick: (() -> Unit)?
+        get() = null
+        set(_) {}
+
     init {
         val buttons = mutableListOf<ButtonState>()
         buttons.add(
@@ -81,7 +85,7 @@ abstract class Dpad(private val engineType: EngineTypes,
 
     @SuppressLint("UnusedBoxWithConstraintsScope")
     @Composable
-    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp, onClick : () -> Unit) {
+    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
