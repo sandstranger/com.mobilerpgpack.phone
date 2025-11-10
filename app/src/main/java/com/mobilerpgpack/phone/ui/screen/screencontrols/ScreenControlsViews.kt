@@ -93,16 +93,14 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    ImageButton(
-        ImageButton.SHOW_KEYBOARD_BUTTON_ID,
+    ShowKeyboardImageButton(
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard
     ),
-    ImageButton(
-        ImageButton.HIDE_CONTROLS_BUTTON_ID,
+    UpdateScreenControlsVisibilityImageButton(
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.5f,
         offsetYPercent = 0.05f,
@@ -205,16 +203,14 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    ImageButton(
-        ImageButton.SHOW_KEYBOARD_BUTTON_ID,
+    ShowKeyboardImageButton(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard
     ),
-    ImageButton(
-        ImageButton.HIDE_CONTROLS_BUTTON_ID,
+    UpdateScreenControlsVisibilityImageButton(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.5f,
         offsetYPercent = 0.05f,
@@ -284,16 +280,14 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    ImageButton(
-        ImageButton.HIDE_CONTROLS_BUTTON_ID,
+    UpdateScreenControlsVisibilityImageButton(
         EngineTypes.DoomRpg,
         offsetXPercent = 0.3f,
         offsetYPercent = 0.05f,
         sizePercent = 0.06f,
         buttonResId = R.drawable.toggles
     ),
-    ImageButton(
-        ImageButton.SHOW_KEYBOARD_BUTTON_ID,
+    ShowKeyboardImageButton(
         EngineTypes.DoomRpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
@@ -399,16 +393,14 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.bot,
         sdlKeyEvent = KeyEvent.KEYCODE_B
     ),
-    ImageButton(
-        ImageButton.SHOW_KEYBOARD_BUTTON_ID,
+    ShowKeyboardImageButton(
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard
     ),
-    ImageButton(
-        ImageButton.HIDE_CONTROLS_BUTTON_ID,
+    UpdateScreenControlsVisibilityImageButton(
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.5f,
         offsetYPercent = 0.05f,

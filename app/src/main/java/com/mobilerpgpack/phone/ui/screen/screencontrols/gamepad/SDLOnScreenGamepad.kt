@@ -47,9 +47,9 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         sizePercent = sizePercent,
         alpha = alpha)
 
-    override var onClick: (() -> Unit)?
-        get() = null
-        set(_) {}
+    override var canBeDrawn: Boolean by mutableStateOf(true)
+
+    override val isQuickPanel: Boolean = false
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) = DrawGamepad(isEditMode, inGame)
