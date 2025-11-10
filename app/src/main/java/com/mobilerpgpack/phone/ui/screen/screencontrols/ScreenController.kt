@@ -63,6 +63,12 @@ open class ScreenController : KoinComponent, IScreenController {
 
     private val preferencesStorage : PreferencesStorage = get ()
 
+    private var showVirtualKeyboardEvent : ((Boolean) -> Unit)? = null
+
+    private var showVirtualKeyboard by mutableStateOf(false)
+
+    override var activeViewsToDraw: Collection<IScreenControlsView>? = null
+
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     override fun DrawScreenControls(
@@ -73,6 +79,11 @@ open class ScreenController : KoinComponent, IScreenController {
         drawInSafeArea : Boolean,
         onBack: () -> Unit,
         showVirtualKeyboardEvent : (Boolean) -> Unit) {
+
+        this.activeViewsToDraw = views
+        this.showVirtualKeyboardEvent = showVirtualKeyboardEvent
+        showVirtualKeyboard = false
+
         val configuration = LocalConfiguration.current
         val density = context.resources.displayMetrics.density
         val coroutineScope = rememberCoroutineScope()
@@ -83,9 +94,7 @@ open class ScreenController : KoinComponent, IScreenController {
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
-        var hideScreenControls by remember(false) { mutableStateOf(false) }
         var readyToDrawControls by remember { mutableStateOf(false) }
-        var showVirtualKeyboard by remember { mutableStateOf(false) }
         val clampButtonsFlow by preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true).collectAsStateWithLifecycle(true)
 
         var screenWidthPx by remember { mutableFloatStateOf(0f) }
@@ -112,6 +121,10 @@ open class ScreenController : KoinComponent, IScreenController {
                 coroutineScope.launch { view.buttonState.saveButtonState() }
             }
             viewsToDraw = loadedMap
+        }
+
+        views.forEach {
+            it.setScreenController(this)
         }
 
         if (drawInSafeArea) {
@@ -236,7 +249,7 @@ open class ScreenController : KoinComponent, IScreenController {
                     val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
                     val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
 
-                    val renderButton = view.isHideControlsButton || !hideScreenControls || isEditMode
+                    val renderButton = view.isHideControlsButton || view.canBeDrawn || isEditMode
                     if (renderButton) {
                         DrawView(
                             viewToDraw = view,
@@ -253,17 +266,6 @@ open class ScreenController : KoinComponent, IScreenController {
                                             false)
                                     }
                                 }
-
-                                if (view.isHideControlsButton && inGame && !isEditMode) {
-                                    hideScreenControls = !hideScreenControls
-                                    showVirtualKeyboard = false
-                                    showVirtualKeyboardEvent(false)
-                                }
-
-                                if (view.isKeyboardButton && inGame && !isEditMode){
-                                    showVirtualKeyboard = !showVirtualKeyboard
-                                    showVirtualKeyboardEvent(showVirtualKeyboard)
-                                }
                             },
                             onDragEnd = { newX, newY ->
                                 view.buttonState.offsetXPercent = (newX / screenWidthPx)
@@ -278,6 +280,16 @@ open class ScreenController : KoinComponent, IScreenController {
                 }
             }
         }
+    }
+
+    override fun updateVirtualKeyboardVisibility() {
+        showVirtualKeyboard = !showVirtualKeyboard
+        showVirtualKeyboardEvent?.invoke(showVirtualKeyboard)
+    }
+
+    override fun hideVirtualKeyboard() {
+        showVirtualKeyboard = false
+        showVirtualKeyboardEvent?.invoke(false)
     }
 
     @Composable
@@ -342,7 +354,6 @@ open class ScreenController : KoinComponent, IScreenController {
                 },
             contentAlignment = Alignment.Center
         ) {
-            viewToDraw.onClick = onClick
             viewToDraw.DrawView(isEditMode,inGame,sizeDp)
         }
     }

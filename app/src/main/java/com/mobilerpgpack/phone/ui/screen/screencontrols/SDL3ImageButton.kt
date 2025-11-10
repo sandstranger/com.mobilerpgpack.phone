@@ -13,7 +13,8 @@ class SDL3ImageButton(
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = 0,
-    buttonResId: Int = NOT_EXISTING_RES) :
+    buttonResId: Int = NOT_EXISTING_RES,
+    override val isQuickPanel: Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,sdlKeyEvent, buttonResId) {
 
     override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
