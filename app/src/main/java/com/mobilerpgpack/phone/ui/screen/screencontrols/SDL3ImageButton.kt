@@ -17,6 +17,10 @@ class SDL3ImageButton(
     override val isQuickPanel: Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,sdlKeyEvent, buttonResId) {
 
+    init {
+        canBeDrawn = !isQuickPanel
+    }
+    
     override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 
     override fun onTouchUp(keyCode: Int) = onNativeKeyUp(keyCode)
