@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -29,11 +32,11 @@ abstract class Dpad(engineType: EngineTypes,
 
     private val dpadButtons: Collection<ButtonState>
 
-    override val buttonState: ButtonState get() = dpadButtonState
+    override var canBeDrawn: Boolean by mutableStateOf(true)
 
-    override var onClick: (() -> Unit)?
-        get() = null
-        set(_) {}
+    override val isQuickPanel: Boolean = false
+
+    override val buttonState: ButtonState get() = dpadButtonState
 
     init {
         val buttons = mutableListOf<ButtonState>()
@@ -158,7 +161,7 @@ abstract class Dpad(engineType: EngineTypes,
 
     protected abstract fun onTouchUp(keyCode: Int)
 
-    companion object {
-        const val dpadId = "dpad"
+    private companion object {
+        private const val dpadId = "dpad"
     }
 }

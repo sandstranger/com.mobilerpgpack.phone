@@ -5,6 +5,9 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
@@ -21,6 +24,8 @@ abstract class SDLImageButton(private val id: String,
     private val sdlKeyEvent: Int = 0,
     private val buttonResId: Int = NOT_EXISTING_RES) : IScreenControlsView {
 
+    override var canBeDrawn: Boolean by mutableStateOf(true)
+
     override val buttonState: ButtonState = ButtonState(
         id,
         engineType,
@@ -31,10 +36,6 @@ abstract class SDLImageButton(private val id: String,
         sdlKeyEvent = sdlKeyEvent,
         alpha = alpha
     )
-
-    override var onClick: (() -> Unit)?
-        get() = null
-        set(_) {}
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
