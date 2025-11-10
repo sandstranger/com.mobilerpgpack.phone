@@ -17,6 +17,8 @@ interface IEngineInfo {
 
     val gameActivityClazz: Class<*>
 
+    val commandLineArgs : Array<String>
+
     suspend fun initialize(activity: ComponentActivity)
 
     fun loadLayout()

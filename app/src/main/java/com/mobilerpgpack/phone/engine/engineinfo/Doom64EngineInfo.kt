@@ -14,9 +14,10 @@ import java.io.File
 open class Doom64EngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    buttonsToDraw: Collection<IScreenControlsView>) :
+    buttonsToDraw: Collection<IScreenControlsView>,
+    commandLineParamsFlow : Flow<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
-        EngineTypes.Doom64ExPlus,emptyFlow()) {
+        EngineTypes.Doom64ExPlus,emptyFlow(),commandLineParamsFlow) {
 
     override val pathToResource: Flow<String> = preferencesStorage.pathToDoom64MainWadsFolder
 

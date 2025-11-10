@@ -37,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -50,7 +51,8 @@ abstract class EngineInfo(
     private val allLibs: Array<String>,
     private val viewsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
-    pathToResourceFlow: Flow<String>) : KoinComponent, IEngineInfo {
+    pathToResourceFlow: Flow<String>,
+    private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
 
     protected val preferencesStorage: PreferencesStorage by inject()
 
@@ -97,6 +99,8 @@ abstract class EngineInfo(
     private var enableControlsAutoHidingFeature = false
     private var displayInSafeArea: Boolean = false
 
+    private var commandLineParams : String = ""
+
     private external fun pauseSound()
 
     private external fun resumeSound()
@@ -117,6 +121,7 @@ abstract class EngineInfo(
         allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame.first()
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
+        commandLineParams = commandLineParamsFlow.first()
         val customAspectRatio = preferencesStorage.customAspectRatio.first()
         val customScreenResolution = preferencesStorage.customScreenResolution.first()
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
@@ -125,6 +130,27 @@ abstract class EngineInfo(
             preserveCustomScreenAspectRatio(customAspectRatio)
         }
     }
+
+    override val commandLineArgs: Array<String>
+        get() {
+            if (commandLineParams.isEmpty() || !commandLineParams.contains("-")) {
+                return emptyArray()
+            }
+
+            try {
+                val args = arrayListOf<String>()
+
+                commandLineParams.split(" ".toRegex()).forEach {
+                    if (it.isNotEmpty()) {
+                        args += it
+                    }
+                }
+
+                return args.toTypedArray()
+            } catch (_: Exception) {
+                return emptyArray()
+            }
+        }
 
     override fun onPause() {
         pauseSound()

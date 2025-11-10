@@ -10,6 +10,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIconHelper
 import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import org.libsdl3.app.SDLSurface
@@ -19,8 +20,10 @@ abstract class SDL3EngineInfo(
     allLibs: Array<String>,
     buttonsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
-    pathToResourceFlow: Flow<String>) :
-    EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType, pathToResourceFlow) {
+    pathToResourceFlow: Flow<String>,
+    commandLineParamsFlow : Flow<String> = emptyFlow()) :
+    EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
+        activeEngineType, pathToResourceFlow, commandLineParamsFlow) {
 
     private val mouseIcon: SDL3MouseIcon by inject()
 
