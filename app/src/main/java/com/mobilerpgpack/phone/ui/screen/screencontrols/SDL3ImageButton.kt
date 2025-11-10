@@ -20,7 +20,7 @@ class SDL3ImageButton(
     init {
         canBeDrawn = !isQuickPanel
     }
-    
+
     override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 
     override fun onTouchUp(keyCode: Int) = onNativeKeyUp(keyCode)
