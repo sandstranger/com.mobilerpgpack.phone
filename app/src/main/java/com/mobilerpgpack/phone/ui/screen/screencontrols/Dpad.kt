@@ -20,7 +20,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import org.koin.core.component.KoinComponent
 
-abstract class Dpad(private val engineType: EngineTypes,
+abstract class Dpad(engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
     private val sizePercent: Float = 0.13f) : KoinComponent, IScreenControlsView {
