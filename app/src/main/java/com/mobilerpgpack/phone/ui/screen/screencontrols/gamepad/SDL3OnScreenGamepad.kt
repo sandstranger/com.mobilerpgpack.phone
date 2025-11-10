@@ -6,7 +6,7 @@ import org.libsdl3.app.SDLControllerManager
 class SDL3OnScreenGamepad(engineType: EngineTypes,
                           offsetXPercent: Float = 0f,
                           offsetYPercent: Float = 0f,
-                          sizePercent: Float = 0.13f,
+                          sizePercent: Float = 0.25f,
                           alpha: Float = 0.65f) :
     SDLOnScreenGamepad(engineType, offsetXPercent, offsetYPercent, sizePercent, alpha) {
 
@@ -24,7 +24,7 @@ class SDL3OnScreenGamepad(engineType: EngineTypes,
         nballs: Int
     ): Int {
         SDLControllerManager.nativeAddJoystick(device_id, name,desc, vendor_id, product_id,
-            button_mask, naxes, axis_mask, nhats, true)
+            button_mask, naxes, axis_mask, nhats, false)
         return 1
     }
 
