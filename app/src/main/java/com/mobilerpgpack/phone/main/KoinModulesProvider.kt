@@ -252,7 +252,8 @@ class KoinModulesProvider(private val context: Context,
 
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
-                doom64Buttons) }.withOptions {
+                doom64Buttons,
+                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
             bind<IEngineInfo>()
         }
