@@ -13,7 +13,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
 
 abstract class SDLImageButton(private val id: String,
-    private val engineType: EngineTypes,
+    engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
     private val sizePercent: Float = 0.13f,

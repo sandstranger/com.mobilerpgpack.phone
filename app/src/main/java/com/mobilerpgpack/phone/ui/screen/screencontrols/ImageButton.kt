@@ -15,7 +15,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NO
 
 class ImageButton(
     val id: String,
-    private val engineType: EngineTypes,
+    val engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
     private val sizePercent: Float = 0.13f,
