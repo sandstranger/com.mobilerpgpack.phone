@@ -32,8 +32,12 @@ abstract class SDLImageButton(private val id: String,
         alpha = alpha
     )
 
+    override var onClick: (() -> Unit)?
+        get() = null
+        set(_) {}
+
     @Composable
-    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp, onClick : () -> Unit) {
+    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         Image(
             painter = painterResource(id = buttonState.buttonResId),
             contentDescription = id,

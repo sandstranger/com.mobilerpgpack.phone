@@ -6,17 +6,14 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
 
-class ToggleImageButton(
+class ImageButton(
     val id: String,
     private val engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
@@ -27,7 +24,7 @@ class ToggleImageButton(
     private val buttonResId: Int = NOT_EXISTING_RES
 ) : IScreenControlsView {
 
-    var currentState by mutableStateOf(false)
+    private var _onClick : (() -> Unit)? = null
 
     override val buttonState: ButtonState = ButtonState(
         id,
@@ -40,8 +37,14 @@ class ToggleImageButton(
         alpha = alpha
     )
 
+    override var onClick: (() -> Unit)?
+        get() = _onClick
+        set(value) {
+            _onClick = value
+        }
+
     @Composable
-    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp, onClick : () -> Unit) {
+    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         Image(
             painter = painterResource(id = buttonState.buttonResId),
             contentDescription = id,
@@ -55,8 +58,7 @@ class ToggleImageButton(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
-                                currentState!=currentState
-                                onClick()
+                                _onClick?.invoke()
                             }
                     } else {
                         Modifier
