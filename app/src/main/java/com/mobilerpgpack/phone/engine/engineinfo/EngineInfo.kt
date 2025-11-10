@@ -105,6 +105,27 @@ abstract class EngineInfo(
 
     private external fun resumeSound()
 
+    override val commandLineArgs: Array<String>
+        get() {
+            if (commandLineParams.isEmpty() || !commandLineParams.contains("-")) {
+                return emptyArray()
+            }
+
+            try {
+                val args = arrayListOf<String>()
+
+                commandLineParams.split(" ".toRegex()).forEach {
+                    if (it.isNotEmpty()) {
+                        args += it
+                    }
+                }
+
+                return args.toTypedArray()
+            } catch (_: Exception) {
+                return emptyArray()
+            }
+        }
+
     override suspend fun initialize(activity: ComponentActivity) {
         this.activity = activity
         initJna()
@@ -130,27 +151,6 @@ abstract class EngineInfo(
             preserveCustomScreenAspectRatio(customAspectRatio)
         }
     }
-
-    override val commandLineArgs: Array<String>
-        get() {
-            if (commandLineParams.isEmpty() || !commandLineParams.contains("-")) {
-                return emptyArray()
-            }
-
-            try {
-                val args = arrayListOf<String>()
-
-                commandLineParams.split(" ".toRegex()).forEach {
-                    if (it.isNotEmpty()) {
-                        args += it
-                    }
-                }
-
-                return args.toTypedArray()
-            } catch (_: Exception) {
-                return emptyArray()
-            }
-        }
 
     override fun onPause() {
         pauseSound()
