@@ -38,6 +38,7 @@
     <string name="wolfenstein_rpg_ipa_file">Path to Wolfenstein RPG IPA file</string>
     <string name="doom2_rpg_ipa_file">Path to Doom II RPG IPA file</string>
     <string name="path_to_doom64_folder">Path to Doom 64 folder with main wads</string>
+    <string name="command_line_args">Command Line args</string>
     <string name="path_to_doom64_mods_folder">Path to Doom 64 folder with mods</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>

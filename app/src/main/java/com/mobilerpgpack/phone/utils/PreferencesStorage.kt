@@ -47,6 +47,8 @@ class PreferencesStorage(private val context: Context) {
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
 
+    val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
+
     val dataStore : DataStore<Preferences> = context.dataStore
 
     val translationModelType
@@ -54,6 +56,8 @@ class PreferencesStorage(private val context: Context) {
             translationModelTypePrefsKey,
             TranslationType.DefaultTranslationType.toString()
         )
+
+    val doom64CommandLineArgsString get() = getStringValue(doom64CommandLineArgsStringPrefsKey)
 
     val allowDownloadingModelsOverMobile
         get() = getBooleanValue(allowDownloadingModelsOverMobilePrefsKey)

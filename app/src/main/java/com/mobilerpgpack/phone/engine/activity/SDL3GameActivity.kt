@@ -29,6 +29,11 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
 
     override fun getLibraries() = engineInfo.nativeLibraries
 
+    override fun getArguments(): Array<String>  {
+        val args = engineInfo.commandLineArgs
+        return if (args.isEmpty()) super.getArguments() else args
+    }
+
     override fun onPause() {
         super.onPause()
         engineInfo.onPause()
