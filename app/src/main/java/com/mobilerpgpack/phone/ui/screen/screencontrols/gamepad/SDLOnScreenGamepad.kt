@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -125,8 +126,8 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         var currentY by remember { mutableFloatStateOf(-1f) }
         var down by remember { mutableStateOf(false) }
 
-        var canvasW by remember { mutableStateOf(0) }
-        var canvasH by remember { mutableStateOf(0) }
+        var canvasW by remember { mutableIntStateOf(0) }
+        var canvasH by remember { mutableIntStateOf(0) }
 
         Canvas(
             modifier = Modifier
@@ -196,6 +197,9 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                 style = Stroke(width = paint.strokeWidth)
             )
 
+            var drawX = centerX
+            var drawY = centerY
+
             if (down) {
                 var vx = currentX - centerX
                 var vy = currentY - centerY
@@ -207,26 +211,19 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                     vy *= s
                 }
 
-                var drawX = centerX + vx
-                var drawY = centerY + vy
+                drawX +=vx
+                drawY +=vy
 
                 drawX = drawX.coerceIn(knobRadius, w - knobRadius)
                 drawY = drawY.coerceIn(knobRadius, h - knobRadius)
-
-                drawCircle(
-                    color = Color.Gray,
-                    radius = knobRadius,
-                    center = Offset(drawX, drawY),
-                    style = Stroke(width = paint.strokeWidth)
-                )
-            } else {
-                drawCircle(
-                    color = Color.Gray,
-                    radius = knobRadius,
-                    center = Offset(centerX, centerY),
-                    style = Stroke(width = paint.strokeWidth)
-                )
             }
+
+            drawCircle(
+                color = Color.Gray,
+                radius = knobRadius,
+                center = Offset(drawX, drawY),
+                style = Stroke(width = paint.strokeWidth)
+            )
         }
     }
 
