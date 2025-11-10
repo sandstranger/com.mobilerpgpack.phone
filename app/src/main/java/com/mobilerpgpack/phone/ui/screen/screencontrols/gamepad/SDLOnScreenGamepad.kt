@@ -34,6 +34,7 @@ import kotlin.math.hypot
 import kotlin.math.min
 
 abstract class SDLOnScreenGamepad(engineType: EngineTypes,
+                                  private val stickId : Int = 0,
                                   private val offsetXPercent: Float = 0f,
                                   private val offsetYPercent: Float = 0f,
                                   private val sizePercent: Float = 0.13f,
@@ -109,15 +110,13 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Joystick(stickId = 0,
-                isEditMode, inGame,
+            Joystick(isEditMode, inGame,
                 onUpdateStick = ::updateStick)
         }
     }
 
     @Composable
     private fun Joystick(
-        stickId: Int,
         isEditMode: Boolean,
         inGame: Boolean,
         onUpdateStick: (Int, Float, Float) -> Unit
@@ -197,9 +196,6 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                 style = Stroke(width = paint.strokeWidth)
             )
 
-            var drawX = centerX
-            var drawY = centerY
-
             if (down) {
                 var vx = currentX - centerX
                 var vy = currentY - centerY
@@ -211,8 +207,8 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                     vy *= s
                 }
 
-                drawX +=vx
-                drawY +=vy
+                var drawX = centerX + vx
+                var drawY = centerY + vy
 
                 drawX = drawX.coerceIn(knobRadius, w - knobRadius)
                 drawY = drawY.coerceIn(knobRadius, h - knobRadius)

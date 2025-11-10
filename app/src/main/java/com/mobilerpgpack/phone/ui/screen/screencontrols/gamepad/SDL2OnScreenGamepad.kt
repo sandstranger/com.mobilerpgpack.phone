@@ -4,11 +4,12 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import org.libsdl.app.SDLControllerManager
 
 class SDL2OnScreenGamepad (engineType: EngineTypes,
+                           stickId : Int = 0,
                            offsetXPercent: Float = 0f,
                            offsetYPercent: Float = 0f,
                            sizePercent: Float = 0.25f,
                            alpha: Float = 0.65f) :
-    SDLOnScreenGamepad(engineType, offsetXPercent, offsetYPercent, sizePercent, alpha) {
+    SDLOnScreenGamepad(engineType, stickId,offsetXPercent, offsetYPercent, sizePercent, alpha) {
 
     override fun nativeAddJoystick(
         device_id: Int,
