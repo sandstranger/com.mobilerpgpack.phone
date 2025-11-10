@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.main.KoinModulesProvider
+import com.mobilerpgpack.phone.ui.items.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.RequestPath
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
@@ -31,9 +32,6 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
         val context = LocalContext.current
         val previousPathToDoom64WadsFolder by preferencesStorage.pathToDoom64MainWadsFolder
             .collectAsState(initial = "")
-        val commandLineArgs by preferencesStorage.doom64CommandLineArgsString
-            .collectAsState(initial = "")
-
         RequestPath(
             context.getString(R.string.path_to_doom64_folder),
             onPathSelected = { selectedPath ->
@@ -44,9 +42,7 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
 
         HorizontalDivider()
 
-        EditTextPreferenceItem(
-            context.getString(R.string.command_line_args),
-            value = commandLineArgs,
+        DrawCommandLinePreferences(preferencesStorage.doom64CommandLineArgsString,
             preferencesStorage.doom64CommandLineArgsStringPrefsKey.name)
 
         HorizontalDivider()
