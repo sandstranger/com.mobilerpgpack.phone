@@ -7,7 +7,7 @@ class SDL3Dpad(
     engineType: EngineTypes,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,
-    sizePercent: Float = 0.13f) : Dpad(engineType, offsetXPercent, offsetYPercent, sizePercent) {
+    sizePercent: Float = 0.25f) : Dpad(engineType, offsetXPercent, offsetYPercent, sizePercent) {
 
     override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 
