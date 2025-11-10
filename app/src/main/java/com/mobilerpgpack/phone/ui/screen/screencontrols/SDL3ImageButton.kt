@@ -14,8 +14,10 @@ class SDL3ImageButton(
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = 0,
     buttonResId: Int = NOT_EXISTING_RES,
-    override val isQuickPanel: Boolean = false) :
-    SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,sdlKeyEvent, buttonResId) {
+    override val isQuickPanel: Boolean = false,
+    useToggle: Boolean = false) :
+    SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
+        alpha,sdlKeyEvent, buttonResId, useToggle = useToggle) {
 
     init {
         canBeDrawn = !isQuickPanel
