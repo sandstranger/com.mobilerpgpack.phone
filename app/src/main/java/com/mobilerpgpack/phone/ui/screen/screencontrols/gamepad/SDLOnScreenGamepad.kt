@@ -216,14 +216,14 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
 
                 drawX = drawX.coerceIn(knobRadius, w - knobRadius)
                 drawY = drawY.coerceIn(knobRadius, h - knobRadius)
-            }
 
-            drawCircle(
-                color = Color.Gray,
-                radius = knobRadius,
-                center = Offset(drawX, drawY),
-                style = Stroke(width = paint.strokeWidth)
-            )
+                drawCircle(
+                    color = Color.Gray,
+                    radius = knobRadius,
+                    center = Offset(drawX, drawY),
+                    style = Stroke(width = paint.strokeWidth)
+                )
+            }
         }
     }
 
