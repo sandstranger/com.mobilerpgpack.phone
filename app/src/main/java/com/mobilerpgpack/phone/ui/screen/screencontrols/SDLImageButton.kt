@@ -69,9 +69,10 @@ abstract class SDLImageButton(
             else Modifier
                 .fillMaxSize()
                 .minimumInteractiveComponentSize()
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }) {
+                .clickable(!isEditMode && inGame) {
+                    if (isEditMode || !inGame) {
+                        return@clickable
+                    }
                     if (!isPressed){
                         onTouchDown(buttonState.sdlKeyCode)
                     }
