@@ -15,7 +15,7 @@ class UpdateScreenControlsVisibilityImageButton(
     override fun onClick() {
         screenController?.activeViewsToDraw?.forEach {
             if (it !== this) {
-                if (it.isQuickPanel && it.canBeDrawn) {
+                if (it.isQuickPanel) {
                     it.canBeDrawn = false
                 } else {
                     it.canBeDrawn = !it.canBeDrawn
