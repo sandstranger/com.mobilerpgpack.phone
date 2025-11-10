@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.gamepad.SDL3OnScreenGamepad
 
 val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
     SDL2Dpad(
@@ -113,9 +114,15 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
 val doom64Buttons : Collection<IScreenControlsView> = listOf(
     SDL3Dpad(
         EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.09f,
+        offsetYPercent = 0.1f,
+        sizePercent = 0.16f,
+    ),
+    SDL3OnScreenGamepad(
+        EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.05f,
-        offsetYPercent = 0.5f,
-        sizePercent = 0.25f,
+        offsetYPercent = 0.55f,
+        sizePercent = 0.21f,
     ),
     SDL3ImageButton(
         "attack",

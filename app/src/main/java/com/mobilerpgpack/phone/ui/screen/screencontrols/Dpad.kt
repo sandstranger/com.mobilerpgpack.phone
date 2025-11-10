@@ -23,7 +23,7 @@ import org.koin.core.component.KoinComponent
 abstract class Dpad(engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
-    private val sizePercent: Float = 0.13f) : KoinComponent, IScreenControlsView {
+    private val sizePercent: Float = 0.25f) : KoinComponent, IScreenControlsView {
 
     private val dpadButtonState: ButtonState
 

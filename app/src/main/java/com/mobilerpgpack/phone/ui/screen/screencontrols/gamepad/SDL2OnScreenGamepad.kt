@@ -6,7 +6,7 @@ import org.libsdl.app.SDLControllerManager
 class SDL2OnScreenGamepad (engineType: EngineTypes,
                            offsetXPercent: Float = 0f,
                            offsetYPercent: Float = 0f,
-                           sizePercent: Float = 0.13f,
+                           sizePercent: Float = 0.25f,
                            alpha: Float = 0.65f) :
     SDLOnScreenGamepad(engineType, offsetXPercent, offsetYPercent, sizePercent, alpha) {
 

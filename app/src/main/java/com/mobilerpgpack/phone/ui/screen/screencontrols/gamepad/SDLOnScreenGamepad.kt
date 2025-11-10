@@ -5,8 +5,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -16,16 +16,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlin.math.abs
+import kotlin.math.hypot
+import kotlin.math.min
 
 abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                                   private val offsetXPercent: Float = 0f,
@@ -112,88 +117,166 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
     @Composable
     private fun Joystick(
         stickId: Int,
-        isEditMode: Boolean, inGame: Boolean,
+        isEditMode: Boolean,
+        inGame: Boolean,
         onUpdateStick: (Int, Float, Float) -> Unit
     ) {
-        var initialX by remember { mutableFloatStateOf(0f) }
-        var initialY by remember { mutableFloatStateOf(0f) }
         var currentX by remember { mutableFloatStateOf(-1f) }
         var currentY by remember { mutableFloatStateOf(-1f) }
         var down by remember { mutableStateOf(false) }
 
+        var canvasW by remember { mutableStateOf(0) }
+        var canvasH by remember { mutableStateOf(0) }
+
         Canvas(
             modifier = Modifier
-                .size(200.dp)
+                .fillMaxSize()
+                .graphicsLayer {
+                    clip = false
+                    compositingStrategy = CompositingStrategy.ModulateAlpha
+                }
+                .onSizeChanged { size ->
+                    canvasW = size.width
+                    canvasH = size.height
+                }
                 .pointerInput(!isEditMode && inGame) {
+                    if (isEditMode || !inGame) {
+                        return@pointerInput
+                    }
                     detectDragGestures(
-                        onDragStart = {
-                            initialX = it.x
-                            initialY = it.y
-                            currentX = initialX
-                            currentY = initialY
+                        onDragStart = { offset ->
                             down = true
+                            currentX = offset.x
+                            currentY = offset.y
                         },
                         onDrag = { change, _ ->
                             currentX = change.position.x
                             currentY = change.position.y
+                            change.consume()
+                            val strokeWidthPx = 2.dp.toPx()
+                            onDrag(canvasW, canvasH, strokeWidthPx, currentX, currentY, onUpdateStick, stickId)
                         },
                         onDragEnd = {
                             down = false
                             currentX = -1f
                             currentY = -1f
+                            onUpdateStick(stickId, 0f, 0f)
+                        },
+                        onDragCancel = {
+                            down = false
+                            currentX = -1f
+                            currentY = -1f
+                            onUpdateStick(stickId, 0f, 0f)
                         }
                     )
                 }
         ) {
-            val strokeWidth2 = 2.dp.toPx()
+            val w = canvasW.toFloat().takeIf { it > 0f } ?: size.width
+            val h = canvasH.toFloat().takeIf { it > 0f } ?: size.height
+            val minDim = min(w, h)
+            val strokeWidthPx = 2.dp.toPx()
             val paint = Paint().apply {
                 style = PaintingStyle.Stroke
-                strokeWidth = strokeWidth2
+                strokeWidth = strokeWidthPx
             }
 
+            val outerRadius = minDim / 2f - strokeWidthPx
+            val knobRadius = minDim / 5f
+            val allowedRadius = outerRadius - knobRadius
+            val overshoot = knobRadius * 0.3f
+            val maxAllowed = allowedRadius + overshoot
+
+            val centerX = w / 2f
+            val centerY = h / 2f
+
+            drawCircle(
+                color = Color.Gray,
+                radius = outerRadius,
+                center = Offset(centerX, centerY),
+                style = Stroke(width = paint.strokeWidth)
+            )
+
             if (down) {
+                var vx = currentX - centerX
+                var vy = currentY - centerY
+                val dist = hypot(vx, vy)
+
+                if (dist > maxAllowed && dist > 0f) {
+                    val s = maxAllowed / dist
+                    vx *= s
+                    vy *= s
+                }
+
+                var drawX = centerX + vx
+                var drawY = centerY + vy
+
+                drawX = drawX.coerceIn(knobRadius, w - knobRadius)
+                drawY = drawY.coerceIn(knobRadius, h - knobRadius)
+
                 drawCircle(
                     color = Color.Gray,
-                    radius = size.minDimension / 10f,
-                    center = Offset(initialX, initialY),
-                    style = Stroke(width = paint.strokeWidth)
-                )
-                drawCircle(
-                    color = Color.Gray,
-                    radius = size.minDimension / 5f,
-                    center = Offset(currentX, currentY),
+                    radius = knobRadius,
+                    center = Offset(drawX, drawY),
                     style = Stroke(width = paint.strokeWidth)
                 )
             } else {
                 drawCircle(
                     color = Color.Gray,
-                    radius = size.minDimension / 2f - paint.strokeWidth,
-                    center = center,
+                    radius = knobRadius,
+                    center = Offset(centerX, centerY),
                     style = Stroke(width = paint.strokeWidth)
                 )
-            }
-
-            if (down) {
-                val maxMovement = size.minDimension / 3f
-                val diffX = currentX - initialX
-                val diffY = currentY - initialY
-
-                val dx = (diffX / maxMovement).coerceIn(-1f, 1f)
-                val dy = (diffY / maxMovement).coerceIn(-1f, 1f)
-
-                onUpdateStick(stickId, dx, dy)
-            } else {
-                onUpdateStick(stickId, 0f, 0f)
             }
         }
     }
 
     protected abstract fun nativeAddJoystick(device_id: Int, name: String?, desc: String?,
-        vendor_id: Int, product_id: Int,
-        is_accelerometer: Boolean, button_mask: Int,
-        naxes: Int, axis_mask: Int, nhats: Int, nballs: Int) : Int
+                                             vendor_id: Int, product_id: Int,
+                                             is_accelerometer: Boolean, button_mask: Int,
+                                             naxes: Int, axis_mask: Int, nhats: Int, nballs: Int) : Int
 
     protected abstract fun onNativeJoy(device_id: Int, axis: Int, value: Float)
+
+    private fun onDrag(
+        canvasW: Int,
+        canvasH: Int,
+        strokeWidthPx: Float,
+        currentX: Float,
+        currentY: Float,
+        onUpdateStick: (Int, Float, Float) -> Unit,
+        stickId: Int
+    ) {
+        val w = canvasW.toFloat().takeIf { it > 0f } ?: return
+        val h = canvasH.toFloat().takeIf { it > 0f } ?: return
+        val minDim = min(w, h)
+
+        val outerRadius = minDim / 2f - strokeWidthPx
+        val knobRadius = minDim / 5f
+        val allowedRadius = outerRadius - knobRadius
+        val overshoot = knobRadius * 0.3f
+        val maxAllowed = allowedRadius + overshoot
+
+        val centerX = w / 2f
+        val centerY = h / 2f
+
+        var vx = currentX - centerX
+        var vy = currentY - centerY
+        val dist = hypot(vx, vy)
+
+        if (dist > maxAllowed && dist > 0f) {
+            val s = maxAllowed / dist
+            vx *= s
+            vy *= s
+        }
+
+        val drawX = (centerX + vx).coerceIn(knobRadius, w - knobRadius)
+        val drawY = (centerY + vy).coerceIn(knobRadius, h - knobRadius)
+
+        val normX = ((drawX - centerX) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
+        val normY = ((drawY - centerY) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
+
+        onUpdateStick(stickId, normX, normY)
+    }
 
     companion object{
         private const val DEVICE_ID = 1384510555

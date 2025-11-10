@@ -257,7 +257,7 @@ class KoinModulesProvider(private val context: Context,
             bind<IEngineInfo>()
         }
 
-        single<IEngineUIController> { Doom64ComposeSettings(wolfensteinButtons) }
+        single<IEngineUIController> { Doom64ComposeSettings(doom64Buttons) }
             .withOptions { named(EngineTypes.Doom64ExPlus.toString()) }
 
         single {
