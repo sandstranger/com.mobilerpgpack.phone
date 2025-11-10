@@ -218,28 +218,6 @@ open class ScreenController : KoinComponent, IScreenController {
                 )
             }
 
-            if (inGame && allowToEditControls) {
-                Image(
-                    painter = painterResource(R.drawable.cog),
-                    contentDescription = "settings_button",
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .size(60.dp)
-                        .alpha(0.75f)
-                        .padding(8.dp)
-                        .then(
-                            Modifier.clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) {
-                                isEditMode = !isEditMode
-                                showVirtualKeyboard = false
-                                showVirtualKeyboardEvent(false)
-                            }
-                        )
-                )
-            }
-
             if (readyToDrawControls) {
                 viewsToDraw.forEach { (id, view) ->
 
@@ -278,6 +256,28 @@ open class ScreenController : KoinComponent, IScreenController {
                         )
                     }
                 }
+            }
+
+            if (inGame && allowToEditControls) {
+                Image(
+                    painter = painterResource(R.drawable.cog),
+                    contentDescription = "settings_button",
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .size(60.dp)
+                        .alpha(0.75f)
+                        .padding(8.dp)
+                        .then(
+                            Modifier.clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() }
+                            ) {
+                                isEditMode = !isEditMode
+                                showVirtualKeyboard = false
+                                showVirtualKeyboardEvent(false)
+                            }
+                        )
+                )
             }
         }
     }
