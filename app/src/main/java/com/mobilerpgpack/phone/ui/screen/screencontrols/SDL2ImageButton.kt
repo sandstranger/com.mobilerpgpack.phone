@@ -5,15 +5,23 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NO
 import org.libsdl.app.SDLActivity.onNativeKeyDown
 import org.libsdl.app.SDLActivity.onNativeKeyUp
 
-class SDL2ImageButton(private val id: String,
-                      private val engineType: EngineTypes,
-                      private val offsetXPercent: Float = 0f,
-                      private val offsetYPercent: Float = 0f,
-                      private val sizePercent: Float = 0.13f,
-                      private val alpha: Float = 0.65f,
-                      private val sdlKeyEvent: Int = 0,
-                      private val buttonResId: Int = NOT_EXISTING_RES) :
-    SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,sdlKeyEvent, buttonResId) {
+class SDL2ImageButton(
+    id: String,
+    engineType: EngineTypes,
+    offsetXPercent: Float = 0f,
+    offsetYPercent: Float = 0f,
+    sizePercent: Float = 0.13f,
+    alpha: Float = 0.65f,
+    sdlKeyEvent: Int = 0,
+    buttonResId: Int = NOT_EXISTING_RES,
+    override val isQuickPanel: Boolean = false,
+    useToggle: Boolean = false ) :
+    SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
+        alpha,sdlKeyEvent, buttonResId, useToggle = useToggle) {
+
+    init {
+        show = !isQuickPanel
+    }
 
     override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 

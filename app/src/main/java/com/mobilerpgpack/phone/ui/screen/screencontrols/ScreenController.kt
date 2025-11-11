@@ -63,6 +63,8 @@ open class ScreenController : KoinComponent, IScreenController {
 
     private val preferencesStorage : PreferencesStorage = get ()
 
+    override var activeViewsToDraw: Collection<IScreenControlsView>? = null
+
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     override fun DrawScreenControls(
@@ -71,8 +73,10 @@ open class ScreenController : KoinComponent, IScreenController {
         inGame: Boolean,
         allowToEditControls: Boolean,
         drawInSafeArea : Boolean,
-        onBack: () -> Unit,
-        showVirtualKeyboardEvent : (Boolean) -> Unit) {
+        onBack: () -> Unit) {
+
+        this.activeViewsToDraw = views
+
         val configuration = LocalConfiguration.current
         val density = context.resources.displayMetrics.density
         val coroutineScope = rememberCoroutineScope()
@@ -83,9 +87,7 @@ open class ScreenController : KoinComponent, IScreenController {
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
-        var hideScreenControls by remember(false) { mutableStateOf(false) }
         var readyToDrawControls by remember { mutableStateOf(false) }
-        var showVirtualKeyboard by remember { mutableStateOf(false) }
         val clampButtonsFlow by preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true).collectAsStateWithLifecycle(true)
 
         var screenWidthPx by remember { mutableFloatStateOf(0f) }
@@ -114,8 +116,14 @@ open class ScreenController : KoinComponent, IScreenController {
             viewsToDraw = loadedMap
         }
 
+        views.forEach {
+            it.setScreenController(this)
+        }
+
         if (drawInSafeArea) {
             val activity = LocalActivity.current!!
+            var screenResolutionCalculated by remember { mutableStateOf(false) }
+            var allContentLoaded by remember { mutableStateOf(false) }
             activity.window.decorView.post {
                 val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
                 val metrics = activity.window.decorView.resources.displayMetrics
@@ -125,17 +133,17 @@ open class ScreenController : KoinComponent, IScreenController {
 
                 screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
                 screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
-
-                readyToDrawControls = true
+                screenResolutionCalculated = true
+                readyToDrawControls = allContentLoaded
             }
-
             LaunchedEffect(Unit) {
                 preloadButtons()
+                allContentLoaded = true
+                readyToDrawControls = screenResolutionCalculated
             }
         } else {
             screenWidthPx = configuration.screenWidthDp * density
             screenHeightPx = configuration.screenHeightDp * density
-
             LaunchedEffect(Unit) {
                 preloadButtons()
                 readyToDrawControls = true
@@ -203,6 +211,46 @@ open class ScreenController : KoinComponent, IScreenController {
                 )
             }
 
+            if (readyToDrawControls) {
+                viewsToDraw.forEach { (id, view) ->
+
+                    val sizePx: Float = screenWidthPx * view.buttonState.sizePercent
+                    val sizeDp: Dp = (sizePx / density).dp
+
+                    val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
+                    val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
+
+                    val renderButton = view.isHideControlsButton || ((view.show || isEditMode) && view.enabled)
+                    if (renderButton) {
+                        DrawView(
+                            viewToDraw = view,
+                            offset = Offset(renderOffsetX, renderOffsetY),
+                            sizeDp = sizeDp,
+                            isEditMode = isEditMode,
+                            isSelected = (selectedButtonId == id),
+                            onClick = {
+                                if (isEditMode) {
+                                    selectedButtonId = id
+                                    coroutineScope.launch {
+                                        preferencesStorage.setBooleanValue(
+                                            clampButtonsPrefsKey,
+                                            false)
+                                    }
+                                }
+                            },
+                            onDragEnd = { newX, newY ->
+                                view.buttonState.offsetXPercent = (newX / screenWidthPx)
+                                view.buttonState.offsetYPercent = (newY / screenHeightPx)
+                                coroutineScope.launch {
+                                    view.buttonState.saveButtonState()
+                                }
+                            },
+                            inGame = inGame,
+                        )
+                    }
+                }
+            }
+
             if (inGame && allowToEditControls) {
                 Image(
                     painter = painterResource(R.drawable.cog),
@@ -218,62 +266,9 @@ open class ScreenController : KoinComponent, IScreenController {
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
                                 isEditMode = !isEditMode
-                                showVirtualKeyboard = false
-                                showVirtualKeyboardEvent(false)
                             }
                         )
                 )
-            }
-
-            if (readyToDrawControls) {
-                viewsToDraw.forEach { (id, view) ->
-
-                    val sizePx: Float = screenWidthPx * view.buttonState.sizePercent
-                    val sizeDp: Dp = (sizePx / density).dp
-
-                    val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
-                    val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
-
-                    val renderButton = view.isHideControlsButton || !hideScreenControls || isEditMode
-                    if (renderButton) {
-                        DraggableImageButton(
-                            viewToDraw = view,
-                            offset = Offset(renderOffsetX, renderOffsetY),
-                            sizeDp = sizeDp,
-                            isEditMode = isEditMode,
-                            isSelected = (selectedButtonId == id),
-                            onClick = {
-                                if (isEditMode) {
-                                    selectedButtonId = id
-                                    coroutineScope.launch {
-                                        preferencesStorage.setBooleanValue(
-                                            clampButtonsPrefsKey,
-                                            false)
-                                    }
-                                }
-
-                                if (view.isHideControlsButton && inGame && !isEditMode) {
-                                    hideScreenControls = !hideScreenControls
-                                    showVirtualKeyboard = false
-                                    showVirtualKeyboardEvent(false)
-                                }
-
-                                if (view.isKeyboardButton && inGame && !isEditMode){
-                                    showVirtualKeyboard = !showVirtualKeyboard
-                                    showVirtualKeyboardEvent(showVirtualKeyboard)
-                                }
-                            },
-                            onDragEnd = { newX, newY ->
-                                view.buttonState.offsetXPercent = (newX / screenWidthPx)
-                                view.buttonState.offsetYPercent = (newY / screenHeightPx)
-                                coroutineScope.launch {
-                                    view.buttonState.saveButtonState()
-                                }
-                            },
-                            inGame = inGame,
-                        )
-                    }
-                }
             }
         }
     }
@@ -284,7 +279,7 @@ open class ScreenController : KoinComponent, IScreenController {
     }
 
     @Composable
-    private fun DraggableImageButton(
+    private fun DrawView(
         viewToDraw: IScreenControlsView,
         offset: Offset,
         sizeDp: Dp,
@@ -340,7 +335,7 @@ open class ScreenController : KoinComponent, IScreenController {
                 },
             contentAlignment = Alignment.Center
         ) {
-            viewToDraw.DrawView(isEditMode,inGame,sizeDp, onClick)
+            viewToDraw.DrawView(isEditMode,inGame,sizeDp)
         }
     }
 

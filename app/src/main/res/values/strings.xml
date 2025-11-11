@@ -38,6 +38,7 @@
     <string name="wolfenstein_rpg_ipa_file">Path to Wolfenstein RPG IPA file</string>
     <string name="doom2_rpg_ipa_file">Path to Doom II RPG IPA file</string>
     <string name="path_to_doom64_folder">Path to Doom 64 folder with main wads</string>
+    <string name="command_line_args">Command Line args</string>
     <string name="path_to_doom64_mods_folder">Path to Doom 64 folder with mods</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>
@@ -46,6 +47,7 @@
     <string name="can_not_start_engine">Engine resource file not found. Unable to launch the engine.</string>
     <string name="ok_text">OK</string>
     <string name="cancel_text">Cancel</string>
+    <string name="sdl_virtual_input">SDL Virtual Input</string>
     <string name="error">Error</string>
     <string name="choose_file_request">Select ZIP or IPA file for engine</string>
     <string name="path_to_log">Log file path</string>
@@ -61,6 +63,7 @@
     <string name="close_controls_configuration">Back</string>
     <string name="select_button">Select button</string>
     <string name="close_text">Close</string>
+    <string name="use_standard_sdl_text_input">Use standard virtual SDL input for texts</string>
     <string name="cancel_download">Cancel download</string>
     <string name="selected_key_code">Selected key code</string>
     <string name="uknown">Unknown</string>

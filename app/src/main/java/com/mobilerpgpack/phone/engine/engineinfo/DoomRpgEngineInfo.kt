@@ -2,27 +2,28 @@ package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.app.Activity
 import android.system.Os
+import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.libsdl.app.SDLSurface
 
 class DoomRpgEngineInfo(
-    private val mainEngineLib: String,
-    private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<IScreenControlsView>,
-) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw) {
+    mainEngineLib: String,
+    allLibs: Array<String>,
+    buttonsToDraw: Collection<IScreenControlsView>,
+) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.DoomRpg,
+    emptyFlow()) {
 
     private var savedDoomRpgScreenWidth: Int = 0
     private var savedDoomRpgScreenHeight: Int = 0
 
     override val pathToResource: Flow<String> = super.preferencesStorage.pathToDoomRpgZipFile
 
-    override val engineType: EngineTypes = EngineTypes.DoomRpg
-
-    override suspend fun initialize(activity: Activity) {
+    override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         recalculateGameScreenResolution()
     }
@@ -53,7 +54,7 @@ class DoomRpgEngineInfo(
             return SDLSurface.fixedWidth to SDLSurface.fixedHeight
         }
 
-        return resolution
+        return resolution.screenWidth to resolution.screenHeight
     }
 }
 

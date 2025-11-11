@@ -38,6 +38,7 @@
     <string name="doom2_rpg_ipa_file">Путь к ipa файлу Doom II RPG</string>
     <string name="doom_rpg_zip_file">Путь к zip-файлу Doom RPG</string>
     <string name="path_to_doom64_folder">Путь к папке Doom 64 с главными WAD-файлами</string>
+    <string name="command_line_args">Аргументы командной строки</string>
     <string name="path_to_doom64_mods_folder">Путь к папке Doom 64 с модами</string>
     <string name="enable_doom64_mods">Включить моды для Doom 64</string>
     <string name="configure_screen_controls">Редактор экранного управления</string>
@@ -46,6 +47,7 @@
     <string name="ok_text">OK</string>
     <string name="cancel_text">Отмена</string>
     <string name="error">Ошибка</string>
+    <string name="use_standard_sdl_text_input">Использовать стандартный виртуальный ввод SDL для текстов</string>
     <string name="choose_file_request">Выберите ZIP- или IPA-файл для игры</string>
     <string name="path_to_log">Путь к файлу лога</string>
     <string name="choose_directory">Выберите директорию</string>

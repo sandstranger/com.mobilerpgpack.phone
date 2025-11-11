@@ -20,7 +20,7 @@ class ButtonState(
     offsetYPercent: Float = 0f,
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
-    sdlKeyEvent: Int = 0,
+    sdlKeyEvent: Int = Int.MIN_VALUE,
     val buttonResId: Int = NOT_EXISTING_RES,
     val buttonType: ButtonType = ButtonType.Default) : KoinComponent {
 
@@ -39,7 +39,7 @@ class ButtonState(
 
     private val preferencesStorage : PreferencesStorage = get()
 
-    val allowToEditKeyEvent get() = buttonResId != NOT_EXISTING_RES
+    val allowToEditKeyEvent get() = buttonResId != NOT_EXISTING_RES && sdlKeyCode!= Int.MIN_VALUE
 
     var offsetXPercent by mutableFloatStateOf(offsetXPercent)
     var offsetYPercent by mutableFloatStateOf(offsetYPercent)

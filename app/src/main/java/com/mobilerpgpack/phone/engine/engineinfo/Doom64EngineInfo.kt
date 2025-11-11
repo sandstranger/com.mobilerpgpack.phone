@@ -1,23 +1,31 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
-import android.app.Activity
 import android.system.Os
+import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.utils.ScreenResolution
+import com.sun.jna.Native
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import java.io.File
 
-class Doom64EngineInfo(private val mainEngineLib: String,
-    private val allLibs: Array<String>,
-    private val buttonsToDraw: Collection<IScreenControlsView>) :
-    SDL3EngineInfo(mainEngineLib, allLibs,buttonsToDraw) {
+open class Doom64EngineInfo(
+    mainEngineLib: String,
+    allLibs: Array<String>,
+    buttonsToDraw: Collection<IScreenControlsView>,
+    commandLineParamsFlow : Flow<String>) :
+    SDL3EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
+        EngineTypes.Doom64ExPlus,emptyFlow(),commandLineParamsFlow) {
 
     override val pathToResource: Flow<String> = preferencesStorage.pathToDoom64MainWadsFolder
 
-    override val engineType: EngineTypes = EngineTypes.Doom64ExPlus
+    private var customScreenResolutionWasApplied = false
 
-    override suspend fun initialize(activity: Activity) {
+    private external fun RecalculateScreenResolution (screenWidth : Int, screenHeight : Int)
+
+    override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
 
         val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
@@ -26,7 +34,33 @@ class Doom64EngineInfo(private val mainEngineLib: String,
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
     }
 
-    private fun getPathToDoom64UserFolder() = pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
+    override fun initJna() {
+        super.initJna()
+        Native.register(Doom64EngineInfo::class.java, mainEngineLib)
+
+    }
+
+    override fun setScreenResolution(screenResolution: ScreenResolution) {
+        super.setScreenResolution(screenResolution)
+        setupScreenResolutionToEnv(screenResolution)
+        customScreenResolutionWasApplied = true
+    }
+
+    override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
+        super.onSafeAreaApplied(screenResolution)
+        if (!customScreenResolutionWasApplied) {
+            setupScreenResolutionToEnv(screenResolution)
+            RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
+        }
+    }
+
+    protected open fun getPathToDoom64UserFolder() =
+        pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
+
+    private fun setupScreenResolutionToEnv (screenResolution: ScreenResolution){
+        Os.setenv("SCREEN_WIDTH", screenResolution.screenWidth.toString(), true)
+        Os.setenv("SCREEN_HEIGHT", screenResolution.screenHeight.toString(), true)
+    }
 
     private suspend fun getPathToDoom64ModsFolder(): String {
         val enableDoom64Mods = preferencesStorage.enableDoom64Mods.first()

@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -20,14 +23,20 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import org.koin.core.component.KoinComponent
 
-abstract class Dpad(private val engineType: EngineTypes,
+abstract class Dpad(engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
-    private val sizePercent: Float = 0.13f) : KoinComponent, IScreenControlsView {
+    private val sizePercent: Float = 0.25f) : KoinComponent, IScreenControlsView {
 
     private val dpadButtonState: ButtonState
 
     private val dpadButtons: Collection<ButtonState>
+
+    override var show: Boolean by mutableStateOf(true)
+
+    override val enabled: Boolean = true
+
+    override val isQuickPanel: Boolean = false
 
     override val buttonState: ButtonState get() = dpadButtonState
 
@@ -81,7 +90,7 @@ abstract class Dpad(private val engineType: EngineTypes,
 
     @SuppressLint("UnusedBoxWithConstraintsScope")
     @Composable
-    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp, onClick : () -> Unit) {
+    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -154,7 +163,7 @@ abstract class Dpad(private val engineType: EngineTypes,
 
     protected abstract fun onTouchUp(keyCode: Int)
 
-    companion object {
-        const val dpadId = "dpad"
+    private companion object {
+        private const val dpadId = "dpad"
     }
 }
