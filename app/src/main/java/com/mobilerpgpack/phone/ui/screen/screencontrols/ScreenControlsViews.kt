@@ -105,15 +105,122 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
 val doom64Buttons : Collection<IScreenControlsView> = listOf(
     SDL3Dpad(
         EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.09f,
-        offsetYPercent = 0.1f,
+        offsetXPercent = 0.03f,
+        offsetYPercent = 0.16f,
         sizePercent = 0.16f,
     ),
     SDL3OnScreenGamepad(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.05f,
-        offsetYPercent = 0.55f,
+        offsetYPercent = 0.54f,
         sizePercent = 0.21f,
+    ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+    ),
+    SDL3ImageButton(
+        "zero_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.16f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zero_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_0,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "first_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.first_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_1,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "second_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.second_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_2,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "third_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.third_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_3,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "fourth_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.4f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.fourth_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_4,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "five_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.46f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.five_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_5,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "six_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.52f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.six_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_6,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "seven_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.seven_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_7,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "eight_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.eight_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_8,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "nine_number",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.nine_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_9,
+        isQuickPanel = true
     ),
     SDL3ImageButton(
         "attack",
@@ -205,7 +312,7 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
     ),
     UpdateScreenControlsVisibilityImageButton(
         EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.5f,
+        offsetXPercent = 0.7f,
         offsetYPercent = 0.05f,
         sizePercent = 0.06f,
         buttonResId = R.drawable.toggles
