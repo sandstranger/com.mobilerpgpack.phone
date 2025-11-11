@@ -47,6 +47,7 @@
     <string name="can_not_start_engine">Engine resource file not found. Unable to launch the engine.</string>
     <string name="ok_text">OK</string>
     <string name="cancel_text">Cancel</string>
+    <string name="sdl_virtual_input">SDL Virtual Input</string>
     <string name="error">Error</string>
     <string name="choose_file_request">Select ZIP or IPA file for engine</string>
     <string name="path_to_log">Log file path</string>
