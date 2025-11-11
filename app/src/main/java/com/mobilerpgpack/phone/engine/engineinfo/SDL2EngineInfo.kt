@@ -42,6 +42,10 @@ abstract class SDL2EngineInfo(
         mouseIcon.DrawMouseIcon()
     }
 
+    final override fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput: Boolean) {
+        SDLActivity.useStandardSDLInput = useSdlTextStandardInput
+    }
+
     override fun setScreenResolution(screenResolution: ScreenResolution) {
         SDLSurface.fixedWidth = screenResolution.screenWidth
         SDLSurface.fixedHeight = screenResolution.screenHeight

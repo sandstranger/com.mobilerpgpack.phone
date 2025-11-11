@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -11,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -28,6 +30,8 @@ abstract class ImageButton(
     protected var screenController : IScreenController? = null
         private set
 
+    override val enabled: Boolean = true
+
     override val isQuickPanel: Boolean = false
 
     override var show: Boolean by mutableStateOf(true)
@@ -44,6 +48,7 @@ abstract class ImageButton(
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+        val context = LocalContext.current
         Image(
             painter = painterResource(id = buttonState.buttonResId),
             contentDescription = id,
@@ -57,7 +62,7 @@ abstract class ImageButton(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
-                                onClick()
+                                onClick(context)
                             }
                     } else {
                         Modifier
@@ -70,5 +75,5 @@ abstract class ImageButton(
         this.screenController = screenController
     }
 
-    protected abstract fun onClick ()
+    protected abstract fun onClick (context : Context)
 }

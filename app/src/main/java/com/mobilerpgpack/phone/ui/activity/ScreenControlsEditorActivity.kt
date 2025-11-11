@@ -59,8 +59,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
                     activeEngine = selectedEngine,
                     drawInSafeArea = displayInSafeArea, onBack = {
                         this@ScreenControlsEditorActivity.finish()
-                    }){
-                }
+                    })
             }
         }
     }
