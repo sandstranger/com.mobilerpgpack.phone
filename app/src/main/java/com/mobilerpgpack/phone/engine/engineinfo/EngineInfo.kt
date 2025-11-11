@@ -1,16 +1,14 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.graphics.Point
 import android.os.Process
 import android.system.Os
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.WindowManager
+import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -27,15 +25,21 @@ import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.callAs
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import com.mobilerpgpack.phone.utils.getScreenResolution
+import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -43,24 +47,24 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
-abstract class EngineInfo(private val mainEngineLib: String,
+abstract class EngineInfo(
+    protected val mainEngineLib: String,
     private val allLibs: Array<String>,
-    private val viewsToDraw: Collection<IScreenControlsView>) : KoinComponent, IEngineInfo {
+    private val viewsToDraw: Collection<IScreenControlsView>,
+    activeEngineType: EngineTypes,
+    pathToResourceFlow: Flow<String>,
+    private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
 
     protected val preferencesStorage: PreferencesStorage by inject()
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 
-    protected lateinit var resolution: Pair<Int, Int>
+    protected lateinit var resolution: ScreenResolution
         private set
 
     protected var controlsOverlayUI: View? = null
 
-    protected var virtualKeyboardView: View? = null
-
-    protected var showVirtualKeyboardSavedState by mutableStateOf(false)
-
-    protected lateinit var activity: Activity
+    protected lateinit var activity: ComponentActivity
         private set
 
     protected var needToShowControlsLastState: Boolean = false
@@ -71,55 +75,80 @@ abstract class EngineInfo(private val mainEngineLib: String,
         )
     )
 
-    private lateinit var needToShowScreenControlsNativeDelegate: Function
+    protected abstract val screenController: IScreenController
 
-    protected open val engineInfoClazz: Class<*> get() = EngineInfo::class.java
+    override val engineType: EngineTypes = activeEngineType
 
-    protected abstract val screenController : IScreenController
+    override val pathToResource: Flow<String> = pathToResourceFlow
 
     override val mainSharedObject: String get() = buildFullLibraryName(mainEngineLib)
 
     override val nativeLibraries: Array<String> get() = allLibs
+
+    private var safeAreaWasApplied = false
+
+    private lateinit var needToShowScreenControlsNativeDelegate: Function
 
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
     private var allowToEditScreenControlsInGame = false
     private var isCursorVisible by mutableIntStateOf(0)
     private var enableControlsAutoHidingFeature = false
-    private var displayInSafeArea : Boolean = false
+    private var displayInSafeArea: Boolean = false
+
+    private var commandLineParams : String? = ""
 
     private external fun pauseSound()
 
     private external fun resumeSound()
 
-    override suspend fun initialize(activity: Activity) {
+    override val commandLineArgs: Array<String>
+        get() {
+            if (commandLineParams.isNullOrEmpty() || !commandLineParams!!.contains("-")) {
+                return emptyArray()
+            }
+
+            try {
+                val args = arrayListOf<String>()
+
+                commandLineParams!!.split(" ".toRegex()).forEach {
+                    if (it.isNotEmpty()) {
+                        args += it
+                    }
+                }
+
+                return args.toTypedArray()
+            } catch (_: Exception) {
+                return emptyArray()
+            }
+        }
+
+    override suspend fun initialize(activity: ComponentActivity) {
         this.activity = activity
         initJna()
         initializeCommonEngineData()
-        resolution = getRealScreenResolution()
+        resolution = activity.getScreenResolution()
 
-        Os.setenv(
-            "PATH_TO_RESOURCES",
-            File(pathToResource.first()).absolutePath, true
-        )
+        Os.setenv("PATH_TO_RESOURCES",
+            File(pathToResource.first()).absolutePath, true)
 
         hideScreenControls = preferencesStorage.hideScreenControls.first()
         enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls.first()
-                && engineType!= EngineTypes.DoomRpg && !hideScreenControls
+                && engineType != EngineTypes.DoomRpg && !hideScreenControls
 
         allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame.first()
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
+        commandLineParams = commandLineParamsFlow.firstOrNull()
+
+        onUseSdlStandardTextInputValueChanged(preferencesStorage.useStandardSDLTextInput.first())
+
         val customAspectRatio = preferencesStorage.customAspectRatio.first()
         val customScreenResolution = preferencesStorage.customScreenResolution.first()
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
 
         if (!customAspectRatio.isEmpty() && !customScreenResolutionWasSet) {
             preserveCustomScreenAspectRatio(customAspectRatio)
-        }
-
-        if (displayInSafeArea) {
-            activity.displayInSafeArea()
         }
     }
 
@@ -136,7 +165,38 @@ abstract class EngineInfo(private val mainEngineLib: String,
         killEngine()
     }
 
-    override fun loadControlsLayout() {
+    override fun loadLayout(){
+        activity.enableEdgeToEdge()
+        activity.hideSystemBarsAndWait  {
+            if (displayInSafeArea && !safeAreaWasApplied) {
+                activity.displayInSafeArea()
+                onSafeAreaApplied(activity.getScreenResolution(true))
+                safeAreaWasApplied = true
+            }
+        }
+        inflateControlsLayout()
+    }
+
+    protected abstract fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput : Boolean)
+
+    protected abstract fun setScreenResolution(screenResolution: ScreenResolution)
+
+    protected open fun isMouseShown(): Int = 1
+
+    protected open fun onSafeAreaApplied (screenResolution : ScreenResolution){}
+
+    @Composable
+    protected open fun DrawMouseIcon() {}
+
+    protected open fun initJna() {
+        needToShowScreenControlsNativeDelegate = Function.getFunction(
+            mainEngineLib,
+            "needToShowScreenControls"
+        )
+        Native.register(EngineInfo::class.java, mainEngineLib)
+    }
+
+    private fun inflateControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
             val binding = GameLayoutBinding.inflate(activity.layoutInflater)
 
@@ -148,26 +208,22 @@ abstract class EngineInfo(private val mainEngineLib: String,
                 )
             )
 
-            if (!showCustomMouseCursor){
+            if (!showCustomMouseCursor) {
                 binding.mouseOverlayUI.visibility = View.GONE
             }
 
-            if (hideScreenControls){
+            if (hideScreenControls) {
                 binding.controlsOverlayUI.visibility = View.GONE
-            }
-            else{
+            } else {
                 controlsOverlayUI = binding.controlsOverlayUI
-                virtualKeyboardView = binding.keyboardView
             }
-
-            binding.keyboardView.visibility = View.GONE
 
             binding.sdlContainer.post {
                 binding.sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
 
-                        if (showCustomMouseCursor){
+                        if (showCustomMouseCursor) {
                             binding.mouseOverlayUI.setContent {
                                 AutoMouseModeComposable()
                                 if (isCursorVisible == 1) {
@@ -183,16 +239,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
                                     inGame = true,
                                     activeEngine = engineType,
                                     allowToEditControls = allowToEditScreenControlsInGame,
-                                    drawInSafeArea = displayInSafeArea,
-                                    showVirtualKeyboardEvent = { showVirtualKeyboard ->
-                                        showVirtualKeyboardSavedState = showVirtualKeyboard
-                                        updateVirtualKeyboardVisibility(showVirtualKeyboard)
-                                    }
-                                )
-                            }
-
-                            binding.keyboardView.setContent {
-                                DrawVirtualKeyboard()
+                                    drawInSafeArea = displayInSafeArea)
                             }
                         }
 
@@ -210,30 +257,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
         }
     }
 
-    protected abstract fun setScreenResolution(screenWidth: Int, screenHeight: Int)
-
-    protected open fun isMouseShown() : Int = 1
-
-
-    @Composable
-    protected open fun DrawVirtualKeyboard(){
-
-    }
-
-    @Composable
-    protected open fun DrawMouseIcon(){
-
-    }
-
-    protected fun getRealScreenResolution(): Pair<Int, Int> {
-        val wm = activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = wm.defaultDisplay
-        val realSize = Point()
-        display.getRealSize(realSize)
-        return realSize.x to realSize.y
-    }
-
-    protected suspend fun changeScreenControlsVisibility() {
+    private suspend fun changeScreenControlsVisibility() {
         if (this@EngineInfo.controlsOverlayUI == null) {
             return
         }
@@ -249,7 +273,6 @@ abstract class EngineInfo(private val mainEngineLib: String,
                     } else {
                         this@EngineInfo.controlsOverlayUI!!.visibility = View.GONE
                     }
-                    updateVirtualKeyboardVisibility(needToShowControls)
                 }
             }
             needToShowControlsLastState = needToShowControls
@@ -257,30 +280,25 @@ abstract class EngineInfo(private val mainEngineLib: String,
         }
     }
 
-    protected fun updateVirtualKeyboardVisibility(showVirtualKeyboard: Boolean) {
-        virtualKeyboardView!!.visibility = if (showVirtualKeyboard && showVirtualKeyboardSavedState)
-            View.VISIBLE else View.GONE
-    }
-
-    private fun preserveCustomScreenAspectRatio(customAspectRatio : String) {
+    private fun preserveCustomScreenAspectRatio(customAspectRatio: String) {
         val aspectRatioData = parseString(customAspectRatio)
-        if (aspectRatioData!=null) {
-            val screenWidth = resolution.first
-            val screenHeight = resolution.second
+        if (aspectRatioData != null) {
+            val screenWidth = resolution.screenWidth
+            val screenHeight = resolution.screenHeight
             val targetRatio = aspectRatioData.first.toFloat() / aspectRatioData.second.toFloat()
             val screenRatio = screenWidth.toFloat() / screenHeight
 
             if (screenRatio > targetRatio) {
                 val newWidth = (screenHeight * targetRatio).toInt()
-                setScreenResolution(newWidth, screenHeight)
+                setScreenResolution(ScreenResolution(newWidth, screenHeight))
             } else {
                 val newHeight = (screenWidth / targetRatio).toInt()
-                setScreenResolution(screenWidth, newHeight)
+                setScreenResolution(ScreenResolution(screenWidth, newHeight))
             }
         }
     }
 
-    private fun parseString (input: String) : Pair<Int, Int>?{
+    private fun parseString(input: String): Pair<Int, Int>? {
         if (input.isNotEmpty() && input.contains(RESOLUTION_DELIMITER)) {
             try {
                 val array = input.split(RESOLUTION_DELIMITER)
@@ -293,8 +311,8 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     private fun setScreenResolution(savedScreenResolution: String): Boolean {
         val screenResolutionData = parseString(savedScreenResolution)
-        if (screenResolutionData!=null) {
-            setScreenResolution(screenResolutionData.first,screenResolutionData.second)
+        if (screenResolutionData != null) {
+            setScreenResolution(ScreenResolution(screenResolutionData.first, screenResolutionData.second))
             return true
         }
 
@@ -332,7 +350,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
             psaFolder.mkdirs()
         }
 
-        Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
+        Os.setenv("LIBGL_SIMPLE_SHADERCONV", "0", true)
         Os.setenv("LIBGL_DXTMIPMAP", "1", true)
         Os.setenv("LIBGL_ES", "3", true)
         Os.setenv("LIBGL_GL", "21", true)
@@ -349,15 +367,7 @@ abstract class EngineInfo(private val mainEngineLib: String,
 
     private fun killEngine() = Process.killProcess(Process.myPid())
 
-    private fun initJna() {
-        needToShowScreenControlsNativeDelegate = Function.getFunction(
-            mainEngineLib,
-            "needToShowScreenControls"
-        )
-        Native.register(engineInfoClazz, mainEngineLib)
-    }
-
-    private companion object{
+    private companion object {
         private const val RESOLUTION_DELIMITER = "x"
     }
 }

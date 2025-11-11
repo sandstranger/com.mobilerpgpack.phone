@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -11,23 +12,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
 
-class ToggleImageButton(
+abstract class ImageButton(
     val id: String,
-    private val engineType: EngineTypes,
+    val engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
     private val sizePercent: Float = 0.13f,
     private val alpha: Float = 0.65f,
-    private val sdlKeyEvent: Int = 0,
-    private val buttonResId: Int = NOT_EXISTING_RES
-) : IScreenControlsView {
+    private val buttonResId: Int = NOT_EXISTING_RES) : IScreenControlsView {
 
-    var currentState by mutableStateOf(false)
+    protected var screenController : IScreenController? = null
+        private set
+
+    override val enabled: Boolean = true
+
+    override val isQuickPanel: Boolean = false
+
+    override var show: Boolean by mutableStateOf(true)
 
     override val buttonState: ButtonState = ButtonState(
         id,
@@ -36,12 +43,12 @@ class ToggleImageButton(
         offsetYPercent = offsetYPercent,
         sizePercent = sizePercent,
         buttonResId = buttonResId,
-        sdlKeyEvent = sdlKeyEvent,
         alpha = alpha
     )
 
     @Composable
-    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp, onClick : () -> Unit) {
+    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+        val context = LocalContext.current
         Image(
             painter = painterResource(id = buttonState.buttonResId),
             contentDescription = id,
@@ -55,8 +62,7 @@ class ToggleImageButton(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
-                                currentState!=currentState
-                                onClick()
+                                onClick(context)
                             }
                     } else {
                         Modifier
@@ -65,9 +71,9 @@ class ToggleImageButton(
         )
     }
 
-    companion object{
-        const val SHOW_KEYBOARD_BUTTON_ID = "keyboard"
-
-        const val HIDE_CONTROLS_BUTTON_ID = "hide_controls"
+    override fun setScreenController(screenController: IScreenController) {
+        this.screenController = screenController
     }
+
+    protected abstract fun onClick (context : Context)
 }

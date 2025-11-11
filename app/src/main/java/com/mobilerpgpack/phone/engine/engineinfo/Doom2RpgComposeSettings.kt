@@ -10,7 +10,7 @@ import com.mobilerpgpack.phone.ui.items.RequestPath
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.launch
 
-class Doom2RpgComposeSettings(private val buttonsToDraw: Collection<IScreenControlsView>) :
+class Doom2RpgComposeSettings(buttonsToDraw: Collection<IScreenControlsView>) :
     CommonDoomRpgComposeSettings(buttonsToDraw) {
 
     @Composable

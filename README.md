@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2 and Wolfenstein RPG for Android
-This is an Android ports of Doom 1,2 and Wolfenstein RPG projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG and Doom64 EX Plus for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG and Doom64 EX Plus projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -7,16 +7,28 @@ https://github.com/Erick194/DoomIIRPG-RE
 
 https://github.com/Erick194/WolfensteinRPG-RE
 
+https://github.com/atsb/Doom64EX-Plus/
+
 # System Requirements
 
 This port for Android has the following system requirements:
 ### Minimum
 * Operating system: Android 7.0 or later
-* Graphics: videocard, which supports GLES 3.2 render
+* Graphics: videocard, which supports GLES 2.0 render
 * Memory: 1GB system RAM
 
 ### Recommended
 * Operating system: Android 12 or later (I tested it mostly on my phone with Android 12)
+
+#Graphics
+
+These source ports supported OpenGL ES 3.2 render with NG-GL4ES, but have a lot of graphics issues.
+
+Because NG-GL4ES is very buggy.
+
+If your device is not supported OPenGL ES 3.2 render or you have graphics issues like black screen, then use binary
+
+with OpenGL ES 2.0 render
 
 ## Controllers Support
 This Android ports support controllers
@@ -75,12 +87,18 @@ This Android ports support controllers
 | Syringes         | Right shoulder |
 | Journal          | Y   			|
 
+## Doom64 
+
+For running Doom 64 EX Plus - get Doom 64 remaster from STEAM
+
+https://store.steampowered.com/app/1148590/DOOM_64/
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
 ## Building
 
-To build the APK file, clone this repository, open the `doom-wolf-rpg-android-port ` directory in Android Studio and run the project.
+To build the APK file, clone this repository, open the project root directory in Android Studio and run the project.
 
 ## Download
 
@@ -143,5 +161,7 @@ fluidsynth: https://github.com/FluidSynth/fluidsynth
 CTranslate2: https://github.com/OpenNMT/CTranslate2
 
 sentencepiece: https://github.com/google/sentencepiece
+
+for icons are using: https://game-icons.net/ https://fonts.google.com/icons
 
 and many others open source libs.
