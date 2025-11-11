@@ -20,7 +20,7 @@ This port for Android has the following system requirements:
 ### Recommended
 * Operating system: Android 12 or later (I tested it mostly on my phone with Android 12)
 
-#Graphics
+# Graphics
 
 These source ports supported OpenGL ES 3.2 render with NG-GL4ES, but have a lot of graphics issues.
 
