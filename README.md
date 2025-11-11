@@ -93,6 +93,8 @@ For running Doom 64 EX Plus - get Doom 64 remaster from STEAM
 
 https://store.steampowered.com/app/1148590/DOOM_64/
 
+Mods can be used from this Doom64 discord server - https://discord.com/invite/doom-64-593915163896315905
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
