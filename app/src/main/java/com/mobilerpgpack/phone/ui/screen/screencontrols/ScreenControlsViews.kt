@@ -223,6 +223,56 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         isQuickPanel = true
     ),
     SDL3ImageButton(
+        "zoom_in",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zoom_in,
+        sdlKeyEvent = KeyEvent.KEYCODE_F7,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "zoom_out",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zoom_out,
+        sdlKeyEvent = KeyEvent.KEYCODE_F6,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "terminal",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.terminal,
+        sdlKeyEvent = KeyEvent.KEYCODE_GRAVE,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "pan_zoom",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.magnifying_glass,
+        sdlKeyEvent = KeyEvent.KEYCODE_Q,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
+        "follow_mode",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.follow,
+        sdlKeyEvent = KeyEvent.KEYCODE_F,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
         "attack",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.8f,
@@ -231,13 +281,31 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
+    SDL3ImageButton(
+        "quick_save",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.save,
+        sdlKeyEvent = KeyEvent.KEYCODE_F5
+    ),
+    SDL3ImageButton(
+        "quick_load",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.83f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.load,
+        sdlKeyEvent = KeyEvent.KEYCODE_F9
+    ),
     SDL3MouseWheelButton(
         "next_weapon",
         EngineTypes.Doom64ExPlus,
         wheelUp = true,
         offsetXPercent = 0.85f,
-        offsetYPercent = 0.1f,
-        sizePercent = 0.075f,
+        offsetYPercent = 0.18f,
+        sizePercent = 0.06f,
         buttonResId = R.drawable.next_weapon,
     ),
     SDL3MouseWheelButton(
@@ -245,8 +313,8 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         EngineTypes.Doom64ExPlus,
         wheelUp = false,
         offsetXPercent = 0.85f,
-        offsetYPercent = 0.26f,
-        sizePercent = 0.075f,
+        offsetYPercent = 0.32f,
+        sizePercent = 0.06f,
         buttonResId = R.drawable.prev_weapon,
     ),
     SDL3ImageButton(
@@ -268,15 +336,6 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
     SDL3ImageButton(
-        "journal",
-        EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.76f,
-        offsetYPercent = 0.26f,
-        sizePercent = 0.085f,
-        buttonResId = R.drawable.journal,
-        sdlKeyEvent = KeyEvent.KEYCODE_P
-    ),
-    SDL3ImageButton(
         "autorun",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.72f,
@@ -285,15 +344,6 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.run,
         sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
         useToggle = true
-    ),
-    SDL3ImageButton(
-        "syringes",
-        EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.7f,
-        offsetYPercent = 0.45f,
-        sizePercent = 0.085f,
-        buttonResId = R.drawable.syringe,
-        sdlKeyEvent = KeyEvent.KEYCODE_O
     ),
     SDL3ImageButton(
         "escape",
@@ -307,7 +357,7 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
     ShowSDL3InputImageButton(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.75f,
-        offsetYPercent = 0.05f,
+        offsetYPercent = 0.15f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard
     ),
