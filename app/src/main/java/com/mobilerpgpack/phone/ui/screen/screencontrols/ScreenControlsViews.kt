@@ -250,20 +250,20 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_X
     ),
     SDL3ImageButton(
-        "pass_turn",
+        "use",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.97f,
         offsetYPercent = 0.7f,
-        sizePercent = 0.085f,
-        buttonResId = R.drawable.pass_turn,
-        sdlKeyEvent = KeyEvent.KEYCODE_C
+        sizePercent = 0.08f,
+        buttonResId = R.drawable.use,
+        sdlKeyEvent = KeyEvent.KEYCODE_SPACE
     ),
     SDL3ImageButton(
         "automap",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.83f,
         offsetYPercent = 0.9f,
-        sizePercent = 0.085f,
+        sizePercent = 0.075f,
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
@@ -277,13 +277,14 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_P
     ),
     SDL3ImageButton(
-        "items",
+        "run",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.72f,
-        offsetYPercent = 0.9f,
-        sizePercent = 0.085f,
-        buttonResId = R.drawable.items,
-        sdlKeyEvent = KeyEvent.KEYCODE_I
+        offsetYPercent = 0.85f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.run,
+        sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
+        useToggle = true
     ),
     SDL3ImageButton(
         "syringes",
@@ -312,9 +313,9 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
     ),
     UpdateScreenControlsVisibilityImageButton(
         EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.7f,
-        offsetYPercent = 0.05f,
-        sizePercent = 0.06f,
+        offsetXPercent = 0.62f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
         buttonResId = R.drawable.toggles
     )
 )
