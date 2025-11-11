@@ -31,7 +31,7 @@ abstract class SDLImageButton(
 
     private var isPressed by mutableStateOf(false)
 
-    override var canBeDrawn: Boolean by mutableStateOf(true)
+    override var show: Boolean by mutableStateOf(true)
 
     override val buttonState: ButtonState = ButtonState(
         id,

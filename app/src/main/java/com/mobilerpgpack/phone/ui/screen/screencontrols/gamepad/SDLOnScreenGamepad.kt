@@ -48,7 +48,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         sizePercent = sizePercent,
         alpha = alpha)
 
-    override var canBeDrawn: Boolean by mutableStateOf(true)
+    override var show: Boolean by mutableStateOf(true)
 
     override val isQuickPanel: Boolean = false
 
