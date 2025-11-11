@@ -93,7 +93,7 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    ShowKeyboardImageButton(
+    ShowSDLInputImageButton(
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
@@ -203,7 +203,7 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    ShowKeyboardImageButton(
+    ShowSDLInputImageButton(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
@@ -287,7 +287,7 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         sizePercent = 0.06f,
         buttonResId = R.drawable.toggles
     ),
-    ShowKeyboardImageButton(
+    ShowSDLInputImageButton(
         EngineTypes.DoomRpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
@@ -393,7 +393,7 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.bot,
         sdlKeyEvent = KeyEvent.KEYCODE_B
     ),
-    ShowKeyboardImageButton(
+    ShowSDLInputImageButton(
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,

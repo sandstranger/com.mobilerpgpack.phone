@@ -47,6 +47,7 @@
     <string name="ok_text">OK</string>
     <string name="cancel_text">Отмена</string>
     <string name="error">Ошибка</string>
+    <string name="use_standard_sdl_text_input">Использовать стандартный виртуальный ввод SDL для текстов</string>
     <string name="choose_file_request">Выберите ZIP- или IPA-файл для игры</string>
     <string name="path_to_log">Путь к файлу лога</string>
     <string name="choose_directory">Выберите директорию</string>

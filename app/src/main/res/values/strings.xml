@@ -62,6 +62,7 @@
     <string name="close_controls_configuration">Back</string>
     <string name="select_button">Select button</string>
     <string name="close_text">Close</string>
+    <string name="use_standard_sdl_text_input">Use standard virtual SDL input for texts</string>
     <string name="cancel_download">Cancel download</string>
     <string name="selected_key_code">Selected key code</string>
     <string name="uknown">Unknown</string>
