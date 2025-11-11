@@ -231,23 +231,23 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
-    SDL3ImageButton(
+    SDL3MouseWheelButton(
         "next_weapon",
         EngineTypes.Doom64ExPlus,
+        wheelUp = true,
         offsetXPercent = 0.85f,
         offsetYPercent = 0.1f,
         sizePercent = 0.075f,
         buttonResId = R.drawable.next_weapon,
-        sdlKeyEvent = KeyEvent.KEYCODE_Z
     ),
-    SDL3ImageButton(
+    SDL3MouseWheelButton(
         "prev_weapon",
         EngineTypes.Doom64ExPlus,
+        wheelUp = false,
         offsetXPercent = 0.85f,
         offsetYPercent = 0.26f,
         sizePercent = 0.075f,
         buttonResId = R.drawable.prev_weapon,
-        sdlKeyEvent = KeyEvent.KEYCODE_X
     ),
     SDL3ImageButton(
         "use",
@@ -277,7 +277,7 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_P
     ),
     SDL3ImageButton(
-        "run",
+        "autorun",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.72f,
         offsetYPercent = 0.85f,
