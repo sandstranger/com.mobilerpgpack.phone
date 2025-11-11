@@ -1,26 +1,14 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.system.Os
-import android.util.Log
-import android.view.KeyEvent
-import android.widget.EditText
 import androidx.activity.ComponentActivity
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
-import com.mobilerpgpack.phone.ui.screen.screencontrols.getKeyCode
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.sun.jna.Native
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
-import org.libsdl3.app.SDLActivity.onNativeScreenKeyboardHidden
-import org.libsdl3.app.SDLActivity.onNativeScreenKeyboardShown
-import org.libsdl3.app.SDLInputConnection
-import org.libsdl3.app.onKeyDown
 import java.io.File
 
 open class Doom64EngineInfo(
@@ -50,35 +38,6 @@ open class Doom64EngineInfo(
         super.initJna()
         Native.register(Doom64EngineInfo::class.java, mainEngineLib)
 
-    }
-
-    override fun DrawVirtualKeyboard() {
-        var context = activity
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Virtual input")
-
-        val input = EditText(context)
-        builder.setView(input)
-
-        builder.setPositiveButton(
-            "OK",
-            DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
-                val text = input.getText().toString()
-                Log.d("CALLED_DDDDDDDDD",text)
-
-                text.forEach {
-                    onKeyDown(getKeyCode(it))
-                }
-
-                SDLInputConnection.nativeCommitText(text, 0)
-            })
-        builder.setNegativeButton(
-            "Cancel",
-            DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
-                dialog!!.cancel()
-            })
-
-        builder.show()
     }
 
     override fun setScreenResolution(screenResolution: ScreenResolution) {

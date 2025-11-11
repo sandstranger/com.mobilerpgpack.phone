@@ -64,10 +64,6 @@ abstract class EngineInfo(
 
     protected var controlsOverlayUI: View? = null
 
-    protected var virtualKeyboardView: View? = null
-
-    protected var showVirtualKeyboardSavedState by mutableStateOf(false)
-
     protected lateinit var activity: ComponentActivity
         private set
 
@@ -144,6 +140,9 @@ abstract class EngineInfo(
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
         commandLineParams = commandLineParamsFlow.firstOrNull()
+
+        onUseSdlStandardTextInputValueChanged(preferencesStorage.useStandardSDLTextInput.first())
+
         val customAspectRatio = preferencesStorage.customAspectRatio.first()
         val customScreenResolution = preferencesStorage.customScreenResolution.first()
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
@@ -178,6 +177,25 @@ abstract class EngineInfo(
         inflateControlsLayout()
     }
 
+    protected abstract fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput : Boolean)
+
+    protected abstract fun setScreenResolution(screenResolution: ScreenResolution)
+
+    protected open fun isMouseShown(): Int = 1
+
+    protected open fun onSafeAreaApplied (screenResolution : ScreenResolution){}
+
+    @Composable
+    protected open fun DrawMouseIcon() {}
+
+    protected open fun initJna() {
+        needToShowScreenControlsNativeDelegate = Function.getFunction(
+            mainEngineLib,
+            "needToShowScreenControls"
+        )
+        Native.register(EngineInfo::class.java, mainEngineLib)
+    }
+
     private fun inflateControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
             val binding = GameLayoutBinding.inflate(activity.layoutInflater)
@@ -198,10 +216,7 @@ abstract class EngineInfo(
                 binding.controlsOverlayUI.visibility = View.GONE
             } else {
                 controlsOverlayUI = binding.controlsOverlayUI
-                virtualKeyboardView = binding.keyboardView
             }
-
-            binding.keyboardView.visibility = View.GONE
 
             binding.sdlContainer.post {
                 binding.sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -224,15 +239,7 @@ abstract class EngineInfo(
                                     inGame = true,
                                     activeEngine = engineType,
                                     allowToEditControls = allowToEditScreenControlsInGame,
-                                    drawInSafeArea = displayInSafeArea,
-                                    showVirtualKeyboardEvent = { showVirtualKeyboard ->
-                                        showVirtualKeyboardSavedState = showVirtualKeyboard
-                                        updateVirtualKeyboardVisibility(showVirtualKeyboard)
-                                    }
-                                )
-                            }
-
-                            binding.keyboardView.setContent {
+                                    drawInSafeArea = displayInSafeArea)
                             }
                         }
 
@@ -250,26 +257,7 @@ abstract class EngineInfo(
         }
     }
 
-    protected abstract fun setScreenResolution(screenResolution: ScreenResolution)
-
-    protected open fun isMouseShown(): Int = 1
-
-    protected open fun onSafeAreaApplied (screenResolution : ScreenResolution){}
-
-    protected open fun DrawVirtualKeyboard() {}
-
-    @Composable
-    protected open fun DrawMouseIcon() {}
-
-    protected open fun initJna() {
-        needToShowScreenControlsNativeDelegate = Function.getFunction(
-            mainEngineLib,
-            "needToShowScreenControls"
-        )
-        Native.register(EngineInfo::class.java, mainEngineLib)
-    }
-
-    protected suspend fun changeScreenControlsVisibility() {
+    private suspend fun changeScreenControlsVisibility() {
         if (this@EngineInfo.controlsOverlayUI == null) {
             return
         }
@@ -285,20 +273,11 @@ abstract class EngineInfo(
                     } else {
                         this@EngineInfo.controlsOverlayUI!!.visibility = View.GONE
                     }
-                    updateVirtualKeyboardVisibility(needToShowControls)
                 }
             }
             needToShowControlsLastState = needToShowControls
             delay(200)
         }
-    }
-
-    protected fun updateVirtualKeyboardVisibility(showVirtualKeyboard: Boolean) {
-
-        if (showVirtualKeyboard){
-            DrawVirtualKeyboard()
-        }
-
     }
 
     private fun preserveCustomScreenAspectRatio(customAspectRatio: String) {

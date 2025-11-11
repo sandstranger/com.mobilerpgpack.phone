@@ -1,17 +1,13 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
-import android.app.Activity
 import android.system.Os
 import androidx.activity.ComponentActivity
-import androidx.compose.runtime.Composable
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.ITranslationManager
-import com.mobilerpgpack.phone.ui.screen.screencontrols.DrawDoomRpgSeriesKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.inject
-import kotlin.getValue
 
 open class DoomRPGSeriesEngineInfo(
     mainEngineLib: String,
@@ -38,11 +34,5 @@ open class DoomRPGSeriesEngineInfo(
         translationManager.inGame = true
         translationManager.activeEngine = engineType
     }
-
-    override fun DrawVirtualKeyboard() {
-        super.DrawVirtualKeyboard()
-//        DrawDoomRpgSeriesKeyboard()
-    }
-
 }
 

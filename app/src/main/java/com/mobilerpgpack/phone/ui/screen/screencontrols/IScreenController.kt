@@ -14,24 +14,5 @@ interface IScreenController{
         inGame: Boolean,
         allowToEditControls: Boolean = true,
         drawInSafeArea : Boolean = false,
-        onBack: () -> Unit = { },
-        showVirtualKeyboardEvent : (Boolean) -> Unit = { })
-
-    fun updateVirtualKeyboardVisibility()
-
-    fun hideVirtualKeyboard()
-}
-
-val IScreenController.isAllScreenControlsHided get() : Boolean{
-
-    if (activeViewsToDraw == null){
-        return true
-    }
-
-    this.activeViewsToDraw!!.forEach {
-        if (it.show && it !is UpdateScreenControlsVisibilityImageButton){
-            return false
-        }
-    }
-    return true
+        onBack: () -> Unit = { })
 }

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
+import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 
 abstract class SDL3EngineInfo(
@@ -39,6 +40,10 @@ abstract class SDL3EngineInfo(
     override fun DrawMouseIcon() {
         super.DrawMouseIcon()
         mouseIcon.DrawMouseIcon()
+    }
+
+    final override fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput: Boolean) {
+        SDLActivity.useStandardSDLInput = useSdlTextStandardInput
     }
 
     override fun setScreenResolution(screenResolution: ScreenResolution) {

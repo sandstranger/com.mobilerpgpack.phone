@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.0"
+agp = "8.13.1"
 composePreferences = "2.0.0-beta02"
 converterGson = "3.0.0"
 core = "3.3.0"
@@ -64,6 +64,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+input = { module = "com.afollestad.material-dialogs:input", version.ref = "core" }
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

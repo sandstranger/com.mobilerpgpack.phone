@@ -253,12 +253,14 @@ class SettingsScreen : KoinComponent {
         )
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState!!) }
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
+        val useStandardSDLTextInput by preferencesStorage.useStandardSDLTextInput
+            .collectAsState(initial = false)
 
         DrawTitleText(context.getString(R.string.user_interface_settings))
 
         SwitchPreferenceItem(context.getString(R.string.use_standard_sdl_text_input),
-            preferencesStorage.useStandardSDLTextInput,
-            preferencesStorage.useSDLTTFForFontsRenderingPrefsKey.name)
+            useStandardSDLTextInput,
+            preferencesStorage.useStandardSDLTextInputPrefsKey.name)
 
         HorizontalDivider()
 

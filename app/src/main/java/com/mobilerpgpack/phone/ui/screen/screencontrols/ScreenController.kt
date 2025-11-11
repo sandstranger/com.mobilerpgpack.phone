@@ -63,10 +63,6 @@ open class ScreenController : KoinComponent, IScreenController {
 
     private val preferencesStorage : PreferencesStorage = get ()
 
-    private var showVirtualKeyboardEvent : ((Boolean) -> Unit)? = null
-
-    private var showVirtualKeyboard by mutableStateOf(false)
-
     override var activeViewsToDraw: Collection<IScreenControlsView>? = null
 
     @SuppressLint("ConfigurationScreenWidthHeight")
@@ -77,12 +73,9 @@ open class ScreenController : KoinComponent, IScreenController {
         inGame: Boolean,
         allowToEditControls: Boolean,
         drawInSafeArea : Boolean,
-        onBack: () -> Unit,
-        showVirtualKeyboardEvent : (Boolean) -> Unit) {
+        onBack: () -> Unit) {
 
         this.activeViewsToDraw = views
-        this.showVirtualKeyboardEvent = showVirtualKeyboardEvent
-        showVirtualKeyboard = false
 
         val configuration = LocalConfiguration.current
         val density = context.resources.displayMetrics.density
@@ -227,7 +220,8 @@ open class ScreenController : KoinComponent, IScreenController {
                     val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
                     val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
 
-                    val renderButton = view.isHideControlsButton || view.show || isEditMode
+                    val enableView = view.enabled
+                    val renderButton = view.isHideControlsButton || (view.show && enableView) || (isEditMode && enableView)
                     if (renderButton) {
                         DrawView(
                             viewToDraw = view,
@@ -273,23 +267,11 @@ open class ScreenController : KoinComponent, IScreenController {
                                 interactionSource = remember { MutableInteractionSource() }
                             ) {
                                 isEditMode = !isEditMode
-                                showVirtualKeyboard = false
-                                showVirtualKeyboardEvent(false)
                             }
                         )
                 )
             }
         }
-    }
-
-    override fun updateVirtualKeyboardVisibility() {
-        showVirtualKeyboard = !showVirtualKeyboard
-        showVirtualKeyboardEvent?.invoke(showVirtualKeyboard)
-    }
-
-    override fun hideVirtualKeyboard() {
-        showVirtualKeyboard = false
-        showVirtualKeyboardEvent?.invoke(false)
     }
 
     @Composable

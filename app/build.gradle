@@ -213,8 +213,6 @@ dependencies {
     implementation(libs.settings.coroutines)
     implementation(libs.settings.datastore)
 
-    implementation ("com.afollestad.material-dialogs:input:3.3.0")
-
     implementation(libs.jna){ artifact { type = "aar" } }
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ndk)
@@ -234,6 +232,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation (libs.core)
     implementation(libs.zip4j)
+    implementation (libs.input)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.material3)

@@ -50,6 +50,8 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
 
     override var show: Boolean by mutableStateOf(true)
 
+    override val enabled: Boolean = true
+
     override val isQuickPanel: Boolean = false
 
     @Composable
