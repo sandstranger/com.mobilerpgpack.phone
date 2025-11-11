@@ -39,10 +39,9 @@ open class DoomRPGSeriesEngineInfo(
         translationManager.activeEngine = engineType
     }
 
-    @Composable
     override fun DrawVirtualKeyboard() {
         super.DrawVirtualKeyboard()
-        DrawDoomRpgSeriesKeyboard()
+//        DrawDoomRpgSeriesKeyboard()
     }
 
 }

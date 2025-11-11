@@ -8,7 +8,9 @@ interface IScreenControlsView {
 
     val buttonState : ButtonState
 
-    var canBeDrawn : Boolean
+    val enable : Boolean
+
+    var show : Boolean
 
     val isQuickPanel : Boolean
 

@@ -227,7 +227,7 @@ open class ScreenController : KoinComponent, IScreenController {
                     val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
                     val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
 
-                    val renderButton = view.isHideControlsButton || view.canBeDrawn || isEditMode
+                    val renderButton = view.isHideControlsButton || view.show || isEditMode
                     if (renderButton) {
                         DrawView(
                             viewToDraw = view,

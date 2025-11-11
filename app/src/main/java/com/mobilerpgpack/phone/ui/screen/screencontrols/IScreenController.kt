@@ -29,7 +29,7 @@ val IScreenController.isAllScreenControlsHided get() : Boolean{
     }
 
     this.activeViewsToDraw!!.forEach {
-        if (it.canBeDrawn && it !is UpdateScreenControlsVisibilityImageButton){
+        if (it.show && it !is UpdateScreenControlsVisibilityImageButton){
             return false
         }
     }

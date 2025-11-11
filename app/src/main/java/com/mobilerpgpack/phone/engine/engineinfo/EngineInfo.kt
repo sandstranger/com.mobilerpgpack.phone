@@ -39,6 +39,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -99,7 +100,7 @@ abstract class EngineInfo(
     private var enableControlsAutoHidingFeature = false
     private var displayInSafeArea: Boolean = false
 
-    private var commandLineParams : String = ""
+    private var commandLineParams : String? = ""
 
     private external fun pauseSound()
 
@@ -107,14 +108,14 @@ abstract class EngineInfo(
 
     override val commandLineArgs: Array<String>
         get() {
-            if (commandLineParams.isEmpty() || !commandLineParams.contains("-")) {
+            if (commandLineParams.isNullOrEmpty() || !commandLineParams!!.contains("-")) {
                 return emptyArray()
             }
 
             try {
                 val args = arrayListOf<String>()
 
-                commandLineParams.split(" ".toRegex()).forEach {
+                commandLineParams!!.split(" ".toRegex()).forEach {
                     if (it.isNotEmpty()) {
                         args += it
                     }
@@ -142,7 +143,7 @@ abstract class EngineInfo(
         allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame.first()
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
-        commandLineParams = commandLineParamsFlow.first()
+        commandLineParams = commandLineParamsFlow.firstOrNull()
         val customAspectRatio = preferencesStorage.customAspectRatio.first()
         val customScreenResolution = preferencesStorage.customScreenResolution.first()
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
@@ -232,7 +233,6 @@ abstract class EngineInfo(
                             }
 
                             binding.keyboardView.setContent {
-                                DrawVirtualKeyboard()
                             }
                         }
 
@@ -256,7 +256,6 @@ abstract class EngineInfo(
 
     protected open fun onSafeAreaApplied (screenResolution : ScreenResolution){}
 
-    @Composable
     protected open fun DrawVirtualKeyboard() {}
 
     @Composable
@@ -295,8 +294,11 @@ abstract class EngineInfo(
     }
 
     protected fun updateVirtualKeyboardVisibility(showVirtualKeyboard: Boolean) {
-        virtualKeyboardView!!.visibility = if (showVirtualKeyboard && showVirtualKeyboardSavedState)
-            View.VISIBLE else View.GONE
+
+        if (showVirtualKeyboard){
+            DrawVirtualKeyboard()
+        }
+
     }
 
     private fun preserveCustomScreenAspectRatio(customAspectRatio: String) {

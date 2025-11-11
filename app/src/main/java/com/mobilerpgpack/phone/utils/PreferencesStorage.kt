@@ -49,7 +49,11 @@ class PreferencesStorage(private val context: Context) {
 
     val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
 
+    val useStandardSDLTextInputPrefsKey = booleanPreferencesKey("use_standard_sdl_text_input")
+
     val dataStore : DataStore<Preferences> = context.dataStore
+
+    val useStandardSDLTextInput get() = getBooleanValue(useStandardSDLTextInputPrefsKey)
 
     val translationModelType
         get() = getStringValue(

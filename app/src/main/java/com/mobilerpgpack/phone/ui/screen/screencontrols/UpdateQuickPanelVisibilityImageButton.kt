@@ -16,7 +16,7 @@ class UpdateQuickPanelVisibilityImageButton(
     override fun onClick() {
         screenController?.activeViewsToDraw?.forEach {
             if (it.isQuickPanel) {
-                it.canBeDrawn = !it.canBeDrawn
+                it.show = !it.show
             }
         }
     }
