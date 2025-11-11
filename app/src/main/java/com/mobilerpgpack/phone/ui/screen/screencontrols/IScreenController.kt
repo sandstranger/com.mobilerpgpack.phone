@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import com.mobilerpgpack.phone.engine.EngineTypes
 
 interface IScreenController{
+
+    var activeViewsToDraw: Collection<IScreenControlsView>?
+
     @Composable
     fun DrawScreenControls(
         views: Collection<IScreenControlsView>,
@@ -11,6 +14,5 @@ interface IScreenController{
         inGame: Boolean,
         allowToEditControls: Boolean = true,
         drawInSafeArea : Boolean = false,
-        onBack: () -> Unit = { },
-        showVirtualKeyboardEvent : (Boolean) -> Unit = { })
+        onBack: () -> Unit = { })
 }

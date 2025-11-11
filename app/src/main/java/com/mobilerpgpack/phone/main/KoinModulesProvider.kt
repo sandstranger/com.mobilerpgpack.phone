@@ -15,7 +15,6 @@ import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.Doom2RpgComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.Doom2RpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.DoomRPGSeriesEngineInfo
@@ -24,7 +23,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.translator.ITranslationManager
@@ -55,7 +53,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
-import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.CustomPreferenceHandler
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -76,7 +73,6 @@ import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
-import org.koin.core.parameter.ParametersHolder
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -256,13 +252,13 @@ class KoinModulesProvider(private val context: Context,
 
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
-                doom64Buttons
-        ) }.withOptions {
+                doom64Buttons,
+                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
             bind<IEngineInfo>()
         }
 
-        single<IEngineUIController> { Doom64ComposeSettings(wolfensteinButtons) }
+        single<IEngineUIController> { Doom64ComposeSettings(doom64Buttons) }
             .withOptions { named(EngineTypes.Doom64ExPlus.toString()) }
 
         single {
@@ -296,9 +292,11 @@ class KoinModulesProvider(private val context: Context,
             nativeLibs.add(TRANSLATOR_NATIVE_LIB_NAME)
             nativeLibs.add(DOOM2RPG_MAIN_ENGINE_LIB)
 
-            Doom2RpgEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB,
+            DoomRPGSeriesEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
-                doom2RPGButtons)
+                doom2RPGButtons,
+                EngineTypes.Doom2Rpg,
+                preferencesStorage.pathToDoom2RpgIpaFile)
         }.withOptions {
             named(EngineTypes.Doom2Rpg.toString())
             bind<IEngineInfo>()
@@ -316,9 +314,11 @@ class KoinModulesProvider(private val context: Context,
             nativeLibs.add(TRANSLATOR_NATIVE_LIB_NAME)
             nativeLibs.add(WOLFENSTEINRPG_MAIN_ENGINE_LIB)
 
-            WolfensteinRpgEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB,
+            DoomRPGSeriesEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB,
                 nativeLibs.toTypedArray(),
-                wolfensteinButtons)
+                wolfensteinButtons,
+                EngineTypes.WolfensteinRpg,
+                preferencesStorage.pathToWolfensteinRpgIpaFile)
         }.withOptions {
             named(EngineTypes.WolfensteinRpg.toString())
             bind<IEngineInfo>()

@@ -12,12 +12,16 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.window.layout.WindowMetricsCalculator
+
+data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
@@ -41,25 +45,49 @@ fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boole
     }
 }
 
-fun Activity.hideSystemBars() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        window.decorView.post {
-            this.window.insetsController?.let {
-                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolution {
+    val windowMetrics = WindowMetricsCalculator.getOrCreate().computeCurrentWindowMetrics(this)
+
+    val bounds = windowMetrics.bounds
+
+    if (!drawInSafeArea){
+        return ScreenResolution(bounds.width(), bounds.height())
+    }
+
+    ViewCompat.getRootWindowInsets(window.decorView)?.let { insets ->
+        val bars = insets.getInsets(
+            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+
+        return ScreenResolution(bounds.width() - bars.left - bars.right,
+            bounds.height() - bars.top - bars.bottom)
+    }
+
+    return ScreenResolution(bounds.width(), bounds.height())
+}
+
+fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
+    val decorView = window.decorView
+    var callbackWasCalled = false
+
+    decorView.post{
+        decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                decorView.postDelayed({
+                    ViewCompat.getRootWindowInsets(decorView)?.let {
+                        if (!it.isVisible(WindowInsetsCompat.Type.systemBars())) {
+                            decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            if (!callbackWasCalled) {
+                                callbackWasCalled = true
+                                callback()
+                            }
+                        }
+                    } ?: run {
+                        decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                }, 50)
             }
-        }
-    } else {
-        window.decorView.post {
-            @Suppress("DEPRECATION")
-            this.window.decorView.systemUiVisibility = (
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            or View.SYSTEM_UI_FLAG_FULLSCREEN
-                            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
-        }
+        })
+        hideSystemBars()
     }
 }
 
@@ -98,23 +126,37 @@ fun Context.isExternalStoragePermissionGranted () : Boolean {
 }
 
 fun Activity.displayInSafeArea() {
-    ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
+    val v = window.decorView.rootView
+    ViewCompat.getRootWindowInsets(v)?.let { insets ->
         val bars = insets.getInsets(
-            WindowInsetsCompat.Type.systemBars()
-                    or WindowInsetsCompat.Type.displayCutout()
-        )
-        v.updatePadding(
-            left = bars.left,
-            top = bars.top,
-            right = bars.right,
-            bottom = bars.bottom,
+            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
         )
 
-        val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-        if (cutout.top > 0 || cutout.left > 0 || cutout.right > 0) {
-            v.setBackgroundColor(Color.BLACK)
+        v.also {
+            it.updatePadding(
+                left = bars.left,
+                top = bars.top,
+                right = bars.right,
+                bottom = bars.bottom)
+            it.setBackgroundColor(Color.BLACK)
         }
+    }
+}
 
-        WindowInsetsCompat.CONSUMED
+private fun Activity.hideSystemBars() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        this.window.insetsController?.let {
+            it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+            it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    } else {
+        @Suppress("DEPRECATION")
+        this.window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
     }
 }
