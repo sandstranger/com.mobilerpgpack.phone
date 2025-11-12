@@ -17,6 +17,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.Doom2RpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.Doom64EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.Doom64EnhancedEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.DoomRPGSeriesEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgEngineInfo
@@ -260,8 +261,27 @@ class KoinModulesProvider(private val context: Context,
             bind<IEngineInfo>()
         }
 
+        single  {
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                SDL3_NATIVE_LIB_NAME,
+                PNG_NATIVE_LIB_NAME,
+                FMOD_NATIVE_LIB_NAME,
+                DOOM64_ENHANCED_MAIN_ENGINE_LIB)
+
+            Doom64EnhancedEngineInfo(DOOM64_ENHANCED_MAIN_ENGINE_LIB,
+                nativeLibs,
+                doom64Buttons,
+                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+            named(EngineTypes.Doom64ExPlusEnhanced.toString())
+            bind<IEngineInfo>()
+        }
+
         single<IEngineUIController> { Doom64ComposeSettings(doom64Buttons) }
-            .withOptions { named(EngineTypes.Doom64ExPlus.toString()) }
+            .withOptions {
+                named(EngineTypes.Doom64ExPlus.toString())
+            }.withOptions {
+                named(EngineTypes.Doom64ExPlusEnhanced.toString())
+            }
 
         single {
             val nativeLibs = arrayOf(gl4esLibraryName,
@@ -324,6 +344,26 @@ class KoinModulesProvider(private val context: Context,
         }.withOptions {
             named(EngineTypes.WolfensteinRpg.toString())
             bind<IEngineInfo>()
+        }
+
+        single { DOOM64_ENHANCED_MAIN_ENGINE_LIB }.withOptions {
+            named(EngineTypes.Doom64ExPlusEnhanced.toString())
+        }
+
+        single { DOOM64_MAIN_ENGINE_LIB }.withOptions {
+            named(EngineTypes.Doom64ExPlus.toString())
+        }
+
+        single { DOOM2RPG_MAIN_ENGINE_LIB }.withOptions {
+            named(EngineTypes.Doom2Rpg.toString())
+        }
+
+        single { DOOMRPG_MAIN_ENGINE_LIB }.withOptions {
+            named(EngineTypes.DoomRpg.toString())
+        }
+
+        single { WOLFENSTEINRPG_MAIN_ENGINE_LIB }.withOptions {
+            named(EngineTypes.WolfensteinRpg.toString())
         }
 
         single<IEngineUIController> { WolfensteinRpgComposeSettings(wolfensteinButtons) }
