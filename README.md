@@ -9,6 +9,8 @@ https://github.com/Erick194/WolfensteinRPG-RE
 
 https://github.com/atsb/Doom64EX-Plus/
 
+https://github.com/Styd051/DOOM64-EX-Plus-Enhanced
+
 # System Requirements
 
 This port for Android has the following system requirements:
