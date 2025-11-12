@@ -44,37 +44,31 @@ abstract class Dpad(engineType: EngineTypes,
         val buttons = mutableListOf<ButtonState>()
         buttons.add(
             ButtonState(
-                ButtonType.DpadDown.toString().lowercase(),
+                DPAD_DOWN,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_DOWN,
-                buttonType = ButtonType.DpadDown,
                 buttonResId = R.drawable.dpad_down,
             )
         )
         buttons.add(
             ButtonState(
-                ButtonType.DpadUp.toString().lowercase(),
+                DPAD_UP,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_UP,
-                buttonType = ButtonType.DpadUp,
                 buttonResId = R.drawable.dpad_up,
             )
         )
         buttons.add(
-            ButtonState(
-                ButtonType.DpadLeft.toString().lowercase(),
+            ButtonState(DPAD_LEFT,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_LEFT,
-                buttonType = ButtonType.DpadLeft,
                 buttonResId = R.drawable.dpad_left,
             )
         )
         buttons.add(
-            ButtonState(
-                ButtonType.DpadRight.toString().lowercase(),
+            ButtonState(DPAD_RIGHT,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_RIGHT,
-                buttonType = ButtonType.DpadRight,
                 buttonResId = R.drawable.dpad_right,
             )
         )
@@ -98,13 +92,13 @@ abstract class Dpad(engineType: EngineTypes,
             val buttonSize = size * 0.4f
             val offsetAmount = size * 0.33f
 
-            val offsetYStorage = hashMapOf<ButtonType, Dp>(
-                ButtonType.DpadUp to -offsetAmount,
-                ButtonType.DpadDown to offsetAmount
+            val offsetYStorage = hashMapOf(
+                DPAD_UP to -offsetAmount,
+                DPAD_DOWN to offsetAmount
             )
-            val offsetXStorage = hashMapOf<ButtonType, Dp>(
-                ButtonType.DpadLeft to -offsetAmount,
-                ButtonType.DpadRight to offsetAmount
+            val offsetXStorage = hashMapOf(
+                DPAD_LEFT to -offsetAmount,
+                DPAD_RIGHT to offsetAmount
             )
 
             @Composable
@@ -140,19 +134,19 @@ abstract class Dpad(engineType: EngineTypes,
             }
 
             for (button in dpadButtons) {
-                if (button.buttonType in listOf(ButtonType.DpadUp, ButtonType.DpadDown)) {
+                if (button.id in dpadDownCollection) {
                     dpadButton(
                         button.buttonResId,
                         button.id,
                         button.sdlKeyCode,
-                        offsetY = offsetYStorage[button.buttonType]!!
+                        offsetY = offsetYStorage[button.id]!!
                     )
-                } else if (button.buttonType in listOf(ButtonType.DpadLeft, ButtonType.DpadRight)) {
+                } else if (button.id in dpadLeftCollection) {
                     dpadButton(
                         button.buttonResId,
                         button.id,
                         button.sdlKeyCode,
-                        offsetX = offsetXStorage[button.buttonType]!!
+                        offsetX = offsetXStorage[button.id]!!
                     )
                 }
             }
@@ -163,7 +157,15 @@ abstract class Dpad(engineType: EngineTypes,
 
     protected abstract fun onTouchUp(keyCode: Int)
 
+
     private companion object {
         private const val dpadId = "dpad"
+        private const val DPAD_LEFT = "DpadLeft"
+        private const val DPAD_RIGHT = "DpadRight"
+        private const val DPAD_DOWN = "DpadDown"
+        private const val DPAD_UP = "DpadUp"
+
+        private val dpadDownCollection : Collection <String> = setOf(DPAD_UP, DPAD_DOWN)
+        private val dpadLeftCollection : Collection <String> = setOf(DPAD_LEFT, DPAD_RIGHT)
     }
 }
