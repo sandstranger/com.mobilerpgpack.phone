@@ -350,7 +350,7 @@ abstract class EngineInfo(
             psaFolder.mkdirs()
         }
 
-        Os.setenv("LIBGL_SIMPLE_SHADERCONV", "0", true)
+        Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
         Os.setenv("LIBGL_DXTMIPMAP", "1", true)
         Os.setenv("LIBGL_ES", if (!BuildConfig.LEGACY_GLES2) "3" else "2", true)
         Os.setenv("LIBGL_GL", "21", true)
