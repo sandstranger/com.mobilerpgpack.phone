@@ -244,15 +244,14 @@ class KoinModulesProvider(private val context: Context,
 
     val enginesModule = module {
         single  {
-            val nativeLibs = mutableListOf<String>()
-            nativeLibs.add(gl4esLibraryName)
-            nativeLibs.add(SDL3_NATIVE_LIB_NAME)
-            nativeLibs.add(PNG_NATIVE_LIB_NAME)
-            nativeLibs.add(FMOD_NATIVE_LIB_NAME)
-            nativeLibs.add(DOOM64_MAIN_ENGINE_LIB)
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                SDL3_NATIVE_LIB_NAME,
+                PNG_NATIVE_LIB_NAME,
+                FMOD_NATIVE_LIB_NAME,
+                DOOM64_MAIN_ENGINE_LIB)
 
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
-                nativeLibs.toTypedArray(),
+                nativeLibs,
                 doom64Buttons,
                 preferencesStorage.doom64CommandLineArgsString) }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
@@ -263,19 +262,18 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.Doom64ExPlus.toString()) }
 
         single {
-            val nativeLibs = mutableListOf<String>()
-            nativeLibs.add(gl4esLibraryName)
-            nativeLibs.add(OBOE_NATIVE_LUB_NAME)
-            nativeLibs.add(FLUIDSYNTH_NATIVE_LIB_NAME)
-            nativeLibs.add(SDL2_NATIVE_LIB_NAME)
-            nativeLibs.add(GME_NATIVE_LIB_NAME)
-            nativeLibs.add(SDL2_MIXER_NATIVE_LIB_NAME)
-            nativeLibs.add(SDL2_TTF_NATIVE_LIB_NAME)
-            nativeLibs.add(TRANSLATOR_NATIVE_LIB_NAME)
-            nativeLibs.add(DOOMRPG_MAIN_ENGINE_LIB)
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                OBOE_NATIVE_LUB_NAME,
+                FLUIDSYNTH_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                GME_NATIVE_LIB_NAME,
+                SDL2_MIXER_NATIVE_LIB_NAME,
+                SDL2_TTF_NATIVE_LIB_NAME,
+                TRANSLATOR_NATIVE_LIB_NAME,
+                DOOMRPG_MAIN_ENGINE_LIB)
 
             DoomRpgEngineInfo(DOOMRPG_MAIN_ENGINE_LIB,
-                nativeLibs.toTypedArray(),
+                nativeLibs,
                 doomRPGButtons
         ) }.withOptions {
             named(EngineTypes.DoomRpg.toString())
@@ -286,17 +284,16 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.DoomRpg.toString()) }
 
         single {
-            val nativeLibs = mutableListOf<String>()
-            nativeLibs.add(gl4esLibraryName)
-            nativeLibs.add(OBOE_NATIVE_LUB_NAME)
-            nativeLibs.add(OPENAL_NATIVE_LIB_NAME)
-            nativeLibs.add(SDL2_NATIVE_LIB_NAME)
-            nativeLibs.add(SDL2_TTF_NATIVE_LIB_NAME)
-            nativeLibs.add(TRANSLATOR_NATIVE_LIB_NAME)
-            nativeLibs.add(DOOM2RPG_MAIN_ENGINE_LIB)
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                OBOE_NATIVE_LUB_NAME,
+                OPENAL_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                SDL2_TTF_NATIVE_LIB_NAME,
+                TRANSLATOR_NATIVE_LIB_NAME,
+                DOOM2RPG_MAIN_ENGINE_LIB)
 
             DoomRPGSeriesEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB,
-                nativeLibs.toTypedArray(),
+                nativeLibs,
                 doom2RPGButtons,
                 EngineTypes.Doom2Rpg,
                 preferencesStorage.pathToDoom2RpgIpaFile)
@@ -309,17 +306,16 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.Doom2Rpg.toString()) }
 
         single {
-            val nativeLibs = mutableListOf<String>()
-            nativeLibs.add(gl4esLibraryName)
-            nativeLibs.add(OBOE_NATIVE_LUB_NAME)
-            nativeLibs.add(OPENAL_NATIVE_LIB_NAME)
-            nativeLibs.add(SDL2_NATIVE_LIB_NAME)
-            nativeLibs.add(SDL2_TTF_NATIVE_LIB_NAME)
-            nativeLibs.add(TRANSLATOR_NATIVE_LIB_NAME)
-            nativeLibs.add(WOLFENSTEINRPG_MAIN_ENGINE_LIB)
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                OBOE_NATIVE_LUB_NAME,
+                OPENAL_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                SDL2_TTF_NATIVE_LIB_NAME,
+                TRANSLATOR_NATIVE_LIB_NAME,
+                WOLFENSTEINRPG_MAIN_ENGINE_LIB)
 
             DoomRPGSeriesEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB,
-                nativeLibs.toTypedArray(),
+                nativeLibs,
                 wolfensteinButtons,
                 EngineTypes.WolfensteinRpg,
                 preferencesStorage.pathToWolfensteinRpgIpaFile)
