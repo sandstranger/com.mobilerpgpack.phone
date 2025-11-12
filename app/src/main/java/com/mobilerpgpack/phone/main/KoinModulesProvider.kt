@@ -244,7 +244,8 @@ class KoinModulesProvider(private val context: Context,
 
     val enginesModule = module {
         single  {
-            val nativeLibs = createNativeLibsList()
+            val nativeLibs = mutableListOf<String>()
+            nativeLibs.add(gl4esLibraryName)
             nativeLibs.add(SDL3_NATIVE_LIB_NAME)
             nativeLibs.add(PNG_NATIVE_LIB_NAME)
             nativeLibs.add(FMOD_NATIVE_LIB_NAME)
@@ -262,7 +263,8 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.Doom64ExPlus.toString()) }
 
         single {
-            val nativeLibs = createNativeLibsList()
+            val nativeLibs = mutableListOf<String>()
+            nativeLibs.add(gl4esLibraryName)
             nativeLibs.add(OBOE_NATIVE_LUB_NAME)
             nativeLibs.add(FLUIDSYNTH_NATIVE_LIB_NAME)
             nativeLibs.add(SDL2_NATIVE_LIB_NAME)
@@ -284,7 +286,8 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.DoomRpg.toString()) }
 
         single {
-            val nativeLibs = createNativeLibsList()
+            val nativeLibs = mutableListOf<String>()
+            nativeLibs.add(gl4esLibraryName)
             nativeLibs.add(OBOE_NATIVE_LUB_NAME)
             nativeLibs.add(OPENAL_NATIVE_LIB_NAME)
             nativeLibs.add(SDL2_NATIVE_LIB_NAME)
@@ -306,7 +309,8 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.Doom2Rpg.toString()) }
 
         single {
-            val nativeLibs = createNativeLibsList()
+            val nativeLibs = mutableListOf<String>()
+            nativeLibs.add(gl4esLibraryName)
             nativeLibs.add(OBOE_NATIVE_LUB_NAME)
             nativeLibs.add(OPENAL_NATIVE_LIB_NAME)
             nativeLibs.add(SDL2_NATIVE_LIB_NAME)
@@ -330,18 +334,6 @@ class KoinModulesProvider(private val context: Context,
 
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule, composeModule, enginesModule)
-    }
-
-    private fun createNativeLibsList () : MutableList <String>{
-        val result = mutableListOf<String>()
-
-        if (!BuildConfig.LEGACY_GLES2){
-            result.add(SPIRV_NATIVE_LIB_NAME)
-        }
-
-        result.add(gl4esLibraryName)
-
-        return result
     }
 
     private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {
