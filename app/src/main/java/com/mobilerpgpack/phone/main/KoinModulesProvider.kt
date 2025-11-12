@@ -55,6 +55,8 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.CustomPreferenceHandler
 import com.mobilerpgpack.phone.utils.IAssetExtractor
+import com.mobilerpgpack.phone.utils.IKeyCodesProvider
+import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
@@ -238,7 +240,7 @@ class KoinModulesProvider(private val context: Context,
 
         singleOf<SDL2MouseIcon>(::SDL2MouseIcon)
         singleOf<SDL3MouseIcon>(::SDL3MouseIcon)
-
+        singleOf<IKeyCodesProvider>(::KeyCodesProvider)
         factory <PreferenceHandler> { (settings : DataStoreSettings) -> CustomPreferenceHandler(settings) }
     }
 
