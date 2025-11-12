@@ -38,7 +38,7 @@ class Doom64AutorunButton (engineType: EngineTypes,
         }
 
         isJnaWasInit = true
-        val mainEngineLibName =  preferencesStorage.let {
+        val mainEngineLibName = preferencesStorage.let {
             var activeEngine : String
             runBlocking {
                 activeEngine = it.activeEngineAsFlowString.first()
