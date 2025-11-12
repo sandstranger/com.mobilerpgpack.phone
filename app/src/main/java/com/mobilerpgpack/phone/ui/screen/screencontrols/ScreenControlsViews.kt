@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64.Doom64AutorunButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.gamepad.SDL3OnScreenGamepad
 
 val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
@@ -335,15 +336,13 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
-    SDL3ImageButton(
+    Doom64AutorunButton(
         "autorun",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.72f,
         offsetYPercent = 0.85f,
         sizePercent = 0.07f,
         buttonResId = R.drawable.run,
-        sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
-        useToggle = true
     ),
     SDL3ImageButton(
         "escape",

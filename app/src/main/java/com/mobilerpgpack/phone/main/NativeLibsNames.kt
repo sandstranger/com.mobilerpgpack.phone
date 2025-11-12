@@ -6,6 +6,8 @@ const val TRANSLATOR_NATIVE_LIB_NAME = "Translator"
 
 const val DOOM64_MAIN_ENGINE_LIB = "DOOM64"
 
+const val DOOM64_ENHANCED_MAIN_ENGINE_LIB = "DOOM64-Enhanced"
+
 const val DOOMRPG_MAIN_ENGINE_LIB = "DoomRPG"
 
 const val DOOM2RPG_MAIN_ENGINE_LIB = "DoomIIRPG"
