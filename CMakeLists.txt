@@ -104,6 +104,7 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")
 add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/Doom64EX-Plus")
+add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DOOM64-EX-Plus-Enhanced")
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
@@ -127,6 +128,12 @@ target_include_directories(DOOM64 PRIVATE  ${SDL3_INCLUDE_DIR} ${OPENGL_INCLUDE_
         ${FMOD_INC_DIR} ${OPENGL_INCLUDE_DIR})
 
 target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${OPENGL_opengl_LIBRARY} ${libpng_LIBRARY}
+        ${FMOD_LIB} ZLIB::ZLIB m log )
+
+target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
+        ${FMOD_INC_DIR} ${OPENGL_INCLUDE_DIR})
+
+target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${OPENGL_opengl_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
 
 add_library(SDL3MouseHelper SHARED)
