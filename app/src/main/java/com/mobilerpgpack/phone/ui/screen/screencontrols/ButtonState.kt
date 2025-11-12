@@ -21,8 +21,7 @@ class ButtonState(
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = Int.MIN_VALUE,
-    val buttonResId: Int = NOT_EXISTING_RES,
-    val buttonType: ButtonType = ButtonType.Default) : KoinComponent {
+    val buttonResId: Int = NOT_EXISTING_RES) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
