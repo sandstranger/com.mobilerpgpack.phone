@@ -2,13 +2,13 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +41,8 @@ abstract class ShowSDLInputImageButton(
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val preferencesStorage: PreferencesStorage by inject()
+
+    private val keycodesProvider : IKeyCodesProvider by inject ()
 
     override var show: Boolean = true
 
@@ -75,7 +77,7 @@ abstract class ShowSDLInputImageButton(
         }
 
         text.forEach {
-            onKeyDown(getKeyCode(it), delayBetweenCharsMs)
+            onKeyDown(keycodesProvider.getKeyCode(it), delayBetweenCharsMs)
         }
     }
 
@@ -85,22 +87,5 @@ abstract class ShowSDLInputImageButton(
         const val DELETE_SYMBOL_KEYCODE = KeyEvent.KEYCODE_DEL
 
         private const val SHOW_KEYBOARD_BUTTON_ID = "keyboard"
-
-        private val charMap : KeyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
-
-        private val cachedKeyEvents : MutableMap<Char, Int> = mutableMapOf()
-
-        fun getKeyCode (charItem : Char) : Int{
-            if (cachedKeyEvents.containsKey(charItem)){
-                return cachedKeyEvents[charItem]!!
-            }
-
-            val events : Array<KeyEvent>? = charMap.getEvents(charArrayOf(charItem))
-            return if (!events.isNullOrEmpty()) {
-                val keyCode = events[0].keyCode
-                cachedKeyEvents[charItem] = keyCode
-                return keyCode
-            } else KeyEvent.KEYCODE_UNKNOWN
-        }
     }
 }
