@@ -12,14 +12,14 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-class Doom64AutorunButton (id: String,
-                           engineType: EngineTypes,
+class Doom64AutorunButton (engineType: EngineTypes,
                            offsetXPercent: Float = 0f,
                            offsetYPercent: Float = 0f,
                            sizePercent: Float = 0.13f,
                            alpha: Float = 0.65f,
                            buttonResId: Int = NOT_EXISTING_RES):
-    ToggleImageButton(id,engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, buttonResId), KoinComponent {
+    ToggleImageButton(AUTORUN_BUTTON_ID,engineType, offsetXPercent, offsetYPercent,
+        sizePercent, alpha, buttonResId), KoinComponent {
 
     private val preferencesStorage : PreferencesStorage by inject ()
 
@@ -38,13 +38,17 @@ class Doom64AutorunButton (id: String,
         }
 
         isJnaWasInit = true
-        var activeEngine : String
-
-        runBlocking {
-            activeEngine = preferencesStorage.activeEngineAsFlowString.first()
+        val mainEngineLibName =  preferencesStorage.let {
+            var activeEngine : String
+            runBlocking {
+                activeEngine = it.activeEngineAsFlowString.first()
+            }
+            get <String> (named(activeEngine))
         }
+        Native.register(Doom64AutorunButton::class.java, mainEngineLibName)
+    }
 
-        val mainEngineLib = get <String> (named(activeEngine))
-        Native.register(Doom64AutorunButton::class.java, mainEngineLib)
+    private companion object{
+        private const val AUTORUN_BUTTON_ID = "autorun"
     }
 }

@@ -48,13 +48,11 @@ abstract class ShowSDLInputImageButton(
 
     override val enabled: Boolean
         get() {
-            var useStandardSDLTextInput = false
-
-            runBlocking {
-                useStandardSDLTextInput = preferencesStorage.useStandardSDLTextInput.first()
+            return preferencesStorage.let {
+                runBlocking {
+                    !it.useStandardSDLTextInput.first()
+                }
             }
-
-            return !useStandardSDLTextInput
         }
 
     @SuppressLint("CheckResult")

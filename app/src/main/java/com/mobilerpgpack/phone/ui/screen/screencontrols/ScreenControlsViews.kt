@@ -337,7 +337,6 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
     Doom64AutorunButton(
-        "autorun",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.72f,
         offsetYPercent = 0.85f,
