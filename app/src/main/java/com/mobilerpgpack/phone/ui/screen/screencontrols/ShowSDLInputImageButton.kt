@@ -88,9 +88,19 @@ abstract class ShowSDLInputImageButton(
 
         private val charMap : KeyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
 
+        private val cachedKeyEvents : MutableMap<Char, Int> = mutableMapOf()
+
         fun getKeyCode (charItem : Char) : Int{
+            if (cachedKeyEvents.containsKey(charItem)){
+                return cachedKeyEvents[charItem]!!
+            }
+
             val events : Array<KeyEvent>? = charMap.getEvents(charArrayOf(charItem))
-            return if (!events.isNullOrEmpty()) events[0].keyCode else KeyEvent.KEYCODE_UNKNOWN
+            return if (!events.isNullOrEmpty()) {
+                val keyCode = events[0].keyCode
+                cachedKeyEvents[charItem] = keyCode
+                return keyCode
+            } else KeyEvent.KEYCODE_UNKNOWN
         }
     }
 }
