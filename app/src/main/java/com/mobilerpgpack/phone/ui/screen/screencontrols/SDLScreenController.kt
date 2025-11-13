@@ -107,8 +107,8 @@ abstract class SDLScreenController : ScreenController() {
                                         trackedPointerId = UNKNOWN_POINTER_ID
                                     }
                                 }
-                                onMotionEventFinished(event.motionEvent!!)
                             }
+                            onMotionEventFinished(event.motionEvent!!)
                         }
                     }
                 }
