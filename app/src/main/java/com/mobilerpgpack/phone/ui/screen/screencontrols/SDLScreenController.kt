@@ -75,9 +75,11 @@ abstract class SDLScreenController : ScreenController() {
                                 val y = pos.y
                                 val pressure = (change.pressure).coerceAtMost(1.0f)
 
-                                fun handlePointer(touchAction: Int) =
-                                    handlePointer(trackedPointerId, pressure ,x,y, touchAction,
-                                    mWidth, mHeight)
+                                fun handlePointer(touchAction: Int) {
+                                    handlePointer(trackedPointerId, pressure, x, y,
+                                        mWidth, mHeight,touchAction,
+                                        event.motionEvent!!)
+                                }
 
                                 when {
                                     change.changedToDown() -> {
@@ -105,6 +107,7 @@ abstract class SDLScreenController : ScreenController() {
                                         trackedPointerId = UNKNOWN_POINTER_ID
                                     }
                                 }
+                                onMotionEventFinished(event.motionEvent!!)
                             }
                         }
                     }
@@ -112,8 +115,10 @@ abstract class SDLScreenController : ScreenController() {
         )
     }
 
-    protected abstract fun handlePointer(pointerId: Int, pressure: Float, x: Float, y: Float, motionEvent : Int,
-                                         viewWidth : Float, viewHeight : Float)
+    protected abstract fun handlePointer(pointerId: Int, pressure: Float, x: Float, y: Float,
+                                         viewWidth : Float, viewHeight : Float,eventAction : Int, event : MotionEvent)
+
+    protected open fun onMotionEventFinished (event: MotionEvent){}
 
     protected companion object{
 
