@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.view.MotionEvent
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -11,10 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.input.pointer.changedToDown
-import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import kotlin.math.roundToInt
@@ -31,7 +29,6 @@ abstract class SDLScreenController : ScreenController() {
         var mHeight by remember { mutableFloatStateOf(0.0f) }
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
-        var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
 
         Box(
             modifier = Modifier
@@ -65,49 +62,26 @@ abstract class SDLScreenController : ScreenController() {
                 }
                 .alpha(0f)
                 .pointerInput(Unit) {
-                    awaitPointerEventScope {
-                        while (true) {
-                            val event = awaitPointerEvent()
-                            for (change in event.changes) {
-                                val pid = change.id.value.toInt()
-                                val pos = change.position
-                                val x = pos.x
-                                val y = pos.y
-                                val pressure = (change.pressure).coerceAtMost(1.0f)
-
-                                fun handlePointer(touchAction: Int) =
-                                    handlePointer(trackedPointerId, pressure ,x,y, touchAction,
-                                    mWidth, mHeight)
-
-                                when {
-                                    change.changedToDown() -> {
-                                        if (trackedPointerId==UNKNOWN_POINTER_ID) {
-                                            trackedPointerId = pid
-                                            handlePointer(MotionEvent.ACTION_DOWN)
-                                        }
-                                    }
-
-                                    change.changedToUp() -> {
-                                        if (trackedPointerId == pid){
-                                            handlePointer(MotionEvent.ACTION_UP)
-                                            trackedPointerId = UNKNOWN_POINTER_ID
-                                        }
-                                    }
-
-                                    change.positionChanged() -> {
-                                        if (trackedPointerId == pid) {
-                                            handlePointer(MotionEvent.ACTION_MOVE)
-                                        }
-                                    }
-
-                                    !change.pressed && trackedPointerId == pid -> {
-                                        handlePointer(MotionEvent.ACTION_CANCEL)
-                                        trackedPointerId = UNKNOWN_POINTER_ID
-                                    }
-                                }
-                            }
+                    detectDragGestures(
+                        onDragStart = { offset ->
+                            handlePointer(DEFAULT_POINTER_ID, DEFAULT_PRESSURE ,offset.x,
+                                offset.y, MotionEvent.ACTION_DOWN, mWidth, mHeight)
+                        },
+                        onDrag = { change, _ ->
+                            val pressure = (change.pressure).coerceAtMost(1.0f)
+                            handlePointer(DEFAULT_POINTER_ID, pressure ,change.position.x
+                                ,change.position.y, MotionEvent.ACTION_MOVE,
+                                mWidth, mHeight)
+                        },
+                        onDragEnd = {
+                            handlePointer(DEFAULT_POINTER_ID, DEFAULT_PRESSURE ,DEFAULT_SCREEN_POSITION,
+                                DEFAULT_SCREEN_POSITION, MotionEvent.ACTION_UP, mWidth, mHeight)
+                        },
+                        onDragCancel = {
+                            handlePointer(DEFAULT_POINTER_ID, DEFAULT_PRESSURE ,DEFAULT_SCREEN_POSITION,
+                                DEFAULT_SCREEN_POSITION, MotionEvent.ACTION_CANCEL, mWidth, mHeight)
                         }
-                    }
+                    )
                 }
         )
     }
@@ -119,6 +93,10 @@ abstract class SDLScreenController : ScreenController() {
 
         const val DEFAULT_TOUCH_DEVICE_ID = -1
 
-        private const val UNKNOWN_POINTER_ID = Int.MIN_VALUE
+        private const val DEFAULT_POINTER_ID = 0
+
+        private const val DEFAULT_PRESSURE = 1.0f
+
+        private const val DEFAULT_SCREEN_POSITION = -1.0f
     }
 }
