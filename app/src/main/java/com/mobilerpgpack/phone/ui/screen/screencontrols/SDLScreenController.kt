@@ -75,33 +75,33 @@ abstract class SDLScreenController : ScreenController() {
                                 val y = pos.y
                                 val pressure = (change.pressure).coerceAtMost(1.0f)
 
-                                fun handlePointer(touchAction: TouchAction) =
-                                    handlePointer(trackedPointerId, pressure ,x,y, motionEventConverter[touchAction]!!,
+                                fun handlePointer(touchAction: Int) =
+                                    handlePointer(trackedPointerId, pressure ,x,y, touchAction,
                                     mWidth, mHeight)
 
                                 when {
                                     change.changedToDown() -> {
                                         if (trackedPointerId==UNKNOWN_POINTER_ID) {
                                             trackedPointerId = pid
-                                            handlePointer(TouchAction.DOWN)
+                                            handlePointer(MotionEvent.ACTION_DOWN)
                                         }
                                     }
 
                                     change.changedToUp() -> {
                                         if (trackedPointerId == pid){
-                                            handlePointer(TouchAction.UP)
+                                            handlePointer(MotionEvent.ACTION_UP)
                                             trackedPointerId = UNKNOWN_POINTER_ID
                                         }
                                     }
 
                                     change.positionChanged() -> {
                                         if (trackedPointerId == pid) {
-                                            handlePointer(TouchAction.MOVE)
+                                            handlePointer(MotionEvent.ACTION_MOVE)
                                         }
                                     }
 
                                     !change.pressed && trackedPointerId == pid -> {
-                                        handlePointer(TouchAction.CANCEL)
+                                        handlePointer(MotionEvent.ACTION_CANCEL)
                                         trackedPointerId = UNKNOWN_POINTER_ID
                                     }
                                 }
@@ -117,16 +117,8 @@ abstract class SDLScreenController : ScreenController() {
 
     protected companion object{
 
-        const val DEFAULT_TOUCH_DEVICE_ID = 1
+        const val DEFAULT_TOUCH_DEVICE_ID = -1
 
         private const val UNKNOWN_POINTER_ID = Int.MIN_VALUE
-
-        private enum class TouchAction { DOWN, MOVE, UP, CANCEL }
-
-        private val motionEventConverter = hashMapOf<TouchAction, Int>(
-            TouchAction.CANCEL to MotionEvent.ACTION_CANCEL,
-            TouchAction.DOWN to MotionEvent.ACTION_DOWN,
-            TouchAction.MOVE to MotionEvent.ACTION_MOVE,
-            TouchAction.UP to MotionEvent.ACTION_UP)
     }
 }
