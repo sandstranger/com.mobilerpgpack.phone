@@ -6,18 +6,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.input.pointer.changedToDown
+import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import kotlin.math.roundToInt
 
 abstract class SDLScreenController : ScreenController() {
-
-    private val trackedPointerIds = mutableSetOf<Int>()
 
     protected abstract val viewWidth : Int
 
@@ -27,53 +29,10 @@ abstract class SDLScreenController : ScreenController() {
     final override fun DrawTouchCamera() {
         var mWidth by remember { mutableFloatStateOf(0.0f) }
         var mHeight by remember { mutableFloatStateOf(0.0f) }
-        var widthSize: Int
-        var heightSize: Int
+        var widthSize by remember { mutableIntStateOf(0) }
+        var heightSize by remember { mutableIntStateOf(0) }
+        var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
 
-        fun onTouchEvent(event: MotionEvent) {
-            val action = event.actionMasked
-            val actionIndex = event.actionIndex
-
-            fun onPointerMoved (){
-                for (pid in trackedPointerIds) {
-                    val idx = event.findPointerIndex(pid)
-                    if (idx >= 0) {
-                        handlePointerAtIndex(idx, pid,
-                            mWidth,mHeight,event)
-                    }
-                }
-            }
-
-            when (action) {
-                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
-                    val pid = event.getPointerId(actionIndex)
-                    val xRaw = event.getX(actionIndex)
-                    val yRaw = event.getY(actionIndex)
-                    if (xRaw in 0f..mWidth && yRaw >= 0f && yRaw <= mHeight) {
-                        trackedPointerIds.add(pid)
-                        handlePointerAtIndex(actionIndex, pid,
-                            mWidth,mHeight, event)
-                    }
-                }
-
-                MotionEvent.ACTION_MOVE -> onPointerMoved()
-
-                MotionEvent.ACTION_POINTER_UP -> {
-                    val upPid = event.getPointerId(actionIndex)
-                    if (trackedPointerIds.remove(upPid)) {
-                        handlePointerAtIndex(actionIndex, upPid,
-                            mWidth,mHeight,event)
-                    }
-                }
-
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    onPointerMoved()
-                    trackedPointerIds.clear()
-                }
-            }
-
-            onMotionEventFinished(event)
-        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -105,17 +64,69 @@ abstract class SDLScreenController : ScreenController() {
                     }
                 }
                 .alpha(0f)
-                .pointerInteropFilter { motionEvent ->
-                    onTouchEvent(motionEvent)
-                    return@pointerInteropFilter true
+                .pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            for (change in event.changes) {
+                                val pid = change.id.value.toInt()
+                                val pos = change.position
+                                val x = pos.x
+                                val y = pos.y
+                                val pressure = (change.pressure).coerceAtMost(1.0f)
+
+                                fun handlePointer(touchAction: TouchAction) =
+                                    handlePointer(trackedPointerId, pressure ,x,y, motionEventConverter[touchAction]!!,
+                                    mWidth, mHeight)
+
+                                when {
+                                    change.changedToDown() -> {
+                                        if (trackedPointerId==UNKNOWN_POINTER_ID) {
+                                            trackedPointerId = pid
+                                            handlePointer(TouchAction.DOWN)
+                                        }
+                                    }
+
+                                    change.changedToUp() -> {
+                                        if (trackedPointerId == pid){
+                                            handlePointer(TouchAction.UP)
+                                            trackedPointerId = UNKNOWN_POINTER_ID
+                                        }
+                                    }
+
+                                    change.positionChanged() -> {
+                                        if (trackedPointerId == pid) {
+                                            handlePointer(TouchAction.MOVE)
+                                        }
+                                    }
+
+                                    !change.pressed && trackedPointerId == pid -> {
+                                        handlePointer(TouchAction.CANCEL)
+                                        trackedPointerId = UNKNOWN_POINTER_ID
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
         )
     }
 
-    protected abstract fun handlePointerAtIndex(i: Int, pointerId: Int,
-                                                viewWidth : Float, viewHeight : Float, event: MotionEvent)
+    protected abstract fun handlePointer(pointerId: Int, pressure: Float, x: Float, y: Float, motionEvent : Int,
+                                         viewWidth : Float, viewHeight : Float)
 
-    protected open fun onMotionEventFinished (event: MotionEvent){}
+    protected companion object{
 
-    protected fun evenCanBeUsed (i: Int, event: MotionEvent) = i >= 0 && i < event.pointerCount
+        const val DEFAULT_TOUCH_DEVICE_ID = 1
+
+        private const val UNKNOWN_POINTER_ID = Int.MIN_VALUE
+
+        private enum class TouchAction { DOWN, MOVE, UP, CANCEL }
+
+        private val motionEventConverter = hashMapOf<TouchAction, Int>(
+            TouchAction.CANCEL to MotionEvent.ACTION_CANCEL,
+            TouchAction.DOWN to MotionEvent.ACTION_DOWN,
+            TouchAction.MOVE to MotionEvent.ACTION_MOVE,
+            TouchAction.UP to MotionEvent.ACTION_UP)
+    }
 }
