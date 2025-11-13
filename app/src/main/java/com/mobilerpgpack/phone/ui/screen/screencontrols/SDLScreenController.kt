@@ -120,10 +120,7 @@ abstract class SDLScreenController : ScreenController() {
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
 
-    protected companion object{
-
-        const val DEFAULT_TOUCH_DEVICE_ID = -1
-
+    private companion object{
         private const val UNKNOWN_POINTER_ID = Int.MIN_VALUE
     }
 }
