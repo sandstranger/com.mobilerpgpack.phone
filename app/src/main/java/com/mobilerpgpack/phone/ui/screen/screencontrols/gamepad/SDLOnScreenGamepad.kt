@@ -154,7 +154,6 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                         onDrag = { change, _ ->
                             currentX = change.position.x
                             currentY = change.position.y
-                            change.consume()
                             val strokeWidthPx = 2.dp.toPx()
                             onDrag(canvasW, canvasH, strokeWidthPx, currentX, currentY, onUpdateStick, stickId)
                         },
@@ -273,8 +272,8 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         onUpdateStick(stickId, normX, normY)
     }
 
-    companion object{
+    private companion object{
         private const val DEVICE_ID = 1384510555
-        const val GAMEPAD_ID = "onscreen_gamepad"
+        private const val GAMEPAD_ID = "onscreen_gamepad"
     }
 }
