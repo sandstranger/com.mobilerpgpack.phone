@@ -154,6 +154,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                         onDrag = { change, _ ->
                             currentX = change.position.x
                             currentY = change.position.y
+                            change.consume()
                             val strokeWidthPx = 2.dp.toPx()
                             onDrag(canvasW, canvasH, strokeWidthPx, currentX, currentY, onUpdateStick, stickId)
                         },

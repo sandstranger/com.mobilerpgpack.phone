@@ -86,6 +86,7 @@ abstract class SDLScreenController : ScreenController() {
                                         if (trackedPointerId==UNKNOWN_POINTER_ID) {
                                             trackedPointerId = pid
                                             handlePointer(MotionEvent.ACTION_DOWN)
+                                            change.consume()
                                         }
                                     }
 
@@ -93,18 +94,21 @@ abstract class SDLScreenController : ScreenController() {
                                         if (trackedPointerId == pid){
                                             handlePointer(MotionEvent.ACTION_UP)
                                             trackedPointerId = UNKNOWN_POINTER_ID
+                                            change.consume()
                                         }
                                     }
 
                                     change.positionChanged() -> {
                                         if (trackedPointerId == pid) {
                                             handlePointer(MotionEvent.ACTION_MOVE)
+                                            change.consume()
                                         }
                                     }
 
                                     !change.pressed && trackedPointerId == pid -> {
                                         handlePointer(MotionEvent.ACTION_CANCEL)
                                         trackedPointerId = UNKNOWN_POINTER_ID
+                                        change.consume()
                                     }
                                 }
                             }
