@@ -57,8 +57,8 @@
     <string name="custom_resolution">Custom screen resolution (overrides “Custom screen aspect ratio”)</string>
     <string name="custom_resolution_hint">1920x1080</string>
     <string name="dark_theme">Enable dark theme for launcher</string>
-    <string name="increase_controls_size">Size-</string>
-    <string name="decrease_controls_size">Size+</string>
+    <string name="increase_controls_size">Size+</string>
+    <string name="decrease_controls_size">Size-</string>
     <string name="decrease_controls_alpha">Alpha-</string>
     <string name="increase_controls_alpha">Alpha+</string>
     <string name="reset_controls_to_default">Reset to defaults</string>
