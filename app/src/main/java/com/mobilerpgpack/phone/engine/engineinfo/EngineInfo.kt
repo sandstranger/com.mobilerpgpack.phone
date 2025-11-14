@@ -99,9 +99,15 @@ abstract class EngineInfo(
 
     private var commandLineParams : String? = ""
 
-    private lateinit var needToShowScreenControlsNativeDelegate: Function
+    private val needToShowScreenControlsNativeDelegate: Function by lazy {
+        Function.getFunction(mainEngineLib,
+            "needToShowScreenControls")
+    }
 
-    private lateinit var needToInvokeMouseButtonsEventsDelegate : Function
+    private val needToInvokeMouseButtonsEventsDelegate : Function by lazy {
+        Function.getFunction(mainEngineLib,
+            "needToInvokeMouseButtonsEvents")
+    }
 
     private external fun pauseSound()
 
@@ -195,12 +201,6 @@ abstract class EngineInfo(
     protected open fun DrawMouseIcon() {}
 
     protected open fun initJna() {
-        needToShowScreenControlsNativeDelegate = Function.getFunction(
-            mainEngineLib,
-            "needToShowScreenControls")
-        needToInvokeMouseButtonsEventsDelegate = Function.getFunction(
-            mainEngineLib,
-            "needToInvokeMouseButtonsEvents")
         Native.register(EngineInfo::class.java, mainEngineLib)
     }
 
