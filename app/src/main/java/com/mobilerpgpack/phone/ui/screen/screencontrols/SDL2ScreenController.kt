@@ -23,7 +23,8 @@ class SDL2ScreenController : SDLScreenController() {
         val normalizedX = x / viewWidth
         val normalizedY = y / viewHeight
         SDLActivity.onNativeTouch(event.deviceId, pointerId,
-            eventAction, normalizedX, normalizedY, pressure)
+            eventAction, normalizedX, normalizedY, pressure,
+            engineInfo.mouseButtonsEventsCanBeInvoked)
     }
 
     companion object{

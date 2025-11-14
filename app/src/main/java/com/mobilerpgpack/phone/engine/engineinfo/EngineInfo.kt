@@ -85,11 +85,10 @@ abstract class EngineInfo(
 
     override val nativeLibraries: Array<String> get() = allLibs
 
-    final override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
+    final override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate
+        .callAs(Boolean::class.java)
 
     private var safeAreaWasApplied = false
-
-    private lateinit var needToShowScreenControlsNativeDelegate: Function
 
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
@@ -100,11 +99,14 @@ abstract class EngineInfo(
 
     private var commandLineParams : String? = ""
 
+    private lateinit var needToShowScreenControlsNativeDelegate: Function
+
+    private lateinit var needToInvokeMouseButtonsEventsDelegate : Function
+
     private external fun pauseSound()
 
     private external fun resumeSound()
 
-    private external fun needToInvokeMouseButtonsEvents() : Boolean
 
     override val commandLineArgs: Array<String>
         get() {
@@ -195,8 +197,10 @@ abstract class EngineInfo(
     protected open fun initJna() {
         needToShowScreenControlsNativeDelegate = Function.getFunction(
             mainEngineLib,
-            "needToShowScreenControls"
-        )
+            "needToShowScreenControls")
+        needToInvokeMouseButtonsEventsDelegate = Function.getFunction(
+            mainEngineLib,
+            "needToInvokeMouseButtonsEvents")
         Native.register(EngineInfo::class.java, mainEngineLib)
     }
 
