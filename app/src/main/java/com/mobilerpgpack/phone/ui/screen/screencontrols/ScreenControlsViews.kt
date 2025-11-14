@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
+import android.text.InputType
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -442,6 +443,7 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.05f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard,
+        inputType = InputType.TYPE_CLASS_NUMBER,
         deleteSymbolsKeyCode = KeyEvent.KEYCODE_DPAD_LEFT,
         symbolsCountToDeleteBeforeInput = 4,
         delayBetweenCharsMs = 20))
