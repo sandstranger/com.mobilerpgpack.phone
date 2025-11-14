@@ -39,9 +39,9 @@ abstract class MouseIcon {
         var iconOffset by remember { mutableStateOf(IntOffset.Zero) }
         val offsetXMouse by preferencesStorage.offsetXMouse.collectAsState(initial = 0f)
         val offsetYMouse by preferencesStorage.offsetYMouse.collectAsState(initial = 0f)
-        val screenResolution = activity.getScreenResolution()
-        val sdlWidth = fixedWidth.toFloat()
-        val sdlHeight = fixedHeight.toFloat()
+        val sdlWidth = fixedWidth
+        val sdlHeight = fixedHeight
+        val screenResolution = activity.getScreenResolution(drawInSafeArea = false)
 
         LaunchedEffect(Unit) {
             while (true) {
