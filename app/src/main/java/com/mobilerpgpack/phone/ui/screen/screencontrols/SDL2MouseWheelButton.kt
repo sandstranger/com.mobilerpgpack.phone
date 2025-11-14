@@ -2,9 +2,9 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
-import org.libsdl3.app.SDLActivity
+import org.libsdl.app.SDLActivity
 
-class SDL3MouseWheelButton(
+class SDL2MouseWheelButton(
     id: String,
     engineType: EngineTypes,
     wheelUp : Boolean,
