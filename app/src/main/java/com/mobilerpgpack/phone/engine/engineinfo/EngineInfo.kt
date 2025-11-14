@@ -234,6 +234,7 @@ abstract class EngineInfo(
                         if (showCustomMouseCursor) {
                             binding.mouseOverlayUI.setContent {
                                 AutoMouseModeComposable()
+                                binding.mouseOverlayUI.visibility = if(isCursorVisible == 1) View.VISIBLE else View.GONE
                                 if (isCursorVisible == 1) {
                                     DrawMouseIcon()
                                 }
