@@ -19,6 +19,8 @@ interface IEngineInfo {
 
     val commandLineArgs : Array<String>
 
+    val mouseButtonsEventsCanBeInvoked : Boolean
+
     suspend fun initialize(activity: ComponentActivity)
 
     fun loadLayout()

@@ -17,6 +17,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
 abstract class SDLScreenController : ScreenController() {
@@ -24,6 +29,12 @@ abstract class SDLScreenController : ScreenController() {
     protected abstract val viewWidth : Int
 
     protected abstract val viewHeight : Int
+
+    protected val engineInfo by lazy {
+        runBlocking {
+            get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.first()))
+        }
+    }
 
     @Composable
     final override fun DrawTouchCamera() {
