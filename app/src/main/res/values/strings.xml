@@ -30,6 +30,8 @@
     <string name="custom_aspect_ratio">Custom screen aspect ratio</string>
     <string name="custom_aspect_ratio_hint">16x9</string>
     <string name="show_custom_mouse_cursor">Show custom mouse cursor. (Do not work in Doom 1 RPG)</string>
+    <string name="custom_mouse_cursor_horizontal_offset">Custom mouse cursor horizontal offset. (Useful for custom resolutions)</string>
+    <string name="custom_mouse_cursor_vertical_offset">Custom mouse cursor vertical offset. (Useful for custom resolutions)</string>
     <string name="allow_to_edit_controls_in_game">Enable in-game control editing</string>
     <string name="active_engine">Active engine</string>
     <string name="use_custom_file_picker">Use custom file picker (for Android TV)</string>

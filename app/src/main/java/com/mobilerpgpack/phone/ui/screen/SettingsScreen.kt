@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
 import android.content.Context
+import android.util.Log
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -39,8 +40,6 @@ import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.translator.ITranslationManager
-import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.getBackgroundColor
@@ -71,7 +70,6 @@ class SettingsScreen : KoinComponent {
 
     private val context : Context by inject()
     private val preferencesStorage : PreferencesStorage = get ()
-    private val translationManager : ITranslationManager by inject ()
     private val settings = DataStoreSettings(preferencesStorage.dataStore)
 
     @Composable
@@ -179,8 +177,8 @@ class SettingsScreen : KoinComponent {
                 .verticalScroll(scrollState),
         ) {
             DrawCommonSettings( scope, activeEngine)
-            DrawGraphicsSettings( scope)
-            DrawUserInterfaceSettings()
+            DrawGraphicsSettings()
+            DrawUserInterfaceSettings(scope)
         }
     }
 
@@ -209,7 +207,7 @@ class SettingsScreen : KoinComponent {
     }
 
     @Composable
-    private fun DrawGraphicsSettings(scope: CoroutineScope) {
+    private fun DrawGraphicsSettings() {
 
         DrawTitleText(context.getString(R.string.graphics_settings))
 
@@ -245,7 +243,7 @@ class SettingsScreen : KoinComponent {
     }
 
     @Composable
-    private fun DrawUserInterfaceSettings() {
+    private fun DrawUserInterfaceSettings(scope: CoroutineScope) {
         val activity = LocalActivity.current!!
         val engineState by preferencesStorage.activeEngineAsFlowString.collectAsState(
             initial =
@@ -255,6 +253,12 @@ class SettingsScreen : KoinComponent {
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
         val useStandardSDLTextInput by preferencesStorage.useStandardSDLTextInput
             .collectAsState(initial = false)
+
+        val horizontalMouseIconOffset by preferencesStorage.offsetXMouse
+            .collectAsState(initial = 0f)
+
+        val verticalMouseIconOffset by preferencesStorage.offsetYMouse
+            .collectAsState(initial = 0f)
 
         DrawTitleText(context.getString(R.string.user_interface_settings))
 
@@ -280,6 +284,28 @@ class SettingsScreen : KoinComponent {
             context.getString(R.string.show_custom_mouse_cursor),
              preferencesStorage.showCustomMouseCursor,
             preferencesStorage.showCustomMouseCursorPrefsKey.name)
+
+        HorizontalDivider()
+
+        EditTextPreferenceItem(
+            context.getString(R.string.custom_mouse_cursor_horizontal_offset),
+            horizontalMouseIconOffset.toString()){
+            val floatValue = it.toFloatOrNull() ?: 0.0f
+                scope.launch {
+                    preferencesStorage.setOffsetXMouse(floatValue)
+                }
+            }
+
+        HorizontalDivider()
+
+        EditTextPreferenceItem(
+            context.getString(R.string.custom_mouse_cursor_vertical_offset),
+             verticalMouseIconOffset.toString()){
+            val floatValue = it.toFloatOrNull() ?: 0.0f
+            scope.launch {
+                preferencesStorage.setOffsetYMouse(floatValue)
+            }
+        }
 
         HorizontalDivider()
 

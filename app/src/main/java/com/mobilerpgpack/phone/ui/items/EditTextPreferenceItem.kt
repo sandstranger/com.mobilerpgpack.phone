@@ -16,7 +16,7 @@ import com.mobilerpgpack.phone.R
 fun EditTextPreferenceItem(
     title: String,
     value: String,
-    key : String,
+    key : String = "",
     hint: String = "",
     onValueChanged: (String) -> Unit = {}) {
     val context = LocalContext.current
@@ -28,7 +28,9 @@ fun EditTextPreferenceItem(
         title = { Text(title) },
         value = value,
         onValueChanged = { newValue : String ->
-            preferences.putString(key, newValue)
+            if (key.isNotEmpty()) {
+                preferences.putString(key, newValue)
+            }
             onValueChanged(newValue)
         },
         summary = {  Text(
