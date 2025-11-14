@@ -37,7 +37,6 @@ open class Doom64EngineInfo(
     override fun initJna() {
         super.initJna()
         Native.register(Doom64EngineInfo::class.java, mainEngineLib)
-
     }
 
     override fun setScreenResolution(screenResolution: ScreenResolution) {
@@ -53,6 +52,8 @@ open class Doom64EngineInfo(
             RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
         }
     }
+
+    final override fun isMouseShown(): Int = if (super.mouseButtonsEventsCanBeInvoked) 1 else 0
 
     protected open fun getPathToDoom64UserFolder() =
         pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator

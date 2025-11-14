@@ -7,7 +7,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64.Doom64AutorunButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.gamepad.SDL3OnScreenGamepad
 
-private const val LEFT_MOUSE_BUTTON_ID = 1
+const val LEFT_MOUSE_BUTTON_ID = 1
 
 val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
     SDL2Dpad(
@@ -276,14 +276,14 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F,
         isQuickPanel = true
     ),
-    SDL3MouseImageButton(
+    SDL3ImageButton(
         "attack",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.45f,
         sizePercent = 0.13f,
         buttonResId = R.drawable.attack_button,
-        sdlKeyEvent = LEFT_MOUSE_BUTTON_ID
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
     SDL3ImageButton(
         "quick_save",
