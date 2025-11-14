@@ -233,8 +233,7 @@ abstract class EngineInfo(
 
                         if (showCustomMouseCursor) {
                             binding.mouseOverlayUI.setContent {
-                                AutoMouseModeComposable()
-                                binding.mouseOverlayUI.visibility = if(isCursorVisible == 1) View.VISIBLE else View.GONE
+                                AutoMouseModeComposable(binding)
                                 if (isCursorVisible == 1) {
                                     DrawMouseIcon()
                                 }
@@ -330,7 +329,7 @@ abstract class EngineInfo(
 
     @SuppressLint("CoroutineCreationDuringComposition")
     @Composable
-    private fun AutoMouseModeComposable() {
+    private fun AutoMouseModeComposable(binding : GameLayoutBinding) {
         var isMouseShown by remember { mutableIntStateOf(isMouseShown()) }
         // Launch a Choreographer callback to update isMouseShown in real-time
         DisposableEffect(Unit) {
@@ -339,6 +338,7 @@ abstract class EngineInfo(
                 override fun doFrame(frameTimeNanos: Long) {
                     isMouseShown = isMouseShown()
                     isCursorVisible = isMouseShown
+                    binding.mouseOverlayUI.visibility = if(isCursorVisible == 1) View.VISIBLE else View.GONE
                     choreographer.postFrameCallback(this)
                 }
             }
