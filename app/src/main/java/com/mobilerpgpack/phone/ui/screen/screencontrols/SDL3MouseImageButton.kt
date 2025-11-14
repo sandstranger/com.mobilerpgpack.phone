@@ -24,14 +24,8 @@ class SDL3MouseImageButton(
     }
 
     override fun onTouchDown(keyCode: Int) =
-        SDLActivity.onNativeMouse(sdlKeyEvent, MotionEvent.ACTION_DOWN,
-            DEFAULT_POSITION, DEFAULT_POSITION, false)
+        SDLActivity.onVirtualMouse(sdlKeyEvent, MotionEvent.ACTION_DOWN)
 
     override fun onTouchUp(keyCode: Int) =
-        SDLActivity.onNativeMouse(sdlKeyEvent, MotionEvent.ACTION_UP,
-            DEFAULT_POSITION, DEFAULT_POSITION, false)
-
-    private companion object{
-        private const val DEFAULT_POSITION = Int.MIN_VALUE.toFloat()
-    }
+        SDLActivity.onVirtualMouse(sdlKeyEvent, MotionEvent.ACTION_UP)
 }
