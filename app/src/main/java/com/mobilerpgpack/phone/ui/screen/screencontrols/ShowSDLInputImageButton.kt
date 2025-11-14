@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.InputType
 import android.view.KeyEvent
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
@@ -25,6 +26,7 @@ abstract class ShowSDLInputImageButton(
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
     buttonResId: Int = NOT_EXISTING_RES,
+    private val inputType: Int = InputType.TYPE_CLASS_TEXT,
     private val deleteSymbolsKeyCode: Int = DELETE_SYMBOL_KEYCODE,
     private var symbolsCountToDeleteBeforeInput: Int = SYMBOLS_COUNT_TO_DELETE_BEFORE_INPUT,
     private val delayBetweenCharsMs : Long = DEFAULT_DELAY_BETWEEN_CHARS_MS) : KoinComponent,
@@ -58,7 +60,8 @@ abstract class ShowSDLInputImageButton(
     @SuppressLint("CheckResult")
     override fun onClick(context: Context) {
         MaterialDialog(context).show {
-            input { _, text -> scope.launch { enterText(text) } }
+            input (inputType = inputType)
+            { _, text -> scope.launch { enterText(text) } }
             positiveButton(R.string.ok_text)
             negativeButton(R.string.cancel_text)
             title(R.string.sdl_virtual_input)
