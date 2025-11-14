@@ -85,6 +85,8 @@ abstract class EngineInfo(
 
     override val nativeLibraries: Array<String> get() = allLibs
 
+    final override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
+
     private var safeAreaWasApplied = false
 
     private lateinit var needToShowScreenControlsNativeDelegate: Function
@@ -101,6 +103,8 @@ abstract class EngineInfo(
     private external fun pauseSound()
 
     private external fun resumeSound()
+
+    private external fun needToInvokeMouseButtonsEvents() : Boolean
 
     override val commandLineArgs: Array<String>
         get() {

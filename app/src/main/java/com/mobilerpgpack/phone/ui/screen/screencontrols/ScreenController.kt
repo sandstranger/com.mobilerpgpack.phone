@@ -61,7 +61,7 @@ open class ScreenController : KoinComponent, IScreenController {
 
     private val context : Context = get ()
 
-    private val preferencesStorage : PreferencesStorage = get ()
+    protected val preferencesStorage : PreferencesStorage = get ()
 
     override var activeViewsToDraw: Collection<IScreenControlsView>? = null
 
