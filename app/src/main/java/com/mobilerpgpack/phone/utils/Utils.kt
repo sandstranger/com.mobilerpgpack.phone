@@ -26,7 +26,9 @@ suspend fun startGame(context: Context, engineToPlay: EngineTypes) {
     val activeEngineInfo: IEngineInfo = get (IEngineInfo::class.java,
         named(engineToPlay.toString()))
 
-    if (activeEngineInfo.pathToResource.first().isEmpty()) {
+    val pathToResource = activeEngineInfo.pathToResource.first()
+
+    if (pathToResource.isEmpty() || !File(pathToResource).exists()) {
         MaterialDialog(context).show {
             title(R.string.error)
             message(R.string.can_not_start_engine)
