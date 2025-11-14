@@ -1,7 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getScreenResolution
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
 import kotlin.math.roundToInt
@@ -34,25 +35,28 @@ abstract class MouseIcon {
     @Composable
     fun DrawMouseIcon() {
         val preferencesStorage = koinInject<PreferencesStorage>()
+        val activity = LocalActivity.current!!
         var iconOffset by remember { mutableStateOf(IntOffset.Zero) }
         val offsetXMouse by preferencesStorage.offsetXMouse.collectAsState(initial = 0f)
         val offsetYMouse by preferencesStorage.offsetYMouse.collectAsState(initial = 0f)
-        val displayMetrics = Resources.getSystem().displayMetrics
-        val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
-        val sdlWidth = fixedWidth
-        val sdlHeight = fixedHeight
+        val screenResolution = activity.getScreenResolution()
+        val sdlWidth = fixedWidth.toFloat()
+        val sdlHeight = fixedHeight.toFloat()
 
         LaunchedEffect(Unit) {
             while (true) {
                 if (sdlWidth > 0 && sdlHeight > 0) {
-                    val x = (getMouseX() + offsetXMouse) * (screenWidth / sdlWidth)
-                    val y = (getMouseY() + offsetYMouse) * (screenHeight / sdlHeight)
-                    iconOffset = IntOffset(x.roundToInt(), y.roundToInt())
+                    val x = (getMouseX() + offsetXMouse) * (screenResolution.screenWidth / sdlWidth)
+                    val y = (getMouseY() + offsetYMouse) * (screenResolution.screenHeight / sdlHeight)
+                    if (!x.isNaN() && !y.isNaN()) {
+                        iconOffset = IntOffset(x.roundToInt(), y.roundToInt())
+                    }
                 } else {
                     val x = (getMouseX() + offsetXMouse)
                     val y = (getMouseY() + offsetYMouse)
-                    iconOffset = IntOffset(x.roundToInt(), y.roundToInt())
+                    if (!x.isNaN() && !y.isNaN()) {
+                        iconOffset = IntOffset(x.roundToInt(), y.roundToInt())
+                    }
                 }
 
                 delay(16L)
