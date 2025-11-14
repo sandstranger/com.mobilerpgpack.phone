@@ -25,6 +25,10 @@ open class Doom64EngineInfo(
 
     private external fun RecalculateScreenResolution (screenWidth : Int, screenHeight : Int)
 
+    init {
+        Native.register(Doom64EngineInfo::class.java, mainEngineLib)
+    }
+
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
 
@@ -32,11 +36,6 @@ open class Doom64EngineInfo(
 
         Os.setenv("PATH_TO_DOOM64_MODS_FOLDER", pathToDoom64ModsFolder, true)
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
-    }
-
-    override fun initJna() {
-        super.initJna()
-        Native.register(Doom64EngineInfo::class.java, mainEngineLib)
     }
 
     override fun setScreenResolution(screenResolution: ScreenResolution) {

@@ -99,12 +99,12 @@ abstract class EngineInfo(
 
     private var commandLineParams : String? = ""
 
-    private val needToShowScreenControlsNativeDelegate: Function by lazy {
+    private val needToShowScreenControlsNativeDelegate by lazy {
         Function.getFunction(mainEngineLib,
             "needToShowScreenControls")
     }
 
-    private val needToInvokeMouseButtonsEventsDelegate : Function by lazy {
+    private val needToInvokeMouseButtonsEventsDelegate by lazy {
         Function.getFunction(mainEngineLib,
             "needToInvokeMouseButtonsEvents")
     }
@@ -112,7 +112,6 @@ abstract class EngineInfo(
     private external fun pauseSound()
 
     private external fun resumeSound()
-
 
     override val commandLineArgs: Array<String>
         get() {
@@ -135,9 +134,12 @@ abstract class EngineInfo(
             }
         }
 
+    init {
+        Native.register(EngineInfo::class.java, mainEngineLib)
+    }
+
     override suspend fun initialize(activity: ComponentActivity) {
         this.activity = activity
-        initJna()
         initializeCommonEngineData()
         resolution = activity.getScreenResolution()
 
@@ -199,10 +201,6 @@ abstract class EngineInfo(
 
     @Composable
     protected open fun DrawMouseIcon() {}
-
-    protected open fun initJna() {
-        Native.register(EngineInfo::class.java, mainEngineLib)
-    }
 
     private fun inflateControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
