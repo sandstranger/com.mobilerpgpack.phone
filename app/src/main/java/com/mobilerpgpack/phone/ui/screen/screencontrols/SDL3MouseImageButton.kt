@@ -12,23 +12,23 @@ class SDL3MouseImageButton(
     offsetYPercent: Float = 0f,
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
-    sdlKeyEvent: Int = 0,
+    private val sdlKeyEvent: Int = 0,
     buttonResId: Int = NOT_EXISTING_RES,
     override val isQuickPanel: Boolean = false,
     useToggle: Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
-        alpha,sdlKeyEvent, buttonResId, useToggle = useToggle) {
+        alpha,Int.MIN_VALUE, buttonResId, useToggle = useToggle) {
 
     init {
         show = !isQuickPanel
     }
 
     override fun onTouchDown(keyCode: Int) =
-        SDLActivity.onNativeMouse(keyCode, MotionEvent.ACTION_DOWN,
+        SDLActivity.onNativeMouse(sdlKeyEvent, MotionEvent.ACTION_DOWN,
             DEFAULT_POSITION, DEFAULT_POSITION, false)
 
     override fun onTouchUp(keyCode: Int) =
-        SDLActivity.onNativeMouse(keyCode, MotionEvent.ACTION_UP,
+        SDLActivity.onNativeMouse(sdlKeyEvent, MotionEvent.ACTION_UP,
             DEFAULT_POSITION, DEFAULT_POSITION, false)
 
     private companion object{
