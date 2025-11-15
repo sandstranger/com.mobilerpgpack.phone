@@ -38,8 +38,10 @@ class Doom64AutorunButton (engineType: EngineTypes,
     }
 
     override fun onToggleStateChanged(isActive: Boolean) {
-        objectsArray[0] = isActive
-        onAutoRunStateChangedNativeDelegate.invoke(objectsArray)
+        onAutoRunStateChangedNativeDelegate.invoke(isActive.let {
+            objectsArray[0] = it
+            return@let objectsArray
+        })
     }
 
     private companion object{
