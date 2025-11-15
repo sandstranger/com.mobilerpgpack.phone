@@ -11,6 +11,8 @@ interface IEngineInfo {
 
     val pathToResource: Flow<String>
 
+    val mainLibraryName : String
+
     val mainSharedObject : String
 
     val nativeLibraries : Array<String>

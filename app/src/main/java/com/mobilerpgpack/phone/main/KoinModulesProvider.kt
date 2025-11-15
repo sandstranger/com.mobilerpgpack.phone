@@ -346,26 +346,6 @@ class KoinModulesProvider(private val context: Context,
             bind<IEngineInfo>()
         }
 
-        single { DOOM64_ENHANCED_MAIN_ENGINE_LIB }.withOptions {
-            named(EngineTypes.Doom64ExPlusEnhanced.toString())
-        }
-
-        single { DOOM64_MAIN_ENGINE_LIB }.withOptions {
-            named(EngineTypes.Doom64ExPlus.toString())
-        }
-
-        single { DOOM2RPG_MAIN_ENGINE_LIB }.withOptions {
-            named(EngineTypes.Doom2Rpg.toString())
-        }
-
-        single { DOOMRPG_MAIN_ENGINE_LIB }.withOptions {
-            named(EngineTypes.DoomRpg.toString())
-        }
-
-        single { WOLFENSTEINRPG_MAIN_ENGINE_LIB }.withOptions {
-            named(EngineTypes.WolfensteinRpg.toString())
-        }
-
         single<IEngineUIController> { WolfensteinRpgComposeSettings(wolfensteinButtons) }
             .withOptions { named(EngineTypes.WolfensteinRpg.toString()) }
     }

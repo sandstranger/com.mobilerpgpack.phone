@@ -76,6 +76,8 @@ abstract class EngineInfo(
 
     protected abstract val screenController: IScreenController
 
+    final override val mainLibraryName: String = mainEngineLib
+
     override val engineType: EngineTypes = activeEngineType
 
     override val pathToResource: Flow<String> = pathToResourceFlow
