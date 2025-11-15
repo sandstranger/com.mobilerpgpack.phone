@@ -59,7 +59,7 @@ open class Doom64EngineInfo(
         }
     }
 
-    final override fun isMouseShown(): Int = if (mouseCursorCanBeDrawnNativeDelegate.invokeBool()) 1 else 0
+    final override fun isMouseShown() = mouseCursorCanBeDrawnNativeDelegate.invokeBool()
 
     protected open fun getPathToDoom64UserFolder() =
         pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
