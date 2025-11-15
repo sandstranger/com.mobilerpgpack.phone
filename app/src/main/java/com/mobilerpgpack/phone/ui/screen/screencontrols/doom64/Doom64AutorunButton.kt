@@ -4,7 +4,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ToggleImageButton
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.sun.jna.Native
+import com.sun.jna.Function
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
@@ -23,21 +23,9 @@ class Doom64AutorunButton (engineType: EngineTypes,
 
     private val preferencesStorage : PreferencesStorage by inject ()
 
-    private var isJnaWasInit = false
+    private val objectsArray : Array <Any?> = arrayOfNulls <Any>(1)
 
-    private external fun OnAutoRunStateChanged (isAutorunEnabled : Boolean)
-
-    override fun onToggleStateChanged(isActive: Boolean) {
-        initJna()
-        OnAutoRunStateChanged(isActive)
-    }
-
-    private fun initJna(){
-        if (isJnaWasInit){
-            return
-        }
-
-        isJnaWasInit = true
+    private val onAutoRunStateChangedNativeDelegate by lazy {
         val mainEngineLibName = preferencesStorage.let {
             var activeEngine : String
             runBlocking {
@@ -45,7 +33,13 @@ class Doom64AutorunButton (engineType: EngineTypes,
             }
             get <String> (named(activeEngine))
         }
-        Native.register(Doom64AutorunButton::class.java, mainEngineLibName)
+        Function.getFunction(mainEngineLibName,
+            "OnAutoRunStateChanged")
+    }
+
+    override fun onToggleStateChanged(isActive: Boolean) {
+        objectsArray[0] = isActive
+        onAutoRunStateChangedNativeDelegate.invoke(objectsArray)
     }
 
     private companion object{

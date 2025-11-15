@@ -7,6 +7,8 @@ class KeyCodesProvider : IKeyCodesProvider {
 
     private val charMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
 
+    private val charArray : CharArray = CharArray(1)
+
     private val cachedKeyEvents = mutableMapOf<Char, Int>()
 
     override fun getKeyCode (charItem : Char) : Int{
@@ -14,7 +16,8 @@ class KeyCodesProvider : IKeyCodesProvider {
             return cachedKeyEvents[charItem]!!
         }
 
-        val events : Array<KeyEvent>? = charMap.getEvents(charArrayOf(charItem))
+        charArray[0] = charItem
+        val events : Array<KeyEvent>? = charMap.getEvents(charArray)
         return if (!events.isNullOrEmpty()) {
             val keyCode = events[0].keyCode
             cachedKeyEvents[charItem] = keyCode
