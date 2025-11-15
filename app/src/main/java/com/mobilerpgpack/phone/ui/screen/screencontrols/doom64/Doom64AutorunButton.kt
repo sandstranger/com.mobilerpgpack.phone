@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.doom64
 
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ToggleImageButton
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -31,7 +32,7 @@ class Doom64AutorunButton (engineType: EngineTypes,
             runBlocking {
                 activeEngine = it.activeEngineAsFlowString.first()
             }
-            get <String> (named(activeEngine))
+            get <IEngineInfo> (named(activeEngine)).mainLibraryName
         }
         Function.getFunction(mainEngineLibName,
             "OnAutoRunStateChanged")
