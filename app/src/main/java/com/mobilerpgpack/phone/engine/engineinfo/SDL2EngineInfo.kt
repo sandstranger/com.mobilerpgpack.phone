@@ -34,7 +34,7 @@ abstract class SDL2EngineInfo(
         named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
     )
 
-    override fun isMouseShown(): Int = SDLActivity.isMouseShown()
+    override fun isMouseShown() = SDLActivity.isMouseShown()
 
     @Composable
     override fun DrawMouseIcon() {

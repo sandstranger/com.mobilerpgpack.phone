@@ -94,7 +94,7 @@ abstract class EngineInfo(
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
     private var allowToEditScreenControlsInGame = false
-    private var isCursorVisible by mutableIntStateOf(0)
+    private var isCursorVisible by mutableStateOf(false)
     private var enableControlsAutoHidingFeature = false
     private var displayInSafeArea: Boolean = false
 
@@ -196,7 +196,7 @@ abstract class EngineInfo(
 
     protected abstract fun setScreenResolution(screenResolution: ScreenResolution)
 
-    protected open fun isMouseShown(): Int = 1
+    protected open fun isMouseShown(): Boolean = true
 
     protected open fun onSafeAreaApplied (screenResolution : ScreenResolution){}
 
@@ -233,7 +233,7 @@ abstract class EngineInfo(
                         if (showCustomMouseCursor) {
                             binding.mouseOverlayUI.setContent {
                                 AutoMouseModeComposable(binding)
-                                if (isCursorVisible == 1) {
+                                if (isCursorVisible) {
                                     DrawMouseIcon()
                                 }
                             }
@@ -328,7 +328,7 @@ abstract class EngineInfo(
     @SuppressLint("CoroutineCreationDuringComposition")
     @Composable
     private fun AutoMouseModeComposable(binding : GameLayoutBinding) {
-        var isMouseShown by remember { mutableIntStateOf(isMouseShown()) }
+        var isMouseShown by remember { mutableStateOf(isMouseShown()) }
         // Launch a Choreographer callback to update isMouseShown in real-time
         DisposableEffect(Unit) {
             val choreographer = Choreographer.getInstance()
@@ -336,7 +336,7 @@ abstract class EngineInfo(
                 override fun doFrame(frameTimeNanos: Long) {
                     isMouseShown = isMouseShown()
                     isCursorVisible = isMouseShown
-                    binding.mouseOverlayUI.visibility = if(isCursorVisible == 1) View.VISIBLE else View.GONE
+                    binding.mouseOverlayUI.visibility = if(isCursorVisible) View.VISIBLE else View.GONE
                     choreographer.postFrameCallback(this)
                 }
             }
