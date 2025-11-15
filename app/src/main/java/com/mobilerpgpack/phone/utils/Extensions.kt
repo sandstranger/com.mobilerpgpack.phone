@@ -25,10 +25,10 @@ data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
 
-fun com.sun.jna.Function.invokeBool(inArgs : Array<Any>? = null) = this.invokeAs(Boolean::class.java, inArgs)
+fun com.sun.jna.Function.invokeBool(inArgs : Array<Any?>? = null) = this.invokeAs(Boolean::class.java, inArgs)
 
 @Suppress("UNCHECKED_CAST")
-fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any>? = null): T = this.invoke(returnType, inArgs) as T
+fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>? = null): T = this.invoke(returnType, inArgs) as T
 
 inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
     this.startActivity(T::class.java, finishParentActivity)
