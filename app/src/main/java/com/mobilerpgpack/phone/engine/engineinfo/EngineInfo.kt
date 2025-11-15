@@ -47,7 +47,7 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 abstract class EngineInfo(
-    protected val mainEngineLib: String,
+    mainEngineLib: String,
     private val allLibs: Array<String>,
     private val viewsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
@@ -81,8 +81,6 @@ abstract class EngineInfo(
     override val engineType: EngineTypes = activeEngineType
 
     override val pathToResource: Flow<String> = pathToResourceFlow
-
-    override val mainSharedObject: String get() = buildFullLibraryName(mainEngineLib)
 
     override val nativeLibraries: Array<String> get() = allLibs
 
