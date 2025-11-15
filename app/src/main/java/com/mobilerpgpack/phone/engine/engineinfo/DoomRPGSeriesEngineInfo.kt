@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.utils.invokeBool
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.inject
@@ -18,6 +19,8 @@ open class DoomRPGSeriesEngineInfo(
     SDL2EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType, pathToResourceFlow) {
 
     private val translationManager: ITranslationManager by inject()
+
+    override fun isMouseShown() = true
 
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)

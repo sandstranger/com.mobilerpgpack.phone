@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
-import android.app.Activity
 import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -22,6 +21,8 @@ class DoomRpgEngineInfo(
     private var savedDoomRpgScreenHeight: Int = 0
 
     override val pathToResource: Flow<String> = super.preferencesStorage.pathToDoomRpgZipFile
+
+    override fun isMouseShown() = false
 
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
