@@ -90,7 +90,7 @@ abstract class SDLScreenController : ScreenController() {
                                 fun handlePointer(touchAction: Int) {
                                     handlePointer(trackedPointerId, pressure, x, y,
                                         mWidth, mHeight,touchAction,
-                                        DEFAULT_TOUCH_DEVICE_ID)
+                                        event.motionEvent?.deviceId ?: DEFAULT_TOUCH_DEVICE_ID)
                                 }
 
                                 when {
