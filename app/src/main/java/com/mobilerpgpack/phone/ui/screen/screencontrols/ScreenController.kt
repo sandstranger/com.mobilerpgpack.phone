@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -259,6 +260,7 @@ open class ScreenController : KoinComponent, IScreenController {
                         .align(Alignment.TopStart)
                         .size(60.dp)
                         .alpha(0.75f)
+                        .minimumInteractiveComponentSize()
                         .padding(8.dp)
                         .then(
                             Modifier.clickable(
@@ -298,6 +300,7 @@ open class ScreenController : KoinComponent, IScreenController {
             modifier = Modifier
                 .offset { IntOffset(position.x.roundToInt(), position.y.roundToInt()) }
                 .size(sizeDp)
+                .minimumInteractiveComponentSize()
                 .alpha(viewToDraw.buttonState.alpha)
                 .background(
                     if (isSelected && isEditMode) Color.Red.copy(alpha = 0.5f)
