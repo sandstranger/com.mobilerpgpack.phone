@@ -61,12 +61,10 @@ abstract class EngineInfo(
     protected lateinit var resolution: ScreenResolution
         private set
 
-    protected var controlsOverlayUI: View? = null
+    private var controlsOverlayUI: View? = null
 
     protected lateinit var activity: ComponentActivity
         private set
-
-    protected var needToShowControlsLastState: Boolean = false
 
     protected val pathToRootUserFolder: String = get(
         named(
@@ -82,12 +80,12 @@ abstract class EngineInfo(
 
     override val pathToResource: Flow<String> = pathToResourceFlow
 
-    override val nativeLibraries: Array<String> get() = allLibs
+    final override val nativeLibraries: Array<String> get() = allLibs
 
     final override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
 
     private var safeAreaWasApplied = false
-
+    private var needToShowControlsLastState: Boolean = false
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
     private var allowToEditScreenControlsInGame = false
