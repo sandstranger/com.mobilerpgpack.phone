@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.ScreenResolution
+import com.mobilerpgpack.phone.utils.invokeBool
+import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -22,6 +24,11 @@ open class Doom64EngineInfo(
     override val pathToResource: Flow<String> = preferencesStorage.pathToDoom64MainWadsFolder
 
     private var customScreenResolutionWasApplied = false
+
+    private val mouseCursorCanBeDrawnNativeDelegate by lazy {
+        Function.getFunction(mainEngineLib,
+            "MouseCursorCanBeDrawn")
+    }
 
     private external fun RecalculateScreenResolution (screenWidth : Int, screenHeight : Int)
 
@@ -52,7 +59,7 @@ open class Doom64EngineInfo(
         }
     }
 
-    final override fun isMouseShown(): Int = if (super.mouseButtonsEventsCanBeInvoked) 1 else 0
+    final override fun isMouseShown(): Int = if (mouseCursorCanBeDrawnNativeDelegate.invokeBool()) 1 else 0
 
     protected open fun getPathToDoom64UserFolder() =
         pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
