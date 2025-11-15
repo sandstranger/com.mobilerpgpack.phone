@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.activity
 
 import android.os.Bundle
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
