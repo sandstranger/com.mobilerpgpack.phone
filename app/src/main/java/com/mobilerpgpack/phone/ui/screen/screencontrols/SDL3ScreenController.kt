@@ -20,11 +20,11 @@ class SDL3ScreenController : SDLScreenController() {
         viewWidth: Float,
         viewHeight: Float,
         eventAction: Int,
-        event: MotionEvent
+        touchDeviceId: Int
     ) {
         val normalizedX = getNormalizedX(x)
         val normalizedY = getNormalizedY(y)
-        SDLActivity.onNativeTouch(event.deviceId, pointerId,
+        SDLActivity.onNativeTouch(touchDeviceId, pointerId,
             eventAction, normalizedX, normalizedY, pressure,
             engineInfo.mouseButtonsEventsCanBeInvoked)
     }
