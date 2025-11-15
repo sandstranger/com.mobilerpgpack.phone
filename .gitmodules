@@ -55,3 +55,6 @@ url=https://github.com/pnggroup/libpng.git
 [submodule "app/src/main/jni/DOOM64-EX-Plus-Enhanced"]
 	path = app/src/main/jni/DOOM64-EX-Plus-Enhanced
 	url = https://github.com/sandstranger/DOOM64-EX-Plus-Enhanced.git
+[submodule "app/src/main/jni/PsyDoom"]
+	path = app/src/main/jni/PsyDoom
+	url = https://github.com/sandstranger/PsyDoom.git
