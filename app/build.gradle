@@ -178,7 +178,8 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':machine_translator:Translator:build', ':third_party:sdl2:android-project:app:build', ':third_party:openal:build',
         ':third_party:sdl2-mixer:build',':third_party:sdl2-ttf:build', ':third_party:NG-GL4ES:build',
         ':third_party:libpng:build',':third_party:sdl3:android-project:app:build',
-        ':third_party:fmod:build',':third_party:legacy_gl4es:build',':third_party:oboe:build'
+        ':third_party:fmod:build',':third_party:legacy_gl4es:build',':third_party:oboe:build',
+        ':third_party:freetype:build'
 
 dependencies {
     implementation(project(":third_party:oboe"))
@@ -190,6 +191,7 @@ dependencies {
     implementation (project(":machine_translator:CTranslate2Proxy"))
     implementation (project(":machine_translator:Translator"))
     implementation (project(":third_party:libpng"))
+    implementation (project(":third_party:freetype"))
     implementation (project(":third_party:sdl3:android-project:app"))
     implementation (project(":third_party:fmod"))
     implementation (project(":third_party:bing_translator"))
