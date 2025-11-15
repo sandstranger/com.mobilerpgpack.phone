@@ -110,7 +110,6 @@ else ()
     set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/freetype/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libfreetype.so")
 endif ()
 
-set(PSYDOOM_INCLUDE_LAUNCHER FALSE)
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
@@ -119,6 +118,8 @@ add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
 add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
+
+set(PSYDOOM_INCLUDE_LAUNCHER FALSE BOOL)
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
@@ -149,6 +150,12 @@ target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${OPENGL
 
 target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${OPENGL_opengl_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
+
+target_include_directories(PsyDoom PRIVATE ${SDL2_INCLUDE_DIR})
+target_link_libraries(PsyDoom PRIVATE ${SDL2_LIBRARY})
+
+target_include_directories(VulkanGL PRIVATE ${SDL2_INCLUDE_DIR})
+target_link_libraries(VulkanGL PRIVATE ${SDL2_LIBRARY})
 
 add_library(SDL3MouseHelper SHARED)
 target_sources(SDL3MouseHelper PRIVATE "${APP_ROOT_DIR}/SDL3MouseIconHelper.c")
