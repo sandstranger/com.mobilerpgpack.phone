@@ -244,6 +244,25 @@ class SettingsScreen : KoinComponent {
 
     @Composable
     private fun DrawUserInterfaceSettings(scope: CoroutineScope) {
+        val useStandardSDLTextInput by preferencesStorage.useStandardSDLTextInput
+            .collectAsState(initial = false)
+
+        DrawTitleText(context.getString(R.string.user_interface_settings))
+        DrawEditScreenControlsSettings()
+        HorizontalDivider()
+
+        SwitchPreferenceItem(context.getString(R.string.use_standard_sdl_text_input),
+            useStandardSDLTextInput,
+            preferencesStorage.useStandardSDLTextInputPrefsKey.name)
+
+        HorizontalDivider()
+
+        DrawMouseCustomCursorSettings(scope)
+        HorizontalDivider()
+    }
+
+    @Composable
+    private fun DrawEditScreenControlsSettings (){
         val activity = LocalActivity.current!!
         val engineState by preferencesStorage.activeEngineAsFlowString.collectAsState(
             initial =
@@ -251,22 +270,6 @@ class SettingsScreen : KoinComponent {
         )
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState!!) }
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
-        val useStandardSDLTextInput by preferencesStorage.useStandardSDLTextInput
-            .collectAsState(initial = false)
-
-        val horizontalMouseIconOffset by preferencesStorage.offsetXMouse
-            .collectAsState(initial = 0f)
-
-        val verticalMouseIconOffset by preferencesStorage.offsetYMouse
-            .collectAsState(initial = 0f)
-
-        DrawTitleText(context.getString(R.string.user_interface_settings))
-
-        SwitchPreferenceItem(context.getString(R.string.use_standard_sdl_text_input),
-            useStandardSDLTextInput,
-            preferencesStorage.useStandardSDLTextInputPrefsKey.name)
-
-        HorizontalDivider()
 
         PreferenceItem(context.getString(R.string.keys_editor)) {
             drawKeysEditor = true
@@ -276,35 +279,6 @@ class SettingsScreen : KoinComponent {
 
         PreferenceItem(context.getString(R.string.configure_screen_controls)) {
             ScreenControlsEditorActivity.editControls( activity,activeEngine)
-        }
-
-        HorizontalDivider()
-
-        SwitchPreferenceItem(
-            context.getString(R.string.show_custom_mouse_cursor),
-             preferencesStorage.showCustomMouseCursor,
-            preferencesStorage.showCustomMouseCursorPrefsKey.name)
-
-        HorizontalDivider()
-
-        EditTextPreferenceItem(
-            context.getString(R.string.custom_mouse_cursor_horizontal_offset),
-            horizontalMouseIconOffset.toString()){
-            val floatValue = it.toFloatOrNull() ?: 0.0f
-                scope.launch {
-                    preferencesStorage.setOffsetXMouse(floatValue)
-                }
-            }
-
-        HorizontalDivider()
-
-        EditTextPreferenceItem(
-            context.getString(R.string.custom_mouse_cursor_vertical_offset),
-             verticalMouseIconOffset.toString()){
-            val floatValue = it.toFloatOrNull() ?: 0.0f
-            scope.launch {
-                preferencesStorage.setOffsetYMouse(floatValue)
-            }
         }
 
         HorizontalDivider()
@@ -328,12 +302,46 @@ class SettingsScreen : KoinComponent {
             preferencesStorage.autoHideScreenControls,
             preferencesStorage.enableControlsAutoHiding.name)
 
-        HorizontalDivider()
-
         if (drawKeysEditor) {
             val engineInfo : IEngineUIController = get (named(activeEngine.toString()))
             KeysEditor(engineInfo.screenViewsToDraw) {
                 drawKeysEditor = false
+            }
+        }
+    }
+
+    @Composable
+    private fun DrawMouseCustomCursorSettings (scope: CoroutineScope){
+        val horizontalMouseIconOffset by preferencesStorage.offsetXMouse
+            .collectAsState(initial = 0f)
+
+        val verticalMouseIconOffset by preferencesStorage.offsetYMouse
+            .collectAsState(initial = 0f)
+
+        SwitchPreferenceItem(
+            context.getString(R.string.show_custom_mouse_cursor),
+            preferencesStorage.showCustomMouseCursor,
+            preferencesStorage.showCustomMouseCursorPrefsKey.name)
+
+        HorizontalDivider()
+
+        EditTextPreferenceItem(
+            context.getString(R.string.custom_mouse_cursor_horizontal_offset),
+            horizontalMouseIconOffset.toString()){
+            val floatValue = it.toFloatOrNull() ?: 0.0f
+            scope.launch {
+                preferencesStorage.setOffsetXMouse(floatValue)
+            }
+        }
+
+        HorizontalDivider()
+
+        EditTextPreferenceItem(
+            context.getString(R.string.custom_mouse_cursor_vertical_offset),
+            verticalMouseIconOffset.toString()){
+            val floatValue = it.toFloatOrNull() ?: 0.0f
+            scope.launch {
+                preferencesStorage.setOffsetYMouse(floatValue)
             }
         }
     }
