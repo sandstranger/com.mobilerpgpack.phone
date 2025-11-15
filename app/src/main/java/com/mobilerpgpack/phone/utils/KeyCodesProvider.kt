@@ -16,8 +16,10 @@ class KeyCodesProvider : IKeyCodesProvider {
             return cachedKeyEvents[charItem]!!
         }
 
-        charArray[0] = charItem
-        val events : Array<KeyEvent>? = charMap.getEvents(charArray)
+        val events : Array<KeyEvent>? = charItem.let {
+            charArray[0] = it
+            charMap.getEvents(charArray)
+        }
         return if (!events.isNullOrEmpty()) {
             val keyCode = events[0].keyCode
             cachedKeyEvents[charItem] = keyCode
