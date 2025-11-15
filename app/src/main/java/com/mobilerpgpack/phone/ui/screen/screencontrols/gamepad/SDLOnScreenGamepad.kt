@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -137,6 +138,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                     clip = false
                     compositingStrategy = CompositingStrategy.ModulateAlpha
                 }
+                .minimumInteractiveComponentSize()
                 .onSizeChanged { size ->
                     canvasW = size.width
                     canvasH = size.height
