@@ -58,3 +58,6 @@ url=https://github.com/pnggroup/libpng.git
 [submodule "app/src/main/jni/PsyDoom"]
 	path = app/src/main/jni/PsyDoom
 	url = https://github.com/sandstranger/PsyDoom.git
+[submodule "third_party/freetype/src/main/jni/freetype"]
+	path = third_party/freetype/src/main/jni/freetype
+	url = https://github.com/freetype/freetype.git
