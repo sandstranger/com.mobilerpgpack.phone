@@ -52,19 +52,21 @@ fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolu
 
     val bounds = windowMetrics.bounds
 
+    val screenResolution = ScreenResolution(bounds.width(), bounds.height())
+
     if (!drawInSafeArea){
-        return ScreenResolution(bounds.width(), bounds.height())
+        return screenResolution
     }
 
-    ViewCompat.getRootWindowInsets(window.decorView)?.let { insets ->
+    return ViewCompat.getRootWindowInsets(window.decorView)?.let { insets ->
         val bars = insets.getInsets(
             WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
 
-        return ScreenResolution(bounds.width() - bars.left - bars.right,
+        ScreenResolution(bounds.width() - bars.left - bars.right,
             bounds.height() - bars.top - bars.bottom)
+    } ?: run {
+        screenResolution
     }
-
-    return ScreenResolution(bounds.width(), bounds.height())
 }
 
 fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {

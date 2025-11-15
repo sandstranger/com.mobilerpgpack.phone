@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.engineinfo
 import android.app.Activity
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.main.buildFullLibraryName
 import kotlinx.coroutines.flow.Flow
 
 interface IEngineInfo {
@@ -12,8 +13,6 @@ interface IEngineInfo {
     val pathToResource: Flow<String>
 
     val mainLibraryName : String
-
-    val mainSharedObject : String
 
     val nativeLibraries : Array<String>
 
@@ -33,3 +32,5 @@ interface IEngineInfo {
 
     fun onDestroy()
 }
+
+val IEngineInfo.mainSharedObject get() = buildFullLibraryName(this.mainLibraryName)
