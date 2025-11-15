@@ -30,6 +30,7 @@ import com.mobilerpgpack.phone.utils.callAs
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
+import com.mobilerpgpack.phone.utils.invokeBool
 import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
@@ -269,8 +270,7 @@ abstract class EngineInfo(
         }
 
         while (true) {
-            val needToShowControls: Boolean = needToShowScreenControlsNativeDelegate
-                .callAs(Boolean::class.java)
+            val needToShowControls: Boolean = needToShowScreenControlsNativeDelegate.invokeBool()
 
             if (needToShowControls != needToShowControlsLastState) {
                 this@EngineInfo.activity.runOnUiThread {
