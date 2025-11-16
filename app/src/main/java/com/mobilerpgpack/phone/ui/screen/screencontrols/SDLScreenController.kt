@@ -120,8 +120,9 @@ abstract class SDLScreenController : ScreenController() {
                                     }
                                 }
                             }
-                            if (event.motionEvent!=null){
-                                onMotionEventFinished(event.motionEvent!!)
+
+                            event.motionEvent?.let {
+                                onMotionEventFinished(it)
                             }
                         }
                     }
