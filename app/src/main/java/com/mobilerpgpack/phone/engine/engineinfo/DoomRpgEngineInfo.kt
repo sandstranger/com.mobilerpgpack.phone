@@ -13,8 +13,8 @@ import org.libsdl.app.SDLSurface
 class DoomRpgEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    buttonsToDraw: Collection<IScreenControlsView>,
-) : DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.DoomRpg,
+    buttonsToDraw: Collection<IScreenControlsView>) :
+    DoomRPGSeriesEngineInfo(mainEngineLib, allLibs, buttonsToDraw, EngineTypes.DoomRpg,
     emptyFlow()) {
 
     private var savedDoomRpgScreenWidth: Int = 0

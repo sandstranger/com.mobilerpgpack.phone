@@ -12,7 +12,6 @@ import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.NLLB200Translator
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
-import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.Doom2RpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.Doom64ComposeSettings
@@ -24,6 +23,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.translator.ITranslationManager
@@ -59,6 +59,7 @@ import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.PsyDoomPreferencesStorage
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
@@ -207,7 +208,7 @@ class KoinModulesProvider(private val context: Context,
     }
 
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
-    val composeModule = module {
+    private val composeModule = module {
         factory <StorageChooser> { (requestOnlyDirectory: Boolean, activity: Activity) ->
             val builder = StorageChooser.Builder()
                 .withActivity(activity)
@@ -245,44 +246,7 @@ class KoinModulesProvider(private val context: Context,
         factory <PreferenceHandler> { (settings : DataStoreSettings) -> CustomPreferenceHandler(settings) }
     }
 
-    val enginesModule = module {
-        single  {
-            val nativeLibs = arrayOf(gl4esLibraryName,
-                SDL3_NATIVE_LIB_NAME,
-                PNG_NATIVE_LIB_NAME,
-                FMOD_NATIVE_LIB_NAME,
-                DOOM64_MAIN_ENGINE_LIB)
-
-            Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
-                nativeLibs,
-                doom64Buttons,
-                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
-            named(EngineTypes.Doom64ExPlus.toString())
-            bind<IEngineInfo>()
-        }
-
-        single  {
-            val nativeLibs = arrayOf(gl4esLibraryName,
-                SDL3_NATIVE_LIB_NAME,
-                PNG_NATIVE_LIB_NAME,
-                FMOD_NATIVE_LIB_NAME,
-                DOOM64_ENHANCED_MAIN_ENGINE_LIB)
-
-            Doom64EnhancedEngineInfo(DOOM64_ENHANCED_MAIN_ENGINE_LIB,
-                nativeLibs,
-                doom64Buttons,
-                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
-            named(EngineTypes.Doom64ExPlusEnhanced.toString())
-            bind<IEngineInfo>()
-        }
-
-        single<IEngineUIController> { Doom64ComposeSettings(doom64Buttons) }
-            .withOptions {
-                named(EngineTypes.Doom64ExPlus.toString())
-            }.withOptions {
-                named(EngineTypes.Doom64ExPlusEnhanced.toString())
-            }
-
+    private val doomRpgSeriesModule = module {
         single {
             val nativeLibs = arrayOf(gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
@@ -350,8 +314,68 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.WolfensteinRpg.toString()) }
     }
 
+    private val doom64RegisterModule = module {
+        single  {
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                SDL3_NATIVE_LIB_NAME,
+                PNG_NATIVE_LIB_NAME,
+                FMOD_NATIVE_LIB_NAME,
+                DOOM64_MAIN_ENGINE_LIB)
+
+            Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
+                nativeLibs,
+                doom64Buttons,
+                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+            named(EngineTypes.Doom64ExPlus.toString())
+            bind<IEngineInfo>()
+        }
+
+        single  {
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                SDL3_NATIVE_LIB_NAME,
+                PNG_NATIVE_LIB_NAME,
+                FMOD_NATIVE_LIB_NAME,
+                DOOM64_ENHANCED_MAIN_ENGINE_LIB)
+
+            Doom64EnhancedEngineInfo(DOOM64_ENHANCED_MAIN_ENGINE_LIB,
+                nativeLibs,
+                doom64Buttons,
+                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+            named(EngineTypes.Doom64ExPlusEnhanced.toString())
+            bind<IEngineInfo>()
+        }
+
+        single<IEngineUIController> { Doom64ComposeSettings(doom64Buttons) }
+            .withOptions {
+                named(EngineTypes.Doom64ExPlus.toString())
+            }.withOptions {
+                named(EngineTypes.Doom64ExPlusEnhanced.toString())
+            }
+    }
+
+    private val psyDoomRegisterModule = module {
+        singleOf(::PsyDoomPreferencesStorage).withOptions {
+            named(EngineTypes.PsyDoom.toString())
+            bind<PsyDoomPreferencesStorage>()
+        }
+
+        single {
+            val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                PSYDOOM_MAIN_ENGINE_LIB)
+
+            PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
+                nativeLibs,
+                wolfensteinButtons)
+        }.withOptions {
+            named(EngineTypes.PsyDoom.toString())
+            bind<IEngineInfo>()
+        }
+    }
+
     init {
-        allModules = listOf<Module>(mainModule,httpModule,translationModule, composeModule, enginesModule)
+        allModules = listOf<Module>(mainModule,httpModule,translationModule,
+            composeModule, doomRpgSeriesModule, doom64RegisterModule, psyDoomRegisterModule)
     }
 
     private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {

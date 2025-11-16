@@ -5,7 +5,8 @@ enum class EngineTypes {
     DoomRpg,
     Doom2Rpg,
     Doom64ExPlus,
-    Doom64ExPlusEnhanced;
+    Doom64ExPlusEnhanced,
+    PsyDoom;
 
     companion object{
         val DefaultActiveEngine = WolfensteinRpg
