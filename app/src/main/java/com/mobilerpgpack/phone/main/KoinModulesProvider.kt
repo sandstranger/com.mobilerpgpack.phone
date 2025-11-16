@@ -359,15 +359,7 @@ class KoinModulesProvider(private val context: Context,
             bind<PsyDoomPreferencesStorage>()
         }
 
-        single {
-            val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
-                SDL2_NATIVE_LIB_NAME,
-                PSYDOOM_MAIN_ENGINE_LIB)
-
-            PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
-                nativeLibs,
-                wolfensteinButtons)
-        }.withOptions {
+        singleOf(::PsyDoomEngineInfo).withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<IEngineInfo>()
         }
