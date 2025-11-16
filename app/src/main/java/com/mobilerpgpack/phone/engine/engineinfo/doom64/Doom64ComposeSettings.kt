@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.doom64
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -6,9 +6,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.ui.items.DrawCommandLinePreferences
-import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.RequestPath
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
@@ -18,10 +18,9 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import org.koin.java.KoinJavaComponent.inject
 
 class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenControlsView>) :
-    KoinComponent,IEngineUIController{
+    KoinComponent, IEngineUIController {
 
     private val scope : CoroutineScope by inject(named(KoinModulesProvider.COROUTINES_SCOPE))
 

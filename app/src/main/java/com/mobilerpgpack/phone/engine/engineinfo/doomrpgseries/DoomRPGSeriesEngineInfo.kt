@@ -1,8 +1,9 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
 import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow

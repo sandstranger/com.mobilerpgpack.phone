@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.doom64
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView

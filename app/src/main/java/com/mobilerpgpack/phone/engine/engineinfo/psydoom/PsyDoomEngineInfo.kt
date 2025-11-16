@@ -1,7 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.main.FREETYPE_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.PSYDOOM_MAIN_ENGINE_LIB
 import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME

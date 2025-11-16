@@ -1,8 +1,9 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.doom64
 
 import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.invokeBool

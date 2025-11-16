@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -10,20 +10,22 @@ import com.mobilerpgpack.phone.ui.items.RequestPath
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.launch
 
-class WolfensteinRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
-    CommonDoomRpgComposeSettings (buttonsToDraw){
+class DoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
+    CommonDoomRpgComposeSettings(buttonsToDraw) {
 
     @Composable
     override fun DrawSettings() {
         val context = LocalContext.current
-        val previousPathToWolfensteinRpgIPa by preferencesStorage.pathToWolfensteinRpgIpaFile
+
+        val savedPathToDoomRpgZip by preferencesStorage.pathToDoomRpgZipFile
             .collectAsState(initial = "")
 
         RequestPath(
-            context.getString(R.string.wolfenstein_rpg_ipa_file), onPathSelected = { selectedPath ->
-                scope.launch { preferencesStorage.setPathToWolfensteinRpgIpaFile(selectedPath) }
+            context.getString(R.string.doom_rpg_zip_file),
+            onPathSelected = { selectedPath ->
+                scope.launch { preferencesStorage.setPathToDoomRpgZipFile(selectedPath) }
             },
-            previousPathToWolfensteinRpgIPa
+            savedPathToDoomRpgZip,
         )
         HorizontalDivider()
         super.DrawSettings()
