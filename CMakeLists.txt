@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 4.1)
 project(Engines_Hub)
 
+set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
 find_package(ZLIB REQUIRED)
 
 set(IS_DEBUG_BUILD OFF)
@@ -100,11 +103,23 @@ else()
     set(SDL3_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl3/android-project/app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL3.so)
 endif ()
 
-add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/WolfensteinRPG-RE")
-add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomRPG-RE")
-add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DoomIIRPG-RE")
-add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/Doom64EX-Plus")
-add_subdirectory("${CMAKE_SOURCE_DIR}/app/src/main/jni/DOOM64-EX-Plus-Enhanced")
+set(FREETYPE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/freetype/src/main/jni/freetype/include")
+if (IS_DEBUG_BUILD)
+    set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/freetype/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libfreetyped.so")
+else ()
+    set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/freetype/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libfreetype.so")
+endif ()
+
+set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
+
+add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
+add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
+add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
+add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
+add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
+add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
+
+set(PSYDOOM_INCLUDE_LAUNCHER FALSE BOOL)
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
@@ -136,7 +151,13 @@ target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${OPENGL
 target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${OPENGL_opengl_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
 
+target_include_directories(PsyDoom PRIVATE ${SDL2_INCLUDE_DIR})
+target_link_libraries(PsyDoom PRIVATE ${SDL2_LIBRARY})
+
+target_include_directories(VulkanGL PRIVATE ${SDL2_INCLUDE_DIR})
+target_link_libraries(VulkanGL PRIVATE ${SDL2_LIBRARY})
+
 add_library(SDL3MouseHelper SHARED)
-target_sources(SDL3MouseHelper PRIVATE app/src/main/jni/SDL3MouseIconHelper.c)
+target_sources(SDL3MouseHelper PRIVATE "${APP_ROOT_DIR}/SDL3MouseIconHelper.c")
 target_include_directories(SDL3MouseHelper PRIVATE ${SDL3_INCLUDE_DIR})
 target_link_libraries(SDL3MouseHelper PRIVATE ${SDL3_LIBRARY})
