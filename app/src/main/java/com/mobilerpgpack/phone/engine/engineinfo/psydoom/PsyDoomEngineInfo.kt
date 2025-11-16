@@ -6,7 +6,6 @@ import com.mobilerpgpack.phone.main.FREETYPE_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.PSYDOOM_MAIN_ENGINE_LIB
 import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
-import com.mobilerpgpack.phone.utils.PsyDoomPreferencesStorage
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 

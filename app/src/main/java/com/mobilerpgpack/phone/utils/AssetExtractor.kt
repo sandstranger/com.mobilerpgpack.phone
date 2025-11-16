@@ -2,6 +2,9 @@ package com.mobilerpgpack.phone.utils
 
 import android.content.Context
 import android.content.res.AssetManager
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,7 +17,7 @@ class AssetExtractor (private val context: Context,
 
     override val assetsCopied get() = _assetsCopied
 
-    private var _assetsCopied = false
+    private var _assetsCopied by mutableStateOf(false)
 
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
 
