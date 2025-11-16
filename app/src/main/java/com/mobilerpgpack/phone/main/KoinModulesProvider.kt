@@ -23,6 +23,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
@@ -59,7 +60,7 @@ import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.PsyDoomPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
@@ -362,6 +363,11 @@ class KoinModulesProvider(private val context: Context,
         singleOf(::PsyDoomEngineInfo).withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<IEngineInfo>()
+        }
+
+        singleOf(::PsyDoomComposeSettings).withOptions {
+            named(EngineTypes.PsyDoom.toString())
+            bind<IEngineUIController>()
         }
     }
 
