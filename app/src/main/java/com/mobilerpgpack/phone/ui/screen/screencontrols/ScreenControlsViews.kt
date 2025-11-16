@@ -5,7 +5,14 @@ import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64.Doom64AutorunButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.gamepad.SDL3OnScreenGamepad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenGamepad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.ShowSDL2InputImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.ShowSDL3InputImageButton
 
 const val LEFT_MOUSE_BUTTON_ID = 1
 
@@ -448,7 +455,9 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         inputType = InputType.TYPE_CLASS_NUMBER,
         deleteSymbolsKeyCode = KeyEvent.KEYCODE_DPAD_LEFT,
         symbolsCountToDeleteBeforeInput = 4,
-        delayBetweenCharsMs = 20))
+        delayBetweenCharsMs = 20
+    )
+)
 
 val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
     SDL2Dpad(

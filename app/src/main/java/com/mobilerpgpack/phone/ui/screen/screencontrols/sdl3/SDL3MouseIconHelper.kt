@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import com.sun.jna.Native
 

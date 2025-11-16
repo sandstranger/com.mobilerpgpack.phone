@@ -1,7 +1,8 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLImageButton
 import org.libsdl.app.SDLActivity.onNativeKeyDown
 import org.libsdl.app.SDLActivity.onNativeKeyUp
 

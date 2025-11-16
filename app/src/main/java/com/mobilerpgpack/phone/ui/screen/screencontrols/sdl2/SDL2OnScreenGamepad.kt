@@ -1,6 +1,7 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols.gamepad
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLOnScreenGamepad
 import org.libsdl.app.SDLControllerManager
 
 class SDL2OnScreenGamepad (engineType: EngineTypes,
