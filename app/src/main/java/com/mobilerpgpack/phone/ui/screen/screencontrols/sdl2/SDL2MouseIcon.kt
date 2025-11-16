@@ -1,5 +1,6 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
+import com.mobilerpgpack.phone.ui.screen.screencontrols.MouseIcon
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
 

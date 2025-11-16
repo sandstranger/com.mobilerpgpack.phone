@@ -45,10 +45,10 @@ import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2MouseIcon
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIcon
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons

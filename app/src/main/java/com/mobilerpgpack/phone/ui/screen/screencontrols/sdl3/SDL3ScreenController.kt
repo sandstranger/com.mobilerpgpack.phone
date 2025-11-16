@@ -1,6 +1,7 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import android.view.MotionEvent
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 import org.libsdl3.app.SDLSurface.getNormalizedX

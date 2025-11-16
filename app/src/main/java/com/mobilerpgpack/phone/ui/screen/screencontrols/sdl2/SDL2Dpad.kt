@@ -1,9 +1,10 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
 import com.mobilerpgpack.phone.engine.EngineTypes
-import org.libsdl3.app.SDLActivity.*
+import com.mobilerpgpack.phone.ui.screen.screencontrols.Dpad
+import org.libsdl.app.SDLActivity.*
 
-class SDL3Dpad(
+class SDL2Dpad(
     engineType: EngineTypes,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,

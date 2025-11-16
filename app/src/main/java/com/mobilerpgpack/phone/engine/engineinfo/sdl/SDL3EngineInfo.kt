@@ -6,9 +6,9 @@ import com.mobilerpgpack.phone.engine.activity.SDL3GameActivity
 import com.mobilerpgpack.phone.engine.engineinfo.EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIcon
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIconHelper
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIconHelper
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
