@@ -54,7 +54,7 @@ abstract class EngineInfo(
     pathToResourceFlow: Flow<String>,
     private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
 
-    protected val preferencesStorage: PreferencesStorage by inject()
+    protected open val preferencesStorage: PreferencesStorage by inject()
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 

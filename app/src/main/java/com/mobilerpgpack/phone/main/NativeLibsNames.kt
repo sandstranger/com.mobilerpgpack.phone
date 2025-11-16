@@ -4,6 +4,8 @@ import com.mobilerpgpack.phone.BuildConfig
 
 const val TRANSLATOR_NATIVE_LIB_NAME = "Translator"
 
+const val PSYDOOM_MAIN_ENGINE_LIB = "PsyDoom"
+
 const val DOOM64_MAIN_ENGINE_LIB = "DOOM64"
 
 const val DOOM64_ENHANCED_MAIN_ENGINE_LIB = "DOOM64-Enhanced"
@@ -33,6 +35,8 @@ const val OBOE_NATIVE_LUB_NAME = "oboe"
 const val SDL2_MIXER_NATIVE_LIB_NAME = "SDL2_mixer"
 
 const val SPIRV_NATIVE_LIB_NAME = "spirv-cross-c-shared"
+
+val FREETYPE_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "freetyped" else "freetype"
 
 val PNG_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "png16d" else "png16"
 

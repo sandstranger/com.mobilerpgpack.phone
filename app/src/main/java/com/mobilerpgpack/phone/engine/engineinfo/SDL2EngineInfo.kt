@@ -21,8 +21,8 @@ abstract class SDL2EngineInfo(
     allLibs: Array<String>,
     buttonsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
-    pathToResourceFlow: Flow<String>,
-    commandLineParamsFlow : Flow<String> = emptyFlow()) :
+    pathToResourceFlow: Flow<String> = emptyFlow(),
+    open val commandLineParamsFlow : Flow<String> = emptyFlow()) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType,
         pathToResourceFlow, commandLineParamsFlow) {
 
