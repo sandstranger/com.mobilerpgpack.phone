@@ -414,9 +414,9 @@ open class ScreenController : KoinComponent, IScreenController {
     }
 
     companion object {
-        private const val SCREEN_ITEMS_CHANGE_SIZE_OFFSET : Float = 0.009f
+        private const val SCREEN_ITEMS_CHANGE_SIZE_OFFSET : Float = 0.005f
 
-        private const val SCREEN_ITEMS_CHANGE_ALPHA_OFFSET : Float = 0.1f
+        private const val SCREEN_ITEMS_CHANGE_ALPHA_OFFSET : Float = 0.05f
 
         const val COMMON_SCREEN_CONTROLLER_NAME = "COMMON_SCREEN_CONTROLLER"
     }
