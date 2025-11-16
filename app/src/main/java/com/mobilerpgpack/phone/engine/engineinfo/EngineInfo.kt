@@ -119,8 +119,9 @@ abstract class EngineInfo(
                 val args = arrayListOf<String>()
 
                 commandLineParams!!.split(" ".toRegex()).forEach {
-                    if (it.isNotEmpty()) {
-                        args += it
+                    val trimmedString = it.trim()
+                    if (trimmedString.isNotBlank() && trimmedString.isNotEmpty()) {
+                        args += trimmedString
                     }
                 }
 

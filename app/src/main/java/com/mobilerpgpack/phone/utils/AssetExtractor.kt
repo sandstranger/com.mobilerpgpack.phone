@@ -2,19 +2,27 @@ package com.mobilerpgpack.phone.utils
 
 import android.content.Context
 import android.content.res.AssetManager
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-private const val GAME_FILES_ASSETS_FOLDER = "game_files"
-
-class AssetExtractor (private val context: Context) : IAssetExtractor {
+class AssetExtractor (private val context: Context,
+                      private val assetFoldersToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
 
     override val assetsCopied get() = _assetsCopied
 
     private var _assetsCopied = false
+
+    private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
+
+    private val alwaysCopyAllFiles : Boolean
+
+    init {
+        alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
+    }
 
     suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
         if (_assetsCopied){
@@ -57,14 +65,54 @@ class AssetExtractor (private val context: Context) : IAssetExtractor {
     }
 
     private fun compareAssetAndFileSize(assetManager: AssetManager, assetPath: String, file: File): Boolean {
+
+        if (!alwaysCopyAllFiles && assetFoldersToIgnoreChecking.any { assetPath.contains(it) }){
+            return true
+        }
+
         return try {
             assetManager.openFd(assetPath).use { assetFileDescriptor ->
                 val assetFileSize = assetFileDescriptor.length
                 val fileSize = file.length()
                 return assetFileSize == fileSize
             }
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             false
         }
+    }
+
+    private fun getAlwaysCopyFilesCurrentState () : Boolean{
+        val assetsVersionFile = File ("${pathToUserFolder}${File.separator}${ASSETS_VERSION_FILE_NAME}")
+
+        val gson = Gson()
+
+        fun writeDefaultVersionToVersionsFile () =
+            assetsVersionFile.writeText(gson.toJson(AssetsVersionProvider(
+                ASSETS_CURRENT_VERSION)))
+
+        if (!assetsVersionFile.exists()){
+            writeDefaultVersionToVersionsFile()
+            return true
+        }
+
+        try {
+            val assetsVersionProvider = gson.fromJson(assetsVersionFile.readText(),
+                AssetsVersionProvider::class.java)
+            return !ASSETS_CURRENT_VERSION.equals(assetsVersionProvider.assetsVersion, true)
+        }
+        catch (_ : Exception){
+            writeDefaultVersionToVersionsFile()
+            return true
+        }
+    }
+
+    private companion object{
+        private const val GAME_FILES_ASSETS_FOLDER = "game_files"
+
+        private const val ASSETS_CURRENT_VERSION = "1.0"
+
+        private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
+
+        private data class AssetsVersionProvider (val assetsVersion : String)
     }
 }
