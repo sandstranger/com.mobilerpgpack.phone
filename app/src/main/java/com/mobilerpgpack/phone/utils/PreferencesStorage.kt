@@ -45,6 +45,7 @@ open class PreferencesStorage(protected val context: Context) {
     val enableDoom64WideScreenPrefsKey = booleanPreferencesKey("enable_doom64_widescreen")
 
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
+
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
 
     val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
@@ -240,13 +241,13 @@ open class PreferencesStorage(protected val context: Context) {
         }
     }
 
-    private fun getStringValue(prefsKey: Preferences.Key<String>, defaultValue: String = ""): Flow<String> {
+    protected fun getStringValue(prefsKey: Preferences.Key<String>, defaultValue: String = ""): Flow<String> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
     }
 
-    private suspend fun setStringValue(prefsKey: Preferences.Key<String>, valueToSave: String) {
+    protected suspend fun setStringValue(prefsKey: Preferences.Key<String>, valueToSave: String) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
         }
