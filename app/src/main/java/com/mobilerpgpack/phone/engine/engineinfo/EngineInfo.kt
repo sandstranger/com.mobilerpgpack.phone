@@ -82,7 +82,9 @@ abstract class EngineInfo(
 
     final override val nativeLibraries: Array<String> get() = allLibs
 
-    final override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
+
+    protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
 
     private var safeAreaWasApplied = false
     private var needToShowControlsLastState: Boolean = false
@@ -266,7 +268,7 @@ abstract class EngineInfo(
         }
 
         while (true) {
-            val needToShowControls: Boolean = needToShowScreenControlsNativeDelegate.invokeBool()
+            val needToShowControls: Boolean = this.needToShowScreenControls
 
             if (needToShowControls != needToShowControlsLastState) {
                 this@EngineInfo.activity.runOnUiThread {
