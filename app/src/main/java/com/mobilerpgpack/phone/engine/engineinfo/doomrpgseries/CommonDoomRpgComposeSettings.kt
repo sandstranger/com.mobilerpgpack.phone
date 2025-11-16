@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.translator.models.TranslationType
@@ -28,7 +29,7 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
-    KoinComponent, IEngineUIController{
+    KoinComponent, IEngineUIController {
 
     private val translationManager : ITranslationManager by inject()
 

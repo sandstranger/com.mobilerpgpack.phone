@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
