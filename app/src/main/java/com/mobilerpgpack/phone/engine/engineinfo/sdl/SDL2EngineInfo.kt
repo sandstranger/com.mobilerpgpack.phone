@@ -1,40 +1,40 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.sdl
 
 import androidx.compose.runtime.Composable
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.activity.SDL3GameActivity
+import com.mobilerpgpack.phone.engine.activity.SDL2GameActivity
+import com.mobilerpgpack.phone.engine.engineinfo.EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIcon
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIconHelper
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2MouseIcon
+import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import org.libsdl3.app.SDLActivity
-import org.libsdl3.app.SDLSurface
+import org.libsdl.app.SDLActivity
+import org.libsdl.app.SDLSurface
 
-abstract class SDL3EngineInfo(
+abstract class SDL2EngineInfo(
     open val mainEngineLib: String = "",
     open val allLibs: Array<String> = emptyArray(),
     open val buttonsToDraw: Collection<IScreenControlsView> = emptyList(),
     activeEngineType: EngineTypes,
-    open val pathToResourceFlow: Flow<String> = emptyFlow(),
-    commandLineParamsFlow : Flow<String> = emptyFlow()) :
-    EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
-        activeEngineType, pathToResourceFlow, commandLineParamsFlow) {
+    pathToResourceFlow: Flow<String> = emptyFlow(),
+    open val commandLineParamsFlow : Flow<String> = emptyFlow()) :
+    EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType,
+        pathToResourceFlow, commandLineParamsFlow) {
 
-    private val mouseIcon: SDL3MouseIcon by inject()
+    private val mouseIcon: SDL2MouseIcon by inject()
 
-    override val gameActivityClazz: Class<*> = SDL3GameActivity::class.java
+    override val gameActivityClazz: Class<*> = SDL2GameActivity::class.java
 
     override val screenController: IScreenController by inject(
-        named(SDL3ScreenController.SDL3_SCREEN_CONTROLLER_NAME)
+        named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
     )
 
-    override fun isMouseShown() = SDL3MouseIconHelper.isMouseShown()
+    override fun isMouseShown() = SDLActivity.isMouseShown()
 
     @Composable
     override fun DrawMouseIcon() {
