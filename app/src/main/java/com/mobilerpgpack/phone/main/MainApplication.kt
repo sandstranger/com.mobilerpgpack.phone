@@ -42,7 +42,7 @@ class MainApplication : Application() {
     }
 
     private fun copyAllAssetsFromApk(){
-        assetExtractor = AssetExtractor(this)
+        assetExtractor = AssetExtractor(this,assetsFoldersToIgnoreChecking)
         globalScope.launch {
             assetExtractor.copyAssetsContentToInternalStorage()
         }
