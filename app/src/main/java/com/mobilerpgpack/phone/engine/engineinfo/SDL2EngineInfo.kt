@@ -17,9 +17,9 @@ import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
 
 abstract class SDL2EngineInfo(
-    mainEngineLib: String,
-    allLibs: Array<String>,
-    buttonsToDraw: Collection<IScreenControlsView>,
+    open val mainEngineLib: String = "",
+    open val allLibs: Array<String> = emptyArray(),
+    open val buttonsToDraw: Collection<IScreenControlsView> = emptyList(),
     activeEngineType: EngineTypes,
     pathToResourceFlow: Flow<String> = emptyFlow(),
     open val commandLineParamsFlow : Flow<String> = emptyFlow()) :
