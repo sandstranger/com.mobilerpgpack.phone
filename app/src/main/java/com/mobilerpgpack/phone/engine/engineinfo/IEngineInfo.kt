@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
-import android.app.Activity
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.buildFullLibraryName

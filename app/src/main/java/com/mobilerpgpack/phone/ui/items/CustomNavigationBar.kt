@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 
+@Suppress("DEPRECATION")
 @Composable
 fun SetupNavigationBar(useDarkTheme: Boolean) {
     val activity = LocalActivity.current!!

@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
-import android.view.MotionEvent
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
 
@@ -18,11 +17,11 @@ class SDL2ScreenController : SDLScreenController() {
         viewWidth: Float,
         viewHeight: Float,
         eventAction: Int,
-        event: MotionEvent
+        touchDeviceId: Int
     ) {
         val normalizedX = x / viewWidth
         val normalizedY = y / viewHeight
-        SDLActivity.onNativeTouch(event.deviceId, pointerId,
+        SDLActivity.onNativeTouch(touchDeviceId, pointerId,
             eventAction, normalizedX, normalizedY, pressure,
             engineInfo.mouseButtonsEventsCanBeInvoked)
     }
