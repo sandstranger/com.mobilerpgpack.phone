@@ -18,10 +18,8 @@ class AssetExtractor (private val context: Context,
 
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
 
-    private val alwaysCopyAllFiles : Boolean
-
-    init {
-        alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
+    private val alwaysCopyAllFiles by lazy {
+        getAlwaysCopyFilesCurrentState()
     }
 
     suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
