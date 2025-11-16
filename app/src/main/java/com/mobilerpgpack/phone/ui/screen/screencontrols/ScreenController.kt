@@ -384,19 +384,19 @@ open class ScreenController : KoinComponent, IScreenController {
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { onAlphaChange(+0.1f) }) {
+                Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
                     Text(context.getString(R.string.increase_controls_alpha))
                 }
-                Button(onClick = { onAlphaChange(-0.1f) }) {
+                Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
                     Text(context.getString(R.string.decrease_controls_alpha))
                 }
             }
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { onSizeChange(+0.01f) }) {
+                Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
                     Text(context.getString(R.string.increase_controls_size))
                 }
-                Button(onClick = { onSizeChange(-0.01f) }) {
+                Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
                     Text(context.getString(R.string.decrease_controls_size))
                 }
             }
@@ -414,6 +414,10 @@ open class ScreenController : KoinComponent, IScreenController {
     }
 
     companion object {
+        private const val SCREEN_ITEMS_CHANGE_SIZE_OFFSET : Float = 0.009f
+
+        private const val SCREEN_ITEMS_CHANGE_ALPHA_OFFSET : Float = 0.1f
+
         const val COMMON_SCREEN_CONTROLLER_NAME = "COMMON_SCREEN_CONTROLLER"
     }
 }

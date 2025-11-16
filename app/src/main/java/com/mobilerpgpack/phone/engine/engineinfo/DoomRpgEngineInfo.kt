@@ -20,6 +20,8 @@ class DoomRpgEngineInfo(
     private var savedDoomRpgScreenWidth: Int = 0
     private var savedDoomRpgScreenHeight: Int = 0
 
+    override val needToShowScreenControls: Boolean = true
+
     override val pathToResource: Flow<String> = super.preferencesStorage.pathToDoomRpgZipFile
 
     override fun isMouseShown() = false
