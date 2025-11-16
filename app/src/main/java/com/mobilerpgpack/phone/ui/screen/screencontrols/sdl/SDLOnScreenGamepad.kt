@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols.gamepad
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.util.Log
 import androidx.compose.foundation.Canvas
@@ -47,7 +47,8 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         offsetXPercent = offsetXPercent,
         offsetYPercent = offsetYPercent,
         sizePercent = sizePercent,
-        alpha = alpha)
+        alpha = alpha
+    )
 
     override var show: Boolean by mutableStateOf(true)
 
@@ -110,11 +111,13 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.Companion.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Joystick(isEditMode, inGame,
-                onUpdateStick = ::updateStick)
+            Joystick(
+                isEditMode, inGame,
+                onUpdateStick = ::updateStick
+            )
         }
     }
 
@@ -132,11 +135,11 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         var canvasH by remember { mutableIntStateOf(0) }
 
         Canvas(
-            modifier = Modifier
+            modifier = Modifier.Companion
                 .fillMaxSize()
                 .graphicsLayer {
                     clip = false
-                    compositingStrategy = CompositingStrategy.ModulateAlpha
+                    compositingStrategy = CompositingStrategy.Companion.ModulateAlpha
                 }
                 .minimumInteractiveComponentSize()
                 .onSizeChanged { size ->
@@ -157,7 +160,15 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                             currentX = change.position.x
                             currentY = change.position.y
                             val strokeWidthPx = 2.dp.toPx()
-                            onDrag(canvasW, canvasH, strokeWidthPx, currentX, currentY, onUpdateStick, stickId)
+                            onDrag(
+                                canvasW,
+                                canvasH,
+                                strokeWidthPx,
+                                currentX,
+                                currentY,
+                                onUpdateStick,
+                                stickId
+                            )
                         },
                         onDragEnd = {
                             down = false
@@ -179,7 +190,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
             val minDim = min(w, h)
             val strokeWidthPx = 2.dp.toPx()
             val paint = Paint().apply {
-                style = PaintingStyle.Stroke
+                style = PaintingStyle.Companion.Stroke
                 strokeWidth = strokeWidthPx
             }
 
@@ -193,7 +204,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
             val centerY = h / 2f
 
             drawCircle(
-                color = Color.Gray,
+                color = Color.Companion.Gray,
                 radius = outerRadius,
                 center = Offset(centerX, centerY),
                 style = Stroke(width = paint.strokeWidth)
@@ -217,7 +228,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                 drawY = drawY.coerceIn(knobRadius, h - knobRadius)
 
                 drawCircle(
-                    color = Color.Gray,
+                    color = Color.Companion.Gray,
                     radius = knobRadius,
                     center = Offset(drawX, drawY),
                     style = Stroke(width = paint.strokeWidth)

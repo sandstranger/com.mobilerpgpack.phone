@@ -1,11 +1,12 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
-import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
-import org.libsdl.app.SDLActivity
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLImageButton
+import org.libsdl3.app.SDLActivity.onNativeKeyUp
+import org.libsdl3.app.SDLActivity.onNativeKeyDown
 
-class SDL2MouseImageButton(
+class SDL3ImageButton(
     id: String,
     engineType: EngineTypes,
     offsetXPercent: Float = 0f,
@@ -23,9 +24,7 @@ class SDL2MouseImageButton(
         show = !isQuickPanel
     }
 
-    override fun onTouchDown(keyCode: Int) =
-        SDLActivity.onVirtualMouse(keyCode, MotionEvent.ACTION_DOWN)
+    override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 
-    override fun onTouchUp(keyCode: Int) =
-        SDLActivity.onVirtualMouse(keyCode, MotionEvent.ACTION_UP)
+    override fun onTouchUp(keyCode: Int) = onNativeKeyUp(keyCode)
 }

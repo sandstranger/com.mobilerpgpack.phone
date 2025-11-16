@@ -1,5 +1,6 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
+import com.mobilerpgpack.phone.ui.screen.screencontrols.MouseIcon
 import org.libsdl3.app.SDLSurface
 
 class SDL3MouseIcon : MouseIcon() {

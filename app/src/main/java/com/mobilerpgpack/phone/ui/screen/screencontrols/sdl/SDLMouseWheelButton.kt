@@ -1,7 +1,8 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 
 abstract class SDLMouseWheelButton(
     id: String,
