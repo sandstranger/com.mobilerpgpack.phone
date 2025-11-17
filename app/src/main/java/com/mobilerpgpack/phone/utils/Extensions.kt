@@ -38,10 +38,10 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
 fun Activity.showErrorDialogBox (messageToShowResource: Int) =
     this.showMessageDialogBox(R.string.error, messageToShowResource)
 
-fun Activity.showMessageDialogBox (titleResource : Int = Int.MIN_VALUE, messageToShowResource: Int){
+fun Activity.showMessageDialogBox (titleResource : Int? = null, messageToShowResource: Int){
     this.runOnUiThread {
         MaterialDialog(this).show {
-            if (titleResource!= Int.MIN_VALUE) {
+            if (titleResource!= null) {
                 title(titleResource)
             }
             message(messageToShowResource)
