@@ -32,6 +32,8 @@ class AssetExtractor (private val context: Context,
 
     override val assetsStartedCopyListeners: MutableCollection<() -> Unit> = mutableListOf()
 
+    override val assetsFinishCopyListeners: MutableCollection<() -> Unit> = mutableListOf()
+
     override suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
         if (assetsCopying){
             return@withContext
@@ -46,6 +48,7 @@ class AssetExtractor (private val context: Context,
         finally {
             _assetsCopied = true
             assetsCopying = false
+            assetsFinishCopyListeners.forEach { it.invoke() }
         }
     }
 

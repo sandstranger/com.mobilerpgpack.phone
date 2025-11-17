@@ -54,6 +54,7 @@ abstract class BaseM2M100TranslationModel(
 
     init {
         assetsExtractor.assetsStartedCopyListeners += { onAssetsStartedCopy() }
+        assetsExtractor.assetsFinishCopyListeners += { onAssetsFinishCopy() }
     }
 
     override fun initialize(sourceLocale: String, targetLocale: String) {
@@ -131,5 +132,11 @@ abstract class BaseM2M100TranslationModel(
 
     private fun onAssetsStartedCopy () {
         isModelDownloaded = false
+    }
+
+    private fun onAssetsFinishCopy (){
+        runBlocking {
+            needToDownloadModel()
+        }
     }
 }
