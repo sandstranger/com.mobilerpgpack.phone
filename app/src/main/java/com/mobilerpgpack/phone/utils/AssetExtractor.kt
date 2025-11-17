@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.concurrent.CopyOnWriteArrayList
 
 class AssetExtractor (private val context: Context,
                       private val assetFoldersToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
@@ -30,9 +31,9 @@ class AssetExtractor (private val context: Context,
 
     override val assetsCopied get() = _assetsCopied
 
-    override val assetsStartedCopyListeners: MutableCollection<() -> Unit> = mutableListOf()
+    override val assetsStartedCopyListeners: MutableCollection<() -> Unit> = CopyOnWriteArrayList()
 
-    override val assetsFinishCopyListeners: MutableCollection<() -> Unit> = mutableListOf()
+    override val assetsFinishCopyListeners: MutableCollection<() -> Unit> = CopyOnWriteArrayList()
 
     override suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
         if (assetsCopying){
