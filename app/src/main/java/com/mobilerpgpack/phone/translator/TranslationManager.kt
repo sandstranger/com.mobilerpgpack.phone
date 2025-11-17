@@ -129,7 +129,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
             emit(isTranslationSupported())
             delay(500)
         }
-    }
+    }.distinctUntilChanged()
     
     override fun isTargetLocaleSupported () : Boolean = _translationModel.isLocaleSupported(targetLocale)
 
