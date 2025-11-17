@@ -14,7 +14,7 @@ import org.koin.core.parameter.parametersOf
 fun RequestPath(explorerItemTitle: String,
                 onPathSelected: (String) -> Unit,
                 previousSavedPath: String = "",
-                requestOnlyDirectory: Boolean = false) {
+                requestMode: RequestPathMode = RequestPathMode.Directory) {
     val activity = LocalActivity.current
     var currentPath by rememberSaveable(previousSavedPath)
     {
@@ -22,7 +22,7 @@ fun RequestPath(explorerItemTitle: String,
     }
 
     val fileChooser = koinInject<StorageChooser>(parameters = {
-        parametersOf(requestOnlyDirectory,activity ) })
+        parametersOf(requestMode,activity ) })
 
     PreferenceItem(
         explorerItemTitle, currentPath,
@@ -30,4 +30,10 @@ fun RequestPath(explorerItemTitle: String,
             fileChooser.setOnSelectListener { path -> onPathSelected(path) }
             fileChooser.show()
         })
+}
+
+enum class RequestPathMode{
+    Directory,
+    Archive,
+    Cue
 }

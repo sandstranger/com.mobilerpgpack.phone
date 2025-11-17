@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.RequestPath
+import com.mobilerpgpack.phone.ui.items.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.launch
 
@@ -25,7 +26,7 @@ class DoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
                 scope.launch { preferencesStorage.setPathToDoomRpgZipFile(selectedPath) }
             },
             savedPathToDoomRpgZip,
-        )
+            requestMode = RequestPathMode.Archive)
         HorizontalDivider()
         super.DrawSettings()
     }

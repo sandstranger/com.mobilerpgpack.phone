@@ -6,11 +6,15 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 
 class PsyDoomPreferencesStorage (context : Context) : PreferencesStorage(context) {
 
-    val pathToPsyDoomResourcesPrefsKey = stringPreferencesKey("path_to_psydoom_resources")
+    val pathToPsyDoomCueFilePrefsKey = stringPreferencesKey("path_to_psydoom_cue_file")
+
+    val pathToPsyDoomModsFolderPrefsKey = stringPreferencesKey("path_to_psydoom_mods_folder")
 
     val psyDoomCommandLineArgsPrefsKey = stringPreferencesKey("pdydoom_command_line_args")
 
-    val pathToPsyDoomResources get() = getStringValue(pathToPsyDoomResourcesPrefsKey)
+    val pathToPsyDoomCueFile get() = getStringValue(pathToPsyDoomCueFilePrefsKey)
+
+    val pathToPsyDoomModsFolder get() = getStringValue(pathToPsyDoomModsFolderPrefsKey)
 
     val psyDoomCommandLineArgsString get() = getStringValue(psyDoomCommandLineArgsPrefsKey)
 }
