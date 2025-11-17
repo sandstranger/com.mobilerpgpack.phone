@@ -11,6 +11,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.translator.ITranslationManager
+import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
@@ -30,6 +31,8 @@ import org.koin.core.qualifier.named
 
 open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
     KoinComponent, IEngineUIController {
+
+    private val translationModelsDownloader : ITranslationModelsDownloader by inject ()
 
     private val translationManager : ITranslationManager by inject()
 
@@ -77,7 +80,7 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
             preferencesStorage.allowDownloadingModelsOverMobile,
             preferencesStorage.allowDownloadingModelsOverMobilePrefsKey.name
         ) {
-            translationManager.allowDownloadingOveMobile = it
+            translationModelsDownloader.allowDownloadingOveMobile = it
         }
 
         HorizontalDivider()
