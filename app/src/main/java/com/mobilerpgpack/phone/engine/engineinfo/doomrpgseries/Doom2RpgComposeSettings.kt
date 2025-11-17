@@ -23,11 +23,9 @@ class Doom2RpgComposeSettings(buttonsToDraw: Collection<IScreenControlsView>) :
 
         RequestPath(
             stringResource(R.string.doom2_rpg_ipa_file),
-            onPathSelected = { selectedPath ->
-                scope.launch { preferencesStorage.setPathToDoom2RpgIpaFile(selectedPath) }
-            },
-            previousPathToDoom2RpgIpa, requestMode = RequestPathMode.Archive
-        )
+            previousPathToDoom2RpgIpa, requestMode = RequestPathMode.Archive){ selectedPath ->
+            scope.launch { preferencesStorage.setPathToDoom2RpgIpaFile(selectedPath) }
+        }
 
         HorizontalDivider()
 

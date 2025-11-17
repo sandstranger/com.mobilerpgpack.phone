@@ -92,7 +92,7 @@ class KoinModulesProvider(private val context: Context,
 
     private val clampButtonsMap = HashMap<EngineTypes, Preferences.Key<Boolean>>()
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
-    private val preferencesStorage: PreferencesStorage = PreferencesStorage(context)
+    private val preferencesStorage: PreferencesStorage = PreferencesStorage(context, scope)
 
     val allModules : List<Module>
 
