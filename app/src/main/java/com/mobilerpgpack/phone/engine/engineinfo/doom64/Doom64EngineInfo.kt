@@ -8,7 +8,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.invokeBool
 import com.sun.jna.Function
-import com.sun.jna.Native
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -31,10 +30,9 @@ open class Doom64EngineInfo(
             "MouseCursorCanBeDrawn")
     }
 
-    private external fun RecalculateScreenResolution (screenWidth : Int, screenHeight : Int)
-
-    init {
-        Native.register(Doom64EngineInfo::class.java, mainEngineLib)
+    private val recalculateScreenResolution by lazy {
+        Function.getFunction(mainEngineLib,
+            "RecalculateScreenResolution")
     }
 
     override suspend fun initialize(activity: ComponentActivity) {
@@ -56,7 +54,7 @@ open class Doom64EngineInfo(
         super.onSafeAreaApplied(screenResolution)
         if (!customScreenResolutionWasApplied) {
             setupScreenResolutionToEnv(screenResolution)
-            RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
+            recalculateScreenResolution.invokeVoid(arrayOf(screenResolution.screenWidth, screenResolution.screenHeight))
         }
     }
 
