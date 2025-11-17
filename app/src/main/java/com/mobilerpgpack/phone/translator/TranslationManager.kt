@@ -94,13 +94,6 @@ class TranslationManager : KoinComponent, ITranslationManager {
             }
         }
 
-    override var allowDownloadingOveMobile: Boolean = false
-        set(value) {
-            translationModels.values.forEach {
-                it.allowDownloadingOveMobile = value
-            }
-        }
-
     override var activeTranslationType : TranslationType
         get() {
             return _translationModel.translationType
@@ -136,7 +129,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
             emit(isTranslationSupported())
             delay(500)
         }
-    }.distinctUntilChanged()
+    }
     
     override fun isTargetLocaleSupported () : Boolean = _translationModel.isLocaleSupported(targetLocale)
 
