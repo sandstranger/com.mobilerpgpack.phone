@@ -64,6 +64,8 @@
     <string name="close_controls_configuration">Назад</string>
     <string name="select_button">Выбрать кнопку</string>
     <string name="close_text">Закрыть</string>
+    <string name="reset_all_resources">Сбросить все игровые ресурсы</string>
+    <string name="resources_not_ready">Игровые ресурсы еще не были скопированы, поэтому невозможно запустить игру </string>
     <string name="cancel_download">Отменить загрузку</string>
     <string name="selected_key_code">Выбранный код клавиши</string>
     <string name="uknown">Неизвестно</string>
