@@ -80,8 +80,7 @@ open class PreferencesStorage(private val context: Context) {
             getBooleanValue(hideScreenControlsPrefsKey, defaultValue = false)
 
     val enableGameMachineTextTranslation
-        get() =
-            getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
+        get() = getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
 
     val editCustomScreenControlsInGame
         get() =
