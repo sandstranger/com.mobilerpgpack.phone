@@ -30,12 +30,15 @@ class AssetExtractor (private val context: Context,
 
     override val assetsCopied get() = _assetsCopied
 
+    override val assetsStartedCopyListeners: MutableCollection<() -> Unit> = mutableListOf()
+
     override suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
         if (assetsCopying){
             return@withContext
         }
         assetsCopying = true
         _assetsCopied = false
+        assetsStartedCopyListeners.forEach { it.invoke() }
         try {
             copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER,
                 userFolder)
