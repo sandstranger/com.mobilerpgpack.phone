@@ -358,12 +358,22 @@ class KoinModulesProvider(private val context: Context,
     }
 
     private val psyDoomRegisterModule = module {
-        singleOf(::PsyDoomPreferencesStorage).withOptions {
+        val preferencesStorage = PsyDoomPreferencesStorage(context, scope)
+
+        single { preferencesStorage }.withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<PsyDoomPreferencesStorage>()
         }
 
-        singleOf(::PsyDoomEngineInfo).withOptions {
+        single {
+            val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
+
+            PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
+                nativeLibs,
+                wolfensteinButtons,
+                preferencesStorage.psyDoomCommandLineArgsString)
+        }.withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<IEngineInfo>()
         }
