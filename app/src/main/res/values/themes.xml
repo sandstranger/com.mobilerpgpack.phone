@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -10,7 +10,7 @@
         <item name="md_color_button_text">@color/md_color_button_text</item>
     </style>
 
-    <style name="AppThemeDark" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -21,7 +21,7 @@
         <item name="md_color_button_text">@color/md_color_button_text_dark</item>
     </style>
 
-    <style name="AppFullScreenTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
@@ -33,7 +33,7 @@
         <item name="md_color_button_text">@color/md_color_button_text</item>
     </style>
 
-    <style name="AppFullScreenThemeDark" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppFullScreenThemeDark" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
