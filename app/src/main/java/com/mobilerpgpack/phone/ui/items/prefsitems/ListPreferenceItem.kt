@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.ui.items
+package com.mobilerpgpack.phone.ui.items.prefsitems
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,12 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun ListPreferenceItem(title: String,
                        initialValue: String,
                        entries : Collection<String>,
-                       onValueChange : (String) -> Unit){
+                       onValueChange : ((String) -> Unit)? = null){
     var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
     var activeValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
     val scrollState = rememberScrollState()
@@ -58,7 +60,7 @@ fun ListPreferenceItem(title: String,
                                 .fillMaxWidth()
                                 .clickable {
                                     activeValue = stringValue
-                                    onValueChange(stringValue)
+                                    onValueChange?.invoke(stringValue)
                                     showValuesDialog = false
                                 }
                                 .padding(8.dp),
@@ -74,4 +76,13 @@ fun ListPreferenceItem(title: String,
             confirmButton = {}
         )
     }
+}
+
+@Composable
+fun ListPreferenceItem(title: String,
+                       initialValueFlow: Flow<String>,
+                       entries : Collection<String>,
+                       onValueChange : ((String) -> Unit)? = null){
+    val initialValue by initialValueFlow.collectAsState(initial = "")
+    ListPreferenceItem(title, initialValue, entries, onValueChange)
 }

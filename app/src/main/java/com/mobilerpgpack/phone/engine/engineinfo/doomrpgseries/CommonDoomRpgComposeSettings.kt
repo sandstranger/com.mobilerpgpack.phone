@@ -15,9 +15,9 @@ import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
-import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
-import com.mobilerpgpack.phone.ui.items.PreferenceItem
-import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.LoadingModelDialogWithCancel
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription

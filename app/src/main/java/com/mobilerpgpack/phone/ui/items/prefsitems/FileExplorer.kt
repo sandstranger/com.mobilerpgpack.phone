@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.ui.items
+package com.mobilerpgpack.phone.ui.items.prefsitems
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
@@ -30,13 +30,14 @@ fun RequestPath(explorerItemTitle: String,
     PreferenceItem(
         explorerItemTitle, currentPath,
         onClick = {
-            val fileChooser : StorageChooser = get (StorageChooser::class.java, parameters =
-                { parametersOf(requestMode, activity) } )
-            val prefsStorage : PreferencesStorage = get(PreferencesStorage::class.java)
+            val fileChooser: StorageChooser = get(
+                StorageChooser::class.java, parameters =
+                    { parametersOf(requestMode, activity) })
+            val prefsStorage: PreferencesStorage = get(PreferencesStorage::class.java)
 
             fileChooser.setOnSelectListener { path ->
                 onPathSelected?.invoke(path)
-                if (path.isNotEmpty() && key!=null){
+                if (path.isNotEmpty() && key != null) {
                     prefsStorage.setStringValue(key, path)
                 }
             }
