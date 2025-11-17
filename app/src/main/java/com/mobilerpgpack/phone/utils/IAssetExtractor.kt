@@ -5,5 +5,7 @@ interface IAssetExtractor{
 
     val assetsStartedCopyListeners : MutableCollection<()-> Unit>
 
+    val assetsFinishCopyListeners : MutableCollection<()-> Unit>
+
     suspend fun copyAssetsContentToInternalStorage ()
 }
