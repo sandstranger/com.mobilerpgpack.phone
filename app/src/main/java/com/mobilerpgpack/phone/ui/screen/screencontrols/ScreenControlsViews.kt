@@ -284,6 +284,16 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         isQuickPanel = true
     ),
     SDL3ImageButton(
+        "delete",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.delete_icon,
+        sdlKeyEvent = KeyEvent.KEYCODE_FORWARD_DEL,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
         "attack",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.8f,

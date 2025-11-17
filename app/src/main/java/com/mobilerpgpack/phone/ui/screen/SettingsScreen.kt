@@ -50,6 +50,7 @@ import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
+import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isTelevision
 import com.mobilerpgpack.phone.utils.startGame
@@ -58,6 +59,7 @@ import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -87,6 +89,7 @@ class SettingsScreen : KoinComponent {
             enumValueOf<EngineTypes>(activeEngineString)
         }
 
+        val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
         val prerefencesHandler : PreferenceHandler = koinInject {parameterSetOf(settings) }
 
         Theme(darkTheme = useDarkTheme) {
@@ -100,9 +103,9 @@ class SettingsScreen : KoinComponent {
 
                 CompositionLocalProvider(LocalPreferenceHandler provides prerefencesHandler) {
                     if (context.isTelevision) {
-                        DrawTelevisionSettings( scope, backgroundColor, activeEngine)
+                        DrawTelevisionSettings( scope, backgroundColor, activeEngine, settingsScreenViewModel)
                     } else {
-                        DrawPhoneSettings( scope, backgroundColor, activeEngine)
+                        DrawPhoneSettings( scope, backgroundColor, activeEngine, settingsScreenViewModel)
                     }
                 }
             }
@@ -114,60 +117,65 @@ class SettingsScreen : KoinComponent {
     @Composable
     private fun DrawTelevisionSettings(
         scope: CoroutineScope,
-        backgroundColor: Color, activeEngine: EngineTypes
+        backgroundColor: Color, activeEngine: EngineTypes,
+        viewModel: SettingsScreenViewModel
     ) {
-        val context = LocalContext.current
-
+        val activity = LocalActivity.current!!
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(backgroundColor),
         ) {
             Button(
-                onClick = { scope.launch { startGame( context,activeEngine) } },
+                onClick = { viewModel.onStartGameClicked(activeEngine, activity) },
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
                 Text(context.getString(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
             }
 
-            DrawAllSettings( scope, activeEngine)
+            DrawAllSettings( scope, activeEngine, viewModel)
         }
     }
 
     @Composable
     private fun DrawPhoneSettings(
         scope: CoroutineScope,
-        backgroundColor: Color, activeEngine: EngineTypes
+        backgroundColor: Color, activeEngine: EngineTypes,
+        viewModel: SettingsScreenViewModel
     ) {
-        val context = LocalContext.current
+        val activity = LocalActivity.current!!
         Scaffold(
             modifier = Modifier.background(backgroundColor),
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { scope.launch { startGame( context,activeEngine) } }
+                    onClick = { viewModel.onStartGameClicked(activeEngine, activity) }
                 ) {
                     Icon(
                         Icons.Default.PlayArrow,
-                        contentDescription = context.getString(R.string.start_game)
+                        contentDescription = activity.getString(R.string.start_game)
                     )
                 }
             }
         ) { innerPadding ->
-            DrawAllSettings( innerPadding, scope, activeEngine)
+            DrawAllSettings( innerPadding, scope,
+                activeEngine, viewModel)
         }
     }
 
     @Composable
-    private fun DrawAllSettings(scope: CoroutineScope, activeEngine: EngineTypes) {
-        DrawAllSettings( PaddingValues(), scope, activeEngine)
+    private fun DrawAllSettings(scope: CoroutineScope, activeEngine: EngineTypes,
+                                viewModel: SettingsScreenViewModel) {
+        DrawAllSettings( PaddingValues(), scope,
+            activeEngine, viewModel)
     }
 
     @Composable
     private fun DrawAllSettings(
         innerPadding: PaddingValues,
-        scope: CoroutineScope, activeEngine: EngineTypes
-    ) {
+        scope: CoroutineScope,
+        activeEngine: EngineTypes,
+        viewModel: SettingsScreenViewModel) {
         val scrollState = rememberScrollState()
 
         Column(
@@ -176,14 +184,15 @@ class SettingsScreen : KoinComponent {
                 .padding(innerPadding)
                 .verticalScroll(scrollState),
         ) {
-            DrawCommonSettings( scope, activeEngine)
+            DrawCommonSettings( scope, activeEngine, viewModel)
             DrawGraphicsSettings()
             DrawUserInterfaceSettings(scope)
         }
     }
 
     @Composable
-    private fun DrawCommonSettings(scope: CoroutineScope, activeEngine: EngineTypes) {
+    private fun DrawCommonSettings(scope: CoroutineScope, activeEngine: EngineTypes,
+                                   viewModel: SettingsScreenViewModel) {
         DrawTitleText(context.getString(R.string.common_settings))
 
         ListPreferenceItem(
@@ -202,6 +211,12 @@ class SettingsScreen : KoinComponent {
 
         val engineInfo : IEngineUIController = koinInject(named(activeEngine.toString()))
         engineInfo.DrawSettings()
+
+        HorizontalDivider()
+
+        PreferenceItem(context.getString(R.string.reset_all_resources)){
+            viewModel.onResetResourcesClicked()
+        }
 
         HorizontalDivider()
     }

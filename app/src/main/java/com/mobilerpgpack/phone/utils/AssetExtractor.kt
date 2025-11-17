@@ -17,20 +17,33 @@ class AssetExtractor (private val context: Context,
 
     override val assetsCopied get() = _assetsCopied
 
+    @Volatile
+    private var _assetsCopying = false
+
     private var _assetsCopied by mutableStateOf(false)
 
-    private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
+    private val userFolder = context.getExternalFilesDir("")!!
+
+    private val pathToUserFolder = userFolder.absolutePath
 
     private val alwaysCopyAllFiles by lazy {
         getAlwaysCopyFilesCurrentState()
     }
 
-    suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
-        if (_assetsCopied){
+    override suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
+        if (_assetsCopying){
             return@withContext
         }
-        copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, context.getExternalFilesDir("")!!)
-        _assetsCopied = true
+        _assetsCopying = true
+        _assetsCopied = false
+        try {
+            copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER,
+                userFolder)
+        }
+        finally {
+            _assetsCopied = true
+            _assetsCopying = false
+        }
     }
 
     private fun copyAssetsFolderToInternalStorage(assetsFolder: String, destFolder: File) {

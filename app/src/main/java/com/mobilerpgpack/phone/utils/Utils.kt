@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.utils
 
-import android.content.Context
-import com.afollestad.materialdialogs.MaterialDialog
+import android.app.Activity
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
@@ -15,11 +14,12 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.security.MessageDigest
 
-suspend fun startGame(context: Context, engineToPlay: EngineTypes) {
+suspend fun startGame(activity: Activity, engineToPlay: EngineTypes) {
 
     val assetsExtractor: IAssetExtractor = get(IAssetExtractor::class.java)
 
     if (!assetsExtractor.assetsCopied) {
+        activity.showErrorDialogBox(R.string.resources_not_ready)
         return
     }
 
@@ -29,15 +29,11 @@ suspend fun startGame(context: Context, engineToPlay: EngineTypes) {
     val pathToResource = activeEngineInfo.pathToResource.first()
 
     if (pathToResource.isEmpty() || !File(pathToResource).exists()) {
-        MaterialDialog(context).show {
-            title(R.string.error)
-            message(R.string.can_not_start_engine)
-            positiveButton(R.string.ok_text)
-        }
+        activity.showErrorDialogBox(R.string.can_not_start_engine)
         return
     }
 
-    context.startActivity(activeEngineInfo.gameActivityClazz)
+    activity.startActivity(activeEngineInfo.gameActivityClazz)
 }
 
 fun unzipArchive(zipPath: String, destDir: String) : Boolean {
