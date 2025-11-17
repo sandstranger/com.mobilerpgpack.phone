@@ -55,6 +55,7 @@ import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
+import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
 import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -199,7 +200,6 @@ class SettingsScreen : KoinComponent {
     @Composable
     private fun DrawCommonSettings(scope: CoroutineScope, activeEngine: EngineTypes,
                                    viewModel: SettingsScreenViewModel) {
-        var resetResources by rememberSaveable(false) { mutableStateOf(false) }
         DrawTitleText(stringResource(R.string.common_settings))
 
         ListPreferenceItem(
@@ -221,26 +221,30 @@ class SettingsScreen : KoinComponent {
 
         HorizontalDivider()
 
-        PreferenceItem(stringResource(R.string.reset_all_resources)){ resetResources = true }
+        DrawResetResourcesDialog(viewModel)
 
         HorizontalDivider()
+    }
+
+    @Composable
+    private fun DrawResetResourcesDialog(viewModel: SettingsScreenViewModel){
+        var resetResources by rememberSaveable(false) { mutableStateOf(false) }
 
         fun dismissResetResources () { resetResources = false}
 
+        val resetAllResources = stringResource(R.string.reset_all_resources)
+
+        PreferenceItem(resetAllResources ){ resetResources = true }
+
         if (resetResources){
-            AlertDialog(
-                onDismissRequest = { dismissResetResources() },
-                title = { Text(stringResource(R.string.reset_all_resources)) },
-                text = { Text(stringResource(R.string.reset_all_resources_confirm_message)) },
-                confirmButton = {
-                    TextButton(onClick = {
-                        dismissResetResources()
-                        viewModel.onResetResourcesClicked()
-                    }) { Text(stringResource(R.string.yes_text)) }
-                },
-                dismissButton = {
-                    TextButton(onClick = { dismissResetResources() }) { Text(stringResource(R.string.no_text)) }
-                })
+            ShowYesNoDialog(resetAllResources,
+                stringResource(R.string.reset_all_resources_confirm_message),
+                positiveAction = {
+                    dismissResetResources()
+                    viewModel.onResetResourcesClicked()
+                }, negativeAction = {
+                    dismissResetResources()
+                } )
         }
     }
 
