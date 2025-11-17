@@ -59,6 +59,10 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
         val initialModelValue = translationModelEntries.first { it.startsWith(activeTranslationTypeString) }
         val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
+        LaunchedEffect(!isModelDownloaded) {
+            preferencesStorage.setEnableGameMachineTextTranslationValue(false)
+        }
+
         DrawTitleText(context.getString(R.string.translation_settings))
 
         ListPreferenceItem(
