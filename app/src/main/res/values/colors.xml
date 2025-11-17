@@ -10,4 +10,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+	<color name="md_background_color">@color/white</color>
+    <color name="md_divider_color">#BDBDBD</color>
+    <color name="md_color_button_text">@android:color/black</color>
+    <color name="md_color_content">@android:color/black</color>
+    <color name="md_color_title">@android:color/black</color>
+	<color name="md_background_color_dark">#37474F</color>
+    <color name="md_divider_color_dark">#FF4081</color>
+    <color name="md_color_button_text_dark">@android:color/white</color>
+    <color name="md_color_content_dark">@android:color/white</color>
+    <color name="md_color_title_dark">@android:color/white</color>
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.main.KoinModulesProvider
@@ -50,7 +51,6 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
     @Composable
     private fun DrawTranslationModelSettings() {
         val scope = rememberCoroutineScope()
-        val context = LocalContext.current
 
         val activeTranslationTypeString by preferencesStorage.translationModelType
             .collectAsState(initial = TranslationType.DefaultTranslationType.toString())
@@ -60,13 +60,15 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
         val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
         LaunchedEffect(!isModelDownloaded) {
-            preferencesStorage.setEnableGameMachineTextTranslationValue(false)
+            if (!isModelDownloaded) {
+                preferencesStorage.setEnableGameMachineTextTranslationValue(false)
+            }
         }
 
-        DrawTitleText(context.getString(R.string.translation_settings))
+        DrawTitleText(stringResource(R.string.translation_settings))
 
         ListPreferenceItem(
-            context.getString(R.string.translation_model_title),
+            stringResource(R.string.translation_model_title),
             initialModelValue,
             translationModelEntries
         ) { newValue ->
@@ -80,7 +82,7 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
         HorizontalDivider()
 
         SwitchPreferenceItem(
-            context.getString(R.string.allow_downloading_over_mobile_network),
+            stringResource(R.string.allow_downloading_over_mobile_network),
             preferencesStorage.allowDownloadingModelsOverMobile,
             preferencesStorage.allowDownloadingModelsOverMobilePrefsKey.name
         ) {
@@ -94,7 +96,7 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
         HorizontalDivider()
 
         SwitchPreferenceItem(
-            context.getString(R.string.use_sdl_ttf_for_rendering),
+            stringResource(R.string.use_sdl_ttf_for_rendering),
             preferencesStorage.useSDLTTFForFontsRendering,
             preferencesStorage.useSDLTTFForFontsRenderingPrefsKey.name
         )
@@ -102,7 +104,7 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
         HorizontalDivider()
 
         SwitchPreferenceItem(
-            context.getString(R.string.use_ai_for_text_translations),
+            stringResource(R.string.use_ai_for_text_translations),
             preferencesStorage.enableGameMachineTextTranslation,
             preferencesStorage.gamesMachineTranslationsPrefsKey.name,
             enabled = isModelDownloaded
@@ -121,7 +123,7 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
             }
         }
 
-        PreferenceItem(context.getString(R.string.load_translation_model)) {
+        PreferenceItem(stringResource(R.string.load_translation_model)) {
             vm.startDownload()
         }
 
