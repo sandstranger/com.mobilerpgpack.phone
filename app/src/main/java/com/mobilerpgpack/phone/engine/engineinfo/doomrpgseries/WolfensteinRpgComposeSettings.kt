@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.RequestPath
+import com.mobilerpgpack.phone.ui.items.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.launch
 
@@ -23,8 +24,8 @@ class WolfensteinRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsVi
             context.getString(R.string.wolfenstein_rpg_ipa_file), onPathSelected = { selectedPath ->
                 scope.launch { preferencesStorage.setPathToWolfensteinRpgIpaFile(selectedPath) }
             },
-            previousPathToWolfensteinRpgIPa
-        )
+            previousPathToWolfensteinRpgIPa,
+            requestMode = RequestPathMode.Archive)
         HorizontalDivider()
         super.DrawSettings()
     }

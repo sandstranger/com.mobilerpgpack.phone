@@ -18,7 +18,7 @@ class PsyDoomEngineInfo : SDL2EngineInfo (activeEngineType = EngineTypes.PsyDoom
 
     override val commandLineParamsFlow get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString
 
-    override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomResources
+    override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueFile
 
     override val mainEngineLib = PSYDOOM_MAIN_ENGINE_LIB
 

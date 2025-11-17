@@ -61,6 +61,7 @@ import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
+import com.mobilerpgpack.phone.ui.items.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
@@ -211,20 +212,20 @@ class KoinModulesProvider(private val context: Context,
 
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     private val composeModule = module {
-        factory <StorageChooser> { (requestOnlyDirectory: Boolean, activity: Activity) ->
+        factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
             val builder = StorageChooser.Builder()
                 .withActivity(activity)
                 .withFragmentManager(activity.fragmentManager)
                 .withMemoryBar(true)
                 .allowCustomPath(true)
 
-            if (requestOnlyDirectory) {
-                builder.setType(StorageChooser.DIRECTORY_CHOOSER)
-            } else {
-                builder.setType(StorageChooser.FILE_PICKER)
+            when (requestMode) {
+                RequestPathMode.Directory -> builder.setType(StorageChooser.DIRECTORY_CHOOSER)
+                RequestPathMode.Archive -> builder.setType(StorageChooser.FILE_PICKER)
                     .filter(StorageChooser.FileType.ARCHIVE)
+                RequestPathMode.Cue -> builder.setType(StorageChooser.FILE_PICKER)
+                    .filter(StorageChooser.FileType.CUE)
             }
-
             builder.build()
         }
 
