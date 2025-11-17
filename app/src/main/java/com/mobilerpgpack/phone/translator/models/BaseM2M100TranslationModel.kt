@@ -130,8 +130,6 @@ abstract class BaseM2M100TranslationModel(
     }
 
     private fun onAssetsStartedCopy () {
-        runBlocking {
-            isModelDownloaded = false
-        }
+        isModelDownloaded = false
     }
 }
