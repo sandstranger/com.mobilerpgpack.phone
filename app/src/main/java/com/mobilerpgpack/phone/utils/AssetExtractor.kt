@@ -25,9 +25,7 @@ class AssetExtractor (private val context: Context,
 
     private val pathToUserFolder = userFolder.absolutePath
 
-    private val alwaysCopyAllFiles by lazy {
-        getAlwaysCopyFilesCurrentState()
-    }
+    private var alwaysCopyAllFiles = false
 
     override val assetsCopied get() = _assetsCopied
 
@@ -43,6 +41,7 @@ class AssetExtractor (private val context: Context,
         _assetsCopied = false
         assetsStartedCopyListeners.forEach { it.invoke() }
         try {
+            alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
             copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER,
                 userFolder)
         }
