@@ -18,11 +18,11 @@ import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 
 abstract class SDL3EngineInfo(
-    open val mainEngineLib: String = "",
-    open val allLibs: Array<String> = emptyArray(),
-    open val buttonsToDraw: Collection<IScreenControlsView> = emptyList(),
+    mainEngineLib: String,
+    allLibs: Array<String>,
+    buttonsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
-    open val pathToResourceFlow: Flow<String> = emptyFlow(),
+    pathToResourceFlow: Flow<String> = emptyFlow(),
     commandLineParamsFlow : Flow<String> = emptyFlow()) :
     EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
         activeEngineType, pathToResourceFlow, commandLineParamsFlow) {
