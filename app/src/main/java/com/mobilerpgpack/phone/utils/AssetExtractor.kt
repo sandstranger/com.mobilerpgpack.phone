@@ -15,10 +15,8 @@ import java.io.IOException
 class AssetExtractor (private val context: Context,
                       private val assetFoldersToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
 
-    override val assetsCopied get() = _assetsCopied
-
     @Volatile
-    private var _assetsCopying = false
+    private var assetsCopying = false
 
     private var _assetsCopied by mutableStateOf(false)
 
@@ -30,11 +28,13 @@ class AssetExtractor (private val context: Context,
         getAlwaysCopyFilesCurrentState()
     }
 
+    override val assetsCopied get() = _assetsCopied
+
     override suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
-        if (_assetsCopying){
+        if (assetsCopying){
             return@withContext
         }
-        _assetsCopying = true
+        assetsCopying = true
         _assetsCopied = false
         try {
             copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER,
@@ -42,7 +42,7 @@ class AssetExtractor (private val context: Context,
         }
         finally {
             _assetsCopied = true
-            _assetsCopying = false
+            assetsCopying = false
         }
     }
 
