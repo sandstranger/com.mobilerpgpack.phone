@@ -7,6 +7,7 @@ import com.mobilerpgpack.phone.main.PSYDOOM_MAIN_ENGINE_LIB
 import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
+import com.sun.jna.Function
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -18,11 +19,22 @@ import java.util.Collections.addAll
 class PsyDoomEngineInfo(mainEngineLib: String,
                         allLibs: Array<String>,
                         buttonsToDraw: Collection<IScreenControlsView>,
-                        commandLineParamsFlow : Flow<String> = emptyFlow()) :
-    SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.PsyDoom) {
+                        commandLineParamsFlow : Flow<String>) :
+    SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.PsyDoom,
+        commandLineParamsFlow = commandLineParamsFlow) {
 
     private val psyDoomPreferencesStorage by inject <PsyDoomPreferencesStorage>(named(
         EngineTypes.PsyDoom.toString()))
+
+    private val onApplicationPauseNativeDelegate by lazy {
+        Function.getFunction(mainEngineLib,
+            "onApplicationPause")
+    }
+
+    private val onApplicationResumeNativeDelegate by lazy {
+        Function.getFunction(mainEngineLib,
+            "onApplicationResume")
+    }
 
     override val preferencesStorage = psyDoomPreferencesStorage
 
@@ -60,6 +72,10 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                 it.toTypedArray()
             }
         }
+
+    override fun onResume() = onApplicationResumeNativeDelegate.invokeVoid(null)
+
+    override fun onDestroy() = onApplicationPauseNativeDelegate.invokeVoid(null)
 
     private companion object{
         private const val CUE_COMMAND = "-cue"
