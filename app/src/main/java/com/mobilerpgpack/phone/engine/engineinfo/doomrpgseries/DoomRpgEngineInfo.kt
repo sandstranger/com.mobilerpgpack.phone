@@ -39,8 +39,8 @@ class DoomRpgEngineInfo(
 
         if (savedDoomRpgScreenWidth != width && savedDoomRpgScreenHeight != height) {
             scope.launch {
-                preferencesStorage.setIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey, width)
-                preferencesStorage.setIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey, height)
+                preferencesStorage.setIntValueAsync(preferencesStorage.savedDoomRpgScreenWidthPrefsKey, width)
+                preferencesStorage.setIntValueAsync(preferencesStorage.savedDoomRpgScreenHeightPrefsKey, height)
             }
 
             Os.setenv("RECALCULATE_RESOLUTION_INDEX", "true", true)

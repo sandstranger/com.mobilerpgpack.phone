@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.ui.items
+package com.mobilerpgpack.phone.ui.items.prefsitems
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Text

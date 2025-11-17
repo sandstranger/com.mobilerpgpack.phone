@@ -30,8 +30,6 @@ class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloa
             val downloadedText = context.getString(R.string.downloaded_text)
             val unknownSizeText = context.getString(R.string.unknown_size)
 
-            val TAG = "DriveDownload"
-
             val url = "https://www.googleapis.com/drive/v3/files/$fileId?alt=media&key=$apiKey"
             val request = Request.Builder().url(url).get().build()
 
@@ -69,7 +67,7 @@ class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloa
                 Log.d(TAG, url)
             }
 
-            val contentLength = resp.body?.contentLength() ?: -1L
+            val contentLength = resp.body.contentLength()
 
             if (contentLength > 0) {
                 onProgress("$downloadedText: 0% (0 / $contentLength $bytesText)")
@@ -81,7 +79,7 @@ class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloa
             var lastLoggedProgress = 0
 
             FileOutputStream(File(destPath)).use { out ->
-                resp.body!!.byteStream().use { input ->
+                resp.body.byteStream().use { input ->
                     val buf = ByteArray(8 * 1024)
                     var read: Int = 0
                     while (isActive && input.read(buf).also { read = it } != -1) {
@@ -114,5 +112,9 @@ class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloa
                 Log.i(TAG, "✅ Downloaded to: $destPath")
             }
         }
+    }
+
+    private companion object{
+        private const val TAG = "DriveDownload"
     }
 }

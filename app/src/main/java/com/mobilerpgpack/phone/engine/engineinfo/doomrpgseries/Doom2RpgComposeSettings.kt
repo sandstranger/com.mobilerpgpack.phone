@@ -7,8 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.ui.items.RequestPath
-import com.mobilerpgpack.phone.ui.items.RequestPathMode
+import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
+import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.launch
 

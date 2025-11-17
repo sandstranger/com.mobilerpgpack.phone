@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -197,7 +196,7 @@ open class ScreenController : KoinComponent, IScreenController {
                             viewsToDraw.values.forEach { view ->
                                 view.buttonState.resetToDefaults()
                             }
-                            preferencesStorage.setBooleanValue( clampButtonsPrefsKey, true)
+                            preferencesStorage.setBooleanValueAsync( clampButtonsPrefsKey, true)
                             viewsToDraw.values.forEach { view ->
                                 clampButton(view.buttonState)
                                 view.buttonState.saveButtonState()
@@ -234,7 +233,7 @@ open class ScreenController : KoinComponent, IScreenController {
                                 if (isEditMode) {
                                     selectedButtonId = id
                                     coroutineScope.launch {
-                                        preferencesStorage.setBooleanValue(
+                                        preferencesStorage.setBooleanValueAsync(
                                             clampButtonsPrefsKey,
                                             false)
                                     }
