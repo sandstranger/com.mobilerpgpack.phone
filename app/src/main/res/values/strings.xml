@@ -44,6 +44,16 @@
     <string name="path_to_doom64_mods_folder">Path to Doom 64 folder with mods</string>
     <string name="path_to_psydoom_cue_file">Path to PSX Doom cue file</string>
     <string name="path_to_psydoom_mods_folder">Path to PsyDoom mods folder</string>
+    <string name="psydoom_game_options_title">Game options</string>
+    <string name="psydoom_record_demos">Record demos</string>
+    <string name="psydoom_force_pistol_start">Force pistol start</string>
+    <string name="psydoom_force_turbo_mode">Turbo mode</string>
+    <string name="psydoom_force_no_monsters">No monsters</string>
+    <string name="psydoom_nm_boss_fixup">No monsters</string>
+    <string name="psydoom_network_settings_title">Network settings</string>
+    <string name="psydoom_port">Port</string>
+    <string name="psydoom_host">Host</string>
+    <string name="psydoom_peer_type">Peer type</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>
     <string name="configure_screen_controls">Screen controls editor</string>

@@ -44,12 +44,12 @@ import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getTopBarColor
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
-import com.mobilerpgpack.phone.ui.items.EditTextPreferenceItem
-import com.mobilerpgpack.phone.ui.items.ListPreferenceItem
-import com.mobilerpgpack.phone.ui.items.PreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
-import com.mobilerpgpack.phone.ui.items.SwitchPreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isTelevision
