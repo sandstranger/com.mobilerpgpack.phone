@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.main.KoinModulesProvider
@@ -28,11 +29,10 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
 
     @Composable
     override fun DrawSettings() {
-        val context = LocalContext.current
         val previousPathToDoom64WadsFolder by preferencesStorage.pathToDoom64MainWadsFolder
             .collectAsState(initial = "")
         RequestPath(
-            context.getString(R.string.path_to_doom64_folder),
+            stringResource(R.string.path_to_doom64_folder),
             onPathSelected = { selectedPath ->
                 scope.launch { preferencesStorage.setPathToDoom64MainWadsFolder(selectedPath) }
             },
@@ -50,7 +50,7 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
         val enableDoom64Mods by enableDoom64ModsFlow.collectAsState(initial = false)
 
         SwitchPreferenceItem(
-            context.getString(R.string.enable_doom64_mods),
+            stringResource(R.string.enable_doom64_mods),
             initialValue = enableDoom64Mods,
             preferencesStorage.enableDoom64ModsPrefsKey.name
         )
@@ -62,7 +62,7 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
             HorizontalDivider()
 
             RequestPath(
-                context.getString(R.string.path_to_doom64_mods_folder),
+                stringResource(R.string.path_to_doom64_mods_folder),
                 onPathSelected = { selectedPath ->
                     scope.launch { preferencesStorage.setPathToDoom64ModsFolder(selectedPath) }
                 },

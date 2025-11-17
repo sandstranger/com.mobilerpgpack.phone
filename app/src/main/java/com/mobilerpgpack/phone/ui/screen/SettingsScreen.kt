@@ -16,14 +16,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,8 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onCancel
 import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
@@ -70,7 +76,6 @@ import org.koin.core.qualifier.named
 @OptIn(ExperimentalSettingsImplementation::class, ExperimentalSettingsApi::class)
 class SettingsScreen : KoinComponent {
 
-    private val context : Context by inject()
     private val preferencesStorage : PreferencesStorage = get ()
     private val settings = DataStoreSettings(preferencesStorage.dataStore)
 
@@ -91,6 +96,7 @@ class SettingsScreen : KoinComponent {
 
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
         val prerefencesHandler : PreferenceHandler = koinInject {parameterSetOf(settings) }
+        val context = LocalContext.current
 
         Theme(darkTheme = useDarkTheme) {
             Column(
@@ -99,7 +105,7 @@ class SettingsScreen : KoinComponent {
                     .background(topBarColor)
                     .systemBarsPadding()
             ) {
-                CustomTopBar(title = context.getString(R.string.app_name), useDarkTheme)
+                CustomTopBar(title = stringResource(R.string.app_name), useDarkTheme)
 
                 CompositionLocalProvider(LocalPreferenceHandler provides prerefencesHandler) {
                     if (context.isTelevision) {
@@ -131,7 +137,7 @@ class SettingsScreen : KoinComponent {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                Text(context.getString(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
+                Text(stringResource(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
             }
 
             DrawAllSettings( scope, activeEngine, viewModel)
@@ -193,10 +199,11 @@ class SettingsScreen : KoinComponent {
     @Composable
     private fun DrawCommonSettings(scope: CoroutineScope, activeEngine: EngineTypes,
                                    viewModel: SettingsScreenViewModel) {
-        DrawTitleText(context.getString(R.string.common_settings))
+        var resetResources by rememberSaveable(false) { mutableStateOf(false) }
+        DrawTitleText(stringResource(R.string.common_settings))
 
         ListPreferenceItem(
-            context.getString(R.string.active_engine),
+            stringResource(R.string.active_engine),
             activeEngine.toString(),
             EngineTypes.entries.map { it.toString() }.toList()
         ) { newValue ->
@@ -214,17 +221,33 @@ class SettingsScreen : KoinComponent {
 
         HorizontalDivider()
 
-        PreferenceItem(context.getString(R.string.reset_all_resources)){
-            viewModel.onResetResourcesClicked()
-        }
+        PreferenceItem(stringResource(R.string.reset_all_resources)){ resetResources = true }
 
         HorizontalDivider()
+
+        fun dismissResetResources () { resetResources = false}
+
+        if (resetResources){
+            AlertDialog(
+                onDismissRequest = { dismissResetResources() },
+                title = { Text(stringResource(R.string.reset_all_resources)) },
+                text = { Text(stringResource(R.string.reset_all_resources_confirm_message)) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        dismissResetResources()
+                        viewModel.onResetResourcesClicked()
+                    }) { Text(stringResource(R.string.yes_text)) }
+                },
+                dismissButton = {
+                    TextButton(onClick = { dismissResetResources() }) { Text(stringResource(R.string.no_text)) }
+                })
+        }
     }
 
     @Composable
     private fun DrawGraphicsSettings() {
 
-        DrawTitleText(context.getString(R.string.graphics_settings))
+        DrawTitleText(stringResource(R.string.graphics_settings))
 
         val customScreenResolution by preferencesStorage.customScreenResolution
             .collectAsState(initial = "")
@@ -233,26 +256,26 @@ class SettingsScreen : KoinComponent {
             .collectAsState(initial = "")
 
         SwitchPreferenceItem(
-            context.getString(R.string.dark_theme),
+            stringResource(R.string.dark_theme),
             preferencesStorage.getUseDarkThemeValue( isSystemInDarkTheme()),
             preferencesStorage.useDarkThemePrefsKey.name)
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
-            context.getString(R.string.display_in_safe_area),
+            stringResource(R.string.display_in_safe_area),
             preferencesStorage.enableDisplayInSafeArea,
             preferencesStorage.displayInSafeAreaPrefsKey.name)
 
         HorizontalDivider()
 
-        EditTextPreferenceItem(context.getString(R.string.custom_aspect_ratio), customAspectRatio,
-            preferencesStorage.customAspectRatioPrefsKey.name, context.getString(R.string.custom_aspect_ratio_hint))
+        EditTextPreferenceItem(stringResource(R.string.custom_aspect_ratio), customAspectRatio,
+            preferencesStorage.customAspectRatioPrefsKey.name, stringResource(R.string.custom_aspect_ratio_hint))
 
         HorizontalDivider()
 
-        EditTextPreferenceItem(context.getString(R.string.custom_resolution),
-            customScreenResolution,preferencesStorage.customScreenResolutionPrefsKey.name, context.getString(R.string.custom_resolution_hint))
+        EditTextPreferenceItem(stringResource(R.string.custom_resolution),
+            customScreenResolution,preferencesStorage.customScreenResolutionPrefsKey.name, stringResource(R.string.custom_resolution_hint))
 
         HorizontalDivider()
     }
@@ -262,11 +285,11 @@ class SettingsScreen : KoinComponent {
         val useStandardSDLTextInput by preferencesStorage.useStandardSDLTextInput
             .collectAsState(initial = false)
 
-        DrawTitleText(context.getString(R.string.user_interface_settings))
+        DrawTitleText(stringResource(R.string.user_interface_settings))
         DrawEditScreenControlsSettings()
         HorizontalDivider()
 
-        SwitchPreferenceItem(context.getString(R.string.use_standard_sdl_text_input),
+        SwitchPreferenceItem(stringResource(R.string.use_standard_sdl_text_input),
             useStandardSDLTextInput,
             preferencesStorage.useStandardSDLTextInputPrefsKey.name)
 
@@ -286,34 +309,34 @@ class SettingsScreen : KoinComponent {
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState!!) }
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
 
-        PreferenceItem(context.getString(R.string.keys_editor)) {
+        PreferenceItem(stringResource(R.string.keys_editor)) {
             drawKeysEditor = true
         }
 
         HorizontalDivider()
 
-        PreferenceItem(context.getString(R.string.configure_screen_controls)) {
+        PreferenceItem(stringResource(R.string.configure_screen_controls)) {
             ScreenControlsEditorActivity.editControls( activity,activeEngine)
         }
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
-            context.getString(R.string.allow_to_edit_controls_in_game),
+            stringResource(R.string.allow_to_edit_controls_in_game),
             preferencesStorage.editCustomScreenControlsInGame,
             preferencesStorage.editCustomScreenControlsInGamePrefsKey.name)
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
-            context.getString(R.string.hide_custom_screen_controls),
+            stringResource(R.string.hide_custom_screen_controls),
             preferencesStorage.hideScreenControls,
             preferencesStorage.hideScreenControlsPrefsKey.name)
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
-            context.getString(R.string.controls_autohing),
+            stringResource(R.string.controls_autohing),
             preferencesStorage.autoHideScreenControls,
             preferencesStorage.enableControlsAutoHiding.name)
 
@@ -334,14 +357,14 @@ class SettingsScreen : KoinComponent {
             .collectAsState(initial = 0f)
 
         SwitchPreferenceItem(
-            context.getString(R.string.show_custom_mouse_cursor),
+            stringResource(R.string.show_custom_mouse_cursor),
             preferencesStorage.showCustomMouseCursor,
             preferencesStorage.showCustomMouseCursorPrefsKey.name)
 
         HorizontalDivider()
 
         EditTextPreferenceItem(
-            context.getString(R.string.custom_mouse_cursor_horizontal_offset),
+            stringResource(R.string.custom_mouse_cursor_horizontal_offset),
             horizontalMouseIconOffset.toString()){
             val floatValue = it.toFloatOrNull() ?: 0.0f
             scope.launch {
@@ -352,7 +375,7 @@ class SettingsScreen : KoinComponent {
         HorizontalDivider()
 
         EditTextPreferenceItem(
-            context.getString(R.string.custom_mouse_cursor_vertical_offset),
+            stringResource(R.string.custom_mouse_cursor_vertical_offset),
             verticalMouseIconOffset.toString()){
             val floatValue = it.toFloatOrNull() ?: 0.0f
             scope.launch {

@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -10,10 +11,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.component.inject
 
 internal class MainActivity : ComponentActivity(), KoinComponent {
@@ -21,9 +27,12 @@ internal class MainActivity : ComponentActivity(), KoinComponent {
     private val settingsScreenProvider : SettingsScreen by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        updateTheme()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         buildScreens()
+        val backgroundColor = resources.getColor(R.color.md_background_color, theme)
+        Log.d("ThemeDebug", "Background color: ${backgroundColor.toString()}")
     }
 
     private fun buildScreens() {
@@ -46,6 +55,17 @@ internal class MainActivity : ComponentActivity(), KoinComponent {
                     }
                 }
             }
+        }
+    }
+
+    private fun updateTheme(){
+        var useDarkTheme = false
+        val preferencesStorage = get<PreferencesStorage>()
+        runBlocking {
+            useDarkTheme = preferencesStorage.getUseDarkThemeValue().first()
+        }
+        if (useDarkTheme) {
+            setTheme(R.style.AppThemeDark)
         }
     }
 

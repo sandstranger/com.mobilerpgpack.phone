@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.TextPreference
@@ -19,9 +20,8 @@ fun EditTextPreferenceItem(
     key : String = "",
     hint: String = "",
     onValueChanged: (String) -> Unit = {}) {
-    val context = LocalContext.current
-    val cancelString = context.getString(R.string.cancel_text)
-    val positiveString = context.getString(R.string.ok_text)
+    val cancelString = stringResource(R.string.cancel_text)
+    val positiveString = stringResource(R.string.ok_text)
     val preferences = LocalPreferenceHandler.current
 
     TextPreference(
