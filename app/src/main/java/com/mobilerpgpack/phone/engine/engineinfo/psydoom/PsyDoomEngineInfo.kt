@@ -2,19 +2,13 @@ package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
-import com.mobilerpgpack.phone.main.FREETYPE_NATIVE_LIB_NAME
-import com.mobilerpgpack.phone.main.PSYDOOM_MAIN_ENGINE_LIB
-import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
-import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.sun.jna.Function
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import java.util.Collections.addAll
 
 class PsyDoomEngineInfo(mainEngineLib: String,
                         allLibs: Array<String>,
@@ -26,14 +20,14 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     private val psyDoomPreferencesStorage by inject <PsyDoomPreferencesStorage>(named(
         EngineTypes.PsyDoom.toString()))
 
-    private val onApplicationPauseNativeDelegate by lazy {
+    private val destroyVulkanSwapChainNativeDelegate by lazy {
         Function.getFunction(mainEngineLib,
-            "onApplicationPause")
+            "destroyVulkanSwapChain")
     }
 
-    private val onApplicationResumeNativeDelegate by lazy {
+    private val recreateVulkanSwapChainNativeDelegate by lazy {
         Function.getFunction(mainEngineLib,
-            "onApplicationResume")
+            "recreateVulkanSwapChain")
     }
 
     override val preferencesStorage = psyDoomPreferencesStorage
@@ -73,9 +67,9 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             }
         }
 
-    override fun onResume() = onApplicationResumeNativeDelegate.invokeVoid(null)
+    override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
 
-    override fun onDestroy() = onApplicationPauseNativeDelegate.invokeVoid(null)
+    override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     private companion object{
         private const val CUE_COMMAND = "-cue"
