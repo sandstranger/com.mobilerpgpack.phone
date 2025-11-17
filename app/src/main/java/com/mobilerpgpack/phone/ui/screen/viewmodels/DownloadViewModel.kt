@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-class DownloadViewModel() : ViewModel(), KoinComponent {
+class DownloadViewModel : ViewModel(), KoinComponent {
 
     private val scope : CoroutineScope = get()
 
