@@ -3,8 +3,9 @@ package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 import android.content.Context
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import kotlinx.coroutines.CoroutineScope
 
-class PsyDoomPreferencesStorage (context : Context) : PreferencesStorage(context) {
+class PsyDoomPreferencesStorage (context : Context, scope : CoroutineScope) : PreferencesStorage(context, scope) {
 
     val pathToPsyDoomCueFilePrefsKey = stringPreferencesKey("path_to_psydoom_cue_file")
 

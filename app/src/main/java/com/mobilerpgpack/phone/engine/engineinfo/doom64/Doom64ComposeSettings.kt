@@ -33,11 +33,9 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
             .collectAsState(initial = "")
         RequestPath(
             stringResource(R.string.path_to_doom64_folder),
-            onPathSelected = { selectedPath ->
-                scope.launch { preferencesStorage.setPathToDoom64MainWadsFolder(selectedPath) }
-            },
-            previousPathToDoom64WadsFolder
-        )
+            previousPathToDoom64WadsFolder) { selectedPath ->
+            scope.launch { preferencesStorage.setPathToDoom64MainWadsFolder(selectedPath) }
+        }
 
         HorizontalDivider()
 
@@ -63,11 +61,10 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
 
             RequestPath(
                 stringResource(R.string.path_to_doom64_mods_folder),
-                onPathSelected = { selectedPath ->
-                    scope.launch { preferencesStorage.setPathToDoom64ModsFolder(selectedPath) }
-                },
                 previousPathToDoom64ModsFolder
-            )
+            ){ selectedPath ->
+                scope.launch { preferencesStorage.setPathToDoom64ModsFolder(selectedPath) }
+            }
         }
     }
 }
