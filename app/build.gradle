@@ -211,7 +211,8 @@ dependencies {
     implementation libs.androidx.compose.runtime
     implementation libs.androidx.window
 
-    implementation(libs.ini4j)
+    implementation(libs.commons.configuration2)
+    implementation(libs.commons.beanutils)
 
     implementation(libs.compose.preferences)
     implementation(libs.settings)

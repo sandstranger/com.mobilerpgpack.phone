@@ -19,6 +19,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.utils.IAssetExtractor
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -34,7 +35,8 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        if (assetsExtractor.assetsCopied){
+        val viewModel : PsyDoomComposeSettingsViewModel = koinViewModel ()
+        if (assetsExtractor.assetsCopied && viewModel.iniFilesLoaded){
             DrawPsyDoomCommonSettings(navController)
         }
     }
@@ -77,6 +79,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     @Composable
     private fun DrawLauncherSettings(){
+
         DrawTitleText(stringResource(R.string.psydoom_game_options_title))
 
         SwitchPreferenceItem(stringResource(R.string.psydoom_record_demos),
