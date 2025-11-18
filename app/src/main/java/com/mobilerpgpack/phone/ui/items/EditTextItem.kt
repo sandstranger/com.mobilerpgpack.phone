@@ -79,3 +79,40 @@ fun EditTextItem(
         )
     }
 }
+
+@Composable
+fun <T> EditTextItem(
+    title: String,
+    value: T,
+    hint: String = "",
+    singleLine : Boolean = true,
+    keyboardType : KeyboardType = KeyboardType.Text,
+    onValueChange: ((String) -> Unit)? = null){
+    EditTextItem(title, value.toString(), hint, singleLine, keyboardType, onValueChange)
+}
+
+@Composable
+fun EditTextItem(
+    title: String,
+    value: Int,
+    hint: String = "",
+    singleLine : Boolean = true,
+    onValueChange: ((Int) -> Unit)? = null){
+    EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Number){
+        val newValue = it.toIntOrNull() ?: 0
+        onValueChange?.invoke(newValue)
+    }
+}
+
+@Composable
+fun EditTextItem(
+    title: String,
+    value: Float,
+    hint: String = "",
+    singleLine : Boolean = true,
+    onValueChange: ((Float) -> Unit)? = null){
+    EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Number){
+        val newValue = it.toFloatOrNull() ?: 0.0f
+        onValueChange?.invoke(newValue)
+    }
+}
