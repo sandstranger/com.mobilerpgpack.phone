@@ -96,6 +96,10 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             navController.navigate(GAME_SETTINGS_SCREEN)
         }
         HorizontalDivider()
+        PreferenceItem(stringResource(R.string.psydoom_input)) {
+            navController.navigate(INPUT_SETTINGS_SCREEN)
+        }
+        HorizontalDivider()
     }
 
     @Composable
@@ -605,6 +609,52 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
     }
 
+    @Composable
+    private fun DrawInputSettings(){
+        val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
+        DrawTitleText(stringResource(R.string.psydoom_mouse))
+
+        EditTextItem(stringResource(R.string.psydoom_mouse_turn_speed),
+            viewModel.mouseTurnSpeed) {
+            viewModel.mouseTurnSpeed = it
+        }
+        HorizontalDivider()
+
+        DrawTitleText(stringResource(R.string.psydoom_gamepad))
+
+        EditTextItem(stringResource(R.string.psydoom_dead_zone),
+            viewModel.gamepadDeadZone) {
+            viewModel.gamepadDeadZone = it
+        }
+        HorizontalDivider()
+
+        EditTextItem(stringResource(R.string.psydoom_high_fast_turn_speed),
+            viewModel.gamepadFastTurnSpeedHigh) {
+            viewModel.gamepadFastTurnSpeedHigh = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_low_fast_turn_speed),
+            viewModel.gamepadFastTurnSpeedLow) {
+            viewModel.gamepadFastTurnSpeedLow = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_low_turn_speed),
+            viewModel.gamepadTurnSpeedLow) {
+            viewModel.gamepadTurnSpeedLow = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_high_turn_speed),
+            viewModel.gamepadTurnSpeedHigh) {
+            viewModel.gamepadTurnSpeedHigh = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_analog_to_digital_threshold),
+            viewModel.analogToDigitalThreshold) {
+            viewModel.analogToDigitalThreshold = it
+        }
+        HorizontalDivider()
+    }
+
     data class PsyDoomLauncherSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen(LAUNCHER_SETTINGS_SCREEN) {
 
@@ -621,6 +671,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             psyDoomComposeSettings.DrawGraphicsSettings()
     }
 
+    data class PsyDoomInputSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
+        PsyDoomSettingScreen(INPUT_SETTINGS_SCREEN) {
+
+        @Composable
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            psyDoomComposeSettings.DrawInputSettings()
+    }
+
     data class PsyDoomGameSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen(GAME_SETTINGS_SCREEN) {
 
@@ -635,13 +693,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
             psyDoomComposeSettings.DrawMoreSettings(navController)
-    }
-
-    private companion object {
-        private const val LAUNCHER_SETTINGS_SCREEN = "launcher_settings_screen"
-        private const val MORE_SETTINGS_SCREEN = "more_settings_screen"
-        private const val GRAPHICS_SETTINGS_SCREEN = "graphics_screen"
-        private const val GAME_SETTINGS_SCREEN = "game_screen"
     }
 
     enum class GameEnum (val value: Int){
@@ -670,6 +721,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
             fun stringCollection () = entries.map { it.toString() }.toList()
         }
+    }
+
+    private companion object {
+        private const val LAUNCHER_SETTINGS_SCREEN = "launcher_settings_screen"
+        private const val MORE_SETTINGS_SCREEN = "more_settings_screen"
+        private const val GRAPHICS_SETTINGS_SCREEN = "graphics_screen"
+        private const val GAME_SETTINGS_SCREEN = "game_screen"
+        private const val INPUT_SETTINGS_SCREEN = "input_screen"
     }
 }
 
