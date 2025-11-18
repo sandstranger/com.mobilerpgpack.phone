@@ -52,7 +52,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     private val context : Context = get ()
 
-    override val drawFloatingActionButton: Boolean = context.isTelevision
+    override val drawFloatingActionButton: Boolean = !context.isTelevision
 
     @Composable
     override fun DrawScreenContent(
@@ -77,7 +77,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             settingsScreenViewModel.onStartGameClicked(activeEngine, activity)
         }
 
-        if (drawFloatingActionButton) {
+        if (!drawFloatingActionButton) {
             DrawTelevisionSettings(innerPadding,
                 scope, activeEngine,
                 navController, settingsScreenViewModel
