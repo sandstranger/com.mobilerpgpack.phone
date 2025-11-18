@@ -10,6 +10,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
+import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
@@ -75,12 +76,16 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             navController.navigate(LAUNCHER_SETTINGS_SCREEN)
         }
         HorizontalDivider()
+        PreferenceItem(stringResource(R.string.psydoom_graphics_settings)){
+            navController.navigate(GRAPHICS_SETTINGS_SCREEN)
+        }
+        HorizontalDivider()
     }
 
     @Composable
     private fun DrawLauncherSettings(){
 
-        DrawTitleText(stringResource(R.string.psydoom_game_options_title))
+        DrawTitleText(stringResource(R.string.psydoom_launcher_settings))
 
         SwitchPreferenceItem(stringResource(R.string.psydoom_record_demos),
             preferencesStorage.recordDemos, preferencesStorage.recordDemosPrefsKey.name)
@@ -140,12 +145,33 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         HorizontalDivider()
     }
 
+    @Composable
+    private fun DrawGraphicsSettings(){
+        val viewModel : PsyDoomComposeSettingsViewModel = koinViewModel ()
+
+        DrawTitleText(stringResource(R.string.psydoom_graphics_settings))
+
+        SwitchItem(stringResource(R.string.psydoom_enable_vsync), viewModel.enableVsync){
+            viewModel.enableVsync = it
+        }
+
+        HorizontalDivider()
+    }
+
     data class PsyDoomLauncherSettingsScreen (private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen (LAUNCHER_SETTINGS_SCREEN){
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
             psyDoomComposeSettings.DrawLauncherSettings()
+    }
+
+    data class PsyDoomGraphicsSettingsScreen (private val psyDoomComposeSettings: PsyDoomComposeSettings) :
+        PsyDoomSettingScreen (GRAPHICS_SETTINGS_SCREEN){
+
+        @Composable
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            psyDoomComposeSettings.DrawGraphicsSettings()
     }
 
    data class PsyDoomMoreSettingsScreen (private val psyDoomComposeSettings: PsyDoomComposeSettings) :
@@ -158,7 +184,10 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     private companion object{
         private const val LAUNCHER_SETTINGS_SCREEN = "launcher_settings_screen"
+
         private const val MORE_SETTINGS_SCREEN = "more_settings_screen"
+
+        private const val GRAPHICS_SETTINGS_SCREEN = "graphics_screen"
     }
 }
 
