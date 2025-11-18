@@ -57,6 +57,13 @@
     <string name="psydoom_launcher_settings">Launcher settings</string>
     <string name="psydoom_graphics_settings">Graphics settings</string>
     <string name="psydoom_enable_vsync">Enable vsync</string>
+    <string name="psydoom_picture_crop_settings">Picture crop and stretch</string>
+    <string name="psydoom_top_overscan_pixels">Top overscan pixels</string>
+    <string name="psydoom_bottom_overscan_pixels">Bottom overscan pixels</string>
+    <string name="psydoom_logical_display_width">Logical display width</string>
+    <string name="psydoom_general_settings">General</string>
+    <string name="psydoom_vram_size">VRAM size (MiB)</string>
+    <string name="psydoom_extended_automap_colors">Use extended automap colors</string>
     <string name="psydoom_peer_type">Peer type</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>
