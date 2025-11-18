@@ -27,6 +27,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
+@Suppress("INFERRED_TYPE_VARIABLE_INTO_EMPTY_INTERSECTION_WARNING",
+    "TYPE_INTERSECTION_AS_REIFIED_WARNING"
+)
 class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     private val assetsExtractor : IAssetExtractor by inject ()
@@ -80,6 +83,10 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         HorizontalDivider()
         PreferenceItem(stringResource(R.string.psydoom_graphics_settings)){
             navController.navigate(GRAPHICS_SETTINGS_SCREEN)
+        }
+        HorizontalDivider()
+        PreferenceItem(stringResource(R.string.psydoom_game)){
+            navController.navigate(GAME_SETTINGS_SCREEN)
         }
         HorizontalDivider()
     }
@@ -170,7 +177,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         EditTextItem(stringResource(R.string.psydoom_bottom_overscan_pixels), viewModel.bottomOverscanPixels){
             viewModel.bottomOverscanPixels = it
         }
-        
+
         HorizontalDivider()
 
         EditTextItem(stringResource(R.string.psydoom_logical_display_width), viewModel.logicalDisplayWidth){
@@ -234,6 +241,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.brightenAutomap){
             viewModel.brightenAutomap = it
         }
+        HorizontalDivider()
         DrawTitleText(stringResource(R.string.psydoom_classic_render))
         SwitchItem(stringResource(R.string.psydoom_enhance_draw_wall_precision),
             viewModel.enhanceWallDrawPrecision){
@@ -248,6 +256,57 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         SwitchItem(stringResource(R.string.psydoom_sky_leak_fix),
             viewModel.skyLeakFix){
             viewModel.skyLeakFix = it
+        }
+        HorizontalDivider()
+    }
+
+    @Composable
+    private fun DrawGameSettings(){
+        val viewModel : PsyDoomComposeSettingsViewModel = koinViewModel ()
+        DrawTitleText(stringResource(R.string.psydoom_interpolation))
+        SwitchItem(stringResource(R.string.psydoom_interpolate_sectors),
+            viewModel.interpolateSectors){
+            viewModel.interpolateSectors = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_interpolate_monsters),
+            viewModel.interpolateMonsters){
+            viewModel.interpolateMonsters = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_interpolate_things),
+            viewModel.interpolateThings){
+            viewModel.interpolateThings = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_interpolate_weapon),
+            viewModel.interpolateWeapon){
+            viewModel.interpolateWeapon = it
+        }
+        HorizontalDivider()
+
+        DrawTitleText(stringResource(R.string.psydoom_counters))
+
+        SwitchItem(stringResource(R.string.psydoom_level_timer),
+            viewModel.enableLevelTimer){
+            viewModel.enableLevelTimer = it
+        }
+        HorizontalDivider()
+
+        SwitchItem(stringResource(R.string.psydoom_perf_counters),
+            viewModel.showPerfCounters){
+            viewModel.showPerfCounters = it
+        }
+        HorizontalDivider()
+
+        EditTextItem(stringResource(R.string.psydoom_bob_scale),
+            viewModel.bobScale){
+            viewModel.bobScale = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_heap_size),
+            viewModel.heapSize){
+            viewModel.heapSize = it
         }
         HorizontalDivider()
     }
@@ -268,6 +327,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             psyDoomComposeSettings.DrawGraphicsSettings()
     }
 
+    data class PsyDoomGameSettingsScreen (private val psyDoomComposeSettings: PsyDoomComposeSettings) :
+        PsyDoomSettingScreen (GAME_SETTINGS_SCREEN){
+
+        @Composable
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            psyDoomComposeSettings.DrawGameSettings()
+    }
+
    data class PsyDoomMoreSettingsScreen (private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen (MORE_SETTINGS_SCREEN){
 
@@ -278,10 +345,9 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     private companion object{
         private const val LAUNCHER_SETTINGS_SCREEN = "launcher_settings_screen"
-
         private const val MORE_SETTINGS_SCREEN = "more_settings_screen"
-
         private const val GRAPHICS_SETTINGS_SCREEN = "graphics_screen"
+        private const val GAME_SETTINGS_SCREEN = "game_screen"
     }
 }
 
