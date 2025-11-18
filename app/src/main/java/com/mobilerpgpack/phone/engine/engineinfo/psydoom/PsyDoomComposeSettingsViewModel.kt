@@ -28,6 +28,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
     private val graphicsIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}graphics_cfg.ini")
 
+    private val gameIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}game_cfg.ini")
+
     val iniFilesLoaded get() = _iniFilesLoaded
 
     init {
@@ -110,6 +112,42 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
     var logicalDisplayWidth : Int
         get() = graphicsIniFile.getIntValue("LogicalDisplayWidth")
         set(value) = graphicsIniFile.setIntValue("LogicalDisplayWidth", value)
+
+    var interpolateSectors : Boolean
+        get() = gameIniFile.getBooleanValue("InterpolateSectors")
+        set(value) = gameIniFile.setBooleanValue("InterpolateSectors", value)
+
+    var interpolateMonsters : Boolean
+        get() = gameIniFile.getBooleanValue("InterpolateMonsters")
+        set(value) = gameIniFile.setBooleanValue("InterpolateMonsters", value)
+
+    var interpolateThings : Boolean
+        get() = gameIniFile.getBooleanValue("InterpolateMobj")
+        set(value) = gameIniFile.setBooleanValue("InterpolateMobj", value)
+
+    var interpolateWeapon : Boolean
+        get() = gameIniFile.getBooleanValue("InterpolateWeapon")
+        set(value) = gameIniFile.setBooleanValue("InterpolateWeapon", value)
+
+    var enableLevelTimer : Boolean
+        get() = gameIniFile.getBooleanValue("EnableSinglePlayerLevelTimer")
+        set(value) = gameIniFile.setBooleanValue("EnableSinglePlayerLevelTimer", value)
+
+    var showPerfCounters : Boolean
+        get() = gameIniFile.getBooleanValue("ShowPerfCounters")
+        set(value) = gameIniFile.setBooleanValue("ShowPerfCounters", value)
+
+    var pauseOnFocusLost : Boolean
+        get() = gameIniFile.getIntValue("PauseOnWindowFocusLost") == 1
+        set(value) = gameIniFile.setIntValue("PauseOnWindowFocusLost", if (value) 1 else 2)
+
+    var bobScale : Float
+        get() = gameIniFile.getFloatValue("ViewBobbingStrength").coerceIn(0.0f,1.0f)
+        set(value) = gameIniFile.setFloatValue("ViewBobbingStrength", value.coerceIn(0.0f,1.0f))
+
+    var heapSize : Int
+        get() = gameIniFile.getIntValue("MainMemoryHeapSize")
+        set(value) = gameIniFile.setIntValue("MainMemoryHeapSize", value)
 
     private fun unloadIniFiles(){
         _iniFilesLoaded = false

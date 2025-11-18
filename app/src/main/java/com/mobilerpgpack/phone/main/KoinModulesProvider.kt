@@ -24,6 +24,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomGameSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomGraphicsSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomMoreSettingsScreen
@@ -65,6 +66,7 @@ import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomSettingScreen
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
@@ -85,6 +87,7 @@ import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
+import org.koin.core.scope.get
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -392,6 +395,16 @@ class KoinModulesProvider(private val context: Context,
         singleOf(::PsyDoomLauncherSettingsScreen).bind()
         singleOf(::PsyDoomMoreSettingsScreen).bind()
         singleOf(::PsyDoomGraphicsSettingsScreen).bind()
+        singleOf(::PsyDoomGameSettingsScreen).bind()
+
+        single {
+            val launcherSettings = get <PsyDoomLauncherSettingsScreen>()
+            val moreSettings = get <PsyDoomMoreSettingsScreen>()
+            val graphicsSettings = get <PsyDoomGraphicsSettingsScreen>()
+            val gameSettings = get <PsyDoomGameSettingsScreen>()
+            listOf(launcherSettings,moreSettings, graphicsSettings, gameSettings)
+        }.withOptions { bind<Collection<PsyDoomSettingScreen>>() }
+
         viewModelOf(::PsyDoomComposeSettingsViewModel)
     }
 
