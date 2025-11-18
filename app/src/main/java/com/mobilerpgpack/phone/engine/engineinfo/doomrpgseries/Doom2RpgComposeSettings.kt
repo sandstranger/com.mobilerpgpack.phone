@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
@@ -16,7 +17,7 @@ class Doom2RpgComposeSettings(buttonsToDraw: Collection<IScreenControlsView>) :
     CommonDoomRpgComposeSettings(buttonsToDraw) {
 
     @Composable
-    override fun DrawSettings() {
+    override fun DrawSettings(navController: NavHostController) {
         val context = LocalContext.current
         val previousPathToDoom2RpgIpa by preferencesStorage.pathToDoom2RpgIpaFile
             .collectAsState(initial = "")
@@ -29,6 +30,6 @@ class Doom2RpgComposeSettings(buttonsToDraw: Collection<IScreenControlsView>) :
 
         HorizontalDivider()
 
-        super.DrawSettings()
+        super.DrawSettings(navController)
     }
 }

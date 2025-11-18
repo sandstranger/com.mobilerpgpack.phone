@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.main.KoinModulesProvider
@@ -44,7 +45,7 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
     override val screenViewsToDraw: Collection<IScreenControlsView> = buttonsToDraw
 
     @Composable
-    override fun DrawSettings() {
+    override fun DrawSettings(navController: NavHostController) {
         DrawTranslationModelSettings()
     }
 

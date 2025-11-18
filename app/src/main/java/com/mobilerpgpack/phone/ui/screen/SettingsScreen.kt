@@ -1,27 +1,19 @@
 package com.mobilerpgpack.phone.ui.screen
 
-import CustomTopBar
+import android.content.Context
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,55 +22,48 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.github.sproctor.composepreferences.LocalPreferenceHandler
-import com.github.sproctor.composepreferences.PreferenceHandler
+import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
-import com.mobilerpgpack.phone.ui.getBackgroundColor
-import com.mobilerpgpack.phone.ui.getTopBarColor
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
+import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
-import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
-import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isTelevision
-import com.russhwolf.settings.ExperimentalSettingsApi
-import com.russhwolf.settings.ExperimentalSettingsImplementation
-import com.russhwolf.settings.datastore.DataStoreSettings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.parameter.parameterSetOf
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-@OptIn(ExperimentalSettingsImplementation::class, ExperimentalSettingsApi::class)
-class SettingsScreen : KoinComponent {
+class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     private val preferencesStorage : PreferencesStorage = get ()
-    private val settings = DataStoreSettings(preferencesStorage.dataStore)
+
+    private val context : Context by inject ()
+
+    override val drawFloatingActionButton: Boolean  = !context.isTelevision
 
     @Composable
-    fun DrawSettingsScreen() {
+    override fun DrawScreenContent(
+        innerPadding: PaddingValues,
+        navController: NavHostController,
+        backgroundColor: Color,
+        textColor: Color,
+        isSystemInDarkTheme: Boolean
+    ) {
         val scope = rememberCoroutineScope()
-        val isSystemInDarkTheme = isSystemInDarkTheme()
-        val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
-            .collectAsState(initial = isSystemInDarkTheme)
-        val backgroundColor = getBackgroundColor(useDarkTheme)
-        val topBarColor = getTopBarColor(useDarkTheme)
         val activeEngineString by preferencesStorage.activeEngineAsFlowString
             .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
 
@@ -87,42 +72,31 @@ class SettingsScreen : KoinComponent {
         }
 
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
-        val prerefencesHandler : PreferenceHandler = koinInject {parameterSetOf(settings) }
-        val context = LocalContext.current
 
-        Theme(darkTheme = useDarkTheme) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(topBarColor)
-                    .systemBarsPadding()
-            ) {
-                CustomTopBar(title = stringResource(R.string.app_name), useDarkTheme)
-
-                CompositionLocalProvider(LocalPreferenceHandler provides prerefencesHandler) {
-                    if (context.isTelevision) {
-                        DrawTelevisionSettings( scope, backgroundColor, activeEngine, settingsScreenViewModel)
-                    } else {
-                        DrawPhoneSettings( scope, backgroundColor, activeEngine, settingsScreenViewModel)
-                    }
-                }
-            }
+        if (!drawFloatingActionButton) {
+            DrawTelevisionSettings(innerPadding,
+                scope, activeEngine,
+                navController, settingsScreenViewModel
+            )
+        } else {
+            DrawAllSettings( innerPadding, scope, activeEngine,navController, settingsScreenViewModel)
         }
-
-        SetupNavigationBar(useDarkTheme)
     }
 
     @Composable
     private fun DrawTelevisionSettings(
+        innerPadding: PaddingValues,
         scope: CoroutineScope,
-        backgroundColor: Color, activeEngine: EngineTypes,
+        activeEngine: EngineTypes,
+        navController: NavHostController,
         viewModel: SettingsScreenViewModel
     ) {
         val activity = LocalActivity.current!!
+        val scrollState = rememberScrollState()
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(backgroundColor),
+                .fillMaxSize().verticalScroll(scrollState),
         ) {
             Button(
                 onClick = { viewModel.onStartGameClicked(activeEngine, activity) },
@@ -132,40 +106,8 @@ class SettingsScreen : KoinComponent {
                 Text(stringResource(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
             }
 
-            DrawAllSettings( scope, activeEngine, viewModel)
+            DrawAllSettings( innerPadding,scope, activeEngine,navController, viewModel)
         }
-    }
-
-    @Composable
-    private fun DrawPhoneSettings(
-        scope: CoroutineScope,
-        backgroundColor: Color, activeEngine: EngineTypes,
-        viewModel: SettingsScreenViewModel
-    ) {
-        val activity = LocalActivity.current!!
-        Scaffold(
-            modifier = Modifier.background(backgroundColor),
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { viewModel.onStartGameClicked(activeEngine, activity) }
-                ) {
-                    Icon(
-                        Icons.Default.PlayArrow,
-                        contentDescription = activity.getString(R.string.start_game)
-                    )
-                }
-            }
-        ) { innerPadding ->
-            DrawAllSettings( innerPadding, scope,
-                activeEngine, viewModel)
-        }
-    }
-
-    @Composable
-    private fun DrawAllSettings(scope: CoroutineScope, activeEngine: EngineTypes,
-                                viewModel: SettingsScreenViewModel) {
-        DrawAllSettings( PaddingValues(), scope,
-            activeEngine, viewModel)
     }
 
     @Composable
@@ -173,6 +115,7 @@ class SettingsScreen : KoinComponent {
         innerPadding: PaddingValues,
         scope: CoroutineScope,
         activeEngine: EngineTypes,
+        navController: NavHostController,
         viewModel: SettingsScreenViewModel) {
         val scrollState = rememberScrollState()
 
@@ -182,7 +125,7 @@ class SettingsScreen : KoinComponent {
                 .padding(innerPadding)
                 .verticalScroll(scrollState),
         ) {
-            DrawCommonSettings( scope, activeEngine, viewModel)
+            DrawCommonSettings( scope, activeEngine, viewModel, navController)
             DrawGraphicsSettings()
             DrawUserInterfaceSettings(scope)
         }
@@ -190,7 +133,7 @@ class SettingsScreen : KoinComponent {
 
     @Composable
     private fun DrawCommonSettings(scope: CoroutineScope, activeEngine: EngineTypes,
-                                   viewModel: SettingsScreenViewModel) {
+                                   viewModel: SettingsScreenViewModel, navController: NavHostController) {
         DrawTitleText(stringResource(R.string.common_settings))
 
         ListPreferenceItem(
@@ -210,7 +153,7 @@ class SettingsScreen : KoinComponent {
         HorizontalDivider()
 
         val engineInfo : IEngineUIController = koinInject(named(activeEngine.toString()))
-        engineInfo.DrawSettings()
+        engineInfo.DrawSettings(navController)
 
         HorizontalDivider()
     }
@@ -375,6 +318,10 @@ class SettingsScreen : KoinComponent {
                 preferencesStorage.setOffsetYMouse(floatValue)
             }
         }
+    }
+
+    companion object{
+        const val SCREEN_NAME = "settings"
     }
 }
 

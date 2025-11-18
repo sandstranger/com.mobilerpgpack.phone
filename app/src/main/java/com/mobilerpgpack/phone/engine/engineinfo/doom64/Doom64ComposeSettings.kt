@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.main.KoinModulesProvider
@@ -27,7 +28,7 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
     private val preferencesStorage : PreferencesStorage by inject()
 
     @Composable
-    override fun DrawSettings() {
+    override fun DrawSettings(navController: NavHostController) {
         val previousPathToDoom64WadsFolder by preferencesStorage.pathToDoom64MainWadsFolder
             .collectAsState(initial = "")
         RequestPath(
