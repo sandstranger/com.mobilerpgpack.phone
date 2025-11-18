@@ -25,7 +25,7 @@ abstract class PsyDoomSettingScreen (screenName : String) : ComposeScreen(screen
         val scrollState = rememberScrollState()
 
         Column(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(scrollState)

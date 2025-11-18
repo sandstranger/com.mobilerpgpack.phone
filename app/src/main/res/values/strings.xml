@@ -49,7 +49,7 @@
     <string name="psydoom_force_pistol_start">Force pistol start</string>
     <string name="psydoom_force_turbo_mode">Turbo mode</string>
     <string name="psydoom_force_no_monsters">No monsters</string>
-    <string name="psydoom_nm_boss_fixup">No monsters</string>
+    <string name="psydoom_nm_boss_fixup">NM boss fix up</string>
     <string name="psydoom_network_settings_title">Network settings</string>
     <string name="psydoom_port">Port</string>
     <string name="psydoom_host">Host</string>
