@@ -1,13 +1,9 @@
 package com.mobilerpgpack.phone.ui.screen
 
-import CustomTopBar
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.FloatingActionButton
@@ -20,11 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getTextColor
-import com.mobilerpgpack.phone.ui.getTopBarColor
-import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
