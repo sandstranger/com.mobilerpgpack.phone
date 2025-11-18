@@ -1,13 +1,24 @@
 package com.mobilerpgpack.phone.ui.activity
 
+import CustomTopBar
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,6 +26,10 @@ import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
+import com.mobilerpgpack.phone.ui.Theme
+import com.mobilerpgpack.phone.ui.getBackgroundColor
+import com.mobilerpgpack.phone.ui.getTopBarColor
+import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -41,10 +56,10 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     private fun buildScreens() {
-        val settingsScreen : SettingsScreen by inject ()
-        val permissionScreen : PermissionScreen by inject ()
-        val psyDoomLauncherSettings : PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen by inject ()
-        val psyDoomMoreSettingsScreen : PsyDoomComposeSettings.PsyDoomMoreSettingsScreen by inject ()
+        val settingsScreen: SettingsScreen by inject()
+        val permissionScreen: PermissionScreen by inject()
+        val psyDoomLauncherSettings: PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen by inject()
+        val psyDoomMoreSettingsScreen: PsyDoomComposeSettings.PsyDoomMoreSettingsScreen by inject()
 
         val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
             settingsScreen.route else permissionScreen.route
@@ -52,38 +67,61 @@ class MainActivity : ComponentActivity(), KoinComponent {
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
-                val preferencesStorage : PreferencesStorage = get ()
+                val preferencesStorage: PreferencesStorage = get()
                 val settings = DataStoreSettings(preferencesStorage.dataStore)
-                val prerefencesHandler : PreferenceHandler = get {parameterSetOf(settings) }
-                CompositionLocalProvider(LocalPreferenceHandler provides prerefencesHandler) {
-                    NavHost(navController = navController, startDestination = startScreen) {
-                        composable(permissionScreen.route)
-                        {
-                            permissionScreen.DrawScreen (navController) {
-                                navController.navigate(settingsScreen.route) {
-                                    popUpTo(settingsScreen.route) { inclusive = true }
+                val prerefencesHandler: PreferenceHandler = get { parameterSetOf(settings) }
+                val isSystemInDarkTheme = isSystemInDarkTheme()
+                val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
+                    .collectAsState(initial = isSystemInDarkTheme)
+                val topBarColor = getTopBarColor(useDarkTheme)
+                val backgroundColor = getBackgroundColor(useDarkTheme)
+
+                Theme(darkTheme = useDarkTheme) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(topBarColor)
+                            .systemBarsPadding()
+                    ) {
+                        CustomTopBar(title = stringResource(R.string.app_name), useDarkTheme)
+                        Column(modifier = Modifier.background(backgroundColor).fillMaxSize()
+                        ) {
+                            CompositionLocalProvider(LocalPreferenceHandler provides prerefencesHandler) {
+                                NavHost(
+                                    navController = navController,
+                                    startDestination = startScreen
+                                ) {
+                                    composable(permissionScreen.route)
+                                    {
+                                        permissionScreen.DrawScreen(navController) {
+                                            navController.navigate(settingsScreen.route) {
+                                                popUpTo(settingsScreen.route) { inclusive = true }
+                                            }
+                                        }
+                                    }
+
+                                    composable(settingsScreen.route) {
+                                        settingsScreen.DrawScreen(navController)
+                                    }
+
+                                    composable(psyDoomLauncherSettings.route) {
+                                        psyDoomLauncherSettings.DrawScreen(navController)
+                                    }
+
+                                    composable(psyDoomMoreSettingsScreen.route) {
+                                        psyDoomMoreSettingsScreen.DrawScreen(navController)
+                                    }
                                 }
                             }
                         }
-
-                        composable(settingsScreen.route) {
-                            settingsScreen.DrawScreen(navController)
-                        }
-
-                        composable(psyDoomLauncherSettings.route) {
-                            psyDoomLauncherSettings.DrawScreen(navController)
-                        }
-
-                        composable (psyDoomMoreSettingsScreen.route) {
-                            psyDoomMoreSettingsScreen.DrawScreen(navController)
-                        }
                     }
+                    SetupNavigationBar(useDarkTheme)
                 }
             }
         }
     }
 
-    private fun updateTheme(){
+    private fun updateTheme() {
         var useDarkTheme = false
         val preferencesStorage = get<PreferencesStorage>()
         runBlocking {

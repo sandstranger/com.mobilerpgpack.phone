@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
+import java.io.File
 
 class PsyDoomEngineInfo(mainEngineLib: String,
                         allLibs: Array<String>,
@@ -52,12 +53,17 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                 it.addAll(baseCommandLineArgs)
 
                 runBlocking {
-                    it += CUE_COMMAND
-                    it += psyDoomPreferencesStorage.pathToPsyDoomCueFile.first()
+
+                    val pathToCue = psyDoomPreferencesStorage.pathToPsyDoomCueFile.first()
+
+                    if (pathToCue.isNotEmpty() && File(pathToCue).exists()) {
+                        it += CUE_COMMAND
+                        it += pathToCue
+                    }
 
                     val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder.first()
 
-                    if (modsFolder.isNotEmpty()){
+                    if (modsFolder.isNotEmpty() && File(modsFolder).exists()){
                         it += DATA_DIR_COMMAND
                         it += modsFolder
                     }
