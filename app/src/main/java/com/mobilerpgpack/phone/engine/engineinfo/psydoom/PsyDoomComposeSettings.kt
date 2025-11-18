@@ -141,14 +141,16 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         PsyDoomSettingScreen (LAUNCHER_SETTINGS_SCREEN){
 
         @Composable
-        override fun DrawSettingsScreen(navController: NavHostController) = psyDoomComposeSettings.DrawLauncherSettings()
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            psyDoomComposeSettings.DrawLauncherSettings()
     }
 
    data class PsyDoomMoreSettingsScreen (private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen (MORE_SETTINGS_SCREEN){
 
         @Composable
-        override fun DrawSettingsScreen(navController: NavHostController) = psyDoomComposeSettings.DrawMoreSettings(navController)
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            psyDoomComposeSettings.DrawMoreSettings(navController)
     }
 
     private companion object{
