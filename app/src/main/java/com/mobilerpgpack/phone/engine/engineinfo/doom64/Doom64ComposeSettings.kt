@@ -31,16 +31,17 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
     override fun DrawSettings(navController: NavHostController) {
         val previousPathToDoom64WadsFolder by preferencesStorage.pathToDoom64MainWadsFolder
             .collectAsState(initial = "")
+
+        DrawCommandLinePreferences(preferencesStorage.doom64CommandLineArgsString,
+            preferencesStorage.doom64CommandLineArgsStringPrefsKey.name)
+
+        HorizontalDivider()
+
         RequestPath(
             stringResource(R.string.path_to_doom64_folder),
             previousPathToDoom64WadsFolder) { selectedPath ->
             scope.launch { preferencesStorage.setPathToDoom64MainWadsFolder(selectedPath) }
         }
-
-        HorizontalDivider()
-
-        DrawCommandLinePreferences(preferencesStorage.doom64CommandLineArgsString,
-            preferencesStorage.doom64CommandLineArgsStringPrefsKey.name)
 
         HorizontalDivider()
 
