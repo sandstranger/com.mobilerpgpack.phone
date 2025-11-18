@@ -189,6 +189,38 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = gameIniFile.getBooleanValue("FixBlockingGibsBug")
         set(value) = gameIniFile.setBooleanValue("FixBlockingGibsBug", value)
 
+    var useExtendedPlayerShootRange : Boolean
+        get() = gameIniFile.getBooleanValue("UseExtendedPlayerShootRange")
+        set(value) = gameIniFile.setBooleanValue("UseExtendedPlayerShootRange", value)
+
+    var allowMultiMapPickup : Boolean
+        get() = gameIniFile.getBooleanValue("AllowMultiMapPickup")
+        set(value) = gameIniFile.setBooleanValue("AllowMultiMapPickup", value)
+
+    var useMoveInputLatencyTweak : Boolean
+        get() = gameIniFile.getBooleanValue("UseMoveInputLatencyTweak")
+        set(value) = gameIniFile.setBooleanValue("UseMoveInputLatencyTweak", value)
+
+    var useSuperShotgunDelayTweak : Boolean
+        get() = gameIniFile.getBooleanValue("UseSuperShotgunDelayTweak")
+        set(value) = gameIniFile.setBooleanValue("UseSuperShotgunDelayTweak", value)
+
+    var singlePlayerForceSpawnDmThings : Boolean
+        get() = gameIniFile.getBooleanValue("SinglePlayerForceSpawnDmThings")
+        set(value) = gameIniFile.setBooleanValue("SinglePlayerForceSpawnDmThings", value)
+
+    var allowTurningCancellation : Boolean
+        get() = gameIniFile.getBooleanValue("AllowTurningCancellation")
+        set(value) = gameIniFile.setBooleanValue("AllowTurningCancellation", value)
+
+    var allowMovementCancellation : PsyDoomComposeSettings.GameEnum
+        get() = PsyDoomComposeSettings.GameEnum.fromValue(gameIniFile.getIntValue("AllowMovementCancellation"))!!
+        set(value) = gameIniFile.setIntValue("AllowMovementCancellation", value.value)
+
+    var useFinalDoomPlayerMovement : PsyDoomComposeSettings.GameEnum
+        get() = PsyDoomComposeSettings.GameEnum.fromValue(gameIniFile.getIntValue("UseFinalDoomPlayerMovement"))!!
+        set(value) = gameIniFile.setIntValue("UseFinalDoomPlayerMovement", value.value)
+
     var fixSoundPropagation : Boolean
         get() = gameIniFile.getBooleanValue("FixSoundPropagation")
         set(value) = gameIniFile.setBooleanValue("FixSoundPropagation", value)
@@ -200,6 +232,10 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
     var heapSize : Int
         get() = gameIniFile.getIntValue("MainMemoryHeapSize")
         set(value) = gameIniFile.setIntValue("MainMemoryHeapSize", value)
+
+    var lostSoulSpawnLimit : Int
+        get() = gameIniFile.getIntValue("LostSoulSpawnLimit")
+        set(value) = gameIniFile.setIntValue("LostSoulSpawnLimit", value)
 
     private fun unloadIniFiles(){
         _iniFilesLoaded = false
