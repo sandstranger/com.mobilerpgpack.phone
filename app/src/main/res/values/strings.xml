@@ -115,6 +115,16 @@
     <string name="psydoom_allow_movement_cancel">Allow movement cancel</string>
     <string name="psydoom_final_doom_player_physx">Use final doom player physx</string>
     <string name="psydoom_lost_soul_spawn_limit">Lost soul spawn limit</string>
+    <string name="psydoom_map_patches_to_apply">Map patches to apply</string>
+    <string name="psydoom_gameplay_fixes">Gameplay fixes</string>
+    <string name="psydoom_visual_fixes">Visual fixes</string>
+    <string name="psydoom_fixes">Fixes for PSyDoom</string>
+    <string name="psydoom_loading">Loading</string>
+    <string name="psydoom_fast_loading">Use fast loading</string>
+    <string name="psydoom_skip_intros">Skip intros</string>
+    <string name="psydoom_game_tick_rate">Game tick rate</string>
+    <string name="psydoom_mode">Mode</string>
+    <string name="psydoom_demo_timings">Demo timings</string>
     <string name="psydoom_peer_type">Peer type</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>

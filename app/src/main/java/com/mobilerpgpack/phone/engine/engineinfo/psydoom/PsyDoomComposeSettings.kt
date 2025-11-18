@@ -395,6 +395,9 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         DrawBugFixes(viewModel)
         HorizontalDivider()
         DrawTweaks(viewModel)
+        HorizontalDivider()
+        DrawExtraGameSettings(viewModel)
+        HorizontalDivider()
     }
 
     @Composable
@@ -551,6 +554,57 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         HorizontalDivider()
     }
 
+    @Composable
+    private fun DrawExtraGameSettings(viewModel: PsyDoomComposeSettingsViewModel){
+        DrawTitleText(stringResource(R.string.psydoom_map_patches_to_apply))
+        SwitchItem(
+            stringResource(R.string.psydoom_gameplay_fixes),
+            viewModel.enableMapPatchesGamePlay) {
+            viewModel.enableMapPatchesGamePlay = it
+        }
+        HorizontalDivider()
+        SwitchItem(
+            stringResource(R.string.psydoom_visual_fixes),
+            viewModel.enableMapPatchesVisual) {
+            viewModel.enableMapPatchesVisual = it
+        }
+        HorizontalDivider()
+        SwitchItem(
+            stringResource(R.string.psydoom_fixes),
+            viewModel.enableMapPatchesPsyDoom) {
+            viewModel.enableMapPatchesPsyDoom = it
+        }
+        HorizontalDivider()
+        SwitchItem(
+            stringResource(R.string.psydoom_fixes),
+            viewModel.enableMapPatchesPsyDoom) {
+            viewModel.enableMapPatchesPsyDoom = it
+        }
+        DrawTitleText(stringResource(R.string.psydoom_loading))
+        SwitchItem(stringResource(R.string.psydoom_fast_loading),
+            viewModel.useFastLoading) {
+            viewModel.useFastLoading = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_skip_intros),
+            viewModel.skipIntros) {
+            viewModel.skipIntros = it
+        }
+
+        DrawTitleText(stringResource(R.string.psydoom_game_tick_rate))
+
+        ListPreferenceItem(stringResource(R.string.psydoom_mode),
+            viewModel.usePalTimings.toString(), TickMode.stringCollection() ) {
+            viewModel.usePalTimings = enumValueOf<TickMode>(it)
+        }
+        HorizontalDivider()
+
+        SwitchItem(stringResource(R.string.psydoom_demo_timings),
+            viewModel.useDemoTimings) {
+            viewModel.useDemoTimings = it
+        }
+    }
+
     data class PsyDoomLauncherSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen(LAUNCHER_SETTINGS_SCREEN) {
 
@@ -597,6 +651,20 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         companion object {
             fun fromValue(value: Int): GameEnum? {
+                return entries.find { it.value == value }
+            }
+
+            fun stringCollection () = entries.map { it.toString() }.toList()
+        }
+    }
+
+    enum class TickMode (val value: Int){
+        NTSC (0),
+        PAL(1),
+        Auto (-1);
+
+        companion object {
+            fun fromValue(value: Int): TickMode? {
                 return entries.find { it.value == value }
             }
 
