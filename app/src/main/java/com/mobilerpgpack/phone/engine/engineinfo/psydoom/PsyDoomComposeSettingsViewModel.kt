@@ -221,9 +221,37 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = PsyDoomComposeSettings.GameEnum.fromValue(gameIniFile.getIntValue("UseFinalDoomPlayerMovement"))!!
         set(value) = gameIniFile.setIntValue("UseFinalDoomPlayerMovement", value.value)
 
+    var usePalTimings : PsyDoomComposeSettings.TickMode
+        get() = PsyDoomComposeSettings.TickMode.fromValue(gameIniFile.getIntValue("UsePalTimings"))!!
+        set(value) = gameIniFile.setIntValue("UsePalTimings", value.value)
+
     var fixSoundPropagation : Boolean
         get() = gameIniFile.getBooleanValue("FixSoundPropagation")
         set(value) = gameIniFile.setBooleanValue("FixSoundPropagation", value)
+
+    var useDemoTimings : Boolean
+        get() = gameIniFile.getBooleanValue("UseDemoTimings")
+        set(value) = gameIniFile.setBooleanValue("UseDemoTimings", value)
+
+    var enableMapPatchesGamePlay : Boolean
+        get() = gameIniFile.getBooleanValue("EnableMapPatches_GamePlay")
+        set(value) = gameIniFile.setBooleanValue("EnableMapPatches_GamePlay", value)
+
+    var enableMapPatchesVisual : Boolean
+        get() = gameIniFile.getBooleanValue("EnableMapPatches_Visual")
+        set(value) = gameIniFile.setBooleanValue("EnableMapPatches_Visual", value)
+
+    var enableMapPatchesPsyDoom : Boolean
+        get() = gameIniFile.getBooleanValue("EnableMapPatches_PsyDoom")
+        set(value) = gameIniFile.setBooleanValue("EnableMapPatches_PsyDoom", value)
+
+    var useFastLoading : Boolean
+        get() = gameIniFile.getBooleanValue("UseFastLoading")
+        set(value) = gameIniFile.setBooleanValue("UseFastLoading", value)
+
+    var skipIntros : Boolean
+        get() = gameIniFile.getBooleanValue("SkipIntros")
+        set(value) = gameIniFile.setBooleanValue("SkipIntros", value)
 
     var bobScale : Float
         get() = gameIniFile.getFloatValue("ViewBobbingStrength").coerceIn(0.0f,1.0f)
