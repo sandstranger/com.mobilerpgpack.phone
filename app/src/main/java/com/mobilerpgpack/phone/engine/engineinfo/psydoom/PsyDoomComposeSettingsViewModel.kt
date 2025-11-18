@@ -36,6 +36,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
     private val cheatsIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}cheats_cfg.ini")
 
+    private val multiPlayerIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}multiplayer_cfg.ini")
+
     val iniFilesLoaded get() = _iniFilesLoaded
 
     init {
@@ -271,6 +273,38 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = cheatsIniFile.getBooleanValue("EnableDevInPlaceReloadFunctionKey")
         set(value) = cheatsIniFile.setBooleanValue("EnableDevInPlaceReloadFunctionKey", value)
 
+    var coopNoFriendlyFire : Boolean
+        get() = multiPlayerIniFile.getBooleanValue("CoopNoFriendlyFire")
+        set(value) = multiPlayerIniFile.setBooleanValue("CoopNoFriendlyFire", value)
+
+    var coopPreserveKeys : Boolean
+        get() = multiPlayerIniFile.getBooleanValue("CoopPreserveKeys")
+        set(value) = multiPlayerIniFile.setBooleanValue("CoopPreserveKeys", value)
+
+    var coopPreserveWeapons : Boolean
+        get() = multiPlayerIniFile.getBooleanValue("CoopPreserveWeapons")
+        set(value) = multiPlayerIniFile.setBooleanValue("CoopPreserveWeapons", value)
+
+    var coopForceSpawnDeathmatchThings : Boolean
+        get() = multiPlayerIniFile.getBooleanValue("CoopForceSpawnDeathmatchThings")
+        set(value) = multiPlayerIniFile.setBooleanValue("CoopForceSpawnDeathmatchThings", value)
+
+    var dmActivateBossSpecialSectors : Boolean
+        get() = multiPlayerIniFile.getBooleanValue("DmActivateBossSpecialSectors")
+        set(value) = multiPlayerIniFile.setBooleanValue("DmActivateBossSpecialSectors", value)
+
+    var dmExitDisabled : Boolean
+        get() = multiPlayerIniFile.getBooleanValue("DmExitDisabled")
+        set(value) = multiPlayerIniFile.setBooleanValue("DmExitDisabled", value)
+
+    var coopPreserveAmmoFactor : PsyDoomComposeSettings.RespawnAmmoEnum
+        get() = PsyDoomComposeSettings.RespawnAmmoEnum.fromValue(multiPlayerIniFile.getIntValue("CoopPreserveAmmoFactor"))!!
+        set(value) = multiPlayerIniFile.setIntValue("CoopPreserveAmmoFactor", value.value)
+
+    var dmFragLimit : Int
+        get() = multiPlayerIniFile.getIntValue("DmFragLimit").coerceIn(0, Int.MAX_VALUE)
+        set(value) = multiPlayerIniFile.setIntValue("DmFragLimit", value.coerceIn(0, Int.MAX_VALUE))
+
     var cheatKeySequenceGodMode : String
         get() = cheatsIniFile.getStringValue("CheatKeySequence_GodMode")
         set(value) {
@@ -406,6 +440,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         inputIniFile.unload()
         audioIniFile.unload()
         cheatsIniFile.unload()
+        multiPlayerIniFile.unload()
     }
 
     private fun reloadIniFiles (){
@@ -414,6 +449,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         inputIniFile.reload()
         audioIniFile.reload()
         cheatsIniFile.reload()
+        multiPlayerIniFile.reload()
         _iniFilesLoaded = true
     }
 

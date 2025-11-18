@@ -154,6 +154,17 @@
     <string name="psydoom_xray_vision">X-ray vision</string>
     <string name="psydoom_vram_viewer">VRAM viewer</string>
     <string name="psydoom_no_target">No target</string>
+    <string name="psydoom_multiplayer">Multiplayer</string>
+    <string name="psydoom_cooperative">Cooperative</string>
+    <string name="psydoom_no_friendly_fire">No friendly fire</string>
+    <string name="psydoom_spawn_deathmatch_only_things">Spawn deathmatch-only things</string>
+    <string name="psydoom_preserve_keys_on_respawn">Preserve keys on respawn</string>
+    <string name="psydoom_preserve_weapons_on_respawn">Preserve weapons on respawn</string>
+    <string name="psydoom_preserve_ammo_on_respawn">Preserve ammo on respawn</string>
+    <string name="psydoom_deathmatch">Deathmatch</string>
+    <string name="psydoom_frag_limit">Frag limit</string>
+    <string name="psydoom_disable_exits">Disable exits</string>
+    <string name="psydoom_auto_activate_boss">Auto-activate boss special sectors</string>
     <string name="psydoom_peer_type">Peer type</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>
