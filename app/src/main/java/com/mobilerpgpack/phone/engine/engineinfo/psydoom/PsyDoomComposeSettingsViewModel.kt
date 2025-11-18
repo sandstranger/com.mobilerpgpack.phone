@@ -43,6 +43,26 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = graphicsIniFile.getBooleanValue("EnableVSync")
         set(value) = graphicsIniFile.setBooleanValue("EnableVSync", value)
 
+    var useExtendedAutomapColors : Boolean
+        get() = graphicsIniFile.getBooleanValue("UseExtendedAutomapColors")
+        set(value) = graphicsIniFile.setBooleanValue("UseExtendedAutomapColors", value)
+
+    var topOverscanPixels : Int
+        get() = graphicsIniFile.getIntValue("TopOverscanPixels")
+        set(value) = graphicsIniFile.setIntValue("TopOverscanPixels", value)
+
+    var vramSizeInMbytes : Int
+        get() = graphicsIniFile.getIntValue("VramSizeInMegabytes")
+        set(value) = graphicsIniFile.setIntValue("VramSizeInMegabytes", value)
+
+    var bottomOverscanPixels : Int
+        get() = graphicsIniFile.getIntValue("BottomOverscanPixels")
+        set(value) = graphicsIniFile.setIntValue("BottomOverscanPixels", value)
+
+    var logicalDisplayWidth : Float
+        get() = graphicsIniFile.getFloatValue("LogicalDisplayWidth")
+        set(value) = graphicsIniFile.setFloatValue("LogicalDisplayWidth", value)
+
     private fun unloadIniFiles(){
         _iniFilesLoaded = false
         graphicsIniFile.unload()

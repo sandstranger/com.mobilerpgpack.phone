@@ -5,11 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
+import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
@@ -155,6 +157,39 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.enableVsync = it
         }
 
+        HorizontalDivider()
+
+        DrawTitleText(stringResource(R.string.psydoom_picture_crop_settings))
+
+        EditTextItem(stringResource(R.string.psydoom_top_overscan_pixels), viewModel.topOverscanPixels){
+            viewModel.topOverscanPixels = it
+        }
+
+        HorizontalDivider()
+
+        EditTextItem(stringResource(R.string.psydoom_bottom_overscan_pixels), viewModel.bottomOverscanPixels){
+            viewModel.bottomOverscanPixels = it
+        }
+
+        HorizontalDivider()
+
+        HorizontalDivider()
+
+        EditTextItem(stringResource(R.string.psydoom_logical_display_width), viewModel.logicalDisplayWidth){
+            viewModel.logicalDisplayWidth = it
+        }
+
+        HorizontalDivider()
+
+        DrawTitleText(stringResource(R.string.psydoom_general_settings))
+        EditTextItem(stringResource(R.string.psydoom_vram_size), viewModel.vramSizeInMbytes){
+            viewModel.vramSizeInMbytes = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_extended_automap_colors),
+            viewModel.useExtendedAutomapColors){
+            viewModel.useExtendedAutomapColors = it
+        }
         HorizontalDivider()
     }
 
