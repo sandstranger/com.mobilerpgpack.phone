@@ -2,56 +2,78 @@ package com.mobilerpgpack.phone.ui.activity
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.github.sproctor.composepreferences.LocalPreferenceHandler
+import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.ExperimentalSettingsImplementation
+import com.russhwolf.settings.datastore.DataStoreSettings
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.parameter.parameterSetOf
+import kotlin.getValue
 
-internal class MainActivity : ComponentActivity(), KoinComponent {
-
-    private val settingsScreenProvider : SettingsScreen by inject()
+class MainActivity : ComponentActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         updateTheme()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         buildScreens()
-        val backgroundColor = resources.getColor(R.color.md_background_color, theme)
-        Log.d("ThemeDebug", "Background color: ${backgroundColor.toString()}")
     }
 
+    @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     private fun buildScreens() {
+
+        val settingsScreen : SettingsScreen by inject ()
+        val permissionScreen : PermissionScreen by inject ()
+
         val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
-            Screen.Settings.route else Screen.Permission.route
+            settingsScreen.route else permissionScreen.route
+        val psyDoomLauncherSettings = get<PsyDoomComposeSettings.PsyDoomLauncherSettings>()
+
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = startScreen) {
-                    composable(Screen.Permission.route)
-                    {
-                        PermissionScreen {
-                            navController.navigate(Screen.Settings.route) {
-                                popUpTo(Screen.Permission.route) { inclusive = true }
+                val preferencesStorage : PreferencesStorage = get ()
+                val settings = DataStoreSettings(preferencesStorage.dataStore)
+                val prerefencesHandler : PreferenceHandler = get {parameterSetOf(settings) }
+                CompositionLocalProvider(LocalPreferenceHandler provides prerefencesHandler) {
+
+                    NavHost(navController = navController, startDestination = startScreen) {
+                        composable(permissionScreen.route)
+                        {
+                            permissionScreen.DrawScreen (navController) {
+                                navController.navigate(settingsScreen.route) {
+                                    popUpTo(settingsScreen.route) { inclusive = true }
+                                }
                             }
                         }
-                    }
-                    composable(Screen.Settings.route) {
-                        settingsScreenProvider.DrawSettingsScreen()
+
+                        composable(settingsScreen.route) {
+                            settingsScreen.DrawScreen(navController)
+                        }
+
+                        composable(psyDoomLauncherSettings.route) {
+                            psyDoomLauncherSettings.DrawScreen(navController)
+                        }
                     }
                 }
             }
@@ -67,10 +89,5 @@ internal class MainActivity : ComponentActivity(), KoinComponent {
         if (useDarkTheme) {
             setTheme(R.style.AppThemeDark)
         }
-    }
-
-    private sealed class Screen(val route: String) {
-        data object Permission : Screen("permission")
-        data object Settings : Screen("settings")
     }
 }

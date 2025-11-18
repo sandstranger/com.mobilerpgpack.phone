@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
@@ -15,7 +16,7 @@ class WolfensteinRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsVi
     CommonDoomRpgComposeSettings(buttonsToDraw){
 
     @Composable
-    override fun DrawSettings() {
+    override fun DrawSettings(navController: NavHostController) {
         val context = LocalContext.current
         val previousPathToWolfensteinRpgIPa by preferencesStorage.pathToWolfensteinRpgIpaFile
             .collectAsState(initial = "")
@@ -27,6 +28,6 @@ class WolfensteinRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsVi
             scope.launch { preferencesStorage.setPathToWolfensteinRpgIpaFile(selectedPath) }
         }
         HorizontalDivider()
-        super.DrawSettings()
+        super.DrawSettings(navController)
     }
 }

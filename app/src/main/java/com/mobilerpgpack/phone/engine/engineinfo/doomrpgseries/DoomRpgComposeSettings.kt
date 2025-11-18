@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
@@ -15,7 +16,7 @@ class DoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
     CommonDoomRpgComposeSettings(buttonsToDraw) {
 
     @Composable
-    override fun DrawSettings() {
+    override fun DrawSettings(navController: NavHostController) {
         val savedPathToDoomRpgZip by preferencesStorage.pathToDoomRpgZipFile
             .collectAsState(initial = "")
 
@@ -26,6 +27,6 @@ class DoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
             scope.launch { preferencesStorage.setPathToDoomRpgZipFile(selectedPath) }
         }
         HorizontalDivider()
-        super.DrawSettings()
+        super.DrawSettings(navController)
     }
 }
