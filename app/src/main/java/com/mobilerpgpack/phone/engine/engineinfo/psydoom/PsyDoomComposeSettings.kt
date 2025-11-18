@@ -49,6 +49,12 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     @Composable
     private fun DrawPsyDoomCommonSettings(navController: NavHostController){
+
+        DrawCommandLinePreferences(preferencesStorage.psyDoomCommandLineArgsString,
+            preferencesStorage.psyDoomCommandLineArgsPrefsKey.name)
+
+        HorizontalDivider()
+
         RequestPath(
             stringResource(R.string.path_to_psydoom_cue_file),
             preferencesStorage.pathToPsyDoomCueFile,
@@ -61,11 +67,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             stringResource(R.string.path_to_psydoom_mods_folder),
             preferencesStorage.pathToPsyDoomModsFolder,
             preferencesStorage.pathToPsyDoomModsFolderPrefsKey)
-
-        HorizontalDivider()
-
-        DrawCommandLinePreferences(preferencesStorage.psyDoomCommandLineArgsString,
-            preferencesStorage.psyDoomCommandLineArgsPrefsKey.name)
 
         HorizontalDivider()
 
@@ -299,6 +300,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
         HorizontalDivider()
 
+        DrawTitleText(stringResource(R.string.psydoom_miscellaneous))
+
+        SwitchItem(stringResource(R.string.psydoom_pause_on_focus_lost),
+            viewModel.pauseOnFocusLost){
+            viewModel.pauseOnFocusLost = it
+        }
+        HorizontalDivider()
+
         EditTextItem(stringResource(R.string.psydoom_bob_scale),
             viewModel.bobScale){
             viewModel.bobScale = it
@@ -307,6 +316,80 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         EditTextItem(stringResource(R.string.psydoom_heap_size),
             viewModel.heapSize){
             viewModel.heapSize = it
+        }
+        HorizontalDivider()
+        DrawBugFixes(viewModel)
+    }
+
+    @Composable
+    private fun DrawBugFixes(viewModel: PsyDoomComposeSettingsViewModel){
+        DrawTitleText(stringResource(R.string.psydoom_bug_fixes_to_apply))
+
+        SwitchItem(stringResource(R.string.psydoom_fix_line_activation),
+            viewModel.fixLineActivation){
+            viewModel.fixLineActivation = it
+        }
+        HorizontalDivider()
+
+        SwitchItem(stringResource(R.string.psydoom_item_pickup_fix),
+            viewModel.itemPickupFix){
+            viewModel.itemPickupFix = it
+        }
+        HorizontalDivider()
+
+        SwitchItem(stringResource(R.string.psydoom_fix_mutiline_crossing),
+            viewModel.fixMultiLineCrossing){
+            viewModel.fixMultiLineCrossing = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_fix_kill_count),
+            viewModel.fixKillCount){
+            viewModel.fixKillCount = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_player_rocket_blast_fix),
+            viewModel.playerRocketBlastFix){
+            viewModel.playerRocketBlastFix = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_fix_sprite_vertical_warp),
+            viewModel.fixSpriteVerticalWarp){
+            viewModel.fixSpriteVerticalWarp = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_fix_view_bob_strength),
+            viewModel.fixViewBobStrength){
+            viewModel.fixViewBobStrength = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_fix_gravity_strength),
+            viewModel.fixGravityStrength){
+            viewModel.fixGravityStrength = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_lost_soul_spawn_fix),
+            viewModel.useLostSoulSpawnFix){
+            viewModel.useLostSoulSpawnFix = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_line_of_sight_overflow_fix),
+            viewModel.useLineOfSightOverflowFix){
+            viewModel.useLineOfSightOverflowFix = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_fix_outdoor_bullet_pufs),
+            viewModel.fixOutdoorBulletPuffs){
+            viewModel.fixOutdoorBulletPuffs = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_fix_blockng_gibs_bug),
+            viewModel.fixBlockingGibsBug){
+            viewModel.fixBlockingGibsBug = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_fix_sound_propagation),
+            viewModel.fixSoundPropagation){
+            viewModel.fixSoundPropagation = it
         }
         HorizontalDivider()
     }

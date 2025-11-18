@@ -141,6 +141,58 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = gameIniFile.getIntValue("PauseOnWindowFocusLost") == 1
         set(value) = gameIniFile.setIntValue("PauseOnWindowFocusLost", if (value) 1 else 2)
 
+    var fixLineActivation : Boolean
+        get() = gameIniFile.getBooleanValue("FixLineActivation")
+        set(value) = gameIniFile.setBooleanValue("FixLineActivation", value)
+
+    var itemPickupFix : Boolean
+        get() = gameIniFile.getBooleanValue("UseItemPickupFix")
+        set(value) = gameIniFile.setBooleanValue("UseItemPickupFix", value)
+
+    var fixMultiLineCrossing : Boolean
+        get() = gameIniFile.getBooleanValue("FixMultiLineSpecialCrossing")
+        set(value) = gameIniFile.setBooleanValue("FixMultiLineSpecialCrossing", value)
+
+    var fixKillCount : Boolean
+        get() = gameIniFile.getBooleanValue("FixKillCount")
+        set(value) = gameIniFile.setBooleanValue("FixKillCount", value)
+
+    var playerRocketBlastFix : Boolean
+        get() = gameIniFile.getBooleanValue("UsePlayerRocketBlastFix")
+        set(value) = gameIniFile.setBooleanValue("UsePlayerRocketBlastFix", value)
+
+    var fixSpriteVerticalWarp : Boolean
+        get() = gameIniFile.getBooleanValue("FixSpriteVerticalWarp")
+        set(value) = gameIniFile.setBooleanValue("FixSpriteVerticalWarp", value)
+
+    var fixViewBobStrength : Boolean
+        get() = gameIniFile.getBooleanValue("FixViewBobStrength")
+        set(value) = gameIniFile.setBooleanValue("FixViewBobStrength", value)
+
+    var fixGravityStrength : Boolean
+        get() = gameIniFile.getBooleanValue("FixGravityStrength")
+        set(value) = gameIniFile.setBooleanValue("FixGravityStrength", value)
+
+    var useLostSoulSpawnFix : Boolean
+        get() = gameIniFile.getBooleanValue("UseLostSoulSpawnFix")
+        set(value) = gameIniFile.setBooleanValue("UseLostSoulSpawnFix", value)
+
+    var useLineOfSightOverflowFix : Boolean
+        get() = gameIniFile.getBooleanValue("UseLineOfSightOverflowFix")
+        set(value) = gameIniFile.setBooleanValue("UseLineOfSightOverflowFix", value)
+
+    var fixOutdoorBulletPuffs : Boolean
+        get() = gameIniFile.getBooleanValue("FixOutdoorBulletPuffs")
+        set(value) = gameIniFile.setBooleanValue("FixOutdoorBulletPuffs", value)
+
+    var fixBlockingGibsBug : Boolean
+        get() = gameIniFile.getBooleanValue("FixBlockingGibsBug")
+        set(value) = gameIniFile.setBooleanValue("FixBlockingGibsBug", value)
+
+    var fixSoundPropagation : Boolean
+        get() = gameIniFile.getBooleanValue("FixSoundPropagation")
+        set(value) = gameIniFile.setBooleanValue("FixSoundPropagation", value)
+
     var bobScale : Float
         get() = gameIniFile.getFloatValue("ViewBobbingStrength").coerceIn(0.0f,1.0f)
         set(value) = gameIniFile.setFloatValue("ViewBobbingStrength", value.coerceIn(0.0f,1.0f))
