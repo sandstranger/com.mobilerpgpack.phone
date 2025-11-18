@@ -41,13 +41,13 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     private fun buildScreens() {
-
         val settingsScreen : SettingsScreen by inject ()
         val permissionScreen : PermissionScreen by inject ()
+        val psyDoomLauncherSettings : PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen by inject ()
+        val psyDoomMoreSettingsScreen : PsyDoomComposeSettings.PsyDoomMoreSettingsScreen by inject ()
 
         val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
             settingsScreen.route else permissionScreen.route
-        val psyDoomLauncherSettings = get<PsyDoomComposeSettings.PsyDoomLauncherSettings>()
 
         setContent {
             MaterialTheme {
@@ -56,7 +56,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 val settings = DataStoreSettings(preferencesStorage.dataStore)
                 val prerefencesHandler : PreferenceHandler = get {parameterSetOf(settings) }
                 CompositionLocalProvider(LocalPreferenceHandler provides prerefencesHandler) {
-
                     NavHost(navController = navController, startDestination = startScreen) {
                         composable(permissionScreen.route)
                         {
@@ -73,6 +72,10 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
                         composable(psyDoomLauncherSettings.route) {
                             psyDoomLauncherSettings.DrawScreen(navController)
+                        }
+
+                        composable (psyDoomMoreSettingsScreen.route) {
+                            psyDoomMoreSettingsScreen.DrawScreen(navController)
                         }
                     }
                 }

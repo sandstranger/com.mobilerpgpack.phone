@@ -1,41 +1,22 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
-import CustomTopBar
-import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.ui.Theme
-import com.mobilerpgpack.phone.ui.getBackgroundColor
-import com.mobilerpgpack.phone.ui.getTextColor
-import com.mobilerpgpack.phone.ui.getTopBarColor
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
-import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
-import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import org.koin.core.component.KoinComponent
@@ -75,9 +56,23 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         HorizontalDivider()
 
-        PreferenceItem("More laucnher settings"){
+        DrawCommandLinePreferences(preferencesStorage.psyDoomCommandLineArgsString,
+            preferencesStorage.psyDoomCommandLineArgsPrefsKey.name)
+
+        HorizontalDivider()
+
+        PreferenceItem(stringResource(R.string.psydoom_more_settings)){
+            navController.navigate(MORE_SETTINGS_SCREEN)
+        }
+    }
+
+    @Composable
+    private fun DrawMoreSettings(navController: NavHostController){
+        HorizontalDivider()
+        PreferenceItem(stringResource(R.string.psydoom_launcher_settings)){
             navController.navigate(LAUNCHER_SETTINGS_SCREEN)
         }
+        HorizontalDivider()
     }
 
     @Composable
@@ -142,31 +137,24 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         HorizontalDivider()
     }
 
-    data class PsyDoomLauncherSettings (private val composeSettings: PsyDoomComposeSettings) :
-        ComposeScreen(LAUNCHER_SETTINGS_SCREEN){
+    data class PsyDoomLauncherSettingsScreen (private val psyDoomComposeSettings: PsyDoomComposeSettings) :
+        PsyDoomSettingScreen (LAUNCHER_SETTINGS_SCREEN){
 
         @Composable
-        override fun DrawScreenContent(
-            innerPadding: PaddingValues,
-            navController: NavHostController,
-            backgroundColor: Color,
-            textColor: Color,
-            isSystemInDarkTheme: Boolean
-        ) {
-            val scrollState = rememberScrollState()
+        override fun DrawSettingsScreen(navController: NavHostController) = psyDoomComposeSettings.DrawLauncherSettings()
+    }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(scrollState)){
-                composeSettings.DrawLauncherSettings()
-            }
-        }
+   data class PsyDoomMoreSettingsScreen (private val psyDoomComposeSettings: PsyDoomComposeSettings) :
+        PsyDoomSettingScreen (MORE_SETTINGS_SCREEN){
+
+        @Composable
+        override fun DrawSettingsScreen(navController: NavHostController) = psyDoomComposeSettings.DrawMoreSettings(navController)
     }
 
     private companion object{
-        private const val LAUNCHER_SETTINGS_SCREEN = "launcher_settings"
+        private const val LAUNCHER_SETTINGS_SCREEN = "launcher_settings_screen"
+        private const val MORE_SETTINGS_SCREEN = "more_settings_screen"
     }
 }
+
 
