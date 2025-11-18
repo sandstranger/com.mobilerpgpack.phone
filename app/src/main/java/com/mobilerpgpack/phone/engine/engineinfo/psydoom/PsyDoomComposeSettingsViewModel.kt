@@ -423,7 +423,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
     var spuRamSize : Int
         get() = audioIniFile.getIntValue("SpuRamSize")
-        set(value) = audioIniFile.setIntValue("AudioBufferSize",value)
+        set(value) = audioIniFile.setIntValue("SpuRamSize",value)
 
     var gamepadDeadZone : Float
         get() = inputIniFile.getFloatValue("GamepadDeadZone").coerceIn(0.0f, 1.0f)
