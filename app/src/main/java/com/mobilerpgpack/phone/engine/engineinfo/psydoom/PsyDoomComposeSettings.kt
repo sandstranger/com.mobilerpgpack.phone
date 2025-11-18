@@ -100,6 +100,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             navController.navigate(INPUT_SETTINGS_SCREEN)
         }
         HorizontalDivider()
+        PreferenceItem(stringResource(R.string.psydoom_audio)) {
+            navController.navigate(AUDIO_SETTINGS_SCREEN)
+        }
+        HorizontalDivider()
+        PreferenceItem(stringResource(R.string.psydoom_cheats)) {
+            navController.navigate(CHEATS_SETTINGS_SCREEN)
+        }
+        HorizontalDivider()
     }
 
     @Composable
@@ -672,6 +680,80 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         HorizontalDivider()
     }
 
+    @Composable
+    private fun DrawCheatsScreen(){
+        val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
+        DrawTitleText(stringResource(R.string.psydoom_cheats_general))
+
+        SwitchItem(stringResource(R.string.psydoom_developer_cheats_shortcuts),
+            viewModel.enableDevCheatShortcuts) {
+            viewModel.enableDevCheatShortcuts = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_developer_map_reload_key),
+            viewModel.enableDevInPlaceReloadFunctionKey) {
+            viewModel.enableDevInPlaceReloadFunctionKey = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_developer_map_reload),
+            viewModel.enableDevMapAutoReload) {
+            viewModel.enableDevMapAutoReload = it
+        }
+        HorizontalDivider()
+
+        DrawTitleText(stringResource(R.string.psydoom_cheat_key_sequences))
+        EditTextItem(stringResource(R.string.psydoom_god_mode),
+            viewModel.cheatKeySequenceGodMode) {
+            viewModel.cheatKeySequenceGodMode = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_no_clip),
+            viewModel.cheatKeySequenceNoClip) {
+            viewModel.cheatKeySequenceNoClip = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_level_warp),
+            viewModel.cheatKeySequenceLevelWarp) {
+            viewModel.cheatKeySequenceLevelWarp = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_weapons_keys_armor_cheat),
+            viewModel.cheatKeySequenceWeaponsKeysAndArmor) {
+            viewModel.cheatKeySequenceWeaponsKeysAndArmor = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_weapons_armor_cheat),
+            viewModel.cheatKeySequenceWeaponsAndArmor) {
+            viewModel.cheatKeySequenceWeaponsAndArmor = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_map_lines_on),
+            viewModel.cheatKeySequenceAllMapLinesOn) {
+            viewModel.cheatKeySequenceAllMapLinesOn = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_map_things_on),
+            viewModel.cheatKeySequenceAllMapThingsOn) {
+            viewModel.cheatKeySequenceAllMapThingsOn = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_xray_vision),
+            viewModel.cheatKeySequenceXRayVision) {
+            viewModel.cheatKeySequenceXRayVision = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_vram_viewer),
+            viewModel.cheatKeySequenceVramViewer) {
+            viewModel.cheatKeySequenceVramViewer = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_no_target),
+            viewModel.cheatKeySequenceNoTarget) {
+            viewModel.cheatKeySequenceNoTarget = it
+        }
+        HorizontalDivider()
+    }
+
     data class PsyDoomLauncherSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen(LAUNCHER_SETTINGS_SCREEN) {
 
@@ -694,6 +776,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
             psyDoomComposeSettings.DrawInputSettings()
+    }
+
+    data class PsyDoomCheatsSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
+        PsyDoomSettingScreen(CHEATS_SETTINGS_SCREEN) {
+
+        @Composable
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            psyDoomComposeSettings.DrawCheatsScreen()
     }
 
     data class PsyDoomAudioSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
@@ -755,6 +845,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         private const val GAME_SETTINGS_SCREEN = "game_screen"
         private const val INPUT_SETTINGS_SCREEN = "input_screen"
         private const val AUDIO_SETTINGS_SCREEN = "audio_screen"
+        private const val CHEATS_SETTINGS_SCREEN = "cheats_screen"
     }
 }
 
