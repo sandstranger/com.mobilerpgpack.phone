@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen
 
 import CustomTopBar
-import android.app.Activity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -34,6 +33,8 @@ abstract class ComposeScreen (val route : String) : KoinComponent{
 
     protected open val drawFloatingActionButton = false
 
+    protected var onFloatingActionButtonClickedDelegate : (() -> Unit)? = null
+
     @Composable
     fun DrawScreen (navController: NavHostController){
         val activity = LocalActivity.current!!
@@ -60,7 +61,7 @@ abstract class ComposeScreen (val route : String) : KoinComponent{
                     floatingActionButton = {
                         if (drawFloatingActionButton) {
                             FloatingActionButton(
-                                onClick = { onFloatingActionButtonClicked(activity) }
+                                onClick = { onFloatingActionButtonClickedDelegate?.invoke() }
                             ) {
                                 Icon(
                                     Icons.Default.PlayArrow,
@@ -83,6 +84,4 @@ abstract class ComposeScreen (val route : String) : KoinComponent{
                                               navController: NavHostController, backgroundColor : Color,
                                               textColor: Color,
                                               isSystemInDarkTheme : Boolean )
-
-    protected open fun onFloatingActionButtonClicked(activity: Activity) {}
 }
