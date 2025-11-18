@@ -591,11 +591,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.enableMapPatchesPsyDoom = it
         }
         HorizontalDivider()
-        SwitchItem(
-            stringResource(R.string.psydoom_fixes),
-            viewModel.enableMapPatchesPsyDoom) {
-            viewModel.enableMapPatchesPsyDoom = it
-        }
+
         DrawTitleText(stringResource(R.string.psydoom_loading))
         SwitchItem(stringResource(R.string.psydoom_fast_loading),
             viewModel.useFastLoading) {
