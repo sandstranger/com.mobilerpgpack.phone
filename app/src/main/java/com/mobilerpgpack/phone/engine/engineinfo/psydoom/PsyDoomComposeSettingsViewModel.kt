@@ -30,6 +30,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
     private val gameIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}game_cfg.ini")
 
+    private val inputIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}input_cfg.ini")
+
     val iniFilesLoaded get() = _iniFilesLoaded
 
     init {
@@ -265,13 +267,45 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = gameIniFile.getIntValue("LostSoulSpawnLimit")
         set(value) = gameIniFile.setIntValue("LostSoulSpawnLimit", value)
 
+    var mouseTurnSpeed : Int
+        get() = inputIniFile.getIntValue("MouseTurnSpeed").coerceIn(0, Int.MAX_VALUE)
+        set(value) = inputIniFile.setIntValue("MouseTurnSpeed", value.coerceIn(0, Int.MAX_VALUE))
+
+    var gamepadFastTurnSpeedHigh : Int
+        get() = inputIniFile.getIntValue("GamepadFastTurnSpeed_High").coerceIn(0, Int.MAX_VALUE)
+        set(value) = inputIniFile.setIntValue("GamepadFastTurnSpeed_High", value.coerceIn(0, Int.MAX_VALUE))
+
+    var gamepadFastTurnSpeedLow : Int
+        get() = inputIniFile.getIntValue("GamepadFastTurnSpeed_Low").coerceIn(0, Int.MAX_VALUE)
+        set(value) = inputIniFile.setIntValue("GamepadFastTurnSpeed_Low", value.coerceIn(0, Int.MAX_VALUE))
+
+    var gamepadTurnSpeedHigh : Int
+        get() = inputIniFile.getIntValue("GamepadTurnSpeed_High").coerceIn(0, Int.MAX_VALUE)
+        set(value) = inputIniFile.setIntValue("GamepadTurnSpeed_High", value.coerceIn(0, Int.MAX_VALUE))
+
+    var gamepadTurnSpeedLow : Int
+        get() = inputIniFile.getIntValue("GamepadTurnSpeed_Low").coerceIn(0, Int.MAX_VALUE)
+        set(value) = inputIniFile.setIntValue("GamepadTurnSpeed_Low", value.coerceIn(0, Int.MAX_VALUE))
+
+    var gamepadDeadZone : Float
+        get() = inputIniFile.getFloatValue("GamepadDeadZone").coerceIn(0.0f, 1.0f)
+        set(value) = inputIniFile.setFloatValue("GamepadDeadZone", value.coerceIn(0.0f, 1.0f))
+
+    var analogToDigitalThreshold : Float
+        get() = inputIniFile.getFloatValue("AnalogToDigitalThreshold").coerceIn(0.0f, 1.0f)
+        set(value) = inputIniFile.setFloatValue("AnalogToDigitalThreshold", value.coerceIn(0.0f, 1.0f))
+
     private fun unloadIniFiles(){
         _iniFilesLoaded = false
         graphicsIniFile.unload()
+        gameIniFile.unload()
+        inputIniFile.unload()
     }
 
     private fun reloadIniFiles (){
         graphicsIniFile.reload()
+        gameIniFile.reload()
+        inputIniFile.reload()
         _iniFilesLoaded = true
     }
 

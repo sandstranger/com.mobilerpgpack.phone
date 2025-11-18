@@ -125,6 +125,16 @@
     <string name="psydoom_game_tick_rate">Game tick rate</string>
     <string name="psydoom_mode">Mode</string>
     <string name="psydoom_demo_timings">Demo timings</string>
+    <string name="psydoom_input">Input</string>
+    <string name="psydoom_mouse">Mouse</string>
+    <string name="psydoom_mouse_turn_speed">Mouse turn speed</string>
+    <string name="psydoom_gamepad">Gamepad</string>
+    <string name="psydoom_dead_zone">Dead zone</string>
+    <string name="psydoom_high_fast_turn_speed">Fast turn speed: High</string>
+    <string name="psydoom_low_fast_turn_speed">Fast turn speed: Low</string>
+    <string name="psydoom_low_turn_speed">Turn speed: Low</string>
+    <string name="psydoom_high_turn_speed">Turn speed: High</string>
+    <string name="psydoom_analog_to_digital_threshold">Analog to digital threshold</string>
     <string name="psydoom_peer_type">Peer type</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>
