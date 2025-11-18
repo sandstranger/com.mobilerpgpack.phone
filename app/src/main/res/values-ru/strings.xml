@@ -86,7 +86,7 @@
     <string name="psydoom_network_settings_title">Настройки сети</string>
     <string name="psydoom_port">Порт</string>
     <string name="psydoom_host">Хост</string>
-    <string name="psydoom_more_settings">Дополнительные настройки</string>
+    <string name="psydoom_more_settings">Дополнительные настройки PsyDoom</string>
     <string name="psydoom_launcher_settings">Настройки лаунчера</string>
     <string name="psydoom_graphics_settings">Настройки графики</string>
     <string name="psydoom_enable_vsync">Включить вертикальную синхронизацию</string>

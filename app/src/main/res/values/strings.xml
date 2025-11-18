@@ -53,7 +53,7 @@
     <string name="psydoom_network_settings_title">Network settings</string>
     <string name="psydoom_port">Port</string>
     <string name="psydoom_host">Host</string>
-    <string name="psydoom_more_settings">More settings</string>
+    <string name="psydoom_more_settings">More PsyDoom settings</string>
     <string name="psydoom_launcher_settings">Launcher settings</string>
     <string name="psydoom_graphics_settings">Graphics settings</string>
     <string name="psydoom_enable_vsync">Enable vsync</string>
