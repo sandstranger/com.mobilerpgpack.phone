@@ -44,16 +44,15 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.get
-import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     private val preferencesStorage : PreferencesStorage = get ()
 
-    private val context : Context by inject ()
+    private val context : Context = get ()
 
-    override val drawFloatingActionButton: Boolean  = !context.isTelevision
+    override val drawFloatingActionButton: Boolean = context.isTelevision
 
     @Composable
     override fun DrawScreenContent(
@@ -63,6 +62,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         textColor: Color,
         isSystemInDarkTheme: Boolean
     ) {
+        val activity = LocalActivity.current!!
         val scope = rememberCoroutineScope()
         val activeEngineString by preferencesStorage.activeEngineAsFlowString
             .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
@@ -73,7 +73,11 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
 
-        if (!drawFloatingActionButton) {
+        super.onFloatingActionButtonClickedDelegate = {
+            settingsScreenViewModel.onStartGameClicked(activeEngine, activity)
+        }
+
+        if (drawFloatingActionButton) {
             DrawTelevisionSettings(innerPadding,
                 scope, activeEngine,
                 navController, settingsScreenViewModel
@@ -92,11 +96,11 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         viewModel: SettingsScreenViewModel
     ) {
         val activity = LocalActivity.current!!
-        val scrollState = rememberScrollState()
 
         Column(
             modifier = Modifier
-                .fillMaxSize().verticalScroll(scrollState),
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
             Button(
                 onClick = { viewModel.onStartGameClicked(activeEngine, activity) },
