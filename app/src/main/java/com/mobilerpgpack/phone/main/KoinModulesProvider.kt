@@ -24,6 +24,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomGameSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomGraphicsSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomInputSettingsScreen
@@ -398,6 +399,7 @@ class KoinModulesProvider(private val context: Context,
         singleOf(::PsyDoomGraphicsSettingsScreen).bind()
         singleOf(::PsyDoomGameSettingsScreen).bind()
         singleOf(::PsyDoomInputSettingsScreen).bind()
+        singleOf(::PsyDoomAudioSettingsScreen).bind()
 
         single {
             val launcherSettings = get <PsyDoomLauncherSettingsScreen>()
@@ -405,7 +407,8 @@ class KoinModulesProvider(private val context: Context,
             val graphicsSettings = get <PsyDoomGraphicsSettingsScreen>()
             val gameSettings = get <PsyDoomGameSettingsScreen>()
             val inputSettings = get <PsyDoomInputSettingsScreen>()
-            listOf(launcherSettings,moreSettings, graphicsSettings, gameSettings, inputSettings)
+            val audioSettings = get <PsyDoomAudioSettingsScreen>()
+            listOf(launcherSettings,moreSettings, graphicsSettings, gameSettings, inputSettings, audioSettings)
         }.withOptions { bind<Collection<PsyDoomSettingScreen>>() }
 
         viewModelOf(::PsyDoomComposeSettingsViewModel)

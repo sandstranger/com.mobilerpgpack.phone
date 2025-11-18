@@ -135,6 +135,9 @@
     <string name="psydoom_low_turn_speed">Turn speed: Low</string>
     <string name="psydoom_high_turn_speed">Turn speed: High</string>
     <string name="psydoom_analog_to_digital_threshold">Analog to digital threshold</string>
+    <string name="psydoom_audio">Audio settings</string>
+    <string name="psydoom_audio_buffer_size">Audio buffer size</string>
+    <string name="psydoom_spu_ram_size">SPU RAM size</string>
     <string name="psydoom_peer_type">Peer type</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>

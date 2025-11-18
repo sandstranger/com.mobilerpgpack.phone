@@ -32,6 +32,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
     private val inputIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}input_cfg.ini")
 
+    private val audioIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}audio_cfg.ini")
+
     val iniFilesLoaded get() = _iniFilesLoaded
 
     init {
@@ -287,6 +289,14 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = inputIniFile.getIntValue("GamepadTurnSpeed_Low").coerceIn(0, Int.MAX_VALUE)
         set(value) = inputIniFile.setIntValue("GamepadTurnSpeed_Low", value.coerceIn(0, Int.MAX_VALUE))
 
+    var audioBufferSize : Int
+        get() = audioIniFile.getIntValue("AudioBufferSize").coerceIn(0, Int.MAX_VALUE)
+        set(value) = audioIniFile.setIntValue("AudioBufferSize", value.coerceIn(0, Int.MAX_VALUE))
+
+    var spuRamSize : Int
+        get() = audioIniFile.getIntValue("SpuRamSize")
+        set(value) = audioIniFile.setIntValue("AudioBufferSize",value)
+
     var gamepadDeadZone : Float
         get() = inputIniFile.getFloatValue("GamepadDeadZone").coerceIn(0.0f, 1.0f)
         set(value) = inputIniFile.setFloatValue("GamepadDeadZone", value.coerceIn(0.0f, 1.0f))
@@ -300,12 +310,14 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         graphicsIniFile.unload()
         gameIniFile.unload()
         inputIniFile.unload()
+        audioIniFile.unload()
     }
 
     private fun reloadIniFiles (){
         graphicsIniFile.reload()
         gameIniFile.reload()
         inputIniFile.reload()
+        audioIniFile.reload()
         _iniFilesLoaded = true
     }
 
