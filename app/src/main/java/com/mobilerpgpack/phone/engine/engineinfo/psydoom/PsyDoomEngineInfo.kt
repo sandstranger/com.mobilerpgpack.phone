@@ -61,6 +61,68 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                         it += DATA_DIR_COMMAND
                         it += modsFolder
                     }
+
+                    val usePistolStart = psyDoomPreferencesStorage.forcePistolStart.first()
+
+                    if (usePistolStart){
+                        it += "-pistolstart"
+                    }
+
+                    val recordDemos = psyDoomPreferencesStorage.recordDemos.first()
+
+                    if (recordDemos){
+                        it += "-record"
+                    }
+
+                    val turboMode = psyDoomPreferencesStorage.turboMode.first()
+
+                    if (turboMode){
+                        it += "-turbo"
+                    }
+
+                    val noMonsters = psyDoomPreferencesStorage.noMonsters.first()
+
+                    if (noMonsters){
+                        it += "-nomonsters"
+                    }
+
+                    val nmBossFixup = psyDoomPreferencesStorage.nmBossFixUp.first()
+
+                    if (nmBossFixup){
+                        it += "-nmbossfixup"
+                    }
+
+                    val host = psyDoomPreferencesStorage.host.first()
+                    val addHost = host.isNotEmpty() && host.isNotBlank()
+
+                    val port = psyDoomPreferencesStorage.port.first()
+                    val addPort = port > 0
+
+                    val peerType = enumValueOf<PeerType>(psyDoomPreferencesStorage.peerType.first())
+
+                    when (peerType) {
+                        PeerType.Server -> {
+                            it +="-server"
+                            if (addPort){
+                                it += port.toString()
+                            }
+                        }
+                        PeerType.Client -> {
+                            if (addPort || addHost){
+                                it += CLIENT_COMMAND
+
+                                it += if (!addPort){
+                                    host
+                                } else{
+                                    if (!addHost){
+                                        "localhost:$port"
+                                    } else{
+                                        "$host:$port"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 it.toTypedArray()
@@ -74,5 +136,6 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     private companion object{
         private const val CUE_COMMAND = "-cue"
         private const val DATA_DIR_COMMAND = "-datadir"
+        private const val CLIENT_COMMAND = "-client"
     }
 }
