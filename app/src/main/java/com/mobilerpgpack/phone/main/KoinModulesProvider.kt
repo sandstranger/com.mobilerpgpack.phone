@@ -24,6 +24,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomGraphicsSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettingsViewModel
@@ -390,6 +391,7 @@ class KoinModulesProvider(private val context: Context,
 
         singleOf(::PsyDoomLauncherSettingsScreen).bind()
         singleOf(::PsyDoomMoreSettingsScreen).bind()
+        singleOf(::PsyDoomGraphicsSettingsScreen).bind()
         viewModelOf(::PsyDoomComposeSettingsViewModel)
     }
 

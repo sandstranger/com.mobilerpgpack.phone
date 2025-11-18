@@ -55,6 +55,8 @@
     <string name="psydoom_host">Host</string>
     <string name="psydoom_more_settings">More settings</string>
     <string name="psydoom_launcher_settings">Launcher settings</string>
+    <string name="psydoom_graphics_settings">Graphics settings</string>
+    <string name="psydoom_enable_vsync">Enable vsync</string>
     <string name="psydoom_peer_type">Peer type</string>
     <string name="enable_doom64_mods">Enable Doom 64 mods</string>
     <string name="doom_rpg_zip_file">Path to Doom RPG ZIP file</string>

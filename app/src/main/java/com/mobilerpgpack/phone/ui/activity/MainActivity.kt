@@ -60,6 +60,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
         val permissionScreen: PermissionScreen by inject()
         val psyDoomLauncherSettings: PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen by inject()
         val psyDoomMoreSettingsScreen: PsyDoomComposeSettings.PsyDoomMoreSettingsScreen by inject()
+        val psyDoomGraphicsSettingsScreen: PsyDoomComposeSettings.PsyDoomGraphicsSettingsScreen by inject()
 
         val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
             settingsScreen.route else permissionScreen.route
@@ -110,6 +111,10 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
                                     composable(psyDoomMoreSettingsScreen.route) {
                                         psyDoomMoreSettingsScreen.DrawScreen(navController)
+                                    }
+
+                                    composable (psyDoomGraphicsSettingsScreen.route) {
+                                        psyDoomGraphicsSettingsScreen.DrawScreen(navController)
                                     }
                                 }
                             }
