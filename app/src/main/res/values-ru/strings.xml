@@ -190,6 +190,7 @@
     <string name="psydoom_multiplayer">Мультиплеер</string>
     <string name="psydoom_cooperative">Кооператив</string>
     <string name="psydoom_no_friendly_fire">Без дружественного огня</string>
+    <string name="psydoom_spawn_deathmatch_only_things">Спавнить предметы, предназначенные только для deathmatch</string>
     <string name="psydoom_preserve_keys_on_respawn">Сохранять ключи при возрождении</string>
     <string name="psydoom_preserve_weapons_on_respawn">Сохранять оружие при возрождении</string>
     <string name="psydoom_preserve_ammo_on_respawn">Сохранять боеприпасы при возрождении</string>
