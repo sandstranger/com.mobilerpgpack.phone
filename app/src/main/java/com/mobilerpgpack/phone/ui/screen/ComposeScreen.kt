@@ -29,59 +29,49 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-abstract class ComposeScreen (val route : String) : KoinComponent{
+abstract class ComposeScreen(val route: String) : KoinComponent {
 
     protected open val drawFloatingActionButton = false
 
-    protected var onFloatingActionButtonClickedDelegate : (() -> Unit)? = null
+    protected var onFloatingActionButtonClickedDelegate: (() -> Unit)? = null
 
     @Composable
-    fun DrawScreen (navController: NavHostController){
+    fun DrawScreen(navController: NavHostController) {
         val activity = LocalActivity.current!!
-        val preferencesStorage : PreferencesStorage = get ()
+        val preferencesStorage: PreferencesStorage = get()
         val isSystemInDarkTheme = isSystemInDarkTheme()
-
         val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
             .collectAsState(initial = isSystemInDarkTheme)
-
         val backgroundColor = getBackgroundColor(useDarkTheme)
-        val topBarColor = getTopBarColor(useDarkTheme)
         val textColor = getTextColor(useDarkTheme)
 
-        Theme (darkTheme = useDarkTheme ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(topBarColor)
-                    .systemBarsPadding()
-            ) {
-                CustomTopBar(title = activity.getString(R.string.app_name),useDarkTheme)
-                Scaffold(
-                    modifier = Modifier.fillMaxSize().background(backgroundColor),
-                    floatingActionButton = {
-                        if (drawFloatingActionButton) {
-                            FloatingActionButton(
-                                onClick = { onFloatingActionButtonClickedDelegate?.invoke() }
-                            ) {
-                                Icon(
-                                    Icons.Default.PlayArrow,
-                                    contentDescription = activity.getString(R.string.start_game)
-                                )
-                            }
-                        }
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            floatingActionButton = {
+                if (drawFloatingActionButton) {
+                    FloatingActionButton(
+                        onClick = { onFloatingActionButtonClickedDelegate?.invoke() }
+                    ) {
+                        Icon(
+                            Icons.Default.PlayArrow,
+                            contentDescription = activity.getString(R.string.start_game)
+                        )
                     }
-                ) { innerPadding ->
-                    DrawScreenContent(innerPadding,
-                        navController, backgroundColor, textColor, useDarkTheme)
                 }
             }
+        ) { innerPadding ->
+            DrawScreenContent(
+                innerPadding,
+                navController, backgroundColor, textColor, useDarkTheme
+            )
         }
-        SetupNavigationBar(useDarkTheme)
     }
 
     @Composable
-    protected abstract fun DrawScreenContent (innerPadding: PaddingValues,
-                                              navController: NavHostController, backgroundColor : Color,
-                                              textColor: Color,
-                                              isSystemInDarkTheme : Boolean )
+    protected abstract fun DrawScreenContent(
+        innerPadding: PaddingValues,
+        navController: NavHostController, backgroundColor: Color,
+        textColor: Color,
+        isSystemInDarkTheme: Boolean
+    )
 }
