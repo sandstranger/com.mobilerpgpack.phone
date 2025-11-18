@@ -655,6 +655,23 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         HorizontalDivider()
     }
 
+    @Composable
+    private fun DrawAudioSettings(){
+        val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
+        DrawTitleText(stringResource(R.string.psydoom_audio))
+
+        EditTextItem(stringResource(R.string.psydoom_audio_buffer_size),
+            viewModel.audioBufferSize) {
+            viewModel.audioBufferSize = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_spu_ram_size),
+            viewModel.spuRamSize) {
+            viewModel.spuRamSize = it
+        }
+        HorizontalDivider()
+    }
+
     data class PsyDoomLauncherSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen(LAUNCHER_SETTINGS_SCREEN) {
 
@@ -677,6 +694,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
             psyDoomComposeSettings.DrawInputSettings()
+    }
+
+    data class PsyDoomAudioSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
+        PsyDoomSettingScreen(AUDIO_SETTINGS_SCREEN) {
+
+        @Composable
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            psyDoomComposeSettings.DrawAudioSettings()
     }
 
     data class PsyDoomGameSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
@@ -729,6 +754,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         private const val GRAPHICS_SETTINGS_SCREEN = "graphics_screen"
         private const val GAME_SETTINGS_SCREEN = "game_screen"
         private const val INPUT_SETTINGS_SCREEN = "input_screen"
+        private const val AUDIO_SETTINGS_SCREEN = "audio_screen"
     }
 }
 
