@@ -47,9 +47,57 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = graphicsIniFile.getBooleanValue("UseExtendedAutomapColors")
         set(value) = graphicsIniFile.setBooleanValue("UseExtendedAutomapColors", value)
 
+    var vulkanPixelsStretch : Boolean
+        get() = graphicsIniFile.getBooleanValue("VulkanPixelStretch")
+        set(value) = graphicsIniFile.setBooleanValue("VulkanPixelStretch", value)
+
+    var widescreenEnabled : Boolean
+        get() = graphicsIniFile.getBooleanValue("VulkanWidescreenEnabled")
+        set(value) = graphicsIniFile.setBooleanValue("VulkanWidescreenEnabled", value)
+
+    var drawExtendedStatusBar : Boolean
+        get() = graphicsIniFile.getBooleanValue("VulkanDrawExtendedStatusBar")
+        set(value) = graphicsIniFile.setBooleanValue("VulkanDrawExtendedStatusBar", value)
+
+    var disableVulkanRender : Boolean
+        get() = graphicsIniFile.getBooleanValue("DisableVulkanRenderer")
+        set(value) = graphicsIniFile.setBooleanValue("DisableVulkanRenderer", value)
+
+    var enhanceWallDrawPrecision : Boolean
+        get() = graphicsIniFile.getBooleanValue("EnhanceWallDrawPrecision")
+        set(value) = graphicsIniFile.setBooleanValue("EnhanceWallDrawPrecision", value)
+
+    var skyLeakFix : Boolean
+        get() = graphicsIniFile.getBooleanValue("SkyLeakFix")
+        set(value) = graphicsIniFile.setBooleanValue("SkyLeakFix", value)
+
+    var floorGapRenderFix : Boolean
+        get() = graphicsIniFile.getBooleanValue("FloorRenderGapFix")
+        set(value) = graphicsIniFile.setBooleanValue("FloorRenderGapFix", value)
+
+    var tripleBuffer : Boolean
+        get() = graphicsIniFile.getBooleanValue("VulkanTripleBuffer")
+        set(value) = graphicsIniFile.setBooleanValue("VulkanTripleBuffer", value)
+
+    var brightenAutomap : Boolean
+        get() = graphicsIniFile.getBooleanValue("VulkanBrightenAutomap")
+        set(value) = graphicsIniFile.setBooleanValue("VulkanBrightenAutomap", value)
+
+    var use32bitShading : Boolean
+        get() = graphicsIniFile.getBooleanValue("UseVulkan32BitShading")
+        set(value) = graphicsIniFile.setBooleanValue("UseVulkan32BitShading", value)
+
     var topOverscanPixels : Int
         get() = graphicsIniFile.getIntValue("TopOverscanPixels")
         set(value) = graphicsIniFile.setIntValue("TopOverscanPixels", value)
+
+    var renderHeight : Int
+        get() = graphicsIniFile.getIntValue("VulkanRenderHeight")
+        set(value) = graphicsIniFile.setIntValue("VulkanRenderHeight", value)
+
+    var antialiasingMultisamples : Int
+        get() = graphicsIniFile.getIntValue("AntiAliasingMultisamples")
+        set(value) = graphicsIniFile.setIntValue("AntiAliasingMultisamples", value)
 
     var vramSizeInMbytes : Int
         get() = graphicsIniFile.getIntValue("VramSizeInMegabytes")
@@ -59,9 +107,9 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = graphicsIniFile.getIntValue("BottomOverscanPixels")
         set(value) = graphicsIniFile.setIntValue("BottomOverscanPixels", value)
 
-    var logicalDisplayWidth : Float
-        get() = graphicsIniFile.getFloatValue("LogicalDisplayWidth")
-        set(value) = graphicsIniFile.setFloatValue("LogicalDisplayWidth", value)
+    var logicalDisplayWidth : Int
+        get() = graphicsIniFile.getIntValue("LogicalDisplayWidth")
+        set(value) = graphicsIniFile.setIntValue("LogicalDisplayWidth", value)
 
     private fun unloadIniFiles(){
         _iniFilesLoaded = false

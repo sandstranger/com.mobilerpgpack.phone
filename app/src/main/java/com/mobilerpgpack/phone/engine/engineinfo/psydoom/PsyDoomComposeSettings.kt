@@ -170,9 +170,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         EditTextItem(stringResource(R.string.psydoom_bottom_overscan_pixels), viewModel.bottomOverscanPixels){
             viewModel.bottomOverscanPixels = it
         }
-
-        HorizontalDivider()
-
+        
         HorizontalDivider()
 
         EditTextItem(stringResource(R.string.psydoom_logical_display_width), viewModel.logicalDisplayWidth){
@@ -189,6 +187,67 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         SwitchItem(stringResource(R.string.psydoom_extended_automap_colors),
             viewModel.useExtendedAutomapColors){
             viewModel.useExtendedAutomapColors = it
+        }
+        HorizontalDivider()
+
+        DrawTitleText(stringResource(R.string.psydoom_vulkan_render))
+
+        EditTextItem(stringResource(R.string.psydoom_render_height), viewModel.renderHeight){
+            viewModel.renderHeight = it
+        }
+        HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_anti_aliasing_samples), viewModel.antialiasingMultisamples){
+            viewModel.antialiasingMultisamples = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_mimic_original_pixel_stretch),
+            viewModel.vulkanPixelsStretch){
+            viewModel.vulkanPixelsStretch = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_widescreen),
+            viewModel.widescreenEnabled){
+            viewModel.widescreenEnabled = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_extended_status_bar),
+            viewModel.drawExtendedStatusBar){
+            viewModel.drawExtendedStatusBar = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_disable_vulkan_render),
+            viewModel.disableVulkanRender){
+            viewModel.disableVulkanRender = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_triple_buffer),
+            viewModel.tripleBuffer){
+            viewModel.tripleBuffer = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_shading),
+            viewModel.use32bitShading){
+            viewModel.use32bitShading = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_brighten_automap),
+            viewModel.brightenAutomap){
+            viewModel.brightenAutomap = it
+        }
+        DrawTitleText(stringResource(R.string.psydoom_classic_render))
+        SwitchItem(stringResource(R.string.psydoom_enhance_draw_wall_precision),
+            viewModel.enhanceWallDrawPrecision){
+            viewModel.enhanceWallDrawPrecision = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_floor_render_gap_fix),
+            viewModel.floorGapRenderFix){
+            viewModel.floorGapRenderFix = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_sky_leak_fix),
+            viewModel.skyLeakFix){
+            viewModel.skyLeakFix = it
         }
         HorizontalDivider()
     }
