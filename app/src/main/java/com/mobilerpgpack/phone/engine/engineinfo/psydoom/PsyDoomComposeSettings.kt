@@ -108,6 +108,10 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             navController.navigate(CHEATS_SETTINGS_SCREEN)
         }
         HorizontalDivider()
+        PreferenceItem(stringResource(R.string.psydoom_multiplayer)) {
+            navController.navigate(MULTIPLAYER_SETTINGS_SCREEN)
+        }
+        HorizontalDivider()
     }
 
     @Composable
@@ -754,6 +758,66 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         HorizontalDivider()
     }
 
+    @Composable
+    private fun DrawMultiplayerScreen(){
+        val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
+        DrawTitleText(stringResource(R.string.psydoom_cooperative))
+
+        SwitchItem(stringResource(R.string.psydoom_no_friendly_fire),
+            viewModel.coopNoFriendlyFire) {
+            viewModel.coopNoFriendlyFire = it
+        }
+        HorizontalDivider()
+
+        SwitchItem(stringResource(R.string.psydoom_spawn_deathmatch_only_things),
+            viewModel.coopForceSpawnDeathmatchThings) {
+            viewModel.coopForceSpawnDeathmatchThings = it
+        }
+        HorizontalDivider()
+
+        SwitchItem(stringResource(R.string.psydoom_preserve_keys_on_respawn),
+            viewModel.coopPreserveKeys) {
+            viewModel.coopPreserveKeys = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_preserve_weapons_on_respawn),
+            viewModel.coopPreserveWeapons) {
+            viewModel.coopPreserveWeapons = it
+        }
+        HorizontalDivider()
+
+        ListPreferenceItem(stringResource(R.string.psydoom_preserve_ammo_on_respawn),
+            viewModel.coopPreserveAmmoFactor.toString(), RespawnAmmoEnum.stringCollection() ) {
+            viewModel.coopPreserveAmmoFactor = enumValueOf<RespawnAmmoEnum>(it)
+        }
+        HorizontalDivider()
+
+        SwitchItem(stringResource(R.string.psydoom_preserve_weapons_on_respawn),
+            viewModel.coopPreserveWeapons) {
+            viewModel.coopPreserveWeapons = it
+        }
+        HorizontalDivider()
+
+        DrawTitleText(stringResource(R.string.psydoom_deathmatch))
+
+        EditTextItem(stringResource(R.string.psydoom_frag_limit),
+            viewModel.dmFragLimit) {
+            viewModel.dmFragLimit = it
+        }
+
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_disable_exits),
+            viewModel.dmExitDisabled) {
+            viewModel.dmExitDisabled = it
+        }
+        HorizontalDivider()
+        SwitchItem(stringResource(R.string.psydoom_auto_activate_boss),
+            viewModel.dmActivateBossSpecialSectors) {
+            viewModel.dmActivateBossSpecialSectors = it
+        }
+        HorizontalDivider()
+    }
+
     data class PsyDoomLauncherSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
         PsyDoomSettingScreen(LAUNCHER_SETTINGS_SCREEN) {
 
@@ -784,6 +848,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
             psyDoomComposeSettings.DrawCheatsScreen()
+    }
+
+    data class PsyDoomMultiplayerSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
+        PsyDoomSettingScreen(MULTIPLAYER_SETTINGS_SCREEN) {
+
+        @Composable
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            psyDoomComposeSettings.DrawMultiplayerScreen()
     }
 
     data class PsyDoomAudioSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
@@ -838,6 +910,20 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
     }
 
+    enum class RespawnAmmoEnum (val value: Int){
+        NONE (0),
+        ALL(1),
+        HALF (2);
+
+        companion object {
+            fun fromValue(value: Int): RespawnAmmoEnum? {
+                return entries.find { it.value == value }
+            }
+
+            fun stringCollection () = entries.map { it.toString() }.toList()
+        }
+    }
+
     private companion object {
         private const val LAUNCHER_SETTINGS_SCREEN = "launcher_settings_screen"
         private const val MORE_SETTINGS_SCREEN = "more_settings_screen"
@@ -846,6 +932,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         private const val INPUT_SETTINGS_SCREEN = "input_screen"
         private const val AUDIO_SETTINGS_SCREEN = "audio_screen"
         private const val CHEATS_SETTINGS_SCREEN = "cheats_screen"
+        private const val MULTIPLAYER_SETTINGS_SCREEN = "multiplayer_screen"
     }
 }
 

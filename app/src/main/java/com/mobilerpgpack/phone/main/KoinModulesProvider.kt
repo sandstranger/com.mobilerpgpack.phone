@@ -31,6 +31,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomInputSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomMoreSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomMultiplayerSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettingsViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
@@ -402,6 +403,7 @@ class KoinModulesProvider(private val context: Context,
         singleOf(::PsyDoomInputSettingsScreen).bind()
         singleOf(::PsyDoomAudioSettingsScreen).bind()
         singleOf(::PsyDoomCheatsSettingsScreen).bind()
+        singleOf(::PsyDoomMultiplayerSettingsScreen).bind()
 
         single {
             val launcherSettings = get <PsyDoomLauncherSettingsScreen>()
@@ -411,8 +413,9 @@ class KoinModulesProvider(private val context: Context,
             val inputSettings = get <PsyDoomInputSettingsScreen>()
             val audioSettings = get <PsyDoomAudioSettingsScreen>()
             val cheatsSettings = get <PsyDoomCheatsSettingsScreen>()
+            val multiplayerSettings = get <PsyDoomMultiplayerSettingsScreen>()
             listOf(launcherSettings,moreSettings, graphicsSettings, gameSettings,
-                inputSettings, audioSettings,cheatsSettings)
+                inputSettings, audioSettings,cheatsSettings,multiplayerSettings)
         }.withOptions { bind<Collection<PsyDoomSettingScreen>>() }
 
         viewModelOf(::PsyDoomComposeSettingsViewModel)
