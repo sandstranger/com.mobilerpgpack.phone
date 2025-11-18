@@ -45,10 +45,6 @@ class PsyDoomEngineInfo(mainEngineLib: String,
         get() {
             val baseCommandLineArgs = super.commandLineArgs
 
-            if (baseCommandLineArgs.contains(CUE_COMMAND)){
-                return baseCommandLineArgs
-            }
-
             return mutableListOf<String>().let {
                 it.addAll(baseCommandLineArgs)
 
@@ -56,46 +52,48 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
                     val pathToCue = psyDoomPreferencesStorage.pathToPsyDoomCueFile.first()
 
-                    if (pathToCue.isNotEmpty() && File(pathToCue).exists()) {
+                    if (pathToCue.isNotEmpty() && File(pathToCue).exists() &&
+                        !baseCommandLineArgs.contains(CUE_COMMAND)) {
                         it += CUE_COMMAND
                         it += pathToCue
                     }
 
                     val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder.first()
 
-                    if (modsFolder.isNotEmpty() && File(modsFolder).exists()){
+                    if (modsFolder.isNotEmpty() && File(modsFolder).exists() &&
+                        !baseCommandLineArgs.contains(DATA_DIR_COMMAND)){
                         it += DATA_DIR_COMMAND
                         it += modsFolder
                     }
 
                     val usePistolStart = psyDoomPreferencesStorage.forcePistolStart.first()
 
-                    if (usePistolStart){
-                        it += "-pistolstart"
+                    if (usePistolStart && !baseCommandLineArgs.contains(PISTOL_START_COMMAND)){
+                        it += PISTOL_START_COMMAND
                     }
 
                     val recordDemos = psyDoomPreferencesStorage.recordDemos.first()
 
-                    if (recordDemos){
-                        it += "-record"
+                    if (recordDemos && !baseCommandLineArgs.contains(RECORD_DEMOS_COMMAND)){
+                        it += RECORD_DEMOS_COMMAND
                     }
 
                     val turboMode = psyDoomPreferencesStorage.turboMode.first()
 
-                    if (turboMode){
-                        it += "-turbo"
+                    if (turboMode && !baseCommandLineArgs.contains(TURBO_COMMAND)){
+                        it += TURBO_COMMAND
                     }
 
                     val noMonsters = psyDoomPreferencesStorage.noMonsters.first()
 
-                    if (noMonsters){
-                        it += "-nomonsters"
+                    if (noMonsters && !baseCommandLineArgs.contains(NO_MONSTERS_COMMAND)){
+                        it += NO_MONSTERS_COMMAND
                     }
 
                     val nmBossFixup = psyDoomPreferencesStorage.nmBossFixUp.first()
 
-                    if (nmBossFixup){
-                        it += "-nmbossfixup"
+                    if (nmBossFixup && !baseCommandLineArgs.contains(BOSS_FIX_COMMAND)){
+                        it += BOSS_FIX_COMMAND
                     }
 
                     val host = psyDoomPreferencesStorage.host.first()
@@ -108,13 +106,13 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
                     when (peerType) {
                         PeerType.Server -> {
-                            it +="-server"
-                            if (addPort){
+                            if (addPort && !baseCommandLineArgs.contains(SERVER_COMMAND)){
+                                it +="-server"
                                 it += port.toString()
                             }
                         }
                         PeerType.Client -> {
-                            if (addPort || addHost){
+                            if ((addPort || addHost) && !baseCommandLineArgs.contains(CLIENT_COMMAND)){
                                 it += CLIENT_COMMAND
 
                                 it += if (!addPort){
@@ -143,5 +141,11 @@ class PsyDoomEngineInfo(mainEngineLib: String,
         private const val CUE_COMMAND = "-cue"
         private const val DATA_DIR_COMMAND = "-datadir"
         private const val CLIENT_COMMAND = "-client"
+        private const val NO_MONSTERS_COMMAND = "-nomonsters"
+        private const val PISTOL_START_COMMAND = "-pistolstart"
+        private const val RECORD_DEMOS_COMMAND = "-record"
+        private const val TURBO_COMMAND = "-turbo"
+        private const val SERVER_COMMAND = "-server"
+        private const val BOSS_FIX_COMMAND = "-nmbossfixup"
     }
 }
