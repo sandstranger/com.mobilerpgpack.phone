@@ -34,6 +34,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
     private val audioIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}audio_cfg.ini")
 
+    private val cheatsIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}cheats_cfg.ini")
+
     val iniFilesLoaded get() = _iniFilesLoaded
 
     init {
@@ -257,6 +259,98 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = gameIniFile.getBooleanValue("SkipIntros")
         set(value) = gameIniFile.setBooleanValue("SkipIntros", value)
 
+    var enableDevMapAutoReload : Boolean
+        get() = cheatsIniFile.getBooleanValue("EnableDevMapAutoReload")
+        set(value) = cheatsIniFile.setBooleanValue("EnableDevMapAutoReload", value)
+
+    var enableDevCheatShortcuts : Boolean
+        get() = cheatsIniFile.getBooleanValue("EnableDevCheatShortcuts")
+        set(value) = cheatsIniFile.setBooleanValue("EnableDevCheatShortcuts", value)
+
+    var enableDevInPlaceReloadFunctionKey : Boolean
+        get() = cheatsIniFile.getBooleanValue("EnableDevInPlaceReloadFunctionKey")
+        set(value) = cheatsIniFile.setBooleanValue("EnableDevInPlaceReloadFunctionKey", value)
+
+    var cheatKeySequenceGodMode : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_GodMode")
+        set(value) {
+            if (value.isNotEmpty() && value.isNotBlank()){
+                cheatsIniFile.setStringValue("CheatKeySequence_GodMode", value)
+            }
+        }
+
+    var cheatKeySequenceNoClip : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_NoClip")
+        set(value) {
+            if (value.isNotEmpty() && value.isNotBlank()) {
+                cheatsIniFile.setStringValue("CheatKeySequence_NoClip", value)
+            }
+        }
+
+    var cheatKeySequenceLevelWarp : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_LevelWarp")
+        set(value) {
+            if (value.isNotEmpty() && value.isNotBlank()) {
+                cheatsIniFile.setStringValue("CheatKeySequence_LevelWarp", value)
+            }
+        }
+
+    var cheatKeySequenceWeaponsKeysAndArmor : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_WeaponsKeysAndArmor")
+        set(value) {
+            if (value.isNotEmpty() && value.isNotBlank()) {
+                cheatsIniFile.setStringValue("CheatKeySequence_WeaponsKeysAndArmor", value)
+            }
+        }
+
+    var cheatKeySequenceWeaponsAndArmor : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_WeaponsAndArmor")
+        set(value) {
+            if (value.isNotEmpty() && value.isNotBlank()){
+                cheatsIniFile.setStringValue("CheatKeySequence_WeaponsAndArmor", value)
+            }
+        }
+
+    var cheatKeySequenceAllMapLinesOn : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_AllMapLinesOn")
+        set(value)  {
+            if (value.isNotEmpty() && value.isNotBlank()) {
+                cheatsIniFile.setStringValue("CheatKeySequence_AllMapLinesOn", value)
+            }
+        }
+
+    var cheatKeySequenceAllMapThingsOn : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_AllMapThingsOn")
+        set(value) {
+            if (value.isNotEmpty() && value.isNotBlank()) {
+                cheatsIniFile.setStringValue("CheatKeySequence_AllMapThingsOn", value)
+            }
+        }
+
+    var cheatKeySequenceXRayVision : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_XRayVision")
+        set(value)  {
+            if (value.isNotEmpty() && value.isNotBlank()) {
+                cheatsIniFile.setStringValue("CheatKeySequence_XRayVision", value)
+            }
+        }
+
+    var cheatKeySequenceVramViewer : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_VramViewer")
+        set(value)  {
+            if (value.isNotEmpty() && value.isNotBlank()) {
+                cheatsIniFile.setStringValue("CheatKeySequence_VramViewer", value)
+            }
+        }
+
+    var cheatKeySequenceNoTarget : String
+        get() = cheatsIniFile.getStringValue("CheatKeySequence_NoTarget")
+        set(value) {
+            if (value.isNotEmpty() && value.isNotBlank()) {
+                cheatsIniFile.setStringValue("CheatKeySequence_NoTarget", value)
+            }
+        }
+
     var bobScale : Float
         get() = gameIniFile.getFloatValue("ViewBobbingStrength").coerceIn(0.0f,1.0f)
         set(value) = gameIniFile.setFloatValue("ViewBobbingStrength", value.coerceIn(0.0f,1.0f))
@@ -311,6 +405,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         gameIniFile.unload()
         inputIniFile.unload()
         audioIniFile.unload()
+        cheatsIniFile.unload()
     }
 
     private fun reloadIniFiles (){
@@ -318,6 +413,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         gameIniFile.reload()
         inputIniFile.reload()
         audioIniFile.reload()
+        cheatsIniFile.reload()
         _iniFilesLoaded = true
     }
 
@@ -341,6 +437,15 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         }
 
         fun setFloatValue (key: String, value : Float) = setValue(key, value)
+
+        fun getStringValue (key: String) : String {
+            if (!loaded){
+                reload()
+            }
+            return if (loaded) iniConfig!!.getString(key) else ""
+        }
+
+        fun setStringValue (key: String, value : String) = setValue(key, value)
 
         fun getIntValue (key: String) : Int{
             if (!loaded){
