@@ -26,10 +26,12 @@ import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomSettingScreen
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getTopBarColor
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
+import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -58,9 +60,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
     private fun buildScreens() {
         val settingsScreen: SettingsScreen by inject()
         val permissionScreen: PermissionScreen by inject()
-        val psyDoomLauncherSettings: PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen by inject()
-        val psyDoomMoreSettingsScreen: PsyDoomComposeSettings.PsyDoomMoreSettingsScreen by inject()
-        val psyDoomGraphicsSettingsScreen: PsyDoomComposeSettings.PsyDoomGraphicsSettingsScreen by inject()
+        val psyDoomSettingsScreens by inject<Collection<PsyDoomSettingScreen>> ()
 
         val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
             settingsScreen.route else permissionScreen.route
@@ -105,16 +105,11 @@ class MainActivity : ComponentActivity(), KoinComponent {
                                         settingsScreen.DrawScreen(navController)
                                     }
 
-                                    composable(psyDoomLauncherSettings.route) {
-                                        psyDoomLauncherSettings.DrawScreen(navController)
-                                    }
-
-                                    composable(psyDoomMoreSettingsScreen.route) {
-                                        psyDoomMoreSettingsScreen.DrawScreen(navController)
-                                    }
-
-                                    composable (psyDoomGraphicsSettingsScreen.route) {
-                                        psyDoomGraphicsSettingsScreen.DrawScreen(navController)
+                                    psyDoomSettingsScreens.forEach {
+                                        val screen : ComposeScreen = it
+                                        composable (screen.route) {
+                                            screen.DrawScreen(navController)
+                                        }
                                     }
                                 }
                             }

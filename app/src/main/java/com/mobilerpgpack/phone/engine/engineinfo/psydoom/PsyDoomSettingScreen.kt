@@ -14,6 +14,8 @@ import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 
 abstract class PsyDoomSettingScreen (screenName : String) : ComposeScreen(screenName){
 
+    override val drawBackButton = true
+
     @Composable
     override fun DrawScreenContent(
         innerPadding: PaddingValues,
