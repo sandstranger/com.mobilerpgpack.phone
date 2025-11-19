@@ -11,7 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
@@ -25,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomSettingScreen
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getBackgroundColor
@@ -45,9 +43,10 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parameterSetOf
-import kotlin.getValue
 
 class MainActivity : ComponentActivity(), KoinComponent {
+
+    private val preferencesStorage = get<PreferencesStorage>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         updateTheme()
@@ -68,7 +67,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
-                val preferencesStorage: PreferencesStorage = get()
                 val settings = DataStoreSettings(preferencesStorage.dataStore)
                 val prerefencesHandler: PreferenceHandler = get { parameterSetOf(settings) }
                 val isSystemInDarkTheme = isSystemInDarkTheme()
@@ -123,7 +121,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
     private fun updateTheme() {
         var useDarkTheme = false
-        val preferencesStorage = get<PreferencesStorage>()
         runBlocking {
             useDarkTheme = preferencesStorage.getUseDarkThemeValue().first()
         }

@@ -91,7 +91,7 @@ abstract class SDLScreenController : ScreenController() {
                                 fun handlePointer(touchAction: Int) {
                                     handlePointer(trackedPointerId, pressure, x, y,
                                         mWidth, mHeight,touchAction,
-                                        event.motionEvent?.deviceId ?: DEFAULT_TOUCH_DEVICE_ID)
+                                        event.motionEvent?.deviceId ?: defaultTouchDeviceId)
                                 }
 
                                 when {
@@ -139,8 +139,11 @@ abstract class SDLScreenController : ScreenController() {
     private companion object{
         private const val UNKNOWN_POINTER_ID = Int.MIN_VALUE
 
-        private val DEFAULT_TOUCH_DEVICE_ID = InputDevice.getDeviceIds()
-            .map { InputDevice.getDevice(it) }
-            .firstOrNull { it != null && it.sources and InputDevice.SOURCE_TOUCHSCREEN == InputDevice.SOURCE_TOUCHSCREEN }?.id ?: -1
+        private val defaultTouchDeviceId : Int by lazy {
+            InputDevice.getDeviceIds()
+                .map { InputDevice.getDevice(it) }
+                .firstOrNull { it != null && it.sources and InputDevice.SOURCE_TOUCHSCREEN ==
+                        InputDevice.SOURCE_TOUCHSCREEN }?.id ?: -1
+        }
     }
 }
