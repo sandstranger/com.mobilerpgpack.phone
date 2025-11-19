@@ -36,6 +36,7 @@ import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
+import com.mobilerpgpack.phone.utils.updateTheme
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
@@ -118,17 +119,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
                     SetupNavigationBar(useDarkTheme)
                 }
             }
-        }
-    }
-
-    private fun updateTheme() {
-        var useDarkTheme = false
-        val preferencesStorage = get<PreferencesStorage>()
-        runBlocking {
-            useDarkTheme = preferencesStorage.getUseDarkThemeValue().first()
-        }
-        if (useDarkTheme) {
-            setTheme(R.style.AppThemeDark)
         }
     }
 }
