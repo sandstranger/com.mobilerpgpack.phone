@@ -12,7 +12,7 @@ class ShowSDL2InputImageButton(
     offsetYPercent: Float = 0f,
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
-    buttonResId: Int = ButtonState.Companion.NOT_EXISTING_RES,
+    buttonResId: Int = ButtonState.NOT_EXISTING_RES,
     inputType: Int = InputType.TYPE_CLASS_TEXT,
     deleteSymbolsKeyCode: Int = DELETE_SYMBOL_KEYCODE,
     symbolsCountToDeleteBeforeInput : Int = SYMBOLS_COUNT_TO_DELETE_BEFORE_INPUT,
