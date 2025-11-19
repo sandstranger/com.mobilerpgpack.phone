@@ -105,6 +105,10 @@ For running PsyDoom - get GEC Master Edition Beta 3 or 4
 
 - [GEC Master Edition Beta 3 or 4](https://www.doomworld.com/forum/topic/101161-gec-master-edition-psx-doom-for-the-playstation-1102019-beta-3-release-now-are-you-ready-for-more-action)
 
+PsyDoom requires vulkan 1.0 render suppport.
+
+If your device is not support vulkan render, then use legacy opengl es render
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
