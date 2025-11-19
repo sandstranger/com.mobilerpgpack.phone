@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -41,6 +42,9 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                                   private val sizePercent: Float = 0.13f,
                                   private val alpha: Float = 0.65f) : IScreenControlsView {
 
+    private val axisX = stickId * 2
+    private val axisY = stickId * 2 + 1
+
     override val buttonState: ButtonState = ButtonState(
         GAMEPAD_ID,
         engineType,
@@ -61,57 +65,47 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
 
     @Composable
     private fun DrawGamepad(isEditMode: Boolean, inGame: Boolean) {
-        var registered by remember { mutableStateOf(false) }
+        var registered by remember(false) { mutableStateOf(false) }
 
-        fun updateStick(stickId: Int, x: Float, y: Float) {
+        if (!registered && !isEditMode && inGame) {
+            registered = true
 
+            val result = nativeAddJoystick(
+                DEVICE_ID, "Virtual", "Virtual",
+                0x045E, 0x028E, false,
+                0xFFFF, 4, 0b1111, 0, 0)
+            Log.d("SDL_INIT", "Joystick registration result: $result")
+            if (result < 0) {
+                Log.e("SDL_INIT", "Failed to register joystick, result: $result")
+            }
+        }
+
+        fun updateStick(x: Float, y: Float) {
             if (isEditMode || !inGame){
                 return
             }
 
-            if (!registered) {
-                registered = true
-                val result = nativeAddJoystick(
-                    DEVICE_ID, "Virtual", "Virtual",
-                    0x045E, 0x028E, false,
-                    0xFFFF, 4, 0b1111, 0, 0)
-                Log.d("SDL_INIT", "Joystick registration result: $result")
-                if (result < 0) {
-                    Log.e("SDL_INIT", "Failed to register joystick, result: $result")
-                }
-            }
-
-            val deadzone = 0.05f
-            val scale = 1.0f
-
             val processedX = when {
-                abs(x) < deadzone -> 0f
-                x > 0 -> (x * scale).coerceAtMost(1f)
-                else -> (x * scale).coerceAtLeast(-1f)
+                abs(x) < GAMEPAD_DEAD_ZONE -> 0f
+                x > 0 -> (x * GAMEPAD_SCALE).coerceAtMost(1f)
+                else -> (x * GAMEPAD_SCALE).coerceAtLeast(-1f)
             }
             val processedY = when {
-                abs(y) < deadzone -> 0f
-                y > 0 -> (y * scale).coerceAtMost(1f)
-                else -> (y * scale).coerceAtLeast(-1f)
+                abs(y) < GAMEPAD_DEAD_ZONE -> 0f
+                y > 0 -> (y * GAMEPAD_SCALE).coerceAtMost(1f)
+                else -> (y * GAMEPAD_SCALE).coerceAtLeast(-1f)
             }
 
-            val axisX = stickId * 2
-            val axisY = stickId * 2 + 1
-
-            listOf(
-                axisX to processedX,
-                axisY to processedY
-            ).forEach { (axis, value) ->
-                try {
-                    onNativeJoy(DEVICE_ID, axis, value)
-                } catch (e: Exception) {
-                    Log.e("SDL_INPUT", "Failed to send to axis $axis", e)
-                }
+            try {
+                onNativeJoy(DEVICE_ID, axisX, processedX)
+                onNativeJoy(DEVICE_ID, axisY, processedY)
+            } catch (e: Exception) {
+                Log.e("SDL_INPUT", "Failed to send to axis", e)
             }
         }
 
         Row(
-            modifier = Modifier.Companion.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Joystick(
@@ -125,7 +119,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
     private fun Joystick(
         isEditMode: Boolean,
         inGame: Boolean,
-        onUpdateStick: (Int, Float, Float) -> Unit
+        onUpdateStick: (Float, Float) -> Unit
     ) {
         var currentX by remember { mutableFloatStateOf(-1f) }
         var currentY by remember { mutableFloatStateOf(-1f) }
@@ -166,21 +160,20 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                                 strokeWidthPx,
                                 currentX,
                                 currentY,
-                                onUpdateStick,
-                                stickId
+                                onUpdateStick
                             )
                         },
                         onDragEnd = {
                             down = false
                             currentX = -1f
                             currentY = -1f
-                            onUpdateStick(stickId, 0f, 0f)
+                            onUpdateStick(0f, 0f)
                         },
                         onDragCancel = {
                             down = false
                             currentX = -1f
                             currentY = -1f
-                            onUpdateStick(stickId, 0f, 0f)
+                            onUpdateStick( 0f, 0f)
                         }
                     )
                 }
@@ -204,7 +197,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
             val centerY = h / 2f
 
             drawCircle(
-                color = Color.Companion.Gray,
+                color = Color.Gray,
                 radius = outerRadius,
                 center = Offset(centerX, centerY),
                 style = Stroke(width = paint.strokeWidth)
@@ -228,7 +221,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                 drawY = drawY.coerceIn(knobRadius, h - knobRadius)
 
                 drawCircle(
-                    color = Color.Companion.Gray,
+                    color = Color.Gray,
                     radius = knobRadius,
                     center = Offset(drawX, drawY),
                     style = Stroke(width = paint.strokeWidth)
@@ -250,8 +243,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         strokeWidthPx: Float,
         currentX: Float,
         currentY: Float,
-        onUpdateStick: (Int, Float, Float) -> Unit,
-        stickId: Int
+        onUpdateStick: (Float, Float) -> Unit
     ) {
         val w = canvasW.toFloat().takeIf { it > 0f } ?: return
         val h = canvasH.toFloat().takeIf { it > 0f } ?: return
@@ -282,11 +274,13 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         val normX = ((drawX - centerX) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
         val normY = ((drawY - centerY) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
 
-        onUpdateStick(stickId, normX, normY)
+        onUpdateStick(normX, normY)
     }
 
     private companion object{
         private const val DEVICE_ID = 1384510555
         private const val GAMEPAD_ID = "onscreen_gamepad"
+        private const val GAMEPAD_DEAD_ZONE = 0.05f
+        private const val GAMEPAD_SCALE = 1.0f
     }
 }
