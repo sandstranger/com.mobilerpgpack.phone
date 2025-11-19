@@ -232,10 +232,9 @@ class KoinModulesProvider(private val context: Context,
                 .withMemoryBar(true)
                 .allowCustomPath(true)
 
-            when (requestMode) {
-                RequestPathMode.Directory -> builder.setType(StorageChooser.DIRECTORY_CHOOSER)
-                RequestPathMode.File -> builder.setType(StorageChooser.FILE_PICKER)
-            }
+            builder.setType( if (requestMode == RequestPathMode.Directory)
+                StorageChooser.DIRECTORY_CHOOSER else StorageChooser.FILE_PICKER)
+
             builder.build()
         }
 
