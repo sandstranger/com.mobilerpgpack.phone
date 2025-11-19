@@ -209,7 +209,11 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
 
         HorizontalDivider()
-
+        EditTextItem(stringResource(R.string.psydoom_refresh_rate),
+            viewModel.outputRefreshRate) {
+            viewModel.outputRefreshRate = it
+        }
+        HorizontalDivider()
         DrawTitleText(stringResource(R.string.psydoom_picture_crop_settings))
 
         EditTextItem(
@@ -242,11 +246,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         DrawTitleText(stringResource(R.string.psydoom_general_settings))
         EditTextItem(stringResource(R.string.psydoom_vram_size), viewModel.vramSizeInMbytes) {
             viewModel.vramSizeInMbytes = it
-        }
-        HorizontalDivider()
-        EditTextItem(stringResource(R.string.psydoom_refresh_rate),
-            viewModel.outputRefreshRate) {
-            viewModel.outputRefreshRate = it
         }
         HorizontalDivider()
         SwitchItem(
