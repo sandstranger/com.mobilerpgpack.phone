@@ -101,9 +101,7 @@ Mods can be used from this Doom64 discord server - https://discord.com/invite/do
 
 ## PsyDoom
 
-For running PsyDoom - get GEC Master Edition Beta 3 or 4
-
-- [GEC Master Edition Beta 3 or 4](https://www.doomworld.com/forum/topic/101161-gec-master-edition-psx-doom-for-the-playstation-1102019-beta-3-release-now-are-you-ready-for-more-action)
+For running PsyDoom - Get Doom PSX disc with cue as described here https://github.com/BodbDearg/PsyDoom?tab=readme-ov-file#running-the-game
 
 PsyDoom requires vulkan 1.0 render suppport.
 
