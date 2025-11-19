@@ -178,6 +178,8 @@ CTranslate2: https://github.com/OpenNMT/CTranslate2
 
 sentencepiece: https://github.com/google/sentencepiece
 
+freetype: https://gitlab.freedesktop.org/freetype/freetype
+
 for icons are using: https://game-icons.net/ https://fonts.google.com/icons
 
 and many others open source libs.
