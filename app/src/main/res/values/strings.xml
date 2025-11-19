@@ -192,7 +192,7 @@
     <string name="select_button">Select button</string>
     <string name="close_text">Close</string>
     <string name="reset_all_resources">Reset all games resources</string>
-    <string name="reset_all_resources_confirm_message">This will reset all games resources and will erase all saved data, like saved games.\nContinue?</string>
+    <string name="reset_all_resources_confirm_message">This will reset all games resources and will erase all saved data, like save games.\nContinue?</string>
     <string name="yes_text">Yes</string>
     <string name="no_text">No</string>
     <string name="resources_not_ready">Game resources have not been copied yet, so the game cannot be launched</string>

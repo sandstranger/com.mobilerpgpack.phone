@@ -2,11 +2,9 @@ package com.mobilerpgpack.phone.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +15,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
-import com.mobilerpgpack.phone.utils.updateTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
@@ -30,8 +27,9 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
     private val screenController : IScreenController by inject (
         named(ScreenController.COMMON_SCREEN_CONTROLLER_NAME))
 
+    private val preferencesStorage : PreferencesStorage by inject ()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        this.updateTheme()
         super.onCreate(savedInstanceState)
 
         val selectedEngine = getSelectedEngineType()
@@ -39,14 +37,12 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         var displayInSafeArea = false
         var activeEngineInfo : IEngineUIController
 
-        val preferencesStorage : PreferencesStorage = get ()
-
         runBlocking {
             displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
             activeEngineInfo = get (named(selectedEngine.toString()))
         }
 
-        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
+        enableEdgeToEdge()
 
         window.decorView.post {
             hideSystemBarsAndWait {
