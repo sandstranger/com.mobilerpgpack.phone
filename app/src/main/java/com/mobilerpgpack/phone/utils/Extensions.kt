@@ -22,6 +22,10 @@ import androidx.core.view.updatePadding
 import androidx.window.layout.WindowMetricsCalculator
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mobilerpgpack.phone.R
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.get
+import org.koin.core.component.get
 
 data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
@@ -144,6 +148,17 @@ fun Context.isExternalStoragePermissionGranted () : Boolean {
         this,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     ) == PackageManager.PERMISSION_GRANTED
+}
+
+fun Activity.updateTheme() {
+    var useDarkTheme = false
+    val preferencesStorage = get<PreferencesStorage>()
+    runBlocking {
+        useDarkTheme = preferencesStorage.getUseDarkThemeValue().first()
+    }
+    if (useDarkTheme) {
+        setTheme(R.style.AppThemeDark)
+    }
 }
 
 fun Activity.displayInSafeArea() {
