@@ -256,7 +256,7 @@ val psyDoomButtons: Collection<IScreenControlsView> = listOf(
         isQuickPanel = true
     ),
     SDL2ImageButton(
-        "record_player",
+        "demo_player",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
         offsetYPercent = 0.39f,
