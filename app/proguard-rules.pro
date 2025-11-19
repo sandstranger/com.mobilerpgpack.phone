@@ -34,18 +34,15 @@
     public static <methods>;
 }
 
--dontwarn java.awt.*
+-dontwarn java.awt.**
 -keep class com.sun.jna.* { *; }
 -keep class * extends com.sun.jna.* { *; }
 -keepclassmembers class * extends com.sun.jna.* { public *; }
 
--dontwarn com.facebook.jni.*
--keep class com.facebook.jni.* { *; }
--keep class * extends com.facebook.jni.* { *; }
--keepclassmembers class * extends com.facebook.jni.* { public *; public static *;}
-
--dontwarn org.fmod.*
+-dontwarn org.fmod.**
 -keep class org.fmod.* { *; }
 -keep class * extends org.fmod.* { *; }
 -keepclassmembers class * extends org.fmod.* { public *; public static *;}
 
+-dontwarn javax.script.**
+-dontwarn org.apache.logging.**
