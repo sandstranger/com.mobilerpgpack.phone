@@ -20,7 +20,6 @@ abstract class PsyDoomSettingScreen (screenName : String) : ComposeScreen(screen
     override fun DrawScreenContent(
         innerPadding: PaddingValues,
         navController: NavHostController,
-        backgroundColor: Color,
         textColor: Color,
         isSystemInDarkTheme: Boolean
     ) {

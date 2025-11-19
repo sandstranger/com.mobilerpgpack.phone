@@ -58,7 +58,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
     override fun DrawScreenContent(
         innerPadding: PaddingValues,
         navController: NavHostController,
-        backgroundColor: Color,
         textColor: Color,
         isSystemInDarkTheme: Boolean
     ) {

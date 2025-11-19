@@ -234,10 +234,7 @@ class KoinModulesProvider(private val context: Context,
 
             when (requestMode) {
                 RequestPathMode.Directory -> builder.setType(StorageChooser.DIRECTORY_CHOOSER)
-                RequestPathMode.Archive -> builder.setType(StorageChooser.FILE_PICKER)
-                    .filter(StorageChooser.FileType.ARCHIVE)
-                RequestPathMode.Cue -> builder.setType(StorageChooser.FILE_PICKER)
-                    .filter(StorageChooser.FileType.CUE)
+                RequestPathMode.File -> builder.setType(StorageChooser.FILE_PICKER)
             }
             builder.build()
         }
