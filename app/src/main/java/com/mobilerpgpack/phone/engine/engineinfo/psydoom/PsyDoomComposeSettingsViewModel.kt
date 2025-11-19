@@ -12,6 +12,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import java.io.File
+import java.io.FileReader
 import java.io.FileWriter
 
 class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
@@ -386,8 +387,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         }
 
     var bobScale : Float
-        get() = gameIniFile.getFloatValue("ViewBobbingStrength").coerceIn(0.0f,1.0f)
-        set(value) = gameIniFile.setFloatValue("ViewBobbingStrength", value.coerceIn(0.0f,1.0f))
+        get() = gameIniFile.getFloatValue("ViewBobbingStrength").coerceIn(0.0f, Float.MAX_VALUE)
+        set(value) = gameIniFile.setFloatValue("ViewBobbingStrength", value.coerceIn(0.0f, Float.MAX_VALUE))
 
     var heapSize : Int
         get() = gameIniFile.getIntValue("MainMemoryHeapSize")
@@ -457,9 +458,11 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
         private val iniFile = File (pathToFile)
 
-        private var iniConfig : INIConfiguration? = null
+        private var iniConfig = INIConfiguration()
 
-        private val loaded get() = iniFile.exists() && iniConfig!=null
+        private var _loaded = false
+
+        private val loaded get() = iniFile.exists() && _loaded
 
         fun getBooleanValue (key: String) = getIntValue(key) > 0
 
@@ -469,7 +472,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
             if (!loaded){
                 reload()
             }
-            return if (loaded) iniConfig!!.getFloat(key) else 0.0f
+            return if (loaded && iniConfig.containsKey(key)) iniConfig.getFloat(key) else 0.0f
         }
 
         fun setFloatValue (key: String, value : Float) = setValue(key, value)
@@ -478,7 +481,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
             if (!loaded){
                 reload()
             }
-            return if (loaded) iniConfig!!.getString(key) else ""
+            return if (loaded && iniConfig.containsKey(key)) iniConfig.getString(key) else ""
         }
 
         fun setStringValue (key: String, value : String) = setValue(key, value)
@@ -487,7 +490,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
             if (!loaded){
                 reload()
             }
-            return if (loaded) iniConfig!!.getInt(key) else 0
+            return if (loaded && iniConfig.containsKey(key)) iniConfig.getInt(key) else 0
         }
 
         fun setIntValue (key: String, value : Int) = setValue(key, value)
@@ -499,25 +502,25 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
             if (loaded) {
                 FileWriter(iniFile.absolutePath).use {
-                    iniConfig!!.setProperty(key, value)
-                    iniConfig!!.write(it)
+                    iniConfig.setProperty(key, value)
+                    iniConfig.write(it)
                 }
             }
         }
 
         fun unload(){
-            iniConfig = null
+            _loaded = false
+            iniConfig.clear()
         }
 
         fun reload (){
             unload()
             if (iniFile.exists()) {
-                iniConfig = configs.fileBased(INIConfiguration::class.java, iniFile.absolutePath)
+                FileReader(iniFile.absolutePath).use {
+                    iniConfig.read(it)
+                }
+                _loaded = true
             }
-        }
-
-        private companion object{
-            private val configs : Configurations = Configurations()
         }
     }
 }
