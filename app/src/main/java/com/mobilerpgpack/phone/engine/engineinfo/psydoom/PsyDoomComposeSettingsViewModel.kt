@@ -106,6 +106,10 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = graphicsIniFile.getIntValue("VulkanRenderHeight")
         set(value) = graphicsIniFile.setIntValue("VulkanRenderHeight", value)
 
+    var outputRefreshRate : Int
+        get() = graphicsIniFile.getIntValue("OutputRefreshRate")
+        set(value) = graphicsIniFile.setIntValue("OutputRefreshRate", value)
+
     var antialiasingMultisamples : Int
         get() = graphicsIniFile.getIntValue("AntiAliasingMultisamples")
         set(value) = graphicsIniFile.setIntValue("AntiAliasingMultisamples", value)
