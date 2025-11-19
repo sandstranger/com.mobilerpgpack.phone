@@ -147,8 +147,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         set(value) = gameIniFile.setBooleanValue("ShowPerfCounters", value)
 
     var pauseOnFocusLost : Boolean
-        get() = gameIniFile.getIntValue("PauseOnWindowFocusLost") == 1
-        set(value) = gameIniFile.setIntValue("PauseOnWindowFocusLost", if (value) 1 else 2)
+        get() = gameIniFile.getBooleanValue("PauseOnWindowFocusLost")
+        set(value) = gameIniFile.setBooleanValue("PauseOnWindowFocusLost",value)
 
     var fixLineActivation : Boolean
         get() = gameIniFile.getBooleanValue("FixLineActivation")
