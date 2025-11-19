@@ -55,11 +55,11 @@ class ButtonState(
     }
 
     suspend fun saveButtonState() {
-        preferencesStorage.setFloatValue( keyX, offsetXPercent)
-        preferencesStorage.setFloatValue( keyY, offsetYPercent)
-        preferencesStorage.setFloatValue( keySize, sizePercent)
-        preferencesStorage.setFloatValue( keyAlpha, alpha)
-        preferencesStorage.setIntValue( sdlKeyEventPrefsKey, sdlKeyCode)
+        preferencesStorage.setFloatValueAsync( keyX, offsetXPercent)
+        preferencesStorage.setFloatValueAsync( keyY, offsetYPercent)
+        preferencesStorage.setFloatValueAsync( keySize, sizePercent)
+        preferencesStorage.setFloatValueAsync( keyAlpha, alpha)
+        preferencesStorage.setIntValueAsync( sdlKeyEventPrefsKey, sdlKeyCode)
     }
 
     suspend fun resetToDefaults() {

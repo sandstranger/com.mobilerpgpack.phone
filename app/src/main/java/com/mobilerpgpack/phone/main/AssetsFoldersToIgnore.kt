@@ -1,3 +1,3 @@
 package com.mobilerpgpack.phone.main
 
-val assetsFoldersToIgnoreChecking = arrayListOf("com.codelobster")
+val assetsFoldersToIgnoreChecking = listOf("com.codelobster")

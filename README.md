@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG and Doom64 EX Plus for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG and Doom64 EX Plus projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -10,6 +10,8 @@ https://github.com/Erick194/WolfensteinRPG-RE
 https://github.com/atsb/Doom64EX-Plus/
 
 https://github.com/Styd051/DOOM64-EX-Plus-Enhanced
+
+https://github.com/BodbDearg/PsyDoom
 
 # System Requirements
 
@@ -96,6 +98,12 @@ For running Doom 64 EX Plus - get Doom 64 remaster from STEAM
 https://store.steampowered.com/app/1148590/DOOM_64/
 
 Mods can be used from this Doom64 discord server - https://discord.com/invite/doom-64-593915163896315905
+
+## PsyDoom
+
+For running PsyDoom - get GEC Master Edition Beta 3 or 4
+
+- [GEC Master Edition Beta 3 or 4](https://www.doomworld.com/forum/topic/101161-gec-master-edition-psx-doom-for-the-playstation-1102019-beta-3-release-now-are-you-ready-for-more-action)
 
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse

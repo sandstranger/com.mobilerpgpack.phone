@@ -2,32 +2,54 @@ package com.mobilerpgpack.phone.utils
 
 import android.content.Context
 import android.content.res.AssetManager
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.concurrent.CopyOnWriteArrayList
 
 class AssetExtractor (private val context: Context,
                       private val assetFoldersToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
 
+    @Volatile
+    private var assetsCopying = false
+
+    private var _assetsCopied by mutableStateOf(false)
+
+    private val userFolder = context.getExternalFilesDir("")!!
+
+    private val pathToUserFolder = userFolder.absolutePath
+
+    private var alwaysCopyAllFiles = false
+
     override val assetsCopied get() = _assetsCopied
 
-    private var _assetsCopied = false
+    override val assetsStartedCopyListeners: MutableCollection<() -> Unit> = CopyOnWriteArrayList()
 
-    private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
+    override val assetsFinishCopyListeners: MutableCollection<() -> Unit> = CopyOnWriteArrayList()
 
-    private val alwaysCopyAllFiles by lazy {
-        getAlwaysCopyFilesCurrentState()
-    }
-
-    suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
-        if (_assetsCopied){
+    override suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
+        if (assetsCopying){
             return@withContext
         }
-        copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, context.getExternalFilesDir("")!!)
-        _assetsCopied = true
+        assetsCopying = true
+        _assetsCopied = false
+        assetsStartedCopyListeners.forEach { it.invoke() }
+        try {
+            alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
+            copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER,
+                userFolder)
+        }
+        finally {
+            _assetsCopied = true
+            assetsCopying = false
+            assetsFinishCopyListeners.forEach { it.invoke() }
+        }
     }
 
     private fun copyAssetsFolderToInternalStorage(assetsFolder: String, destFolder: File) {

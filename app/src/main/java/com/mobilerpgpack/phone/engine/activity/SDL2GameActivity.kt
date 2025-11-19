@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.activity
 
 import android.os.Bundle
+import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -16,10 +17,15 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val preferencesStorage : PreferencesStorage = get()
+        var useDarkTheme = false
         runBlocking {
+            useDarkTheme = preferencesStorage.getUseDarkThemeValue().first()
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()
             engineInfo = get (named(activeEngineType))
             engineInfo.initialize(this@SDL2GameActivity)
+        }
+        if (useDarkTheme){
+            setTheme(R.style.AppFullScreenThemeDark)
         }
         super.onCreate(savedInstanceState)
         engineInfo.loadLayout()

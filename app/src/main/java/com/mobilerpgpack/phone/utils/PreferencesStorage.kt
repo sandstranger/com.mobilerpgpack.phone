@@ -11,13 +11,15 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "preferences_storage")
 
-open class PreferencesStorage(protected val context: Context) {
+open class PreferencesStorage(private val context: Context, private val scope : CoroutineScope) {
 
     val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
     val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
@@ -42,9 +44,8 @@ open class PreferencesStorage(protected val context: Context) {
     val pathToDoom64FolderWithMods = stringPreferencesKey("path_to_doom64_folder_mods")
     val enableDoom64ModsPrefsKey = booleanPreferencesKey("enable_doom64_mods")
 
-    val enableDoom64WideScreenPrefsKey = booleanPreferencesKey("enable_doom64_widescreen")
-
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
+
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
 
     val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
@@ -79,8 +80,7 @@ open class PreferencesStorage(protected val context: Context) {
             getBooleanValue(hideScreenControlsPrefsKey, defaultValue = false)
 
     val enableGameMachineTextTranslation
-        get() =
-            getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
+        get() = getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
 
     val editCustomScreenControlsInGame
         get() =
@@ -116,73 +116,71 @@ open class PreferencesStorage(protected val context: Context) {
 
     val offsetYMouse get() = context.dataStore.data.map { preferences -> preferences[OFFSET_Y_MOUSE] ?: 0.0f }
 
-    val enableDoom64WideScreen get() = getBooleanValue(enableDoom64WideScreenPrefsKey, defaultValue = true)
-
     suspend fun setEnableDoom64WideScreenValue(valueToSave: Boolean) =
-        setBooleanValue(enableDoom64ModsPrefsKey, valueToSave)
+        setBooleanValueAsync(enableDoom64ModsPrefsKey, valueToSave)
 
     suspend fun setTranslationModelTypeValue(valueToSave: String) =
-        setStringValue(translationModelTypePrefsKey, valueToSave)
+        setStringValueAsync(translationModelTypePrefsKey, valueToSave)
 
     suspend fun setTranslationModelTypeValue(valueToSave: TranslationType) =
-        setStringValue(translationModelTypePrefsKey, valueToSave.toString())
+        setStringValueAsync(translationModelTypePrefsKey, valueToSave.toString())
 
     suspend fun setAllowDownloadingModelsOverMobileValue(valueToSave: Boolean) =
-        setBooleanValue(allowDownloadingModelsOverMobilePrefsKey, valueToSave)
+        setBooleanValueAsync(allowDownloadingModelsOverMobilePrefsKey, valueToSave)
 
     suspend fun setEnableDoom64ModsValue(valueToSave: Boolean) =
-        setBooleanValue(enableDoom64ModsPrefsKey, valueToSave)
+        setBooleanValueAsync(enableDoom64ModsPrefsKey, valueToSave)
 
     suspend fun setDisplayInSafeAreaValue(valueToSave: Boolean) =
-        setBooleanValue(displayInSafeAreaPrefsKey, valueToSave)
+        setBooleanValueAsync(displayInSafeAreaPrefsKey, valueToSave)
 
     suspend fun setEnableLauncherTextTranslationValue(valueToSave: Boolean) =
-        setBooleanValue(enableLauncherTextTranslationPrefsKey, valueToSave)
+        setBooleanValueAsync(enableLauncherTextTranslationPrefsKey, valueToSave)
 
     suspend fun setEnableGameMachineTextTranslationValue(valueToSave: Boolean) =
-        setBooleanValue(gamesMachineTranslationsPrefsKey, valueToSave)
+        setBooleanValueAsync(gamesMachineTranslationsPrefsKey, valueToSave)
 
     suspend fun setUseSDLTTFForFontsRenderingValue(valueToSave: Boolean) =
-        setBooleanValue(useSDLTTFForFontsRenderingPrefsKey, valueToSave)
+        setBooleanValueAsync(useSDLTTFForFontsRenderingPrefsKey, valueToSave)
 
     suspend fun setEditCustomScreenControlsInGameValue(valueToSave: Boolean) =
-        setBooleanValue(editCustomScreenControlsInGamePrefsKey, valueToSave)
+        setBooleanValueAsync(editCustomScreenControlsInGamePrefsKey, valueToSave)
 
     suspend fun setHideControlsValue(valueToSave: Boolean) =
-        setBooleanValue(hideScreenControlsPrefsKey, valueToSave)
+        setBooleanValueAsync(hideScreenControlsPrefsKey, valueToSave)
 
     suspend fun setCustomScreenResolution(valueToSave: String) =
-        setStringValue(customScreenResolutionPrefsKey, valueToSave)
+        setStringValueAsync(customScreenResolutionPrefsKey, valueToSave)
 
     suspend fun setCustomAspectRatio(valueToSave: String) =
-        setStringValue(customAspectRatioPrefsKey, valueToSave)
+        setStringValueAsync(customAspectRatioPrefsKey, valueToSave)
 
     suspend fun setPathToDoom64ModsFolder(valueToSave: String) =
-        setStringValue(pathToDoom64FolderWithMods, valueToSave)
+        setStringValueAsync(pathToDoom64FolderWithMods, valueToSave)
 
     suspend fun setPathToDoom64MainWadsFolder(valueToSave: String) =
-        setStringValue(pathToDoom64FolderWithMainWads, valueToSave)
+        setStringValueAsync(pathToDoom64FolderWithMainWads, valueToSave)
 
     suspend fun setPathToWolfensteinRpgIpaFile(valueToSave: String) =
-        setStringValue(pathToWolfensteinRpgIpaPrefsKey, valueToSave)
+        setStringValueAsync(pathToWolfensteinRpgIpaPrefsKey, valueToSave)
 
     suspend fun setPathToDoom2RpgIpaFile(valueToSave: String) =
-        setStringValue(pathToDoom2RpgIpaPrefsKey, valueToSave)
+        setStringValueAsync(pathToDoom2RpgIpaPrefsKey, valueToSave)
 
     suspend fun setPathToDoomRpgZipFile(valueToSave: String) =
-        setStringValue(pathToDoomRpgZipFilePrefsKey, valueToSave)
+        setStringValueAsync(pathToDoomRpgZipFilePrefsKey, valueToSave)
 
     suspend fun setControlsAutoHidingValue(valueToSave: Boolean) =
-        setBooleanValue(enableControlsAutoHiding, valueToSave)
+        setBooleanValueAsync(enableControlsAutoHiding, valueToSave)
 
     suspend fun setShowCustomMouseCursorValue(valueToSave: Boolean) =
-        setBooleanValue(showCustomMouseCursorPrefsKey, valueToSave)
+        setBooleanValueAsync(showCustomMouseCursorPrefsKey, valueToSave)
 
     fun getUseDarkThemeValue(initialValue: Boolean = false) =
         getBooleanValue(useDarkThemePrefsKey, initialValue)
 
     suspend fun setUseDarkThemeValue(valueToSave: Boolean) =
-        setBooleanValue(useDarkThemePrefsKey, valueToSave)
+        setBooleanValueAsync(useDarkThemePrefsKey, valueToSave)
 
     suspend fun getActiveEngineValue(): EngineTypes {
         val activeEngine = getStringValue(activeEnginePrefsKey, EngineTypes.DefaultActiveEngine.toString()).first()
@@ -190,7 +188,7 @@ open class PreferencesStorage(protected val context: Context) {
     }
 
     suspend fun setActiveEngineValue(valueToSave: EngineTypes) =
-        setStringValue(activeEnginePrefsKey, valueToSave.toString())
+        setStringValueAsync(activeEnginePrefsKey, valueToSave.toString())
 
     fun getFloatValue(prefsKey: Preferences.Key<Float>, defaultValue: Float = 0.0f): Flow<Float?> {
         return context.dataStore.data.map { preferences ->
@@ -198,13 +196,21 @@ open class PreferencesStorage(protected val context: Context) {
         }
     }
 
-    suspend fun setFloatValue(prefsKey: Preferences.Key<Float>, valueToSave: Float) {
+    fun setFloatValue(prefsKey: Preferences.Key<Float>, valueToSave: Float) {
+        scope.launch { setFloatValueAsync(prefsKey, valueToSave) }
+    }
+
+    suspend fun setFloatValueAsync(prefsKey: Preferences.Key<Float>, valueToSave: Float) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
         }
     }
 
-    suspend fun setIntValue(prefsKey: Preferences.Key<Int>, valueToSave: Int) {
+    fun setIntValue(prefsKey: Preferences.Key<Int>, valueToSave: Int) {
+        scope.launch { setIntValueAsync(prefsKey, valueToSave) }
+    }
+
+    suspend fun setIntValueAsync(prefsKey: Preferences.Key<Int>, valueToSave: Int) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
         }
@@ -228,7 +234,11 @@ open class PreferencesStorage(protected val context: Context) {
         }
     }
 
-    suspend fun setBooleanValue(prefsKey: Preferences.Key<Boolean>, valueToSave: Boolean) {
+    fun setBooleanValue(prefsKey: Preferences.Key<Boolean>, valueToSave: Boolean) {
+        scope.launch { setBooleanValueAsync(prefsKey, valueToSave) }
+    }
+
+    suspend fun setBooleanValueAsync(prefsKey: Preferences.Key<Boolean>, valueToSave: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
         }
@@ -240,13 +250,16 @@ open class PreferencesStorage(protected val context: Context) {
         }
     }
 
-    private fun getStringValue(prefsKey: Preferences.Key<String>, defaultValue: String = ""): Flow<String> {
+    fun setStringValue(prefsKey: Preferences.Key<String>, valueToSave: String) =
+        scope.launch { setStringValueAsync(prefsKey, valueToSave) }
+
+    protected fun getStringValue(prefsKey: Preferences.Key<String>, defaultValue: String = ""): Flow<String> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
     }
 
-    private suspend fun setStringValue(prefsKey: Preferences.Key<String>, valueToSave: String) {
+    protected suspend fun setStringValueAsync(prefsKey: Preferences.Key<String>, valueToSave: String) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
         }
