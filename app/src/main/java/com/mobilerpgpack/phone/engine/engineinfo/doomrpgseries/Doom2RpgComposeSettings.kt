@@ -24,7 +24,7 @@ class Doom2RpgComposeSettings(buttonsToDraw: Collection<IScreenControlsView>) :
 
         RequestPath(
             stringResource(R.string.doom2_rpg_ipa_file),
-            previousPathToDoom2RpgIpa, requestMode = RequestPathMode.Archive){ selectedPath ->
+            previousPathToDoom2RpgIpa, requestMode = RequestPathMode.File){ selectedPath ->
             scope.launch { preferencesStorage.setPathToDoom2RpgIpaFile(selectedPath) }
         }
 
