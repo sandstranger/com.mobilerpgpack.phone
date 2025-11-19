@@ -65,10 +65,9 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
 
     @Composable
     private fun DrawGamepad(isEditMode: Boolean, inGame: Boolean) {
-        var registered by remember(false) { mutableStateOf(false) }
 
-        if (!registered && !isEditMode && inGame) {
-            registered = true
+        if (!joystickRegistered && !isEditMode && inGame) {
+            joystickRegistered = true
 
             val result = nativeAddJoystick(
                 DEVICE_ID, "Virtual", "Virtual",
@@ -282,5 +281,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         private const val GAMEPAD_ID = "onscreen_gamepad"
         private const val GAMEPAD_DEAD_ZONE = 0.05f
         private const val GAMEPAD_SCALE = 1.0f
+
+        private var joystickRegistered by mutableStateOf(false)
     }
 }
