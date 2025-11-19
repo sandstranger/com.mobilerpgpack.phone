@@ -64,14 +64,23 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         HorizontalDivider()
 
-        RequestPath(
-            stringResource(R.string.path_to_psydoom_mods_folder),
-            preferencesStorage.pathToPsyDoomModsFolder,
-            preferencesStorage.pathToPsyDoomModsFolderPrefsKey
-        )
+        SwitchPreferenceItem(
+            stringResource(R.string.enable_psydoom_mods),
+            initialValueFlow = preferencesStorage.enablePsyDoomMods,
+            preferencesStorage.enablePsyDoomModsPrefsKey.name)
 
         HorizontalDivider()
 
+        val enablePsyDoomMods by preferencesStorage.enablePsyDoomMods.collectAsState(initial = false)
+
+        if (enablePsyDoomMods) {
+            RequestPath(
+                stringResource(R.string.path_to_psydoom_mods_folder),
+                preferencesStorage.pathToPsyDoomModsFolder,
+                preferencesStorage.pathToPsyDoomModsFolderPrefsKey
+            )
+            HorizontalDivider()
+        }
         PreferenceItem(stringResource(R.string.psydoom_more_settings)) {
             navController.navigate(MORE_SETTINGS_SCREEN)
         }

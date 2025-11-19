@@ -44,8 +44,6 @@ open class PreferencesStorage(private val context: Context, private val scope : 
     val pathToDoom64FolderWithMods = stringPreferencesKey("path_to_doom64_folder_mods")
     val enableDoom64ModsPrefsKey = booleanPreferencesKey("enable_doom64_mods")
 
-    val enableDoom64WideScreenPrefsKey = booleanPreferencesKey("enable_doom64_widescreen")
-
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
 
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
@@ -117,8 +115,6 @@ open class PreferencesStorage(private val context: Context, private val scope : 
     val offsetXMouse get() = context.dataStore.data.map { preferences -> preferences[OFFSET_X_MOUSE] ?: 0.0f }
 
     val offsetYMouse get() = context.dataStore.data.map { preferences -> preferences[OFFSET_Y_MOUSE] ?: 0.0f }
-
-    val enableDoom64WideScreen get() = getBooleanValue(enableDoom64WideScreenPrefsKey, defaultValue = true)
 
     suspend fun setEnableDoom64WideScreenValue(valueToSave: Boolean) =
         setBooleanValueAsync(enableDoom64ModsPrefsKey, valueToSave)

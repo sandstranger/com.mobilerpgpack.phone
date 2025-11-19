@@ -31,6 +31,8 @@ class PsyDoomPreferencesStorage (context : Context, scope : CoroutineScope) : Pr
 
     val peerTypePrefsKey = stringPreferencesKey("psy_doom_peer_type")
 
+    val enablePsyDoomModsPrefsKey = booleanPreferencesKey("enable_psydoom_mods")
+
     val pathToPsyDoomCueFile get() = getStringValue(pathToPsyDoomCueFilePrefsKey)
 
     val recordDemos get() = getBooleanValue(recordDemosPrefsKey)
@@ -52,4 +54,6 @@ class PsyDoomPreferencesStorage (context : Context, scope : CoroutineScope) : Pr
     val pathToPsyDoomModsFolder get() = getStringValue(pathToPsyDoomModsFolderPrefsKey)
 
     val psyDoomCommandLineArgsString get() = getStringValue(psyDoomCommandLineArgsPrefsKey)
+
+    val enablePsyDoomMods get() = getBooleanValue(enablePsyDoomModsPrefsKey)
 }

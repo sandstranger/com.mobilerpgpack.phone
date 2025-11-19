@@ -1,5 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
@@ -58,12 +60,17 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                         it += pathToCue
                     }
 
-                    val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder.first()
+                    val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods.first()
 
-                    if (modsFolder.isNotEmpty() && File(modsFolder).exists() &&
-                        !baseCommandLineArgs.contains(DATA_DIR_COMMAND)){
-                        it += DATA_DIR_COMMAND
-                        it += modsFolder
+                    if (enablePsyDoomMods) {
+                        val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder.first()
+
+                        if (modsFolder.isNotEmpty() && File(modsFolder).exists() &&
+                            !baseCommandLineArgs.contains(DATA_DIR_COMMAND)
+                        ) {
+                            it += DATA_DIR_COMMAND
+                            it += modsFolder
+                        }
                     }
 
                     val usePistolStart = psyDoomPreferencesStorage.forcePistolStart.first()

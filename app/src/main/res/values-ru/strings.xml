@@ -43,6 +43,7 @@
     <string name="command_line_args">Аргументы командной строки</string>
     <string name="path_to_doom64_mods_folder">Путь к папке Doom 64 с модами</string>
     <string name="enable_doom64_mods">Включить моды для Doom 64</string>
+    <string name="enable_psydoom_mods">Включить моды для PsyDoom</string>
     <string name="configure_screen_controls">Редактор экранного управления</string>
     <string name="hide_custom_screen_controls">Скрыть экранное управление</string>
     <string name="can_not_start_engine">Файл ресурсов игры не найден. Невозможно запустить игру.</string>
