@@ -345,7 +345,23 @@ val psyDoomButtons: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.07f,
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
-    ),)
+    ),
+    ShowSDL2InputImageButton(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.08f,
+        delayBetweenCharsMs = 150L,
+        symbolsCountToDeleteBeforeInput = 0,
+        buttonResId = R.drawable.keyboard
+    ),
+    UpdateScreenControlsVisibilityImageButton(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.62f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.toggles
+    ))
 
 val doom64Buttons: Collection<IScreenControlsView> = listOf(
     SDL3Dpad(
