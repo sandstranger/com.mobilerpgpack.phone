@@ -135,11 +135,11 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         var canvasH by remember { mutableIntStateOf(0) }
 
         Canvas(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxSize()
                 .graphicsLayer {
                     clip = false
-                    compositingStrategy = CompositingStrategy.Companion.ModulateAlpha
+                    compositingStrategy = CompositingStrategy.ModulateAlpha
                 }
                 .minimumInteractiveComponentSize()
                 .onSizeChanged { size ->
@@ -190,7 +190,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
             val minDim = min(w, h)
             val strokeWidthPx = 2.dp.toPx()
             val paint = Paint().apply {
-                style = PaintingStyle.Companion.Stroke
+                style = PaintingStyle.Stroke
                 strokeWidth = strokeWidthPx
             }
 
