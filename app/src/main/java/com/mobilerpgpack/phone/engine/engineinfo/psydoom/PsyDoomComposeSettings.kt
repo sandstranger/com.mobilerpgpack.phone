@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -21,16 +20,13 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
-import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
+import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-@Suppress("INFERRED_TYPE_VARIABLE_INTO_EMPTY_INTERSECTION_WARNING",
-    "TYPE_INTERSECTION_AS_REIFIED_WARNING"
-)
 class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     private val assetsExtractor: IAssetExtractor by inject()
@@ -39,7 +35,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         named(EngineTypes.PsyDoom.toString())
     )
 
-    override val screenViewsToDraw = wolfensteinButtons
+    override val screenViewsToDraw = psyDoomButtons
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {

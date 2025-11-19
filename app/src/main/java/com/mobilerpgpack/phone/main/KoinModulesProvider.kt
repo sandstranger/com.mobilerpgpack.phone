@@ -73,6 +73,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStora
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomSettingScreen
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
+import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
@@ -384,7 +385,7 @@ class KoinModulesProvider(private val context: Context,
 
             PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
                 nativeLibs,
-                wolfensteinButtons,
+                psyDoomButtons,
                 preferencesStorage.psyDoomCommandLineArgsString)
         }.withOptions {
             named(EngineTypes.PsyDoom.toString())

@@ -8,6 +8,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64.Doom64AutorunButt
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenGamepad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenGamepad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.ShowSDL2InputImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
@@ -28,7 +29,7 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.45f,
-        sizePercent = 0.13f,
+        sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
@@ -113,7 +114,30 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
     )
 )
 
-val doom64Buttons : Collection<IScreenControlsView> = listOf(
+val psyDoomButtons: Collection<IScreenControlsView> = listOf(
+    SDL2Dpad(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.03f,
+        offsetYPercent = 0.16f,
+        sizePercent = 0.16f,
+    ),
+    SDL2OnScreenGamepad(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.54f,
+        sizePercent = 0.21f,
+    ),
+    SDL2ImageButton(
+        "attack",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.8f,
+        offsetYPercent = 0.45f,
+        sizePercent = 0.11f,
+        buttonResId = R.drawable.attack_button,
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER
+    ))
+
+val doom64Buttons: Collection<IScreenControlsView> = listOf(
     SDL3Dpad(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.03f,
@@ -298,7 +322,7 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.45f,
-        sizePercent = 0.13f,
+        sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
@@ -400,7 +424,7 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         EngineTypes.DoomRpg,
         offsetXPercent = 0.76f,
         offsetYPercent = 0.45f,
-        sizePercent = 0.13f,
+        sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
@@ -481,7 +505,7 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.45f,
-        sizePercent = 0.13f,
+        sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
