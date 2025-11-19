@@ -59,7 +59,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             stringResource(R.string.path_to_psydoom_cue_file),
             preferencesStorage.pathToPsyDoomCueFile,
             preferencesStorage.pathToPsyDoomCueFilePrefsKey,
-            RequestPathMode.Cue
+            RequestPathMode.File
         )
 
         HorizontalDivider()

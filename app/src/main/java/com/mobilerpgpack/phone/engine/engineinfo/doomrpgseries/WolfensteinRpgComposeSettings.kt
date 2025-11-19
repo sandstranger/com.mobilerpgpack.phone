@@ -24,7 +24,7 @@ class WolfensteinRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsVi
         RequestPath(
             context.getString(R.string.wolfenstein_rpg_ipa_file),
             previousPathToWolfensteinRpgIPa,
-            requestMode = RequestPathMode.Archive){ selectedPath ->
+            requestMode = RequestPathMode.File){ selectedPath ->
             scope.launch { preferencesStorage.setPathToWolfensteinRpgIpaFile(selectedPath) }
         }
         HorizontalDivider()
