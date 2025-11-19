@@ -163,6 +163,7 @@
     <string name="psydoom_preserve_ammo_on_respawn">Preserve ammo on respawn</string>
     <string name="psydoom_deathmatch">Deathmatch</string>
     <string name="psydoom_frag_limit">Frag limit</string>
+    <string name="psydoom_refresh_rate">Refresh rate</string>
     <string name="psydoom_disable_exits">Disable exits</string>
     <string name="psydoom_auto_activate_boss">Auto-activate boss special sectors</string>
     <string name="psydoom_peer_type">Peer type</string>

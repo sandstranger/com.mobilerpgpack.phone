@@ -244,6 +244,11 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.vramSizeInMbytes = it
         }
         HorizontalDivider()
+        EditTextItem(stringResource(R.string.psydoom_refresh_rate),
+            viewModel.outputRefreshRate) {
+            viewModel.outputRefreshRate = it
+        }
+        HorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_extended_automap_colors),
             viewModel.useExtendedAutomapColors
