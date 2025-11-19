@@ -226,16 +226,14 @@ class KoinModulesProvider(private val context: Context,
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     private val composeModule = module {
         factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
-            val builder = StorageChooser.Builder()
+            StorageChooser.Builder()
                 .withActivity(activity)
                 .withFragmentManager(activity.fragmentManager)
                 .withMemoryBar(true)
                 .allowCustomPath(true)
-
-            builder.setType( if (requestMode == RequestPathMode.Directory)
+                .setType( if (requestMode == RequestPathMode.Directory)
                 StorageChooser.DIRECTORY_CHOOSER else StorageChooser.FILE_PICKER)
-
-            builder.build()
+                .build()
         }
 
         factory { (engineType : EngineTypes) -> getClampButtonPrefsKey(engineType) }
