@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen
 
-import CustomTopBar
 import android.Manifest
 import android.content.Intent
 import android.os.Build
@@ -11,11 +10,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,79 +25,82 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.ui.Theme
-import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getTextColor
-import com.mobilerpgpack.phone.ui.getTopBarColor
-import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
-@Composable
-fun PermissionScreen( onPermissionGranted: () -> Unit ) {
-    val activity = LocalActivity.current!!
-    val isSystemInDarkTheme = isSystemInDarkTheme()
-    val backgroundColor = getBackgroundColor(isSystemInDarkTheme)
-    val topBarColor = getTopBarColor(isSystemInDarkTheme)
-    val textColor = getTextColor(isSystemInDarkTheme)
+class PermissionScreen : ComposeScreen (SCREEN_NAME) {
 
-    Theme (darkTheme = isSystemInDarkTheme ) {
+    private lateinit var onPermissionGranted: () -> Unit
+
+    @Composable
+    fun DrawScreen(navController: NavHostController, onPermissionGranted: () -> Unit){
+        this.onPermissionGranted = onPermissionGranted
+        super.DrawScreen(navController)
+    }
+
+    @Composable
+    override fun DrawScreenContent(
+        innerPadding: PaddingValues,
+        navController: NavHostController,
+        backgroundColor: Color,
+        textColor: Color,
+        isSystemInDarkTheme: Boolean
+    ) {
+        val activity = LocalActivity.current!!
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(topBarColor)
-                .systemBarsPadding()
-        ) {
-            CustomTopBar(title = activity.getString(R.string.app_name),isSystemInDarkTheme)
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(backgroundColor),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                val launcher =
-                    rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                        if (activity.isExternalStoragePermissionGranted()) {
-                            onPermissionGranted()
-                        }
-                    }
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally){
 
-                val legacyPermissionsLauncher = rememberLauncherForActivityResult(
-                    ActivityResultContracts.RequestPermission()
-                ) { isGranted: Boolean ->
-                    if (isGranted) {
+            val launcher =
+                rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    if (activity.isExternalStoragePermissionGranted()) {
                         onPermissionGranted()
                     }
                 }
 
-                Text(text = activity.getString(R.string.access_to_all_files), textAlign = TextAlign.Center,
-                    color = textColor, fontSize = 24.sp)
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            if (!activity.isExternalStoragePermissionGranted()) {
-                                val uri = "package:${BuildConfig.APPLICATION_ID}".toUri()
-                                launcher.launch(
-                                    Intent(
-                                        Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                                        uri
-                                    )
-                                )
-                            }
-                        } else {
-                            legacyPermissionsLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        }
-                    },
-                ) {
-                    Text(
-                        text = activity.getString(R.string.grant_permission),
-                        textAlign = TextAlign.Center, fontSize = 21.sp,
-                    )
+            val legacyPermissionsLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    onPermissionGranted()
                 }
+            }
+
+            Text(text = activity.getString(R.string.access_to_all_files), textAlign = TextAlign.Center,
+                color = textColor, fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        if (!activity.isExternalStoragePermissionGranted()) {
+                            val uri = "package:${BuildConfig.APPLICATION_ID}".toUri()
+                            launcher.launch(
+                                Intent(
+                                    Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                                    uri
+                                )
+                            )
+                        }
+                    } else {
+                        legacyPermissionsLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                },
+            ) {
+                Text(
+                    text = activity.getString(R.string.grant_permission),
+                    textAlign = TextAlign.Center, fontSize = 21.sp,
+                )
             }
         }
     }
-    SetupNavigationBar(isSystemInDarkTheme)
+
+    companion object {
+        const val SCREEN_NAME = "permission_screem"
+    }
 }

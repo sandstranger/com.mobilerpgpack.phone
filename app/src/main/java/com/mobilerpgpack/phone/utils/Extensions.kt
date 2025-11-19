@@ -20,6 +20,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.window.layout.WindowMetricsCalculator
+import com.afollestad.materialdialogs.MaterialDialog
+import com.mobilerpgpack.phone.R
 
 data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
@@ -32,6 +34,21 @@ fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>
 
 inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
     this.startActivity(T::class.java, finishParentActivity)
+
+fun Activity.showErrorDialogBox (messageToShowResource: Int) =
+    this.showMessageDialogBox(R.string.error, messageToShowResource)
+
+fun Activity.showMessageDialogBox (titleResource : Int? = null, messageToShowResource: Int){
+    this.runOnUiThread {
+        MaterialDialog(this).show {
+            if (titleResource!= null) {
+                title(titleResource)
+            }
+            message(messageToShowResource)
+            positiveButton(R.string.ok_text)
+        }
+    }
+}
 
 fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
     val i = Intent(this, activityClazz)

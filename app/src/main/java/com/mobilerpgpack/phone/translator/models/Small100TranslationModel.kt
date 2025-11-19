@@ -7,10 +7,10 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
 class Small100TranslationModel(
-    private val context: Context,
-    private val modelFile: String,
-    private val spmFile: String,
-    private val allowDownloadingOverMobile: Boolean = false
+    context: Context,
+    modelFile: String,
+    spmFile: String,
+    allowDownloadingOverMobile: Boolean = false
 ) : BaseM2M100TranslationModel(context, modelFile, spmFile, allowDownloadingOverMobile),KoinComponent {
 
     override val zipFileId: String = "1Adl4YxrLdSq_sn7kpeixneaof88YAfle"

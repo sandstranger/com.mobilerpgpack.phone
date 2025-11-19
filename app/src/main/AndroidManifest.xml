@@ -43,6 +43,7 @@
     <application
         android:name=".main.MainApplication"
         android:gwpAsanMode="always"
+        android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:largeHeap="true"

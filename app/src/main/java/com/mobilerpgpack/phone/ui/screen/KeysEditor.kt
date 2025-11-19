@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
@@ -26,7 +27,6 @@ fun KeysEditor(
 ) {
     val modifier = Modifier
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val buttonsToEdit = buttonStates.filter { it.allowToEditKeyEvent }
 
     LaunchedEffect(buttonsToEdit) {
@@ -73,10 +73,10 @@ fun KeysEditor(
             onDismissRequest = { showButtonSelectDialog = false },
             confirmButton = {
                 TextButton(onClick = { showButtonSelectDialog = false }) {
-                    Text(context.getString(R.string.close_text))
+                    Text(stringResource(R.string.close_text))
                 }
             },
-            title = { Text(context.getString(R.string.select_button)) },
+            title = { Text(stringResource(R.string.select_button)) },
             text = {
                 Column (modifier = Modifier.verticalScroll(scrollState)){
                     buttonsToEdit.forEach { button ->
@@ -149,21 +149,21 @@ fun KeysEditor(
             TextButton(onClick = {
                 onDismiss()
             }) {
-                Text(context.getString(R.string.close_text))
+                Text(stringResource(R.string.close_text))
             }
         },
         dismissButton = {
             TextButton(onClick = {
                 shouldReset = true
             }) {
-                Text(context.getString(R.string.reset_to_default))
+                Text(stringResource(R.string.reset_to_default))
             }
         },
-        title = { Text(context.getString(R.string.keys_editor)) },
+        title = { Text(stringResource(R.string.keys_editor)) },
         text = {
             Column(modifier = modifier.fillMaxWidth()) {
 
-                Text(context.getString(R.string.select_button), style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(R.string.select_button), style = MaterialTheme.typography.labelMedium)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -183,13 +183,13 @@ fun KeysEditor(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(context.getString(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium)
                 Row(
                     modifier = Modifier
                         .clickable { showKeyCodeDialog = true }
                         .padding(8.dp)
                 ) {
-                    Text(text = keyCodeMap[selectedKeyCode] ?: context.getString(R.string.uknown))
+                    Text(text = keyCodeMap[selectedKeyCode] ?: stringResource(R.string.uknown))
                 }
             }
         }

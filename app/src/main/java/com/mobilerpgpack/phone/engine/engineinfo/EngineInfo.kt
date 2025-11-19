@@ -54,7 +54,7 @@ abstract class EngineInfo(
     pathToResourceFlow: Flow<String>,
     private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
 
-    protected val preferencesStorage: PreferencesStorage by inject()
+    protected open val preferencesStorage: PreferencesStorage by inject()
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 
@@ -86,6 +86,7 @@ abstract class EngineInfo(
 
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
 
+    private var wasInit = false
     private var safeAreaWasApplied = false
     private var needToShowControlsLastState: Boolean = false
     private var hideScreenControls: Boolean = false
@@ -107,9 +108,15 @@ abstract class EngineInfo(
             "needToInvokeMouseButtonsEvents")
     }
 
-    private external fun pauseSound()
+    private val pauseSoundNativeDelegate by lazy {
+        Function.getFunction(mainEngineLib,
+            "pauseSound")
+    }
 
-    private external fun resumeSound()
+    private val resumeSoundNativeDelegate by lazy {
+        Function.getFunction(mainEngineLib,
+            "resumeSound")
+    }
 
     override val commandLineArgs: Array<String>
         get() {
@@ -133,11 +140,12 @@ abstract class EngineInfo(
             }
         }
 
-    init {
-        Native.register(EngineInfo::class.java, mainEngineLib)
-    }
-
     override suspend fun initialize(activity: ComponentActivity) {
+        if (wasInit){
+            return
+        }
+
+        wasInit = true
         this.activity = activity
         initializeCommonEngineData()
         resolution = activity.getScreenResolution()
@@ -166,11 +174,11 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        pauseSound()
+        pauseSoundNativeDelegate.invokeVoid(null)
     }
 
     override fun onResume() {
-        resumeSound()
+        resumeSoundNativeDelegate.invokeVoid(null)
     }
 
     override fun onDestroy() {

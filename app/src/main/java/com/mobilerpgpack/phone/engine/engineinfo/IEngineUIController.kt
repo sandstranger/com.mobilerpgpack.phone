@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 
 interface IEngineUIController {
@@ -8,5 +9,5 @@ interface IEngineUIController {
     val screenViewsToDraw : Collection<IScreenControlsView>
 
     @Composable
-    fun DrawSettings()
+    fun DrawSettings(navController: NavHostController)
 }

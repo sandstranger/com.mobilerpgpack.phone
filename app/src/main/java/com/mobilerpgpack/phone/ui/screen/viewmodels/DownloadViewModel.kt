@@ -5,15 +5,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
+import com.mobilerpgpack.phone.utils.IAssetExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 
-class DownloadViewModel() : ViewModel(), KoinComponent {
+class DownloadViewModel : ViewModel(), KoinComponent {
 
     private val scope : CoroutineScope = get()
+
+    private val assetsExtractor : IAssetExtractor by inject ()
 
     private val translationModelsDownloader : ITranslationModelsDownloader = get()
 
@@ -25,6 +29,10 @@ class DownloadViewModel() : ViewModel(), KoinComponent {
     private var currentTranslationModelType : String? = null
 
     private var downloadJob: Job? = null
+
+    init {
+        assetsExtractor.assetsStartedCopyListeners += { cancelDownload() }
+    }
 
     fun onTranslationTypeChanged(translationModelType : String){
         if (currentTranslationModelType != translationModelType){

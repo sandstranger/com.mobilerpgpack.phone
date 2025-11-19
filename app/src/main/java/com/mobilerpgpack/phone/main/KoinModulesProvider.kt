@@ -12,18 +12,28 @@ import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.NLLB200Translator
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
-import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.Doom2RpgComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.Doom64ComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.Doom64EngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.Doom64EnhancedEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.DoomRPGSeriesEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.DoomRpgEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRPGSeriesEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.engine.engineinfo.WolfensteinRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomCheatsSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomGameSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomGraphicsSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomInputSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomLauncherSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomMoreSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomMultiplayerSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettingsViewModel
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.translator.ITranslationManager
@@ -44,10 +54,10 @@ import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2MouseIcon
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL2ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3MouseIcon
-import com.mobilerpgpack.phone.ui.screen.screencontrols.SDL3ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons
@@ -59,6 +69,12 @@ import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomSettingScreen
+import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
+import com.mobilerpgpack.phone.ui.screen.PermissionScreen
+import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
+import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
@@ -76,6 +92,7 @@ import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
+import org.koin.core.scope.get
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -88,7 +105,7 @@ class KoinModulesProvider(private val context: Context,
 
     private val clampButtonsMap = HashMap<EngineTypes, Preferences.Key<Boolean>>()
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
-    private val preferencesStorage: PreferencesStorage = PreferencesStorage(context)
+    private val preferencesStorage: PreferencesStorage = PreferencesStorage(context, scope)
 
     val allModules : List<Module>
 
@@ -207,27 +224,28 @@ class KoinModulesProvider(private val context: Context,
     }
 
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
-    val composeModule = module {
-        factory <StorageChooser> { (requestOnlyDirectory: Boolean, activity: Activity) ->
+    private val composeModule = module {
+        factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
             val builder = StorageChooser.Builder()
                 .withActivity(activity)
                 .withFragmentManager(activity.fragmentManager)
                 .withMemoryBar(true)
                 .allowCustomPath(true)
 
-            if (requestOnlyDirectory) {
-                builder.setType(StorageChooser.DIRECTORY_CHOOSER)
-            } else {
-                builder.setType(StorageChooser.FILE_PICKER)
+            when (requestMode) {
+                RequestPathMode.Directory -> builder.setType(StorageChooser.DIRECTORY_CHOOSER)
+                RequestPathMode.Archive -> builder.setType(StorageChooser.FILE_PICKER)
                     .filter(StorageChooser.FileType.ARCHIVE)
+                RequestPathMode.Cue -> builder.setType(StorageChooser.FILE_PICKER)
+                    .filter(StorageChooser.FileType.CUE)
             }
-
             builder.build()
         }
 
         factory { (engineType : EngineTypes) -> getClampButtonPrefsKey(engineType) }
 
         viewModelOf(::DownloadViewModel)
+        viewModelOf(::SettingsScreenViewModel)
         singleOf(::SettingsScreen)
         singleOf <IScreenController>(::SDL2ScreenController).withOptions {
             named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
@@ -243,46 +261,10 @@ class KoinModulesProvider(private val context: Context,
         singleOf<SDL3MouseIcon>(::SDL3MouseIcon)
         singleOf<IKeyCodesProvider>(::KeyCodesProvider)
         factory <PreferenceHandler> { (settings : DataStoreSettings) -> CustomPreferenceHandler(settings) }
+        singleOf(::PermissionScreen).bind()
     }
 
-    val enginesModule = module {
-        single  {
-            val nativeLibs = arrayOf(gl4esLibraryName,
-                SDL3_NATIVE_LIB_NAME,
-                PNG_NATIVE_LIB_NAME,
-                FMOD_NATIVE_LIB_NAME,
-                DOOM64_MAIN_ENGINE_LIB)
-
-            Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
-                nativeLibs,
-                doom64Buttons,
-                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
-            named(EngineTypes.Doom64ExPlus.toString())
-            bind<IEngineInfo>()
-        }
-
-        single  {
-            val nativeLibs = arrayOf(gl4esLibraryName,
-                SDL3_NATIVE_LIB_NAME,
-                PNG_NATIVE_LIB_NAME,
-                FMOD_NATIVE_LIB_NAME,
-                DOOM64_ENHANCED_MAIN_ENGINE_LIB)
-
-            Doom64EnhancedEngineInfo(DOOM64_ENHANCED_MAIN_ENGINE_LIB,
-                nativeLibs,
-                doom64Buttons,
-                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
-            named(EngineTypes.Doom64ExPlusEnhanced.toString())
-            bind<IEngineInfo>()
-        }
-
-        single<IEngineUIController> { Doom64ComposeSettings(doom64Buttons) }
-            .withOptions {
-                named(EngineTypes.Doom64ExPlus.toString())
-            }.withOptions {
-                named(EngineTypes.Doom64ExPlusEnhanced.toString())
-            }
-
+    private val doomRpgSeriesModule = module {
         single {
             val nativeLibs = arrayOf(gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
@@ -350,8 +332,99 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.WolfensteinRpg.toString()) }
     }
 
+    private val doom64RegisterModule = module {
+        single  {
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                SDL3_NATIVE_LIB_NAME,
+                PNG_NATIVE_LIB_NAME,
+                FMOD_NATIVE_LIB_NAME,
+                DOOM64_MAIN_ENGINE_LIB)
+
+            Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
+                nativeLibs,
+                doom64Buttons,
+                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+            named(EngineTypes.Doom64ExPlus.toString())
+            bind<IEngineInfo>()
+        }
+
+        single  {
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                SDL3_NATIVE_LIB_NAME,
+                PNG_NATIVE_LIB_NAME,
+                FMOD_NATIVE_LIB_NAME,
+                DOOM64_ENHANCED_MAIN_ENGINE_LIB)
+
+            Doom64EnhancedEngineInfo(DOOM64_ENHANCED_MAIN_ENGINE_LIB,
+                nativeLibs,
+                doom64Buttons,
+                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+            named(EngineTypes.Doom64ExPlusEnhanced.toString())
+            bind<IEngineInfo>()
+        }
+
+        single<IEngineUIController> { Doom64ComposeSettings(doom64Buttons) }
+            .withOptions {
+                named(EngineTypes.Doom64ExPlus.toString())
+            }.withOptions {
+                named(EngineTypes.Doom64ExPlusEnhanced.toString())
+            }
+    }
+
+    private val psyDoomRegisterModule = module {
+        val preferencesStorage = PsyDoomPreferencesStorage(context, scope)
+
+        single { preferencesStorage }.withOptions {
+            named(EngineTypes.PsyDoom.toString())
+            bind<PsyDoomPreferencesStorage>()
+        }
+
+        single {
+            val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
+
+            PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
+                nativeLibs,
+                psyDoomButtons,
+                preferencesStorage.psyDoomCommandLineArgsString)
+        }.withOptions {
+            named(EngineTypes.PsyDoom.toString())
+            bind<IEngineInfo>()
+        }
+
+        singleOf(::PsyDoomComposeSettings).withOptions {
+            named(EngineTypes.PsyDoom.toString())
+            bind<IEngineUIController>()
+        }
+
+        singleOf(::PsyDoomLauncherSettingsScreen).bind()
+        singleOf(::PsyDoomMoreSettingsScreen).bind()
+        singleOf(::PsyDoomGraphicsSettingsScreen).bind()
+        singleOf(::PsyDoomGameSettingsScreen).bind()
+        singleOf(::PsyDoomInputSettingsScreen).bind()
+        singleOf(::PsyDoomAudioSettingsScreen).bind()
+        singleOf(::PsyDoomCheatsSettingsScreen).bind()
+        singleOf(::PsyDoomMultiplayerSettingsScreen).bind()
+
+        single {
+            val launcherSettings = get <PsyDoomLauncherSettingsScreen>()
+            val moreSettings = get <PsyDoomMoreSettingsScreen>()
+            val graphicsSettings = get <PsyDoomGraphicsSettingsScreen>()
+            val gameSettings = get <PsyDoomGameSettingsScreen>()
+            val inputSettings = get <PsyDoomInputSettingsScreen>()
+            val audioSettings = get <PsyDoomAudioSettingsScreen>()
+            val cheatsSettings = get <PsyDoomCheatsSettingsScreen>()
+            val multiplayerSettings = get <PsyDoomMultiplayerSettingsScreen>()
+            listOf(launcherSettings,moreSettings, graphicsSettings, gameSettings,
+                inputSettings, audioSettings,cheatsSettings,multiplayerSettings)
+        }.withOptions { bind<Collection<PsyDoomSettingScreen>>() }
+
+        viewModelOf(::PsyDoomComposeSettingsViewModel)
+    }
+
     init {
-        allModules = listOf<Module>(mainModule,httpModule,translationModule, composeModule, enginesModule)
+        allModules = listOf<Module>(mainModule,httpModule,translationModule,
+            composeModule, doomRpgSeriesModule, doom64RegisterModule, psyDoomRegisterModule)
     }
 
     private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {
