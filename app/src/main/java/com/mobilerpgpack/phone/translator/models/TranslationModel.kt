@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import android.util.Log
 import com.mobilerpgpack.phone.utils.isWifiConnected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -12,7 +11,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 abstract class TranslationModel (private val context : Context,
-                                 private val allowDownloadingOverMobile : Boolean = false ) : ITranslationModel {
+                                 allowDownloadingOverMobile : Boolean = false ) : ITranslationModel {
     private var currentDownload: Deferred<Boolean>? = null
     private val downloadMutex = Mutex()
 
@@ -63,17 +62,13 @@ abstract class TranslationModel (private val context : Context,
             return false
         }
 
-        // Получаем (или создаём) Deferred<Boolean> под мьютексом
         val task: Deferred<Boolean> = downloadMutex.withLock {
-            // Если есть незавершённый таск — переиспользуем
             currentDownload?.takeIf { !it.isCompleted }?.let { return@withLock it }
 
-            // Иначе создаём новый
             val newTask = scope.async {
                 try {
                     downloadModelTask(onProgress)
-                } catch (e: Exception) {
-                    Log.d("CALLED_PITUD", e.toString())
+                } catch (_: Exception) {
                     false
                 }
             }

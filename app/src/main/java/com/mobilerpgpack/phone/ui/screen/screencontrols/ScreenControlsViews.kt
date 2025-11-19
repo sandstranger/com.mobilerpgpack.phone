@@ -5,7 +5,16 @@ import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64.Doom64AutorunButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.gamepad.SDL3OnScreenGamepad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenGamepad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenGamepad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.ShowSDL2InputImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.ShowSDL3InputImageButton
 
 const val LEFT_MOUSE_BUTTON_ID = 1
 
@@ -21,7 +30,7 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.45f,
-        sizePercent = 0.13f,
+        sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
@@ -106,7 +115,255 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
     )
 )
 
-val doom64Buttons : Collection<IScreenControlsView> = listOf(
+val psyDoomButtons: Collection<IScreenControlsView> = listOf(
+    SDL2Dpad(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.03f,
+        offsetYPercent = 0.16f,
+        sizePercent = 0.16f,
+    ),
+    SDL2OnScreenGamepad(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.54f,
+        sizePercent = 0.21f,
+    ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+    ),
+    SDL2ImageButton(
+        "first_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.16f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.first_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_1,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "second_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.second_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_2,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "third_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.third_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_3,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "fourth_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.fourth_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_4,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "five_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.4f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.five_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_5,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "six_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.46f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.six_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_6,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "seven_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.seven_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_7,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "eight_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.eight_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_8,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "delete",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.delete_icon,
+        sdlKeyEvent = KeyEvent.KEYCODE_DEL,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "pan",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.follow,
+        sdlKeyEvent = KeyEvent.KEYCODE_F,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "zoom_in",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zoom_in,
+        sdlKeyEvent = KeyEvent.KEYCODE_EQUALS,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "zoom_out",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zoom_out,
+        sdlKeyEvent = KeyEvent.KEYCODE_MINUS,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "demo_player",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.screen_record,
+        sdlKeyEvent = KeyEvent.KEYCODE_V,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "attack",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.8f,
+        offsetYPercent = 0.45f,
+        sizePercent = 0.11f,
+        buttonResId = R.drawable.attack_button,
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER
+    ),
+    SDL2MouseWheelButton(
+        "next_weapon",
+        EngineTypes.PsyDoom,
+        wheelUp = true,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.18f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.next_weapon,
+    ),
+    SDL2MouseWheelButton(
+        "prev_weapon",
+        EngineTypes.PsyDoom,
+        wheelUp = false,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.32f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.prev_weapon,
+    ),
+    SDL2ImageButton(
+        "autorun",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.72f,
+        offsetYPercent = 0.85f,
+        sizePercent = 0.06f,
+        sdlKeyEvent = KeyEvent.KEYCODE_CAPS_LOCK,
+        buttonResId = R.drawable.run,
+    ),
+    SDL2ImageButton(
+        "escape",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.99f,
+        offsetYPercent = 0.05f,
+        sizePercent = 0.065f,
+        buttonResId = R.drawable.pause,
+        sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
+    ),
+    SDL2ImageButton(
+        "quick_save",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.save,
+        sdlKeyEvent = KeyEvent.KEYCODE_F5
+    ),
+    SDL2ImageButton(
+        "quick_load",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.83f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.load,
+        sdlKeyEvent = KeyEvent.KEYCODE_F9
+    ),
+    SDL2ImageButton(
+        "use",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.97f,
+        offsetYPercent = 0.7f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.use,
+        sdlKeyEvent = KeyEvent.KEYCODE_SPACE
+    ),
+    SDL2ImageButton(
+        "automap",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.83f,
+        offsetYPercent = 0.9f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.automap,
+        sdlKeyEvent = KeyEvent.KEYCODE_TAB
+    ),
+    ShowSDL2InputImageButton(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.08f,
+        delayBetweenCharsMs = 150L,
+        symbolsCountToDeleteBeforeInput = 0,
+        buttonResId = R.drawable.keyboard
+    ),
+    UpdateScreenControlsVisibilityImageButton(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.62f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.toggles
+    ))
+
+val doom64Buttons: Collection<IScreenControlsView> = listOf(
     SDL3Dpad(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.03f,
@@ -277,11 +534,21 @@ val doom64Buttons : Collection<IScreenControlsView> = listOf(
         isQuickPanel = true
     ),
     SDL3ImageButton(
+        "delete",
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.delete_icon,
+        sdlKeyEvent = KeyEvent.KEYCODE_FORWARD_DEL,
+        isQuickPanel = true
+    ),
+    SDL3ImageButton(
         "attack",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.45f,
-        sizePercent = 0.13f,
+        sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
@@ -383,7 +650,7 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         EngineTypes.DoomRpg,
         offsetXPercent = 0.76f,
         offsetYPercent = 0.45f,
-        sizePercent = 0.13f,
+        sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
@@ -448,7 +715,9 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         inputType = InputType.TYPE_CLASS_NUMBER,
         deleteSymbolsKeyCode = KeyEvent.KEYCODE_DPAD_LEFT,
         symbolsCountToDeleteBeforeInput = 4,
-        delayBetweenCharsMs = 20))
+        delayBetweenCharsMs = 20
+    )
+)
 
 val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
     SDL2Dpad(
@@ -462,7 +731,7 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.45f,
-        sizePercent = 0.13f,
+        sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),

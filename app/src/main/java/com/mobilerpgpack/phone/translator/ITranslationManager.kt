@@ -13,8 +13,6 @@ interface ITranslationManager{
 
     var activeEngine: EngineTypes
 
-    var allowDownloadingOveMobile: Boolean
-
     var activeTranslationType : TranslationType
 
     fun terminate()

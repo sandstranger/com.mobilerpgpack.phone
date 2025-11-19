@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,7 +38,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -60,8 +61,6 @@ import kotlin.math.roundToInt
 
 open class ScreenController : KoinComponent, IScreenController {
 
-    private val context : Context = get ()
-
     protected val preferencesStorage : PreferencesStorage = get ()
 
     override var activeViewsToDraw: Collection<IScreenControlsView>? = null
@@ -78,6 +77,7 @@ open class ScreenController : KoinComponent, IScreenController {
 
         this.activeViewsToDraw = views
 
+        val context = LocalContext.current
         val configuration = LocalConfiguration.current
         val density = context.resources.displayMetrics.density
         val coroutineScope = rememberCoroutineScope()
@@ -196,7 +196,7 @@ open class ScreenController : KoinComponent, IScreenController {
                             viewsToDraw.values.forEach { view ->
                                 view.buttonState.resetToDefaults()
                             }
-                            preferencesStorage.setBooleanValue( clampButtonsPrefsKey, true)
+                            preferencesStorage.setBooleanValueAsync( clampButtonsPrefsKey, true)
                             viewsToDraw.values.forEach { view ->
                                 clampButton(view.buttonState)
                                 view.buttonState.saveButtonState()
@@ -233,7 +233,7 @@ open class ScreenController : KoinComponent, IScreenController {
                                 if (isEditMode) {
                                     selectedButtonId = id
                                     coroutineScope.launch {
-                                        preferencesStorage.setBooleanValue(
+                                        preferencesStorage.setBooleanValueAsync(
                                             clampButtonsPrefsKey,
                                             false)
                                     }
@@ -385,38 +385,38 @@ open class ScreenController : KoinComponent, IScreenController {
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
-                    Text(context.getString(R.string.increase_controls_alpha))
+                    Text(stringResource(R.string.increase_controls_alpha))
                 }
                 Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
-                    Text(context.getString(R.string.decrease_controls_alpha))
+                    Text(stringResource(R.string.decrease_controls_alpha))
                 }
             }
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
-                    Text(context.getString(R.string.increase_controls_size))
+                    Text(stringResource(R.string.increase_controls_size))
                 }
                 Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
-                    Text(context.getString(R.string.decrease_controls_size))
+                    Text(stringResource(R.string.decrease_controls_size))
                 }
             }
             Spacer(Modifier.height(8.dp))
             Button(onClick = onReset) {
-                Text(context.getString(R.string.reset_controls_to_default))
+                Text(stringResource(R.string.reset_controls_to_default))
             }
             Spacer(Modifier.height(8.dp))
             if (!inGame) {
                 Button(onClick = onBack) {
-                    Text(context.getString(R.string.close_controls_configuration))
+                    Text(stringResource(R.string.close_controls_configuration))
                 }
             }
         }
     }
 
     companion object {
-        private const val SCREEN_ITEMS_CHANGE_SIZE_OFFSET : Float = 0.009f
+        private const val SCREEN_ITEMS_CHANGE_SIZE_OFFSET : Float = 0.005f
 
-        private const val SCREEN_ITEMS_CHANGE_ALPHA_OFFSET : Float = 0.1f
+        private const val SCREEN_ITEMS_CHANGE_ALPHA_OFFSET : Float = 0.05f
 
         const val COMMON_SCREEN_CONTROLLER_NAME = "COMMON_SCREEN_CONTROLLER"
     }

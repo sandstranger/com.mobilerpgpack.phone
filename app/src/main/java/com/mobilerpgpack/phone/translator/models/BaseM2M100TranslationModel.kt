@@ -5,6 +5,7 @@ import android.util.Log
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
+import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
 import kotlinx.coroutines.async
@@ -19,7 +20,7 @@ abstract class BaseM2M100TranslationModel(
     private val context: Context,
     private val pathToModelFolder: String,
     private val spmFile: String,
-    private val allowDownloadingOverMobile: Boolean = false
+    allowDownloadingOverMobile: Boolean = false
 ) : TranslationModel(context, allowDownloadingOverMobile), KoinComponent {
 
     protected abstract val zipFileId: String
@@ -46,13 +47,14 @@ abstract class BaseM2M100TranslationModel(
 
     private val smpFile by lazy { File(spmFile) }
 
+    private val assetsExtractor : IAssetExtractor = get ()
+
     @Volatile
     protected var isModelDownloaded = false
 
     init {
-        runBlocking {
-            isModelDownloaded = !needToDownloadModel()
-        }
+        assetsExtractor.assetsStartedCopyListeners += { onAssetsStartedCopy() }
+        assetsExtractor.assetsFinishCopyListeners += { onAssetsFinishCopy() }
     }
 
     override fun initialize(sourceLocale: String, targetLocale: String) {
@@ -104,10 +106,12 @@ abstract class BaseM2M100TranslationModel(
     }
 
     override suspend fun needToDownloadModel(): Boolean {
-        if (isModelDownloaded){
+        if (this.isModelDownloaded){
             return false
         }
-        return !modelFolder.exists() || !smpFile.exists() || zipFile.exists()
+        val needToDownloadModel = !modelFolder.exists() || !smpFile.exists() || zipFile.exists();
+        isModelDownloaded = !needToDownloadModel
+        return needToDownloadModel
     }
 
     private fun extractDownloadedModel(zipFile: File): Boolean {
@@ -124,5 +128,15 @@ abstract class BaseM2M100TranslationModel(
         }
 
         return false
+    }
+
+    private fun onAssetsStartedCopy () {
+        isModelDownloaded = false
+    }
+
+    private fun onAssetsFinishCopy (){
+        runBlocking {
+            needToDownloadModel()
+        }
     }
 }

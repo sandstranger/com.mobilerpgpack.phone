@@ -26,8 +26,6 @@ fun LoadingModelDialogWithCancel(
     val context = LocalContext.current
 
     if (show) {
-        Log.d("CALLED_PITUD", "PITUD")
-
         AlertDialog(
             onDismissRequest = { },
             title = { Text(context.getString(R.string.loading_model_title)) },
