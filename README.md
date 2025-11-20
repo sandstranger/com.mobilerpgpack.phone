@@ -105,7 +105,7 @@ For running PsyDoom - Get Doom PSX disc with cue as described here https://githu
 
 PsyDoom requires vulkan 1.0 render suppport.
 
-If your device is not support vulkan render, then use legacy opengl es render
+If your device does not support vulkan render, then use legacy opengl es render
 
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
