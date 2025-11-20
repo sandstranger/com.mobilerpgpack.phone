@@ -118,7 +118,15 @@ class AssetExtractor (private val context: Context,
         try {
             val assetsVersionProvider = gson.fromJson(assetsVersionFile.readText(),
                 AssetsVersionProvider::class.java)
-            return !ASSETS_CURRENT_VERSION.equals(assetsVersionProvider.assetsVersion, true)
+
+            val copyAssetsForced = !ASSETS_CURRENT_VERSION
+                .equals(assetsVersionProvider.assetsVersion, true)
+
+            if (copyAssetsForced) {
+                writeDefaultVersionToVersionsFile()
+            }
+
+            return copyAssetsForced
         }
         catch (_ : Exception){
             writeDefaultVersionToVersionsFile()
