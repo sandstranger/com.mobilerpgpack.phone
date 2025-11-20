@@ -82,15 +82,14 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
         ) { innerPadding ->
             DrawScreenContent(
                 innerPadding,
-                navController, backgroundColor, textColor, useDarkTheme
-            )
+                navController, textColor, useDarkTheme)
         }
     }
 
     @Composable
     protected abstract fun DrawScreenContent(
         innerPadding: PaddingValues,
-        navController: NavHostController, backgroundColor: Color,
+        navController: NavHostController,
         textColor: Color,
         isSystemInDarkTheme: Boolean
     )

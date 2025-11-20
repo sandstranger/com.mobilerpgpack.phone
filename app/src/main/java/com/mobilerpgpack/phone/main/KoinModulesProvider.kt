@@ -223,23 +223,18 @@ class KoinModulesProvider(private val context: Context,
         singleOf<ITranslationModelsDownloader>(::TranslationModelsDownloader)
     }
 
+    @Suppress("DEPRECATION")
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     private val composeModule = module {
         factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
-            val builder = StorageChooser.Builder()
+            StorageChooser.Builder()
                 .withActivity(activity)
                 .withFragmentManager(activity.fragmentManager)
-                .withMemoryBar(true)
+                .withMemoryBar(false)
                 .allowCustomPath(true)
-
-            when (requestMode) {
-                RequestPathMode.Directory -> builder.setType(StorageChooser.DIRECTORY_CHOOSER)
-                RequestPathMode.Archive -> builder.setType(StorageChooser.FILE_PICKER)
-                    .filter(StorageChooser.FileType.ARCHIVE)
-                RequestPathMode.Cue -> builder.setType(StorageChooser.FILE_PICKER)
-                    .filter(StorageChooser.FileType.CUE)
-            }
-            builder.build()
+                .setType( if (requestMode == RequestPathMode.Directory)
+                StorageChooser.DIRECTORY_CHOOSER else StorageChooser.FILE_PICKER)
+                .build()
         }
 
         factory { (engineType : EngineTypes) -> getClampButtonPrefsKey(engineType) }
