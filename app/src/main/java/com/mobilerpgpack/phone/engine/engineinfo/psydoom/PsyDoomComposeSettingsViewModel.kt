@@ -496,7 +496,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
             }
 
             if (loaded) {
-                FileWriter(iniFile.absolutePath).use {
+                FileWriter(iniFile).use {
                     iniConfig.setProperty(key, value)
                     iniConfig.write(it)
                 }
@@ -511,7 +511,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         fun load (){
             clear()
             if (iniFile.exists()) {
-                FileReader(iniFile.absolutePath).use {
+                FileReader(iniFile).use {
                     iniConfig.read(it)
                 }
                 loaded = true
