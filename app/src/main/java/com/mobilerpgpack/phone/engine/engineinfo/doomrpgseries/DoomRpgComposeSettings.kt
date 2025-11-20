@@ -23,7 +23,7 @@ class DoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
         RequestPath(
             stringResource(R.string.doom_rpg_zip_file),
             savedPathToDoomRpgZip,
-            requestMode = RequestPathMode.Archive){ selectedPath ->
+            requestMode = RequestPathMode.File){ selectedPath ->
             scope.launch { preferencesStorage.setPathToDoomRpgZipFile(selectedPath) }
         }
         HorizontalDivider()
