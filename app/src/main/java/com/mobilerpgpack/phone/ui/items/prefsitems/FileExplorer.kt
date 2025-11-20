@@ -57,6 +57,5 @@ fun RequestPath(explorerItemTitle: String,
 
 enum class RequestPathMode{
     Directory,
-    Archive,
-    Cue
+    File
 }
