@@ -223,13 +223,14 @@ class KoinModulesProvider(private val context: Context,
         singleOf<ITranslationModelsDownloader>(::TranslationModelsDownloader)
     }
 
+    @Suppress("DEPRECATION")
     @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     private val composeModule = module {
         factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
             StorageChooser.Builder()
                 .withActivity(activity)
                 .withFragmentManager(activity.fragmentManager)
-                .withMemoryBar(true)
+                .withMemoryBar(false)
                 .allowCustomPath(true)
                 .setType( if (requestMode == RequestPathMode.Directory)
                 StorageChooser.DIRECTORY_CHOOSER else StorageChooser.FILE_PICKER)

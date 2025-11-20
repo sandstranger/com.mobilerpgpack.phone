@@ -461,11 +461,9 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
         private val iniFile = File (pathToFile)
 
-        private var iniConfig = INIConfiguration()
+        private val iniConfig = INIConfiguration()
 
-        private var _loaded = false
-
-        private val loaded get() = iniFile.exists() && _loaded
+        private var loaded = false
 
         fun getBooleanValue (key: String) = getIntValue(key) > 0
 
@@ -475,7 +473,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
             if (!loaded){
                 reload()
             }
-            return if (loaded && iniConfig.containsKey(key)) iniConfig.getFloat(key) else 0.0f
+            return if (iniConfig.containsKey(key)) iniConfig.getFloat(key) else 0.0f
         }
 
         fun setFloatValue (key: String, value : Float) = setValue(key, value)
@@ -484,7 +482,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
             if (!loaded){
                 reload()
             }
-            return if (loaded && iniConfig.containsKey(key)) iniConfig.getString(key) else ""
+            return if (iniConfig.containsKey(key)) iniConfig.getString(key) else ""
         }
 
         fun setStringValue (key: String, value : String) = setValue(key, value)
@@ -493,7 +491,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
             if (!loaded){
                 reload()
             }
-            return if (loaded && iniConfig.containsKey(key)) iniConfig.getInt(key) else 0
+            return if (iniConfig.containsKey(key)) iniConfig.getInt(key) else 0
         }
 
         fun setIntValue (key: String, value : Int) = setValue(key, value)
@@ -512,7 +510,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         }
 
         fun unload(){
-            _loaded = false
+            loaded = false
             iniConfig.clear()
         }
 
@@ -522,7 +520,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
                 FileReader(iniFile.absolutePath).use {
                     iniConfig.read(it)
                 }
-                _loaded = true
+                loaded = true
             }
         }
     }
