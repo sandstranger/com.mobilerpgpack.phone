@@ -46,7 +46,8 @@
     <string name="enable_psydoom_mods">Включить моды для PsyDoom</string>
     <string name="configure_screen_controls">Редактор экранного управления</string>
     <string name="hide_custom_screen_controls">Скрыть экранное управление</string>
-    <string name="can_not_start_engine">Файл ресурсов игры не найден. Невозможно запустить игру.</string>
+    <string name="resource_not_found_error">Файл ресурсов игры не найден. Невозможно запустить игру.</string>
+    <string name="resource_not_correct_error">Файл ресурсов игры некорректен. Он должен иметь расширение %1$s. Невозможно запустить игру.</string>
     <string name="ok_text">OK</string>
     <string name="cancel_text">Отмена</string>
     <string name="error">Ошибка</string>

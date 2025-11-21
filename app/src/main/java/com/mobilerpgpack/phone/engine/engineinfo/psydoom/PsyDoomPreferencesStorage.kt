@@ -7,7 +7,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.CoroutineScope
 
-class PsyDoomPreferencesStorage (context : Context, scope : CoroutineScope) : PreferencesStorage(context, scope) {
+class PsyDoomPreferencesStorage(context: Context, scope: CoroutineScope) :
+    PreferencesStorage(context, scope) {
 
     val pathToPsyDoomCueFilePrefsKey = stringPreferencesKey("path_to_psydoom_cue_file")
 
@@ -33,27 +34,27 @@ class PsyDoomPreferencesStorage (context : Context, scope : CoroutineScope) : Pr
 
     val enablePsyDoomModsPrefsKey = booleanPreferencesKey("enable_psydoom_mods")
 
-    val pathToPsyDoomCueFile get() = getStringValue(pathToPsyDoomCueFilePrefsKey)
+    val pathToPsyDoomCueFile = getStringValue(pathToPsyDoomCueFilePrefsKey)
 
-    val recordDemos get() = getBooleanValue(recordDemosPrefsKey)
+    val recordDemos = getBooleanValue(recordDemosPrefsKey)
 
-    val forcePistolStart get() = getBooleanValue(forcePistolStartPrefsKey)
+    val forcePistolStart = getBooleanValue(forcePistolStartPrefsKey)
 
-    val turboMode get() = getBooleanValue(turboModePrefsKey)
+    val turboMode = getBooleanValue(turboModePrefsKey)
 
-    val noMonsters get() = getBooleanValue(noMonstersPrefsKey)
+    val noMonsters = getBooleanValue(noMonstersPrefsKey)
 
-    val nmBossFixUp get() = getBooleanValue(nmBossFixUpPrefsKey)
+    val nmBossFixUp = getBooleanValue(nmBossFixUpPrefsKey)
 
-    val host get() = getStringValue(hostPrefsKey)
+    val host = getStringValue(hostPrefsKey)
 
-    val port get() = getIntValue(portPrefsKey, 0)
+    val port = getIntValue(portPrefsKey, 0)
 
-    val peerType get() = getStringValue(peerTypePrefsKey,PeerType.Client.toString())
+    val peerType = getStringValue(peerTypePrefsKey, PeerType.Client.toString())
 
-    val pathToPsyDoomModsFolder get() = getStringValue(pathToPsyDoomModsFolderPrefsKey)
+    val pathToPsyDoomModsFolder = getStringValue(pathToPsyDoomModsFolderPrefsKey)
 
-    val psyDoomCommandLineArgsString get() = getStringValue(psyDoomCommandLineArgsPrefsKey)
+    val psyDoomCommandLineArgsString = getStringValue(psyDoomCommandLineArgsPrefsKey)
 
-    val enablePsyDoomMods get() = getBooleanValue(enablePsyDoomModsPrefsKey)
+    val enablePsyDoomMods = getBooleanValue(enablePsyDoomModsPrefsKey)
 }
