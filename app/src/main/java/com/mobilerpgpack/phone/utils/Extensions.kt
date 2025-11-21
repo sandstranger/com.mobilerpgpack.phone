@@ -21,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.window.layout.WindowMetricsCalculator
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.mobilerpgpack.phone.R
 
 data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
@@ -46,6 +47,7 @@ fun Activity.showMessageDialogBox (titleResource : Int? = null, messageToShowRes
                 title(titleResource)
             }
             message(messageToShowResource)
+
             positiveButton(R.string.ok_text){ onCloseDialogBox?.invoke() }
         }
     }
@@ -62,7 +64,8 @@ fun Activity.showMessageDialogBox (title: String = "", messageToShow : String,
                 title(text = title)
             }
             message(text = messageToShow)
-            positiveButton(R.string.ok_text){ onCloseDialogBox?.invoke() }
+            onDismiss { onCloseDialogBox?.invoke() }
+            positiveButton(R.string.ok_text)
         }
     }
 }
