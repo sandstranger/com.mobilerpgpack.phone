@@ -601,14 +601,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
         HorizontalDivider()
 
-        DrawTitleText(stringResource(R.string.psydoom_loading))
-
-        SwitchItem(stringResource(R.string.psydoom_skip_intros),
-            viewModel.skipIntros) {
-            viewModel.skipIntros = it
-        }
-        HorizontalDivider()
-
         DrawTitleText(stringResource(R.string.psydoom_game_tick_rate))
 
         ListPreferenceItem(stringResource(R.string.psydoom_mode),
