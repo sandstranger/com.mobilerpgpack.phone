@@ -35,5 +35,5 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
     }
 
     fun onStartGameClicked(activeEngine : EngineTypes,activity: Activity) =
-        scope.launch { startGame(activity, activeEngine) }
+        startGame(activity, activeEngine)
 }

@@ -54,67 +54,62 @@ open class PreferencesStorage(private val context: Context, private val scope : 
 
     val dataStore : DataStore<Preferences> = context.dataStore
 
-    val useStandardSDLTextInput get() = getBooleanValue(useStandardSDLTextInputPrefsKey)
+    val useStandardSDLTextInput = getBooleanValue(useStandardSDLTextInputPrefsKey)
 
-    val translationModelType
-        get() = getStringValue(
-            translationModelTypePrefsKey,
-            TranslationType.DefaultTranslationType.toString()
-        )
+    val translationModelType = getStringValue(
+        translationModelTypePrefsKey,
+        TranslationType.DefaultTranslationType.toString()
+    )
 
-    val doom64CommandLineArgsString get() = getStringValue(doom64CommandLineArgsStringPrefsKey)
+    val doom64CommandLineArgsString = getStringValue(doom64CommandLineArgsStringPrefsKey)
 
-    val allowDownloadingModelsOverMobile
-        get() = getBooleanValue(allowDownloadingModelsOverMobilePrefsKey)
+    val allowDownloadingModelsOverMobile = getBooleanValue(allowDownloadingModelsOverMobilePrefsKey)
 
-    val enableDoom64Mods get() = getBooleanValue(enableDoom64ModsPrefsKey)
+    val enableDoom64Mods = getBooleanValue(enableDoom64ModsPrefsKey)
 
-    val enableDisplayInSafeArea get() = getBooleanValue(displayInSafeAreaPrefsKey)
+    val enableDisplayInSafeArea = getBooleanValue(displayInSafeAreaPrefsKey)
 
-    val useSDLTTFForFontsRendering
-        get() =
-            getBooleanValue(useSDLTTFForFontsRenderingPrefsKey, defaultValue = false)
+    val useSDLTTFForFontsRendering =
+        getBooleanValue(useSDLTTFForFontsRenderingPrefsKey, defaultValue = false)
 
-    val hideScreenControls
-        get() =
-            getBooleanValue(hideScreenControlsPrefsKey, defaultValue = false)
+    val hideScreenControls =
+        getBooleanValue(hideScreenControlsPrefsKey, defaultValue = false)
 
-    val enableGameMachineTextTranslation
-        get() = getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
+    val enableGameMachineTextTranslation =
+        getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
 
-    val editCustomScreenControlsInGame
-        get() =
-            getBooleanValue(editCustomScreenControlsInGamePrefsKey, defaultValue = true)
+    val editCustomScreenControlsInGame =
+        getBooleanValue(editCustomScreenControlsInGamePrefsKey, defaultValue = true)
 
-    val customScreenResolution get() = getStringValue(customScreenResolutionPrefsKey)
+    val customScreenResolution = getStringValue(customScreenResolutionPrefsKey)
 
-    val customAspectRatio get() = getStringValue(customAspectRatioPrefsKey)
+    val customAspectRatio = getStringValue(customAspectRatioPrefsKey)
 
-    val pathToWolfensteinRpgIpaFile get() = getStringValue(pathToWolfensteinRpgIpaPrefsKey)
+    val pathToWolfensteinRpgIpaFile = getStringValue(pathToWolfensteinRpgIpaPrefsKey)
 
-    val pathToDoom64ModsFolder
-        get() =
-            getStringValue(pathToDoom64FolderWithMods)
+    val pathToDoom64ModsFolder =
+        getStringValue(pathToDoom64FolderWithMods)
 
-    val pathToDoom64MainWadsFolder get() = getStringValue(pathToDoom64FolderWithMainWads)
+    val pathToDoom64MainWadsFolder = getStringValue(pathToDoom64FolderWithMainWads)
 
-    val pathToDoom2RpgIpaFile get() = getStringValue(pathToDoom2RpgIpaPrefsKey)
+    val pathToDoom2RpgIpaFile = getStringValue(pathToDoom2RpgIpaPrefsKey)
 
-    val pathToDoomRpgZipFile get() = getStringValue(pathToDoomRpgZipFilePrefsKey)
+    val pathToDoomRpgZipFile = getStringValue(pathToDoomRpgZipFilePrefsKey)
 
-    val autoHideScreenControls get() = getBooleanValue(enableControlsAutoHiding, defaultValue = false)
+    val autoHideScreenControls = getBooleanValue(enableControlsAutoHiding, defaultValue = false)
 
-    val showCustomMouseCursor get() = getBooleanValue(showCustomMouseCursorPrefsKey)
+    val showCustomMouseCursor = getBooleanValue(showCustomMouseCursorPrefsKey)
 
-    val activeEngineAsFlowString
-        get() = getStringValue(
-            activeEnginePrefsKey,
-            EngineTypes.DefaultActiveEngine.toString()
-        )
+    val activeEngineAsFlowString = getStringValue(
+        activeEnginePrefsKey,
+        EngineTypes.DefaultActiveEngine.toString()
+    )
 
-    val offsetXMouse get() = context.dataStore.data.map { preferences -> preferences[OFFSET_X_MOUSE] ?: 0.0f }
+    val offsetXMouse =
+        context.dataStore.data.map { preferences -> preferences[OFFSET_X_MOUSE] ?: 0.0f }
 
-    val offsetYMouse get() = context.dataStore.data.map { preferences -> preferences[OFFSET_Y_MOUSE] ?: 0.0f }
+    val offsetYMouse =
+        context.dataStore.data.map { preferences -> preferences[OFFSET_Y_MOUSE] ?: 0.0f }
 
     suspend fun setEnableDoom64WideScreenValue(valueToSave: Boolean) =
         setBooleanValueAsync(enableDoom64ModsPrefsKey, valueToSave)
