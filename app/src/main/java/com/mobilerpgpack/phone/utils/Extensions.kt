@@ -35,17 +35,34 @@ fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>
 inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
     this.startActivity(T::class.java, finishParentActivity)
 
-fun Activity.showErrorDialogBox (messageToShowResource: Int) =
-    this.showMessageDialogBox(R.string.error, messageToShowResource)
+fun Activity.showErrorDialogBox (messageToShowResource: Int,onCloseDialogBox :(()-> Unit)? =null) =
+    this.showMessageDialogBox(R.string.error, messageToShowResource, onCloseDialogBox)
 
-fun Activity.showMessageDialogBox (titleResource : Int? = null, messageToShowResource: Int){
+fun Activity.showMessageDialogBox (titleResource : Int? = null, messageToShowResource: Int,
+                                   onCloseDialogBox :(()-> Unit)? =null){
     this.runOnUiThread {
         MaterialDialog(this).show {
             if (titleResource!= null) {
                 title(titleResource)
             }
             message(messageToShowResource)
-            positiveButton(R.string.ok_text)
+            positiveButton(R.string.ok_text){ onCloseDialogBox?.invoke() }
+        }
+    }
+}
+
+fun Activity.showErrorDialogBox (messageToShow : String, onCloseDialogBox :(()-> Unit)? =null) =
+    this.showMessageDialogBox(this.getString(R.string.error), messageToShow, onCloseDialogBox)
+
+fun Activity.showMessageDialogBox (title: String = "", messageToShow : String,
+                                   onCloseDialogBox :(()-> Unit)? =null){
+    this.runOnUiThread {
+        MaterialDialog(this).show {
+            if (title.isNotEmpty()) {
+                title(text = title)
+            }
+            message(text = messageToShow)
+            positiveButton(R.string.ok_text){ onCloseDialogBox?.invoke() }
         }
     }
 }

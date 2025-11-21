@@ -1,7 +1,5 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
@@ -35,7 +33,9 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     override val preferencesStorage = psyDoomPreferencesStorage
 
-    override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueFile
+    override val pathToResource get() = runBlocking{ psyDoomPreferencesStorage.pathToPsyDoomCueFile.first() }
+
+    override val requiredResourceExtension = ".cue"
 
     override val needToShowScreenControls = true
 

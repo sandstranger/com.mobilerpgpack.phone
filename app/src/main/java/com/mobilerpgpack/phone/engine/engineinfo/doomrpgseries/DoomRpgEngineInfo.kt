@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.libsdl.app.SDLSurface
 
 class DoomRpgEngineInfo(
@@ -22,9 +23,11 @@ class DoomRpgEngineInfo(
 
     override val needToShowScreenControls: Boolean = true
 
-    override val pathToResource: Flow<String> = super.preferencesStorage.pathToDoomRpgZipFile
+    override val pathToResource get() = runBlocking { super.preferencesStorage.pathToDoomRpgZipFile.first() }
 
     override fun isMouseShown() = false
+
+    override val requiredResourceExtension: String = ".zip"
 
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)

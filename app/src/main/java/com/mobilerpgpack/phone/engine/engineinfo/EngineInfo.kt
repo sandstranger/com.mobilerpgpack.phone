@@ -19,7 +19,6 @@ import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
-import com.mobilerpgpack.phone.main.buildFullLibraryName
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
@@ -30,7 +29,6 @@ import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.mobilerpgpack.phone.utils.invokeBool
 import com.sun.jna.Function
-import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -40,6 +38,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -51,7 +50,7 @@ abstract class EngineInfo(
     private val allLibs: Array<String>,
     private val viewsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
-    pathToResourceFlow: Flow<String>,
+    private val pathToResourceFlow: Flow<String>,
     private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
 
     protected open val preferencesStorage: PreferencesStorage by inject()
@@ -78,13 +77,25 @@ abstract class EngineInfo(
 
     override val engineType: EngineTypes = activeEngineType
 
-    override val pathToResource: Flow<String> = pathToResourceFlow
+    final override val pathToResourceExists : Boolean
+        get() {
+            val pathToResource = this.pathToResource
+            return pathToResource.isNotEmpty() &&
+                    File(pathToResource).exists()
+        }
+
+    override val pathToResourceIsCorrect: Boolean get() = pathToResourceExists &&
+            (requiredResourceExtension.isEmpty() || pathToResource.endsWith(requiredResourceExtension))
+
+    override val requiredResourceExtension: String = ""
 
     final override val nativeLibraries: Array<String> get() = allLibs
 
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
 
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
+
+    protected open val pathToResource : String get() = runBlocking { pathToResourceFlow.first() }
 
     private var wasInit = false
     private var safeAreaWasApplied = false
@@ -151,7 +162,7 @@ abstract class EngineInfo(
         resolution = activity.getScreenResolution()
 
         Os.setenv("PATH_TO_RESOURCES",
-            File(pathToResource.first()).absolutePath, true)
+            File(pathToResource).absolutePath, true)
 
         hideScreenControls = preferencesStorage.hideScreenControls.first()
         enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls.first()
