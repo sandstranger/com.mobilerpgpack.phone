@@ -576,7 +576,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.lostSoulSpawnLimit) {
             viewModel.lostSoulSpawnLimit = it
         }
-        HorizontalDivider()
     }
 
     @Composable
