@@ -257,10 +257,6 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = gameIniFile.getBooleanValue("EnableMapPatches_PsyDoom")
         set(value) = gameIniFile.setValue("EnableMapPatches_PsyDoom", value)
 
-    var skipIntros : Boolean
-        get() = gameIniFile.getBooleanValue("SkipIntros")
-        set(value) = gameIniFile.setValue("SkipIntros", value)
-
     var enableDevMapAutoReload : Boolean
         get() = cheatsIniFile.getBooleanValue("EnableDevMapAutoReload")
         set(value) = cheatsIniFile.setValue("EnableDevMapAutoReload", value)

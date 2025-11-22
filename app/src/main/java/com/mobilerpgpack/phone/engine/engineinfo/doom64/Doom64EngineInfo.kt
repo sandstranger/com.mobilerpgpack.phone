@@ -11,6 +11,7 @@ import com.sun.jna.Function
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 open class Doom64EngineInfo(
@@ -21,7 +22,7 @@ open class Doom64EngineInfo(
     SDL3EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
         EngineTypes.Doom64ExPlus,emptyFlow(),commandLineParamsFlow) {
 
-    override val pathToResource: Flow<String> = preferencesStorage.pathToDoom64MainWadsFolder
+    override val pathToResource get() = runBlocking { preferencesStorage.pathToDoom64MainWadsFolder.first() }
 
     private var customScreenResolutionWasApplied = false
 
