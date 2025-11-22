@@ -110,8 +110,8 @@ else ()
     set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/freetype/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libfreetype.so")
 endif ()
 
-set(VPX_INCLUDE_DIR "app/src/main/jni/vpx/android/${ANDROID_ABI}/include")
-set(VPX_LIBRARIES "app/src/main/jni/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
+set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni/vpx/android/${ANDROID_ABI}/include")
+set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/app/src/main/jni/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
 
 set(ZMUSIC_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/zmusic/src/main/jni/ZMusic/include")
 if (IS_DEBUG_BUILD)
@@ -119,6 +119,9 @@ if (IS_DEBUG_BUILD)
 else ()
     set(ZMUSIC_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/zmusic/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libzmusic.so")
 endif ()
+
+set(RE2C_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/lzdoom_tools/re2c.exe")
+set(LEMON_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/lzdoom_tools/lemon.exe")
 
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 
