@@ -576,7 +576,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.lostSoulSpawnLimit) {
             viewModel.lostSoulSpawnLimit = it
         }
-        HorizontalDivider()
     }
 
     @Composable
@@ -598,14 +597,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             stringResource(R.string.psydoom_fixes),
             viewModel.enableMapPatchesPsyDoom) {
             viewModel.enableMapPatchesPsyDoom = it
-        }
-        HorizontalDivider()
-
-        DrawTitleText(stringResource(R.string.psydoom_loading))
-
-        SwitchItem(stringResource(R.string.psydoom_skip_intros),
-            viewModel.skipIntros) {
-            viewModel.skipIntros = it
         }
         HorizontalDivider()
 

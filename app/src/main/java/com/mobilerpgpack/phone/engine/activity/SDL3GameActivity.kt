@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.activity
 import android.os.Bundle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
@@ -23,11 +24,16 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
             useDarkTheme = preferencesStorage.getUseDarkThemeValue().first()
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()
             engineInfo = get (named(activeEngineType))
-            engineInfo.initialize(this@SDL3GameActivity)
         }
+        gameResourcesFound = engineInfo.isResourceCorrect(this, onCloseDialogBox = { finish() })
         if (useDarkTheme){
             setTheme(R.style.AppFullScreenThemeDark)
         }
+        if (!gameResourcesFound){
+            super.onCreate(savedInstanceState)
+            return
+        }
+        runBlocking { engineInfo.initialize(this@SDL3GameActivity) }
         super.onCreate(savedInstanceState)
         engineInfo.loadLayout()
     }
@@ -43,12 +49,16 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
 
     override fun onPause() {
         super.onPause()
-        engineInfo.onPause()
+        if (gameResourcesFound) {
+            engineInfo.onPause()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        engineInfo.onResume()
+        if (gameResourcesFound) {
+            engineInfo.onResume()
+        }
     }
 
     override fun onDestroy() {

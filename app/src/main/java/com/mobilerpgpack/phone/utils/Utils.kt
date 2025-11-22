@@ -4,7 +4,7 @@ import android.app.Activity
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import kotlinx.coroutines.flow.first
+import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import org.koin.core.qualifier.named
@@ -14,8 +14,7 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.security.MessageDigest
 
-suspend fun startGame(activity: Activity, engineToPlay: EngineTypes) {
-
+fun startGame(activity: Activity, engineToPlay: EngineTypes) {
     val assetsExtractor: IAssetExtractor = get(IAssetExtractor::class.java)
 
     if (!assetsExtractor.assetsCopied) {
@@ -26,14 +25,9 @@ suspend fun startGame(activity: Activity, engineToPlay: EngineTypes) {
     val activeEngineInfo: IEngineInfo = get (IEngineInfo::class.java,
         named(engineToPlay.toString()))
 
-    val pathToResource = activeEngineInfo.pathToResource.first()
-
-    if (pathToResource.isEmpty() || !File(pathToResource).exists()) {
-        activity.showErrorDialogBox(R.string.can_not_start_engine)
-        return
+    if (activeEngineInfo.isResourceCorrect(activity)) {
+        activity.startActivity(activeEngineInfo.gameActivityClazz)
     }
-
-    activity.startActivity(activeEngineInfo.gameActivityClazz)
 }
 
 fun unzipArchive(zipPath: String, destDir: String) : Boolean {

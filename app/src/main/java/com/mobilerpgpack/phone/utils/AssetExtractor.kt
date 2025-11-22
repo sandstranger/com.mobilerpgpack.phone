@@ -23,7 +23,10 @@ class AssetExtractor (private val context: Context,
 
     private val userFolder = context.getExternalFilesDir("")!!
 
-    private val pathToUserFolder = userFolder.absolutePath
+    private val assetsVersionFile = File ("${userFolder.absolutePath}" +
+            "${File.separator}${ASSETS_VERSION_FILE_NAME}")
+
+    private val gson = Gson()
 
     private var alwaysCopyAllFiles = false
 
@@ -102,10 +105,6 @@ class AssetExtractor (private val context: Context,
     }
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
-        val assetsVersionFile = File ("${pathToUserFolder}${File.separator}${ASSETS_VERSION_FILE_NAME}")
-
-        val gson = Gson()
-
         fun writeDefaultVersionToVersionsFile () =
             assetsVersionFile.writeText(gson.toJson(AssetsVersionProvider(
                 ASSETS_CURRENT_VERSION)))
@@ -118,7 +117,15 @@ class AssetExtractor (private val context: Context,
         try {
             val assetsVersionProvider = gson.fromJson(assetsVersionFile.readText(),
                 AssetsVersionProvider::class.java)
-            return !ASSETS_CURRENT_VERSION.equals(assetsVersionProvider.assetsVersion, true)
+
+            val copyAssetsForced = !ASSETS_CURRENT_VERSION
+                .equals(assetsVersionProvider.assetsVersion, true)
+
+            if (copyAssetsForced) {
+                writeDefaultVersionToVersionsFile()
+            }
+
+            return copyAssetsForced
         }
         catch (_ : Exception){
             writeDefaultVersionToVersionsFile()

@@ -66,22 +66,22 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
     @Composable
     private fun DrawGamepad(isEditMode: Boolean, inGame: Boolean) {
 
-        if (!joystickRegistered && !isEditMode && inGame) {
-            joystickRegistered = true
-
-            val result = nativeAddJoystick(
-                DEVICE_ID, "Virtual", "Virtual",
-                0x045E, 0x028E, false,
-                0xFFFF, 4, 0b1111, 0, 0)
-            Log.d("SDL_INIT", "Joystick registration result: $result")
-            if (result < 0) {
-                Log.e("SDL_INIT", "Failed to register joystick, result: $result")
-            }
-        }
-
         fun updateStick(x: Float, y: Float) {
             if (isEditMode || !inGame){
                 return
+            }
+
+            if (!joystickRegistered) {
+                joystickRegistered = true
+
+                val result = nativeAddJoystick(
+                    DEVICE_ID, "Virtual", "Virtual",
+                    0x045E, 0x028E, false,
+                    0xFFFF, 4, 0b1111, 0, 0)
+                Log.d("SDL_INIT", "Joystick registration result: $result")
+                if (result < 0) {
+                    Log.e("SDL_INIT", "Failed to register joystick, result: $result")
+                }
             }
 
             val processedX = when {
@@ -126,6 +126,10 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
 
         var canvasW by remember { mutableIntStateOf(0) }
         var canvasH by remember { mutableIntStateOf(0) }
+
+        if (isEditMode || !inGame){
+            down = false
+        }
 
         Canvas(
             modifier = Modifier
