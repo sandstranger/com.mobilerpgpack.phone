@@ -64,3 +64,6 @@ url=https://github.com/pnggroup/libpng.git
 [submodule "app/src/main/jni/lzdoom"]
 	path = app/src/main/jni/lzdoom
 	url = https://github.com/sandstranger/lzdoom.git
+[submodule "third_party/zmusic/src/main/jni/ZMusic"]
+	path = third_party/zmusic/src/main/jni/ZMusic
+url=https://github.com/sandstranger/ZMusic.git

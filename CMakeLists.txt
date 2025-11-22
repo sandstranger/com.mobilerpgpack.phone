@@ -118,6 +118,7 @@ add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
 add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
+#add_subdirectory("${APP_ROOT_DIR}/lzdoom")
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
