@@ -1,15 +1,21 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
+import android.app.Activity
 import androidx.activity.ComponentActivity
+import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.buildFullLibraryName
-import kotlinx.coroutines.flow.Flow
+import com.mobilerpgpack.phone.utils.showErrorDialogBox
 
 interface IEngineInfo {
 
     val engineType : EngineTypes
 
-    val pathToResource: Flow<String>
+    val pathToResourceIsCorrect : Boolean
+
+    val pathToResourceExists : Boolean
+
+    val requiredResourceExtension : String
 
     val mainLibraryName : String
 
@@ -33,3 +39,19 @@ interface IEngineInfo {
 }
 
 val IEngineInfo.mainSharedObject get() = buildFullLibraryName(this.mainLibraryName)
+
+fun IEngineInfo.isResourceCorrect (activity: Activity, onCloseDialogBox :(()-> Unit)? =null) : Boolean{
+    if (!pathToResourceExists) {
+        activity.showErrorDialogBox(R.string.resource_not_found_error, onCloseDialogBox)
+        return false
+    }
+
+    if (!pathToResourceIsCorrect) {
+        val errorMessage = activity.getString(R.string.resource_not_correct_error,
+            this.requiredResourceExtension)
+        activity.showErrorDialogBox(errorMessage, onCloseDialogBox)
+        return false
+    }
+
+    return true
+}
