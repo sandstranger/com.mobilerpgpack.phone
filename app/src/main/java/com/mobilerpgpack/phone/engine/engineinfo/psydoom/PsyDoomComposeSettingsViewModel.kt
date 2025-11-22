@@ -6,13 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.IAssetExtractor
-import org.apache.commons.configuration2.INIConfiguration
+import com.mobilerpgpack.phone.utils.Ini
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
 
 class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
@@ -26,7 +24,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
     private val pathToPsyDoomConfigsFolder = "${pathToRootUserFolder}${File.separator}" +
             "com.codelobster${File.separator}PsyDoom"
 
-    private val graphicsIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}graphics_cfg.ini")
+    private val graphicsIniFile =
+        Ini("${pathToPsyDoomConfigsFolder}${File.separator}graphics_cfg.ini")
 
     private val gameIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}game_cfg.ini")
 
@@ -36,7 +35,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
     private val cheatsIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}cheats_cfg.ini")
 
-    private val multiPlayerIniFile = Ini("${pathToPsyDoomConfigsFolder}${File.separator}multiplayer_cfg.ini")
+    private val multiPlayerIniFile =
+        Ini("${pathToPsyDoomConfigsFolder}${File.separator}multiplayer_cfg.ini")
 
     val iniFilesLoaded get() = _iniFilesLoaded
 
@@ -298,8 +298,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         set(value) = multiPlayerIniFile.setValue("CoopPreserveAmmoFactor", value.value)
 
     var dmFragLimit : Int
-        get() = multiPlayerIniFile.getIntValue("DmFragLimit").coerceIn(0, Int.MAX_VALUE)
-        set(value) = multiPlayerIniFile.setValue("DmFragLimit", value.coerceIn(0, Int.MAX_VALUE))
+        get() = multiPlayerIniFile.getIntValue("DmFragLimit").coerceAtLeast(0)
+        set(value) = multiPlayerIniFile.setValue("DmFragLimit", value.coerceAtLeast(0))
 
     var cheatKeySequenceGodMode : String
         get() = cheatsIniFile.getStringValue("CheatKeySequence_GodMode")
@@ -382,8 +382,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         }
 
     var bobScale : Float
-        get() = gameIniFile.getFloatValue("ViewBobbingStrength").coerceIn(0.0f, Float.MAX_VALUE)
-        set(value) = gameIniFile.setValue("ViewBobbingStrength", value.coerceIn(0.0f, Float.MAX_VALUE))
+        get() = gameIniFile.getFloatValue("ViewBobbingStrength").coerceAtLeast(0.0f)
+        set(value) = gameIniFile.setValue("ViewBobbingStrength", value.coerceAtLeast(0.0f))
 
     var heapSize : Int
         get() = gameIniFile.getIntValue("MainMemoryHeapSize")
@@ -394,28 +394,28 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         set(value) = gameIniFile.setValue("LostSoulSpawnLimit", value)
 
     var mouseTurnSpeed : Int
-        get() = inputIniFile.getIntValue("MouseTurnSpeed").coerceIn(0, Int.MAX_VALUE)
-        set(value) = inputIniFile.setValue("MouseTurnSpeed", value.coerceIn(0, Int.MAX_VALUE))
+        get() = inputIniFile.getIntValue("MouseTurnSpeed").coerceAtLeast(0)
+        set(value) = inputIniFile.setValue("MouseTurnSpeed", value.coerceAtLeast(0))
 
     var gamepadFastTurnSpeedHigh : Int
-        get() = inputIniFile.getIntValue("GamepadFastTurnSpeed_High").coerceIn(0, Int.MAX_VALUE)
-        set(value) = inputIniFile.setValue("GamepadFastTurnSpeed_High", value.coerceIn(0, Int.MAX_VALUE))
+        get() = inputIniFile.getIntValue("GamepadFastTurnSpeed_High").coerceAtLeast(0)
+        set(value) = inputIniFile.setValue("GamepadFastTurnSpeed_High", value.coerceAtLeast(0))
 
     var gamepadFastTurnSpeedLow : Int
-        get() = inputIniFile.getIntValue("GamepadFastTurnSpeed_Low").coerceIn(0, Int.MAX_VALUE)
-        set(value) = inputIniFile.setValue("GamepadFastTurnSpeed_Low", value.coerceIn(0, Int.MAX_VALUE))
+        get() = inputIniFile.getIntValue("GamepadFastTurnSpeed_Low").coerceAtLeast(0)
+        set(value) = inputIniFile.setValue("GamepadFastTurnSpeed_Low", value.coerceAtLeast(0))
 
     var gamepadTurnSpeedHigh : Int
-        get() = inputIniFile.getIntValue("GamepadTurnSpeed_High").coerceIn(0, Int.MAX_VALUE)
-        set(value) = inputIniFile.setValue("GamepadTurnSpeed_High", value.coerceIn(0, Int.MAX_VALUE))
+        get() = inputIniFile.getIntValue("GamepadTurnSpeed_High").coerceAtLeast(0)
+        set(value) = inputIniFile.setValue("GamepadTurnSpeed_High", value.coerceAtLeast(0))
 
     var gamepadTurnSpeedLow : Int
-        get() = inputIniFile.getIntValue("GamepadTurnSpeed_Low").coerceIn(0, Int.MAX_VALUE)
-        set(value) = inputIniFile.setValue("GamepadTurnSpeed_Low", value.coerceIn(0, Int.MAX_VALUE))
+        get() = inputIniFile.getIntValue("GamepadTurnSpeed_Low").coerceAtLeast(0)
+        set(value) = inputIniFile.setValue("GamepadTurnSpeed_Low", value.coerceAtLeast(0))
 
     var audioBufferSize : Int
-        get() = audioIniFile.getIntValue("AudioBufferSize").coerceIn(0, Int.MAX_VALUE)
-        set(value) = audioIniFile.setValue("AudioBufferSize", value.coerceIn(0, Int.MAX_VALUE))
+        get() = audioIniFile.getIntValue("AudioBufferSize").coerceAtLeast(0)
+        set(value) = audioIniFile.setValue("AudioBufferSize", value.coerceAtLeast(0))
 
     var spuRamSize : Int
         get() = audioIniFile.getIntValue("SpuRamSize")
@@ -447,67 +447,5 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         cheatsIniFile.load()
         multiPlayerIniFile.load()
         _iniFilesLoaded = true
-    }
-
-    private class Ini (pathToFile : String ){
-
-        private val iniFile = File (pathToFile)
-
-        private val iniConfig = INIConfiguration()
-
-        private var loaded = false
-
-        fun getBooleanValue (key: String) = getIntValue(key) > 0
-
-        fun getFloatValue (key: String) : Float {
-            if (!loaded){
-                load()
-            }
-            return if (iniConfig.containsKey(key)) iniConfig.getFloat(key) else 0.0f
-        }
-
-        fun getStringValue (key: String) : String {
-            if (!loaded){
-                load()
-            }
-            return if (iniConfig.containsKey(key)) iniConfig.getString(key) else ""
-        }
-
-        fun getIntValue (key: String) : Int{
-            if (!loaded){
-                load()
-            }
-            return if (iniConfig.containsKey(key)) iniConfig.getInt(key) else 0
-        }
-
-        fun setValue (key: String, value: Boolean) = setValue(key, if (value) 1 else 0)
-
-        fun <T> setValue (key: String, value: T){
-            if (!loaded){
-                load()
-            }
-
-            if (loaded) {
-                FileWriter(iniFile).use {
-                    iniConfig.setProperty(key, value)
-                    iniConfig.write(it)
-                }
-            }
-        }
-
-        fun clear(){
-            loaded = false
-            iniConfig.clear()
-        }
-
-        fun load (){
-            clear()
-            if (iniFile.exists()) {
-                FileReader(iniFile).use {
-                    iniConfig.read(it)
-                }
-                loaded = true
-            }
-        }
     }
 }
