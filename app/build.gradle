@@ -182,7 +182,6 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':third_party:freetype:build',':third_party:zmusic:build'
 
 dependencies {
-    implementation(project(":third_party:oboe"))
     implementation project(':third_party:sdl2:android-project:app')
     implementation (project(":third_party:openal"))
     implementation(project(":third_party:sdl2-mixer"))
