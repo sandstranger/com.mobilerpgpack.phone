@@ -48,7 +48,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             val baseCommandLineArgs = super.commandLineArgs
 
             return mutableListOf<String>().let {
-                it.addAll(baseCommandLineArgs)
+                it +=baseCommandLineArgs
 
                 runBlocking {
 
