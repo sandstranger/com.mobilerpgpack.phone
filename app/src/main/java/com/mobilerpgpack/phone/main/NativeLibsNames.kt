@@ -6,6 +6,8 @@ const val TRANSLATOR_NATIVE_LIB_NAME = "Translator"
 
 const val PSYDOOM_MAIN_ENGINE_LIB = "PsyDoom"
 
+const val LZDOOM_MAIN_ENGINE_LIB = "lzdoom"
+
 const val DOOM64_MAIN_ENGINE_LIB = "DOOM64"
 
 const val DOOM64_ENHANCED_MAIN_ENGINE_LIB = "DOOM64-Enhanced"
@@ -21,6 +23,8 @@ const val SDL3_NATIVE_LIB_NAME = "SDL3"
 const val FMOD_NATIVE_LIB_NAME = "fmod"
 
 const val SDL2_NATIVE_LIB_NAME = "SDL2"
+
+const val ZMUSIC_NATIVE_LIB_NAME = "zmusic"
 
 const val OPENAL_NATIVE_LIB_NAME = "openal"
 

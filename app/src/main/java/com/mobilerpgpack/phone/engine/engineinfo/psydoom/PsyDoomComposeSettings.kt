@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.GameEnum.Companion.stringCollection
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
@@ -31,9 +32,10 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     private val assetsExtractor: IAssetExtractor by inject()
 
+    private val engineInfo : IEngineInfo by inject (named(EngineTypes.PsyDoom.toString()))
+
     private val preferencesStorage: PsyDoomPreferencesStorage by inject(
-        named(EngineTypes.PsyDoom.toString())
-    )
+        named(EngineTypes.PsyDoom.toString()))
 
     override val screenViewsToDraw = psyDoomButtons
 
@@ -59,7 +61,8 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             stringResource(R.string.path_to_psydoom_cue_file),
             preferencesStorage.pathToPsyDoomCueFile,
             preferencesStorage.pathToPsyDoomCueFilePrefsKey,
-            RequestPathMode.File
+            RequestPathMode.File,
+            requiredFileExtensions = arrayListOf(engineInfo.requiredResourceExtension)
         )
 
         HorizontalDivider()
