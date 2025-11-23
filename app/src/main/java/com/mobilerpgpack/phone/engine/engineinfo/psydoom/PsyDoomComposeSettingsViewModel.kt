@@ -14,7 +14,7 @@ import java.io.File
 
 class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
-    private var _iniFilesLoaded by mutableStateOf(false)
+    private var iniFilesLoaded by mutableStateOf(false)
 
     private val assetsExtractor : IAssetExtractor = get ()
 
@@ -38,7 +38,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
     private val multiPlayerIniFile =
         Ini("${pathToPsyDoomConfigsFolder}${File.separator}multiplayer_cfg.ini")
 
-    val iniFilesLoaded get() = _iniFilesLoaded
+    val showView get() = iniFilesLoaded && assetsExtractor.assetsCopied
 
     init {
         assetsExtractor.assetsStartedCopyListeners += { unloadIniFiles() }
@@ -430,7 +430,7 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         set(value) = inputIniFile.setValue("AnalogToDigitalThreshold", value.coerceIn(0.0f, 1.0f))
 
     private fun unloadIniFiles(){
-        _iniFilesLoaded = false
+        iniFilesLoaded = false
         graphicsIniFile.clear()
         gameIniFile.clear()
         inputIniFile.clear()
@@ -446,6 +446,6 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         audioIniFile.load()
         cheatsIniFile.load()
         multiPlayerIniFile.load()
-        _iniFilesLoaded = true
+        iniFilesLoaded = true
     }
 }

@@ -14,7 +14,7 @@ import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
 
 class AssetExtractor (private val context: Context,
-                      private val assetFoldersToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
+                      private val assetToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
 
     @Volatile
     private var assetsCopying = false
@@ -89,7 +89,7 @@ class AssetExtractor (private val context: Context,
 
     private fun compareAssetAndFileSize(assetManager: AssetManager, assetPath: String, file: File): Boolean {
 
-        if (!alwaysCopyAllFiles && assetFoldersToIgnoreChecking.any { assetPath.contains(it) }){
+        if (!alwaysCopyAllFiles && assetToIgnoreChecking.any { assetPath.contains(it) }){
             return true
         }
 
