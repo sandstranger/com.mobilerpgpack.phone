@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.Preferences
 import com.codekidlabs.storagechooser.StorageChooser
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.items.ShowErrorDialog
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.showErrorDialogBox
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +26,8 @@ fun RequestPath(explorerItemTitle: String,
                 requiredFileExtensions : Collection<String> = emptyList(),
                 onPathSelected: ((String) -> Unit)? = null) {
     val activity = LocalActivity.current!!
+    var showErrorDialogBox by rememberSaveable(false) { mutableStateOf(false) }
+    var errorMessageToShow by rememberSaveable("") {  mutableStateOf("")}
     var currentPath by rememberSaveable(previousSavedPath)
     {
         mutableStateOf(previousSavedPath)
@@ -40,10 +43,11 @@ fun RequestPath(explorerItemTitle: String,
 
             fileChooser.setOnSelectListener { path ->
                 if (path.isNotEmpty()) {
-                    if (requiredFileExtensions.isNotEmpty() && requiredFileExtensions.all { !path.endsWith(it) }){
-                        val errorMessage = activity.getString(R.string.file_extension_not_correct_error,
+                    if (requestMode == RequestPathMode.File &&
+                        requiredFileExtensions.isNotEmpty() && requiredFileExtensions.all { !path.endsWith(it) }){
+                        errorMessageToShow = activity.getString(R.string.file_extension_not_correct_error,
                             requiredFileExtensions.joinToString(" "))
-                        activity.showErrorDialogBox(errorMessage)
+                        showErrorDialogBox = true
                         return@setOnSelectListener
                     }
                     onPathSelected?.invoke(path)
@@ -54,6 +58,10 @@ fun RequestPath(explorerItemTitle: String,
             }
             fileChooser.show()
         })
+    ShowErrorDialog(errorMessageToShow, showErrorDialogBox){
+        showErrorDialogBox = false
+        errorMessageToShow = ""
+    }
 }
 
 @Composable
