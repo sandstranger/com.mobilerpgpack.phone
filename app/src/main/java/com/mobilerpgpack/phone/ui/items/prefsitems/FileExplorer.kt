@@ -9,7 +9,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.Preferences
 import com.codekidlabs.storagechooser.StorageChooser
+import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.showErrorDialogBox
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.parameter.parametersOf
@@ -20,8 +22,9 @@ fun RequestPath(explorerItemTitle: String,
                 previousSavedPath: String = "",
                 key : Preferences.Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
+                requiredFileExtensions : Collection<String> = emptyList(),
                 onPathSelected: ((String) -> Unit)? = null) {
-    val activity = LocalActivity.current
+    val activity = LocalActivity.current!!
     var currentPath by rememberSaveable(previousSavedPath)
     {
         mutableStateOf(previousSavedPath)
@@ -36,9 +39,17 @@ fun RequestPath(explorerItemTitle: String,
             val prefsStorage: PreferencesStorage = get(PreferencesStorage::class.java)
 
             fileChooser.setOnSelectListener { path ->
-                onPathSelected?.invoke(path)
-                if (path.isNotEmpty() && key != null) {
-                    prefsStorage.setStringValue(key, path)
+                if (path.isNotEmpty()) {
+                    if (requiredFileExtensions.isNotEmpty() && requiredFileExtensions.all { !path.endsWith(it) }){
+                        val errorMessage = activity.getString(R.string.file_extension_not_correct_error,
+                            requiredFileExtensions.joinToString(" "))
+                        activity.showErrorDialogBox(errorMessage)
+                        return@setOnSelectListener
+                    }
+                    onPathSelected?.invoke(path)
+                    if ( key != null) {
+                        prefsStorage.setStringValue(key, path)
+                    }
                 }
             }
             fileChooser.show()
@@ -50,9 +61,11 @@ fun RequestPath(explorerItemTitle: String,
                 previousSavedPathFlow: Flow<String> = emptyFlow(),
                 key : Preferences.Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
+                requiredFileExtensions : Collection<String> = emptyList(),
                 onPathSelected: ((String) -> Unit)? = null) {
     val flowValue by previousSavedPathFlow.collectAsState(initial = "")
-    RequestPath(explorerItemTitle, flowValue, key, requestMode, onPathSelected)
+    RequestPath(explorerItemTitle, flowValue, key, requestMode, requiredFileExtensions,
+        onPathSelected)
 }
 
 enum class RequestPathMode{

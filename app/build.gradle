@@ -132,7 +132,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             aaptOptions {
-                noCompress "bin","spm","json","txt","sf2","ttf","wad", "ini"
+                noCompress "bin","spm","json","txt","sf2","ttf","wad", "ini", "wopl", "wopn", "pk3"
             }
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
@@ -145,7 +145,7 @@ android {
             }
             signingConfig signingConfigs.debug
             aaptOptions {
-                noCompress "bin","spm","json","txt","sf2","ttf", "wad", "ini"
+                noCompress "bin","spm","json","txt","sf2","ttf", "wad", "ini", "wopl", "wopn", "pk3"
             }
         }
     }
