@@ -12,7 +12,6 @@ import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
-import java.nio.charset.Charset
 
 class MainApplication : Application() {
 
@@ -42,7 +41,7 @@ class MainApplication : Application() {
     }
 
     private fun copyAllAssetsFromApk(){
-        assetExtractor = AssetExtractor(this,assetsFoldersToIgnoreChecking)
+        assetExtractor = AssetExtractor(this,assetsToIgnoreChecking)
         globalScope.launch {
             assetExtractor.copyAssetsContentToInternalStorage()
         }

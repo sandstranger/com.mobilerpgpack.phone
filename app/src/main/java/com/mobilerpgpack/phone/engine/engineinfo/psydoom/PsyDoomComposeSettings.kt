@@ -30,8 +30,6 @@ import org.koin.core.qualifier.named
 
 class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
-    private val assetsExtractor: IAssetExtractor by inject()
-
     private val engineInfo : IEngineInfo by inject (named(EngineTypes.PsyDoom.toString()))
 
     private val preferencesStorage: PsyDoomPreferencesStorage by inject(
@@ -42,7 +40,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
-        if (assetsExtractor.assetsCopied && viewModel.iniFilesLoaded) {
+        if (viewModel.showView) {
             DrawPsyDoomCommonSettings(navController)
         }
     }

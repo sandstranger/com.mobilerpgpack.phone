@@ -78,6 +78,10 @@ open class Doom64EngineInfo(
 
         var pathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder.first()
 
+        if (pathToDoom64ModsFolder.isEmpty()){
+            return ""
+        }
+
         val pathToDoom64ModsFolderExists = File(pathToDoom64ModsFolder).exists()
 
         if (!pathToDoom64ModsFolderExists) {

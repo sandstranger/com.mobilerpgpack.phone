@@ -8,14 +8,14 @@ import androidx.compose.ui.res.stringResource
 import com.mobilerpgpack.phone.R
 
 @Composable
-fun ShowErrorDialog (message : String,showDialog : Boolean = false, dismissAction : (() -> Unit)? = null){
+fun ShowErrorDialog (message : String,showDialog : Boolean, dismissAction : () -> Unit){
     if (showDialog) {
         AlertDialog(
             title = { Text(stringResource(R.string.error)) },
             text = { Text(message) },
             confirmButton = {
-                TextButton(onClick = { dismissAction?.invoke() })
+                TextButton(onClick = { dismissAction.invoke() })
                 { Text(stringResource(R.string.ok_text)) }
-            }, onDismissRequest = { dismissAction?.invoke() })
+            }, onDismissRequest = { dismissAction.invoke() })
     }
 }
