@@ -23,6 +23,9 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.lzdoom.LZDoomComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.lzdoom.LZDoomEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.lzdoom.LZDoomPreferenceStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomCheatsSettingsScreen
@@ -366,6 +369,38 @@ class KoinModulesProvider(private val context: Context,
             }
     }
 
+    private val lZDoomRegisterModule = module {
+        val preferencesStorage = LZDoomPreferenceStorage(context, scope)
+
+        single { preferencesStorage }.withOptions {
+            named(EngineTypes.LZDoom.toString())
+            bind<LZDoomPreferenceStorage>()
+        }
+
+        single  {
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                SDL2_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
+                FLUIDSYNTH_NATIVE_LIB_NAME,
+                OPENAL_NATIVE_LIB_NAME,
+                ZMUSIC_NATIVE_LIB_NAME,
+                LZDOOM_MAIN_ENGINE_LIB)
+
+            LZDoomEngineInfo(LZDOOM_MAIN_ENGINE_LIB,
+                nativeLibs,
+                psyDoomButtons,
+                preferencesStorage.lZDoomCommandLineArgsString) }.withOptions {
+            named(EngineTypes.LZDoom.toString())
+            bind<IEngineInfo>()
+        }
+
+        singleOf(::LZDoomComposeSettings)
+            .withOptions {
+                named(EngineTypes.LZDoom.toString())
+                bind<IEngineUIController>()
+            }
+    }
+
     private val psyDoomRegisterModule = module {
         val preferencesStorage = PsyDoomPreferencesStorage(context, scope)
 
@@ -419,7 +454,7 @@ class KoinModulesProvider(private val context: Context,
 
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
-            composeModule, doomRpgSeriesModule, doom64RegisterModule, psyDoomRegisterModule)
+            composeModule, doomRpgSeriesModule, doom64RegisterModule, psyDoomRegisterModule,lZDoomRegisterModule)
     }
 
     private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {
