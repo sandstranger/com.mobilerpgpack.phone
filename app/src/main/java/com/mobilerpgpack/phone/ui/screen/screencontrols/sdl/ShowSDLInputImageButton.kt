@@ -4,7 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.InputType
 import android.view.KeyEvent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.afollestad.materialdialogs.input.input
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -47,6 +51,8 @@ abstract class ShowSDLInputImageButton(
 
     private val keycodesProvider : IKeyCodesProvider by inject ()
 
+    private var inputDialogShown by mutableStateOf(false)
+
     override var show: Boolean = true
 
     override val enabled: Boolean
@@ -60,11 +66,16 @@ abstract class ShowSDLInputImageButton(
 
     @SuppressLint("CheckResult")
     override fun onClick(context: Context) {
+        if (inputDialogShown){
+            return
+        }
+        inputDialogShown = true
         MaterialDialog(context).show {
             input (inputType = inputType)
             { _, text -> scope.launch { enterText(text) } }
             positiveButton(R.string.ok_text)
             negativeButton(R.string.cancel_text)
+            onDismiss { inputDialogShown = false }
             title(R.string.sdl_virtual_input)
         }
     }
