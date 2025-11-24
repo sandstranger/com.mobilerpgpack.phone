@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.sun.jna.Function
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -29,6 +30,16 @@ class LZDoomEngineInfo (mainEngineLib: String,
 
     private val pathToLZDoomConfigsFile by lazy {
         pathToLZDoomUserFolder + File.separator + "lzdoom.ini"
+    }
+
+    private val destroyVulkanSwapChainNativeDelegate by lazy {
+        com.sun.jna.Function.getFunction(mainEngineLib,
+            "DestroyVulkanSwapChain")
+    }
+
+    private val recreateVulkanSwapChainNativeDelegate by lazy {
+        Function.getFunction(mainEngineLib,
+            "RecreateVulkanSwapChain")
     }
 
     override val preferencesStorage = lzDoomPreferencesStorage
@@ -72,6 +83,10 @@ class LZDoomEngineInfo (mainEngineLib: String,
         Os.setenv("PATH_TO_LZDOOM_USER_FOLDER", pathToLZDoomUserFolder, true)
         Os.setenv("PATH_TO_LZDOOM_MODS_FOLDER", getPathToLZDoomModsFolder(), true)
     }
+
+    override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
+
+    override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     private suspend fun getPathToLZDoomModsFolder(): String {
         val enableMods = preferencesStorage.enableLZDoomMods.first()
