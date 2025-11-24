@@ -23,9 +23,13 @@ class LZDoomEngineInfo (mainEngineLib: String,
     private val lzDoomPreferencesStorage by inject <LZDoomPreferenceStorage>(named(
         EngineTypes.LZDoom.toString()))
 
-    private val pathToLZDoomUserFolder get() = super.pathToRootUserFolder + File.separator + "lzdoom"
+    private val pathToLZDoomUserFolder by lazy{
+        super.pathToRootUserFolder + File.separator + "lzdoom"
+    }
 
-    private val pathToLZDoomConfigsFile get() = pathToLZDoomUserFolder + File.separator + "lzdoom.ini"
+    private val pathToLZDoomConfigsFile by lazy {
+        pathToLZDoomUserFolder + File.separator + "lzdoom.ini"
+    }
 
     override val preferencesStorage = lzDoomPreferencesStorage
 
@@ -51,6 +55,11 @@ class LZDoomEngineInfo (mainEngineLib: String,
                     if (!baseCommandLineArgs.contains(CONFIG_FILE_COMMAND)){
                         it += CONFIG_FILE_COMMAND
                         it += pathToLZDoomConfigsFile
+                    }
+
+                    if (!baseCommandLineArgs.contains(SAVE_DIR_COMMAND)){
+                        it += SAVE_DIR_COMMAND
+                        it += pathToLZDoomUserFolder
                     }
                 }
 
@@ -92,5 +101,6 @@ class LZDoomEngineInfo (mainEngineLib: String,
         private const val PLAY_DEMO_COMMAND = "-playdemo"
         private const val XLAT_FILE_COMMAND = "-xlat"
         private const val CONFIG_FILE_COMMAND = "-config"
+        private const val SAVE_DIR_COMMAND = "-savedir"
     }
 }
