@@ -114,6 +114,7 @@ set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni/vpx/android/${ANDROID_
 set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/app/src/main/jni/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
 
 set(ZMUSIC_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/zmusic/src/main/jni/ZMusic/include")
+set(ZMUSIC_FOUND TRUE)
 if (IS_DEBUG_BUILD)
     set(ZMUSIC_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/zmusic/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libzmusic.so")
 else ()
@@ -131,7 +132,7 @@ add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
 add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
-add_subdirectory("${APP_ROOT_DIR}/lzdoom")
+add_subdirectory("${APP_ROOT_DIR}/UZDoom")
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
