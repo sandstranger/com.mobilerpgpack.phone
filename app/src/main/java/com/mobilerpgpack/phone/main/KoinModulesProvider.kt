@@ -378,7 +378,8 @@ class KoinModulesProvider(private val context: Context,
         }
 
         single  {
-            val nativeLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(gl4esLibraryName,
+                SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
