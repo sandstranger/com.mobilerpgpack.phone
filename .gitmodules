@@ -61,9 +61,9 @@ url=https://github.com/pnggroup/libpng.git
 [submodule "third_party/freetype/src/main/jni/freetype"]
 	path = third_party/freetype/src/main/jni/freetype
 	url = https://github.com/freetype/freetype.git
-[submodule "app/src/main/jni/lzdoom"]
-	path = app/src/main/jni/lzdoom
-	url = https://github.com/sandstranger/lzdoom.git
 [submodule "third_party/zmusic/src/main/jni/ZMusic"]
 	path = third_party/zmusic/src/main/jni/ZMusic
 url=https://github.com/sandstranger/ZMusic.git
+[submodule "app/src/main/jni/UZDoom"]
+	path = app/src/main/jni/UZDoom
+	url = https://github.com/sandstranger/UZDoom.git
