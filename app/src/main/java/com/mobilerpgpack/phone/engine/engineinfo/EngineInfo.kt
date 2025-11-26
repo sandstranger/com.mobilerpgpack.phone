@@ -97,6 +97,8 @@ abstract class EngineInfo(
 
     protected open val pathToResource : String get() = runBlocking { pathToResourceFlow.first() }
 
+    protected open val loadGL4ES : Boolean = true
+
     private var wasInit = false
     private var safeAreaWasApplied = false
     private var needToShowControlsLastState: Boolean = false
@@ -366,23 +368,26 @@ abstract class EngineInfo(
     }
 
     private fun initializeCommonEngineData() {
-        val pathToSDL2ControllerDB = "${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt"
-        val pathToPsaFolder = getPathToPsaFolder()
-        val psaFolder = File(pathToPsaFolder)
+        if (loadGL4ES) {
+            val pathToPsaFolder = getPathToPsaFolder()
+            val psaFolder = File(pathToPsaFolder)
 
-        if (!psaFolder.exists()) {
-            psaFolder.mkdirs()
+            if (!psaFolder.exists()) {
+                psaFolder.mkdirs()
+            }
+
+            Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
+            Os.setenv("LIBGL_DXTMIPMAP", "1", true)
+            Os.setenv("LIBGL_ES", if (!BuildConfig.LEGACY_GLES2) "3" else "2", true)
+            Os.setenv("LIBGL_GL", "21", true)
+            Os.setenv("LIBGL_DXT", "1", true)
+            Os.setenv("LIBGL_NOTEXARRAY", "0", true)
+            Os.setenv("LIBGL_NOPSA", "0", true)
+            Os.setenv("LIBGL_PSA_FOLDER", pathToPsaFolder, true)
+            Os.setenv("SDL_VIDEO_GL_DRIVER", gl4esFullLibraryName, true)
         }
 
-        Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
-        Os.setenv("LIBGL_DXTMIPMAP", "1", true)
-        Os.setenv("LIBGL_ES", if (!BuildConfig.LEGACY_GLES2) "3" else "2", true)
-        Os.setenv("LIBGL_GL", "21", true)
-        Os.setenv("LIBGL_DXT", "1", true)
-        Os.setenv("LIBGL_NOTEXARRAY", "0", true)
-        Os.setenv("LIBGL_NOPSA", "0", true)
-        Os.setenv("LIBGL_PSA_FOLDER", pathToPsaFolder, true)
-        Os.setenv("SDL_VIDEO_GL_DRIVER", gl4esFullLibraryName, true)
+        val pathToSDL2ControllerDB = "${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt"
         Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", pathToSDL2ControllerDB, true)
     }
 
