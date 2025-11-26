@@ -48,6 +48,8 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     override val requiredResourceExtension = ".wad"
 
+    override val loadGL4ES = false
+
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
