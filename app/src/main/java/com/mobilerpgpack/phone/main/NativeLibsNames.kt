@@ -6,7 +6,7 @@ const val TRANSLATOR_NATIVE_LIB_NAME = "Translator"
 
 const val PSYDOOM_MAIN_ENGINE_LIB = "PsyDoom"
 
-const val LZDOOM_MAIN_ENGINE_LIB = "lzdoom"
+const val UZDOOM_MAIN_ENGINE_LIB = "uzdoom"
 
 const val DOOM64_MAIN_ENGINE_LIB = "DOOM64"
 

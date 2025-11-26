@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo.lzdoom
+package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -21,28 +21,28 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import kotlin.getValue
 
-class LZDoomComposeSettings: IEngineUIController, KoinComponent {
+class UZDoomComposeSettings: IEngineUIController, KoinComponent {
 
-    private val lzDoomEngineInfo : IEngineInfo by inject (named(EngineTypes.LZDoom.toString()))
+    private val lzDoomEngineInfo : IEngineInfo by inject (named(EngineTypes.UZDoom.toString()))
 
-    private val preferencesStorage: LZDoomPreferenceStorage by inject(
-        named(EngineTypes.LZDoom.toString()))
+    private val preferencesStorage: UZDoomPreferenceStorage by inject(
+        named(EngineTypes.UZDoom.toString()))
 
     override val screenViewsToDraw: Collection<IScreenControlsView> = psyDoomButtons
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         DrawCommandLinePreferences(
-            preferencesStorage.lZDoomCommandLineArgsString,
-            preferencesStorage.lZDoomCommandLineArgsPrefsKey.name
+            preferencesStorage.uZDoomCommandLineArgsString,
+            preferencesStorage.uZDoomCommandLineArgsPrefsKey.name
         )
 
         HorizontalDivider()
 
         RequestPath(
-            stringResource(R.string.path_to_lzdoom_wad_file),
-            preferencesStorage.pathToLZDoomIWadFile,
-            preferencesStorage.pathToLZDoomIWadFilePrefsKey,
+            stringResource(R.string.path_to_uzdoom_wad_file),
+            preferencesStorage.pathToUZDoomIWadFile,
+            preferencesStorage.pathToUZDoomIWadFilePrefsKey,
             RequestPathMode.File,
             requiredFileExtensions = arrayListOf(lzDoomEngineInfo.requiredResourceExtension))
 
@@ -50,17 +50,17 @@ class LZDoomComposeSettings: IEngineUIController, KoinComponent {
 
         SwitchPreferenceItem(
             stringResource(R.string.enable_lzdoom_mods),
-            initialValueFlow = preferencesStorage.enableLZDoomMods,
-            preferencesStorage.enableLZDoomModsPrefsKey.name)
+            initialValueFlow = preferencesStorage.enableUZDoomMods,
+            preferencesStorage.enableUZDoomModsPrefsKey.name)
 
-        val enableMods by preferencesStorage.enableLZDoomMods.collectAsState(initial = false)
+        val enableMods by preferencesStorage.enableUZDoomMods.collectAsState(initial = false)
 
         if (enableMods) {
             HorizontalDivider()
             RequestPath(
-                stringResource(R.string.path_to_lzdoom_mods_folder),
-                preferencesStorage.pathToLZDoomModsFolder,
-                preferencesStorage.pathToLZDoomModsFolderPrefsKey
+                stringResource(R.string.path_to_uzdoom_mods_folder),
+                preferencesStorage.pathToUZDoomModsFolder,
+                preferencesStorage.pathToUZDoomModsFolderPrefsKey
             )
         }
     }
