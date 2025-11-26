@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo.lzdoom
+package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 import android.system.Os
 import androidx.activity.ComponentActivity
@@ -14,22 +14,22 @@ import org.koin.core.qualifier.named
 import java.io.File
 import kotlin.getValue
 
-class LZDoomEngineInfo (mainEngineLib: String,
+class UZDoomEngineInfo (mainEngineLib: String,
                         allLibs: Array<String>,
                         buttonsToDraw: Collection<IScreenControlsView>,
                         commandLineParamsFlow : Flow<String>) :
-    SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.LZDoom,
+    SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.UZDoom,
         commandLineParamsFlow = commandLineParamsFlow) {
 
-    private val lzDoomPreferencesStorage by inject <LZDoomPreferenceStorage>(named(
-        EngineTypes.LZDoom.toString()))
+    private val lzDoomPreferencesStorage by inject <UZDoomPreferenceStorage>(named(
+        EngineTypes.UZDoom.toString()))
 
     private val pathToLZDoomUserFolder by lazy{
-        super.pathToRootUserFolder + File.separator + "lzdoom"
+        super.pathToRootUserFolder + File.separator + "uzdoom"
     }
 
     private val pathToLZDoomConfigsFile by lazy {
-        pathToLZDoomUserFolder + File.separator + "lzdoom.ini"
+        pathToLZDoomUserFolder + File.separator + "uzdoom.ini"
     }
 
     private val destroyVulkanSwapChainNativeDelegate by lazy {
@@ -44,7 +44,7 @@ class LZDoomEngineInfo (mainEngineLib: String,
 
     override val preferencesStorage = lzDoomPreferencesStorage
 
-    override val pathToResource get() = runBlocking{ lzDoomPreferencesStorage.pathToLZDoomIWadFile.first() }
+    override val pathToResource get() = runBlocking{ lzDoomPreferencesStorage.pathToUZDoomIWadFile.first() }
 
     override val requiredResourceExtension = ".wad"
 
@@ -56,7 +56,7 @@ class LZDoomEngineInfo (mainEngineLib: String,
                 it +=baseCommandLineArgs
 
                 runBlocking {
-                    val pathToWadFile = preferencesStorage.pathToLZDoomIWadFile.first()
+                    val pathToWadFile = preferencesStorage.pathToUZDoomIWadFile.first()
                     if (pathToWadFile.isNotEmpty() && File(pathToWadFile).exists() &&
                         !baseCommandLineArgs.contains(IWAD_COMMAND)){
                         it += IWAD_COMMAND
@@ -80,8 +80,8 @@ class LZDoomEngineInfo (mainEngineLib: String,
 
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
-        Os.setenv("PATH_TO_LZDOOM_USER_FOLDER", pathToLZDoomUserFolder, true)
-        Os.setenv("PATH_TO_LZDOOM_MODS_FOLDER", getPathToLZDoomModsFolder(), true)
+        Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToLZDoomUserFolder, true)
+        Os.setenv("PATH_TO_UZDOOM_MODS_FOLDER", getPathToLZDoomModsFolder(), true)
     }
 
     override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
@@ -89,13 +89,13 @@ class LZDoomEngineInfo (mainEngineLib: String,
     override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     private suspend fun getPathToLZDoomModsFolder(): String {
-        val enableMods = preferencesStorage.enableLZDoomMods.first()
+        val enableMods = preferencesStorage.enableUZDoomMods.first()
 
         if (!enableMods) {
             return ""
         }
 
-        var pathToModsFolder = preferencesStorage.pathToLZDoomModsFolder.first()
+        var pathToModsFolder = preferencesStorage.pathToUZDoomModsFolder.first()
 
         if (pathToModsFolder.isEmpty()){
             return ""
