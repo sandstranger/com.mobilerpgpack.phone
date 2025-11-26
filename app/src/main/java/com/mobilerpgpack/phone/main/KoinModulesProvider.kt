@@ -23,9 +23,9 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.lzdoom.LZDoomComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.lzdoom.LZDoomEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.lzdoom.LZDoomPreferenceStorage
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomPreferenceStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomCheatsSettingsScreen
@@ -95,7 +95,6 @@ import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
-import org.koin.core.scope.get
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -369,12 +368,12 @@ class KoinModulesProvider(private val context: Context,
             }
     }
 
-    private val lZDoomRegisterModule = module {
-        val preferencesStorage = LZDoomPreferenceStorage(context, scope)
+    private val uZDoomRegisterModule = module {
+        val preferencesStorage = UZDoomPreferenceStorage(context, scope)
 
         single { preferencesStorage }.withOptions {
-            named(EngineTypes.LZDoom.toString())
-            bind<LZDoomPreferenceStorage>()
+            named(EngineTypes.UZDoom.toString())
+            bind<UZDoomPreferenceStorage>()
         }
 
         single  {
@@ -384,19 +383,19 @@ class KoinModulesProvider(private val context: Context,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 ZMUSIC_NATIVE_LIB_NAME,
-                LZDOOM_MAIN_ENGINE_LIB)
+                UZDOOM_MAIN_ENGINE_LIB)
 
-            LZDoomEngineInfo(LZDOOM_MAIN_ENGINE_LIB,
+            UZDoomEngineInfo(UZDOOM_MAIN_ENGINE_LIB,
                 nativeLibs,
                 psyDoomButtons,
-                preferencesStorage.lZDoomCommandLineArgsString) }.withOptions {
-            named(EngineTypes.LZDoom.toString())
+                preferencesStorage.uZDoomCommandLineArgsString) }.withOptions {
+            named(EngineTypes.UZDoom.toString())
             bind<IEngineInfo>()
         }
 
-        singleOf(::LZDoomComposeSettings)
+        singleOf(::UZDoomComposeSettings)
             .withOptions {
-                named(EngineTypes.LZDoom.toString())
+                named(EngineTypes.UZDoom.toString())
                 bind<IEngineUIController>()
             }
     }
@@ -454,7 +453,7 @@ class KoinModulesProvider(private val context: Context,
 
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
-            composeModule, doomRpgSeriesModule, doom64RegisterModule, psyDoomRegisterModule,lZDoomRegisterModule)
+            composeModule, doomRpgSeriesModule, doom64RegisterModule, psyDoomRegisterModule,uZDoomRegisterModule)
     }
 
     private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {

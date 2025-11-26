@@ -41,8 +41,8 @@
     <string name="doom2_rpg_ipa_file">Path to Doom II RPG IPA file</string>
     <string name="path_to_doom64_folder">Path to Doom 64 folder with main wads</string>
     <string name="command_line_args">Command Line args</string>
-    <string name="path_to_lzdoom_wad_file">Path to LZDoom main wad file</string>
-    <string name="path_to_lzdoom_mods_folder">Path to LZDoom mods folder</string>
+    <string name="path_to_uzdoom_wad_file">Path to UZDoom main wad file</string>
+    <string name="path_to_uzdoom_mods_folder">Path to UZDoom mods folder</string>
     <string name="enable_lzdoom_mods">Enable LZDoom mods</string>
     <string name="path_to_doom64_mods_folder">Path to Doom 64 folder with mods</string>
     <string name="path_to_psydoom_cue_file">Path to PSX Doom cue file</string>
