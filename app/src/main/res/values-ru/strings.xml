@@ -43,7 +43,11 @@
     <string name="command_line_args">Аргументы командной строки</string>
     <string name="path_to_uzdoom_wad_file">Путь к главному wad файлу для UZDoom</string>
     <string name="path_to_uzdoom_mods_folder">Путь к папке с модами для UZDoom</string>
-    <string name="enable_lzdoom_mods">Включить моды для LZDoom</string>
+    <string name="enable_lzdoom_mods">Включить моды для UZDoom</string>
+    <string name="uzdoom_rendering_api">Рендер</string>
+    <string name="uzdoom_autoload_widescreen">Автозагрузка поддержки широкоэкранных режимов</string>
+    <string name="uzdoom_autoload_brightmaps">Автозагрузка карт освещения</string>
+    <string name="uzdoom_autoload_lights">Автозагрузка освещения</string>
     <string name="path_to_doom64_mods_folder">Путь к папке Doom 64 с модами</string>
     <string name="enable_doom64_mods">Включить моды для Doom 64</string>
     <string name="enable_psydoom_mods">Включить моды для PsyDoom</string>
