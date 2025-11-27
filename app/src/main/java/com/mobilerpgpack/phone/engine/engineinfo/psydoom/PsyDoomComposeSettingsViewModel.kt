@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.mobilerpgpack.phone.engine.engineinfo.IniViewModel
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.Ini
@@ -12,14 +13,7 @@ import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import java.io.File
 
-class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
-
-    private var iniFilesLoaded by mutableStateOf(false)
-
-    private val assetsExtractor : IAssetExtractor = get ()
-
-    private val pathToRootUserFolder: String = get(
-        named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
+class PsyDoomComposeSettingsViewModel : IniViewModel() {
 
     private val pathToPsyDoomConfigsFolder = "${pathToRootUserFolder}${File.separator}" +
             "com.codelobster${File.separator}PsyDoom"
@@ -37,17 +31,6 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
 
     private val multiPlayerIniFile =
         Ini("${pathToPsyDoomConfigsFolder}${File.separator}multiplayer_cfg.ini")
-
-    val showView get() = iniFilesLoaded && assetsExtractor.assetsCopied
-
-    init {
-        assetsExtractor.assetsStartedCopyListeners += { unloadIniFiles() }
-        assetsExtractor.assetsFinishCopyListeners += { reloadIniFiles() }
-
-        if (assetsExtractor.assetsCopied){
-            reloadIniFiles()
-        }
-    }
 
     var enableVsync : Boolean
         get() = graphicsIniFile.getBooleanValue("EnableVSync")
@@ -429,8 +412,8 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         get() = inputIniFile.getFloatValue("AnalogToDigitalThreshold").coerceIn(0.0f, 1.0f)
         set(value) = inputIniFile.setValue("AnalogToDigitalThreshold", value.coerceIn(0.0f, 1.0f))
 
-    private fun unloadIniFiles(){
-        iniFilesLoaded = false
+    override fun unloadIniFiles(){
+        super.unloadIniFiles()
         graphicsIniFile.clear()
         gameIniFile.clear()
         inputIniFile.clear()
@@ -439,13 +422,13 @@ class PsyDoomComposeSettingsViewModel : ViewModel(), KoinComponent {
         multiPlayerIniFile.clear()
     }
 
-    private fun reloadIniFiles (){
+    override fun reloadIniFiles (){
         graphicsIniFile.load()
         gameIniFile.load()
         inputIniFile.load()
         audioIniFile.load()
         cheatsIniFile.load()
         multiPlayerIniFile.load()
-        iniFilesLoaded = true
+        super.reloadIniFiles()
     }
 }
