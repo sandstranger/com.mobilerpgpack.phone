@@ -13,13 +13,20 @@ class Ini (pathToFile : String ){
 
     private var loaded = false
 
-    fun getBooleanValue (key: String) = getIntValue(key) > 0
+    fun getBooleanValueFromInt (key: String) = getIntValue(key) > 0
 
     fun getFloatValue (key: String) : Float {
         if (!loaded){
             load()
         }
         return if (iniConfig.containsKey(key)) iniConfig.getFloat(key) else 0.0f
+    }
+
+    fun getBooleanValue (key: String) : Boolean {
+        if (!loaded){
+            load()
+        }
+        return if (iniConfig.containsKey(key)) iniConfig.getBoolean(key) else false
     }
 
     fun getStringValue (key: String) : String {
@@ -36,7 +43,7 @@ class Ini (pathToFile : String ){
         return if (iniConfig.containsKey(key)) iniConfig.getInt(key) else 0
     }
 
-    fun setValue (key: String, value: Boolean) = setValue(key, if (value) 1 else 0)
+    fun setValueAsInt (key: String, value: Boolean) = setValue(key, if (value) 1 else 0)
 
     fun <T> setValue (key: String, value: T){
         if (!loaded){

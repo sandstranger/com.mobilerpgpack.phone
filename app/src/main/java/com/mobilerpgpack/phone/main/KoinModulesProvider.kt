@@ -74,6 +74,7 @@ import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomSettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
@@ -397,6 +398,7 @@ class KoinModulesProvider(private val context: Context,
                 named(EngineTypes.UZDoom.toString())
                 bind<IEngineUIController>()
             }
+        viewModelOf(::UZDoomComposeSettingsViewModel)
     }
 
     private val psyDoomRegisterModule = module {

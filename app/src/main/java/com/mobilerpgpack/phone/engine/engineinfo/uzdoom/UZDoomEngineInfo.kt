@@ -86,7 +86,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
         Os.setenv("PATH_TO_UZDOOM_MODS_FOLDER", getPathToLZDoomModsFolder(), true)
     }
 
-    override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null) 
+    override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
 

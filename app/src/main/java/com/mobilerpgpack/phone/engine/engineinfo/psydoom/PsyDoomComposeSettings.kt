@@ -40,6 +40,8 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
+        viewModel.initialize()
+
         if (viewModel.showView) {
             DrawPsyDoomCommonSettings(navController)
         }
