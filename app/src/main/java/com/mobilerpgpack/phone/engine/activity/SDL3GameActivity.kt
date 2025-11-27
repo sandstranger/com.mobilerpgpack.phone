@@ -17,6 +17,8 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
 
     private lateinit var engineInfo : IEngineInfo
 
+    private var wasPaused = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         var useDarkTheme = false
         val preferencesStorage : PreferencesStorage = get()
@@ -52,13 +54,15 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
         if (gameResourcesFound) {
             engineInfo.onPause()
         }
+        wasPaused = true
     }
 
     override fun onResume() {
         super.onResume()
-        if (gameResourcesFound) {
+        if (gameResourcesFound && wasPaused) {
             engineInfo.onResume()
         }
+        wasPaused = false
     }
 
     override fun onDestroy() {
