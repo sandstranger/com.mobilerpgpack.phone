@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo.psydoom
+package com.mobilerpgpack.phone.engine.engineinfo
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 
-abstract class PsyDoomSettingScreen (screenName : String) : ComposeScreen(screenName){
+abstract class SettingScreen (screenName : String) : ComposeScreen(screenName){
 
     override val drawBackButton = true
 
@@ -26,7 +26,7 @@ abstract class PsyDoomSettingScreen (screenName : String) : ComposeScreen(screen
         val scrollState = rememberScrollState()
 
         Column(
-            modifier = Modifier
+            modifier = Modifier.Companion
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(scrollState)

@@ -107,6 +107,14 @@ PsyDoom requires vulkan 1.0 render suppport.
 
 If your device does not support vulkan render, then use legacy opengl es render
 
+## UZDoom
+
+This project contains code from GZDoom android port (https://github.com/emileb/gzdoom),
+which is licensed under GPL v3. All modifications are clearly marked in commit history.
+And using render changes (line OGL emulation, gles render and some bugfixes for Android platform)
+All credits for Android render changes to emileb - https://github.com/emileb
+This project is ALSO licensed under GPL v3.
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 

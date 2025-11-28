@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.main
 
 import android.app.Application
+import com.google.gson.Gson
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import kotlinx.coroutines.CoroutineScope
@@ -14,6 +15,8 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 
 class MainApplication : Application() {
+
+    private val gson = Gson()
 
     private lateinit var assetExtractor: AssetExtractor
 
@@ -32,7 +35,8 @@ class MainApplication : Application() {
     }
 
     private fun initializeKoin(){
-        val koinModulesProvider = KoinModulesProvider(this@MainApplication, assetExtractor,globalScope)
+        val koinModulesProvider = KoinModulesProvider(this@MainApplication, gson,
+            assetExtractor,globalScope)
         startKoin{
             androidLogger()
             androidContext(this@MainApplication)
@@ -41,7 +45,8 @@ class MainApplication : Application() {
     }
 
     private fun copyAllAssetsFromApk(){
-        assetExtractor = AssetExtractor(this,assetsToIgnoreChecking)
+        assetExtractor = AssetExtractor(this,gson,
+            assetsToIgnoreChecking)
         globalScope.launch {
             assetExtractor.copyAssetsContentToInternalStorage()
         }

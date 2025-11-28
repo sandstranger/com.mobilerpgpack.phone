@@ -1,7 +1,9 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
+import com.google.gson.Gson
 import com.mobilerpgpack.phone.engine.engineinfo.IniViewModel
 import com.mobilerpgpack.phone.utils.Ini
+import org.koin.core.component.inject
 import java.io.File
 
 class UZDoomComposeSettingsViewModel : IniViewModel(){
@@ -25,6 +27,7 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
         get() = uzDoomIni.getBooleanValue(AUTOLOAD_LIGHTS)
         set(value) = uzDoomIni.setValue(AUTOLOAD_LIGHTS, value)
 
+
     override fun reloadIniFiles() {
         uzDoomIni.load()
         super.reloadIniFiles()
@@ -43,17 +46,3 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
     }
 }
 
-enum class UZDoomRenderAPI (vararg args: Int){
-    OpenGLES (2,0),
-    Vulkan (1);
-
-    val values: IntArray = args
-
-    companion object {
-        val stringCollection = UZDoomRenderAPI.entries.map { it.toString() }.toList()
-
-        fun fromValue(value: Int): UZDoomRenderAPI {
-            return UZDoomRenderAPI.entries.find { it.values.contains(value) }!!
-        }
-    }
-}

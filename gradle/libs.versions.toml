@@ -1,7 +1,7 @@
 [versions]
 agp = "8.13.1"
 commonsBeanutils = "1.11.0"
-commonsConfiguration2 = "2.12.0"
+commonsConfiguration2 = "2.13.0"
 composePreferences = "2.0.0-beta02"
 converterGson = "3.0.0"
 core = "3.3.0"
