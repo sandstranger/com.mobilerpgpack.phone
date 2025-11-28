@@ -24,7 +24,8 @@ import androidx.navigation.compose.rememberNavController
 import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomSettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.SettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getTopBarColor
@@ -59,7 +60,8 @@ class MainActivity : ComponentActivity(), KoinComponent {
     private fun buildScreens() {
         val settingsScreen: SettingsScreen by inject()
         val permissionScreen: PermissionScreen by inject()
-        val psyDoomSettingsScreens by inject<Collection<PsyDoomSettingScreen>> ()
+        val psyDoomSettingsScreens by inject<Collection<SettingScreen>> ()
+        val moreUZDoomSettingsScreen by inject<UZDoomMoreSettingsScreen>()
 
         val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
             settingsScreen.route else permissionScreen.route
@@ -108,6 +110,10 @@ class MainActivity : ComponentActivity(), KoinComponent {
                                         composable (screen.route) {
                                             screen.DrawScreen(navController)
                                         }
+                                    }
+
+                                    composable (moreUZDoomSettingsScreen.route) {
+                                        moreUZDoomSettingsScreen.DrawScreen(navController)
                                     }
                                 }
                             }

@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.codekidlabs.storagechooser.StorageChooser
 import com.github.sproctor.composepreferences.PreferenceHandler
+import com.google.gson.Gson
 import com.google.mlkit.common.model.RemoteModel
 import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
@@ -73,7 +74,8 @@ import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
-import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomSettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.SettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
@@ -103,6 +105,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class KoinModulesProvider(private val context: Context,
+                          private val gson: Gson,
                           private val assetExtractor: IAssetExtractor,
                           private val scope: CoroutineScope) : KoinComponent  {
 
@@ -125,6 +128,7 @@ class KoinModulesProvider(private val context: Context,
             createdAtStart()
         }
         single { assetExtractor }.bind()
+        single { gson }.bind()
     }
 
     private val httpModule = module {
@@ -447,9 +451,10 @@ class KoinModulesProvider(private val context: Context,
             val multiplayerSettings = get <PsyDoomMultiplayerSettingsScreen>()
             listOf(launcherSettings,moreSettings, graphicsSettings, gameSettings,
                 inputSettings, audioSettings,cheatsSettings,multiplayerSettings)
-        }.withOptions { bind<Collection<PsyDoomSettingScreen>>() }
+        }.withOptions { bind<Collection<SettingScreen>>() }
 
         viewModelOf(::PsyDoomComposeSettingsViewModel)
+        singleOf(::UZDoomMoreSettingsScreen).bind()
     }
 
     init {
