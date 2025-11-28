@@ -10,6 +10,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.engine.engineinfo.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.GameEnum.Companion.stringCollection
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.EditTextItem
@@ -22,7 +23,6 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
-import com.mobilerpgpack.phone.utils.IAssetExtractor
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -815,7 +815,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     }
 
     data class PsyDoomLauncherSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
-        PsyDoomSettingScreen(LAUNCHER_SETTINGS_SCREEN) {
+        SettingScreen(LAUNCHER_SETTINGS_SCREEN) {
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
@@ -823,7 +823,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     }
 
     data class PsyDoomGraphicsSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
-        PsyDoomSettingScreen(GRAPHICS_SETTINGS_SCREEN) {
+        SettingScreen(GRAPHICS_SETTINGS_SCREEN) {
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
@@ -831,7 +831,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     }
 
     data class PsyDoomInputSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
-        PsyDoomSettingScreen(INPUT_SETTINGS_SCREEN) {
+        SettingScreen(INPUT_SETTINGS_SCREEN) {
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
@@ -839,7 +839,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     }
 
     data class PsyDoomCheatsSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
-        PsyDoomSettingScreen(CHEATS_SETTINGS_SCREEN) {
+        SettingScreen(CHEATS_SETTINGS_SCREEN) {
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
@@ -847,7 +847,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     }
 
     data class PsyDoomMultiplayerSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
-        PsyDoomSettingScreen(MULTIPLAYER_SETTINGS_SCREEN) {
+        SettingScreen(MULTIPLAYER_SETTINGS_SCREEN) {
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
@@ -855,7 +855,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     }
 
     data class PsyDoomAudioSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
-        PsyDoomSettingScreen(AUDIO_SETTINGS_SCREEN) {
+        SettingScreen(AUDIO_SETTINGS_SCREEN) {
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
@@ -863,7 +863,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     }
 
     data class PsyDoomGameSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
-        PsyDoomSettingScreen(GAME_SETTINGS_SCREEN) {
+        SettingScreen(GAME_SETTINGS_SCREEN) {
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =
@@ -871,7 +871,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     }
 
     data class PsyDoomMoreSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :
-        PsyDoomSettingScreen(MORE_SETTINGS_SCREEN) {
+        SettingScreen(MORE_SETTINGS_SCREEN) {
 
         @Composable
         override fun DrawSettingsScreen(navController: NavHostController) =

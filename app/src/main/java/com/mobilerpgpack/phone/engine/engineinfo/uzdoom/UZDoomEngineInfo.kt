@@ -119,5 +119,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
         private const val XLAT_FILE_COMMAND = "-xlat"
         private const val CONFIG_FILE_COMMAND = "-config"
         private const val SAVE_DIR_COMMAND = "-savedir"
+        private const val DEH_COMMAND = "-deh"
+        private const val BEH_COMMAND = "-bex"
     }
 }

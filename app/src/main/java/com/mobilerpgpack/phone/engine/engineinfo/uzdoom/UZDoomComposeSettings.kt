@@ -10,11 +10,11 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PeerType
-import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.GameEnum
+import com.mobilerpgpack.phone.engine.engineinfo.SettingScreen
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
@@ -28,7 +28,7 @@ import kotlin.getValue
 
 class UZDoomComposeSettings: IEngineUIController, KoinComponent {
 
-    private val lzDoomEngineInfo : IEngineInfo by inject (named(EngineTypes.UZDoom.toString()))
+    private val zDoomEngineInfo : IEngineInfo by inject (named(EngineTypes.UZDoom.toString()))
 
     private val preferencesStorage: UZDoomPreferenceStorage by inject(
         named(EngineTypes.UZDoom.toString()))
@@ -56,7 +56,7 @@ class UZDoomComposeSettings: IEngineUIController, KoinComponent {
             preferencesStorage.pathToUZDoomIWadFile,
             preferencesStorage.pathToUZDoomIWadFilePrefsKey,
             RequestPathMode.File,
-            requiredFileExtensions = arrayListOf(lzDoomEngineInfo.requiredResourceExtension))
+            requiredFileExtensions = arrayListOf(zDoomEngineInfo.requiredResourceExtension))
 
         HorizontalDivider()
 
@@ -110,5 +110,28 @@ class UZDoomComposeSettings: IEngineUIController, KoinComponent {
             viewModel.autoLoadWideScreen) {
             viewModel.autoLoadWideScreen = it
         }
+
+        HorizontalDivider()
+
+        PreferenceItem(stringResource(R.string.more_uzdoom_settings)) {
+            navController.navigate(MORE_SETTINGS_SCREEN)
+        }
+    }
+
+    @Composable
+    private fun DrawMoreSettings(){
+
+    }
+
+    data class UZDoomMoreSettingsScreen(private val composeSettings: UZDoomComposeSettings) :
+        SettingScreen(MORE_SETTINGS_SCREEN) {
+
+        @Composable
+        override fun DrawSettingsScreen(navController: NavHostController) =
+            composeSettings.DrawMoreSettings()
+    }
+
+    private companion object{
+        private const val MORE_SETTINGS_SCREEN = "more_uzdoom_settings_screen"
     }
 }

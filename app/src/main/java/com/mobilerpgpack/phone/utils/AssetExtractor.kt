@@ -14,6 +14,7 @@ import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
 
 class AssetExtractor (private val context: Context,
+                      private val gson: Gson,
                       private val assetToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
 
     @Volatile
@@ -25,8 +26,6 @@ class AssetExtractor (private val context: Context,
 
     private val assetsVersionFile = File ("${userFolder.absolutePath}" +
             "${File.separator}${ASSETS_VERSION_FILE_NAME}")
-
-    private val gson = Gson()
 
     private var alwaysCopyAllFiles = false
 
