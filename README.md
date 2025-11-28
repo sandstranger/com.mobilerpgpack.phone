@@ -113,7 +113,7 @@ This project contains code from GZDoom android port (https://github.com/emileb/g
 
 which is licensed under GPL v3. All modifications are clearly marked in commit history.
 
-And using render changes (line OGL emulation, gles render and some bugfixes for Android platform)
+And using render changes (like OGL emulation, gles render and some bugfixes for Android platform)
 
 All credits for Android render changes to emileb - https://github.com/emileb
 
