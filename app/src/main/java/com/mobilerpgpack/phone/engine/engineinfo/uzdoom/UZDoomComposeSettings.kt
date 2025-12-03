@@ -142,7 +142,9 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         if (viewModel.uzDoomMods.enableDemoPlayingSupport.value!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_demo_file),
-                viewModel.uzDoomMods.pathToDemoFile.value!!, requestMode = RequestPathMode.File
+                viewModel.uzDoomMods.pathToDemoFile.value!!,
+                requestMode = RequestPathMode.File,
+                requiredFileExtensions = listOf(".lmp")
             ) {
                 viewModel.uzDoomMods.pathToDemoFile.value = it
                 viewModel.uzDoomMods.save()
@@ -163,7 +165,9 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         if (viewModel.uzDoomMods.enableBehSupport.value!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_beh_file),
-                viewModel.uzDoomMods.pathToBehFile.value!!, requestMode = RequestPathMode.File
+                viewModel.uzDoomMods.pathToBehFile.value!!,
+                requestMode = RequestPathMode.File,
+                requiredFileExtensions = listOf(".beh")
             ) {
                 viewModel.uzDoomMods.pathToBehFile.value = it
                 viewModel.uzDoomMods.save()
@@ -184,7 +188,9 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         if (viewModel.uzDoomMods.enableDehSupport.value!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_deh_file),
-                viewModel.uzDoomMods.pathToDehFile.value!!, requestMode = RequestPathMode.File
+                viewModel.uzDoomMods.pathToDehFile.value!!,
+                requestMode = RequestPathMode.File,
+                requiredFileExtensions = listOf(".deh")
             ) {
                 viewModel.uzDoomMods.pathToDehFile.value = it
                 viewModel.uzDoomMods.save()
@@ -205,7 +211,8 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         if (viewModel.uzDoomMods.enableXLatSupport.value!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_xlat_file),
-                viewModel.uzDoomMods.pathToXLatFile.value!!, requestMode = RequestPathMode.File
+                viewModel.uzDoomMods.pathToXLatFile.value!!,
+                requestMode = RequestPathMode.File
             ) {
                 viewModel.uzDoomMods.pathToXLatFile.value = it
                 viewModel.uzDoomMods.save()

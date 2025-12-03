@@ -25,7 +25,6 @@ fun RequestPath(explorerItemTitle: String,
                 key : Preferences.Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
                 requiredFileExtensions : Collection<String> = emptyList(),
-                modifier: Modifier = Modifier,
                 onPathSelected: ((String) -> Unit)? = null) {
     val activity = LocalActivity.current!!
     var showErrorDialogBox by rememberSaveable(false) { mutableStateOf(false) }
@@ -37,7 +36,6 @@ fun RequestPath(explorerItemTitle: String,
 
     PreferenceItem(
         explorerItemTitle, currentPath,
-        modifier = modifier,
         onClick = {
             val fileChooser: StorageChooser = get(
                 StorageChooser::class.java, parameters =
@@ -73,11 +71,9 @@ fun RequestPath(explorerItemTitle: String,
                 key : Preferences.Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
                 requiredFileExtensions : Collection<String> = emptyList(),
-                modifier: Modifier = Modifier,
                 onPathSelected: ((String) -> Unit)? = null) {
     val flowValue by previousSavedPathFlow.collectAsState(initial = "")
-    RequestPath(explorerItemTitle, flowValue, key, requestMode, requiredFileExtensions,
-        modifier, onPathSelected)
+    RequestPath(explorerItemTitle, flowValue, key, requestMode, requiredFileExtensions, onPathSelected)
 }
 
 enum class RequestPathMode{

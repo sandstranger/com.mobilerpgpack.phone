@@ -54,9 +54,9 @@
     <string name="enable_separate_mods_support">Включить поддержку отдельных модов</string>
     <string name="path_to_mod">Путь к моду</string>
     <string name="enable_uzdoom_playing_records">Включить поддержку восроизведения демо</string>
-    <string name="uzdoom_path_to_demo_file">Путь к демо файлу</string>
-    <string name="enable_uzdoom_xlat_support">Включить поддержку .xlat</string>
-    <string name="uzdoom_path_to_xlat_file">Путь к .xlat-файлу</string>
+    <string name="uzdoom_path_to_demo_file">Путь к демо .lmp файлу</string>
+    <string name="enable_uzdoom_xlat_support">Включить поддержку xlat</string>
+    <string name="uzdoom_path_to_xlat_file">Путь к xlat файлу</string>
     <string name="enable_uzdoom_deh_support">Включить поддержку .deh</string>
     <string name="uzdoom_path_to_deh_file">Путь к файлу .deh</string>
     <string name="enable_uzdoom_beh_support">Включить поддержку .beh</string>
