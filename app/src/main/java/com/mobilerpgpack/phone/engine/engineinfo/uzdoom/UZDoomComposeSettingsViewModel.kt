@@ -1,9 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
-import android.util.Log
-import com.ernestoyaquello.dragdropswipelazycolumn.OrderedItem
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
-import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.utils.Ini
 import org.koin.core.component.get
 import java.io.File
@@ -30,15 +27,6 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
     var autoLoadLights : Boolean
         get() = uzDoomIni.getBooleanValue(AUTOLOAD_LIGHTS)
         set(value) = uzDoomIni.setValue(AUTOLOAD_LIGHTS, value)
-
-    fun onReorderedItems (reorderedCollection : List<OrderedItem<Mod>>){
-        uzDoomMods.also {
-            for (i in 0 until reorderedCollection.count()) {
-                it.pathToMods[i] = reorderedCollection[i].value
-            }
-            it.save()
-        }
-    }
 
     override fun reloadIniFiles() {
         uzDoomIni.load()

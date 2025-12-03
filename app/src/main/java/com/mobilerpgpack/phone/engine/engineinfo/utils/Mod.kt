@@ -2,13 +2,19 @@ package com.mobilerpgpack.phone.engine.engineinfo.utils
 
 import com.mobilerpgpack.phone.utils.MutableValue
 import kotlinx.serialization.Serializable
+import java.util.UUID
 
 @Serializable
-data class Mod (var index : Int){
+class Mod {
+
+    private var _key: String? = null
 
     val pathToMod = MutableValue<String>()
 
+    val key get() = _key!!
+
     init {
-        pathToMod.value ?:run { pathToMod.value = "" }
+        _key ?: run { _key = UUID.randomUUID().toString() }
+        pathToMod.value ?: run { pathToMod.value = "" }
     }
 }
