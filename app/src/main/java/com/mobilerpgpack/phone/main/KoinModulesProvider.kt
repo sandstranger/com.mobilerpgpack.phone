@@ -74,9 +74,10 @@ import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
-import com.mobilerpgpack.phone.engine.engineinfo.SettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomModsModel
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
@@ -105,7 +106,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class KoinModulesProvider(private val context: Context,
-                          private val gson: Gson,
                           private val assetExtractor: IAssetExtractor,
                           private val scope: CoroutineScope) : KoinComponent  {
 
@@ -128,7 +128,6 @@ class KoinModulesProvider(private val context: Context,
             createdAtStart()
         }
         single { assetExtractor }.bind()
-        single { gson }.bind()
     }
 
     private val httpModule = module {
@@ -403,6 +402,8 @@ class KoinModulesProvider(private val context: Context,
                 bind<IEngineUIController>()
             }
         viewModelOf(::UZDoomComposeSettingsViewModel)
+
+        single<UZDoomModsModel> { UZDoomModsModel.load() }
     }
 
     private val psyDoomRegisterModule = module {

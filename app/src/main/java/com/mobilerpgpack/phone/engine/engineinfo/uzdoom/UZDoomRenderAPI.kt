@@ -1,7 +1,8 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 enum class UZDoomRenderAPI (vararg args: Int){
-    OpenGLES (2,0),
+    OpenGLES (2),
+    OpenGL (0),
     Vulkan (1);
 
     val values: IntArray = args

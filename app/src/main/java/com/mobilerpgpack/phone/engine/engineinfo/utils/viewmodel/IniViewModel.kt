@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo
+package com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
