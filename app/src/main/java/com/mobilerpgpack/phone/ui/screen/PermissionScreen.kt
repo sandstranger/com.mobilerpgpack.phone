@@ -7,8 +7,6 @@ import android.provider.Settings
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +27,6 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.ui.getTextColor
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
 class PermissionScreen : ComposeScreen (SCREEN_NAME) {
@@ -71,7 +69,7 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
                 }
             }
 
-            Text(text = activity.getString(R.string.access_to_all_files), textAlign = TextAlign.Center,
+            Text(text = stringResource(R.string.access_to_all_files), textAlign = TextAlign.Center,
                 color = textColor, fontSize = 24.sp)
             Spacer(modifier = Modifier.height(16.dp))
             Button(
@@ -92,7 +90,7 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
                 },
             ) {
                 Text(
-                    text = activity.getString(R.string.grant_permission),
+                    text = stringResource(R.string.grant_permission),
                     textAlign = TextAlign.Center, fontSize = 21.sp,
                 )
             }

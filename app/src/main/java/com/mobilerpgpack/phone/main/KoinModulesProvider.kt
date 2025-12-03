@@ -77,7 +77,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStora
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
