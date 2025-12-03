@@ -8,13 +8,14 @@ import androidx.compose.runtime.setValue
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
 
 class AssetExtractor (private val context: Context,
-                      private val gson: Gson,
                       private val assetToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
 
     @Volatile
@@ -105,7 +106,7 @@ class AssetExtractor (private val context: Context,
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
         fun writeDefaultVersionToVersionsFile () =
-            assetsVersionFile.writeText(gson.toJson(AssetsVersionProvider(
+            assetsVersionFile.writeText(Json.encodeToString(AssetsVersionProvider(
                 ASSETS_CURRENT_VERSION)))
 
         if (!assetsVersionFile.exists()){
@@ -114,8 +115,7 @@ class AssetExtractor (private val context: Context,
         }
 
         try {
-            val assetsVersionProvider = gson.fromJson(assetsVersionFile.readText(),
-                AssetsVersionProvider::class.java)
+            val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(assetsVersionFile.readText())
 
             val copyAssetsForced = !ASSETS_CURRENT_VERSION
                 .equals(assetsVersionProvider.assetsVersion, true)
@@ -139,6 +139,7 @@ class AssetExtractor (private val context: Context,
 
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
 
+        @Serializable
         private data class AssetsVersionProvider (val assetsVersion : String)
     }
 }

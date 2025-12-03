@@ -24,7 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.github.sproctor.composepreferences.LocalPreferenceHandler
 import com.github.sproctor.composepreferences.PreferenceHandler
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.engine.engineinfo.SettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getBackgroundColor

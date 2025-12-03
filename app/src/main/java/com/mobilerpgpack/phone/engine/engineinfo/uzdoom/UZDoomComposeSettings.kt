@@ -10,7 +10,9 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.engine.engineinfo.SettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsLazyColumn
+import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
@@ -24,23 +26,23 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import kotlin.getValue
 
-class UZDoomComposeSettings: IEngineUIController, KoinComponent {
+class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
-    private val zDoomEngineInfo : IEngineInfo by inject (named(EngineTypes.UZDoom.toString()))
+    private val zDoomEngineInfo: IEngineInfo by inject(named(EngineTypes.UZDoom.toString()))
 
     private val preferencesStorage: UZDoomPreferenceStorage by inject(
-        named(EngineTypes.UZDoom.toString()))
+        named(EngineTypes.UZDoom.toString())
+    )
 
     override val screenViewsToDraw: Collection<IScreenControlsView> = psyDoomButtons
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        val viewModel : UZDoomComposeSettingsViewModel = koinViewModel ()
+        val viewModel: UZDoomComposeSettingsViewModel = koinViewModel()
         viewModel.initialize()
 
-        if (!viewModel.showView){
+        if (!viewModel.showView) {
             return
         }
 
@@ -56,14 +58,16 @@ class UZDoomComposeSettings: IEngineUIController, KoinComponent {
             preferencesStorage.pathToUZDoomIWadFile,
             preferencesStorage.pathToUZDoomIWadFilePrefsKey,
             RequestPathMode.File,
-            requiredFileExtensions = arrayListOf(zDoomEngineInfo.requiredResourceExtension))
+            requiredFileExtensions = arrayListOf(zDoomEngineInfo.requiredResourceExtension)
+        )
 
         HorizontalDivider()
 
         SwitchPreferenceItem(
-            stringResource(R.string.enable_lzdoom_mods),
+            stringResource(R.string.enable_uzdoom_mods),
             initialValueFlow = preferencesStorage.enableUZDoomMods,
-            preferencesStorage.enableUZDoomModsPrefsKey.name)
+            preferencesStorage.enableUZDoomModsPrefsKey.name
+        )
 
         HorizontalDivider()
 
@@ -84,14 +88,15 @@ class UZDoomComposeSettings: IEngineUIController, KoinComponent {
             viewModel.renderAPI.toString(),
             UZDoomRenderAPI.stringCollection
         ) {
-            viewModel.renderAPI =  enumValueOf<UZDoomRenderAPI>(it)
+            viewModel.renderAPI = enumValueOf<UZDoomRenderAPI>(it)
         }
 
         HorizontalDivider()
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_lights),
-            viewModel.autoLoadLights) {
+            viewModel.autoLoadLights
+        ) {
             viewModel.autoLoadLights = it
         }
 
@@ -99,7 +104,8 @@ class UZDoomComposeSettings: IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_brightmaps),
-            viewModel.autoLoadBrightMaps) {
+            viewModel.autoLoadBrightMaps
+        ) {
             viewModel.autoLoadBrightMaps = it
         }
 
@@ -107,7 +113,8 @@ class UZDoomComposeSettings: IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_widescreen),
-            viewModel.autoLoadWideScreen) {
+            viewModel.autoLoadWideScreen
+        ) {
             viewModel.autoLoadWideScreen = it
         }
 
@@ -119,8 +126,39 @@ class UZDoomComposeSettings: IEngineUIController, KoinComponent {
     }
 
     @Composable
-    private fun DrawMoreSettings(){
+    private fun DrawMoreSettings() {
+        val viewModel: UZDoomComposeSettingsViewModel = koinViewModel()
+        DrawModsSupport(viewModel)
+    }
 
+    @Composable
+    private fun DrawModsSupport(viewModel: UZDoomComposeSettingsViewModel) {
+        HorizontalDivider()
+
+        SwitchItem(stringResource(R.string.enable_separate_mods_support),
+            viewModel.uzDoomMods.enableModsSupport.value!!) {
+            viewModel.uzDoomMods.enableModsSupport.value = it
+        }
+
+        HorizontalDivider()
+
+        if (viewModel.uzDoomMods.enableModsSupport.value!!) {
+            EditTextItem(
+                stringResource(R.string.uzdoom_mods_count),
+                viewModel.uzDoomMods.modsCount
+            ) {
+                viewModel.uzDoomMods.modsCount = it
+            }
+
+            HorizontalDivider()
+
+            if (viewModel.uzDoomMods.modsCount > 0) {
+                DrawModsLazyColumn(viewModel.uzDoomMods) {
+                    viewModel.onReorderedItems(it)
+                }
+                HorizontalDivider()
+            }
+        }
     }
 
     data class UZDoomMoreSettingsScreen(private val composeSettings: UZDoomComposeSettings) :
@@ -131,7 +169,7 @@ class UZDoomComposeSettings: IEngineUIController, KoinComponent {
             composeSettings.DrawMoreSettings()
     }
 
-    private companion object{
+    private companion object {
         private const val MORE_SETTINGS_SCREEN = "more_uzdoom_settings_screen"
     }
 }
