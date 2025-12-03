@@ -20,6 +20,7 @@ espressoCore = "3.7.0"
 appcompat = "1.7.1"
 koinKspCompiler = "2.3.1"
 kotlinxCoroutinesPlayServices = "1.10.2"
+kotlinxSerializationJson = "1.9.0"
 lifecycleRuntimeKtx = "2.10.0"
 lombokVersion = "1.18.42"
 material = "1.13.0"
@@ -32,6 +33,7 @@ preferenceKtx = "1.2.1"
 fragmentKtx = "1.8.9"
 activityCompose = "1.12.0"
 composeBom = "2025.11.01"
+reorderable = "3.0.0"
 retrofit = "3.0.0"
 roomRuntime = "2.8.4"
 slf4jApi = "2.0.17"
@@ -82,8 +84,10 @@ koin-android = { module = "io.insert-koin:koin-android" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKspCompiler" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
+reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "settings" }
 settings-coroutines = { group = "com.russhwolf", name = "multiplatform-settings-coroutines", version.ref = "settings" }
 settings-datastore = { group = "com.russhwolf", name = "multiplatform-settings-datastore", version.ref = "settings" }

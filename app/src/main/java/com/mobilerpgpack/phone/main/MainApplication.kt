@@ -16,8 +16,6 @@ import org.koin.core.context.GlobalContext.startKoin
 
 class MainApplication : Application() {
 
-    private val gson = Gson()
-
     private lateinit var assetExtractor: AssetExtractor
 
     override fun onCreate() {
@@ -35,7 +33,7 @@ class MainApplication : Application() {
     }
 
     private fun initializeKoin(){
-        val koinModulesProvider = KoinModulesProvider(this@MainApplication, gson,
+        val koinModulesProvider = KoinModulesProvider(this@MainApplication,
             assetExtractor,globalScope)
         startKoin{
             androidLogger()
@@ -45,8 +43,7 @@ class MainApplication : Application() {
     }
 
     private fun copyAllAssetsFromApk(){
-        assetExtractor = AssetExtractor(this,gson,
-            assetsToIgnoreChecking)
+        assetExtractor = AssetExtractor(this, assetsToIgnoreChecking)
         globalScope.launch {
             assetExtractor.copyAssetsContentToInternalStorage()
         }

@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.datastore.preferences.core.Preferences
 import com.codekidlabs.storagechooser.StorageChooser
 import com.mobilerpgpack.phone.R
@@ -24,6 +25,7 @@ fun RequestPath(explorerItemTitle: String,
                 key : Preferences.Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
                 requiredFileExtensions : Collection<String> = emptyList(),
+                modifier: Modifier = Modifier,
                 onPathSelected: ((String) -> Unit)? = null) {
     val activity = LocalActivity.current!!
     var showErrorDialogBox by rememberSaveable(false) { mutableStateOf(false) }
@@ -35,6 +37,7 @@ fun RequestPath(explorerItemTitle: String,
 
     PreferenceItem(
         explorerItemTitle, currentPath,
+        modifier = modifier,
         onClick = {
             val fileChooser: StorageChooser = get(
                 StorageChooser::class.java, parameters =
@@ -70,10 +73,11 @@ fun RequestPath(explorerItemTitle: String,
                 key : Preferences.Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
                 requiredFileExtensions : Collection<String> = emptyList(),
+                modifier: Modifier = Modifier,
                 onPathSelected: ((String) -> Unit)? = null) {
     val flowValue by previousSavedPathFlow.collectAsState(initial = "")
     RequestPath(explorerItemTitle, flowValue, key, requestMode, requiredFileExtensions,
-        onPathSelected)
+        modifier, onPathSelected)
 }
 
 enum class RequestPathMode{

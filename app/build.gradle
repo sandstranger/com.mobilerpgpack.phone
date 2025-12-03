@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id 'com.google.devtools.ksp' version '2.3.0'
     id("com.google.gms.google-services")
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.2.21'
     id("com.google.firebase.crashlytics") version "3.0.6"
 }
 
@@ -173,7 +174,6 @@ android {
     ndkVersion versions.ndk_version
 }
 
-
 preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTranslate2Proxy:build',
         ':machine_translator:Translator:build', ':third_party:sdl2:android-project:app:build', ':third_party:openal:build',
         ':third_party:sdl2-mixer:build',':third_party:sdl2-ttf:build', ':third_party:NG-GL4ES:build',
@@ -208,6 +208,9 @@ dependencies {
     implementation(libs.koin.core.coroutines)
     ksp(libs.koin.ksp.compiler)
 
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation libs.reorderable
     implementation libs.androidx.compose.runtime
     implementation libs.androidx.window
 
