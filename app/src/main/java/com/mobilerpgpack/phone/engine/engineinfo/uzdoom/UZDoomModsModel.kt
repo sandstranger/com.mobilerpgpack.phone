@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.ComposeImmutableList
 import com.mobilerpgpack.phone.utils.MutableValue
@@ -11,11 +12,7 @@ import org.koin.java.KoinJavaComponent.get
 import java.io.File
 
 @Serializable
-class UZDoomModsModel {
-
-    private val modsCollection = ComposeImmutableList<Mod>()
-
-    val enableModsSupport = MutableValue<Boolean>()
+class UZDoomModsModel : ModsModel() {
 
     val enableDemoPlayingSupport = MutableValue<Boolean>()
 
@@ -33,22 +30,9 @@ class UZDoomModsModel {
 
     val pathToDehFile = MutableValue<String>()
 
-    var modsCount : Int
-        get() = modsCollection.count!!
-        set(value) {
-            modsCollection.count = value
-            save()
-        }
-
-    val pathToMods get() = modsCollection.sourceList
-
-    val pathToModsComposeCollection get() = modsCollection.composeList
+    override val jsonFileName = JSON_FILE_NAME
 
     init {
-        modsCollection.initialize(defaultValue = { Mod() })
-        enableModsSupport.initialize(false){
-            save()
-        }
         enableDemoPlayingSupport.initialize(false){
             save()
         }
@@ -75,18 +59,10 @@ class UZDoomModsModel {
         }
     }
 
-    fun updateComposeModsList () = modsCollection.updateComposeList()
-
-    fun save () = uzDoomModsJsonFile.writeText(Json.encodeToString(this))
-
     companion object{
-        private val pathToRootUserFolder : String = get(String()::class.java,
-            named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
+        private const val JSON_FILE_NAME = "UZDoomMods.json"
 
-        private val uzDoomModsJsonFile = File(pathToRootUserFolder + File.separator + "UZDoomMods.json")
-
-        fun load () : UZDoomModsModel = if (uzDoomModsJsonFile.exists())
-            Json.decodeFromString<UZDoomModsModel>(uzDoomModsJsonFile.readText(),) else UZDoomModsModel()
+        fun load () : UZDoomModsModel = load(JSON_FILE_NAME)
     }
 }
 

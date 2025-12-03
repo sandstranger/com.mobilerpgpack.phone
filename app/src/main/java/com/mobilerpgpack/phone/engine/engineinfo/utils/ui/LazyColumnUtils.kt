@@ -20,21 +20,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
-fun DrawModsLazyColumn(uzDoomMods: UZDoomModsModel){
+fun DrawModsLazyColumn(mods: ModsModel){
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        uzDoomMods.pathToMods.apply {
+        mods.pathToMods.apply {
             add(to.index, removeAt(from.index))
         }
-        uzDoomMods.updateComposeModsList()
-        uzDoomMods.save()
+        mods.updateComposeModsList()
+        mods.save()
     }
 
     LazyColumn(
@@ -44,7 +44,7 @@ fun DrawModsLazyColumn(uzDoomMods: UZDoomModsModel){
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        itemsIndexed(uzDoomMods.pathToModsComposeCollection, key = { _, mod -> mod.key }) { _, mod ->
+        itemsIndexed(mods.pathToModsComposeCollection, key = { _, mod -> mod.key }) { _, mod ->
             ReorderableItem(reorderableLazyListState, key = mod.key) {
                 Column {
                     HorizontalDivider()
@@ -54,7 +54,7 @@ fun DrawModsLazyColumn(uzDoomMods: UZDoomModsModel){
                                 mod.pathToMod.value ?: "", requestMode = RequestPathMode.File
                             ) {
                                 mod.pathToMod.value = it
-                                uzDoomMods.save()
+                                mods.save()
                             }
                         }
 
