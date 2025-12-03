@@ -5,13 +5,19 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
-class Ini (pathToFile : String ){
+class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false ){
 
     private val iniFile = File(pathToFile)
 
     private val iniConfig = INIConfiguration()
 
     private var loaded = false
+
+    init {
+        if (removeSpacesBetweenSeparator) {
+            iniConfig.separatorUsedInOutput = "="
+        }
+    }
 
     fun getBooleanValueFromInt (key: String) = getIntValue(key) > 0
 

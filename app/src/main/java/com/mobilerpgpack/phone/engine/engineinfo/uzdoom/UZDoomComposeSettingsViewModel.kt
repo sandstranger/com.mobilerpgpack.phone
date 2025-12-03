@@ -9,7 +9,7 @@ import java.io.File
 class UZDoomComposeSettingsViewModel : IniViewModel(){
 
     private val uzDoomIni = Ini ("${pathToRootUserFolder}${File.separator}" +
-                "uzdoom${File.separator}uzdoom.ini")
+                "uzdoom${File.separator}uzdoom.ini", removeSpacesBetweenSeparator = true)
 
     val uzDoomMods : UZDoomModsModel = get ()
 
