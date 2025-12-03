@@ -1,17 +1,14 @@
-package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
+@file:OptIn(ExperimentalSerializationApi::class)
 
-import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
-import com.mobilerpgpack.phone.main.KoinModulesProvider
-import com.mobilerpgpack.phone.utils.ComposeImmutableList
+package com.mobilerpgpack.phone.engine.engineinfo.utils
+
 import com.mobilerpgpack.phone.utils.MutableValue
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import org.koin.core.qualifier.named
-import org.koin.java.KoinJavaComponent.get
-import java.io.File
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 
 @Serializable
+@JsonIgnoreUnknownKeys
 class UZDoomModsModel : ModsModel() {
 
     val enableDemoPlayingSupport = MutableValue<Boolean>()
@@ -24,13 +21,13 @@ class UZDoomModsModel : ModsModel() {
 
     val enableBehSupport = MutableValue<Boolean>()
 
-    val pathToBehFile = MutableValue<String> ()
+    val pathToBehFile = MutableValue<String>()
 
     val enableDehSupport = MutableValue<Boolean>()
 
     val pathToDehFile = MutableValue<String>()
 
-    override val jsonFileName = JSON_FILE_NAME
+    override val jsonFileName : String get() = JSON_FILE_NAME
 
     init {
         enableDemoPlayingSupport.initialize(false){
@@ -65,4 +62,3 @@ class UZDoomModsModel : ModsModel() {
         fun load () : UZDoomModsModel = load(JSON_FILE_NAME)
     }
 }
-

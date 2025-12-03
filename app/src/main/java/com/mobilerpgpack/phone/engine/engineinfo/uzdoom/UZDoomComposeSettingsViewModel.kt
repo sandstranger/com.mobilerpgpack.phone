@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
+import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
 import com.mobilerpgpack.phone.utils.Ini
 import org.koin.core.component.get

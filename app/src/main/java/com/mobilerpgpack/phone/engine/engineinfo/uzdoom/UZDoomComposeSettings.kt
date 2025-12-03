@@ -129,6 +129,90 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
     private fun DrawMoreSettings() {
         val viewModel: UZDoomComposeSettingsViewModel = koinViewModel()
         DrawModsSupport(viewModel)
+
+        SwitchItem(
+            stringResource(R.string.enable_uzdoom_playing_records),
+            viewModel.uzDoomMods.enableDemoPlayingSupport.value!!
+        ) {
+            viewModel.uzDoomMods.enableDemoPlayingSupport.value = it
+            viewModel.uzDoomMods.save()
+        }
+
+        HorizontalDivider()
+
+        if (viewModel.uzDoomMods.enableDemoPlayingSupport.value!!){
+            RequestPath(stringResource(R.string.uzdoom_path_to_demo_file),
+                viewModel.uzDoomMods.pathToDemoFile.value!!, requestMode = RequestPathMode.File
+            ) {
+                viewModel.uzDoomMods.pathToDemoFile.value = it
+                viewModel.uzDoomMods.save()
+            }
+
+            HorizontalDivider()
+        }
+
+        SwitchItem(
+            stringResource(R.string.enable_uzdoom_beh_support),
+            viewModel.uzDoomMods.enableBehSupport.value!!
+        ) {
+            viewModel.uzDoomMods.enableBehSupport.value = it
+            viewModel.uzDoomMods.save()
+        }
+
+        HorizontalDivider()
+
+        if (viewModel.uzDoomMods.enableBehSupport.value!!){
+            RequestPath(stringResource(R.string.uzdoom_path_to_beh_file),
+                viewModel.uzDoomMods.pathToBehFile.value!!, requestMode = RequestPathMode.File
+            ) {
+                viewModel.uzDoomMods.pathToBehFile.value = it
+                viewModel.uzDoomMods.save()
+            }
+
+            HorizontalDivider()
+        }
+
+        SwitchItem(
+            stringResource(R.string.enable_uzdoom_deh_support),
+            viewModel.uzDoomMods.enableDehSupport.value!!
+        ) {
+            viewModel.uzDoomMods.enableDehSupport.value = it
+            viewModel.uzDoomMods.save()
+        }
+
+        HorizontalDivider()
+
+        if (viewModel.uzDoomMods.enableDehSupport.value!!){
+            RequestPath(stringResource(R.string.uzdoom_path_to_deh_file),
+                viewModel.uzDoomMods.pathToDehFile.value!!, requestMode = RequestPathMode.File
+            ) {
+                viewModel.uzDoomMods.pathToDehFile.value = it
+                viewModel.uzDoomMods.save()
+            }
+
+            HorizontalDivider()
+        }
+
+        SwitchItem(
+            stringResource(R.string.enable_uzdoom_xlat_support),
+            viewModel.uzDoomMods.enableXLatSupport.value!!
+        ) {
+            viewModel.uzDoomMods.enableXLatSupport.value = it
+            viewModel.uzDoomMods.save()
+        }
+
+        HorizontalDivider()
+
+        if (viewModel.uzDoomMods.enableXLatSupport.value!!){
+            RequestPath(stringResource(R.string.uzdoom_path_to_xlat_file),
+                viewModel.uzDoomMods.pathToXLatFile.value!!, requestMode = RequestPathMode.File
+            ) {
+                viewModel.uzDoomMods.pathToXLatFile.value = it
+                viewModel.uzDoomMods.save()
+            }
+
+            HorizontalDivider()
+        }
     }
 
     @Composable
@@ -138,6 +222,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
         SwitchItem(stringResource(R.string.enable_separate_mods_support),
             viewModel.uzDoomMods.enableModsSupport.value!!) {
             viewModel.uzDoomMods.enableModsSupport.value = it
+            viewModel.uzDoomMods.save()
         }
 
         HorizontalDivider()
