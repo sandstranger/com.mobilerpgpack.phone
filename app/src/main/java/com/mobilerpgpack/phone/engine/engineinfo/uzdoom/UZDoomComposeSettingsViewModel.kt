@@ -15,7 +15,7 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
 
     var renderAPI : UZDoomRenderAPI
         get() = UZDoomRenderAPI.fromValue(uzDoomIni.getIntValue(PREFERRED_RENDER_API))
-        set(value) = uzDoomIni.setValue(PREFERRED_RENDER_API,value.values.first())
+        set(value) = uzDoomIni.setValue(PREFERRED_RENDER_API,value.value)
 
     var autoLoadBrightMaps : Boolean
         get() = uzDoomIni.getBooleanValue(AUTOLOAD_BRIGHTMAPS)
