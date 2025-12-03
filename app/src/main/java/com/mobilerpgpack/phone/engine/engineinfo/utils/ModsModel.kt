@@ -49,7 +49,7 @@ sealed class ModsModel {
 
     fun save () = jsoFile.writeText(Json.encodeToString(this))
 
-    companion object{
+    protected companion object{
         val pathToRootUserFolder : String = get(String()::class.java,
             named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
 
