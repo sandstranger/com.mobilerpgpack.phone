@@ -3,9 +3,9 @@ package com.mobilerpgpack.phone.utils
 interface IAssetExtractor{
     val assetsCopied : Boolean
 
-    val assetsStartedCopyListeners : MutableCollection<()-> Unit>
+    val assetsStartedCopyListeners : MulticastAction
 
-    val assetsFinishCopyListeners : MutableCollection<()-> Unit>
+    val assetsFinishCopyListeners : MulticastAction
 
     suspend fun copyAssetsContentToInternalStorage ()
 }

@@ -5,7 +5,6 @@ import android.content.res.AssetManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -13,7 +12,6 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.concurrent.CopyOnWriteArrayList
 
 class AssetExtractor (private val context: Context,
                       private val assetToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
@@ -32,9 +30,9 @@ class AssetExtractor (private val context: Context,
 
     override val assetsCopied get() = _assetsCopied
 
-    override val assetsStartedCopyListeners: MutableCollection<() -> Unit> = CopyOnWriteArrayList()
+    override val assetsStartedCopyListeners = MulticastAction()
 
-    override val assetsFinishCopyListeners: MutableCollection<() -> Unit> = CopyOnWriteArrayList()
+    override val assetsFinishCopyListeners = MulticastAction()
 
     override suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
         if (assetsCopying){
@@ -42,7 +40,7 @@ class AssetExtractor (private val context: Context,
         }
         assetsCopying = true
         _assetsCopied = false
-        assetsStartedCopyListeners.forEach { it.invoke() }
+        assetsStartedCopyListeners.invoke()
         try {
             alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
             copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER,
@@ -51,7 +49,7 @@ class AssetExtractor (private val context: Context,
         finally {
             _assetsCopied = true
             assetsCopying = false
-            assetsFinishCopyListeners.forEach { it.invoke() }
+            assetsFinishCopyListeners.invoke()
         }
     }
 
