@@ -17,4 +17,16 @@ class Mod {
         _key ?: run { _key = UUID.randomUUID().toString() }
         pathToMod.value ?: run { pathToMod.value = "" }
     }
+
+    override fun toString() = "Mod(key='$key', pathToMod=${pathToMod.value})"
+
+    override fun hashCode() = key.hashCode()
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as Mod
+        return key == other.key
+    }
 }
