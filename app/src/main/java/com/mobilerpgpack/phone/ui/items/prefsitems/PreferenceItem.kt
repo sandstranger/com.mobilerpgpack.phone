@@ -8,16 +8,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.github.sproctor.composepreferences.Preference
 
 @Composable
-fun PreferenceItem(title: String, initialValue: String = "", modifier: Modifier = Modifier,
-                   onClick: () -> Unit = {}) {
+fun PreferenceItem(title: String, initialValue: String = "", onClick: () -> Unit = {}) {
     if (!initialValue.isEmpty()) {
         Preference(
             title = { Text(title, overflow = TextOverflow.Ellipsis) },
             summary = { Text(initialValue) },
-            modifier = modifier.clickable { onClick() })
+            modifier = Modifier.clickable { onClick() })
     } else {
         Preference(
             title = { Text(title, overflow = TextOverflow.Ellipsis) },
-            modifier = modifier.clickable { onClick() })
+            modifier = Modifier.clickable { onClick() })
     }
 }
