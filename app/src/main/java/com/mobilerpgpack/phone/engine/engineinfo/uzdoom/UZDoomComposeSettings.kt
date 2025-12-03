@@ -153,9 +153,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             HorizontalDivider()
 
             if (viewModel.uzDoomMods.modsCount > 0) {
-                DrawModsLazyColumn(viewModel.uzDoomMods) {
-                    viewModel.onReorderedItems(it)
-                }
+                DrawModsLazyColumn(viewModel.uzDoomMods)
                 HorizontalDivider()
             }
         }
