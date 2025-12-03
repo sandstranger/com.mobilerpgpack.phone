@@ -21,6 +21,7 @@
     <string name="enable_launcher_text_translation">Enable launcher text translation</string>
     <string name="allow_downloading_over_mobile_network">Allow translation model downloads over mobile networks</string>
     <string name="grant_permission">Grant permission</string>
+    <string name="clear">Clear</string>
     <string name="selected_button">Selected button</string>
     <string name="common_settings">General settings</string>
     <string name="translation_settings">Translation settings</string>

@@ -1,17 +1,22 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.mobilerpgpack.phone.engine.engineinfo.utils
 
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.ComposeImmutableList
 import com.mobilerpgpack.phone.utils.MutableValue
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.get
 import java.io.File
 
 @Serializable
-abstract class ModsModel {
+@JsonIgnoreUnknownKeys
+sealed class ModsModel {
 
     protected abstract val jsonFileName : String
 
@@ -45,11 +50,10 @@ abstract class ModsModel {
     fun save () = jsoFile.writeText(Json.encodeToString(this))
 
     companion object{
-        protected val pathToRootUserFolder : String = get(String()::class.java,
+        val pathToRootUserFolder : String = get(String()::class.java,
             named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
 
-        @JvmStatic
-        protected inline fun <reified T> load(jsonFileName : String ): T where T : ModsModel {
+        inline fun <reified T> load(jsonFileName : String ): T where T : ModsModel {
             val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
 
             return if (jsoFile.exists())

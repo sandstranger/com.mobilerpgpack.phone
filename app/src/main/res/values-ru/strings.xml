@@ -21,6 +21,7 @@
     <string name="allow_downloading_over_mobile_network">Разрешить загрузку моделей перевода по мобильной сети</string>
     <string name="grant_permission">Предоставить разрешение</string>
     <string name="selected_button">Выбранная кнопка</string>
+    <string name="clear">Очистить</string>
     <string name="common_settings">Общие настройки</string>
     <string name="graphics_settings">Настройки графики</string>
     <string name="translation_settings">Настройки перевода</string>

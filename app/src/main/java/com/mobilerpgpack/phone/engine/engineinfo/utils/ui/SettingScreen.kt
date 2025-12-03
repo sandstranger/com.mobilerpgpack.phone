@@ -26,7 +26,7 @@ abstract class SettingScreen (screenName : String) : ComposeScreen(screenName){
         val scrollState = rememberScrollState()
 
         Column(
-            modifier = Modifier.Companion
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(scrollState)
