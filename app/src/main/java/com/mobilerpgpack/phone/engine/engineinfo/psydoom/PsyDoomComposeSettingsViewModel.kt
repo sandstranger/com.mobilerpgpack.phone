@@ -1,16 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
-import com.mobilerpgpack.phone.main.KoinModulesProvider
-import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.Ini
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.qualifier.named
 import java.io.File
 
 class PsyDoomComposeSettingsViewModel : IniViewModel() {
@@ -33,52 +24,52 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
         Ini("${pathToPsyDoomConfigsFolder}${File.separator}multiplayer_cfg.ini")
 
     var enableVsync : Boolean
-        get() = graphicsIniFile.getBooleanValue("EnableVSync")
-        set(value) = graphicsIniFile.setValue("EnableVSync", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("EnableVSync")
+        set(value) = graphicsIniFile.setValueAsInt("EnableVSync", value)
 
     var useExtendedAutomapColors : Boolean
-        get() = graphicsIniFile.getBooleanValue("UseExtendedAutomapColors")
-        set(value) = graphicsIniFile.setValue("UseExtendedAutomapColors", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("UseExtendedAutomapColors")
+        set(value) = graphicsIniFile.setValueAsInt("UseExtendedAutomapColors", value)
 
     var vulkanPixelsStretch : Boolean
-        get() = graphicsIniFile.getBooleanValue("VulkanPixelStretch")
-        set(value) = graphicsIniFile.setValue("VulkanPixelStretch", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("VulkanPixelStretch")
+        set(value) = graphicsIniFile.setValueAsInt("VulkanPixelStretch", value)
 
     var widescreenEnabled : Boolean
-        get() = graphicsIniFile.getBooleanValue("VulkanWidescreenEnabled")
-        set(value) = graphicsIniFile.setValue("VulkanWidescreenEnabled", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("VulkanWidescreenEnabled")
+        set(value) = graphicsIniFile.setValueAsInt("VulkanWidescreenEnabled", value)
 
     var drawExtendedStatusBar : Boolean
-        get() = graphicsIniFile.getBooleanValue("VulkanDrawExtendedStatusBar")
-        set(value) = graphicsIniFile.setValue("VulkanDrawExtendedStatusBar", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("VulkanDrawExtendedStatusBar")
+        set(value) = graphicsIniFile.setValueAsInt("VulkanDrawExtendedStatusBar", value)
 
     var disableVulkanRender : Boolean
-        get() = graphicsIniFile.getBooleanValue("DisableVulkanRenderer")
-        set(value) = graphicsIniFile.setValue("DisableVulkanRenderer", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("DisableVulkanRenderer")
+        set(value) = graphicsIniFile.setValueAsInt("DisableVulkanRenderer", value)
 
     var enhanceWallDrawPrecision : Boolean
-        get() = graphicsIniFile.getBooleanValue("EnhanceWallDrawPrecision")
-        set(value) = graphicsIniFile.setValue("EnhanceWallDrawPrecision", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("EnhanceWallDrawPrecision")
+        set(value) = graphicsIniFile.setValueAsInt("EnhanceWallDrawPrecision", value)
 
     var skyLeakFix : Boolean
-        get() = graphicsIniFile.getBooleanValue("SkyLeakFix")
-        set(value) = graphicsIniFile.setValue("SkyLeakFix", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("SkyLeakFix")
+        set(value) = graphicsIniFile.setValueAsInt("SkyLeakFix", value)
 
     var floorGapRenderFix : Boolean
-        get() = graphicsIniFile.getBooleanValue("FloorRenderGapFix")
-        set(value) = graphicsIniFile.setValue("FloorRenderGapFix", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("FloorRenderGapFix")
+        set(value) = graphicsIniFile.setValueAsInt("FloorRenderGapFix", value)
 
     var tripleBuffer : Boolean
-        get() = graphicsIniFile.getBooleanValue("VulkanTripleBuffer")
-        set(value) = graphicsIniFile.setValue("VulkanTripleBuffer", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("VulkanTripleBuffer")
+        set(value) = graphicsIniFile.setValueAsInt("VulkanTripleBuffer", value)
 
     var brightenAutomap : Boolean
-        get() = graphicsIniFile.getBooleanValue("VulkanBrightenAutomap")
-        set(value) = graphicsIniFile.setValue("VulkanBrightenAutomap", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("VulkanBrightenAutomap")
+        set(value) = graphicsIniFile.setValueAsInt("VulkanBrightenAutomap", value)
 
     var use32bitShading : Boolean
-        get() = graphicsIniFile.getBooleanValue("UseVulkan32BitShading")
-        set(value) = graphicsIniFile.setValue("UseVulkan32BitShading", value)
+        get() = graphicsIniFile.getBooleanValueFromInt("UseVulkan32BitShading")
+        set(value) = graphicsIniFile.setValueAsInt("UseVulkan32BitShading", value)
 
     var topOverscanPixels : Int
         get() = graphicsIniFile.getIntValue("TopOverscanPixels")
@@ -109,104 +100,104 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
         set(value) = graphicsIniFile.setValue("LogicalDisplayWidth", value)
 
     var interpolateSectors : Boolean
-        get() = gameIniFile.getBooleanValue("InterpolateSectors")
-        set(value) = gameIniFile.setValue("InterpolateSectors", value)
+        get() = gameIniFile.getBooleanValueFromInt("InterpolateSectors")
+        set(value) = gameIniFile.setValueAsInt("InterpolateSectors", value)
 
     var interpolateMonsters : Boolean
-        get() = gameIniFile.getBooleanValue("InterpolateMonsters")
-        set(value) = gameIniFile.setValue("InterpolateMonsters", value)
+        get() = gameIniFile.getBooleanValueFromInt("InterpolateMonsters")
+        set(value) = gameIniFile.setValueAsInt("InterpolateMonsters", value)
 
     var interpolateThings : Boolean
-        get() = gameIniFile.getBooleanValue("InterpolateMobj")
-        set(value) = gameIniFile.setValue("InterpolateMobj", value)
+        get() = gameIniFile.getBooleanValueFromInt("InterpolateMobj")
+        set(value) = gameIniFile.setValueAsInt("InterpolateMobj", value)
 
     var interpolateWeapon : Boolean
-        get() = gameIniFile.getBooleanValue("InterpolateWeapon")
-        set(value) = gameIniFile.setValue("InterpolateWeapon", value)
+        get() = gameIniFile.getBooleanValueFromInt("InterpolateWeapon")
+        set(value) = gameIniFile.setValueAsInt("InterpolateWeapon", value)
 
     var enableLevelTimer : Boolean
-        get() = gameIniFile.getBooleanValue("EnableSinglePlayerLevelTimer")
-        set(value) = gameIniFile.setValue("EnableSinglePlayerLevelTimer", value)
+        get() = gameIniFile.getBooleanValueFromInt("EnableSinglePlayerLevelTimer")
+        set(value) = gameIniFile.setValueAsInt("EnableSinglePlayerLevelTimer", value)
 
     var showPerfCounters : Boolean
-        get() = gameIniFile.getBooleanValue("ShowPerfCounters")
-        set(value) = gameIniFile.setValue("ShowPerfCounters", value)
+        get() = gameIniFile.getBooleanValueFromInt("ShowPerfCounters")
+        set(value) = gameIniFile.setValueAsInt("ShowPerfCounters", value)
 
     var pauseOnFocusLost : Boolean
-        get() = gameIniFile.getBooleanValue("PauseOnWindowFocusLost")
-        set(value) = gameIniFile.setValue("PauseOnWindowFocusLost",value)
+        get() = gameIniFile.getBooleanValueFromInt("PauseOnWindowFocusLost")
+        set(value) = gameIniFile.setValueAsInt("PauseOnWindowFocusLost",value)
 
     var fixLineActivation : Boolean
-        get() = gameIniFile.getBooleanValue("FixLineActivation")
-        set(value) = gameIniFile.setValue("FixLineActivation", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixLineActivation")
+        set(value) = gameIniFile.setValueAsInt("FixLineActivation", value)
 
     var itemPickupFix : Boolean
-        get() = gameIniFile.getBooleanValue("UseItemPickupFix")
-        set(value) = gameIniFile.setValue("UseItemPickupFix", value)
+        get() = gameIniFile.getBooleanValueFromInt("UseItemPickupFix")
+        set(value) = gameIniFile.setValueAsInt("UseItemPickupFix", value)
 
     var fixMultiLineCrossing : Boolean
-        get() = gameIniFile.getBooleanValue("FixMultiLineSpecialCrossing")
-        set(value) = gameIniFile.setValue("FixMultiLineSpecialCrossing", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixMultiLineSpecialCrossing")
+        set(value) = gameIniFile.setValueAsInt("FixMultiLineSpecialCrossing", value)
 
     var fixKillCount : Boolean
-        get() = gameIniFile.getBooleanValue("FixKillCount")
-        set(value) = gameIniFile.setValue("FixKillCount", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixKillCount")
+        set(value) = gameIniFile.setValueAsInt("FixKillCount", value)
 
     var playerRocketBlastFix : Boolean
-        get() = gameIniFile.getBooleanValue("UsePlayerRocketBlastFix")
-        set(value) = gameIniFile.setValue("UsePlayerRocketBlastFix", value)
+        get() = gameIniFile.getBooleanValueFromInt("UsePlayerRocketBlastFix")
+        set(value) = gameIniFile.setValueAsInt("UsePlayerRocketBlastFix", value)
 
     var fixSpriteVerticalWarp : Boolean
-        get() = gameIniFile.getBooleanValue("FixSpriteVerticalWarp")
-        set(value) = gameIniFile.setValue("FixSpriteVerticalWarp", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixSpriteVerticalWarp")
+        set(value) = gameIniFile.setValueAsInt("FixSpriteVerticalWarp", value)
 
     var fixViewBobStrength : Boolean
-        get() = gameIniFile.getBooleanValue("FixViewBobStrength")
-        set(value) = gameIniFile.setValue("FixViewBobStrength", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixViewBobStrength")
+        set(value) = gameIniFile.setValueAsInt("FixViewBobStrength", value)
 
     var fixGravityStrength : Boolean
-        get() = gameIniFile.getBooleanValue("FixGravityStrength")
-        set(value) = gameIniFile.setValue("FixGravityStrength", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixGravityStrength")
+        set(value) = gameIniFile.setValueAsInt("FixGravityStrength", value)
 
     var useLostSoulSpawnFix : Boolean
-        get() = gameIniFile.getBooleanValue("UseLostSoulSpawnFix")
-        set(value) = gameIniFile.setValue("UseLostSoulSpawnFix", value)
+        get() = gameIniFile.getBooleanValueFromInt("UseLostSoulSpawnFix")
+        set(value) = gameIniFile.setValueAsInt("UseLostSoulSpawnFix", value)
 
     var useLineOfSightOverflowFix : Boolean
-        get() = gameIniFile.getBooleanValue("UseLineOfSightOverflowFix")
-        set(value) = gameIniFile.setValue("UseLineOfSightOverflowFix", value)
+        get() = gameIniFile.getBooleanValueFromInt("UseLineOfSightOverflowFix")
+        set(value) = gameIniFile.setValueAsInt("UseLineOfSightOverflowFix", value)
 
     var fixOutdoorBulletPuffs : Boolean
-        get() = gameIniFile.getBooleanValue("FixOutdoorBulletPuffs")
-        set(value) = gameIniFile.setValue("FixOutdoorBulletPuffs", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixOutdoorBulletPuffs")
+        set(value) = gameIniFile.setValueAsInt("FixOutdoorBulletPuffs", value)
 
     var fixBlockingGibsBug : Boolean
-        get() = gameIniFile.getBooleanValue("FixBlockingGibsBug")
-        set(value) = gameIniFile.setValue("FixBlockingGibsBug", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixBlockingGibsBug")
+        set(value) = gameIniFile.setValueAsInt("FixBlockingGibsBug", value)
 
     var useExtendedPlayerShootRange : Boolean
-        get() = gameIniFile.getBooleanValue("UseExtendedPlayerShootRange")
-        set(value) = gameIniFile.setValue("UseExtendedPlayerShootRange", value)
+        get() = gameIniFile.getBooleanValueFromInt("UseExtendedPlayerShootRange")
+        set(value) = gameIniFile.setValueAsInt("UseExtendedPlayerShootRange", value)
 
     var allowMultiMapPickup : Boolean
-        get() = gameIniFile.getBooleanValue("AllowMultiMapPickup")
-        set(value) = gameIniFile.setValue("AllowMultiMapPickup", value)
+        get() = gameIniFile.getBooleanValueFromInt("AllowMultiMapPickup")
+        set(value) = gameIniFile.setValueAsInt("AllowMultiMapPickup", value)
 
     var useMoveInputLatencyTweak : Boolean
-        get() = gameIniFile.getBooleanValue("UseMoveInputLatencyTweak")
-        set(value) = gameIniFile.setValue("UseMoveInputLatencyTweak", value)
+        get() = gameIniFile.getBooleanValueFromInt("UseMoveInputLatencyTweak")
+        set(value) = gameIniFile.setValueAsInt("UseMoveInputLatencyTweak", value)
 
     var useSuperShotgunDelayTweak : Boolean
-        get() = gameIniFile.getBooleanValue("UseSuperShotgunDelayTweak")
-        set(value) = gameIniFile.setValue("UseSuperShotgunDelayTweak", value)
+        get() = gameIniFile.getBooleanValueFromInt("UseSuperShotgunDelayTweak")
+        set(value) = gameIniFile.setValueAsInt("UseSuperShotgunDelayTweak", value)
 
     var singlePlayerForceSpawnDmThings : Boolean
-        get() = gameIniFile.getBooleanValue("SinglePlayerForceSpawnDmThings")
-        set(value) = gameIniFile.setValue("SinglePlayerForceSpawnDmThings", value)
+        get() = gameIniFile.getBooleanValueFromInt("SinglePlayerForceSpawnDmThings")
+        set(value) = gameIniFile.setValueAsInt("SinglePlayerForceSpawnDmThings", value)
 
     var allowTurningCancellation : Boolean
-        get() = gameIniFile.getBooleanValue("AllowTurningCancellation")
-        set(value) = gameIniFile.setValue("AllowTurningCancellation", value)
+        get() = gameIniFile.getBooleanValueFromInt("AllowTurningCancellation")
+        set(value) = gameIniFile.setValueAsInt("AllowTurningCancellation", value)
 
     var allowMovementCancellation : PsyDoomComposeSettings.GameEnum
         get() = PsyDoomComposeSettings.GameEnum.fromValue(gameIniFile.getIntValue("AllowMovementCancellation"))!!
@@ -221,60 +212,60 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
         set(value) = gameIniFile.setValue("UsePalTimings", value.value)
 
     var fixSoundPropagation : Boolean
-        get() = gameIniFile.getBooleanValue("FixSoundPropagation")
-        set(value) = gameIniFile.setValue("FixSoundPropagation", value)
+        get() = gameIniFile.getBooleanValueFromInt("FixSoundPropagation")
+        set(value) = gameIniFile.setValueAsInt("FixSoundPropagation", value)
 
     var useDemoTimings : Boolean
-        get() = gameIniFile.getBooleanValue("UseDemoTimings")
-        set(value) = gameIniFile.setValue("UseDemoTimings", value)
+        get() = gameIniFile.getBooleanValueFromInt("UseDemoTimings")
+        set(value) = gameIniFile.setValueAsInt("UseDemoTimings", value)
 
     var enableMapPatchesGamePlay : Boolean
-        get() = gameIniFile.getBooleanValue("EnableMapPatches_GamePlay")
-        set(value) = gameIniFile.setValue("EnableMapPatches_GamePlay", value)
+        get() = gameIniFile.getBooleanValueFromInt("EnableMapPatches_GamePlay")
+        set(value) = gameIniFile.setValueAsInt("EnableMapPatches_GamePlay", value)
 
     var enableMapPatchesVisual : Boolean
-        get() = gameIniFile.getBooleanValue("EnableMapPatches_Visual")
-        set(value) = gameIniFile.setValue("EnableMapPatches_Visual", value)
+        get() = gameIniFile.getBooleanValueFromInt("EnableMapPatches_Visual")
+        set(value) = gameIniFile.setValueAsInt("EnableMapPatches_Visual", value)
 
     var enableMapPatchesPsyDoom : Boolean
-        get() = gameIniFile.getBooleanValue("EnableMapPatches_PsyDoom")
-        set(value) = gameIniFile.setValue("EnableMapPatches_PsyDoom", value)
+        get() = gameIniFile.getBooleanValueFromInt("EnableMapPatches_PsyDoom")
+        set(value) = gameIniFile.setValueAsInt("EnableMapPatches_PsyDoom", value)
 
     var enableDevMapAutoReload : Boolean
-        get() = cheatsIniFile.getBooleanValue("EnableDevMapAutoReload")
-        set(value) = cheatsIniFile.setValue("EnableDevMapAutoReload", value)
+        get() = cheatsIniFile.getBooleanValueFromInt("EnableDevMapAutoReload")
+        set(value) = cheatsIniFile.setValueAsInt("EnableDevMapAutoReload", value)
 
     var enableDevCheatShortcuts : Boolean
-        get() = cheatsIniFile.getBooleanValue("EnableDevCheatShortcuts")
-        set(value) = cheatsIniFile.setValue("EnableDevCheatShortcuts", value)
+        get() = cheatsIniFile.getBooleanValueFromInt("EnableDevCheatShortcuts")
+        set(value) = cheatsIniFile.setValueAsInt("EnableDevCheatShortcuts", value)
 
     var enableDevInPlaceReloadFunctionKey : Boolean
-        get() = cheatsIniFile.getBooleanValue("EnableDevInPlaceReloadFunctionKey")
-        set(value) = cheatsIniFile.setValue("EnableDevInPlaceReloadFunctionKey", value)
+        get() = cheatsIniFile.getBooleanValueFromInt("EnableDevInPlaceReloadFunctionKey")
+        set(value) = cheatsIniFile.setValueAsInt("EnableDevInPlaceReloadFunctionKey", value)
 
     var coopNoFriendlyFire : Boolean
-        get() = multiPlayerIniFile.getBooleanValue("CoopNoFriendlyFire")
-        set(value) = multiPlayerIniFile.setValue("CoopNoFriendlyFire", value)
+        get() = multiPlayerIniFile.getBooleanValueFromInt("CoopNoFriendlyFire")
+        set(value) = multiPlayerIniFile.setValueAsInt("CoopNoFriendlyFire", value)
 
     var coopPreserveKeys : Boolean
-        get() = multiPlayerIniFile.getBooleanValue("CoopPreserveKeys")
-        set(value) = multiPlayerIniFile.setValue("CoopPreserveKeys", value)
+        get() = multiPlayerIniFile.getBooleanValueFromInt("CoopPreserveKeys")
+        set(value) = multiPlayerIniFile.setValueAsInt("CoopPreserveKeys", value)
 
     var coopPreserveWeapons : Boolean
-        get() = multiPlayerIniFile.getBooleanValue("CoopPreserveWeapons")
-        set(value) = multiPlayerIniFile.setValue("CoopPreserveWeapons", value)
+        get() = multiPlayerIniFile.getBooleanValueFromInt("CoopPreserveWeapons")
+        set(value) = multiPlayerIniFile.setValueAsInt("CoopPreserveWeapons", value)
 
     var coopForceSpawnDeathmatchThings : Boolean
-        get() = multiPlayerIniFile.getBooleanValue("CoopForceSpawnDeathmatchThings")
-        set(value) = multiPlayerIniFile.setValue("CoopForceSpawnDeathmatchThings", value)
+        get() = multiPlayerIniFile.getBooleanValueFromInt("CoopForceSpawnDeathmatchThings")
+        set(value) = multiPlayerIniFile.setValueAsInt("CoopForceSpawnDeathmatchThings", value)
 
     var dmActivateBossSpecialSectors : Boolean
-        get() = multiPlayerIniFile.getBooleanValue("DmActivateBossSpecialSectors")
-        set(value) = multiPlayerIniFile.setValue("DmActivateBossSpecialSectors", value)
+        get() = multiPlayerIniFile.getBooleanValueFromInt("DmActivateBossSpecialSectors")
+        set(value) = multiPlayerIniFile.setValueAsInt("DmActivateBossSpecialSectors", value)
 
     var dmExitDisabled : Boolean
-        get() = multiPlayerIniFile.getBooleanValue("DmExitDisabled")
-        set(value) = multiPlayerIniFile.setValue("DmExitDisabled", value)
+        get() = multiPlayerIniFile.getBooleanValueFromInt("DmExitDisabled")
+        set(value) = multiPlayerIniFile.setValueAsInt("DmExitDisabled", value)
 
     var coopPreserveAmmoFactor : PsyDoomComposeSettings.RespawnAmmoEnum
         get() = PsyDoomComposeSettings.RespawnAmmoEnum.fromValue(multiPlayerIniFile.getIntValue("CoopPreserveAmmoFactor"))!!
