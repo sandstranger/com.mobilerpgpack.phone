@@ -37,7 +37,6 @@ class UZDoomModsModel {
         get() = modsCollection.count!!
         set(value) {
             modsCollection.count = value
-            updateIndexes()
             save()
         }
 
@@ -46,7 +45,7 @@ class UZDoomModsModel {
     val pathToModsComposeCollection get() = modsCollection.composeList
 
     init {
-        modsCollection.initialize(defaultValue = { Mod(it)})
+        modsCollection.initialize(defaultValue = { Mod() })
         enableModsSupport.initialize(false){
             save()
         }
@@ -76,12 +75,7 @@ class UZDoomModsModel {
         }
     }
 
-    fun updateIndexes(){
-        for (i in 0 until modsCollection.sourceList.count()) {
-            modsCollection.sourceList[i].index  = i
-        }
-        modsCollection.updateComposeList()
-    }
+    fun updateComposeModsList () = modsCollection.updateComposeList()
 
     fun save () = uzDoomModsJsonFile.writeText(Json.encodeToString(this))
 
