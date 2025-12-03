@@ -238,11 +238,11 @@ java bing translate api: https://github.com/marmot-z/bing-translate-api-java
 
 apache commons:[Licence](https://commons.apache.org/proper/commons-bsf/license.html)	 https://commons.apache.org/
 
-draggable lazy column support: [Licence](https://github.com/ernestoyaquello/DragDropSwipeLazyColumn/blob/main/LICENSE)	https://github.com/ernestoyaquello/DragDropSwipeLazyColumn
+Reorderable: [Licence](https://github.com/Calvin-LL/Reorderable/blob/main/LICENSE)	 https://github.com/Calvin-LL/Reorderable
+
+kotlinx.serialization:	[Licence](https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt)	https://github.com/Kotlin/kotlinx.serialization
 
 compose preferences: [Licence](https://github.com/sproctor/ComposePreferences/blob/main/LICENSE)	https://github.com/sproctor/ComposePreferences
-
-kotlin collections: [Licence](https://github.com/Kotlin/kotlinx.collections.immutable/blob/master/LICENSE.txt)		https://github.com/Kotlin/kotlinx.collections.immutable
 
 Mlkit: [Licence](https://developers.google.com/ml-kit/terms)	https://developers.google.com/ml-kit
 
