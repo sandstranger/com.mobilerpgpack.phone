@@ -63,26 +63,6 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         HorizontalDivider()
 
-        SwitchPreferenceItem(
-            stringResource(R.string.enable_uzdoom_mods),
-            initialValueFlow = preferencesStorage.enableUZDoomMods,
-            preferencesStorage.enableUZDoomModsPrefsKey.name
-        )
-
-        HorizontalDivider()
-
-        val enableMods by preferencesStorage.enableUZDoomMods.collectAsState(initial = false)
-
-        if (enableMods) {
-            RequestPath(
-                stringResource(R.string.path_to_uzdoom_mods_folder),
-                preferencesStorage.pathToUZDoomModsFolder,
-                preferencesStorage.pathToUZDoomModsFolderPrefsKey
-            )
-
-            HorizontalDivider()
-        }
-
         ListPreferenceItem(
             stringResource(R.string.uzdoom_rendering_api),
             viewModel.renderAPI.toString(),

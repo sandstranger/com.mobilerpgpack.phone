@@ -11,15 +11,11 @@ class UZDoomPreferenceStorage (context: Context, scope: CoroutineScope) :
 
     val pathToUZDoomIWadFilePrefsKey = stringPreferencesKey("path_to_uzdoom_iwad_file")
 
-    val pathToUZDoomModsFolderPrefsKey = stringPreferencesKey("path_to_uzdoom_mods_folder")
-
     val uZDoomCommandLineArgsPrefsKey = stringPreferencesKey("uzdoom_command_line_args")
 
     val enableUZDoomModsPrefsKey = booleanPreferencesKey("enable_uzdoom_mods")
 
     val pathToUZDoomIWadFile = getStringValue(pathToUZDoomIWadFilePrefsKey)
-
-    val pathToUZDoomModsFolder = getStringValue(pathToUZDoomModsFolderPrefsKey)
 
     val uZDoomCommandLineArgsString = getStringValue(uZDoomCommandLineArgsPrefsKey)
 

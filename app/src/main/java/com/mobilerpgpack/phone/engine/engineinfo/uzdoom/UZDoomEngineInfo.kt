@@ -4,6 +4,13 @@ import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
+import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.behFileCanBeUsed
+import com.mobilerpgpack.phone.engine.engineinfo.utils.dehFileCanBeUsed
+import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
+import com.mobilerpgpack.phone.engine.engineinfo.utils.playingRecordsFileCanBeUsed
+import com.mobilerpgpack.phone.engine.engineinfo.utils.xlatFileCanBeUsed
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.sun.jna.Function
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +19,6 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
-import kotlin.getValue
 
 class UZDoomEngineInfo (mainEngineLib: String,
                         allLibs: Array<String>,
@@ -24,6 +30,8 @@ class UZDoomEngineInfo (mainEngineLib: String,
     private val lzDoomPreferencesStorage by inject <UZDoomPreferenceStorage>(named(
         EngineTypes.UZDoom.toString()))
 
+    private val modsModel : UZDoomModsModel by inject ()
+
     private val pathToLZDoomUserFolder by lazy{
         super.pathToRootUserFolder + File.separator + "uzdoom"
     }
@@ -33,7 +41,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
     }
 
     private val destroyVulkanSwapChainNativeDelegate by lazy {
-        com.sun.jna.Function.getFunction(mainEngineLib,
+        Function.getFunction(mainEngineLib,
             "DestroyVulkanSwapChain")
     }
 
@@ -74,6 +82,36 @@ class UZDoomEngineInfo (mainEngineLib: String,
                         it += SAVE_DIR_COMMAND
                         it += pathToLZDoomUserFolder
                     }
+
+                    if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
+                        it +=FILE_COMMAND
+
+                        modsModel.pathToMods.forEach { mod : Mod ->
+                            if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()){
+                                it+=mod.pathToMod.value!!
+                            }
+                        }
+                    }
+
+                    if (!baseCommandLineArgs.contains(PLAY_DEMO_COMMAND) && modsModel.playingRecordsFileCanBeUsed){
+                        it +=PLAY_DEMO_COMMAND
+                        it +=modsModel.pathToDemoFile.value!!
+                    }
+
+                    if (!baseCommandLineArgs.contains(XLAT_FILE_COMMAND) && modsModel.xlatFileCanBeUsed){
+                        it +=XLAT_FILE_COMMAND
+                        it +=modsModel.pathToXLatFile.value!!
+                    }
+
+                    if (!baseCommandLineArgs.contains(DEH_COMMAND) && modsModel.dehFileCanBeUsed){
+                        it +=DEH_COMMAND
+                        it +=modsModel.pathToDehFile.value!!
+                    }
+
+                    if (!baseCommandLineArgs.contains(BEH_COMMAND) && modsModel.behFileCanBeUsed){
+                        it +=BEH_COMMAND
+                        it +=modsModel.pathToBehFile.value!!
+                    }
                 }
 
                 it.toTypedArray()
@@ -83,34 +121,12 @@ class UZDoomEngineInfo (mainEngineLib: String,
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToLZDoomUserFolder, true)
-        Os.setenv("PATH_TO_UZDOOM_MODS_FOLDER", getPathToLZDoomModsFolder(), true)
+        Os.setenv("PATH_TO_UZDOOM_MODS_FOLDER", "", true)
     }
 
     override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
-
-    private suspend fun getPathToLZDoomModsFolder(): String {
-        val enableMods = preferencesStorage.enableUZDoomMods.first()
-
-        if (!enableMods) {
-            return ""
-        }
-
-        var pathToModsFolder = preferencesStorage.pathToUZDoomModsFolder.first()
-
-        if (pathToModsFolder.isEmpty()){
-            return ""
-        }
-
-        val pathToDoom64ModsFolderExists = File(pathToModsFolder).exists()
-
-        if (!pathToDoom64ModsFolderExists) {
-            pathToModsFolder = ""
-        }
-
-        return pathToModsFolder
-    }
 
     private companion object {
         private const val IWAD_COMMAND = "-iwad"
