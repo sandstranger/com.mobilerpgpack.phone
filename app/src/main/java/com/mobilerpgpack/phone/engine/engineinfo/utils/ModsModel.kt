@@ -62,3 +62,6 @@ sealed class ModsModel {
         }
     }
 }
+
+val ModsModel.modsCanBeUsed get() = enableModsSupport.value!! && modsCount > 0 &&
+        this.pathToMods.any { mod -> !mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists() }
