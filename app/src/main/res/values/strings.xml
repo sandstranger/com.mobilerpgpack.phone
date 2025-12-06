@@ -43,8 +43,7 @@
     <string name="path_to_doom64_folder">Path to Doom 64 folder with main wads</string>
     <string name="command_line_args">Command Line args</string>
     <string name="path_to_uzdoom_wad_file">Path to UZDoom main wad file</string>
-    <string name="path_to_uzdoom_mods_folder">Path to UZDoom mods folder</string>
-    <string name="enable_uzdoom_mods">Enable UZDoom mods</string>
+    <string name="path_to_mods_folder">Path to mods folder</string>
     <string name="uzdoom_rendering_api">Rendering API</string>
     <string name="uzdoom_autoload_widescreen">Autoload widescreen support</string>
     <string name="uzdoom_autoload_brightmaps">Autoload brightmaps</string>

@@ -2,24 +2,20 @@ package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsLazyColumn
-import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
-import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
 import org.koin.androidx.compose.koinViewModel
@@ -108,7 +104,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
     @Composable
     private fun DrawMoreSettings() {
         val viewModel: UZDoomComposeSettingsViewModel = koinViewModel()
-        DrawModsSupport(viewModel)
+        DrawModsSupport(viewModel.uzDoomMods)
 
         SwitchItem(
             stringResource(R.string.enable_uzdoom_playing_records),
@@ -199,35 +195,6 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             }
 
             HorizontalDivider()
-        }
-    }
-
-    @Composable
-    private fun DrawModsSupport(viewModel: UZDoomComposeSettingsViewModel) {
-        HorizontalDivider()
-
-        SwitchItem(stringResource(R.string.enable_separate_mods_support),
-            viewModel.uzDoomMods.enableModsSupport.value!!) {
-            viewModel.uzDoomMods.enableModsSupport.value = it
-            viewModel.uzDoomMods.save()
-        }
-
-        HorizontalDivider()
-
-        if (viewModel.uzDoomMods.enableModsSupport.value!!) {
-            EditTextItem(
-                stringResource(R.string.uzdoom_mods_count),
-                viewModel.uzDoomMods.modsCount
-            ) {
-                viewModel.uzDoomMods.modsCount = it
-            }
-
-            HorizontalDivider()
-
-            if (viewModel.uzDoomMods.modsCount > 0) {
-                DrawModsLazyColumn(viewModel.uzDoomMods)
-                HorizontalDivider()
-            }
         }
     }
 

@@ -67,3 +67,21 @@ url=https://github.com/sandstranger/ZMusic.git
 [submodule "app/src/main/jni/UZDoom"]
 	path = app/src/main/jni/UZDoom
 	url = https://github.com/sandstranger/UZDoom.git
+[submodule "third_party/mpg123/src/main/jni/MPG123-Android"]
+	path = third_party/mpg123/src/main/jni/MPG123-Android
+	url = https://github.com/rosuH/MPG123-Android.git
+[submodule "third_party/libsndfile/src/main/jni/libsndfile"]
+	path = third_party/libsndfile/src/main/jni/libsndfile
+url=https://github.com/sandstranger/libsndfile.git
+[submodule "third_party/flac/src/main/jni/flac"]
+	path = third_party/flac/src/main/jni/flac
+	url = https://github.com/xiph/flac.git
+[submodule "third_party/libvorbis/src/main/jni/libvorbis-android"]
+	path = third_party/libvorbis/src/main/jni/libvorbis-android
+	url = https://github.com/sandstranger/libvorbis-android.git
+[submodule "third_party/opus/src/main/jni/opus"]
+	path = third_party/opus/src/main/jni/opus
+	url = https://github.com/xiph/opus.git
+[submodule "third_party/libmp3lame/src/main/jni/libmp3lame-android"]
+	path = third_party/libmp3lame/src/main/jni/libmp3lame-android
+	url = https://github.com/sandstranger/libmp3lame-android.git
