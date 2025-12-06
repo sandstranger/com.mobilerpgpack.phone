@@ -6,6 +6,11 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 find_package(ZLIB REQUIRED)
 
+if (${ANDROID_ABI} STREQUAL "arm64-v8a" OR ${ANDROID_ABI} STREQUAL "armeabi-v7a")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -munaligned-access")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -munaligned-access")
+endif ()
+
 set(IS_DEBUG_BUILD OFF)
 if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(IS_DEBUG_BUILD ON)
