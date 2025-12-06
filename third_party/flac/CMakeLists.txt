@@ -10,3 +10,5 @@ endif ()
 set(OGG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../libvorbis/src/main/jni/libvorbis-android/jni/include")
 
 add_subdirectory("src/main/jni/flac")
+
+target_compile_definitions(FLAC PRIVATE HAVE_FSEEKO)
