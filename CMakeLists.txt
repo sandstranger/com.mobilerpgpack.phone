@@ -110,8 +110,8 @@ else ()
     set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/freetype/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libfreetype.so")
 endif ()
 
-set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni/vpx/android/${ANDROID_ABI}/include")
-set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/app/src/main/jni/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
+set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/include")
+set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
 
 set(ZMUSIC_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/zmusic/src/main/jni/ZMusic/include")
 set(ZMUSIC_FOUND TRUE)

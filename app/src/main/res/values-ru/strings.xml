@@ -43,8 +43,7 @@
     <string name="path_to_doom64_folder">Путь к папке Doom 64 с главными WAD-файлами</string>
     <string name="command_line_args">Аргументы командной строки</string>
     <string name="path_to_uzdoom_wad_file">Путь к главному wad файлу для UZDoom</string>
-    <string name="path_to_uzdoom_mods_folder">Путь к папке с модами для UZDoom</string>
-    <string name="enable_uzdoom_mods">Включить моды для UZDoom</string>
+    <string name="path_to_mods_folder">Путь к папке с модами</string>
     <string name="uzdoom_rendering_api">Рендер</string>
     <string name="uzdoom_autoload_widescreen">Автозагрузка поддержки широкоэкранных режимов</string>
     <string name="uzdoom_autoload_brightmaps">Автозагрузка карт освещения</string>

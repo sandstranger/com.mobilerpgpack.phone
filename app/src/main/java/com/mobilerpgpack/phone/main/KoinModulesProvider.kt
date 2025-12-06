@@ -385,6 +385,13 @@ class KoinModulesProvider(private val context: Context,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
+                MPG123_NATIVE_LIB_NAME,
+                MP3LAME_NATIVE_LIB_NAME,
+                OGG_NATIVE_LIB_NAME,
+                VORBIS_NATIVE_LIB_NAME,
+                FLAC_NATIVE_LIB_NAME,
+                OPUS_NATIVE_LIB_NAME,
+                SND_FILE_NATIVE_LIB_NAME,
                 ZMUSIC_NATIVE_LIB_NAME,
                 UZDOOM_MAIN_ENGINE_LIB)
 
