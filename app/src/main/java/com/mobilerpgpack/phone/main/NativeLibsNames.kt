@@ -38,7 +38,19 @@ const val OBOE_NATIVE_LUB_NAME = "oboe"
 
 const val SDL2_MIXER_NATIVE_LIB_NAME = "SDL2_mixer"
 
-const val SPIRV_NATIVE_LIB_NAME = "spirv-cross-c-shared"
+const val MPG123_NATIVE_LIB_NAME = "mpg123"
+
+const val OGG_NATIVE_LIB_NAME = "ogg"
+
+const val MP3LAME_NATIVE_LIB_NAME = "mp3lame"
+
+const val VORBIS_NATIVE_LIB_NAME = "vorbis"
+
+const val OPUS_NATIVE_LIB_NAME = "opus"
+
+const val FLAC_NATIVE_LIB_NAME = "FLAC"
+
+const val SND_FILE_NATIVE_LIB_NAME = "sndfile"
 
 val FREETYPE_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "freetyped" else "freetype"
 

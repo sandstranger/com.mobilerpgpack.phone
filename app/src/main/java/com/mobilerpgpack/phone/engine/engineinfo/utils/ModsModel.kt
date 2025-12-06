@@ -25,7 +25,11 @@ sealed class ModsModel {
     @Transient
     private val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
 
+    val allowedModsExtensions get() = ModsModel.allowedModsExtensions
+
     val enableModsSupport = MutableValue<Boolean>()
+
+    val pathToModsFolder = MutableValue<String>()
 
     var modsCount : Int
         get() = modsCollection.count!!
@@ -34,22 +38,108 @@ sealed class ModsModel {
             save()
         }
 
-    val pathToMods get() = modsCollection.sourceList
+    val mods get() = modsCollection.sourceList
 
-    val pathToModsComposeCollection get() = modsCollection.composeList
+    val modsComposeCollection get() = modsCollection.composeList
 
     init {
         modsCollection.initialize(defaultValue = { Mod() })
         enableModsSupport.initialize(false){
             save()
         }
+        pathToModsFolder.initialize(""){
+            findFilesInModsFolder()
+            save()
+        }
+      //  removeNotExistingMods()
+        //updateFilesInModsFolder()
     }
 
     fun updateComposeModsList () = modsCollection.updateComposeList()
 
     fun save () = jsoFile.writeText(Json.encodeToString(this))
 
+    private fun findFilesInModsFolder(){
+        if (pathToModsFolder.value.isNullOrEmpty()){
+            return
+        }
+
+        getModsFromModsFolder()?.let {
+            mods.clear()
+
+            it.forEach { file ->
+                val mod = Mod()
+                mod.pathToMod.value = file.absolutePath
+                mods +=mod
+            }
+            modsCount = it.count()
+            updateComposeModsList()
+        }
+    }
+
+    private fun removeNotExistingMods(){
+        if (pathToModsFolder.value.isNullOrEmpty()){
+            return
+        }
+
+        val modsToRemove = mutableSetOf<Mod>()
+
+        mods.forEach {
+            if (!it.pathToMod.value.isNullOrEmpty() && !File(it.pathToMod.value!!).exists()){
+                modsToRemove += it
+            }
+        }
+
+        mods.removeAll(modsToRemove)
+        modsCount -= modsToRemove.count()
+
+        if (modsToRemove.count() >0){
+            save()
+            updateComposeModsList()
+        }
+    }
+
+    private fun updateFilesInModsFolder(){
+        if (pathToModsFolder.value.isNullOrEmpty()){
+            return
+        }
+
+        var newFoundedModsCount = 0
+
+        getModsFromModsFolder()?.let {
+            it.forEach { file ->
+                if (!mods.any{mod -> mod.pathToMod.value == file.absolutePath}){
+                    val mod = Mod()
+                    mod.pathToMod.value = file.absolutePath
+                    mods +=mod
+                    ++newFoundedModsCount
+                }
+            }
+
+            if (newFoundedModsCount >0){
+                modsCount +=newFoundedModsCount
+                save()
+                updateComposeModsList()
+            }
+        }
+
+        File(pathToModsFolder.value!!).listFiles()?.filter { file -> file.isMod }?.toList()?.let {
+            it.forEach { file ->
+                val mod = Mod()
+                mod.pathToMod.value = file.absolutePath
+                mods +=mod
+            }
+            updateComposeModsList()
+        }
+    }
+
+    private fun getModsFromModsFolder () = if (pathToModsFolder.value.isNullOrEmpty()) null else
+        File(pathToModsFolder.value!!).listFiles()?.filter { file -> file.isMod }?.toList()
+
     protected companion object{
+
+        val allowedModsExtensions = listOf("wad", "pk3", "iwad", "ipk3", "ipk7")
+//
         val pathToRootUserFolder : String = get(String()::class.java,
             named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
 
@@ -61,7 +151,9 @@ sealed class ModsModel {
                 T::class.java.getDeclaredConstructor().newInstance()
         }
     }
+
+    private val File.isMod get() = this.isFile && allowedModsExtensions.contains(this.extension)
 }
 
 val ModsModel.modsCanBeUsed get() = enableModsSupport.value!! && modsCount > 0 &&
-        this.pathToMods.any { mod -> !mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists() }
+        this.mods.any { mod -> !mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists() }

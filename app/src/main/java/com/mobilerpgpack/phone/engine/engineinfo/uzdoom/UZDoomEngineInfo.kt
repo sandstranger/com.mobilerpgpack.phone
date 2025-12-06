@@ -86,7 +86,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
                     if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
                         it +=FILE_COMMAND
 
-                        modsModel.pathToMods.forEach { mod : Mod ->
+                        modsModel.mods.forEach { mod : Mod ->
                             if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()){
                                 it+=mod.pathToMod.value!!
                             }

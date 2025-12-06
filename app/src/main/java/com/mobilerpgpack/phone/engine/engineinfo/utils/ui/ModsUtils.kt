@@ -24,16 +24,58 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
+import com.mobilerpgpack.phone.ui.items.EditTextItem
+import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
 @Composable
-fun DrawModsLazyColumn(mods: ModsModel){
+fun DrawModsSupport(mods: ModsModel) {
+    HorizontalDivider()
+
+    SwitchItem(stringResource(R.string.enable_separate_mods_support),
+        mods.enableModsSupport.value!!) {
+        mods.enableModsSupport.value = it
+        mods.save()
+    }
+
+    HorizontalDivider()
+
+    if (mods.enableModsSupport.value!!) {
+
+        RequestPath(
+            stringResource(R.string.path_to_mods_folder),
+            mods.pathToModsFolder.value!!){
+            mods.pathToModsFolder.value = it
+
+
+        }
+
+        HorizontalDivider()
+
+        EditTextItem(
+            stringResource(R.string.uzdoom_mods_count),
+            mods.modsCount
+        ) {
+            mods.modsCount = it
+        }
+
+        HorizontalDivider()
+
+        if (mods.modsCount > 0) {
+            DrawModsLazyColumn(mods)
+            HorizontalDivider()
+        }
+    }
+}
+
+@Composable
+private fun DrawModsLazyColumn(mods: ModsModel){
     val lazyListState = rememberLazyListState()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        mods.pathToMods.apply {
+        mods.mods.apply {
             add(to.index, removeAt(from.index))
         }
         mods.updateComposeModsList()
@@ -47,14 +89,16 @@ fun DrawModsLazyColumn(mods: ModsModel){
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        itemsIndexed(mods.pathToModsComposeCollection, key = { _, mod -> mod.key }) { _, mod ->
+        itemsIndexed(mods.modsComposeCollection, key = { _, mod -> mod.key }) { _, mod ->
             ReorderableItem(reorderableLazyListState, key = mod.key) {
                 Column {
                     HorizontalDivider()
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(modifier = Modifier.weight(0.88f)) {
                             RequestPath(stringResource(R.string.path_to_mod),
-                                mod.pathToMod.value ?: "", requestMode = RequestPathMode.File
+                                mod.pathToMod.value ?: "",
+                                requestMode = RequestPathMode.File,
+                                requiredFileExtensions = mods.allowedModsExtensions
                             ) {
                                 mod.pathToMod.value = it
                                 mods.save()

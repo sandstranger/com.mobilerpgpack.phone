@@ -320,6 +320,20 @@ glad as UZDoom dependency: [Licence](https://github.com/Dav1dde/glad/blob/glad2/
 
 androidx: [Licence](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt) https://github.com/androidx
 
+vorbis-android: [Licence](https://gitlab.xiph.org/xiph/vorbis/-/blob/main/COPYING) https://github.com/MoNTE48/libvorbis-android
+
+opus: [Licence](https://github.com/xiph/opus/blob/main/COPYING)	 https://github.com/xiph/opus
+
+MPG123-Android:	[Licence](https://github.com/rosuH/MPG123-Android/blob/master/LICENSE)	https://github.com/rosuH/MPG123-Android
+
+flac: [Licence](https://github.com/xiph/flac/blob/master/COPYING.Xiph)	https://github.com/xiph/flac
+
+libmp3lame-android: [Licence](https://github.com/xieyangxuejun/libmp3lame-android/blob/master/LICENSE)	 https://github.com/xieyangxuejun/libmp3lame-android
+
+libsndfile: [Licence](https://github.com/libsndfile/libsndfile/blob/master/COPYING) https://github.com/libsndfile/libsndfile
+
+vpx-android: [Licence](https://github.com/cmeng-git/atalk-android/blob/master/LICENSE)	https://github.com/cmeng-git/atalk-android/blob/master/LICENSE https://github.com/cmeng-git/atalk-android/tree/master/aTalk/jni/vpx
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
