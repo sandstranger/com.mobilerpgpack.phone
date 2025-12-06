@@ -330,9 +330,9 @@ flac: [Licence](https://github.com/xiph/flac/blob/master/COPYING.Xiph)	https://g
 
 libmp3lame-android: [Licence](https://github.com/xieyangxuejun/libmp3lame-android/blob/master/LICENSE)	 https://github.com/xieyangxuejun/libmp3lame-android
 
-libsndfile: [Licence](https://github.com/libsndfile/libsndfile/blob/master/COPYING) https://github.com/libsndfile/libsndfile
+libsndfile: [Licence](https://github.com/libsndfile/libsndfile/blob/master/COPYING)  https://github.com/libsndfile/libsndfile
 
-vpx-android: [Licence](https://github.com/cmeng-git/atalk-android/blob/master/LICENSE)	https://github.com/cmeng-git/atalk-android/blob/master/LICENSE https://github.com/cmeng-git/atalk-android/tree/master/aTalk/jni/vpx
+vpx-android: [Licence](https://github.com/cmeng-git/atalk-android/blob/master/LICENSE)	https://github.com/cmeng-git/atalk-android/tree/master/aTalk/jni/vpx
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
