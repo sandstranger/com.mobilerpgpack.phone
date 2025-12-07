@@ -2,6 +2,10 @@ package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
+import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.sun.jna.Function
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +21,8 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                         commandLineParamsFlow : Flow<String>) :
     SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.PsyDoom,
         commandLineParamsFlow = commandLineParamsFlow) {
+
+    private val modsModel : PsyDoomModsModel by inject ()
 
     private val psyDoomPreferencesStorage by inject <PsyDoomPreferencesStorage>(named(
         EngineTypes.PsyDoom.toString()))
@@ -58,6 +64,16 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                         !baseCommandLineArgs.contains(CUE_COMMAND)) {
                         it += CUE_COMMAND
                         it += pathToCue
+                    }
+
+                    if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
+                        it += FILE_COMMAND
+
+                        modsModel.mods.forEach { mod : Mod ->
+                            if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()){
+                                it+=mod.pathToMod.value!!
+                            }
+                        }
                     }
 
                     val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods.first()
@@ -145,6 +161,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     private companion object{
+        private const val FILE_COMMAND = "-file"
         private const val CUE_COMMAND = "-cue"
         private const val DATA_DIR_COMMAND = "-datadir"
         private const val CLIENT_COMMAND = "-client"

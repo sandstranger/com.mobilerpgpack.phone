@@ -17,7 +17,7 @@ import java.util.Locale.getDefault
 
 @Serializable
 @JsonIgnoreUnknownKeys
-sealed class ModsModel {
+abstract sealed class ModsModel {
 
     protected abstract val jsonFileName : String
 
