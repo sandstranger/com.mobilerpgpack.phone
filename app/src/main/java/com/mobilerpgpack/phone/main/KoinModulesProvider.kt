@@ -74,6 +74,7 @@ import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
@@ -370,6 +371,8 @@ class KoinModulesProvider(private val context: Context,
             }.withOptions {
                 named(EngineTypes.Doom64ExPlusEnhanced.toString())
             }
+
+        single<Doom64ModsModel> { Doom64ModsModel.load() }
     }
 
     private val uZDoomRegisterModule = module {

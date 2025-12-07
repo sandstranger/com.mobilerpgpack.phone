@@ -10,6 +10,8 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
@@ -29,6 +31,8 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
 
     private val preferencesStorage : PreferencesStorage by inject()
 
+    private val modsModel : Doom64ModsModel by inject ()
+
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         val previousPathToDoom64WadsFolder by preferencesStorage.pathToDoom64MainWadsFolder
@@ -45,7 +49,7 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
             scope.launch { preferencesStorage.setPathToDoom64MainWadsFolder(selectedPath) }
         }
 
-        HorizontalDivider()
+        DrawModsSupport(modsModel)
 
         val enableDoom64ModsFlow = preferencesStorage.enableDoom64Mods
         val enableDoom64Mods by enableDoom64ModsFlow.collectAsState(initial = false)
