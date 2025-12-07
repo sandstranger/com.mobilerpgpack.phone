@@ -47,6 +47,7 @@
     <string name="path_to_mods_folder">Путь к папке с модами. Это перезапишет текущую историю модов</string>
     <string name="enable_mods_autoupdate">Включить автоматическое обновление модов при запуске приложения, если папка с модами выбрана</string>
     <string name="uzdoom_rendering_api">Рендер</string>
+    <string name="uzdoom_enable_light_shaders">Включить легкие шейдеры</string>
     <string name="uzdoom_autoload_widescreen">Автозагрузка поддержки широкоэкранных режимов</string>
     <string name="uzdoom_autoload_brightmaps">Автозагрузка карт освещения</string>
     <string name="uzdoom_autoload_lights">Автозагрузка освещения</string>

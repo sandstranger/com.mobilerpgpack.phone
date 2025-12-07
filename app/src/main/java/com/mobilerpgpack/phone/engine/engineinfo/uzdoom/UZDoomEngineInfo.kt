@@ -50,6 +50,13 @@ class UZDoomEngineInfo (mainEngineLib: String,
             "RecreateVulkanSwapChain")
     }
 
+    private val updateGLLiteShaderStateNativeDelegate  by lazy {
+        Function.getFunction(mainEngineLib,
+            "UpdateGLLiteShaderState")
+    }
+
+    private var enableLightShaders = false
+
     override val preferencesStorage = lzDoomPreferencesStorage
 
     override val pathToResource get() = runBlocking{ lzDoomPreferencesStorage.pathToUZDoomIWadFile.first() }
@@ -121,8 +128,11 @@ class UZDoomEngineInfo (mainEngineLib: String,
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToLZDoomUserFolder, true)
-        Os.setenv("PATH_TO_UZDOOM_MODS_FOLDER", "", true)
+        enableLightShaders = preferencesStorage.enableLightShaders.first()
     }
+
+    override fun onNativeLibrariesLoaded() = updateGLLiteShaderStateNativeDelegate
+        .invokeVoid(arrayOf(enableLightShaders))
 
     override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
 

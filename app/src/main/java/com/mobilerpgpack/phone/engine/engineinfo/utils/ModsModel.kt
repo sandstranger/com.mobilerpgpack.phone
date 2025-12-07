@@ -89,10 +89,6 @@ sealed class ModsModel {
     }
 
     private fun removeNotExistingMods(){
-        if (pathToModsFolder.value.isNullOrEmpty()){
-            return
-        }
-
         val modsToRemove = mutableSetOf<Mod>()
 
         mods.forEach {
