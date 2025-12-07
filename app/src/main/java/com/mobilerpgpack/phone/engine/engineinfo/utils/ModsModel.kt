@@ -2,7 +2,6 @@
 
 package com.mobilerpgpack.phone.engine.engineinfo.utils
 
-import androidx.compose.ui.text.toUpperCase
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.ComposeImmutableList
 import com.mobilerpgpack.phone.utils.MutableValue
@@ -14,7 +13,6 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.get
 import java.io.File
-import java.util.Locale
 import java.util.Locale.getDefault
 
 @Serializable
