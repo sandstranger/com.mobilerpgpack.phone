@@ -38,6 +38,7 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
         runBlocking { engineInfo.initialize(this@SDL3GameActivity) }
         super.onCreate(savedInstanceState)
         engineInfo.loadLayout()
+        engineInfo.onNativeLibrariesLoaded()
     }
 
     override fun getMainSharedObject() = engineInfo.mainSharedObject

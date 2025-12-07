@@ -16,6 +16,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
+import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
 import org.koin.androidx.compose.koinViewModel
@@ -66,6 +67,13 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.renderAPI = enumValueOf<UZDoomRenderAPI>(it)
         }
+
+        HorizontalDivider()
+
+        SwitchPreferenceItem(
+            stringResource(R.string.uzdoom_enable_light_shaders),
+            preferencesStorage.enableLightShaders,
+            preferencesStorage.enableLightShadersPrefsKey.name)
 
         HorizontalDivider()
 
