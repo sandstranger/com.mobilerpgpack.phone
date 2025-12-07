@@ -374,7 +374,7 @@ class KoinModulesProvider(private val context: Context,
                 named(EngineTypes.Doom64ExPlusEnhanced.toString())
             }
 
-        single<ModsModel> { ModsFilesUpdater(Doom64ModsModel.load()) }.withOptions {
+        single<ModsModel> { ModsFilesUpdater(Doom64ModsModel.load()).updateFiles() }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
         }.withOptions {
             named(EngineTypes.Doom64ExPlusEnhanced.toString())
@@ -420,11 +420,7 @@ class KoinModulesProvider(private val context: Context,
         viewModelOf(::UZDoomComposeSettingsViewModel)
         singleOf(::UZDoomMoreSettingsScreen).bind()
 
-        single<UZDoomModsModel> {
-            UZDoomModsModel.load().apply {
-                ModsFilesUpdater(this)
-            }
-        }.withOptions {
+        single<UZDoomModsModel> { ModsFilesUpdater(UZDoomModsModel.load()).updateFiles() }.withOptions {
             named(EngineTypes.UZDoom.toString())
         }
     }
@@ -479,7 +475,7 @@ class KoinModulesProvider(private val context: Context,
 
         viewModelOf(::PsyDoomComposeSettingsViewModel)
         singleOf(::PsyDoomMoreSettingsScreen).bind()
-        single <ModsModel> { ModsFilesUpdater( PsyDoomModsModel.load()) }.withOptions {
+        single <ModsModel> { ModsFilesUpdater( PsyDoomModsModel.load()).updateFiles() }.withOptions {
             named(EngineTypes.PsyDoom.toString())
         }
     }
