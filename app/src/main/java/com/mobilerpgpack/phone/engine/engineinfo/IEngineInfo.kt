@@ -35,6 +35,8 @@ interface IEngineInfo {
 
     fun onResume()
 
+    fun onNativeLibrariesLoaded() {}
+
     fun onDestroy()
 }
 

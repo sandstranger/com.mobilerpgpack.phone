@@ -46,6 +46,7 @@
     <string name="path_to_uzdoom_wad_file">Path to UZDoom main wad file</string>
     <string name="path_to_mods_folder">Path to mods folder. This will overwrite current mod history</string>
     <string name="enable_mods_autoupdate">Enable mods autoupdate at app startup, if mods folder is selected</string>
+    <string name="uzdoom_enable_light_shaders">Enable light shaders</string>
     <string name="uzdoom_rendering_api">Rendering API</string>
     <string name="uzdoom_autoload_widescreen">Autoload widescreen support</string>
     <string name="uzdoom_autoload_brightmaps">Autoload brightmaps</string>
