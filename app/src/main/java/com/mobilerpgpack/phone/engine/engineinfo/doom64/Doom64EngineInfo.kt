@@ -6,6 +6,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 import java.io.File
 import kotlin.collections.forEach
 
@@ -32,7 +34,7 @@ open class Doom64EngineInfo(
 
     private var customScreenResolutionWasApplied = false
 
-    private val modsModel : Doom64ModsModel by inject ()
+    private val modsModel : ModsModel by inject (named(EngineTypes.Doom64ExPlus.toString()))
 
     private val mouseCursorCanBeDrawnNativeDelegate by lazy {
         Function.getFunction(mainEngineLib,

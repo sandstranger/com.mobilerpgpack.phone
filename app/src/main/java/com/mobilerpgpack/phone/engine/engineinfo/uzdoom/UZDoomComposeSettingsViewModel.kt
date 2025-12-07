@@ -1,9 +1,12 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
+import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
 import com.mobilerpgpack.phone.utils.Ini
 import org.koin.core.component.get
+import org.koin.core.qualifier.named
 import java.io.File
 
 class UZDoomComposeSettingsViewModel : IniViewModel(){
@@ -11,7 +14,7 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
     private val uzDoomIni = Ini ("${pathToRootUserFolder}${File.separator}" +
                 "uzdoom${File.separator}uzdoom.ini", removeSpacesBetweenSeparator = true)
 
-    val uzDoomMods : UZDoomModsModel = get ()
+    val uzDoomMods : UZDoomModsModel = get (named(EngineTypes.UZDoom.toString()))
 
     var renderAPI : UZDoomRenderAPI
         get() = UZDoomRenderAPI.fromValue(uzDoomIni.getIntValue(PREFERRED_RENDER_API))
