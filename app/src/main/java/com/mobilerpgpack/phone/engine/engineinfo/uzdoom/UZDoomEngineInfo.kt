@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.behFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.dehFileCanBeUsed
@@ -30,7 +31,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
     private val lzDoomPreferencesStorage by inject <UZDoomPreferenceStorage>(named(
         EngineTypes.UZDoom.toString()))
 
-    private val modsModel : UZDoomModsModel by inject ()
+    private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
 
     private val pathToLZDoomUserFolder by lazy{
         super.pathToRootUserFolder + File.separator + "uzdoom"

@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.codekidlabs.storagechooser.StorageChooser
 import com.github.sproctor.composepreferences.PreferenceHandler
-import com.google.gson.Gson
 import com.google.mlkit.common.model.RemoteModel
 import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
@@ -75,6 +74,8 @@ import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsFilesUpdater
 import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
@@ -373,7 +374,11 @@ class KoinModulesProvider(private val context: Context,
                 named(EngineTypes.Doom64ExPlusEnhanced.toString())
             }
 
-        single<Doom64ModsModel> { Doom64ModsModel.load() }
+        single<ModsModel> { ModsFilesUpdater(Doom64ModsModel.load()) }.withOptions {
+            named(EngineTypes.Doom64ExPlus.toString())
+        }.withOptions {
+            named(EngineTypes.Doom64ExPlusEnhanced.toString())
+        }
     }
 
     private val uZDoomRegisterModule = module {
@@ -415,7 +420,13 @@ class KoinModulesProvider(private val context: Context,
         viewModelOf(::UZDoomComposeSettingsViewModel)
         singleOf(::UZDoomMoreSettingsScreen).bind()
 
-        single<UZDoomModsModel> { UZDoomModsModel.load() }
+        single<UZDoomModsModel> {
+            UZDoomModsModel.load().apply {
+                ModsFilesUpdater(this)
+            }
+        }.withOptions {
+            named(EngineTypes.UZDoom.toString())
+        }
     }
 
     private val psyDoomRegisterModule = module {
@@ -468,7 +479,9 @@ class KoinModulesProvider(private val context: Context,
 
         viewModelOf(::PsyDoomComposeSettingsViewModel)
         singleOf(::PsyDoomMoreSettingsScreen).bind()
-        single <PsyDoomModsModel> { PsyDoomModsModel.load() }
+        single <ModsModel> { ModsFilesUpdater( PsyDoomModsModel.load()) }.withOptions {
+            named(EngineTypes.PsyDoom.toString())
+        }
     }
 
     init {

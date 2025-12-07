@@ -11,6 +11,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
@@ -31,7 +32,7 @@ class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenC
 
     private val preferencesStorage : PreferencesStorage by inject()
 
-    private val modsModel : Doom64ModsModel by inject ()
+    private val modsModel : ModsModel by inject (named(EngineTypes.Doom64ExPlus.toString()))
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {

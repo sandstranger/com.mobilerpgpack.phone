@@ -1,9 +1,12 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
+import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
 import com.mobilerpgpack.phone.utils.Ini
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 import java.io.File
 
 class PsyDoomComposeSettingsViewModel : IniViewModel() {
@@ -25,7 +28,7 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
     private val multiPlayerIniFile =
         Ini("${pathToPsyDoomConfigsFolder}${File.separator}multiplayer_cfg.ini")
 
-    val modsModel : PsyDoomModsModel by inject ()
+    val modsModel : ModsModel by inject (named(EngineTypes.PsyDoom.toString()))
 
     var enableVsync : Boolean
         get() = graphicsIniFile.getBooleanValueFromInt("EnableVSync")
