@@ -32,7 +32,8 @@ fun EditTextItem(
     keyboardType : KeyboardType = KeyboardType.Text,
     onValueChange: ((String) -> Unit)? = null
 ) {
-    var showDialog by rememberSaveable(false) { mutableStateOf(false) }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var tempValue by rememberSaveable(value) { mutableStateOf(value) }
 
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -42,7 +43,7 @@ fun EditTextItem(
         Text(text = title)
 
         Text(
-            text = value.ifEmpty { hint },
+            text = tempValue.ifEmpty { hint },
             style = MaterialTheme.typography.bodyMedium,
             color = if (value.isNotEmpty()) Color.Unspecified else Color.Gray,
             modifier = Modifier.padding(top = 4.dp)
@@ -50,7 +51,6 @@ fun EditTextItem(
     }
 
     if (showDialog) {
-        var tempValue by rememberSaveable(value) { mutableStateOf(value) }
 
         AlertDialog(
             onDismissRequest = { showDialog = false },

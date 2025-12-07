@@ -96,7 +96,11 @@ class MainActivity : ComponentActivity(), KoinComponent {
                                     {
                                         permissionScreen.DrawScreen(navController) {
                                             navController.navigate(settingsScreen.route) {
-                                                popUpTo(settingsScreen.route) { inclusive = true }
+                                                popUpTo(0) {
+                                                    inclusive = true
+                                                    saveState = false
+                                                }
+                                                launchSingleTop = true
                                             }
                                         }
                                     }
