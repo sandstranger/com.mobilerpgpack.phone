@@ -84,7 +84,7 @@ abstract sealed class ModsModel {
                 Json.decodeFromString<T>(jsoFile.readText()) else
                 T::class.java.getDeclaredConstructor().newInstance()
             return model.apply {
-                this.initialize()
+                initialize()
             }
         }
     }
