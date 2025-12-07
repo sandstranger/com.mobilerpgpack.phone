@@ -2,6 +2,7 @@
 
 package com.mobilerpgpack.phone.engine.engineinfo.utils
 
+import androidx.compose.ui.text.toUpperCase
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.ComposeImmutableList
 import com.mobilerpgpack.phone.utils.MutableValue
@@ -13,6 +14,8 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.get
 import java.io.File
+import java.util.Locale
+import java.util.Locale.getDefault
 
 @Serializable
 @JsonIgnoreUnknownKeys
@@ -27,7 +30,14 @@ sealed class ModsModel {
     @Transient
     private val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
 
-    open val allowedModsExtensions : Collection<String> = listOf("wad", "pk3", "iwad", "ipk3", "ipk7")
+    open val allowedModsExtensions : Collection<String> = listOf("wad", "pk3", "iwad", "ipk3", "ipk7").let {
+        val result = mutableListOf<String>()
+        result += it
+        it.forEach { fileExtension ->
+            result += fileExtension.uppercase(getDefault())
+        }
+        result
+    }
 
     val enableModsSupport = MutableValue<Boolean>()
 
@@ -128,15 +138,6 @@ sealed class ModsModel {
                 save()
                 updateComposeModsList()
             }
-        }
-
-        File(pathToModsFolder.value!!).listFiles()?.filter { file -> file.isMod }?.toList()?.let {
-            it.forEach { file ->
-                val mod = Mod()
-                mod.pathToMod.value = file.absolutePath
-                mods +=mod
-            }
-            updateComposeModsList()
         }
     }
 
