@@ -28,6 +28,7 @@ sealed class ModsModel {
     @Transient
     private val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
 
+    @Transient
     open val allowedModsExtensions : Collection<String> = listOf("wad", "pk3", "iwad", "ipk3", "ipk7").let {
         val result = mutableListOf<String>()
         result += it
