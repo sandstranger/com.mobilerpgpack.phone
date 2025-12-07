@@ -22,6 +22,7 @@
     <string name="grant_permission">Предоставить разрешение</string>
     <string name="selected_button">Выбранная кнопка</string>
     <string name="clear">Очистить</string>
+    <string name="delete">Удалить</string>
     <string name="common_settings">Общие настройки</string>
     <string name="graphics_settings">Настройки графики</string>
     <string name="translation_settings">Настройки перевода</string>
@@ -43,7 +44,8 @@
     <string name="path_to_doom64_folder">Путь к папке Doom 64 с главными WAD-файлами</string>
     <string name="command_line_args">Аргументы командной строки</string>
     <string name="path_to_uzdoom_wad_file">Путь к главному wad файлу для UZDoom</string>
-    <string name="path_to_mods_folder">Путь к папке с модами</string>
+    <string name="path_to_mods_folder">Путь к папке с модами. Это перезапишет текущую историю модов</string>
+    <string name="enable_mods_autoupdate">Включить автоматическое обновление модов при запуске приложения, если папка с модами выбрана</string>
     <string name="uzdoom_rendering_api">Рендер</string>
     <string name="uzdoom_autoload_widescreen">Автозагрузка поддержки широкоэкранных режимов</string>
     <string name="uzdoom_autoload_brightmaps">Автозагрузка карт освещения</string>

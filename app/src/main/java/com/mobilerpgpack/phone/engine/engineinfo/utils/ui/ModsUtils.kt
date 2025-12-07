@@ -44,13 +44,32 @@ fun DrawModsSupport(mods: ModsModel) {
     HorizontalDivider()
 
     if (mods.enableModsSupport.value!!) {
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            Box(modifier = Modifier.weight(0.65f)) {
+                RequestPath(
+                    stringResource(R.string.path_to_mods_folder),
+                    mods.pathToModsFolder.value!!) {
+                    mods.pathToModsFolder.value = it
+                }
+            }
 
-        RequestPath(
-            stringResource(R.string.path_to_mods_folder),
-            mods.pathToModsFolder.value!!){
-            mods.pathToModsFolder.value = it
+            if (!mods.pathToModsFolder.value.isNullOrEmpty()) {
+                Button(modifier = Modifier.weight(0.35f).height(40.dp), onClick = {
+                    mods.pathToModsFolder.value = ""
+                    mods.save()
+                }) {
+                    Text(
+                        text = stringResource(R.string.clear),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
 
+        HorizontalDivider()
 
+        SwitchItem(stringResource(R.string.enable_mods_autoupdate),mods.enableModsAutoUpdateInFolder){
+            mods.enableModsAutoUpdateInFolder = it
         }
 
         HorizontalDivider()
@@ -105,12 +124,25 @@ private fun DrawModsLazyColumn(mods: ModsModel){
                             }
                         }
 
-                        if (!mod.pathToMod.value.isNullOrEmpty()) {
+                        Column {
+                            if (!mod.pathToMod.value.isNullOrEmpty()) {
+                                Button(onClick = {
+                                    mod.pathToMod.value = ""
+                                    mods.save() }) {
+                                    Text(
+                                        text = stringResource(R.string.clear),
+                                        textAlign = TextAlign.Center,
+                                    )
+                                }
+                            }
+
                             Button(onClick = {
-                                mod.pathToMod.value = ""
+                                mods.mods -=mod
+                                --mods.modsCount
+                                mods.updateComposeModsList()
                                 mods.save() }) {
                                 Text(
-                                    text = stringResource(R.string.clear),
+                                    text = stringResource(R.string.delete),
                                     textAlign = TextAlign.Center,
                                 )
                             }
