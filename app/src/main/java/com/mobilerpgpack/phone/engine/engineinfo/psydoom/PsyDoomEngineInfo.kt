@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
@@ -22,7 +23,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.PsyDoom,
         commandLineParamsFlow = commandLineParamsFlow) {
 
-    private val modsModel : PsyDoomModsModel by inject ()
+    private val modsModel : ModsModel by inject (named(EngineTypes.PsyDoom.toString()))
 
     private val psyDoomPreferencesStorage by inject <PsyDoomPreferencesStorage>(named(
         EngineTypes.PsyDoom.toString()))
