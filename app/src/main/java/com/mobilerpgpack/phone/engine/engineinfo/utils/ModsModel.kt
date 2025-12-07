@@ -22,14 +22,22 @@ sealed class ModsModel {
 
     private val modsCollection = ComposeImmutableList<Mod>()
 
+    private val _enableModsAutoUpdateInFolder = MutableValue<Boolean>()
+
     @Transient
     private val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
 
-    val allowedModsExtensions get() = ModsModel.allowedModsExtensions
+    open val allowedModsExtensions : Collection<String> = listOf("wad", "pk3", "iwad", "ipk3", "ipk7")
 
     val enableModsSupport = MutableValue<Boolean>()
 
     val pathToModsFolder = MutableValue<String>()
+
+    var enableModsAutoUpdateInFolder
+        get() = _enableModsAutoUpdateInFolder.value!!
+        set(value) {
+            _enableModsAutoUpdateInFolder.value = value
+        }
 
     var modsCount : Int
         get() = modsCollection.count!!
@@ -42,7 +50,7 @@ sealed class ModsModel {
 
     val modsComposeCollection get() = modsCollection.composeList
 
-    init {
+    protected open fun initialize() {
         modsCollection.initialize(defaultValue = { Mod() })
         enableModsSupport.initialize(false){
             save()
@@ -51,8 +59,11 @@ sealed class ModsModel {
             findFilesInModsFolder()
             save()
         }
-      //  removeNotExistingMods()
-        //updateFilesInModsFolder()
+        _enableModsAutoUpdateInFolder.initialize(true){
+            save()
+        }
+        removeNotExistingMods()
+        updateFilesInModsFolder()
     }
 
     fun updateComposeModsList () = modsCollection.updateComposeList()
@@ -100,7 +111,7 @@ sealed class ModsModel {
     }
 
     private fun updateFilesInModsFolder(){
-        if (pathToModsFolder.value.isNullOrEmpty()){
+        if (pathToModsFolder.value.isNullOrEmpty() || !enableModsAutoUpdateInFolder){
             return
         }
 
@@ -138,17 +149,18 @@ sealed class ModsModel {
 
     protected companion object{
 
-        val allowedModsExtensions = listOf("wad", "pk3", "iwad", "ipk3", "ipk7")
-//
         val pathToRootUserFolder : String = get(String()::class.java,
             named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
 
         inline fun <reified T> load(jsonFileName : String ): T where T : ModsModel {
             val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
 
-            return if (jsoFile.exists())
+            val model = if (jsoFile.exists())
                 Json.decodeFromString<T>(jsoFile.readText()) else
                 T::class.java.getDeclaredConstructor().newInstance()
+            return model.also {
+                it.initialize()
+            }
         }
     }
 

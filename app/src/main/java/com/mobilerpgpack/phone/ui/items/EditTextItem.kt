@@ -13,6 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -31,8 +32,7 @@ fun EditTextItem(
     keyboardType : KeyboardType = KeyboardType.Text,
     onValueChange: ((String) -> Unit)? = null
 ) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    var tempValue by rememberSaveable { mutableStateOf(value) }
+    var showDialog by rememberSaveable(false) { mutableStateOf(false) }
 
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -42,7 +42,7 @@ fun EditTextItem(
         Text(text = title)
 
         Text(
-            text = tempValue.ifEmpty { hint },
+            text = value.ifEmpty { hint },
             style = MaterialTheme.typography.bodyMedium,
             color = if (value.isNotEmpty()) Color.Unspecified else Color.Gray,
             modifier = Modifier.padding(top = 4.dp)
@@ -50,6 +50,8 @@ fun EditTextItem(
     }
 
     if (showDialog) {
+        var tempValue by rememberSaveable(value) { mutableStateOf(value) }
+
         AlertDialog(
             onDismissRequest = { showDialog = false },
             confirmButton = {
