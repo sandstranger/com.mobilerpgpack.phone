@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -12,6 +13,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.GameEnum.Companion.stringCollection
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.SwitchItem
@@ -43,12 +45,13 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         viewModel.initialize()
 
         if (viewModel.showView) {
-            DrawPsyDoomCommonSettings(navController)
+            DrawPsyDoomCommonSettings(viewModel,navController)
         }
     }
 
     @Composable
-    private fun DrawPsyDoomCommonSettings(navController: NavHostController) {
+    private fun DrawPsyDoomCommonSettings(viewModel: PsyDoomComposeSettingsViewModel,
+                                          navController: NavHostController) {
 
         DrawCommandLinePreferences(
             preferencesStorage.psyDoomCommandLineArgsString,
@@ -65,7 +68,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             requiredFileExtensions = arrayListOf(engineInfo.requiredResourceExtension)
         )
 
-        HorizontalDivider()
+        DrawModsSupport(viewModel.modsModel)
 
         SwitchPreferenceItem(
             stringResource(R.string.enable_psydoom_mods),
