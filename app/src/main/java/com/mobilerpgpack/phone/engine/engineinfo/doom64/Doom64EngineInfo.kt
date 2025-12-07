@@ -4,6 +4,10 @@ import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
+import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.invokeBool
@@ -12,7 +16,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import org.koin.core.component.inject
 import java.io.File
+import kotlin.collections.forEach
 
 open class Doom64EngineInfo(
     mainEngineLib: String,
@@ -26,6 +32,8 @@ open class Doom64EngineInfo(
 
     private var customScreenResolutionWasApplied = false
 
+    private val modsModel : Doom64ModsModel by inject ()
+
     private val mouseCursorCanBeDrawnNativeDelegate by lazy {
         Function.getFunction(mainEngineLib,
             "MouseCursorCanBeDrawn")
@@ -36,12 +44,35 @@ open class Doom64EngineInfo(
             "RecalculateScreenResolution")
     }
 
+    override val commandLineArgs: Array<String>
+        get() {
+            val baseCommandLineArgs = super.commandLineArgs
+
+            return mutableListOf<String>().let {
+                it += baseCommandLineArgs
+
+                if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
+                    it += FILE_COMMAND
+                    modsModel.mods.forEach { mod : Mod ->
+                        if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()){
+                            it+=mod.pathToMod.value!!
+                        }
+                    }
+                }
+
+                val pathToDoom64ModsFolder = runBlocking { getPathToDoom64ModsFolder()}
+
+                if (!baseCommandLineArgs.contains(MODS_COMMAND) && pathToDoom64ModsFolder.isNotEmpty()){
+                    it +=MODS_COMMAND
+                    it +=pathToDoom64ModsFolder
+                }
+
+                it.toTypedArray()
+            }
+        }
+
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
-
-        val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
-
-        Os.setenv("PATH_TO_DOOM64_MODS_FOLDER", pathToDoom64ModsFolder, true)
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
     }
 
@@ -89,6 +120,11 @@ open class Doom64EngineInfo(
         }
 
         return pathToDoom64ModsFolder
+    }
+
+    private companion object{
+        private const val FILE_COMMAND = "-file"
+        private const val MODS_COMMAND = "-mod"
     }
 }
 
