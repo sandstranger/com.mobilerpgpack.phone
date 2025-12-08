@@ -134,9 +134,15 @@ class UZDoomEngineInfo (mainEngineLib: String,
     override fun onNativeLibrariesLoaded() = updateGLLiteShaderStateNativeDelegate
         .invokeVoid(arrayOf(enableLightShaders))
 
-    override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
+    override fun onResume() {
+        super.onResume()
+        recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
+    }
 
-    override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
+    override fun onPause() {
+        super.onPause()
+        destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
+    }
 
     private companion object {
         private const val IWAD_COMMAND = "-iwad"
