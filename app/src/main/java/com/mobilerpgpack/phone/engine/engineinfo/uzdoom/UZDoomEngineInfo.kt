@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.behFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.dehFileCanBeUsed
@@ -54,6 +53,10 @@ class UZDoomEngineInfo (mainEngineLib: String,
     private val updateGLLiteShaderStateNativeDelegate  by lazy {
         Function.getFunction(mainEngineLib,
             "UpdateGLLiteShaderState")
+    }
+
+    private val registerJoysticksNativeDelegate by lazy {
+        Function.getFunction(mainEngineLib, "RegisterJoysticks")
     }
 
     private var enableLightShaders = false
@@ -138,6 +141,8 @@ class UZDoomEngineInfo (mainEngineLib: String,
     override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
+
+    override fun registerJoysticks() = registerJoysticksNativeDelegate.invokeVoid(null)
 
     private companion object {
         private const val IWAD_COMMAND = "-iwad"
