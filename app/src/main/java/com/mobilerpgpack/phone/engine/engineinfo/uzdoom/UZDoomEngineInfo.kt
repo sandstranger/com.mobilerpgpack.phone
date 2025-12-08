@@ -55,10 +55,6 @@ class UZDoomEngineInfo (mainEngineLib: String,
             "UpdateGLLiteShaderState")
     }
 
-    private val registerJoysticksNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib, "RegisterJoysticks")
-    }
-
     private var enableLightShaders = false
 
     override val preferencesStorage = lzDoomPreferencesStorage
@@ -141,8 +137,6 @@ class UZDoomEngineInfo (mainEngineLib: String,
     override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
-
-    override fun registerJoysticks() = registerJoysticksNativeDelegate.invokeVoid(null)
 
     private companion object {
         private const val IWAD_COMMAND = "-iwad"
