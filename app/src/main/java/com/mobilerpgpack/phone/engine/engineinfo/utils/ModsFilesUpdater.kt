@@ -2,31 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.utils
 
 import java.io.File
 
-class ModsFilesUpdater <T> (private val modsModel: T) : ModsModel() where T : ModsModel{
-
-    override val jsonFileName = ""
-
-    override val modsComposeCollection get() = modsModel.modsComposeCollection
-
-    override val mods get() = modsModel.mods
-
-    override var modsCount
-        get() = modsModel.modsCount
-        set(value) {
-            modsModel.modsCount = value
-        }
-
-    override var enableModsAutoUpdateInFolder
-        get() = modsModel.enableModsAutoUpdateInFolder
-        set(value) {
-            modsModel.enableModsAutoUpdateInFolder = value
-        }
-
-    override val pathToModsFolder get() = modsModel.pathToModsFolder
-
-    override val enableModsSupport get() = modsModel.enableModsSupport
-
-    override val allowedModsExtensions  get() = modsModel.allowedModsExtensions
+class ModsFilesUpdater <T> (private val modsModel: T) where T : ModsModel{
 
     fun updateFiles(): T =
         modsModel.apply {
@@ -37,10 +13,6 @@ class ModsFilesUpdater <T> (private val modsModel: T) : ModsModel() where T : Mo
             removeNotExistingMods()
             updateFilesInModsFolder()
         }
-
-    override fun save() = modsModel.save()
-
-    override fun updateComposeModsList() = modsModel.updateComposeModsList()
 
     private fun updateFilesInModsFolder(){
         modsModel.apply {
