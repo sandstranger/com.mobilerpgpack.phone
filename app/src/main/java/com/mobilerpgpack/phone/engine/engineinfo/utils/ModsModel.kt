@@ -19,7 +19,7 @@ import java.util.Locale.getDefault
 @JsonIgnoreUnknownKeys
 abstract sealed class ModsModel {
 
-    protected abstract val jsonFileName : String
+    protected abstract val jsonFileName: String
 
     private val modsCollection = ComposeImmutableList<Mod>()
 
@@ -29,56 +29,59 @@ abstract sealed class ModsModel {
     private val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
 
     @Transient
-    open val allowedModsExtensions : Collection<String> = listOf("wad", "pk3", "iwad", "ipk3", "ipk7").let {
-        val result = mutableListOf<String>()
-        result += it
-        it.forEach { fileExtension ->
-            result += fileExtension.uppercase(getDefault())
+    open val allowedModsExtensions: Collection<String> =
+        listOf("wad", "pk3", "iwad", "ipk3", "ipk7").let {
+            val result = mutableListOf<String>()
+            result += it
+            it.forEach { fileExtension ->
+                result += fileExtension.uppercase(getDefault())
+            }
+            result
         }
-        result
-    }
 
-    open val enableModsSupport = MutableValue<Boolean>()
+    val enableModsSupport = MutableValue<Boolean>()
 
-    open val pathToModsFolder = MutableValue<String>()
+    val pathToModsFolder = MutableValue<String>()
 
-    open var enableModsAutoUpdateInFolder
+    var enableModsAutoUpdateInFolder
         get() = _enableModsAutoUpdateInFolder.value!!
         set(value) {
             _enableModsAutoUpdateInFolder.value = value
         }
 
-    open var modsCount : Int
+    var modsCount: Int
         get() = modsCollection.count!!
         set(value) {
             modsCollection.count = value
             save()
         }
 
-    open val mods get() = modsCollection.sourceList
+    val mods get() = modsCollection.sourceList
 
-    open val modsComposeCollection get() = modsCollection.composeList
+    val modsComposeCollection get() = modsCollection.composeList
 
-    protected open fun initialize(){
+    protected open fun initialize() {
         modsCollection.initialize(defaultValue = { Mod() })
-        enableModsSupport.initialize(false){
+        enableModsSupport.initialize(false) {
             save()
         }
-        _enableModsAutoUpdateInFolder.initialize(true){
+        _enableModsAutoUpdateInFolder.initialize(true) {
             save()
         }
     }
 
-    open fun updateComposeModsList () = modsCollection.updateComposeList()
+    fun updateComposeModsList() = modsCollection.updateComposeList()
 
-    open fun save () = jsoFile.writeText(Json.encodeToString(this))
+    fun save() = jsoFile.writeText(Json.encodeToString(this))
 
-    protected companion object{
+    protected companion object {
 
-        val pathToRootUserFolder : String = get(String()::class.java,
-            named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
+        val pathToRootUserFolder: String = get(
+            String()::class.java,
+            named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY)
+        )
 
-        inline fun <reified T> load(jsonFileName : String ): T where T : ModsModel {
+        inline fun <reified T> load(jsonFileName: String): T where T : ModsModel {
             val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
             val model = if (jsoFile.exists())
                 Json.decodeFromString<T>(jsoFile.readText()) else
@@ -90,5 +93,6 @@ abstract sealed class ModsModel {
     }
 }
 
-val ModsModel.modsCanBeUsed get() = enableModsSupport.value!! && modsCount > 0 &&
-        this.mods.any { mod -> !mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists() }
+val ModsModel.modsCanBeUsed
+    get() = enableModsSupport.value!! && modsCount > 0 &&
+            this.mods.any { mod -> !mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists() }
