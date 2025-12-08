@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -29,8 +28,15 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.utils.PreferencesStorage
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.min
@@ -40,10 +46,17 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                                   private val offsetXPercent: Float = 0f,
                                   private val offsetYPercent: Float = 0f,
                                   private val sizePercent: Float = 0.13f,
-                                  private val alpha: Float = 0.65f) : IScreenControlsView {
+                                  private val alpha: Float = 0.65f) : IScreenControlsView, KoinComponent {
 
     private val axisX = stickId * 2
     private val axisY = stickId * 2 + 1
+
+    protected val engineInfo by lazy {
+        runBlocking {
+            val preferencesStorage : PreferencesStorage = get()
+            get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.first()))
+        }
+    }
 
     override val buttonState: ButtonState = ButtonState(
         GAMEPAD_ID,
@@ -79,6 +92,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                     0x045E, 0x028E, false,
                     0xFFFF, 4, 0b1111, 0, 0)
                 Log.d("SDL_INIT", "Joystick registration result: $result")
+                engineInfo.registerJoysticks()
                 if (result < 0) {
                     Log.e("SDL_INIT", "Failed to register joystick, result: $result")
                 }

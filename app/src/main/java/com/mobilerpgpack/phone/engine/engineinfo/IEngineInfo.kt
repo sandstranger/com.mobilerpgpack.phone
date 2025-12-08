@@ -37,6 +37,8 @@ interface IEngineInfo {
 
     fun onNativeLibrariesLoaded() {}
 
+    fun registerJoysticks() {}
+
     fun onDestroy()
 }
 
