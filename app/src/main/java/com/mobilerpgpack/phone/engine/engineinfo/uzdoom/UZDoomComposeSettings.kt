@@ -70,6 +70,16 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         HorizontalDivider()
 
+        ListPreferenceItem(
+            stringResource(R.string.uzdoom_rendering_gles_version),
+            preferencesStorage.uzDoomGLESVersion,
+            UZDoomGLESVersion.stringCollection
+        ) {
+            preferencesStorage.setStringValue(preferencesStorage.uzDoomGLESVersionPrefsKey, it)
+        }
+
+        HorizontalDivider()
+
         SwitchPreferenceItem(
             stringResource(R.string.uzdoom_enable_light_shaders),
             preferencesStorage.enableLightShaders,

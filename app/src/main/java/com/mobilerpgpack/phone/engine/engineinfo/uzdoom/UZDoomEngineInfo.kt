@@ -55,6 +55,11 @@ class UZDoomEngineInfo (mainEngineLib: String,
             "UpdateGLLiteShaderState")
     }
 
+    private val updateHarmGLESVersionNativeDelegate  by lazy {
+        Function.getFunction(mainEngineLib,
+            "UpdateHarmGLESVersion")
+    }
+
     private var enableLightShaders = false
 
     override val preferencesStorage = lzDoomPreferencesStorage
@@ -131,8 +136,11 @@ class UZDoomEngineInfo (mainEngineLib: String,
         enableLightShaders = preferencesStorage.enableLightShaders.first()
     }
 
-    override fun onNativeLibrariesLoaded() = updateGLLiteShaderStateNativeDelegate
-        .invokeVoid(arrayOf(enableLightShaders))
+    override fun onNativeLibrariesLoaded() {
+        updateGLLiteShaderStateNativeDelegate.invokeVoid(arrayOf(enableLightShaders))
+        val glesVersion = runBlocking { enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion.first()) }.value
+        updateHarmGLESVersionNativeDelegate.invokeVoid(arrayOf(glesVersion))
+    }
 
     override fun onResume() {
         super.onResume()
