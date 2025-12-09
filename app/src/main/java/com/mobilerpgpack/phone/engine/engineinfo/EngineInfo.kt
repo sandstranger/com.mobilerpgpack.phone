@@ -7,6 +7,7 @@ import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
@@ -61,6 +62,8 @@ abstract class EngineInfo(
         private set
 
     private var controlsOverlayUI: View? = null
+
+    private var layoutBinding : GameLayoutBinding? = null
 
     protected lateinit var activity: ComponentActivity
         private set
@@ -130,6 +133,12 @@ abstract class EngineInfo(
         Function.getFunction(mainEngineLib,
             "resumeSound")
     }
+
+    final override val rootView get() = layoutBinding?.sdlContainer
+
+    final override val keyboardView get() = layoutBinding?.customKeyboard
+
+    final override val keyboardInputField: TextView? get() = layoutBinding?.keyboardEditText
 
     override val commandLineArgs: Array<String>
         get() {
@@ -224,10 +233,10 @@ abstract class EngineInfo(
 
     private fun inflateControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
-            val binding = GameLayoutBinding.inflate(activity.layoutInflater)
+            layoutBinding = GameLayoutBinding.inflate(activity.layoutInflater)
 
             activity.window.addContentView(
-                binding.root,
+                layoutBinding!!.root,
                 ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -235,23 +244,23 @@ abstract class EngineInfo(
             )
 
             if (!showCustomMouseCursor) {
-                binding.mouseOverlayUI.visibility = View.GONE
+                layoutBinding!!.mouseOverlayUI.visibility = View.GONE
             }
 
             if (hideScreenControls) {
-                binding.controlsOverlayUI.visibility = View.GONE
+                layoutBinding!!.controlsOverlayUI.visibility = View.GONE
             } else {
-                controlsOverlayUI = binding.controlsOverlayUI
+                controlsOverlayUI = layoutBinding!!.controlsOverlayUI
             }
 
-            binding.sdlContainer.post {
-                binding.sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
+            layoutBinding!!.sdlContainer.post {
+                layoutBinding!!.sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
 
                         if (showCustomMouseCursor) {
-                            binding.mouseOverlayUI.setContent {
-                                AutoMouseModeComposable(binding)
+                            layoutBinding!!.mouseOverlayUI.setContent {
+                                AutoMouseModeComposable(layoutBinding!!)
                                 if (isCursorVisible) {
                                     DrawMouseIcon()
                                 }
@@ -259,7 +268,7 @@ abstract class EngineInfo(
                         }
 
                         if (!hideScreenControls) {
-                            binding.controlsOverlayUI.setContent {
+                            layoutBinding!!.controlsOverlayUI.setContent {
                                 screenController.DrawScreenControls(
                                     viewsToDraw,
                                     inGame = true,
@@ -269,7 +278,7 @@ abstract class EngineInfo(
                             }
                         }
 
-                        binding.sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        layoutBinding!!.sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
                     }
                 })
 

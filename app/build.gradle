@@ -210,6 +210,8 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
 
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
     implementation libs.reorderable
     implementation libs.androidx.compose.runtime
     implementation libs.androidx.window
