@@ -121,7 +121,13 @@ which is licensed under GPL v3. All modifications are clearly marked in commit h
 
 And using render changes (like OGL emulation, gles render and some bugfixes for Android platform)
 
-All credits for Android render changes and Android bugfixes to emileb - https://github.com/emileb
+credits for Android render changes and Android bugfixes to emileb - https://github.com/emileb
+
+And contains code from glKarin GZDoom android port - https://github.com/glKarin/com.n0n3m4.diii4a
+
+Gles 3.0 - Gles 3.2 native render support used from glKarin gzdoom port - https://github.com/glKarin/com.n0n3m4.diii4a
+
+All credits for Gles 3.x native render support to glKarin - https://github.com/glKarin
 
 This project is ALSO licensed under GPL v3.
 
@@ -333,6 +339,8 @@ libmp3lame-android: [Licence](https://github.com/xieyangxuejun/libmp3lame-androi
 libsndfile: [Licence](https://github.com/libsndfile/libsndfile/blob/master/COPYING)  https://github.com/libsndfile/libsndfile
 
 vpx-android: [Licence](https://github.com/cmeng-git/atalk-android/blob/master/LICENSE)	https://github.com/cmeng-git/atalk-android/tree/master/aTalk/jni/vpx
+
+com.n0n3m4.diii4a: [Licence](https://github.com/glKarin/com.n0n3m4.diii4a/blob/master/LICENSE)	https://github.com/glKarin/com.n0n3m4.diii4a
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
