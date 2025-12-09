@@ -1,6 +1,8 @@
 package com.mobilerpgpack.phone.engine.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
@@ -68,5 +70,10 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
     override fun onDestroy() {
         super.onDestroy()
         engineInfo.onDestroy()
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        org.libsdl.app.onKeyDown(KeyEvent.KEYCODE_ESCAPE, delayBeforeKeyRelease = 50L)
     }
 }
