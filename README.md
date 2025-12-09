@@ -342,6 +342,8 @@ vpx-android: [Licence](https://github.com/cmeng-git/atalk-android/blob/master/LI
 
 com.n0n3m4.diii4a: [Licence](https://github.com/glKarin/com.n0n3m4.diii4a/blob/master/LICENSE)	https://github.com/glKarin/com.n0n3m4.diii4a
 
+custom-keyboard-android: [Licence](https://github.com/qinvent/custom-keyboard-android/blob/master/LICENSE)  https://github.com/qinvent/custom-keyboard-android
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)

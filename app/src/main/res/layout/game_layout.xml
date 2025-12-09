@@ -1,19 +1,36 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/sdl_container"
-    android:fitsSystemWindows="false"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:fitsSystemWindows="false">
 
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/mouse_overlayUI"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="top|start" />
+    <EditText
+        android:id="@+id/keyboard_edit_text"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:focusable="true"
+        android:imeOptions="flagNoFullscreen"
+        android:focusableInTouchMode="true"
+        android:layout_gravity="top|start"
+        android:inputType="text" />
 
-        <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/controls_overlayUI"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="top|start" />
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/mouse_overlayUI"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|start" />
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/controls_overlayUI"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|start" />
+
+    <com.quantuminventions.customkeyboard.components.keyboard.CustomisedKeyboardView
+        android:id="@+id/custom_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 </FrameLayout>

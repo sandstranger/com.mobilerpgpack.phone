@@ -1,10 +1,9 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
-import android.text.InputType
+import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLInputImageButton
-import org.libsdl.app.onKeyDownTask
 
 class ShowSDL2InputImageButton(
     engineType: EngineTypes,
@@ -12,16 +11,9 @@ class ShowSDL2InputImageButton(
     offsetYPercent: Float = 0f,
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
-    buttonResId: Int = ButtonState.NOT_EXISTING_RES,
-    inputType: Int = InputType.TYPE_CLASS_TEXT,
-    deleteSymbolsKeyCode: Int = DELETE_SYMBOL_KEYCODE,
-    symbolsCountToDeleteBeforeInput : Int = SYMBOLS_COUNT_TO_DELETE_BEFORE_INPUT,
-    delayBetweenCharsMs : Long = DEFAULT_DELAY_BETWEEN_CHARS_MS
-)  :
+    buttonResId: Int = ButtonState.NOT_EXISTING_RES)  :
     ShowSDLInputImageButton(engineType, offsetXPercent, offsetYPercent, sizePercent,
-        alpha, buttonResId, inputType,deleteSymbolsKeyCode,
-        symbolsCountToDeleteBeforeInput, delayBetweenCharsMs) {
-
-    override suspend fun onKeyDown(keyCode: Int, delay: Long, repeatCount: Int) =
-        onKeyDownTask(keyCode, delay, delay, repeatCount)
+        alpha, buttonResId)
+{
+    override fun onKeyDown(keyCode: Int) = org.libsdl.app.onKeyDown(keyCode, delayBeforeKeyRelease = 50L)
 }
