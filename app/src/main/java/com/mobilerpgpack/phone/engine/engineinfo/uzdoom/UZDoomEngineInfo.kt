@@ -27,17 +27,14 @@ class UZDoomEngineInfo (mainEngineLib: String,
     SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.UZDoom,
         commandLineParamsFlow = commandLineParamsFlow) {
 
-    private val lzDoomPreferencesStorage by inject <UZDoomPreferenceStorage>(named(
-        EngineTypes.UZDoom.toString()))
-
     private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
 
-    private val pathToLZDoomUserFolder by lazy{
+    private val pathToUZDoomUserFolder by lazy{
         super.pathToRootUserFolder + File.separator + "uzdoom"
     }
 
-    private val pathToLZDoomConfigsFile by lazy {
-        pathToLZDoomUserFolder + File.separator + "uzdoom.ini"
+    private val pathToUZDoomConfigsFile by lazy {
+        pathToUZDoomUserFolder + File.separator + "uzdoom.ini"
     }
 
     private val destroyVulkanSwapChainNativeDelegate by lazy {
@@ -50,21 +47,22 @@ class UZDoomEngineInfo (mainEngineLib: String,
             "RecreateVulkanSwapChain")
     }
 
-    private val updateGLLiteShaderStateNativeDelegate  by lazy {
+    private val updateGLLiteShaderStateNativeDelegate by lazy {
         Function.getFunction(mainEngineLib,
             "UpdateGLLiteShaderState")
     }
 
-    private val updateHarmGLESVersionNativeDelegate  by lazy {
+    private val updateHarmGLESVersionNativeDelegate by lazy {
         Function.getFunction(mainEngineLib,
             "UpdateHarmGLESVersion")
     }
 
     private var enableLightShaders = false
 
-    override val preferencesStorage = lzDoomPreferencesStorage
+    override val preferencesStorage by inject <UZDoomPreferenceStorage>(named(
+        EngineTypes.UZDoom.toString()))
 
-    override val pathToResource get() = runBlocking{ lzDoomPreferencesStorage.pathToUZDoomIWadFile.first() }
+    override val pathToResource get() = runBlocking{ preferencesStorage.pathToUZDoomIWadFile.first() }
 
     override val requiredResourceExtension = ".wad"
 
@@ -87,12 +85,12 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
                     if (!baseCommandLineArgs.contains(CONFIG_FILE_COMMAND)){
                         it += CONFIG_FILE_COMMAND
-                        it += pathToLZDoomConfigsFile
+                        it += pathToUZDoomConfigsFile
                     }
 
                     if (!baseCommandLineArgs.contains(SAVE_DIR_COMMAND)){
                         it += SAVE_DIR_COMMAND
-                        it += pathToLZDoomUserFolder
+                        it += pathToUZDoomUserFolder
                     }
 
                     if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
@@ -132,7 +130,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
-        Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToLZDoomUserFolder, true)
+        Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToUZDoomUserFolder, true)
         enableLightShaders = preferencesStorage.enableLightShaders.first()
     }
 

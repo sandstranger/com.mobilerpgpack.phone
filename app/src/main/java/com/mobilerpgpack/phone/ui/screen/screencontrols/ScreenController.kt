@@ -185,7 +185,7 @@ open class ScreenController : KoinComponent, IScreenController {
                     onSizeChange = { deltaPercent ->
                         selectedButtonId?.let { id ->
                             val state = viewsToDraw[id]!!.buttonState
-                            state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(0f, 1f)
+                            state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(0.025f, 1f)
                             coroutineScope.launch {
                                 state.saveButtonState()
                             }
