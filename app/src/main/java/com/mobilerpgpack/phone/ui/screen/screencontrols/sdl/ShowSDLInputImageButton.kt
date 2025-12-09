@@ -48,6 +48,7 @@ abstract class ShowSDLInputImageButton(
             return
         }
         setupKeyboard()
+        engineInfo.keyboardInputField!!.text = ""
         engineInfo.keyboardInputField!!.requestFocus()
         engineInfo.keyboardInputField!!.clearFocus()
         engineInfo.rootView!!.requestFocus()
@@ -80,6 +81,7 @@ abstract class ShowSDLInputImageButton(
         when (state) {
             ExpandableState.COLLAPSED,
             ExpandableState.COLLAPSING -> {
+                engineInfo.keyboardInputField!!.text = ""
                 engineInfo.keyboardView!!.clearFocus()
                 engineInfo.rootView!!.requestFocus()
             }
