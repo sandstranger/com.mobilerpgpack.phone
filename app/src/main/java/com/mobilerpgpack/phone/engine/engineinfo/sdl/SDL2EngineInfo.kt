@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.sdl
 
+import android.view.KeyEvent
 import androidx.compose.runtime.Composable
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL2GameActivity
@@ -15,6 +16,7 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
+import org.libsdl.app.onKeyDown
 
 abstract class SDL2EngineInfo(
     mainEngineLib: String,
@@ -44,6 +46,13 @@ abstract class SDL2EngineInfo(
 
     final override fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput: Boolean) {
         SDLActivity.useStandardSDLInput = useSdlTextStandardInput
+    }
+
+    final override fun onBackPressed(): Boolean {
+        if(!super.onBackPressed()){
+            onKeyDown(KeyEvent.KEYCODE_ESCAPE, delayBeforeKeyRelease = 50L)
+        }
+        return true
     }
 
     override fun setScreenResolution(screenResolution: ScreenResolution) {

@@ -208,6 +208,14 @@ abstract class EngineInfo(
         killEngine()
     }
 
+    override fun onBackPressed(): Boolean {
+        if (layoutBinding == null || !layoutBinding!!.customKeyboard.isExpanded){
+            return false
+        }
+        layoutBinding!!.customKeyboard.translateLayout()
+        return true
+    }
+
     final override fun loadLayout(){
         activity.enableEdgeToEdge()
         activity.hideSystemBarsAndWait  {
@@ -218,14 +226,6 @@ abstract class EngineInfo(
             }
         }
         inflateControlsLayout()
-    }
-
-    final override fun onBackPressed(): Boolean {
-        if (layoutBinding == null || !layoutBinding!!.customKeyboard.isExpanded){
-            return false
-        }
-        layoutBinding!!.customKeyboard.translateLayout()
-        return true
     }
 
     protected abstract fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput : Boolean)

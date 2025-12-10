@@ -1,9 +1,9 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
-import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLInputImageButton
+import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
 class ShowSDL2InputImageButton(
     engineType: EngineTypes,
@@ -11,9 +11,10 @@ class ShowSDL2InputImageButton(
     offsetYPercent: Float = 0f,
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
-    buttonResId: Int = ButtonState.NOT_EXISTING_RES)  :
+    buttonResId: Int = ButtonState.NOT_EXISTING_RES,
+    keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE)  :
     ShowSDLInputImageButton(engineType, offsetXPercent, offsetYPercent, sizePercent,
-        alpha, buttonResId)
+        alpha, buttonResId, keyboardInputType)
 {
     override fun onKeyDown(keyCode: Int) = org.libsdl.app.onKeyDown(keyCode, delayBeforeKeyRelease = 50L)
 }
