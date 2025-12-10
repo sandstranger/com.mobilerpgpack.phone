@@ -13,7 +13,7 @@ interface IScreenControlsView {
     val isQuickPanel : Boolean
 
     @Composable
-    fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp = 10.dp)
+    fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp)
 
     fun setScreenController (screenController: IScreenController){}
 }
