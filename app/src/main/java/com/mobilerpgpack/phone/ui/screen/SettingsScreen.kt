@@ -234,7 +234,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         HorizontalDivider()
 
-        DrawMouseCustomCursorSettings(scope)
+        DrawMouseCustomCursorSettings()
         HorizontalDivider()
     }
 
@@ -297,12 +297,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
     }
 
     @Composable
-    private fun DrawMouseCustomCursorSettings (scope: CoroutineScope){
-        val horizontalMouseIconOffset by preferencesStorage.offsetXMouse
-            .collectAsState(initial = 0f)
-
-        val verticalMouseIconOffset by preferencesStorage.offsetYMouse
-            .collectAsState(initial = 0f)
+    private fun DrawMouseCustomCursorSettings (){
 
         SwitchPreferenceItem(
             stringResource(R.string.show_custom_mouse_cursor),
@@ -311,25 +306,13 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         HorizontalDivider()
 
-        EditTextPreferenceItem(
-            stringResource(R.string.custom_mouse_cursor_horizontal_offset),
-            horizontalMouseIconOffset.toString()){
-            val floatValue = it.toFloatOrNull() ?: 0.0f
-            scope.launch {
-                preferencesStorage.setOffsetXMouse(floatValue)
-            }
-        }
+        EditTextPreferenceItem(stringResource(R.string.custom_mouse_cursor_horizontal_offset),
+            preferencesStorage.offsetXMouse, preferencesStorage.OFFSET_X_MOUSE.name)
 
         HorizontalDivider()
 
-        EditTextPreferenceItem(
-            stringResource(R.string.custom_mouse_cursor_vertical_offset),
-            verticalMouseIconOffset.toString()){
-            val floatValue = it.toFloatOrNull() ?: 0.0f
-            scope.launch {
-                preferencesStorage.setOffsetYMouse(floatValue)
-            }
-        }
+        EditTextPreferenceItem(stringResource(R.string.custom_mouse_cursor_vertical_offset),
+            preferencesStorage.offsetYMouse, preferencesStorage.OFFSET_Y_MOUSE.name)
     }
 
     companion object{
