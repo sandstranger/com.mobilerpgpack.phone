@@ -254,9 +254,6 @@ class KoinModulesProvider(private val context: Context,
         singleOf <IScreenController>(::SDL2ScreenController).withOptions {
             named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
         }
-        singleOf <IScreenController>(::ScreenController).withOptions {
-            named(ScreenController.COMMON_SCREEN_CONTROLLER_NAME)
-        }
         singleOf <IScreenController>(::SDL3ScreenController).withOptions {
             named(SDL3ScreenController.SDL3_SCREEN_CONTROLLER_NAME)
         }
@@ -288,7 +285,7 @@ class KoinModulesProvider(private val context: Context,
             bind<IEngineInfo>()
         }
 
-        single<IEngineUIController> { DoomRpgComposeSettings(wolfensteinButtons) }
+        single<IEngineUIController> { DoomRpgComposeSettings() }
             .withOptions { named(EngineTypes.DoomRpg.toString()) }
 
         single {
@@ -310,7 +307,7 @@ class KoinModulesProvider(private val context: Context,
             bind<IEngineInfo>()
         }
 
-        single<IEngineUIController> { Doom2RpgComposeSettings(doom2RPGButtons) }
+        single<IEngineUIController> { Doom2RpgComposeSettings() }
             .withOptions { named(EngineTypes.Doom2Rpg.toString()) }
 
         single {
@@ -332,7 +329,7 @@ class KoinModulesProvider(private val context: Context,
             bind<IEngineInfo>()
         }
 
-        single<IEngineUIController> { WolfensteinRpgComposeSettings(wolfensteinButtons) }
+        single<IEngineUIController> { WolfensteinRpgComposeSettings() }
             .withOptions { named(EngineTypes.WolfensteinRpg.toString()) }
     }
 
@@ -367,7 +364,7 @@ class KoinModulesProvider(private val context: Context,
             bind<IEngineInfo>()
         }
 
-        single<IEngineUIController> { Doom64ComposeSettings(doom64Buttons) }
+        single<IEngineUIController> { Doom64ComposeSettings() }
             .withOptions {
                 named(EngineTypes.Doom64ExPlus.toString())
             }.withOptions {

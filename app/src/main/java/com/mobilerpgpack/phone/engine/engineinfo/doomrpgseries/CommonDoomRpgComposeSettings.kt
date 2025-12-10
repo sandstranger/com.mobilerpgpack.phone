@@ -20,7 +20,6 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.LoadingModelDialogWithCancel
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -31,7 +30,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
+open class CommonDoomRpgComposeSettings :
     KoinComponent, IEngineUIController {
 
     private val translationModelsDownloader : ITranslationModelsDownloader by inject ()
@@ -41,8 +40,6 @@ open class CommonDoomRpgComposeSettings (buttonsToDraw: Collection<IScreenContro
     protected val scope : CoroutineScope by inject (named(KoinModulesProvider.COROUTINES_SCOPE))
 
     protected val preferencesStorage : PreferencesStorage by inject()
-
-    override val screenViewsToDraw: Collection<IScreenControlsView> = buttonsToDraw
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {

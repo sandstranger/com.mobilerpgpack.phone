@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,14 +14,23 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +51,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -52,6 +63,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.CustomSDLButton
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -60,11 +72,15 @@ import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
-open class ScreenController : KoinComponent, IScreenController {
+abstract class ScreenController : KoinComponent, IScreenController {
+
+    private val customViews : MutableList<IScreenControlsView> = mutableListOf()
+
+    private val _activeViewsToDraw: MutableList<IScreenControlsView> = mutableListOf()
 
     protected val preferencesStorage : PreferencesStorage = get ()
 
-    override var activeViewsToDraw: Collection<IScreenControlsView>? = null
+    final override val activeViewsToDraw: Collection<IScreenControlsView> get() = _activeViewsToDraw
 
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
@@ -76,7 +92,16 @@ open class ScreenController : KoinComponent, IScreenController {
         drawInSafeArea : Boolean,
         onBack: () -> Unit) {
 
-        this.activeViewsToDraw = views
+        customViews.apply {
+            clear()
+            addAll(buildCustomViews(activeEngine))
+        }
+
+        _activeViewsToDraw.apply {
+            clear()
+            addAll(views)
+            addAll(customViews)
+        }
 
         val context = LocalContext.current
         val configuration = LocalConfiguration.current
@@ -108,9 +133,9 @@ open class ScreenController : KoinComponent, IScreenController {
         }
 
         suspend fun preloadButtons() {
-            val loadedMap = views.associateBy { it.buttonState.id }
+            val loadedMap = _activeViewsToDraw.associateBy { it.buttonState.id }
             loadedMap.values.forEach { view ->
-                view.buttonState.loadButtonState()
+                view.buttonState.load()
             }
             loadedMap.values.forEach { view ->
                 clampButton(view.buttonState)
@@ -119,7 +144,7 @@ open class ScreenController : KoinComponent, IScreenController {
             viewsToDraw = loadedMap
         }
 
-        views.forEach {
+        _activeViewsToDraw.forEach {
             it.setScreenController(this)
         }
 
@@ -203,6 +228,10 @@ open class ScreenController : KoinComponent, IScreenController {
                             }
                         }
                     },
+                    onCustomViewSelected = { customView ->
+                        customView.buttonState.isDeleted = false
+                        coroutineScope.launch { customView.buttonState.save() }
+                    },
                     onReset = {
                         coroutineScope.launch {
                             viewsToDraw.values.forEach { view ->
@@ -235,7 +264,8 @@ open class ScreenController : KoinComponent, IScreenController {
                     val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
                     val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
 
-                    val renderView = view.isHideControlsButton || view.renderView || isEditMode
+                    val renderView = (view.isHideControlsButton || view.renderView || isEditMode) && !view.buttonState.isDeleted
+
                     if (renderView) {
                         DrawView(
                             viewToDraw = view,
@@ -291,9 +321,9 @@ open class ScreenController : KoinComponent, IScreenController {
     }
 
     @Composable
-    protected open fun DrawTouchCamera(){
+    protected abstract fun DrawTouchCamera()
 
-    }
+    protected abstract fun buildCustomViews (engineTypes: EngineTypes) : Collection<IScreenControlsView>
 
     @Composable
     private fun DrawView(
@@ -331,7 +361,8 @@ open class ScreenController : KoinComponent, IScreenController {
                         },
                         onDrag = { _, dragAmount ->
                             if (isEditMode && isSelected) {
-                                position = Offset(position.x + dragAmount.x, position.y + dragAmount.y)
+                                position =
+                                    Offset(position.x + dragAmount.x, position.y + dragAmount.y)
                             }
                         },
                         onDragEnd = {
@@ -380,10 +411,13 @@ open class ScreenController : KoinComponent, IScreenController {
         onAlphaChange: (Float) -> Unit,
         onSizeChange: (Float) -> Unit,
         onRenderRuleChange : (ViewRenderRule) -> Unit,
+        onCustomViewSelected : (selectedView : IScreenControlsView) -> Unit,
         onReset: () -> Unit,
         onBack: () -> Unit,
         modifier: Modifier = Modifier
     ) {
+        var showCustomViewsEditor by remember { mutableStateOf(false) }
+
         Column(
             modifier = modifier
                 .background(Color.Gray.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
@@ -423,24 +457,87 @@ open class ScreenController : KoinComponent, IScreenController {
                     onRenderRuleChange)
             }
             Spacer(Modifier.height(8.dp))
-            Button(onClick = onReset) {
-                Text(stringResource(R.string.reset_controls_to_default))
+            Button(onClick = { showCustomViewsEditor = true }) {
+                Text(stringResource(R.string.add_custom_buttons))
             }
             Spacer(Modifier.height(8.dp))
-            if (!inGame) {
-                Button(onClick = onBack) {
-                    Text(stringResource(R.string.close_controls_configuration))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = onReset) {
+                    Text(stringResource(R.string.reset_controls_to_default))
+                }
+                if (!inGame) {
+                    Button(onClick = onBack) {
+                        Text(stringResource(R.string.close_controls_configuration))
+                    }
                 }
             }
         }
+
+        if (showCustomViewsEditor){
+            DrawCustomButtonsEditor { customView ->
+                showCustomViewsEditor = false
+                if (customView!=null){
+                    onCustomViewSelected.invoke(customView)
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun DrawCustomButtonsEditor(onViewSelected: (selectedView: IScreenControlsView?) -> Unit) {
+        if (customViews.isEmpty()) {
+            onViewSelected(null)
+            return
+        }
+        val itemsToDraw by mutableStateOf(mutableListOf<IScreenControlsView>())
+        itemsToDraw.addAll(customViews.filter { it.buttonState.isDeleted }.toList())
+
+        AlertDialog(
+            onDismissRequest = { onViewSelected(null) },
+            confirmButton = {
+                TextButton(onClick = { onViewSelected(null) }) {
+                    Text(stringResource(R.string.close_text))
+                }
+            },
+            title = { Text(stringResource(R.string.select_button)) },
+            text = {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    itemsIndexed(itemsToDraw, key = { _, view ->
+                        view.buttonState.id
+                    }) { _, view ->
+                        Row(
+                            modifier = Modifier.clickable { onViewSelected(view) },
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            CustomSDLButton.DrawView(
+                                Modifier
+                                    .width(50.dp)
+                                    .height(50.dp), Color.Black,
+                                view.buttonState.id
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                modifier = Modifier.wrapContentHeight(),
+                                text = view.buttonState.id,
+                                color = Color.Black,
+                                fontSize = 21.sp,
+                                textAlign = TextAlign.Right
+                            )
+                        }
+                    }
+                }
+            }
+        )
     }
 
     companion object {
         private const val SCREEN_ITEMS_CHANGE_SIZE_OFFSET : Float = 0.005f
 
         private const val SCREEN_ITEMS_CHANGE_ALPHA_OFFSET : Float = 0.05f
-
-        const val COMMON_SCREEN_CONTROLLER_NAME = "COMMON_SCREEN_CONTROLLER"
     }
 }
 

@@ -31,9 +31,9 @@ abstract class SDL3EngineInfo(
 
     private val mouseIcon: SDL3MouseIcon by inject()
 
-    override val gameActivityClazz: Class<*> = SDL3GameActivity::class.java
+    final override val gameActivityClazz: Class<*> = SDL3GameActivity::class.java
 
-    override val screenController: IScreenController by inject(
+    final override val screenController: IScreenController by inject(
         named(SDL3ScreenController.SDL3_SCREEN_CONTROLLER_NAME)
     )
 

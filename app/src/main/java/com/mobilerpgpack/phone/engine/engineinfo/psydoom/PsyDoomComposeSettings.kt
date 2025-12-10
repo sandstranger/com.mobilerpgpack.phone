@@ -35,8 +35,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     private val preferencesStorage: PsyDoomPreferencesStorage by inject(
         named(EngineTypes.PsyDoom.toString()))
 
-    override val screenViewsToDraw = psyDoomButtons
-
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()

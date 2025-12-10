@@ -17,8 +17,7 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import kotlin.getValue
 
-class WolfensteinRpgComposeSettings (buttonsToDraw: Collection<IScreenControlsView>) :
-    CommonDoomRpgComposeSettings(buttonsToDraw){
+class WolfensteinRpgComposeSettings : CommonDoomRpgComposeSettings(){
 
     private val engineInfo : IEngineInfo by inject (named(EngineTypes.WolfensteinRpg.toString()))
 

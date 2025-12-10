@@ -1,11 +1,10 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
-import android.text.InputType
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64.Doom64AutorunButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenGamepad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.CustomSDL2Button
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
@@ -14,6 +13,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.ShowSDL2InputImageB
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenGamepad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.ShowSDL3InputImageButton
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
@@ -335,6 +335,14 @@ val psyDoomButtons: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.03f,
         sizePercent = 0.05f,
         buttonResId = R.drawable.load,
+        sdlKeyEvent = KeyEvent.KEYCODE_F9
+    ),
+    CustomSDL2Button(
+        "23",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.73f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
         sdlKeyEvent = KeyEvent.KEYCODE_F9
     ),
     SDL2ImageButton(

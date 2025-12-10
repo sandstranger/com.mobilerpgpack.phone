@@ -18,8 +18,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
+import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.CustomSDL2Button
+import com.mobilerpgpack.phone.utils.keyCodeMap
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.get
@@ -27,6 +31,8 @@ import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
 abstract class SDLScreenController : ScreenController() {
+
+    private var customViews : Collection<IScreenControlsView>? = null
 
     protected abstract val viewWidth : Int
 
@@ -135,6 +141,22 @@ abstract class SDLScreenController : ScreenController() {
                                          viewWidth : Float, viewHeight : Float,eventAction : Int, touchDeviceId : Int)
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
+
+    protected abstract fun buildCustomView (id : String, engineTypes: EngineTypes, keyCode : Int) :
+            IScreenControlsView
+
+    final override fun buildCustomViews(engineTypes: EngineTypes): Collection<IScreenControlsView> {
+        customViews ?: run { customViews = buildCustomViewsCollection(engineTypes)}
+        return customViews!!
+    }
+
+    private fun buildCustomViewsCollection (engineTypes: EngineTypes) : Collection<IScreenControlsView>{
+        return mutableListOf<IScreenControlsView>().apply {
+            keyCodeMap.forEach {
+                this.add(buildCustomView(it.value, engineTypes, it.key))
+            }
+        }
+    }
 
     private companion object{
         private const val UNKNOWN_POINTER_ID = Int.MIN_VALUE

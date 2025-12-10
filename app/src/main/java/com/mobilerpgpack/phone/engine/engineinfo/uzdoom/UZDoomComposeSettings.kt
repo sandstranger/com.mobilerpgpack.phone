@@ -32,8 +32,6 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
         named(EngineTypes.UZDoom.toString())
     )
 
-    override val screenViewsToDraw: Collection<IScreenControlsView> = psyDoomButtons
-
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         val viewModel: UZDoomComposeSettingsViewModel = koinViewModel()
