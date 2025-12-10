@@ -487,8 +487,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             onViewSelected(null)
             return
         }
-        val itemsToDraw by mutableStateOf(mutableListOf<IScreenControlsView>())
-        itemsToDraw.addAll(customViews.filter { it.buttonState.isDeleted }.toList())
+        val itemsToDraw by mutableStateOf(customViews.filter { it.buttonState.isDeleted }.toList())
 
         AlertDialog(
             onDismissRequest = { onViewSelected(null) },
