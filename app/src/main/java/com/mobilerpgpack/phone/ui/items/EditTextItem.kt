@@ -113,7 +113,7 @@ fun EditTextItem(
     hint: String = "",
     singleLine : Boolean = true,
     onValueChange: ((Float) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Number){
+    EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Decimal){
         val newValue = it.toFloatOrNull() ?: 0.0f
         onValueChange?.invoke(newValue)
     }

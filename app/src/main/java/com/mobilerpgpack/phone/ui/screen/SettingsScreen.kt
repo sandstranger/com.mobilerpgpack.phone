@@ -279,6 +279,15 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.autoHideScreenControls,
             preferencesStorage.enableControlsAutoHiding.name)
 
+        HorizontalDivider()
+
+        EditTextPreferenceItem(
+            stringResource(R.string.custom_keyboard_transparency),
+            preferencesStorage.customOnScreenKeyboardTransparency){
+            preferencesStorage.setFloatValue(preferencesStorage.customOnScreenKeyboardTransparencyPrefsKey,
+                it.coerceIn(0f, 1.0f))
+        }
+
         if (drawKeysEditor) {
             val engineInfo : IEngineUIController = get (named(activeEngine.toString()))
             KeysEditor(engineInfo.screenViewsToDraw) {

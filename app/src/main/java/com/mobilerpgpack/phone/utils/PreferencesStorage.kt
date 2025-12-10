@@ -52,7 +52,11 @@ open class PreferencesStorage(private val context: Context, private val scope : 
 
     val useStandardSDLTextInputPrefsKey = booleanPreferencesKey("use_standard_sdl_text_input")
 
+    val customOnScreenKeyboardTransparencyPrefsKey = floatPreferencesKey("custom_keyboard_transparency")
+
     val dataStore : DataStore<Preferences> = context.dataStore
+
+    val customOnScreenKeyboardTransparency = getFloatValue(customOnScreenKeyboardTransparencyPrefsKey, 1.0f)
 
     val useStandardSDLTextInput = getBooleanValue(useStandardSDLTextInputPrefsKey)
 
@@ -185,7 +189,7 @@ open class PreferencesStorage(private val context: Context, private val scope : 
     suspend fun setActiveEngineValue(valueToSave: EngineTypes) =
         setStringValueAsync(activeEnginePrefsKey, valueToSave.toString())
 
-    fun getFloatValue(prefsKey: Preferences.Key<Float>, defaultValue: Float = 0.0f): Flow<Float?> {
+    fun getFloatValue(prefsKey: Preferences.Key<Float>, defaultValue: Float = 0.0f): Flow<Float> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
