@@ -6,8 +6,6 @@ enum class UZDoomRenderAPI (val value : Int){
     Vulkan (1);
 
     companion object {
-        val stringCollection = entries.map { it.toString() }.toList()
-
         fun fromValue(value: Int): UZDoomRenderAPI {
             return entries.find { it.value == value }!!
         }

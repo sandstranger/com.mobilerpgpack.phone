@@ -10,8 +10,7 @@ import androidx.compose.ui.Modifier
 inline fun <reified T : Enum<T>> EnumDropdown(
     title: String,
     initialValue: T? = null,
-    crossinline onValueChange: (T) -> Unit = {}
-) {
+    crossinline onValueChange: (T) -> Unit = {}) {
     var expanded by remember { mutableStateOf(false) }
     var selectedValue by remember (initialValue) { mutableStateOf(initialValue) }
     val enumValues = remember { enumValues<T>() }
