@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.utils
 
 import android.app.Activity
+import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
@@ -13,6 +14,17 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.security.MessageDigest
+
+private const val KEYCODE_PREFIX = "KEYCODE_"
+
+val keyCodeMap: Map<Int, String> by lazy {
+    KeyEvent::class.java.fields
+        .filter { it.name.startsWith(KEYCODE_PREFIX) }
+        .sortedBy { it.name }
+        .associate { field ->
+            field.getInt(null) to field.name.replace(KEYCODE_PREFIX, "")
+        }
+}
 
 fun startGame(activity: Activity, engineToPlay: EngineTypes) {
     val assetsExtractor: IAssetExtractor = get(IAssetExtractor::class.java)

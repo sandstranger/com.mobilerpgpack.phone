@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.allowToEditKeyEvent
+import com.mobilerpgpack.phone.utils.keyCodeMap
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,14 +46,7 @@ fun KeysEditor(
 
     val currentButton = rememberUpdatedState(selectedButton)
 
-    val keyCodeMap: Map<Int, String> = remember {
-        KeyEvent::class.java.fields
-            .filter { it.name.startsWith("KEYCODE_") }
-            .sortedBy { it.name }
-            .associate { field ->
-                field.getInt(null) to field.name
-            }
-    }
+    val keyCodeMap: Map<Int, String> = remember { keyCodeMap }
 
     if (shouldReset) {
         LaunchedEffect(buttonsToEdit) {
