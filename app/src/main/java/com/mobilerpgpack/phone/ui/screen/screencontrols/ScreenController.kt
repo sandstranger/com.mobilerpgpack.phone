@@ -234,15 +234,15 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     },
                     onReset = {
                         coroutineScope.launch {
-                            preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
+                            preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, false)
+                            viewsToDraw.values.forEach { view ->
+                                view.buttonState.resetToDefaults()
+                                clampButton(view.buttonState)
+                                coroutineScope.launch { view.buttonState.save() }
+                            }
+                            selectedButtonId = null
+                            selectedViewRenderRule = null
                         }
-                        viewsToDraw.values.forEach { view ->
-                            view.buttonState.resetToDefaults()
-                            clampButton(view.buttonState)
-                            coroutineScope.launch { view.buttonState.save() }
-                        }
-                        selectedButtonId = null
-                        selectedViewRenderRule = null
                     },
                     onBack = {
                         selectedButtonId = null
@@ -500,7 +500,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             title = { Text(stringResource(R.string.select_button)) },
             text = {
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     itemsIndexed(itemsToDraw, key = { _, view ->
@@ -513,8 +513,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         ) {
                             CustomSDLButton.DrawView(
                                 Modifier
-                                    .width(50.dp)
-                                    .height(50.dp), Color.Black,
+                                    .width(40.dp)
+                                    .height(40.dp), Color.Black,
                                 view.buttonState.id
                             )
                             Spacer(modifier = Modifier.width(12.dp))
@@ -522,7 +522,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 modifier = Modifier.wrapContentHeight(),
                                 text = view.buttonState.id,
                                 color = Color.Black,
-                                fontSize = 21.sp,
+                                fontSize = 18.sp,
                                 textAlign = TextAlign.Right
                             )
                         }
