@@ -234,17 +234,15 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     },
                     onReset = {
                         coroutineScope.launch {
-                            viewsToDraw.values.forEach { view ->
-                                view.buttonState.resetToDefaults()
-                            }
-                            preferencesStorage.setBooleanValueAsync( clampButtonsPrefsKey, true)
-                            viewsToDraw.values.forEach { view ->
-                                clampButton(view.buttonState)
-                                view.buttonState.save()
-                            }
-                            selectedButtonId = null
-                            selectedViewRenderRule = null
+                            preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
                         }
+                        viewsToDraw.values.forEach { view ->
+                            view.buttonState.resetToDefaults()
+                            clampButton(view.buttonState)
+                            coroutineScope.launch { view.buttonState.save() }
+                        }
+                        selectedButtonId = null
+                        selectedViewRenderRule = null
                     },
                     onBack = {
                         selectedButtonId = null
