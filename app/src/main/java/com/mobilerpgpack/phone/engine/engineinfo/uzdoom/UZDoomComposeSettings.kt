@@ -62,10 +62,8 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         ListPreferenceItem(
             stringResource(R.string.uzdoom_rendering_api),
-            viewModel.renderAPI.toString(),
-            UZDoomRenderAPI.stringCollection
-        ) {
-            viewModel.renderAPI = enumValueOf<UZDoomRenderAPI>(it)
+            viewModel.renderAPI) {
+            viewModel.renderAPI = it
         }
 
         HorizontalDivider()

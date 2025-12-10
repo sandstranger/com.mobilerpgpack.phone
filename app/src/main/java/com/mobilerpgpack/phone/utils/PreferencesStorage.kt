@@ -186,8 +186,8 @@ open class PreferencesStorage(private val context: Context, private val scope : 
         return if (activeEngine.isNullOrEmpty()) EngineTypes.DefaultActiveEngine else enumValueOf<EngineTypes>(activeEngine)
     }
 
-    suspend fun setActiveEngineValue(valueToSave: EngineTypes) =
-        setStringValueAsync(activeEnginePrefsKey, valueToSave.toString())
+    fun setActiveEngineValue(valueToSave: EngineTypes) =
+        setStringValue(activeEnginePrefsKey, valueToSave.toString())
 
     fun getFloatValue(prefsKey: Preferences.Key<Float>, defaultValue: Float = 0.0f): Flow<Float> {
         return context.dataStore.data.map { preferences ->

@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -85,4 +86,18 @@ fun ListPreferenceItem(title: String,
                        onValueChange : ((String) -> Unit)? = null){
     val initialValue by initialValueFlow.collectAsState(initial = "")
     ListPreferenceItem(title, initialValue, entries, onValueChange)
+}
+
+@Composable
+inline fun <reified T : Enum<T>> ListPreferenceItem(
+    title: String,
+    initialValue: T? = null,
+    crossinline onValueChange: (T) -> Unit = {}) {
+    var selectedValue by remember (initialValue) { mutableStateOf(initialValue) }
+    val enumValues = remember { enumValues<T>().map { it.toString() }.toList() }
+    ListPreferenceItem(title, selectedValue.toString(),enumValues){
+        val newValue = enumValueOf<T>(it)
+        selectedValue = newValue
+        onValueChange.invoke(newValue)
+    }
 }
