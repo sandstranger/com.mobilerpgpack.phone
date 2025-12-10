@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLOnScreenGamepad
 import org.libsdl3.app.SDLControllerManager
 
@@ -9,9 +10,10 @@ class SDL3OnScreenGamepad(engineType: EngineTypes,
                           offsetXPercent: Float = 0f,
                           offsetYPercent: Float = 0f,
                           sizePercent: Float = 0.25f,
-                          alpha: Float = 0.65f) :
+                          alpha: Float = 0.65f,
+                          defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) :
     SDLOnScreenGamepad(engineType, stickId,offsetXPercent,
-        offsetYPercent, sizePercent, alpha) {
+        offsetYPercent, sizePercent, alpha, defaultViewRenderRule = defaultViewRenderRule) {
 
     override fun nativeAddJoystick(
         device_id: Int,

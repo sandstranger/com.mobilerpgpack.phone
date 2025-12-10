@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLImageButton
 import org.libsdl3.app.SDLActivity.onNativeKeyUp
 import org.libsdl3.app.SDLActivity.onNativeKeyDown
@@ -16,9 +17,10 @@ class SDL3ImageButton(
     sdlKeyEvent: Int = 0,
     buttonResId: Int = NOT_EXISTING_RES,
     override val isQuickPanel: Boolean = false,
-    useToggle: Boolean = false) :
+    useToggle: Boolean = false,
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
-        alpha,sdlKeyEvent, buttonResId, useToggle = useToggle) {
+        alpha,sdlKeyEvent, buttonResId, useToggle = useToggle, defaultViewRenderRule = defaultViewRenderRule) {
 
     init {
         show = !isQuickPanel

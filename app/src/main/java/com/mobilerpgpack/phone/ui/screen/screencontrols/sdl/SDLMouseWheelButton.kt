@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 
 abstract class SDLMouseWheelButton(
     id: String,
@@ -13,9 +14,10 @@ abstract class SDLMouseWheelButton(
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
     buttonResId: Int = ButtonState.NOT_EXISTING_RES,
-    override val isQuickPanel: Boolean = false) :
+    override val isQuickPanel: Boolean = false,
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
-        alpha, Int.MIN_VALUE, buttonResId, useToggle = false) {
+        alpha, Int.MIN_VALUE, buttonResId, useToggle = false, defaultViewRenderRule) {
 
     init {
         show = !isQuickPanel

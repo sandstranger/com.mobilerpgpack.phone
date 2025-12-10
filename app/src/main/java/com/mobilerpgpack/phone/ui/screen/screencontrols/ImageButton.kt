@@ -25,7 +25,8 @@ abstract class ImageButton(
     private val offsetYPercent: Float = 0f,
     private val sizePercent: Float = 0.13f,
     private val alpha: Float = 0.65f,
-    private val buttonResId: Int = NOT_EXISTING_RES) : IScreenControlsView {
+    private val buttonResId: Int = NOT_EXISTING_RES,
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : IScreenControlsView {
 
     protected var screenController : IScreenController? = null
         private set
@@ -41,8 +42,8 @@ abstract class ImageButton(
         offsetYPercent = offsetYPercent,
         sizePercent = sizePercent,
         buttonResId = buttonResId,
-        alpha = alpha
-    )
+        alpha = alpha,
+        defaultViewRenderRule = defaultViewRenderRule)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
