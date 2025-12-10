@@ -76,7 +76,7 @@ class ButtonState(
         preferencesStorage.setBooleanValueAsync(isDeletedPrefsKey,isDeleted)
     }
 
-    suspend fun resetToDefaults() {
+    fun resetToDefaults() {
         offsetXPercent = defaultOffsetXPercent
         offsetYPercent = defaultOffsetYPercent
         sizePercent = defaultSizePercent
@@ -84,7 +84,6 @@ class ButtonState(
         sdlKeyCode = defaultSdlKeyEvent
         viewRenderRule = defaultViewRenderRule
         isDeleted = isCustomButton
-        save()
     }
 
     suspend fun resetKeyEvent() {
