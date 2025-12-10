@@ -35,8 +35,6 @@ abstract class SDLImageButton(
 
     override var show: Boolean by mutableStateOf(true)
 
-    override val enabled: Boolean = true
-
     override val buttonState: ButtonState = ButtonState(
         id,
         engineType,

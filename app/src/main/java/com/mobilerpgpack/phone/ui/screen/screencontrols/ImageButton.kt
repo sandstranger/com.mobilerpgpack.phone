@@ -30,8 +30,6 @@ abstract class ImageButton(
     protected var screenController : IScreenController? = null
         private set
 
-    override val enabled: Boolean = true
-
     override val isQuickPanel: Boolean = false
 
     override var show: Boolean by mutableStateOf(true)

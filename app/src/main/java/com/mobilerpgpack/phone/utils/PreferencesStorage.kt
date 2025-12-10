@@ -252,7 +252,7 @@ open class PreferencesStorage(private val context: Context, private val scope : 
     fun setStringValue(prefsKey: Preferences.Key<String>, valueToSave: String) =
         scope.launch { setStringValueAsync(prefsKey, valueToSave) }
 
-    protected fun getStringValue(prefsKey: Preferences.Key<String>, defaultValue: String = ""): Flow<String> {
+    fun getStringValue(prefsKey: Preferences.Key<String>, defaultValue: String = ""): Flow<String> {
         return context.dataStore.data.map { preferences ->
             preferences[prefsKey] ?: defaultValue
         }
