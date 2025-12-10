@@ -27,7 +27,8 @@ abstract class ShowSDLInputImageButton(
     offsetYPercent: Float = 0f,
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
-    buttonResId: Int = NOT_EXISTING_RES) : KoinComponent, KeyboardListener, ExpandableStateListener,
+    buttonResId: Int = NOT_EXISTING_RES,
+    private val keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE) : KoinComponent, KeyboardListener, ExpandableStateListener,
     ImageButton(SHOW_KEYBOARD_BUTTON_ID, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,
         buttonResId)
 {
@@ -87,13 +88,14 @@ abstract class ShowSDLInputImageButton(
         wasInit = true
         engineInfo.keyboardView!!.setKeyCodeListener (this)
         engineInfo.keyboardView!!.registerListener(this)
-        engineInfo.keyboardView!!.registerEditText(CustomKeyboardView.KeyboardType.QWERTY,
-            engineInfo.keyboardInputField!!)
+        engineInfo.keyboardView!!.registerEditText(keyboardInputType, engineInfo.keyboardInputField!!)
     }
 
     companion object {
         private const val DELETE_SYMBOL_KEYCODE = KeyEvent.KEYCODE_DEL
 
         private const val SHOW_KEYBOARD_BUTTON_ID = "keyboard"
+
+        val DEFAULT_KEYBOARD_INPUT_TYPE = CustomKeyboardView.KeyboardType.QWERTY
     }
 }
