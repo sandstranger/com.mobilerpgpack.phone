@@ -25,7 +25,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-class Doom64ComposeSettings (override val screenViewsToDraw: Collection<IScreenControlsView>) :
+class Doom64ComposeSettings () :
     KoinComponent, IEngineUIController {
 
     private val scope : CoroutineScope by inject(named(KoinModulesProvider.COROUTINES_SCOPE))

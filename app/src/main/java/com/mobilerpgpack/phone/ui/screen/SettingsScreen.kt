@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
@@ -283,8 +284,8 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         }
 
         if (drawKeysEditor) {
-            val engineInfo : IEngineUIController = get (named(activeEngine.toString()))
-            KeysEditor(engineInfo.screenViewsToDraw) {
+            val engineInfo : IEngineInfo = get (named(activeEngine.toString()))
+            KeysEditor(engineInfo.viewsToDraw) {
                 drawKeysEditor = false
             }
         }
