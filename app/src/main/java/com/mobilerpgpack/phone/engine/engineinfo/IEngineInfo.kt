@@ -7,12 +7,18 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.buildFullLibraryName
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.showErrorDialogBox
 import com.quantuminventions.customkeyboard.components.keyboard.CustomisedKeyboardView
 
 interface IEngineInfo {
 
     val rootView : View?
+
+    val screenController : IScreenController
+
+    val viewsToDraw: Collection<IScreenControlsView>
 
     val keyboardView : CustomisedKeyboardView?
 

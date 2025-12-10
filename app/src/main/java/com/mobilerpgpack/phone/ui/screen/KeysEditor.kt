@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen
 
-import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -31,7 +30,7 @@ fun KeysEditor(
 
     LaunchedEffect(buttonsToEdit) {
         scope.launch {
-            buttonsToEdit.forEach { it.buttonState.loadButtonState() }
+            buttonsToEdit.forEach { it.buttonState.load() }
         }
     }
 

@@ -49,7 +49,7 @@ import java.io.File
 abstract class EngineInfo(
     mainEngineLib: String,
     private val allLibs: Array<String>,
-    private val viewsToDraw: Collection<IScreenControlsView>,
+    override val viewsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
     private val pathToResourceFlow: Flow<String>,
     private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
@@ -73,8 +73,6 @@ abstract class EngineInfo(
             KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY
         )
     )
-
-    protected abstract val screenController: IScreenController
 
     final override val mainLibraryName: String = mainEngineLib
 

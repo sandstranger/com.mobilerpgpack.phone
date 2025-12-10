@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -24,7 +25,8 @@ class ButtonState(
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = Int.MIN_VALUE,
     val buttonResId: Int = NOT_EXISTING_RES,
-    val defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : KoinComponent {
+    private val defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+    val isCustomButton : Boolean = false) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
@@ -39,6 +41,7 @@ class ButtonState(
     private val keyAlpha: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_alpha")
     private val sdlKeyEventPrefsKey: Preferences.Key<Int> = intPreferencesKey("${engineTypeString}_${id}_sdl_key")
     private val viewRenderRulePrefsKey = stringPreferencesKey("${engineTypeString}_${id}_view_render_rule")
+    private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${id}_is_deleted")
 
     private val preferencesStorage : PreferencesStorage = get()
 
@@ -50,8 +53,9 @@ class ButtonState(
     var alpha by mutableFloatStateOf(alpha)
     var sdlKeyCode by mutableIntStateOf(sdlKeyEvent)
     var viewRenderRule by mutableStateOf(defaultViewRenderRule)
+    var isDeleted by mutableStateOf(isCustomButton)
 
-    suspend fun loadButtonState() {
+    suspend fun load() {
         offsetXPercent = preferencesStorage.getFloatValue( keyX, defaultOffsetXPercent).first()
         offsetYPercent = preferencesStorage.getFloatValue( keyY, defaultOffsetYPercent).first()
         sizePercent = preferencesStorage.getFloatValue( keySize, defaultSizePercent).first()
@@ -59,6 +63,7 @@ class ButtonState(
         sdlKeyCode = preferencesStorage.getIntValue( sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()
         viewRenderRule = enumValueOf<ViewRenderRule>(preferencesStorage.getStringValue(viewRenderRulePrefsKey,
             defaultViewRenderRule.toString()).first())
+        isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isCustomButton).first()
     }
 
     suspend fun save() {
@@ -67,7 +72,8 @@ class ButtonState(
         preferencesStorage.setFloatValueAsync( keySize, sizePercent)
         preferencesStorage.setFloatValueAsync( keyAlpha, alpha)
         preferencesStorage.setIntValueAsync( sdlKeyEventPrefsKey, sdlKeyCode)
-        preferencesStorage.setStringValue(viewRenderRulePrefsKey, viewRenderRule.toString())
+        preferencesStorage.setStringValueAsync(viewRenderRulePrefsKey, viewRenderRule.toString())
+        preferencesStorage.setBooleanValueAsync(isDeletedPrefsKey,isDeleted)
     }
 
     suspend fun resetToDefaults() {
@@ -77,6 +83,7 @@ class ButtonState(
         alpha = defaultAlpha
         sdlKeyCode = defaultSdlKeyEvent
         viewRenderRule = defaultViewRenderRule
+        isDeleted = isCustomButton
         save()
     }
 

@@ -37,7 +37,7 @@ abstract class SDLImageButton(
 
     final override var show: Boolean by mutableStateOf(true)
 
-    final override val buttonState: ButtonState = ButtonState(
+    override val buttonState: ButtonState = ButtonState(
         id,
         engineType,
         offsetXPercent = offsetXPercent,

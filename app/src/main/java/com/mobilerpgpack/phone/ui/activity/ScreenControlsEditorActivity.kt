@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
@@ -24,9 +25,6 @@ import org.koin.core.qualifier.named
 
 class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
-    private val screenController : IScreenController by inject (
-        named(ScreenController.COMMON_SCREEN_CONTROLLER_NAME))
-
     private val preferencesStorage : PreferencesStorage by inject ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +33,11 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         val selectedEngine = getSelectedEngineType()
 
         var displayInSafeArea = false
-        var activeEngineInfo : IEngineUIController
+        var activeEngine : IEngineInfo
 
         runBlocking {
             displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
-            activeEngineInfo = get (named(selectedEngine.toString()))
+            activeEngine = get (named(selectedEngine.toString()))
         }
 
         enableEdgeToEdge()
@@ -54,7 +52,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
         setContent {
             MaterialTheme {
-                screenController.DrawScreenControls(activeEngineInfo.screenViewsToDraw,
+                activeEngine.screenController.DrawScreenControls(activeEngine.viewsToDraw,
                     inGame = false,
                     activeEngine = selectedEngine,
                     drawInSafeArea = displayInSafeArea, onBack = {

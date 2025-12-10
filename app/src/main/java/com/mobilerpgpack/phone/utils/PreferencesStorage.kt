@@ -258,7 +258,7 @@ open class PreferencesStorage(private val context: Context, private val scope : 
         }
     }
 
-    protected suspend fun setStringValueAsync(prefsKey: Preferences.Key<String>, valueToSave: String) {
+    suspend fun setStringValueAsync(prefsKey: Preferences.Key<String>, valueToSave: String) {
         context.dataStore.edit { preferences ->
             preferences[prefsKey] = valueToSave
         }
