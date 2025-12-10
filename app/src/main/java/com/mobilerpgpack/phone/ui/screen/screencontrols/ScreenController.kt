@@ -51,6 +51,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -86,6 +87,7 @@ open class ScreenController : KoinComponent, IScreenController {
 
         var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
+        var selectedViewRenderRule by remember { mutableStateOf<ViewRenderRule?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
         var readyToDrawControls by remember { mutableStateOf(false) }
@@ -112,7 +114,7 @@ open class ScreenController : KoinComponent, IScreenController {
             }
             loadedMap.values.forEach { view ->
                 clampButton(view.buttonState)
-                coroutineScope.launch { view.buttonState.saveButtonState() }
+                coroutineScope.launch { view.buttonState.save() }
             }
             viewsToDraw = loadedMap
         }
@@ -172,13 +174,14 @@ open class ScreenController : KoinComponent, IScreenController {
             if (isEditMode) {
                 EditControls(
                     selectedButtonId,
+                    selectedViewRenderRule,
                     inGame,
                     onAlphaChange = { delta ->
                         selectedButtonId?.let { id ->
                             val state = viewsToDraw[id]!!.buttonState
                             state.alpha = (state.alpha + delta).coerceIn(0.0f, 1f)
                             coroutineScope.launch {
-                                state.saveButtonState()
+                                state.save()
                             }
                         }
                     },
@@ -187,7 +190,16 @@ open class ScreenController : KoinComponent, IScreenController {
                             val state = viewsToDraw[id]!!.buttonState
                             state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(0.025f, 1f)
                             coroutineScope.launch {
-                                state.saveButtonState()
+                                state.save()
+                            }
+                        }
+                    },
+                    onRenderRuleChange = { newRenderRule ->
+                        selectedButtonId?.let { id ->
+                            val state = viewsToDraw[id]!!.buttonState
+                            state.viewRenderRule = newRenderRule
+                            coroutineScope.launch {
+                                state.save()
                             }
                         }
                     },
@@ -199,13 +211,15 @@ open class ScreenController : KoinComponent, IScreenController {
                             preferencesStorage.setBooleanValueAsync( clampButtonsPrefsKey, true)
                             viewsToDraw.values.forEach { view ->
                                 clampButton(view.buttonState)
-                                view.buttonState.saveButtonState()
+                                view.buttonState.save()
                             }
                             selectedButtonId = null
+                            selectedViewRenderRule = null
                         }
                     },
                     onBack = {
                         selectedButtonId = null
+                        selectedViewRenderRule = null
                         onBack()
                     },
                     modifier = Modifier.align(Alignment.Center)
@@ -221,8 +235,8 @@ open class ScreenController : KoinComponent, IScreenController {
                     val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
                     val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
 
-                    val renderButton = view.isHideControlsButton || ((view.show || isEditMode) && view.enabled)
-                    if (renderButton) {
+                    val renderView = view.isHideControlsButton || view.renderView || isEditMode
+                    if (renderView) {
                         DrawView(
                             viewToDraw = view,
                             offset = Offset(renderOffsetX, renderOffsetY),
@@ -232,6 +246,7 @@ open class ScreenController : KoinComponent, IScreenController {
                             onClick = {
                                 if (isEditMode) {
                                     selectedButtonId = id
+                                    selectedViewRenderRule = view.buttonState.viewRenderRule
                                     coroutineScope.launch {
                                         preferencesStorage.setBooleanValueAsync(
                                             clampButtonsPrefsKey,
@@ -243,7 +258,7 @@ open class ScreenController : KoinComponent, IScreenController {
                                 view.buttonState.offsetXPercent = (newX / screenWidthPx)
                                 view.buttonState.offsetYPercent = (newY / screenHeightPx)
                                 coroutineScope.launch {
-                                    view.buttonState.saveButtonState()
+                                    view.buttonState.save()
                                 }
                             },
                             inGame = inGame,
@@ -360,9 +375,11 @@ open class ScreenController : KoinComponent, IScreenController {
     @Composable
     private fun EditControls(
         selectedButtonId: String?,
+        viewRenderRule: ViewRenderRule?,
         inGame: Boolean,
         onAlphaChange: (Float) -> Unit,
         onSizeChange: (Float) -> Unit,
+        onRenderRuleChange : (ViewRenderRule) -> Unit,
         onReset: () -> Unit,
         onBack: () -> Unit,
         modifier: Modifier = Modifier
@@ -399,6 +416,11 @@ open class ScreenController : KoinComponent, IScreenController {
                 Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
                     Text(stringResource(R.string.decrease_controls_size))
                 }
+            }
+            Spacer(Modifier.height(8.dp))
+            if (viewRenderRule!=null){
+                EnumDropdown(stringResource(R.string.screen_controls_view_render_rule), viewRenderRule,
+                    onRenderRuleChange)
             }
             Spacer(Modifier.height(8.dp))
             Button(onClick = onReset) {
