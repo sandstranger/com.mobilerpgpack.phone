@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import org.libsdl.app.onKeyDown
+import org.libsdl3.app.onKeyDown
 import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 
