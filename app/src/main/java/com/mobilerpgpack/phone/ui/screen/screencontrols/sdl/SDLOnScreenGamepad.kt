@@ -31,6 +31,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -46,7 +47,8 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                                   private val offsetXPercent: Float = 0f,
                                   private val offsetYPercent: Float = 0f,
                                   private val sizePercent: Float = 0.13f,
-                                  private val alpha: Float = 0.65f) : IScreenControlsView, KoinComponent {
+                                  private val alpha: Float = 0.65f,
+                                  defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : IScreenControlsView, KoinComponent {
 
     private val axisX = stickId * 2
     private val axisY = stickId * 2 + 1
@@ -64,8 +66,8 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         offsetXPercent = offsetXPercent,
         offsetYPercent = offsetYPercent,
         sizePercent = sizePercent,
-        alpha = alpha
-    )
+        alpha = alpha,
+        defaultViewRenderRule = defaultViewRenderRule)
 
     override var show : Boolean by mutableStateOf(true)
 

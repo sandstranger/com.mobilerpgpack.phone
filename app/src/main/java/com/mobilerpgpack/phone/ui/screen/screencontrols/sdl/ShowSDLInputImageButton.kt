@@ -7,6 +7,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.quantuminventions.customkeyboard.components.expandableView.ExpandableState
@@ -28,9 +29,10 @@ abstract class ShowSDLInputImageButton(
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
     buttonResId: Int = NOT_EXISTING_RES,
-    private val keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE) : KoinComponent, KeyboardListener, ExpandableStateListener,
+    private val keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE,
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default ) : KoinComponent, KeyboardListener, ExpandableStateListener,
     ImageButton(SHOW_KEYBOARD_BUTTON_ID, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,
-        buttonResId)
+        buttonResId, defaultViewRenderRule)
 {
     private var wasInit = false
 
