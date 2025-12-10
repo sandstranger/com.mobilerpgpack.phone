@@ -35,9 +35,9 @@ abstract class SDLImageButton(
 
     private var isPressed by mutableStateOf(false)
 
-    override var show: Boolean by mutableStateOf(true)
+    final override var show: Boolean by mutableStateOf(true)
 
-    override val buttonState: ButtonState = ButtonState(
+    final override val buttonState: ButtonState = ButtonState(
         id,
         engineType,
         offsetXPercent = offsetXPercent,
@@ -53,43 +53,47 @@ abstract class SDLImageButton(
         Image(
             painter = painterResource(id = buttonState.buttonResId),
             contentDescription = id,
-            modifier = if (!useToggle) Modifier
-                .fillMaxSize()
-                .minimumInteractiveComponentSize()
-                .pointerInput(!isEditMode && inGame) {
-                    if (isEditMode || !inGame) return@pointerInput
-
-                    detectTapGestures(
-                        onPress = {
-                            onTouchDown(buttonState.sdlKeyCode)
-                            try {
-                                awaitRelease()
-                            } finally {
-                                onTouchUp(buttonState.sdlKeyCode)
-                            }
-                        }
-                    )
-                }
-            else Modifier
-                .fillMaxSize()
-                .minimumInteractiveComponentSize()
-                .clickable(indication = null,
-                    interactionSource = remember { MutableInteractionSource() }) {
-                    if (isEditMode || !inGame) {
-                        return@clickable
-                    }
-                    if (!isPressed){
-                        onTouchDown(buttonState.sdlKeyCode)
-                    }
-                    else{
-                        onTouchUp(buttonState.sdlKeyCode)
-                    }
-                    isPressed=!isPressed
-                }
-        )
+            modifier = BuildModifier(isEditMode, inGame))
     }
 
     protected abstract fun onTouchDown(keyCode: Int)
 
     protected abstract fun onTouchUp(keyCode: Int)
+
+    @Composable
+    protected fun BuildModifier (isEditMode: Boolean, inGame: Boolean) : Modifier{
+        return if (!useToggle) Modifier
+            .fillMaxSize()
+            .minimumInteractiveComponentSize()
+            .pointerInput(!isEditMode && inGame) {
+                if (isEditMode || !inGame) return@pointerInput
+
+                detectTapGestures(
+                    onPress = {
+                        onTouchDown(buttonState.sdlKeyCode)
+                        try {
+                            awaitRelease()
+                        } finally {
+                            onTouchUp(buttonState.sdlKeyCode)
+                        }
+                    }
+                )
+            }
+        else Modifier
+            .fillMaxSize()
+            .minimumInteractiveComponentSize()
+            .clickable(indication = null,
+                interactionSource = remember { MutableInteractionSource() }) {
+                if (isEditMode || !inGame) {
+                    return@clickable
+                }
+                if (!isPressed){
+                    onTouchDown(buttonState.sdlKeyCode)
+                }
+                else{
+                    onTouchUp(buttonState.sdlKeyCode)
+                }
+                isPressed=!isPressed
+            }
+    }
 }
