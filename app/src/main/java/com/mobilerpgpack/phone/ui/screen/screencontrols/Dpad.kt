@@ -34,8 +34,6 @@ abstract class Dpad(engineType: EngineTypes,
 
     override var show: Boolean by mutableStateOf(true)
 
-    override val enabled: Boolean = true
-
     override val isQuickPanel: Boolean = false
 
     override val buttonState: ButtonState get() = dpadButtonState

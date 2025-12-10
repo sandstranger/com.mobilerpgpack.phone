@@ -57,6 +57,7 @@
     <string name="uzdoom_mods_count">mods count</string>
     <string name="enable_separate_mods_support">Enable separate mods support</string>
     <string name="path_to_mod">Path to mod</string>
+    <string name="screen_controls_view_render_rule">Render rule</string>
     <string name="enable_uzdoom_playing_records">Enable playing records support</string>
     <string name="uzdoom_path_to_demo_file">Path to .lmp demo file</string>
     <string name="enable_uzdoom_xlat_support">Enable xlat support</string>
