@@ -54,20 +54,9 @@ abstract class ShowSDLInputImageButton(
         engineInfo.rootView!!.requestFocus()
     }
 
-    private fun setupKeyboard(){
-        if (wasInit){
-            return
-        }
-        wasInit = true
-        engineInfo.keyboardView!!.setKeyCodeListener (this)
-        engineInfo.keyboardView!!.registerListener(this)
-        engineInfo.keyboardView!!.registerEditText(CustomKeyboardView.KeyboardType.QWERTY,
-            engineInfo.keyboardInputField!!)
-    }
+    final override fun characterClicked(c: Char) = onKeyDown(keyCodesProvider.getKeyCode(c))
 
-    override fun characterClicked(c: Char) = onKeyDown(keyCodesProvider.getKeyCode(c))
-
-    override fun specialKeyClicked(key: KeyboardController.SpecialKey) {
+    final override fun specialKeyClicked(key: KeyboardController.SpecialKey) {
         when (key) {
             KeyboardController.SpecialKey.DELETE,
             KeyboardController.SpecialKey.BACKSPACE -> onKeyDown(DELETE_SYMBOL_KEYCODE)
@@ -77,7 +66,7 @@ abstract class ShowSDLInputImageButton(
         }
     }
 
-    override fun onStateChange(state: ExpandableState) {
+    final override fun onStateChange(state: ExpandableState) {
         when (state) {
             ExpandableState.COLLAPSED,
             ExpandableState.COLLAPSING -> {
@@ -90,6 +79,17 @@ abstract class ShowSDLInputImageButton(
     }
 
     protected abstract fun onKeyDown(keyCode: Int)
+
+    private fun setupKeyboard(){
+        if (wasInit){
+            return
+        }
+        wasInit = true
+        engineInfo.keyboardView!!.setKeyCodeListener (this)
+        engineInfo.keyboardView!!.registerListener(this)
+        engineInfo.keyboardView!!.registerEditText(CustomKeyboardView.KeyboardType.QWERTY,
+            engineInfo.keyboardInputField!!)
+    }
 
     companion object {
         private const val DELETE_SYMBOL_KEYCODE = KeyEvent.KEYCODE_DEL

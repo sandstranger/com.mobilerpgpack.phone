@@ -44,11 +44,14 @@ interface IEngineInfo {
 
     fun onResume()
 
+    fun onDestroy()
+
+    fun onBackPressed() : Boolean
+
     fun onNativeLibrariesLoaded() {}
 
     fun registerJoysticks() {}
 
-    fun onDestroy()
 }
 
 val IEngineInfo.mainSharedObject get() = buildFullLibraryName(this.mainLibraryName)
