@@ -242,58 +242,61 @@ abstract class EngineInfo(
     private fun inflateControlsLayout() {
         if (showCustomMouseCursor || !hideScreenControls) {
             layoutBinding = GameLayoutBinding.inflate(activity.layoutInflater)
-
-            activity.window.addContentView(
-                layoutBinding!!.root,
-                ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
+            layoutBinding?.apply {
+                activity.window.addContentView(
+                    root,
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
                 )
-            )
 
-            if (!showCustomMouseCursor) {
-                layoutBinding!!.mouseOverlayUI.visibility = View.GONE
-            }
+                if (!showCustomMouseCursor) {
+                    mouseOverlayUI.visibility = View.GONE
+                }
 
-            if (hideScreenControls) {
-                layoutBinding!!.controlsOverlayUI.visibility = View.GONE
-            } else {
-                controlsOverlayUI = layoutBinding!!.controlsOverlayUI
-            }
+                if (hideScreenControls) {
+                    controlsOverlayUI.visibility = View.GONE
+                } else {
+                    controlsOverlayUI = controlsOverlayUI
+                }
 
-            layoutBinding!!.sdlContainer.post {
-                layoutBinding!!.sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
-                    ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
+                customKeyboard.alpha = runBlocking { preferencesStorage.customOnScreenKeyboardTransparency.first() }
 
-                        if (showCustomMouseCursor) {
-                            layoutBinding!!.mouseOverlayUI.setContent {
-                                AutoMouseModeComposable(layoutBinding!!)
-                                if (isCursorVisible) {
-                                    DrawMouseIcon()
+                sdlContainer.post {
+                    sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
+                        ViewTreeObserver.OnGlobalLayoutListener {
+                        override fun onGlobalLayout() {
+
+                            if (showCustomMouseCursor) {
+                                mouseOverlayUI.setContent {
+                                    AutoMouseModeComposable(layoutBinding!!)
+                                    if (isCursorVisible) {
+                                        DrawMouseIcon()
+                                    }
                                 }
                             }
-                        }
 
-                        if (!hideScreenControls) {
-                            layoutBinding!!.controlsOverlayUI.setContent {
-                                screenController.DrawScreenControls(
-                                    viewsToDraw,
-                                    inGame = true,
-                                    activeEngine = engineType,
-                                    allowToEditControls = allowToEditScreenControlsInGame,
-                                    drawInSafeArea = displayInSafeArea)
+                            if (!hideScreenControls) {
+                                controlsOverlayUI.setContent {
+                                    screenController.DrawScreenControls(
+                                        viewsToDraw,
+                                        inGame = true,
+                                        activeEngine = engineType,
+                                        allowToEditControls = allowToEditScreenControlsInGame,
+                                        drawInSafeArea = displayInSafeArea)
+                                }
                             }
+
+                            sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
                         }
+                    })
 
-                        layoutBinding!!.sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    }
-                })
-
-                if (enableControlsAutoHidingFeature) {
-                    needToShowControlsLastState = true
-                    scope.launch {
-                        changeScreenControlsVisibility()
+                    if (enableControlsAutoHidingFeature) {
+                        needToShowControlsLastState = true
+                        scope.launch {
+                            changeScreenControlsVisibility()
+                        }
                     }
                 }
             }
