@@ -19,6 +19,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 
 abstract class SDLImageButton(
     private val id: String,
@@ -29,7 +30,8 @@ abstract class SDLImageButton(
     private val alpha: Float = 0.65f,
     private val sdlKeyEvent: Int = 0,
     private val buttonResId: Int = NOT_EXISTING_RES,
-    private val useToggle: Boolean = false) : IScreenControlsView {
+    private val useToggle: Boolean = false,
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : IScreenControlsView {
 
     private var isPressed by mutableStateOf(false)
 
@@ -43,8 +45,8 @@ abstract class SDLImageButton(
         sizePercent = sizePercent,
         buttonResId = buttonResId,
         sdlKeyEvent = sdlKeyEvent,
-        alpha = alpha
-    )
+        alpha = alpha,
+        defaultViewRenderRule = defaultViewRenderRule)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {

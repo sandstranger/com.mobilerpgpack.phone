@@ -23,10 +23,12 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import org.koin.core.component.KoinComponent
 
-abstract class Dpad(engineType: EngineTypes,
+abstract class Dpad(
+    engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
-    private val sizePercent: Float = 0.25f) : KoinComponent, IScreenControlsView {
+    private val sizePercent: Float = 0.25f,
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : KoinComponent, IScreenControlsView {
 
     private val dpadButtonState: ButtonState
 
@@ -57,14 +59,16 @@ abstract class Dpad(engineType: EngineTypes,
             )
         )
         buttons.add(
-            ButtonState(DPAD_LEFT,
+            ButtonState(
+                DPAD_LEFT,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_LEFT,
                 buttonResId = R.drawable.dpad_left,
             )
         )
         buttons.add(
-            ButtonState(DPAD_RIGHT,
+            ButtonState(
+                DPAD_RIGHT,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_RIGHT,
                 buttonResId = R.drawable.dpad_right,
@@ -76,7 +80,8 @@ abstract class Dpad(engineType: EngineTypes,
             engineType,
             offsetXPercent = offsetXPercent,
             offsetYPercent = offsetYPercent,
-            sizePercent = sizePercent
+            sizePercent = sizePercent,
+            defaultViewRenderRule = defaultViewRenderRule
         )
     }
 
@@ -163,7 +168,7 @@ abstract class Dpad(engineType: EngineTypes,
         private const val DPAD_DOWN = "DpadDown"
         private const val DPAD_UP = "DpadUp"
 
-        private val dpadDownCollection : Collection <String> = setOf(DPAD_UP, DPAD_DOWN)
-        private val dpadLeftCollection : Collection <String> = setOf(DPAD_LEFT, DPAD_RIGHT)
+        private val dpadDownCollection: Collection<String> = setOf(DPAD_UP, DPAD_DOWN)
+        private val dpadLeftCollection: Collection<String> = setOf(DPAD_LEFT, DPAD_RIGHT)
     }
 }
