@@ -5,15 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
-import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.GameEnum.Companion.stringCollection
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.SwitchItem
@@ -195,10 +193,8 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         ListPreferenceItem(
             stringResource(R.string.psydoom_peer_type),
-            peerType,
-            enumValues<PeerType>().map { it.toString() }.toList()
-        ) {
-            preferencesStorage.setStringValue(preferencesStorage.peerTypePrefsKey, it)
+            enumValueOf<PeerType>(peerType)) {
+            preferencesStorage.setStringValue(preferencesStorage.peerTypePrefsKey, it.toString())
         }
 
         HorizontalDivider()
@@ -568,13 +564,13 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
         HorizontalDivider()
         ListPreferenceItem(stringResource(R.string.psydoom_allow_movement_cancel),
-            viewModel.allowMovementCancellation.toString(),stringCollection() ) {
-            viewModel.allowMovementCancellation = enumValueOf<GameEnum>(it)
+            viewModel.allowMovementCancellation) {
+            viewModel.allowMovementCancellation = it
         }
         HorizontalDivider()
         ListPreferenceItem(stringResource(R.string.psydoom_final_doom_player_physx),
-            viewModel.useFinalDoomPlayerMovement.toString(),stringCollection() ) {
-            viewModel.useFinalDoomPlayerMovement = enumValueOf<GameEnum>(it)
+            viewModel.useFinalDoomPlayerMovement ) {
+            viewModel.useFinalDoomPlayerMovement = it
         }
         HorizontalDivider()
         EditTextItem(
@@ -609,8 +605,8 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         DrawTitleText(stringResource(R.string.psydoom_game_tick_rate))
 
         ListPreferenceItem(stringResource(R.string.psydoom_mode),
-            viewModel.usePalTimings.toString(), TickMode.stringCollection() ) {
-            viewModel.usePalTimings = enumValueOf<TickMode>(it)
+            viewModel.usePalTimings ) {
+            viewModel.usePalTimings = it
         }
         HorizontalDivider()
 
@@ -786,8 +782,8 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         HorizontalDivider()
 
         ListPreferenceItem(stringResource(R.string.psydoom_preserve_ammo_on_respawn),
-            viewModel.coopPreserveAmmoFactor.toString(), RespawnAmmoEnum.stringCollection() ) {
-            viewModel.coopPreserveAmmoFactor = enumValueOf<RespawnAmmoEnum>(it)
+            viewModel.coopPreserveAmmoFactor,) {
+            viewModel.coopPreserveAmmoFactor = it
         }
         HorizontalDivider()
 
@@ -890,8 +886,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             fun fromValue(value: Int): GameEnum? {
                 return entries.find { it.value == value }
             }
-
-            fun stringCollection () = entries.map { it.toString() }.toList()
         }
     }
 
@@ -904,8 +898,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             fun fromValue(value: Int): TickMode? {
                 return entries.find { it.value == value }
             }
-
-            fun stringCollection () = entries.map { it.toString() }.toList()
         }
     }
 
@@ -918,8 +910,6 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             fun fromValue(value: Int): RespawnAmmoEnum? {
                 return entries.find { it.value == value }
             }
-
-            fun stringCollection () = entries.map { it.toString() }.toList()
         }
     }
 
