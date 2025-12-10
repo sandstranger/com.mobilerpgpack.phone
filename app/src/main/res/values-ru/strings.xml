@@ -23,6 +23,7 @@
     <string name="selected_button">Выбранная кнопка</string>
     <string name="clear">Очистить</string>
     <string name="delete">Удалить</string>
+    <string name="custom_keyboard_transparency">Прозрачность кастомной экранной клавиатуры</string>
     <string name="common_settings">Общие настройки</string>
     <string name="graphics_settings">Настройки графики</string>
     <string name="translation_settings">Настройки перевода</string>

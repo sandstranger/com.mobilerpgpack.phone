@@ -49,9 +49,11 @@ abstract class ShowSDLInputImageButton(
             return
         }
         setupKeyboard()
-        engineInfo.keyboardInputField!!.text = ""
-        engineInfo.keyboardInputField!!.requestFocus()
-        engineInfo.keyboardInputField!!.clearFocus()
+        engineInfo.keyboardInputField?.apply {
+            text = ""
+            requestFocus()
+            clearFocus()
+        }
         engineInfo.rootView!!.requestFocus()
     }
 
@@ -86,9 +88,11 @@ abstract class ShowSDLInputImageButton(
             return
         }
         wasInit = true
-        engineInfo.keyboardView!!.setKeyCodeListener (this)
-        engineInfo.keyboardView!!.registerListener(this)
-        engineInfo.keyboardView!!.registerEditText(keyboardInputType, engineInfo.keyboardInputField!!)
+        engineInfo.keyboardView?.apply {
+            setKeyCodeListener (this@ShowSDLInputImageButton)
+            registerListener(this@ShowSDLInputImageButton)
+            registerEditText(keyboardInputType, engineInfo.keyboardInputField!!)
+        }
     }
 
     companion object {

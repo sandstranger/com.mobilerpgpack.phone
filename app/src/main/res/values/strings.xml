@@ -23,6 +23,7 @@
     <string name="grant_permission">Grant permission</string>
     <string name="clear">Clear</string>
     <string name="delete">Delete</string>
+    <string name="custom_keyboard_transparency">Custom onscreen keyboard transparency</string>
     <string name="selected_button">Selected button</string>
     <string name="common_settings">General settings</string>
     <string name="translation_settings">Translation settings</string>
