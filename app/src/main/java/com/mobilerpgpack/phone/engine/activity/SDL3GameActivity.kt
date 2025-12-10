@@ -75,6 +75,8 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
 
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        org.libsdl3.app.onKeyDown(KeyEvent.KEYCODE_ESCAPE, delayBeforeKeyRelease = 50L)
+        if (!engineInfo.onBackPressed()) {
+            org.libsdl3.app.onKeyDown(KeyEvent.KEYCODE_ESCAPE, delayBeforeKeyRelease = 50L)
+        }
     }
 }
