@@ -15,6 +15,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.ShowSDL3InputImageButton
+import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
 const val LEFT_MOUSE_BUTTON_ID = 1
 
@@ -111,7 +112,8 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
         sizePercent = 0.08f,
-        buttonResId = R.drawable.keyboard
+        buttonResId = R.drawable.keyboard,
+        keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
     ),
     UpdateScreenControlsVisibilityImageButton(
         EngineTypes.WolfensteinRpg,
@@ -716,7 +718,8 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
         sizePercent = 0.08f,
-        buttonResId = R.drawable.keyboard
+        buttonResId = R.drawable.keyboard,
+        keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
     )
 )
 
@@ -822,7 +825,8 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
         sizePercent = 0.08f,
-        buttonResId = R.drawable.keyboard
+        buttonResId = R.drawable.keyboard,
+        keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
     ),
     UpdateScreenControlsVisibilityImageButton(
         EngineTypes.Doom2Rpg,
