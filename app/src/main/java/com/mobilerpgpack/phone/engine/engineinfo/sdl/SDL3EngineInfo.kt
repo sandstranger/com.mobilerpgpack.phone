@@ -50,7 +50,7 @@ abstract class SDL3EngineInfo(
     }
 
     final override fun onBackPressed(): Boolean {
-        if(super.onBackPressed()){
+        if(!super.onBackPressed()){
             onKeyDown(KeyEvent.KEYCODE_ESCAPE, delayBeforeKeyRelease = 50L)
         }
         return true
