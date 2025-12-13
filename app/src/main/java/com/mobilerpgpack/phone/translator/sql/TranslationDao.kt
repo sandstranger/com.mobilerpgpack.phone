@@ -13,7 +13,7 @@ interface TranslationDao {
     @Query("SELECT value FROM translations WHERE `key` = :key AND lang = :lang LIMIT 1")
     suspend fun getTranslation(key: String, lang: String): String?
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTranslation(translation: TranslationEntry)
 
     @Query("SELECT * FROM translations")
