@@ -42,16 +42,17 @@ import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.min
 
-abstract class SDLOnScreenGamepad(engineType: EngineTypes,
-                                  private val stickId : Int = 0,
-                                  private val offsetXPercent: Float = 0f,
-                                  private val offsetYPercent: Float = 0f,
-                                  private val sizePercent: Float = 0.13f,
-                                  private val alpha: Float = 0.65f,
-                                  defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : IScreenControlsView, KoinComponent {
+abstract class SDLOnScreenStick(stickId : String = DEFAULT_STICK_ID,
+                                engineType: EngineTypes,
+                                stickType : StickType = StickType.LeftStick,
+                                private val offsetXPercent: Float = 0f,
+                                private val offsetYPercent: Float = 0f,
+                                private val sizePercent: Float = 0.13f,
+                                private val alpha: Float = 0.65f,
+                                defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : IScreenControlsView, KoinComponent {
 
-    private val axisX = stickId * 2
-    private val axisY = stickId * 2 + 1
+    private val axisX = stickType.value * 2
+    private val axisY = stickType.value * 2 + 1
 
     protected val engineInfo by lazy {
         runBlocking {
@@ -61,7 +62,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
     }
 
     override val viewState: ViewState = ViewState(
-        GAMEPAD_ID,
+        stickId,
         engineType,
         offsetXPercent = offsetXPercent,
         offsetYPercent = offsetYPercent,
@@ -88,7 +89,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
                 joystickRegistered = true
 
                 val result = nativeAddJoystick(
-                    DEVICE_ID, "Virtual", "Virtual",
+                    DEFAULT_GAMEPAD_DEVICE_ID, "Virtual", "Virtual",
                     0x045E, 0x028E, false,
                     0xFFFF, 4, 0b1111, 0, 0)
                 Log.d("SDL_INIT", "Joystick registration result: $result")
@@ -99,19 +100,19 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
             }
 
             val processedX = when {
-                abs(x) < GAMEPAD_DEAD_ZONE -> 0f
-                x > 0 -> (x * GAMEPAD_SCALE).coerceAtMost(1f)
-                else -> (x * GAMEPAD_SCALE).coerceAtLeast(-1f)
+                abs(x) < STICK_DEAD_ZONE -> 0f
+                x > 0 -> (x * STICK_SCALE).coerceAtMost(1f)
+                else -> (x * STICK_SCALE).coerceAtLeast(-1f)
             }
             val processedY = when {
-                abs(y) < GAMEPAD_DEAD_ZONE -> 0f
-                y > 0 -> (y * GAMEPAD_SCALE).coerceAtMost(1f)
-                else -> (y * GAMEPAD_SCALE).coerceAtLeast(-1f)
+                abs(y) < STICK_DEAD_ZONE -> 0f
+                y > 0 -> (y * STICK_SCALE).coerceAtMost(1f)
+                else -> (y * STICK_SCALE).coerceAtLeast(-1f)
             }
 
             try {
-                onNativeJoy(DEVICE_ID, axisX, processedX)
-                onNativeJoy(DEVICE_ID, axisY, processedY)
+                onNativeJoy(DEFAULT_GAMEPAD_DEVICE_ID, axisX, processedX)
+                onNativeJoy(DEFAULT_GAMEPAD_DEVICE_ID, axisY, processedY)
             } catch (e: Exception) {
                 Log.e("SDL_INPUT", "Failed to send to axis", e)
             }
@@ -294,12 +295,16 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         onUpdateStick(normX, normY)
     }
 
-    private companion object{
-        private const val DEVICE_ID = 1384510555
-        private const val GAMEPAD_ID = "onscreen_gamepad"
-        private const val GAMEPAD_DEAD_ZONE = 0.05f
-        private const val GAMEPAD_SCALE = 1.0f
-
+    companion object{
+        private const val DEFAULT_GAMEPAD_DEVICE_ID = 1384510555
+        private const val STICK_DEAD_ZONE = 0.05f
+        private const val STICK_SCALE = 1.0f
+        const val DEFAULT_STICK_ID = "onscreen_stick"
         private var joystickRegistered by mutableStateOf(false)
     }
+}
+
+enum class StickType (val value : Int ) {
+    LeftStick (0),
+    RightStick (1)
 }
