@@ -74,10 +74,10 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     override val isQuickPanel: Boolean = false
 
     @Composable
-    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) = DrawGamepad(isEditMode, inGame)
+    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) = DrawStick(isEditMode, inGame)
 
     @Composable
-    private fun DrawGamepad(isEditMode: Boolean, inGame: Boolean) {
+    private fun DrawStick(isEditMode: Boolean, inGame: Boolean) {
 
         fun updateStick(x: Float, y: Float) {
             if (isEditMode || !inGame){
@@ -121,7 +121,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Joystick(
+            DrawStick(
                 isEditMode, inGame,
                 onUpdateStick = ::updateStick
             )
@@ -129,7 +129,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     }
 
     @Composable
-    private fun Joystick(
+    private fun DrawStick(
         isEditMode: Boolean,
         inGame: Boolean,
         onUpdateStick: (Float, Float) -> Unit

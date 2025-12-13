@@ -3,10 +3,12 @@ package com.mobilerpgpack.phone.utils.sharesprefs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.koin.java.KoinJavaComponent.get
+import java.lang.Exception
 import java.util.concurrent.ConcurrentHashMap
 
 open class SharedPrefsRepository {
@@ -14,6 +16,23 @@ open class SharedPrefsRepository {
     init {
         loadAllEntries()
     }
+
+    inline fun <reified T : Enum<T>> getEnumValue(key: String, defaultValue: T): Flow<T> =
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
+            .map { stringValue ->
+                if (stringValue.isNotEmpty()) {
+                    try {
+                        enumValueOf<T>(stringValue)
+                    } catch (_: Exception) {
+                        defaultValue
+                    }
+                } else {
+                    defaultValue
+                }
+            }
+
+    inline fun <reified T : Enum<T>> getEnumValue(key: Key<T>, defaultValue: T): Flow<T> =
+        getEnumValue(key.name, defaultValue)
 
     fun getStringValue(key: String, defaultValue: String = "") =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
@@ -110,7 +129,22 @@ open class SharedPrefsRepository {
         }
     }
 
-    private class MutableFlow<T>(initialValue: T) {
+    inline fun <reified T : Enum<T>> setEnumValue(key: String, value: T) = scope.launch { setEnumValueAsync(key, value) }
+
+    inline fun <reified T : Enum<T>> setEnumValue(key: Key<T>, value: T) = setEnumValue(key.name, value)
+
+    suspend inline fun <reified T : Enum<T>> setEnumValueAsync(key: Key<T>, value: T) =
+        setEnumValueAsync(key.name, value)
+
+    suspend inline fun <reified T : Enum<T>> setEnumValueAsync(key: String, value: T) {
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
+            prefsEntry.stringValue = value.name
+            stringFlow!!.value = value.name
+            dao.upsert(prefsEntry)
+        }
+    }
+
+    class MutableFlow<T>(initialValue: T) {
         private val mutableFlow = MutableStateFlow(initialValue)
 
         val flow: Flow<T> = mutableFlow
@@ -119,7 +153,7 @@ open class SharedPrefsRepository {
             set(value) { mutableFlow.value = value }
     }
 
-    private class SharedPrefsValue(
+    class SharedPrefsValue(
         var prefsEntry: SharedPrefsEntry,
         val floatFlow: MutableFlow<Float>? = null,
         val stringFlow: MutableFlow<String>? = null,
@@ -142,17 +176,17 @@ open class SharedPrefsRepository {
         }
     }
 
-    private companion object {
+    companion object {
         @Volatile
         private var entriesWasLoaded = false
 
         private val mutex = Mutex()
 
-        private val scope: CoroutineScope = get(CoroutineScope::class.java)
+        val scope: CoroutineScope = get(CoroutineScope::class.java)
 
-        private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
+        val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
 
-        private val loadedEntries = ConcurrentHashMap<String, SharedPrefsValue>()
+        val loadedEntries = ConcurrentHashMap<String, SharedPrefsValue>()
 
         private fun loadAllEntries() {
             if (!entriesWasLoaded) {
@@ -228,6 +262,12 @@ open class SharedPrefsRepository {
             SharedPrefsValue(
                 SharedPrefsEntry(key, booleanValue = value),
                 booleanFlow = MutableFlow(value)
+            )
+
+        fun <T : Enum<T>> buildSharedPrefsValue(key: String, value: T) =
+            SharedPrefsValue(
+                SharedPrefsEntry(key, stringValue = value.name),
+                stringFlow = MutableFlow(value.name)
             )
     }
 }
