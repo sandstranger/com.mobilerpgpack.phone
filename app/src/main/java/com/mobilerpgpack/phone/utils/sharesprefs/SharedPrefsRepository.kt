@@ -18,26 +18,27 @@ open class SharedPrefsRepository {
     fun getStringValue(key: String, defaultValue: String = "") =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
 
-    fun getStringValue(key: Key<String>, defaultValue: String = "") =
-        loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.stringFlow!!.flow
+    fun getStringValue(key: Key<String>, defaultValue: String = "") = getStringValue(key.name, defaultValue)
 
     fun getIntValue(key: String, defaultValue: Int = 0) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.intFlow!!.flow
 
-    fun getIntValue(key: Key<Int>, defaultValue: Int = 0) =
-        loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.intFlow!!.flow
+    fun getIntValue(key: Key<Int>, defaultValue: Int = 0) = getIntValue(key.name, defaultValue)
 
     fun getBooleanValue(key: String, defaultValue: Boolean = false) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.booleanFlow!!.flow
 
-    fun getBooleanValue(key: Key<Boolean>, defaultValue: Boolean = false) =
-        loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.booleanFlow!!.flow
+    fun getBooleanValue(key: Key<Boolean>, defaultValue: Boolean = false) = getBooleanValue(key.name, defaultValue)
 
-    fun getFloatValue(key: Key<Float>, defaultValue: Float = 0.0f) =
-        loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.floatFlow!!.flow
+    fun getFloatValue(key: Key<Float>, defaultValue: Float = 0.0f) = getFloatValue(key.name, defaultValue)
 
-    fun getDoubleValue(key: Key<Double>, defaultValue: Double = 0.0) =
-        loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.doubleFlow!!.flow
+    fun getFloatValue(key: String, defaultValue: Float = 0.0f) =
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.floatFlow!!.flow
+
+    fun getDoubleValue(key: Key<Double>, defaultValue: Double = 0.0) = getDoubleValue(key.name, defaultValue)
+
+    fun getDoubleValue(key: String, defaultValue: Double = 0.0) =
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.doubleFlow!!.flow
 
     fun setStringValue(key: Key<String>, value: String) = setStringValue(key.name, value)
 
