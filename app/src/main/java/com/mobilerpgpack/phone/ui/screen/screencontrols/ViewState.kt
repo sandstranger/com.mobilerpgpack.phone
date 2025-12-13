@@ -25,7 +25,7 @@ class ViewState(
     sdlKeyEvent : Int = Int.MIN_VALUE,
     val buttonResId: Int = NOT_EXISTING_RES,
     private val defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    val isCustomButton : Boolean = false) : KoinComponent {
+    val isCustomView : Boolean = false) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
@@ -50,7 +50,7 @@ class ViewState(
     var alpha by mutableFloatStateOf(defaultAlpha)
     var sdlKeyCode by mutableIntStateOf(defaultSdlKeyEvent)
     var viewRenderRule by mutableStateOf(defaultViewRenderRule)
-    var isDeleted by mutableStateOf(isCustomButton)
+    var isDeleted by mutableStateOf(isCustomView)
 
     suspend fun load() {
         offsetXPercent = preferencesStorage.getFloatValue( keyX, defaultOffsetXPercent).first()
@@ -60,7 +60,7 @@ class ViewState(
         sdlKeyCode = preferencesStorage.getIntValue( sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()
         viewRenderRule = enumValueOf<ViewRenderRule>(preferencesStorage.getStringValue(viewRenderRulePrefsKey,
             defaultViewRenderRule.toString()).first())
-        isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isCustomButton).first()
+        isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isCustomView).first()
     }
 
     suspend fun save() {
@@ -80,7 +80,7 @@ class ViewState(
         alpha = defaultAlpha
         sdlKeyCode = defaultSdlKeyEvent
         viewRenderRule = defaultViewRenderRule
-        isDeleted = isCustomButton
+        isDeleted = isCustomView
     }
 
     suspend fun resetKeyEvent() {

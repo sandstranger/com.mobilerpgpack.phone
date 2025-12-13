@@ -7,11 +7,10 @@ import android.provider.Settings
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -52,6 +51,7 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally){
 
             val launcher =
@@ -71,7 +71,6 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
 
             Text(text = stringResource(R.string.access_to_all_files), textAlign = TextAlign.Center,
                 color = textColor, fontSize = 24.sp)
-            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
