@@ -85,6 +85,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
+import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.datastore.DataStoreSettings
@@ -131,6 +132,7 @@ class KoinModulesProvider(private val context: Context,
             createdAtStart()
         }
         single { assetExtractor }.bind()
+        single <SharedPrefsDatabase> { SharedPrefsDatabase.createInstance().dao() }
     }
 
     private val httpModule = module {
