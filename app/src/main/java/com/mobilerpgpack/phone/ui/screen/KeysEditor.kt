@@ -59,8 +59,6 @@ fun KeysEditor(
     }
 
     if (showButtonSelectDialog) {
-        val scrollState = rememberScrollState()
-
         AlertDialog(
             onDismissRequest = { showButtonSelectDialog = false },
             confirmButton = {
