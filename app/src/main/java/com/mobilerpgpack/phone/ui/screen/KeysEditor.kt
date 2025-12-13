@@ -52,10 +52,7 @@ fun KeysEditor(
 
     if (shouldReset) {
         LaunchedEffect(buttonsToEdit) {
-            scope.launch {
-                buttonsToEdit.forEach { it.viewState.resetKeyEvent() }
-                selectedKeyCode = currentButton.value.viewState.sdlKeyCode
-            }
+            buttonsToEdit.forEach { it.viewState.resetKeyEvent() }
             selectedKeyCode = currentButton.value.viewState.sdlKeyCode
             shouldReset = false
         }
