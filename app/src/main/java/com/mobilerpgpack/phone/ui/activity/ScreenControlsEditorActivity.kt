@@ -7,10 +7,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -52,12 +56,19 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
         setContent {
             MaterialTheme {
-                activeEngine.screenController.DrawScreenControls(activeEngine.viewsToDraw,
-                    inGame = false,
-                    activeEngine = selectedEngine,
-                    drawInSafeArea = displayInSafeArea, onBack = {
-                        this@ScreenControlsEditorActivity.finish()
-                    })
+                val isSystemInDarkTheme = isSystemInDarkTheme()
+                val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
+                    .collectAsState(initial = isSystemInDarkTheme)
+
+                Theme(darkTheme = useDarkTheme) {
+                    activeEngine.screenController.DrawScreenControls(
+                        activeEngine.viewsToDraw,
+                        inGame = false,
+                        activeEngine = selectedEngine,
+                        drawInSafeArea = displayInSafeArea, onBack = {
+                            this@ScreenControlsEditorActivity.finish()
+                        })
+                }
             }
         }
     }
