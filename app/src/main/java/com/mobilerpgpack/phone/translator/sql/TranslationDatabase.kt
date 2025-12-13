@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.mobilerpgpack.phone.translator.sql.TranslationEntry
 
 @Database(entities = [TranslationEntry::class], version = 1)
 @TypeConverters(EngineTypeConverter::class)

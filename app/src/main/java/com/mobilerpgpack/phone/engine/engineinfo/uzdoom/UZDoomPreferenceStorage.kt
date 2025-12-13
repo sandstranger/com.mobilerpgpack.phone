@@ -1,14 +1,10 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
-import android.content.Context
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.CoroutineScope
+import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 
-class UZDoomPreferenceStorage (context: Context, scope: CoroutineScope) :
-    PreferencesStorage(context, scope) {
+class UZDoomPreferenceStorage :PreferencesStorage() {
 
     val enableLightShadersPrefsKey = booleanPreferencesKey("enable_uzdoom_light_shaders")
 

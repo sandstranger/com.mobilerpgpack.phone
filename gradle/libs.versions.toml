@@ -1,13 +1,11 @@
 [versions]
-agp = "8.13.1"
+agp = "8.13.2"
 commonsBeanutils = "1.11.0"
 commonsConfiguration2 = "2.13.0"
-composePreferences = "2.0.0-beta02"
 converterGson = "3.0.0"
 core = "3.3.0"
 googleServices = "4.4.4"
-datastorePreferences = "1.2.0"
-firebaseBom = "34.6.0"
+firebaseBom = "34.7.0"
 gson = "2.13.2"
 icu4j = "78.1"
 koinAnnotations = "2.3.1"
@@ -41,7 +39,6 @@ translate = "17.0.3"
 ui = "1.10.0"
 navigationCompose = "2.9.6"
 zip4j = "2.11.5"
-settings = "1.3.0"
 runtime = "1.10.0"
 window = "1.5.1"
 
@@ -49,7 +46,6 @@ window = "1.5.1"
 androidx-compose-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
 androidx-compose-material-icons-core-android = { module = "androidx.compose.material:material-icons-core-android", version.ref = "materialIconsCoreAndroid" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -61,7 +57,6 @@ androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "ui" }
 commons-beanutils = { module = "commons-beanutils:commons-beanutils", version.ref = "commonsBeanutils" }
 commons-configuration2 = { module = "org.apache.commons:commons-configuration2", version.ref = "commonsConfiguration2" }
-compose-preferences = { module = "com.seanproctor:compose-preferences", version.ref = "composePreferences" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.afollestad.material-dialogs:core", version.ref = "core" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
@@ -88,9 +83,6 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "settings" }
-settings-coroutines = { group = "com.russhwolf", name = "multiplatform-settings-coroutines", version.ref = "settings" }
-settings-datastore = { group = "com.russhwolf", name = "multiplatform-settings-datastore", version.ref = "settings" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }

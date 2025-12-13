@@ -5,13 +5,12 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.floatPreferencesKey
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.floatPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.intPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -19,21 +18,26 @@ import org.koin.core.component.get
 class ViewState(
     val id: String,
     val engineType: EngineTypes,
-    val defaultOffsetXPercent: Float = 0f,
-    val defaultOffsetYPercent: Float = 0f,
-    val defaultSizePercent: Float = 0.13f,
-    val defaultAlpha: Float = 0.65f,
-    val defaultSdlKeyEvent : Int = Int.MIN_VALUE,
+    offsetXPercent: Float = 0f,
+    offsetYPercent: Float = 0f,
+    sizePercent: Float = 0.13f,
+    alpha: Float = 0.65f,
+    sdlKeyEvent : Int = Int.MIN_VALUE,
     val buttonResId: Int = NOT_EXISTING_RES,
     private val defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     val isCustomButton : Boolean = false) : KoinComponent {
 
+    private val defaultSdlKeyEvent = sdlKeyEvent
+    private val defaultOffsetXPercent = offsetXPercent
+    private val defaultOffsetYPercent = offsetYPercent
+    private val defaultSizePercent = sizePercent
+    private val defaultAlpha = alpha
     private val engineTypeString = engineType.toString().lowercase()
-    private val keyX: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_x")
-    private val keyY: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_y")
-    private val keySize: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_size_percent")
-    private val keyAlpha: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_alpha")
-    private val sdlKeyEventPrefsKey: Preferences.Key<Int> = intPreferencesKey("${engineTypeString}_${id}_sdl_key")
+    private val keyX = floatPreferencesKey("${engineTypeString}_${id}_x")
+    private val keyY = floatPreferencesKey("${engineTypeString}_${id}_y")
+    private val keySize = floatPreferencesKey("${engineTypeString}_${id}_size_percent")
+    private val keyAlpha = floatPreferencesKey("${engineTypeString}_${id}_alpha")
+    private val sdlKeyEventPrefsKey = intPreferencesKey("${engineTypeString}_${id}_sdl_key")
     private val viewRenderRulePrefsKey = stringPreferencesKey("${engineTypeString}_${id}_view_render_rule")
     private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${id}_is_deleted")
     private val preferencesStorage : PreferencesStorage = get()

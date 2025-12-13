@@ -7,13 +7,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.datastore.preferences.core.Preferences
 import com.codekidlabs.storagechooser.StorageChooser
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.ShowErrorDialog
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.showErrorDialogBox
+import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.parameter.parametersOf
@@ -22,7 +20,7 @@ import org.koin.java.KoinJavaComponent.get
 @Composable
 fun RequestPath(explorerItemTitle: String,
                 previousSavedPath: String = "",
-                key : Preferences.Key<String>? = null,
+                key : Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
                 requiredFileExtensions : Collection<String> = emptyList(),
                 onPathSelected: ((String) -> Unit)? = null) {
@@ -68,7 +66,7 @@ fun RequestPath(explorerItemTitle: String,
 @Composable
 fun RequestPath(explorerItemTitle: String,
                 previousSavedPathFlow: Flow<String> = emptyFlow(),
-                key : Preferences.Key<String>? = null,
+                key : Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
                 requiredFileExtensions : Collection<String> = emptyList(),
                 onPathSelected: ((String) -> Unit)? = null) {

@@ -1,21 +1,13 @@
 package com.mobilerpgpack.phone.ui.items.prefsitems
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import com.github.sproctor.composepreferences.LocalPreferenceHandler
-import com.github.sproctor.composepreferences.TextPreference
-import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.items.EditTextItem
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.flow.Flow
+import org.koin.compose.koinInject
 
 @Composable
 fun EditTextPreferenceItem(
@@ -25,28 +17,13 @@ fun EditTextPreferenceItem(
     hint: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     onValueChanged: ((String) -> Unit)? = null) {
-    val cancelString = stringResource(R.string.cancel_text)
-    val positiveString = stringResource(R.string.ok_text)
-    val preferences = LocalPreferenceHandler.current
-
-    TextPreference(
-        title = { Text(title) },
-        value = value,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        onValueChanged = { newValue : String ->
-            if (key.isNotEmpty()) {
-                preferences.putString(key, newValue)
-            }
-            onValueChanged?.invoke(newValue)
-        },
-        summary = {  Text(
-            text = value.ifEmpty { hint },
-            style = MaterialTheme.typography.bodyMedium,
-            color = if (value.isNotEmpty()) Color.Unspecified else Color.Gray,
-            modifier = Modifier.padding(top = 4.dp)
-        ) },
-        confirmText = positiveString,
-        dismissText = cancelString )
+    val preferencesStorage : PreferencesStorage = koinInject()
+    EditTextItem(title,value, hint, keyboardType = keyboardType){
+        if (key.isNotEmpty()){
+            preferencesStorage.setStringValue(key, it)
+        }
+        onValueChanged?.invoke(it)
+    }
 }
 
 @Composable
@@ -69,12 +46,12 @@ fun EditTextPreferenceItem(
     key : String = "",
     hint: String = "",
     onValueChanged: ((Float) -> Unit)? = null){
-    val preferences = LocalPreferenceHandler.current
+    val preferencesStorage : PreferencesStorage = koinInject()
     val initialValue by valueFlow.collectAsState(initial = 0f)
     EditTextPreferenceItem(title, initialValue.toString(), "", hint, KeyboardType.Decimal){
         val newValue = it.toFloatOrNull() ?: 0f
         if (key.isNotEmpty()){
-            preferences.putFloat(key,newValue)
+            preferencesStorage.setFloatValue(key,newValue)
         }
         onValueChanged?.invoke(newValue)
     }
@@ -85,10 +62,16 @@ fun EditTextPreferenceItem(
 fun EditTextPreferenceItem(
     title: String,
     valueFlow: Flow<Int>,
+    key : String = "",
     hint: String = "",
     onValueChanged: ((Int) -> Unit)? = null){
+    val preferencesStorage : PreferencesStorage = koinInject()
     val initialValue by valueFlow.collectAsState(initial = 0)
     EditTextPreferenceItem(title, initialValue.toString(), "", hint,KeyboardType.Number){
-        onValueChanged?.invoke(it.toIntOrNull() ?: 0)
+        val newValue = it.toIntOrNull() ?: 0
+        if (key.isNotEmpty()){
+            preferencesStorage.setIntValue(key, newValue)
+        }
+        onValueChanged?.invoke(newValue)
     }
 }
