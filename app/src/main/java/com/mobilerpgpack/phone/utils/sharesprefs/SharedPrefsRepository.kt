@@ -17,7 +17,7 @@ open class SharedPrefsRepository {
         loadAllEntries()
     }
 
-    inline fun <reified T : Enum<T>> getEnumValue(key: String, defaultValue: T): Flow<T> =
+    inline fun <reified T : Enum<T>> getEnumValue(key: String, defaultValue: T) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
             .map { stringValue ->
                 if (stringValue.isNotEmpty()) {
@@ -31,8 +31,7 @@ open class SharedPrefsRepository {
                 }
             }
 
-    inline fun <reified T : Enum<T>> getEnumValue(key: Key<T>, defaultValue: T): Flow<T> =
-        getEnumValue(key.name, defaultValue)
+    inline fun <reified T : Enum<T>> getEnumValue(key: Key<T>, defaultValue: T) = getEnumValue(key.name, defaultValue)
 
     fun getStringValue(key: String, defaultValue: String = "") =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
@@ -136,13 +135,8 @@ open class SharedPrefsRepository {
     suspend inline fun <reified T : Enum<T>> setEnumValueAsync(key: Key<T>, value: T) =
         setEnumValueAsync(key.name, value)
 
-    suspend inline fun <reified T : Enum<T>> setEnumValueAsync(key: String, value: T) {
-        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
-            prefsEntry.stringValue = value.name
-            stringFlow!!.value = value.name
-            dao.upsert(prefsEntry)
-        }
-    }
+    suspend inline fun <reified T : Enum<T>> setEnumValueAsync(key: String, value: T) =
+        setStringValueAsync(key, value.name)
 
     class MutableFlow<T>(initialValue: T) {
         private val mutableFlow = MutableStateFlow(initialValue)
