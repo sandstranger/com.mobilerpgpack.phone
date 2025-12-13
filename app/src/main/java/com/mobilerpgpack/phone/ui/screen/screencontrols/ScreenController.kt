@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -111,6 +110,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
+        var isSelectedViewCustomView by remember { mutableStateOf(false) }
         var selectedViewRenderRule by remember { mutableStateOf<ViewRenderRule?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
@@ -198,6 +198,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             if (isEditMode) {
                 EditControls(
                     selectedButtonId,
+                    isSelectedViewCustomView,
                     selectedViewRenderRule,
                     inGame,
                     onAlphaChange = { delta ->
@@ -212,7 +213,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     onSizeChange = { deltaPercent ->
                         selectedButtonId?.let { id ->
                             val state = viewsToDraw[id]!!.viewState
-                            state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(0.025f, 1f)
+                            state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(MIN_VIEW_SIZE, MAX_VIEW_SIZE)
                             coroutineScope.launch {
                                 state.save()
                             }
@@ -228,24 +229,41 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         }
                     },
                     onCustomViewSelected = { customView ->
-                        customView.viewState.isDeleted = false
-                        coroutineScope.launch { customView.viewState.save() }
+                        customView.viewState.apply {
+                            isDeleted = false
+                            isSelectedViewCustomView = isCustomView
+                            coroutineScope.launch { save() }
+                        }
+                    },
+                    onCustomViewDeleted = { viewIdToDelete ->
+                        viewsToDraw[viewIdToDelete]!!.viewState.apply {
+                            isDeleted = true
+                            resetToDefaults()
+                            coroutineScope.launch { save() }
+                        }
+                        selectedButtonId = null
+                        selectedViewRenderRule = null
+                        isSelectedViewCustomView = false
                     },
                     onReset = {
                         coroutineScope.launch {
                             preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, false)
                             viewsToDraw.values.forEach { view ->
-                                view.viewState.resetToDefaults()
-                                clampButton(view.viewState)
-                                coroutineScope.launch { view.viewState.save() }
+                                view.viewState.apply {
+                                    resetToDefaults()
+                                    clampButton(this)
+                                    coroutineScope.launch { save() }
+                                }
                             }
                             selectedButtonId = null
                             selectedViewRenderRule = null
+                            isSelectedViewCustomView = false
                         }
                     },
                     onBack = {
                         selectedButtonId = null
                         selectedViewRenderRule = null
+                        isSelectedViewCustomView = false
                         onBack()
                     },
                     modifier = Modifier.align(Alignment.Center)
@@ -273,11 +291,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
                             onClick = {
                                 if (isEditMode) {
                                     selectedButtonId = id
-                                    selectedViewRenderRule = view.viewState.viewRenderRule
+                                    view.viewState.apply {
+                                        isSelectedViewCustomView = isCustomView
+                                        selectedViewRenderRule = viewRenderRule
+                                    }
+
                                     coroutineScope.launch {
-                                        preferencesStorage.setBooleanValueAsync(
-                                            clampButtonsPrefsKey,
-                                            false)
+                                        preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, false)
                                     }
                                 }
                             },
@@ -403,12 +423,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
     @Composable
     private fun EditControls(
         selectedButtonId: String?,
+        isCustomViewSelected : Boolean,
         viewRenderRule: ViewRenderRule?,
         inGame: Boolean,
         onAlphaChange: (Float) -> Unit,
         onSizeChange: (Float) -> Unit,
         onRenderRuleChange : (ViewRenderRule) -> Unit,
         onCustomViewSelected : (selectedView : IScreenControlsView) -> Unit,
+        onCustomViewDeleted: (selectedButtonId : String) -> Unit,
         onReset: () -> Unit,
         onBack: () -> Unit,
         modifier: Modifier = Modifier
@@ -419,8 +441,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
             modifier = modifier
                 .background(Color.Gray.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
                 .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (!selectedButtonId.isNullOrBlank()) {
                 Text(
                     text = selectedButtonId,
@@ -428,7 +450,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     style = MaterialTheme.typography.labelMedium,
                     fontSize = 18.sp
                 )
-                Spacer(Modifier.height(8.dp))
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -439,7 +460,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     Text(stringResource(R.string.decrease_controls_alpha))
                 }
             }
-            Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
                     Text(stringResource(R.string.increase_controls_size))
@@ -448,16 +468,23 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     Text(stringResource(R.string.decrease_controls_size))
                 }
             }
-            Spacer(Modifier.height(8.dp))
-            if (viewRenderRule!=null){
+            if (selectedButtonId!=null && viewRenderRule!=null){
                 EnumDropdown(stringResource(R.string.screen_controls_view_render_rule), viewRenderRule,
                     onRenderRuleChange)
             }
-            Spacer(Modifier.height(8.dp))
-            Button(onClick = { showCustomViewsEditor = true }) {
-                Text(stringResource(R.string.add_custom_buttons))
+
+            Row (horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = { showCustomViewsEditor = true }) {
+                    Text(stringResource(R.string.add_custom_buttons))
+                }
+
+                if (selectedButtonId!=null && isCustomViewSelected){
+                    Button(onClick = { onCustomViewDeleted(selectedButtonId) }) {
+                        Text(stringResource(R.string.delete))
+                    }
+                }
             }
-            Spacer(Modifier.height(8.dp))
+
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = onReset) {
                     Text(stringResource(R.string.reset_controls_to_default))
@@ -509,7 +536,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     }) { _, view ->
                         Row(
                             modifier = Modifier.clickable { onViewSelected(view) },
-                            horizontalArrangement = Arrangement.Center,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             CustomSDLButton.DrawView(
@@ -518,7 +545,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                     .height(40.dp), itemsColorToUse,
                                 view.viewState.id
                             )
-                            Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
                                 text = view.viewState.id,
@@ -533,10 +559,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
         )
     }
 
-    companion object {
+    private companion object {
         private const val SCREEN_ITEMS_CHANGE_SIZE_OFFSET : Float = 0.005f
 
         private const val SCREEN_ITEMS_CHANGE_ALPHA_OFFSET : Float = 0.05f
+
+        private const val MIN_VIEW_SIZE : Float = 0.025f
+
+        private const val MAX_VIEW_SIZE : Float = 1.0f
     }
 }
 

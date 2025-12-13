@@ -47,7 +47,7 @@ abstract class CustomSDLButton(
         sdlKeyEvent = sdlKeyEvent,
         alpha = alpha,
         defaultViewRenderRule = defaultViewRenderRule,
-        isCustomButton = true)
+        isCustomView = true)
 
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) =

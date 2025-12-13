@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
@@ -72,10 +73,13 @@ fun KeysEditor(
             },
             title = { Text(stringResource(R.string.select_button)) },
             text = {
-                Column (modifier = Modifier.verticalScroll(scrollState)){
-                    buttonsToEdit.forEach { button ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
+                LazyColumn(modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp))
+                {
+                    itemsIndexed(
+                        buttonsToEdit,
+                        key = { _, button -> button.viewState.id }) { _, button ->
+                        Row(verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
@@ -83,16 +87,13 @@ fun KeysEditor(
                                     selectedButtonId = button.viewState.id
                                     selectedKeyCode = button.viewState.sdlKeyCode
                                     showButtonSelectDialog = false
-                                }
-                                .padding(8.dp)
-                        ) {
+                                }, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             if (button.viewState.buttonResId != 0) {
                                 Image(
                                     painter = painterResource(id = button.viewState.buttonResId),
                                     contentDescription = button.viewState.id,
                                     modifier = Modifier.size(32.dp)
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
                             }
                             Text(button.viewState.id)
                         }
@@ -126,9 +127,7 @@ fun KeysEditor(
                                         currentButton.value.viewState.save()
                                     }
                                     showKeyCodeDialog = false
-                                }
-                                .padding(8.dp)
-                        ) {
+                                }) {
                             Text(pair.second)
                         }
                      }
@@ -155,14 +154,12 @@ fun KeysEditor(
         },
         title = { Text(stringResource(R.string.keys_editor)) },
         text = {
-            Column(modifier = modifier.fillMaxWidth()) {
-
+            Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Text(stringResource(R.string.select_button), style = MaterialTheme.typography.labelMedium)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clickable { showButtonSelectDialog = true }
-                        .padding(8.dp)
+                    modifier = Modifier.clickable { showButtonSelectDialog = true },
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     if (selectedButton.viewState.buttonResId != 0) {
                         Image(
@@ -170,21 +167,14 @@ fun KeysEditor(
                             contentDescription = selectedButton.viewState.id,
                             modifier = Modifier.size(32.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
                     }
                     Text(selectedButton.viewState.id)
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
                 Text(stringResource(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium)
-                Row(
-                    modifier = Modifier
-                        .clickable { showKeyCodeDialog = true }
-                        .padding(8.dp)
-                ) {
-                    Text(text = keyCodeMap[selectedKeyCode] ?: stringResource(R.string.uknown))
-                }
+
+                Text(modifier = Modifier.fillMaxWidth().clickable { showKeyCodeDialog = true },
+                    text = keyCodeMap[selectedKeyCode] ?: stringResource(R.string.uknown))
             }
         }
     )

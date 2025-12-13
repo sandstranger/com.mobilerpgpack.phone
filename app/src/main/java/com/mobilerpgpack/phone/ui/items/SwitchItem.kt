@@ -1,11 +1,10 @@
 package com.mobilerpgpack.phone.ui.items
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -39,11 +38,11 @@ fun SwitchItem(
             }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         Text(title,
             modifier = Modifier.weight(1f),
             color = if (enabled) color else disabledColor)
-        Spacer(Modifier.width(5.dp))
         Switch(
             checked = checkedState,
             onCheckedChange = null,
