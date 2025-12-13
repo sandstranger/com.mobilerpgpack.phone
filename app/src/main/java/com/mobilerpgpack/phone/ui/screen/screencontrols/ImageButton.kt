@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 
 abstract class ImageButton(
     val id: String,
@@ -35,7 +35,7 @@ abstract class ImageButton(
 
     override var show: Boolean by mutableStateOf(true)
 
-    override val buttonState: ButtonState = ButtonState(
+    override val viewState: ViewState = ViewState(
         id,
         engineType,
         offsetXPercent = offsetXPercent,
@@ -49,7 +49,7 @@ abstract class ImageButton(
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         val context = LocalContext.current
         Image(
-            painter = painterResource(id = buttonState.buttonResId),
+            painter = painterResource(id = viewState.buttonResId),
             contentDescription = id,
             modifier = Modifier
                 .fillMaxSize()

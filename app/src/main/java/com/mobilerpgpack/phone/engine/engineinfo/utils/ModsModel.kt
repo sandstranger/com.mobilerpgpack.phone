@@ -4,12 +4,15 @@ package com.mobilerpgpack.phone.engine.engineinfo.utils
 
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.ComposeImmutableList
+import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.MutableValue
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.get
 import java.io.File
@@ -17,7 +20,7 @@ import java.util.Locale.getDefault
 
 @Serializable
 @JsonIgnoreUnknownKeys
-abstract sealed class ModsModel {
+abstract sealed class ModsModel : KoinComponent {
 
     protected abstract val jsonFileName: String
 
@@ -66,6 +69,11 @@ abstract sealed class ModsModel {
             save()
         }
         _enableModsAutoUpdateInFolder.initialize(true) {
+            save()
+        }
+
+        val assetsProvider : IAssetExtractor = get()
+        assetsProvider.assetsFinishCopyListeners += {
             save()
         }
     }
