@@ -134,11 +134,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
         suspend fun preloadButtons() {
             val loadedMap = _activeViewsToDraw.associateBy { it.viewState.id }
             loadedMap.values.forEach { view ->
-                view.viewState.load()
-            }
-            loadedMap.values.forEach { view ->
-                clampButton(view.viewState)
-                coroutineScope.launch { view.viewState.save() }
+                view.viewState.apply {
+                    load()
+                    if (!this.isDeleted){
+                        clampButton(this)
+                        save()
+                    }
+                }
             }
             viewsToDraw = loadedMap
         }
@@ -246,18 +248,21 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         isSelectedViewCustomView = false
                     },
                     onReset = {
+                        selectedButtonId = null
+                        selectedViewRenderRule = null
+                        isSelectedViewCustomView = false
                         coroutineScope.launch {
-                            preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, false)
+                            preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
                             viewsToDraw.values.forEach { view ->
                                 view.viewState.apply {
+                                    val deleted = isDeleted
                                     resetToDefaults()
                                     clampButton(this)
-                                    coroutineScope.launch { save() }
+                                    if (!deleted){
+                                        save()
+                                    }
                                 }
                             }
-                            selectedButtonId = null
-                            selectedViewRenderRule = null
-                            isSelectedViewCustomView = false
                         }
                     },
                     onBack = {
