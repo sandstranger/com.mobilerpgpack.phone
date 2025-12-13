@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -101,9 +102,7 @@ private fun DrawModsLazyColumn(mods: ModsModel){
         mods.save()
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .height(300.dp)
+    LazyColumn(modifier = Modifier.heightIn(max = 300.dp)
             .padding(top = 2.dp, bottom = 2.dp),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(5.dp),
