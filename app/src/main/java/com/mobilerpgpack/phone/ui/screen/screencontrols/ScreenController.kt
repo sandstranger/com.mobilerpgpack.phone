@@ -138,7 +138,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     load()
                     if (!this.isDeleted){
                         clampButton(this)
-                        save()
+                        coroutineScope.launch { save() }
                     }
                 }
             }
@@ -257,9 +257,11 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 view.viewState.apply {
                                     val deleted = isDeleted
                                     resetToDefaults()
-                                    clampButton(this)
+                                    if (!isDeleted) {
+                                        clampButton(this)
+                                    }
                                     if (!deleted){
-                                        save()
+                                        coroutineScope.launch { save() }
                                     }
                                 }
                             }
