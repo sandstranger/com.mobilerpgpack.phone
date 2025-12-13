@@ -15,37 +15,37 @@ open class SharedPrefsRepository {
         loadAllEntries()
     }
 
-    protected fun getStringFlow(key: String, defaultValue: String = "") =
+    fun getStringValue(key: String, defaultValue: String = "") =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
 
-    protected fun getStringFlow(key: Key<String>, defaultValue: String = "") =
+    fun getStringValue(key: Key<String>, defaultValue: String = "") =
         loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.stringFlow!!.flow
 
-    protected fun getIntFlow(key: String, defaultValue: Int = 0) =
+    fun getIntValue(key: String, defaultValue: Int = 0) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.intFlow!!.flow
 
-    protected fun getIntFlow(key: Key<Int>, defaultValue: Int = 0) =
+    fun getIntValue(key: Key<Int>, defaultValue: Int = 0) =
         loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.intFlow!!.flow
 
-    protected fun getBooleanFlow(key: String, defaultValue: Boolean = false) =
+    fun getBooleanValue(key: String, defaultValue: Boolean = false) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.booleanFlow!!.flow
 
-    protected fun getBooleanFlow(key: Key<Boolean>, defaultValue: Boolean = false) =
+    fun getBooleanValue(key: Key<Boolean>, defaultValue: Boolean = false) =
         loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.booleanFlow!!.flow
 
-    protected fun getFloatFlow(key: Key<Float>, defaultValue: Float = 0.0f) =
+    fun getFloatValue(key: Key<Float>, defaultValue: Float = 0.0f) =
         loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.floatFlow!!.flow
 
-    protected fun getDoubleFlow(key: Key<Double>, defaultValue: Double = 0.0) =
+    fun getDoubleValue(key: Key<Double>, defaultValue: Double = 0.0) =
         loadedEntries.getOrPut(key.name) { buildSharedPrefsValue(key.name, defaultValue) }.doubleFlow!!.flow
 
-    fun setString(key: Key<String>, value: String) = setString(key.name, value)
+    fun setStringValue(key: Key<String>, value: String) = setStringValue(key.name, value)
 
-    fun setString(key: String, value: String) = scope.launch { setStringAsync(key, value) }
+    fun setStringValue(key: String, value: String) = scope.launch { setStringValueAsync(key, value) }
 
-    suspend fun setStringAsync(key: Key<String>, value: String) = setStringAsync(key.name, value)
+    suspend fun setStringValueAsync(key: Key<String>, value: String) = setStringValueAsync(key.name, value)
 
-    suspend fun setStringAsync(key: String, value: String) {
+    suspend fun setStringValueAsync(key: String, value: String) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.stringValue = value
             stringFlow!!.value = value
@@ -53,13 +53,13 @@ open class SharedPrefsRepository {
         }
     }
 
-    fun setInt(key: Key<Int>, value: Int) = setInt(key.name, value)
+    fun setIntValue(key: Key<Int>, value: Int) = setIntValue(key.name, value)
 
-    fun setInt(key: String, value: Int) = scope.launch { setIntAsync(key, value) }
+    fun setIntValue(key: String, value: Int) = scope.launch { setIntValueAsync(key, value) }
 
-    suspend fun setIntAsync(key: Key<Int>, value: Int) = setIntAsync(key.name, value)
+    suspend fun setIntValueAsync(key: Key<Int>, value: Int) = setIntValueAsync(key.name, value)
 
-    suspend fun setIntAsync(key: String, value: Int) {
+    suspend fun setIntValueAsync(key: String, value: Int) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.intValue = value
             intFlow!!.value = value
@@ -67,13 +67,13 @@ open class SharedPrefsRepository {
         }
     }
 
-    fun setBoolean(key: Key<Boolean>, value: Boolean) = setBoolean(key.name, value)
+    fun setBooleanValue(key: Key<Boolean>, value: Boolean) = setBooleanValue(key.name, value)
 
-    fun setBoolean(key: String, value: Boolean) = scope.launch { setBooleanAsync(key, value) }
+    fun setBooleanValue(key: String, value: Boolean) = scope.launch { setBooleanValueAsync(key, value) }
 
-    suspend fun setBooleanAsync(key: Key<Boolean>, value: Boolean) = setBooleanAsync(key.name, value)
+    suspend fun setBooleanValueAsync(key: Key<Boolean>, value: Boolean) = setBooleanValueAsync(key.name, value)
 
-    suspend fun setBooleanAsync(key: String, value: Boolean) {
+    suspend fun setBooleanValueAsync(key: String, value: Boolean) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.booleanValue = value
             booleanFlow!!.value = value
@@ -81,13 +81,13 @@ open class SharedPrefsRepository {
         }
     }
 
-    fun setFloat(key: String, value: Float) = scope.launch { setFloatAsync(key, value) }
+    fun setFloatValue(key: String, value: Float) = scope.launch { setFloatValueAsync(key, value) }
 
-    fun setFloat(key: Key<Float>, value: Float) = setFloat(key.name, value)
+    fun setFloatValue(key: Key<Float>, value: Float) = setFloatValue(key.name, value)
 
-    suspend fun setFloatAsync(key: Key<Float>, value: Float) = setFloatAsync(key.name, value)
+    suspend fun setFloatValueAsync(key: Key<Float>, value: Float) = setFloatValueAsync(key.name, value)
 
-    suspend fun setFloatAsync(key: String, value: Float) {
+    suspend fun setFloatValueAsync(key: String, value: Float) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.floatValue = value
             floatFlow!!.value = value
@@ -95,13 +95,13 @@ open class SharedPrefsRepository {
         }
     }
 
-    fun setDouble(key: Key<Double>, value: Double) = setDouble(key.name, value)
+    fun setDoubleValue(key: Key<Double>, value: Double) = setDoubleValue(key.name, value)
 
-    fun setDouble(key: String, value: Double) = scope.launch { setDoubleAsync(key, value) }
+    fun setDoubleValue(key: String, value: Double) = scope.launch { setDoubleValueAsync(key, value) }
 
-    suspend fun setDoubleAsync(key: Key<Double>, value: Double) = setDoubleAsync(key.name, value)
+    suspend fun setDoubleValueAsync(key: Key<Double>, value: Double) = setDoubleValueAsync(key.name, value)
 
-    suspend fun setDoubleAsync(key: String, value: Double) {
+    suspend fun setDoubleValueAsync(key: String, value: Double) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.doubleValue = value
             doubleFlow!!.value = value
@@ -164,7 +164,7 @@ open class SharedPrefsRepository {
             val entries = dao.getAllEntries()
             mutex.withLock {
                 entries.forEach { entry ->
-                    if (!loadedEntries.contains(entry.key)) {
+                    if (!loadedEntries.containsKey(entry.key)) {
                         loadedEntries[entry.key] = buildSharedPrefsValue(entry)!!
                     } else {
                         loadedEntries[entry.key]!!.updateEntry(entry)

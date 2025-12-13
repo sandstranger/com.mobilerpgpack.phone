@@ -2,10 +2,7 @@ package com.mobilerpgpack.phone.main
 
 import android.app.Activity
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.codekidlabs.storagechooser.StorageChooser
-import com.github.sproctor.composepreferences.PreferenceHandler
 import com.google.mlkit.common.model.RemoteModel
 import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
@@ -13,19 +10,16 @@ import com.mobilerpgpack.ctranslate2proxy.NLLB200Translator
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
 import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRPGSeriesEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomPreferenceStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomCheatsSettingsScreen
@@ -37,6 +31,18 @@ import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomMultiplayerSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettingsViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsFilesUpdater
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomPreferenceStorage
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.translator.ITranslationManager
@@ -55,40 +61,29 @@ import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
 import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
+import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
+import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
+import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons
+import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
+import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
-import com.mobilerpgpack.phone.utils.CustomPreferenceHandler
+import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
-import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsFilesUpdater
-import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
-import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
-import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
-import com.mobilerpgpack.phone.ui.screen.PermissionScreen
-import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
-import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
+import com.mobilerpgpack.phone.utils.sharesprefs.Key
+import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
-import com.russhwolf.settings.ExperimentalSettingsApi
-import com.russhwolf.settings.ExperimentalSettingsImplementation
-import com.russhwolf.settings.datastore.DataStoreSettings
+import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -96,6 +91,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.createdAtStart
@@ -103,6 +99,8 @@ import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -113,9 +111,8 @@ class KoinModulesProvider(private val context: Context,
                           private val assetExtractor: IAssetExtractor,
                           private val scope: CoroutineScope) : KoinComponent  {
 
-    private val clampButtonsMap = HashMap<EngineTypes, Preferences.Key<Boolean>>()
+    private val clampButtonsMap = HashMap<EngineTypes, Key<Boolean>>()
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
-    private val preferencesStorage: PreferencesStorage = PreferencesStorage(context, scope)
 
     val allModules : List<Module>
 
@@ -125,14 +122,14 @@ class KoinModulesProvider(private val context: Context,
             createdAtStart()
             named(COROUTINES_SCOPE)
         }
-        single<PreferencesStorage> { preferencesStorage }.withOptions { createdAtStart() }
+        single<PreferencesStorage> { PreferencesStorage() }.withOptions { createdAtStart() }
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
         single<String> { pathToUserFolder }.withOptions {
             named(USER_ROOT_FOLDER_NAMED_KEY)
             createdAtStart()
         }
         single { assetExtractor }.bind()
-        single <SharedPrefsDatabase> { SharedPrefsDatabase.createInstance().dao() }
+        single <SharedPrefsDao> { SharedPrefsDatabase.createInstance().dao() }
     }
 
     private val httpModule = module {
@@ -145,15 +142,15 @@ class KoinModulesProvider(private val context: Context,
         factory <IDriveDownloader> { (apiKey: String) -> DriveDownloader(apiKey) }
     }
 
-    private val translationModule = module {
-        var activeTranslationModelType : TranslationType
-        var allowDownloadingModelsOverMobile = false
-
-        runBlocking {
-            allowDownloadingModelsOverMobile = preferencesStorage.allowDownloadingModelsOverMobile.first()
-            activeTranslationModelType = enumValueOf<TranslationType>(preferencesStorage.translationModelType.first())
+    private val allowDownloadingModelsOverMobile : Boolean
+        get() {
+            return runBlocking {
+                val preferencesStorage : PreferencesStorage = get ()
+                preferencesStorage.allowDownloadingModelsOverMobile.first()
+            }
         }
 
+    private val translationModule = module {
         val targetLocale = TranslationManager.getSystemLocale()
 
         single { targetLocale }.withOptions {
@@ -225,7 +222,10 @@ class KoinModulesProvider(private val context: Context,
             }
         }
 
-        single <ITranslationModel> { get<Map<TranslationType, ITranslationModel>>()[activeTranslationModelType]!! }
+        single <ITranslationModel> {
+            val preferencesStorage : PreferencesStorage = get ()
+            var activeTranslationModelType = runBlocking { enumValueOf<TranslationType>(preferencesStorage.translationModelType.first()) }
+            get<Map<TranslationType, ITranslationModel>>()[activeTranslationModelType]!! }
             .withOptions {
             named(ACTIVE_TRANSLATION_MODEL_KEY)
         }
@@ -235,7 +235,6 @@ class KoinModulesProvider(private val context: Context,
     }
 
     @Suppress("DEPRECATION")
-    @OptIn(ExperimentalSettingsApi::class, ExperimentalSettingsImplementation::class)
     private val composeModule = module {
         factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
             StorageChooser.Builder()
@@ -263,7 +262,6 @@ class KoinModulesProvider(private val context: Context,
         singleOf<SDL2MouseIcon>(::SDL2MouseIcon)
         singleOf<SDL3MouseIcon>(::SDL3MouseIcon)
         singleOf<IKeyCodesProvider>(::KeyCodesProvider)
-        factory <PreferenceHandler> { (settings : DataStoreSettings) -> CustomPreferenceHandler(settings) }
         singleOf(::PermissionScreen).bind()
     }
 
@@ -291,6 +289,7 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.DoomRpg.toString()) }
 
         single {
+            val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
@@ -313,6 +312,7 @@ class KoinModulesProvider(private val context: Context,
             .withOptions { named(EngineTypes.Doom2Rpg.toString()) }
 
         single {
+            val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
@@ -337,6 +337,7 @@ class KoinModulesProvider(private val context: Context,
 
     private val doom64RegisterModule = module {
         single  {
+            val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(gl4esLibraryName,
                 SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
@@ -352,6 +353,7 @@ class KoinModulesProvider(private val context: Context,
         }
 
         single  {
+            val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(gl4esLibraryName,
                 SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
@@ -381,14 +383,14 @@ class KoinModulesProvider(private val context: Context,
     }
 
     private val uZDoomRegisterModule = module {
-        val preferencesStorage = UZDoomPreferenceStorage(context, scope)
 
-        single { preferencesStorage }.withOptions {
+        single { UZDoomPreferenceStorage() }.withOptions {
             named(EngineTypes.UZDoom.toString())
             bind<UZDoomPreferenceStorage>()
         }
 
         single  {
+            val preferencesStorage : UZDoomPreferenceStorage = get (named(EngineTypes.UZDoom.toString()))
             val nativeLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
@@ -425,14 +427,14 @@ class KoinModulesProvider(private val context: Context,
     }
 
     private val psyDoomRegisterModule = module {
-        val preferencesStorage = PsyDoomPreferencesStorage(context, scope)
 
-        single { preferencesStorage }.withOptions {
+        single { PsyDoomPreferencesStorage() }.withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<PsyDoomPreferencesStorage>()
         }
 
         single {
+            val preferencesStorage : PsyDoomPreferencesStorage = get (named(EngineTypes.PsyDoom.toString()))
             val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
 

@@ -54,13 +54,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.CustomSDLButton
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -104,7 +104,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val density = context.resources.displayMetrics.density
         val coroutineScope = rememberCoroutineScope()
 
-        val clampButtonsPrefsKey = koinInject<Preferences.Key<Boolean>> { parametersOf(activeEngine) }
+        val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngine) }
 
         var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }

@@ -248,7 +248,7 @@ Reorderable: [Licence](https://github.com/Calvin-LL/Reorderable/blob/main/LICENS
 
 kotlinx.serialization:	[Licence](https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt)	https://github.com/Kotlin/kotlinx.serialization
 
-compose preferences: [Licence](https://github.com/sproctor/ComposePreferences/blob/main/LICENSE)	https://github.com/sproctor/ComposePreferences
+compose preferences(used in previous builds): [Licence](https://github.com/sproctor/ComposePreferences/blob/main/LICENSE)	https://github.com/sproctor/ComposePreferences
 
 Mlkit: [Licence](https://developers.google.com/ml-kit/terms)	https://developers.google.com/ml-kit
 
@@ -272,7 +272,7 @@ retrofit: [Licence](https://github.com/square/retrofit/blob/trunk/LICENSE.txt)	 
 
 icu:  [Licence](https://github.com/unicode-org/icu/blob/main/LICENSE)	https://icu.unicode.org/
 
-datastore: [Licence](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)	https://developer.android.com/jetpack/androidx/releases/datastore
+datastore (used in previous builds): [Licence](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)	https://developer.android.com/jetpack/androidx/releases/datastore
 
 compose for all ui: [Licence](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)	https://developer.android.com/compose
 
@@ -318,7 +318,7 @@ Re2C: [Licence](https://re2c.org/#license)	https://re2c.org/	https://sourceforge
 
 SQLite: [Licence](https://sqlite.org/copyright.html)	https://sqlite.org/	https://github.com/sqlite/sqlite
 
-multiplatform-settings: [Licence](https://github.com/russhwolf/multiplatform-settings/blob/main/LICENSE.txt)  https://github.com/russhwolf/multiplatform-settings
+multiplatform-settings (used in previous builds): [Licence](https://github.com/russhwolf/multiplatform-settings/blob/main/LICENSE.txt)  https://github.com/russhwolf/multiplatform-settings
 
 slf4j: [Licence](https://github.com/qos-ch/slf4j/blob/master/LICENSE.txt)  https://github.com/qos-ch/slf4j
 

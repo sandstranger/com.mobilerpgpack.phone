@@ -1,14 +1,10 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.Translator
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.java.KoinJavaComponent.get
 
 class M2M100TranslationModel (
     private val context: Context,

@@ -9,7 +9,7 @@ import org.koin.java.KoinJavaComponent.get
 @Database(entities = [SharedPrefsEntry::class], version = 1)
 internal abstract class SharedPrefsDatabase : RoomDatabase() {
 
-    abstract fun dao(): SharedPrefsDatabase
+    abstract fun dao(): SharedPrefsDao
 
     companion object {
         const val DATABASE_NAME = "shared_prefs"
