@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +59,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.getTextColor
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.CustomSDLButton
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -483,7 +486,11 @@ abstract class ScreenController : KoinComponent, IScreenController {
             onViewSelected(null)
             return
         }
-        val itemsToDraw by mutableStateOf(customViews.filter { it.viewState.isDeleted }.toList())
+        val isSystemInDarkTheme = isSystemInDarkTheme()
+        val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
+            .collectAsState(initial = isSystemInDarkTheme)
+        val itemsColorToUse = getTextColor(useDarkTheme)
+        val itemsToDraw = customViews.filter { it.viewState.isDeleted }.toList()
 
         AlertDialog(
             onDismissRequest = { onViewSelected(null) },
@@ -509,14 +516,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                             CustomSDLButton.DrawView(
                                 Modifier
                                     .width(40.dp)
-                                    .height(40.dp), Color.Black,
+                                    .height(40.dp), itemsColorToUse,
                                 view.viewState.id
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
                                 text = view.viewState.id,
-                                color = Color.Black,
+                                color = itemsColorToUse,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Right
                             )

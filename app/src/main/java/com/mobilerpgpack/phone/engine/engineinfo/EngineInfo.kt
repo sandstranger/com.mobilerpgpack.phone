@@ -10,8 +10,11 @@ import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +24,7 @@ import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
+import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -277,12 +281,20 @@ abstract class EngineInfo(
 
                             if (!hideScreenControls) {
                                 controlsOverlayUI.setContent {
-                                    screenController.DrawScreenControls(
-                                        viewsToDraw,
-                                        inGame = true,
-                                        activeEngine = engineType,
-                                        allowToEditControls = allowToEditScreenControlsInGame,
-                                        drawInSafeArea = displayInSafeArea)
+                                    MaterialTheme {
+                                        val isSystemInDarkTheme = isSystemInDarkTheme()
+                                        val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
+                                            .collectAsState(initial = isSystemInDarkTheme)
+
+                                        Theme(darkTheme = useDarkTheme) {
+                                            screenController.DrawScreenControls(
+                                                viewsToDraw,
+                                                inGame = true,
+                                                activeEngine = engineType,
+                                                allowToEditControls = allowToEditScreenControlsInGame,
+                                                drawInSafeArea = displayInSafeArea)
+                                        }
+                                    }
                                 }
                             }
 
@@ -366,7 +378,6 @@ abstract class EngineInfo(
     @Composable
     private fun AutoMouseModeComposable(binding : GameLayoutBinding) {
         var isMouseShown by remember { mutableStateOf(isMouseShown()) }
-        // Launch a Choreographer callback to update isMouseShown in real-time
         DisposableEffect(Unit) {
             val choreographer = Choreographer.getInstance()
             val frameCallback = object : Choreographer.FrameCallback {
