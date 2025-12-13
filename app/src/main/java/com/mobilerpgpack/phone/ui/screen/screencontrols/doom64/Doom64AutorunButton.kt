@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.doom64
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ToggleImageButton
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Function

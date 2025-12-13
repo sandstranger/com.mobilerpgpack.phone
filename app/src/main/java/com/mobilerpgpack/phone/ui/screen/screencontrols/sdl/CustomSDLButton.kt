@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 
 abstract class CustomSDLButton(
@@ -37,7 +37,7 @@ abstract class CustomSDLButton(
         id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
         NOT_EXISTING_RES, useToggle, defaultViewRenderRule) {
 
-    final override val buttonState: ButtonState = ButtonState(
+    final override val viewState: ViewState = ViewState(
         id,
         engineType,
         offsetXPercent = offsetXPercent,

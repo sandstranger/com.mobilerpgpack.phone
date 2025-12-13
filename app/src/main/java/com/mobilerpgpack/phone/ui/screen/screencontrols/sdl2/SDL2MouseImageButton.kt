@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLImageButton
 import org.libsdl.app.SDLActivity
