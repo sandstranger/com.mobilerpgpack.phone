@@ -7,9 +7,5 @@ enum class UZDoomGLESVersion (val value : Int){
 
     companion object {
         val stringCollection = entries.map { it.toString() }.toList()
-
-        fun fromValue(value: Int): UZDoomGLESVersion {
-            return entries.find { it.value == value }!!
-        }
     }
 }

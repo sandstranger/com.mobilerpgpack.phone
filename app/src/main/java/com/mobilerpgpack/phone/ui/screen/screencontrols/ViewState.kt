@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -42,6 +43,8 @@ class ViewState(
     private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${id}_is_deleted")
     private val preferencesStorage : PreferencesStorage = get()
 
+    private var wasLoaded by mutableStateOf(false)
+
     val allowToEditKeyEvent get() = buttonResId != NOT_EXISTING_RES && sdlKeyCode!= Int.MIN_VALUE
 
     var offsetXPercent by mutableFloatStateOf(defaultOffsetXPercent)
@@ -53,6 +56,10 @@ class ViewState(
     var isDeleted by mutableStateOf(isCustomView)
 
     suspend fun load() {
+        if (wasLoaded){
+            return
+        }
+        wasLoaded = true
         offsetXPercent = preferencesStorage.getFloatValue( keyX, defaultOffsetXPercent).first()
         offsetYPercent = preferencesStorage.getFloatValue( keyY, defaultOffsetYPercent).first()
         sizePercent = preferencesStorage.getFloatValue( keySize, defaultSizePercent).first()
