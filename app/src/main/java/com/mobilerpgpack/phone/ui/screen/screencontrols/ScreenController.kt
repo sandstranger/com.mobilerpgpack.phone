@@ -138,7 +138,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     load()
                     if (!this.isDeleted){
                         clampButton(this)
-                        coroutineScope.launch { save() }
+                        save()
                     }
                 }
             }
@@ -205,28 +205,25 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     inGame,
                     onAlphaChange = { delta ->
                         selectedButtonId?.let { id ->
-                            val state = viewsToDraw[id]!!.viewState
-                            state.alpha = (state.alpha + delta).coerceIn(0.0f, 1f)
-                            coroutineScope.launch {
-                                state.save()
+                            viewsToDraw[id]!!.viewState.apply {
+                                alpha = (alpha + delta).coerceIn(0.0f, 1f)
+                                save()
                             }
                         }
                     },
                     onSizeChange = { deltaPercent ->
                         selectedButtonId?.let { id ->
-                            val state = viewsToDraw[id]!!.viewState
-                            state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(MIN_VIEW_SIZE, MAX_VIEW_SIZE)
-                            coroutineScope.launch {
-                                state.save()
+                            viewsToDraw[id]!!.viewState.apply {
+                                sizePercent = (sizePercent + deltaPercent).coerceIn(MIN_VIEW_SIZE, MAX_VIEW_SIZE)
+                                save()
                             }
                         }
                     },
                     onRenderRuleChange = { newRenderRule ->
                         selectedButtonId?.let { id ->
-                            val state = viewsToDraw[id]!!.viewState
-                            state.viewRenderRule = newRenderRule
-                            coroutineScope.launch {
-                                state.save()
+                            viewsToDraw[id]!!.viewState.apply {
+                                viewRenderRule = newRenderRule
+                                save()
                             }
                         }
                     },
@@ -234,14 +231,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         customView.viewState.apply {
                             isDeleted = false
                             isSelectedViewCustomView = isCustomView
-                            coroutineScope.launch { save() }
+                            save()
                         }
                     },
                     onCustomViewDeleted = { viewIdToDelete ->
                         viewsToDraw[viewIdToDelete]!!.viewState.apply {
                             isDeleted = true
                             resetToDefaults()
-                            coroutineScope.launch { save() }
+                            save()
                         }
                         selectedButtonId = null
                         selectedViewRenderRule = null
@@ -261,7 +258,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                         clampButton(this)
                                     }
                                     if (!deleted){
-                                        coroutineScope.launch { save() }
+                                         save()
                                     }
                                 }
                             }
@@ -309,10 +306,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 }
                             },
                             onDragEnd = { newX, newY ->
-                                view.viewState.offsetXPercent = (newX / screenWidthPx)
-                                view.viewState.offsetYPercent = (newY / screenHeightPx)
-                                coroutineScope.launch {
-                                    view.viewState.save()
+                                view.viewState.apply {
+                                    offsetXPercent = (newX / screenWidthPx)
+                                    offsetYPercent = (newY / screenHeightPx)
+                                    save()
                                 }
                             },
                             inGame = inGame,
