@@ -219,11 +219,6 @@ dependencies {
     implementation(libs.commons.configuration2)
     implementation(libs.commons.beanutils)
 
-    implementation(libs.compose.preferences)
-    implementation(libs.settings)
-    implementation(libs.settings.coroutines)
-    implementation(libs.settings.datastore)
-
     implementation(libs.jna){ artifact { type = "aar" } }
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ndk)
@@ -250,7 +245,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.datastore.preferences)
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
