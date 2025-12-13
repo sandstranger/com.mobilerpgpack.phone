@@ -6,15 +6,14 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLOnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import org.libsdl3.app.SDLControllerManager
 
-class SDL3OnScreenStick(stickId : String = DEFAULT_STICK_ID,
-                        engineType: EngineTypes,
+class SDL3OnScreenStick(engineType: EngineTypes,
                         stickType: StickType = StickType.LeftStick,
                         offsetXPercent: Float = 0f,
                         offsetYPercent: Float = 0f,
                         sizePercent: Float = 0.25f,
                         alpha: Float = 0.65f,
                         defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) :
-    SDLOnScreenStick(stickId,engineType, stickType,offsetXPercent,
+    SDLOnScreenStick(engineType, stickType,offsetXPercent,
         offsetYPercent, sizePercent, alpha, defaultViewRenderRule = defaultViewRenderRule) {
 
     override fun nativeAddJoystick(

@@ -42,8 +42,7 @@ import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.min
 
-abstract class SDLOnScreenStick(stickId : String = DEFAULT_STICK_ID,
-                                engineType: EngineTypes,
+abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 stickType : StickType = StickType.LeftStick,
                                 private val offsetXPercent: Float = 0f,
                                 private val offsetYPercent: Float = 0f,
@@ -62,7 +61,7 @@ abstract class SDLOnScreenStick(stickId : String = DEFAULT_STICK_ID,
     }
 
     override val viewState: ViewState = ViewState(
-        stickId,
+        if (stickType == StickType.LeftStick) LEFT_STICK_ID else RIGHT_STICK_ID,
         engineType,
         offsetXPercent = offsetXPercent,
         offsetYPercent = offsetYPercent,
@@ -295,11 +294,12 @@ abstract class SDLOnScreenStick(stickId : String = DEFAULT_STICK_ID,
         onUpdateStick(normX, normY)
     }
 
-    companion object{
+    private companion object{
         private const val DEFAULT_GAMEPAD_DEVICE_ID = 1384510555
         private const val STICK_DEAD_ZONE = 0.05f
         private const val STICK_SCALE = 1.0f
-        const val DEFAULT_STICK_ID = "onscreen_stick"
+        private const val LEFT_STICK_ID = "left_onscreen_stick"
+        private const val RIGHT_STICK_ID = "right_onscreen_stick"
         private var joystickRegistered by mutableStateOf(false)
     }
 }
