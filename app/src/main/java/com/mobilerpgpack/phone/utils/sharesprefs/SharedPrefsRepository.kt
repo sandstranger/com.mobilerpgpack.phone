@@ -111,6 +111,9 @@ open class SharedPrefsRepository {
     }
 
     private companion object {
+        @Volatile
+        private var entriesWasLoaded = false
+
         private val mutex = Mutex()
 
         private val scope: CoroutineScope = get(CoroutineScope::class.java)
@@ -120,7 +123,10 @@ open class SharedPrefsRepository {
         private val loadedEntries = ConcurrentHashMap<String, SharedPrefsValue>()
 
         private fun loadAllEntries() {
-            scope.launch { loadAllEntriesAsync() }
+            if (!entriesWasLoaded) {
+                entriesWasLoaded = true
+                scope.launch { loadAllEntriesAsync() }
+            }
         }
 
         private suspend fun loadAllEntriesAsync() {
