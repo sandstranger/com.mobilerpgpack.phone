@@ -16,3 +16,6 @@ fun booleanPreferencesKey(name: String): Key<Boolean> = Key(name)
 
 @JvmName("floatKey")
 fun floatPreferencesKey(name: String): Key<Float> = Key(name)
+
+@JvmName("enumKey")
+inline fun <reified T : Enum<T>> enumPreferencesKey(name: String): Key<T> = Key(name)
