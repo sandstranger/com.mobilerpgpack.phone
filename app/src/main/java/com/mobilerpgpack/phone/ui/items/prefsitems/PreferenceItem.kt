@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.items.prefsitems
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,11 +19,11 @@ fun PreferenceItem(title: String, initialValue: String = "", onClick: () -> Unit
     Column(modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .padding(16.dp)) {
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(text = title, overflow = TextOverflow.Ellipsis)
 
         if (initialValue.isNotBlank()) {
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = initialValue,
                 style = MaterialTheme.typography.bodySmall,
