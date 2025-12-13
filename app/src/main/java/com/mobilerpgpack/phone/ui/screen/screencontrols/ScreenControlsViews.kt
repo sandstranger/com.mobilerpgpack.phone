@@ -8,12 +8,12 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.CustomSDL2Button
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenGamepad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.ShowSDL2InputImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenGamepad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.ShowSDL3InputImageButton
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
@@ -131,8 +131,8 @@ val psyDoomButtons: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
     ),
-    SDL2OnScreenGamepad(
-        EngineTypes.PsyDoom,
+    SDL2OnScreenStick(
+        engineType = EngineTypes.PsyDoom,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
@@ -385,8 +385,8 @@ val doom64Buttons: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
     ),
-    SDL3OnScreenGamepad(
-        EngineTypes.Doom64ExPlus,
+    SDL3OnScreenStick(
+        engineType = EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
