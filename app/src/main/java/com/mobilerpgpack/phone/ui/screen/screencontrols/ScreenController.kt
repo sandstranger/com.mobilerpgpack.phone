@@ -503,8 +503,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             text = {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
+                    verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     itemsIndexed(itemsToDraw, key = { _, view ->
                         view.viewState.id
                     }) { _, view ->

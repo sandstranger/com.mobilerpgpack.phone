@@ -3,6 +3,8 @@ package com.mobilerpgpack.phone.ui.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -44,8 +46,8 @@ fun KeysEditor(
     var showKeyCodeDialog by rememberSaveable { mutableStateOf(false) }
 
     val currentButton = rememberUpdatedState(selectedButton)
-
-    val keyCodeMap: Map<Int, String> = remember { keyCodeMap }
+    val keyCodeMap = remember { keyCodeMap }
+    val keyCodesToDraw by rememberSaveable { mutableStateOf(keyCodeMap.toList()) }
 
     if (shouldReset) {
         LaunchedEffect(buttonsToEdit) {
@@ -101,8 +103,6 @@ fun KeysEditor(
     }
 
     if (showKeyCodeDialog) {
-        val scrollState = rememberScrollState()
-
         AlertDialog(
             onDismissRequest = { showKeyCodeDialog = false },
             confirmButton = {
@@ -112,13 +112,15 @@ fun KeysEditor(
             },
             title = { Text("Select Key Code") },
             text = {
-                Column(modifier = Modifier.heightIn(max = 400.dp).verticalScroll(scrollState)) {
-                    keyCodeMap.forEach { (code, name) ->
+                LazyColumn(modifier = Modifier.heightIn(max = 400.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp))
+                {
+                    itemsIndexed(keyCodesToDraw, key = { _, pair -> pair.first }) { _, pair ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    selectedKeyCode = code
+                                    selectedKeyCode = pair.first
                                     currentButton.value.viewState.sdlKeyCode = selectedKeyCode
                                     scope.launch {
                                         currentButton.value.viewState.save()
@@ -127,9 +129,9 @@ fun KeysEditor(
                                 }
                                 .padding(8.dp)
                         ) {
-                            Text(name)
+                            Text(pair.second)
                         }
-                    }
+                     }
                 }
             }
         )
