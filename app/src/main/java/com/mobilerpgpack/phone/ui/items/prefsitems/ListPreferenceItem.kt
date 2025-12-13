@@ -1,12 +1,16 @@
 package com.mobilerpgpack.phone.ui.items.prefsitems
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -33,7 +37,7 @@ fun ListPreferenceItem(title: String,
                        onValueChange : ((String) -> Unit)? = null){
     var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
     var activeValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
-    val scrollState = rememberScrollState()
+    val entriesToDraw by rememberSaveable { mutableStateOf(entries.toList()) }
 
     Row(
         modifier = Modifier
@@ -54,8 +58,10 @@ fun ListPreferenceItem(title: String,
             onDismissRequest = { showValuesDialog = false },
             title = { Text(title) },
             text = {
-                Column (modifier = Modifier.verticalScroll(scrollState)) {
-                    entries.forEach { stringValue ->
+                LazyColumn(modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp))
+                {
+                    itemsIndexed(entriesToDraw, key = { _, stringValue -> stringValue }) { _, stringValue ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
