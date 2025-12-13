@@ -70,14 +70,14 @@ class ViewState(
         isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isCustomView).first()
     }
 
-    suspend fun save() {
-        preferencesStorage.setFloatValueAsync( keyX, offsetXPercent)
-        preferencesStorage.setFloatValueAsync( keyY, offsetYPercent)
-        preferencesStorage.setFloatValueAsync( keySize, sizePercent)
-        preferencesStorage.setFloatValueAsync( keyAlpha, alpha)
-        preferencesStorage.setIntValueAsync( sdlKeyEventPrefsKey, sdlKeyCode)
-        preferencesStorage.setStringValueAsync(viewRenderRulePrefsKey, viewRenderRule.toString())
-        preferencesStorage.setBooleanValueAsync(isDeletedPrefsKey,isDeleted)
+    fun save() {
+        preferencesStorage.setFloatValue( keyX, offsetXPercent)
+        preferencesStorage.setFloatValue( keyY, offsetYPercent)
+        preferencesStorage.setFloatValue( keySize, sizePercent)
+        preferencesStorage.setFloatValue( keyAlpha, alpha)
+        preferencesStorage.setIntValue( sdlKeyEventPrefsKey, sdlKeyCode)
+        preferencesStorage.setStringValue(viewRenderRulePrefsKey, viewRenderRule.toString())
+        preferencesStorage.setBooleanValue(isDeletedPrefsKey,isDeleted)
     }
 
     fun resetToDefaults() {
@@ -90,7 +90,7 @@ class ViewState(
         isDeleted = isCustomView
     }
 
-    suspend fun resetKeyEvent() {
+    fun resetKeyEvent() {
         sdlKeyCode = defaultSdlKeyEvent
         save()
     }
