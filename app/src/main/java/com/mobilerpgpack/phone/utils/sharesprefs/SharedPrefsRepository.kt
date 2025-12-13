@@ -15,72 +15,86 @@ open class SharedPrefsRepository {
 
     protected fun getStringFlow(key: String, defaultValue: String = ""): Flow<String> {
         val prefsValue = synchronized(lockObject) { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
-        return prefsValue.stringFlow!!.state
+        return prefsValue.stringFlow!!.flow
     }
 
     protected fun getIntFlow(key: String, defaultValue: Int = 0): Flow<Int> {
         val prefsValue = synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
-        return prefsValue.intFlow!!.state
+        return prefsValue.intFlow!!.flow
     }
 
     protected fun getBooleanFlow(key: String, defaultValue: Boolean = false): Flow<Boolean> {
         val prefsValue = synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
-        return prefsValue.booleanFlow!!.state
+        return prefsValue.booleanFlow!!.flow
     }
 
     protected fun getFloatFlow(key: String, defaultValue: Float = 0.0f): Flow<Float> {
         val prefsValue = synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
-        return prefsValue.floatFlow!!.state
+        return prefsValue.floatFlow!!.flow
     }
 
     protected fun getDoubleFlow(key: String, defaultValue: Double = 0.0): Flow<Double> {
         val prefsValue = synchronized(lockObject) { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
-        return prefsValue.doubleFlow!!.state
+        return prefsValue.doubleFlow!!.flow
     }
 
     fun setString(key: String, value: String) = scope.launch { setStringAsync(key, value) }
 
     suspend fun setStringAsync(key: String, value: String) {
-        val prefsValue = synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
-        dao.upsert(prefsValue.prefsEntry)
+        synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }.apply {
+            prefsEntry.stringValue = value
+            stringFlow!!.value = value
+            dao.upsert(prefsEntry)
+        }
     }
 
     fun setInt(key: String, value: Int) = scope.launch { setIntAsync(key, value) }
 
     suspend fun setIntAsync(key: String, value: Int) {
-        val prefsValue = synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
-        dao.upsert(prefsValue.prefsEntry)
+        synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }.apply {
+            prefsEntry.intValue = value
+            intFlow!!.value = value
+            dao.upsert(prefsEntry)
+        }
     }
 
     fun setBoolean(key: String, value: Boolean) = scope.launch { setBooleanAsync(key, value) }
 
     suspend fun setBooleanAsync(key: String, value: Boolean) {
-        val prefsValue = synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
-        dao.upsert(prefsValue.prefsEntry)
+        synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }.apply {
+            prefsEntry.booleanValue = value
+            booleanFlow!!.value = value
+            dao.upsert(prefsEntry)
+        }
     }
 
     fun setFloat(key: String, value: Float) = scope.launch { setFloatAsync(key, value) }
 
     suspend fun setFloatAsync(key: String, value: Float) {
-        val prefsValue = synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
-        dao.upsert(prefsValue.prefsEntry)
+        synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }.apply {
+            prefsEntry.floatValue = value
+            floatFlow!!.value = value
+            dao.upsert(prefsEntry)
+        }
     }
 
     fun setDouble(key: String, value: Double) = scope.launch { setDoubleAsync(key, value) }
 
     suspend fun setDoubleAsync(key: String, value: Double) {
-        val prefsValue = synchronized(lockObject) {  loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
-        dao.upsert(prefsValue.prefsEntry)
+        synchronized(lockObject) {  loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }.apply {
+            prefsEntry.doubleValue = value
+            doubleFlow!!.value = value
+            dao.upsert(prefsEntry)
+        }
     }
 
     private class SimpleFlow<T>(initialValue: T) {
         private val _state = MutableStateFlow(initialValue)
 
-        val state: Flow<T> = _state
+        val flow: Flow<T> = _state
 
-        fun set(value: T) {
-            _state.value = value
-        }
+        var value get() = _state.value
+            set(value) { _state.value = value }
     }
 
     private class SharedPrefsValue(
@@ -92,17 +106,15 @@ open class SharedPrefsRepository {
         val doubleFlow: SimpleFlow<Double>? = null
     ) {
 
-        val key get() = prefsEntry.key
-
         fun updateEntry(newPrefsEntry: SharedPrefsEntry) {
             prefsEntry = newPrefsEntry
             newPrefsEntry.apply {
                 when {
-                    floatFlow != null && floatValue != null -> floatFlow.set(floatValue!!)
-                    intFlow != null && intValue != null -> intFlow.set(intValue!!)
-                    booleanFlow != null && booleanValue != null -> booleanFlow.set(booleanValue!!)
-                    doubleFlow != null && doubleValue != null -> doubleFlow.set(doubleValue!!)
-                    stringFlow != null && stringValue != null -> stringFlow.set(stringValue!!)
+                    floatFlow != null && floatValue != null -> floatFlow.value = floatValue!!
+                    intFlow != null && intValue != null -> intFlow.value = intValue!!
+                    booleanFlow != null && booleanValue != null -> booleanFlow.value = booleanValue!!
+                    doubleFlow != null && doubleValue != null -> doubleFlow.value = doubleValue!!
+                    stringFlow != null && stringValue != null -> stringFlow.value = stringValue!!
                 }
             }
         }
