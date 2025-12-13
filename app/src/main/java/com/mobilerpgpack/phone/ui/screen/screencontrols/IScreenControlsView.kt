@@ -2,11 +2,10 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 interface IScreenControlsView {
 
-    val buttonState : ButtonState
+    val viewState : ViewState
 
     var show : Boolean
 
@@ -20,11 +19,11 @@ interface IScreenControlsView {
 
 val IScreenControlsView.isHideControlsButton get() = this is UpdateScreenControlsVisibilityImageButton
 
-val IScreenControlsView.allowToEditKeyEvent get() = this.buttonState.allowToEditKeyEvent
+val IScreenControlsView.allowToEditKeyEvent get() = this.viewState.allowToEditKeyEvent
 
 val IScreenControlsView.renderView : Boolean
     get() {
-        return when (this.buttonState.viewRenderRule) {
+        return when (this.viewState.viewRenderRule) {
             ViewRenderRule.Default -> this.show
             ViewRenderRule.AlwaysShow -> true
             ViewRenderRule.Disable -> false

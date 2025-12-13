@@ -30,20 +30,20 @@ abstract class Dpad(
     private val sizePercent: Float = 0.25f,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : KoinComponent, IScreenControlsView {
 
-    private val dpadButtonState: ButtonState
+    private val dpadButtonState: ViewState
 
-    private val dpadButtons: Collection<ButtonState>
+    private val dpadButtons: Collection<ViewState>
 
     override var show: Boolean by mutableStateOf(true)
 
     override val isQuickPanel: Boolean = false
 
-    override val buttonState: ButtonState get() = dpadButtonState
+    override val viewState: ViewState get() = dpadButtonState
 
     init {
-        val buttons = mutableListOf<ButtonState>()
+        val buttons = mutableListOf<ViewState>()
         buttons.add(
-            ButtonState(
+            ViewState(
                 DPAD_DOWN,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_DOWN,
@@ -51,7 +51,7 @@ abstract class Dpad(
             )
         )
         buttons.add(
-            ButtonState(
+            ViewState(
                 DPAD_UP,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_UP,
@@ -59,7 +59,7 @@ abstract class Dpad(
             )
         )
         buttons.add(
-            ButtonState(
+            ViewState(
                 DPAD_LEFT,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_LEFT,
@@ -67,7 +67,7 @@ abstract class Dpad(
             )
         )
         buttons.add(
-            ButtonState(
+            ViewState(
                 DPAD_RIGHT,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_RIGHT,
@@ -75,7 +75,7 @@ abstract class Dpad(
             )
         )
         dpadButtons = buttons
-        dpadButtonState = ButtonState(
+        dpadButtonState = ViewState(
             dpadId,
             engineType,
             offsetXPercent = offsetXPercent,

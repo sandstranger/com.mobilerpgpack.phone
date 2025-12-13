@@ -30,14 +30,14 @@ fun KeysEditor(
 
     LaunchedEffect(buttonsToEdit) {
         scope.launch {
-            buttonsToEdit.forEach { it.buttonState.load() }
+            buttonsToEdit.forEach { it.viewState.load() }
         }
     }
 
     var selectedButton by remember { mutableStateOf(buttonsToEdit.first()) }
-    var selectedButtonId by rememberSaveable { mutableStateOf(selectedButton.buttonState.id) }
-    var selectedKeyCode by rememberSaveable { mutableIntStateOf(selectedButton.buttonState.sdlKeyCode) }
-    selectedButton = buttonsToEdit.first { it.buttonState.id == selectedButtonId }
+    var selectedButtonId by rememberSaveable { mutableStateOf(selectedButton.viewState.id) }
+    var selectedKeyCode by rememberSaveable { mutableIntStateOf(selectedButton.viewState.sdlKeyCode) }
+    selectedButton = buttonsToEdit.first { it.viewState.id == selectedButtonId }
 
     var shouldReset by rememberSaveable { mutableStateOf(false) }
     var showButtonSelectDialog by rememberSaveable { mutableStateOf(false) }
@@ -50,10 +50,10 @@ fun KeysEditor(
     if (shouldReset) {
         LaunchedEffect(buttonsToEdit) {
             scope.launch {
-                buttonsToEdit.forEach { it.buttonState.resetKeyEvent() }
-                selectedKeyCode = currentButton.value.buttonState.sdlKeyCode
+                buttonsToEdit.forEach { it.viewState.resetKeyEvent() }
+                selectedKeyCode = currentButton.value.viewState.sdlKeyCode
             }
-            selectedKeyCode = currentButton.value.buttonState.sdlKeyCode
+            selectedKeyCode = currentButton.value.viewState.sdlKeyCode
             shouldReset = false
         }
     }
@@ -78,21 +78,21 @@ fun KeysEditor(
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedButton = button
-                                    selectedButtonId = button.buttonState.id
-                                    selectedKeyCode = button.buttonState.sdlKeyCode
+                                    selectedButtonId = button.viewState.id
+                                    selectedKeyCode = button.viewState.sdlKeyCode
                                     showButtonSelectDialog = false
                                 }
                                 .padding(8.dp)
                         ) {
-                            if (button.buttonState.buttonResId != 0) {
+                            if (button.viewState.buttonResId != 0) {
                                 Image(
-                                    painter = painterResource(id = button.buttonState.buttonResId),
-                                    contentDescription = button.buttonState.id,
+                                    painter = painterResource(id = button.viewState.buttonResId),
+                                    contentDescription = button.viewState.id,
                                     modifier = Modifier.size(32.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                             }
-                            Text(button.buttonState.id)
+                            Text(button.viewState.id)
                         }
                     }
                 }
@@ -119,9 +119,9 @@ fun KeysEditor(
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedKeyCode = code
-                                    currentButton.value.buttonState.sdlKeyCode = selectedKeyCode
+                                    currentButton.value.viewState.sdlKeyCode = selectedKeyCode
                                     scope.launch {
-                                        currentButton.value.buttonState.save()
+                                        currentButton.value.viewState.save()
                                     }
                                     showKeyCodeDialog = false
                                 }
@@ -162,15 +162,15 @@ fun KeysEditor(
                         .clickable { showButtonSelectDialog = true }
                         .padding(8.dp)
                 ) {
-                    if (selectedButton.buttonState.buttonResId != 0) {
+                    if (selectedButton.viewState.buttonResId != 0) {
                         Image(
-                            painter = painterResource(id = selectedButton.buttonState.buttonResId),
-                            contentDescription = selectedButton.buttonState.id,
+                            painter = painterResource(id = selectedButton.viewState.buttonResId),
+                            contentDescription = selectedButton.viewState.id,
                             modifier = Modifier.size(32.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                     }
-                    Text(selectedButton.buttonState.id)
+                    Text(selectedButton.viewState.id)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

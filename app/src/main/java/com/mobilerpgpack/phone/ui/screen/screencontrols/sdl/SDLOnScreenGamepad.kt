@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -60,7 +60,7 @@ abstract class SDLOnScreenGamepad(engineType: EngineTypes,
         }
     }
 
-    override val buttonState: ButtonState = ButtonState(
+    override val viewState: ViewState = ViewState(
         GAMEPAD_ID,
         engineType,
         offsetXPercent = offsetXPercent,

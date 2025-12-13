@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -23,9 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -121,7 +117,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         var screenWidthPx by remember { mutableFloatStateOf(0f) }
         var screenHeightPx by remember { mutableFloatStateOf(0f) }
 
-        fun clampButton(state: ButtonState) {
+        fun clampButton(state: ViewState) {
             if (!clampButtonsFlow) {
                 return
             }
@@ -133,13 +129,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
         }
 
         suspend fun preloadButtons() {
-            val loadedMap = _activeViewsToDraw.associateBy { it.buttonState.id }
+            val loadedMap = _activeViewsToDraw.associateBy { it.viewState.id }
             loadedMap.values.forEach { view ->
-                view.buttonState.load()
+                view.viewState.load()
             }
             loadedMap.values.forEach { view ->
-                clampButton(view.buttonState)
-                coroutineScope.launch { view.buttonState.save() }
+                clampButton(view.viewState)
+                coroutineScope.launch { view.viewState.save() }
             }
             viewsToDraw = loadedMap
         }
@@ -203,7 +199,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     inGame,
                     onAlphaChange = { delta ->
                         selectedButtonId?.let { id ->
-                            val state = viewsToDraw[id]!!.buttonState
+                            val state = viewsToDraw[id]!!.viewState
                             state.alpha = (state.alpha + delta).coerceIn(0.0f, 1f)
                             coroutineScope.launch {
                                 state.save()
@@ -212,7 +208,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     },
                     onSizeChange = { deltaPercent ->
                         selectedButtonId?.let { id ->
-                            val state = viewsToDraw[id]!!.buttonState
+                            val state = viewsToDraw[id]!!.viewState
                             state.sizePercent = (state.sizePercent + deltaPercent).coerceIn(0.025f, 1f)
                             coroutineScope.launch {
                                 state.save()
@@ -221,7 +217,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     },
                     onRenderRuleChange = { newRenderRule ->
                         selectedButtonId?.let { id ->
-                            val state = viewsToDraw[id]!!.buttonState
+                            val state = viewsToDraw[id]!!.viewState
                             state.viewRenderRule = newRenderRule
                             coroutineScope.launch {
                                 state.save()
@@ -229,16 +225,16 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         }
                     },
                     onCustomViewSelected = { customView ->
-                        customView.buttonState.isDeleted = false
-                        coroutineScope.launch { customView.buttonState.save() }
+                        customView.viewState.isDeleted = false
+                        coroutineScope.launch { customView.viewState.save() }
                     },
                     onReset = {
                         coroutineScope.launch {
                             preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, false)
                             viewsToDraw.values.forEach { view ->
-                                view.buttonState.resetToDefaults()
-                                clampButton(view.buttonState)
-                                coroutineScope.launch { view.buttonState.save() }
+                                view.viewState.resetToDefaults()
+                                clampButton(view.viewState)
+                                coroutineScope.launch { view.viewState.save() }
                             }
                             selectedButtonId = null
                             selectedViewRenderRule = null
@@ -256,13 +252,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
             if (readyToDrawControls) {
                 viewsToDraw.forEach { (id, view) ->
 
-                    val sizePx: Float = screenWidthPx * view.buttonState.sizePercent
+                    val sizePx: Float = screenWidthPx * view.viewState.sizePercent
                     val sizeDp: Dp = (sizePx / density).dp
 
-                    val renderOffsetX = view.buttonState.offsetXPercent * screenWidthPx
-                    val renderOffsetY = view.buttonState.offsetYPercent * screenHeightPx
+                    val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
+                    val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
 
-                    val renderView = (view.isHideControlsButton || view.renderView || isEditMode) && !view.buttonState.isDeleted
+                    val renderView = (view.isHideControlsButton || view.renderView || isEditMode) && !view.viewState.isDeleted
 
                     if (renderView) {
                         DrawView(
@@ -274,7 +270,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                             onClick = {
                                 if (isEditMode) {
                                     selectedButtonId = id
-                                    selectedViewRenderRule = view.buttonState.viewRenderRule
+                                    selectedViewRenderRule = view.viewState.viewRenderRule
                                     coroutineScope.launch {
                                         preferencesStorage.setBooleanValueAsync(
                                             clampButtonsPrefsKey,
@@ -283,10 +279,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 }
                             },
                             onDragEnd = { newX, newY ->
-                                view.buttonState.offsetXPercent = (newX / screenWidthPx)
-                                view.buttonState.offsetYPercent = (newY / screenHeightPx)
+                                view.viewState.offsetXPercent = (newX / screenWidthPx)
+                                view.viewState.offsetYPercent = (newY / screenHeightPx)
                                 coroutineScope.launch {
-                                    view.buttonState.save()
+                                    view.viewState.save()
                                 }
                             },
                             inGame = inGame,
@@ -333,7 +329,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         isSelected: Boolean,
         onClick: () -> Unit,
         onDragEnd: (x: Float, y: Float) -> Unit) {
-        var position by remember(viewToDraw.buttonState.id) { mutableStateOf(offset) }
+        var position by remember(viewToDraw.viewState.id) { mutableStateOf(offset) }
 
         LaunchedEffect(offset) {
             position = offset
@@ -344,7 +340,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 .offset { IntOffset(position.x.roundToInt(), position.y.roundToInt()) }
                 .size(sizeDp)
                 .minimumInteractiveComponentSize()
-                .alpha(viewToDraw.buttonState.alpha)
+                .alpha(viewToDraw.viewState.alpha)
                 .background(
                     if (isSelected && isEditMode) Color.Red.copy(alpha = 0.5f)
                     else Color.Transparent,
@@ -487,7 +483,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             onViewSelected(null)
             return
         }
-        val itemsToDraw by mutableStateOf(customViews.filter { it.buttonState.isDeleted }.toList())
+        val itemsToDraw by mutableStateOf(customViews.filter { it.viewState.isDeleted }.toList())
 
         AlertDialog(
             onDismissRequest = { onViewSelected(null) },
@@ -503,7 +499,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     itemsIndexed(itemsToDraw, key = { _, view ->
-                        view.buttonState.id
+                        view.viewState.id
                     }) { _, view ->
                         Row(
                             modifier = Modifier.clickable { onViewSelected(view) },
@@ -514,12 +510,12 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 Modifier
                                     .width(40.dp)
                                     .height(40.dp), Color.Black,
-                                view.buttonState.id
+                                view.viewState.id
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
-                                text = view.buttonState.id,
+                                text = view.viewState.id,
                                 color = Color.Black,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Right

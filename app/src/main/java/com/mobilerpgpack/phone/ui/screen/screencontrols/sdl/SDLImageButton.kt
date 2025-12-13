@@ -16,8 +16,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 
@@ -37,7 +37,7 @@ abstract class SDLImageButton(
 
     final override var show: Boolean by mutableStateOf(true)
 
-    override val buttonState: ButtonState = ButtonState(
+    override val viewState: ViewState = ViewState(
         id,
         engineType,
         offsetXPercent = offsetXPercent,
@@ -51,7 +51,7 @@ abstract class SDLImageButton(
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         Image(
-            painter = painterResource(id = buttonState.buttonResId),
+            painter = painterResource(id = viewState.buttonResId),
             contentDescription = id,
             modifier = BuildModifier(isEditMode, inGame))
     }
@@ -70,11 +70,11 @@ abstract class SDLImageButton(
 
                 detectTapGestures(
                     onPress = {
-                        onTouchDown(buttonState.sdlKeyCode)
+                        onTouchDown(viewState.sdlKeyCode)
                         try {
                             awaitRelease()
                         } finally {
-                            onTouchUp(buttonState.sdlKeyCode)
+                            onTouchUp(viewState.sdlKeyCode)
                         }
                     }
                 )
@@ -88,10 +88,10 @@ abstract class SDLImageButton(
                     return@clickable
                 }
                 if (!isPressed){
-                    onTouchDown(buttonState.sdlKeyCode)
+                    onTouchDown(viewState.sdlKeyCode)
                 }
                 else{
-                    onTouchUp(buttonState.sdlKeyCode)
+                    onTouchUp(viewState.sdlKeyCode)
                 }
                 isPressed=!isPressed
             }

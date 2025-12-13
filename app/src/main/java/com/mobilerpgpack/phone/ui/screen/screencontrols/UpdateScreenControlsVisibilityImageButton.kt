@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ButtonState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 
 class UpdateScreenControlsVisibilityImageButton(
     engineType: EngineTypes,

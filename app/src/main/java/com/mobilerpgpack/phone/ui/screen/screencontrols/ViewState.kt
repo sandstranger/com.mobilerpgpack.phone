@@ -16,25 +16,19 @@ import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-class ButtonState(
+class ViewState(
     val id: String,
     val engineType: EngineTypes,
-    offsetXPercent: Float = 0f,
-    offsetYPercent: Float = 0f,
-    sizePercent: Float = 0.13f,
-    alpha: Float = 0.65f,
-    sdlKeyEvent: Int = Int.MIN_VALUE,
+    val defaultOffsetXPercent: Float = 0f,
+    val defaultOffsetYPercent: Float = 0f,
+    val defaultSizePercent: Float = 0.13f,
+    val defaultAlpha: Float = 0.65f,
+    val defaultSdlKeyEvent : Int = Int.MIN_VALUE,
     val buttonResId: Int = NOT_EXISTING_RES,
     private val defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     val isCustomButton : Boolean = false) : KoinComponent {
 
-    private val defaultSdlKeyEvent = sdlKeyEvent
-    private val defaultOffsetXPercent = offsetXPercent
-    private val defaultOffsetYPercent = offsetYPercent
-    private val defaultSizePercent = sizePercent
-    private val defaultAlpha = alpha
     private val engineTypeString = engineType.toString().lowercase()
-
     private val keyX: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_x")
     private val keyY: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_y")
     private val keySize: Preferences.Key<Float> = floatPreferencesKey("${engineTypeString}_${id}_size_percent")
@@ -42,16 +36,15 @@ class ButtonState(
     private val sdlKeyEventPrefsKey: Preferences.Key<Int> = intPreferencesKey("${engineTypeString}_${id}_sdl_key")
     private val viewRenderRulePrefsKey = stringPreferencesKey("${engineTypeString}_${id}_view_render_rule")
     private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${id}_is_deleted")
-
     private val preferencesStorage : PreferencesStorage = get()
 
     val allowToEditKeyEvent get() = buttonResId != NOT_EXISTING_RES && sdlKeyCode!= Int.MIN_VALUE
 
-    var offsetXPercent by mutableFloatStateOf(offsetXPercent)
-    var offsetYPercent by mutableFloatStateOf(offsetYPercent)
-    var sizePercent by mutableFloatStateOf(sizePercent)
-    var alpha by mutableFloatStateOf(alpha)
-    var sdlKeyCode by mutableIntStateOf(sdlKeyEvent)
+    var offsetXPercent by mutableFloatStateOf(defaultOffsetXPercent)
+    var offsetYPercent by mutableFloatStateOf(defaultOffsetYPercent)
+    var sizePercent by mutableFloatStateOf(defaultSizePercent)
+    var alpha by mutableFloatStateOf(defaultAlpha)
+    var sdlKeyCode by mutableIntStateOf(defaultSdlKeyEvent)
     var viewRenderRule by mutableStateOf(defaultViewRenderRule)
     var isDeleted by mutableStateOf(isCustomButton)
 
