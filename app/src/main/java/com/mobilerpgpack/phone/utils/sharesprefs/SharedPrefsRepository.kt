@@ -4,8 +4,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.koin.java.KoinJavaComponent.get
 import java.util.concurrent.ConcurrentHashMap
 
@@ -16,62 +14,62 @@ open class SharedPrefsRepository {
     }
 
     protected fun getStringFlow(key: String, defaultValue: String = ""): Flow<String> {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }
+        val prefsValue = synchronized(lockObject) { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
         return prefsValue.stringFlow!!.state
     }
 
     protected fun getIntFlow(key: String, defaultValue: Int = 0): Flow<Int> {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }
+        val prefsValue = synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
         return prefsValue.intFlow!!.state
     }
 
     protected fun getBooleanFlow(key: String, defaultValue: Boolean = false): Flow<Boolean> {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }
+        val prefsValue = synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
         return prefsValue.booleanFlow!!.state
     }
 
     protected fun getFloatFlow(key: String, defaultValue: Float = 0.0f): Flow<Float> {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }
+        val prefsValue = synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
         return prefsValue.floatFlow!!.state
     }
 
     protected fun getDoubleFlow(key: String, defaultValue: Double = 0.0): Flow<Double> {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }
+        val prefsValue = synchronized(lockObject) { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) } }
         return prefsValue.doubleFlow!!.state
     }
 
     fun setString(key: String, value: String) = scope.launch { setStringAsync(key, value) }
 
     suspend fun setStringAsync(key: String, value: String) {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }
+        val prefsValue = synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
         dao.upsert(prefsValue.prefsEntry)
     }
 
     fun setInt(key: String, value: Int) = scope.launch { setIntAsync(key, value) }
 
     suspend fun setIntAsync(key: String, value: Int) {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }
+        val prefsValue = synchronized(lockObject) {loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
         dao.upsert(prefsValue.prefsEntry)
     }
 
     fun setBoolean(key: String, value: Boolean) = scope.launch { setBooleanAsync(key, value) }
 
     suspend fun setBooleanAsync(key: String, value: Boolean) {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }
+        val prefsValue = synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
         dao.upsert(prefsValue.prefsEntry)
     }
 
     fun setFloat(key: String, value: Float) = scope.launch { setFloatAsync(key, value) }
 
     suspend fun setFloatAsync(key: String, value: Float) {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }
+        val prefsValue = synchronized(lockObject)  { loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
         dao.upsert(prefsValue.prefsEntry)
     }
 
     fun setDouble(key: String, value: Double) = scope.launch { setDoubleAsync(key, value) }
 
     suspend fun setDoubleAsync(key: String, value: Double) {
-        val prefsValue = loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }
+        val prefsValue = synchronized(lockObject) {  loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) } }
         dao.upsert(prefsValue.prefsEntry)
     }
 
@@ -114,7 +112,7 @@ open class SharedPrefsRepository {
         @Volatile
         private var entriesWasLoaded = false
 
-        private val mutex = Mutex()
+        private val lockObject = Any()
 
         private val scope: CoroutineScope = get(CoroutineScope::class.java)
 
@@ -132,7 +130,7 @@ open class SharedPrefsRepository {
         private suspend fun loadAllEntriesAsync() {
             val entries = dao.getAllEntries()
 
-            mutex.withLock {
+            synchronized(lockObject){
                 entries.forEach { entry ->
                     if (!loadedEntries.contains(entry.key)) {
                         loadedEntries[entry.key] = buildSharedPrefsValue(entry)!!
