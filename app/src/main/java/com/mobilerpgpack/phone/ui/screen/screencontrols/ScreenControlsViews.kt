@@ -125,7 +125,7 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
     )
 )
 
-val psyDoomButtons: Collection<IScreenControlsView> = listOf(
+val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
     SDL2Dpad(
         EngineTypes.PsyDoom,
         offsetXPercent = 0.03f,
@@ -351,7 +351,7 @@ val psyDoomButtons: Collection<IScreenControlsView> = listOf(
         EngineTypes.PsyDoom,
         offsetXPercent = 0.97f,
         offsetYPercent = 0.7f,
-        sizePercent = 0.07f,
+        sizePercent = 0.065f,
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE
     ),
@@ -360,7 +360,7 @@ val psyDoomButtons: Collection<IScreenControlsView> = listOf(
         EngineTypes.PsyDoom,
         offsetXPercent = 0.83f,
         offsetYPercent = 0.9f,
-        sizePercent = 0.07f,
+        sizePercent = 0.065f,
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
@@ -377,6 +377,296 @@ val psyDoomButtons: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.03f,
         sizePercent = 0.05f,
         buttonResId = R.drawable.toggles
+    ))
+
+val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
+    SDL2Dpad(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.03f,
+        offsetYPercent = 0.16f,
+        sizePercent = 0.16f,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2OnScreenStick(
+        engineType = EngineTypes.PsyDoom,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.54f,
+        sizePercent = 0.21f,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2OnScreenStick(
+        engineType = EngineTypes.PsyDoom,
+        stickType = StickType.RightStick,
+        offsetXPercent = 0.8f,
+        offsetYPercent = 0.54f,
+        sizePercent = 0.21f,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "first_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.16f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.first_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_1,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "second_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.second_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_2,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "third_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.third_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_3,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "fourth_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.fourth_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_4,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "five_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.4f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.five_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_5,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "six_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.46f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.six_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_6,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "seven_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.seven_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_7,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "eight_number",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.eight_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_8,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "delete",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.delete_icon,
+        sdlKeyEvent = KeyEvent.KEYCODE_DEL,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "pan",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.follow,
+        sdlKeyEvent = KeyEvent.KEYCODE_F,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "zoom_in",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zoom_in,
+        sdlKeyEvent = KeyEvent.KEYCODE_EQUALS,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "zoom_out",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zoom_out,
+        sdlKeyEvent = KeyEvent.KEYCODE_MINUS,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "demo_player",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.screen_record,
+        sdlKeyEvent = KeyEvent.KEYCODE_V,
+        isQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "attack",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.7f,
+        offsetYPercent = 0.47f,
+        sizePercent = 0.11f,
+        buttonResId = R.drawable.attack_button,
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2MouseWheelButton(
+        "next_weapon",
+        EngineTypes.PsyDoom,
+        wheelUp = true,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.18f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.next_weapon,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2MouseWheelButton(
+        "prev_weapon",
+        EngineTypes.PsyDoom,
+        wheelUp = false,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.32f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.prev_weapon,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "autorun",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.62f,
+        offsetYPercent = 0.85f,
+        sizePercent = 0.06f,
+        sdlKeyEvent = KeyEvent.KEYCODE_CAPS_LOCK,
+        buttonResId = R.drawable.run,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "escape",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.99f,
+        offsetYPercent = 0.05f,
+        sizePercent = 0.065f,
+        buttonResId = R.drawable.pause,
+        sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "quick_save",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.save,
+        sdlKeyEvent = KeyEvent.KEYCODE_F5,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "quick_load",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.83f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.load,
+        sdlKeyEvent = KeyEvent.KEYCODE_F9,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    CustomSDL2Button(
+        "23",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.73f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        sdlKeyEvent = KeyEvent.KEYCODE_F9,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "use",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.99f,
+        offsetYPercent = 0.4f,
+        sizePercent = 0.065f,
+        buttonResId = R.drawable.use,
+        sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "automap",
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.73f,
+        offsetYPercent = 0.9f,
+        sizePercent = 0.065f,
+        buttonResId = R.drawable.automap,
+        sdlKeyEvent = KeyEvent.KEYCODE_TAB,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    ShowSDL2InputImageButton(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.08f,
+        buttonResId = R.drawable.keyboard,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    UpdateScreenControlsVisibilityImageButton(
+        EngineTypes.PsyDoom,
+        offsetXPercent = 0.62f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.toggles,
+        controlsType = ControlsType.OnScreenStick
     ))
 
 val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
@@ -675,6 +965,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
+        controlsType = ControlsType.OnScreenStick
     ),
     UpdateQuickPanelVisibilityImageButton(
         EngineTypes.Doom64ExPlus,
@@ -914,7 +1205,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         "use",
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.99f,
-        offsetYPercent = 0.42f,
+        offsetYPercent = 0.4f,
         sizePercent = 0.065f,
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,

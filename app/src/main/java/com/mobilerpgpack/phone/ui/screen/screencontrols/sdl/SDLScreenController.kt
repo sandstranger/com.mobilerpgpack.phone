@@ -35,7 +35,7 @@ import kotlin.math.roundToInt
 
 abstract class SDLScreenController : ScreenController() {
 
-    private var customViews : MutableMap<EngineTypes, MutableMap<ControlsType,Collection<IScreenControlsView>>> = mutableMapOf()
+    private val customViews : MutableMap<EngineTypes, MutableMap<ControlsType,Collection<IScreenControlsView>>> = mutableMapOf()
 
     protected abstract val viewWidth : Int
 
@@ -149,8 +149,9 @@ abstract class SDLScreenController : ScreenController() {
     protected abstract fun buildCustomView (id : String, engineTypes: EngineTypes, keyCode : Int) : IScreenControlsView
 
     final override fun buildCustomViews(engineTypes: EngineTypes): Collection<IScreenControlsView> {
-        val customViewsMap = customViews.getOrPut(engineTypes) { mutableMapOf() }
-        return customViewsMap.getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes)}
+        return customViews.getOrPut(engineTypes) { mutableMapOf() }.run {
+            getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes)}
+        }
     }
 
     private fun buildCustomViewsCollection (engineTypes: EngineTypes) : Collection<IScreenControlsView>{
