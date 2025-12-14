@@ -10,8 +10,11 @@ class UpdateScreenControlsVisibilityImageButton(
     offsetYPercent: Float = 0f,
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
-    buttonResId: Int = NOT_EXISTING_RES) : ImageButton(HIDE_CONTROLS_BUTTON_ID, engineType, offsetXPercent, offsetYPercent,
-    sizePercent, alpha, buttonResId) {
+    buttonResId: Int = NOT_EXISTING_RES,
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+    controlsType: ControlsType = ControlsType.Default) :
+    ImageButton(HIDE_CONTROLS_BUTTON_ID, engineType, offsetXPercent, offsetYPercent,
+    sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType) {
 
     override fun onClick(context: Context) {
         screenController?.activeViewsToDraw?.forEach {
