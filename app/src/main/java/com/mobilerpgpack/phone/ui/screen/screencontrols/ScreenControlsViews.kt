@@ -1020,7 +1020,8 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom,
         sdlKeyEvent = KeyEvent.KEYCODE_Z,
-        defaultViewRenderRule = ViewRenderRule.Disable
+        defaultViewRenderRule = ViewRenderRule.Disable,
+        useToggle = true
     ),
     SDL2ImageButton(
         "weapon_reload",
@@ -1463,7 +1464,8 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.zoom,
         sdlKeyEvent = KeyEvent.KEYCODE_Z,
         defaultViewRenderRule = ViewRenderRule.Disable,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        useToggle = true
     ),
     SDL2ImageButton(
         "weapon_reload",
