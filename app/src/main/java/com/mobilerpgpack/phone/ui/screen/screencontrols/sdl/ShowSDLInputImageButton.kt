@@ -6,18 +6,17 @@ import android.view.KeyEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.quantuminventions.customkeyboard.components.expandableView.ExpandableState
 import com.quantuminventions.customkeyboard.components.expandableView.ExpandableStateListener
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import com.quantuminventions.customkeyboard.components.keyboard.KeyboardListener
 import com.quantuminventions.customkeyboard.components.keyboard.controllers.KeyboardController
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -36,15 +35,17 @@ abstract class ShowSDLInputImageButton(
     ImageButton(SHOW_KEYBOARD_BUTTON_ID, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,
         buttonResId, defaultViewRenderRule, controlsType)
 {
+    private val preferencesStorage : PreferencesStorage = get ()
+
     private var wasInit = false
 
     private val keyCodesProvider : IKeyCodesProvider by inject ()
 
+    override var show: Boolean get() = !preferencesStorage.useStandardSDLTextInput.getBlockingValue()
+        set(value) {}
+
     private val engineInfo by lazy {
-        runBlocking {
-            val preferencesStorage : PreferencesStorage = get ()
-            get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.first()))
-        }
+            get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
     }
 
     @SuppressLint("CheckResult")
@@ -61,7 +62,10 @@ abstract class ShowSDLInputImageButton(
         engineInfo.rootView!!.requestFocus()
     }
 
-    final override fun characterClicked(c: Char) = onKeyDown(keyCodesProvider.getKeyCode(c))
+    final override fun characterClicked(c: Char) {
+        onKeyDown(keyCodesProvider.getKeyCode(c))
+        onCharClicked(c)
+    }
 
     final override fun specialKeyClicked(key: KeyboardController.SpecialKey) {
         when (key) {
@@ -86,6 +90,8 @@ abstract class ShowSDLInputImageButton(
     }
 
     protected abstract fun onKeyDown(keyCode: Int)
+
+    protected abstract fun onCharClicked (char: Char)
 
     private fun setupKeyboard(){
         if (wasInit){

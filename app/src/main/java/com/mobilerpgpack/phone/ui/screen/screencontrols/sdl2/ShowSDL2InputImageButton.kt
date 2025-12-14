@@ -6,6 +6,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLInputImageButton
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
+import org.libsdl.app.SDLInputConnection
 
 class ShowSDL2InputImageButton(
     engineType: EngineTypes,
@@ -21,4 +22,6 @@ class ShowSDL2InputImageButton(
         alpha, buttonResId, keyboardInputType, defaultViewRenderRule = defaultViewRenderRule, controlsType)
 {
     override fun onKeyDown(keyCode: Int) = org.libsdl.app.onKeyDown(keyCode, delayBeforeKeyRelease = 50L)
+
+    override fun onCharClicked(char: Char) = SDLInputConnection.nativeCommitText(char.toString(),0)
 }
