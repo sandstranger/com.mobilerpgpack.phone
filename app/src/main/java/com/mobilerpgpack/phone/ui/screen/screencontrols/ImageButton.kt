@@ -26,16 +26,17 @@ abstract class ImageButton(
     private val sizePercent: Float = 0.13f,
     private val alpha: Float = 0.65f,
     private val buttonResId: Int = NOT_EXISTING_RES,
-    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : IScreenControlsView {
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+    controlsType: ControlsType = ControlsType.Default) : IScreenControlsView {
 
     protected var screenController : IScreenController? = null
         private set
 
     override val isQuickPanel: Boolean = false
 
-    override var show: Boolean by mutableStateOf(true)
+    final override var show: Boolean by mutableStateOf(true)
 
-    override val viewState: ViewState = ViewState(
+    final override val viewState: ViewState = ViewState(
         id,
         engineType,
         offsetXPercent = offsetXPercent,
@@ -43,7 +44,8 @@ abstract class ImageButton(
         sizePercent = sizePercent,
         buttonResId = buttonResId,
         alpha = alpha,
-        defaultViewRenderRule = defaultViewRenderRule)
+        defaultViewRenderRule = defaultViewRenderRule,
+        controlsType = controlsType)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {

@@ -23,6 +23,9 @@ import androidx.window.layout.WindowMetricsCalculator
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.mobilerpgpack.phone.R
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
@@ -69,6 +72,8 @@ fun Activity.showMessageDialogBox (title: String = "", messageToShow : String,
         }
     }
 }
+
+fun <T> Flow<T>.getBlockingValue() = runBlocking { first() }
 
 fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
     val i = Intent(this, activityClazz)

@@ -4,12 +4,9 @@ import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.invokeBool
 import com.sun.jna.Function
@@ -20,14 +17,12 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
-import kotlin.collections.forEach
 
 open class Doom64EngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    buttonsToDraw: Collection<IScreenControlsView>,
     commandLineParamsFlow : Flow<String>) :
-    SDL3EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
+    SDL3EngineInfo(mainEngineLib, allLibs,
         EngineTypes.Doom64ExPlus,emptyFlow(),commandLineParamsFlow) {
 
     override val pathToResource get() = runBlocking { preferencesStorage.pathToDoom64MainWadsFolder.first() }

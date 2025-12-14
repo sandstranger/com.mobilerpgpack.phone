@@ -9,9 +9,9 @@ interface IScreenController{
 
     @Composable
     fun DrawScreenControls(
-        views: Collection<IScreenControlsView>,
         activeEngine : EngineTypes,
         inGame: Boolean,
+        blockTouchCameraEvents : Boolean = false,
         allowToEditControls: Boolean = true,
         drawInSafeArea : Boolean = false,
         onBack: () -> Unit = { })

@@ -25,8 +25,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -53,24 +52,26 @@ import java.io.File
 abstract class EngineInfo(
     mainEngineLib: String,
     private val allLibs: Array<String>,
-    override val viewsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
     private val pathToResourceFlow: Flow<String>,
     private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
 
+    private var controlsOverlayUI: View? = null
+    private var layoutBinding : GameLayoutBinding? = null
+
     protected open val preferencesStorage: PreferencesStorage by inject()
+
+    protected open val blockTouchCameraEvents get() = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 
     protected lateinit var resolution: ScreenResolution
         private set
 
-    private var controlsOverlayUI: View? = null
-
-    private var layoutBinding : GameLayoutBinding? = null
-
     protected lateinit var activity: ComponentActivity
         private set
+
+    protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
 
     protected val pathToRootUserFolder: String = get(
         named(
@@ -288,8 +289,8 @@ abstract class EngineInfo(
 
                                         Theme(darkTheme = useDarkTheme) {
                                             screenController.DrawScreenControls(
-                                                viewsToDraw,
                                                 inGame = true,
+                                                blockTouchCameraEvents = blockTouchCameraEvents,
                                                 activeEngine = engineType,
                                                 allowToEditControls = allowToEditScreenControlsInGame,
                                                 drawInSafeArea = displayInSafeArea)
