@@ -71,7 +71,8 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64AbsoluteTouchControls
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64OnScreenStickControls
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
-import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
+import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomAbsoluteTouchControls
+import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomOnScreenStickControls
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
@@ -402,7 +403,7 @@ class KoinModulesProvider(private val context: Context,
         }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.UZDoom, hashMapOf(
-            ControlsType.AbsoluteTouchControls to psyDoomButtons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControls)) }.withOptions {
             named(EngineTypes.UZDoom.name) }
 
         single  {
@@ -442,14 +443,14 @@ class KoinModulesProvider(private val context: Context,
     }
 
     private val psyDoomRegisterModule = module {
-
         single { PsyDoomPreferencesStorage() }.withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<PsyDoomPreferencesStorage>()
         }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.PsyDoom, hashMapOf(
-            ControlsType.AbsoluteTouchControls to psyDoomButtons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControls,
+            ControlsType.OnScreenStick to psyDoomOnScreenStickControls)) }.withOptions {
             named(EngineTypes.PsyDoom.name) }
 
         single {
