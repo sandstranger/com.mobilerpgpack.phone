@@ -812,6 +812,76 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         isQuickPanel = true
     ),
     SDL2ImageButton(
+        "previous_item",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.previous,
+        sdlKeyEvent = KeyEvent.KEYCODE_LEFT_BRACKET,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "next_item",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.next,
+        sdlKeyEvent = KeyEvent.KEYCODE_RIGHT_BRACKET,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "drop_item",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.delete_icon,
+        sdlKeyEvent = KeyEvent.KEYCODE_DEL,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "query_item",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.4f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.items,
+        sdlKeyEvent = KeyEvent.KEYCODE_Q,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "toggle_grid",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.23f,
+        offsetYPercent = 0.51f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.grid,
+        sdlKeyEvent = KeyEvent.KEYCODE_G,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "toggle_texture",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.29f,
+        offsetYPercent = 0.51f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.texture,
+        sdlKeyEvent = KeyEvent.KEYCODE_P,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
+        "open_console",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.35f,
+        offsetYPercent = 0.51f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.terminal,
+        sdlKeyEvent = KeyEvent.KEYCODE_GRAVE,
+        isQuickPanel = true
+    ),
+    SDL2ImageButton(
         "attack",
         EngineTypes.UZDoom,
         offsetXPercent = 0.8f,
@@ -839,9 +909,39 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.prev_weapon,
     ),
     SDL2ImageButton(
+        "fly_up",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.94f,
+        offsetYPercent = 0.2f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.fly_up,
+        sdlKeyEvent = KeyEvent.KEYCODE_PAGE_UP,
+        defaultViewRenderRule = ViewRenderRule.Disable
+    ),
+    SDL2ImageButton(
+        "fly_down",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.94f,
+        offsetYPercent = 0.37f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.fly_down,
+        sdlKeyEvent = KeyEvent.KEYCODE_INSERT,
+        defaultViewRenderRule = ViewRenderRule.Disable
+    ),
+    SDL2ImageButton(
+        "stop_flying",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.94f,
+        offsetYPercent = 0.55f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.cancel,
+        sdlKeyEvent = KeyEvent.KEYCODE_HOME,
+        defaultViewRenderRule = ViewRenderRule.Disable
+    ),
+    SDL2ImageButton(
         "autorun",
         EngineTypes.UZDoom,
-        offsetXPercent = 0.72f,
+        offsetXPercent = 0.55f,
         offsetYPercent = 0.85f,
         sizePercent = 0.06f,
         sdlKeyEvent = KeyEvent.KEYCODE_CAPS_LOCK,
@@ -879,18 +979,58 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         EngineTypes.UZDoom,
         offsetXPercent = 0.97f,
         offsetYPercent = 0.7f,
-        sizePercent = 0.065f,
+        sizePercent = 0.06f,
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_E
     ),
     SDL2ImageButton(
         "automap",
         EngineTypes.UZDoom,
-        offsetXPercent = 0.83f,
+        offsetXPercent = 0.68f,
         offsetYPercent = 0.9f,
         sizePercent = 0.065f,
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
+    ),
+    SDL2ImageButton(
+        "crouch",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.79f,
+        offsetYPercent = 0.9f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.crouch,
+        sdlKeyEvent = KeyEvent.KEYCODE_X,
+        defaultViewRenderRule = ViewRenderRule.Disable
+    ),
+    SDL2ImageButton(
+        "jump",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.72f,
+        offsetYPercent = 0.7f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.jump,
+        sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
+        defaultViewRenderRule = ViewRenderRule.Disable
+    ),
+    SDL2ImageButton(
+        "weapon_zoom",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.81f,
+        offsetYPercent = 0.7f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zoom,
+        sdlKeyEvent = KeyEvent.KEYCODE_Z,
+        defaultViewRenderRule = ViewRenderRule.Disable
+    ),
+    SDL2ImageButton(
+        "weapon_reload",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.9f,
+        offsetYPercent = 0.88f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.reload_gun,
+        sdlKeyEvent = KeyEvent.KEYCODE_R,
+        defaultViewRenderRule = ViewRenderRule.Disable
     ),
     ShowSDL2InputImageButton(
         EngineTypes.UZDoom,
