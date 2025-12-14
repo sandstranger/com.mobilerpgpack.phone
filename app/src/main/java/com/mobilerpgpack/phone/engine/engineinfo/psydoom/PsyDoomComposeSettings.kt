@@ -22,7 +22,6 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
-import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
