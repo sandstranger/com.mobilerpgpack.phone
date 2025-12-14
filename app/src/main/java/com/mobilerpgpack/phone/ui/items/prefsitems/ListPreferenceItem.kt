@@ -100,3 +100,19 @@ inline fun <reified T : Enum<T>> ListPreferenceItem(
         onValueChange.invoke(newValue)
     }
 }
+
+@Composable
+inline fun <reified T : Enum<T>> ListPreferenceItem(
+    title: String,
+    valueFlow: Flow<T>,
+    crossinline onValueChange: (T) -> Unit = {}) {
+    val enumValues = remember { enumValues<T>().toList() }
+    val enumValuesStrings = remember { enumValues.map { it.toString() }.toList() }
+    val initialValue by valueFlow.collectAsState(initial = enumValues.first())
+    var selectedValue by remember (initialValue) { mutableStateOf(initialValue) }
+    ListPreferenceItem(title, selectedValue.toString(),enumValuesStrings){
+        val newValue = enumValueOf<T>(it)
+        selectedValue = newValue
+        onValueChange.invoke(newValue)
+    }
+}

@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.translator.ITranslationManager
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.inject
@@ -13,10 +12,9 @@ import org.koin.core.component.inject
 open class DoomRPGSeriesEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    buttonsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
     pathToResourceFlow: Flow<String>) :
-    SDL2EngineInfo(mainEngineLib, allLibs, buttonsToDraw, activeEngineType, pathToResourceFlow) {
+    SDL2EngineInfo(mainEngineLib, allLibs, activeEngineType, pathToResourceFlow) {
 
     private val translationManager: ITranslationManager by inject()
 

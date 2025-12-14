@@ -62,7 +62,6 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
                 Theme(darkTheme = useDarkTheme) {
                     activeEngine.screenController.DrawScreenControls(
-                        activeEngine.viewsToDraw,
                         inGame = false,
                         activeEngine = selectedEngine,
                         drawInSafeArea = displayInSafeArea, onBack = {

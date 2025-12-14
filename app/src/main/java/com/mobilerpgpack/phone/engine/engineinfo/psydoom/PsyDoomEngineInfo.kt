@@ -4,10 +4,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
-import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.sun.jna.Function
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -18,9 +15,8 @@ import java.io.File
 
 class PsyDoomEngineInfo(mainEngineLib: String,
                         allLibs: Array<String>,
-                        buttonsToDraw: Collection<IScreenControlsView>,
                         commandLineParamsFlow : Flow<String>) :
-    SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.PsyDoom,
+    SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.PsyDoom,
         commandLineParamsFlow = commandLineParamsFlow) {
 
     private val modsModel : ModsModel by inject (named(EngineTypes.PsyDoom.toString()))

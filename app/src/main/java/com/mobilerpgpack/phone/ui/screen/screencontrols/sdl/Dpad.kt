@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.ui.screen.screencontrols
+package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.annotation.SuppressLint
 import android.view.KeyEvent
@@ -21,6 +21,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import org.koin.core.component.KoinComponent
 
 abstract class Dpad(
@@ -28,17 +32,19 @@ abstract class Dpad(
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
     private val sizePercent: Float = 0.25f,
-    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : KoinComponent, IScreenControlsView {
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+    controlsType: ControlsType = ControlsType.Default) : KoinComponent,
+    IScreenControlsView {
 
     private val dpadButtonState: ViewState
 
     private val dpadButtons: Collection<ViewState>
 
-    override var show: Boolean by mutableStateOf(true)
+    final override var show: Boolean by mutableStateOf(true)
 
-    override val isQuickPanel: Boolean = false
+    final override val isQuickPanel: Boolean = false
 
-    override val viewState: ViewState get() = dpadButtonState
+    final override val viewState: ViewState get() = dpadButtonState
 
     init {
         val buttons = mutableListOf<ViewState>()
@@ -47,7 +53,7 @@ abstract class Dpad(
                 DPAD_DOWN,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_DOWN,
-                buttonResId = R.drawable.dpad_down,
+                buttonResId = R.drawable.dpad_down
             )
         )
         buttons.add(
@@ -55,7 +61,7 @@ abstract class Dpad(
                 DPAD_UP,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_UP,
-                buttonResId = R.drawable.dpad_up,
+                buttonResId = R.drawable.dpad_up
             )
         )
         buttons.add(
@@ -63,7 +69,7 @@ abstract class Dpad(
                 DPAD_LEFT,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_LEFT,
-                buttonResId = R.drawable.dpad_left,
+                buttonResId = R.drawable.dpad_left
             )
         )
         buttons.add(
@@ -71,23 +77,24 @@ abstract class Dpad(
                 DPAD_RIGHT,
                 engineType,
                 sdlKeyEvent = KeyEvent.KEYCODE_DPAD_RIGHT,
-                buttonResId = R.drawable.dpad_right,
+                buttonResId = R.drawable.dpad_right
             )
         )
         dpadButtons = buttons
         dpadButtonState = ViewState(
-            dpadId,
+            DPAD_ID,
             engineType,
             offsetXPercent = offsetXPercent,
             offsetYPercent = offsetYPercent,
             sizePercent = sizePercent,
-            defaultViewRenderRule = defaultViewRenderRule
+            defaultViewRenderRule = defaultViewRenderRule,
+            controlsType = controlsType
         )
     }
 
     @SuppressLint("UnusedBoxWithConstraintsScope")
     @Composable
-    override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+    final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -115,7 +122,7 @@ abstract class Dpad(
                 Image(
                     painter = painterResource(painterId),
                     contentDescription = desc,
-                    modifier = Modifier
+                    modifier = Modifier.Companion
                         .size(buttonSize)
                         .minimumInteractiveComponentSize()
                         .offset(x = offsetX, y = offsetY)
@@ -160,9 +167,8 @@ abstract class Dpad(
 
     protected abstract fun onTouchUp(keyCode: Int)
 
-
     private companion object {
-        private const val dpadId = "dpad"
+        private const val DPAD_ID = "dpad"
         private const val DPAD_LEFT = "DpadLeft"
         private const val DPAD_RIGHT = "DpadRight"
         private const val DPAD_DOWN = "DpadDown"

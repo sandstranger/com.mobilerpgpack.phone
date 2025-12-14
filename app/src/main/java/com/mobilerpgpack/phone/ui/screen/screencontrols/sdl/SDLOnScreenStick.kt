@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
@@ -48,7 +49,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 private val offsetYPercent: Float = 0f,
                                 private val sizePercent: Float = 0.13f,
                                 private val alpha: Float = 0.65f,
-                                defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) : IScreenControlsView, KoinComponent {
+                                defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+                                controlsType: ControlsType = ControlsType.Default) : IScreenControlsView, KoinComponent {
 
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
@@ -67,7 +69,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         offsetYPercent = offsetYPercent,
         sizePercent = sizePercent,
         alpha = alpha,
-        defaultViewRenderRule = defaultViewRenderRule)
+        defaultViewRenderRule = defaultViewRenderRule,
+        controlsType = controlsType)
 
     override var show : Boolean by mutableStateOf(true)
 

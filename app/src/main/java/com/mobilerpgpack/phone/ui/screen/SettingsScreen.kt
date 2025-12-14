@@ -33,15 +33,16 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
+import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isTelevision
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.get
@@ -129,15 +130,15 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 .padding(innerPadding)
                 .verticalScroll(scrollState),
         ) {
-            DrawCommonSettings( scope, activeEngine, viewModel, navController)
+            DrawCommonSettings(activeEngine, viewModel, navController)
             DrawGraphicsSettings()
-            DrawUserInterfaceSettings(scope)
+            DrawUserInterfaceSettings()
         }
     }
 
     @Composable
-    private fun DrawCommonSettings(scope: CoroutineScope, activeEngine: EngineTypes,
-                                   viewModel: SettingsScreenViewModel, navController: NavHostController) {
+    private fun DrawCommonSettings(activeEngine: EngineTypes,
+        viewModel: SettingsScreenViewModel, navController: NavHostController) {
         DrawTitleText(stringResource(R.string.common_settings))
 
         ListPreferenceItem(
@@ -215,7 +216,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
     }
 
     @Composable
-    private fun DrawUserInterfaceSettings(scope: CoroutineScope) {
+    private fun DrawUserInterfaceSettings() {
         val useStandardSDLTextInput by preferencesStorage.useStandardSDLTextInput
             .collectAsState(initial = false)
 
@@ -240,8 +241,9 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             initial =
                 EngineTypes.DefaultActiveEngine.toString()
         )
-        val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState!!) }
+        val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState) }
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
+        val controlsProvider : ControlsProvider = koinInject (named(activeEngine.name))
 
         PreferenceItem(stringResource(R.string.keys_editor)) {
             drawKeysEditor = true
@@ -283,9 +285,23 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 it.coerceIn(0f, 1.0f))
         }
 
+        if (controlsProvider.drawControlsTypesInMenu){
+            HorizontalDivider()
+            ListPreferenceItem(stringResource(R.string.controls_type),
+                controlsProvider.activeControlsTypeAsFlow){
+                controlsProvider.activeControlsType = it
+            }
+            HorizontalDivider()
+
+            HorizontalDivider()
+            SwitchItem(stringResource(R.string.block_touch_camera_events),
+                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActiveAsFlow){
+                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive = it
+            }
+        }
+
         if (drawKeysEditor) {
-            val engineInfo : IEngineInfo = get (named(activeEngine.toString()))
-            KeysEditor(engineInfo.viewsToDraw) {
+            KeysEditor(controlsProvider.controlsToDraw) {
                 drawKeysEditor = false
             }
         }

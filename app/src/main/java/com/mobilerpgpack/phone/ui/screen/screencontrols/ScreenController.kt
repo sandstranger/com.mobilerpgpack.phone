@@ -68,6 +68,7 @@ import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
 abstract class ScreenController : KoinComponent, IScreenController {
@@ -83,12 +84,15 @@ abstract class ScreenController : KoinComponent, IScreenController {
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     override fun DrawScreenControls(
-        views: Collection<IScreenControlsView>,
         activeEngine : EngineTypes,
         inGame: Boolean,
+        blockTouchCameraEvents : Boolean,
         allowToEditControls: Boolean,
         drawInSafeArea : Boolean,
         onBack: () -> Unit) {
+
+        val controlsProvider : ControlsProvider = koinInject(named(activeEngine.name))
+        val views = controlsProvider.controlsToDraw
 
         customViews.apply {
             clear()
@@ -192,7 +196,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         ) {
             if (inGame) {
                 DrawBlockAndroidViewsBox()
-                if (!isEditMode) {
+                if (!isEditMode && !blockTouchCameraEvents) {
                     DrawTouchCamera()
                 }
             }

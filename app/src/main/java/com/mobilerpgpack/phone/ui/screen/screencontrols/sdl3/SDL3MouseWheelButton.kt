@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLMouseWheelButton
@@ -16,9 +17,10 @@ class SDL3MouseWheelButton(
     alpha: Float = 0.65f,
     buttonResId: Int = NOT_EXISTING_RES,
     isQuickPanel: Boolean = false,
-    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) :
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+    controlsType: ControlsType = ControlsType.Default) :
     SDLMouseWheelButton(id, engineType, wheelUp,offsetXPercent, offsetYPercent, sizePercent,
-        alpha,buttonResId, isQuickPanel, defaultViewRenderRule = defaultViewRenderRule){
+        alpha,buttonResId, isQuickPanel, defaultViewRenderRule = defaultViewRenderRule, controlsType){
 
     override fun onMouseWheel (keyCode: Int, x : Float, y : Float, event: Int ) =
         SDLActivity.onNativeMouse(keyCode, event, x, y, false)

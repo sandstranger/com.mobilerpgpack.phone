@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
@@ -32,10 +33,10 @@ abstract class CustomSDLButton(
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = 0,
     useToggle: Boolean = false,
-    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default
-) : SDLImageButton(
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+    controlsType: ControlsType = ControlsType.Default) : SDLImageButton(
         id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
-        NOT_EXISTING_RES, useToggle, defaultViewRenderRule) {
+        NOT_EXISTING_RES, useToggle, defaultViewRenderRule, controlsType) {
 
     final override val viewState: ViewState = ViewState(
         id,
@@ -47,7 +48,8 @@ abstract class CustomSDLButton(
         sdlKeyEvent = sdlKeyEvent,
         alpha = alpha,
         defaultViewRenderRule = defaultViewRenderRule,
-        isCustomView = true)
+        isCustomView = true,
+        controlsType = controlsType)
 
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) =
