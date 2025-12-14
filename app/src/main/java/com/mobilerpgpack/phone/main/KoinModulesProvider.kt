@@ -78,6 +78,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenControlle
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.uzDoomAbsoluteTouchControls
+import com.mobilerpgpack.phone.ui.screen.screencontrols.uzDoomOnScreenStickControls
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
@@ -404,7 +405,8 @@ class KoinModulesProvider(private val context: Context,
         }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.UZDoom, hashMapOf(
-            ControlsType.AbsoluteTouchControls to uzDoomAbsoluteTouchControls)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to uzDoomAbsoluteTouchControls,
+            ControlsType.OnScreenStick to uzDoomOnScreenStickControls)) }.withOptions {
             named(EngineTypes.UZDoom.name) }
 
         single  {
