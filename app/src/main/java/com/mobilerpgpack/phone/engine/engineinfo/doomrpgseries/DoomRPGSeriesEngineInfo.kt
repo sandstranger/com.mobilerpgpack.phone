@@ -38,6 +38,6 @@ open class DoomRPGSeriesEngineInfo(
         translationManager.activeEngine = engineType
     }
 
-    override val requiredResourceExtension: String = ".ipa"
+    override val requiredResourceExtensions = listOf(".ipa", ".IPA")
 }
 

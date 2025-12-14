@@ -60,7 +60,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.pathToPsyDoomCueFile,
             preferencesStorage.pathToPsyDoomCueFilePrefsKey,
             RequestPathMode.File,
-            requiredFileExtensions = arrayListOf(engineInfo.requiredResourceExtension)
+            requiredFileExtensions = engineInfo.requiredResourceExtensions
         )
 
         DrawModsSupport(viewModel.modsModel)

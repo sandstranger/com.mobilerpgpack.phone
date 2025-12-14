@@ -11,7 +11,6 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -30,7 +29,7 @@ class DoomRpgComposeSettings : CommonDoomRpgComposeSettings() {
             stringResource(R.string.doom_rpg_zip_file),
             savedPathToDoomRpgZip,
             requestMode = RequestPathMode.File,
-            requiredFileExtensions = arrayListOf(engineInfo.requiredResourceExtension)){ selectedPath ->
+            requiredFileExtensions = engineInfo.requiredResourceExtensions){ selectedPath ->
             scope.launch { preferencesStorage.setPathToDoomRpgZipFile(selectedPath) }
         }
         HorizontalDivider()
