@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -26,7 +25,8 @@ class ViewState(
     sdlKeyEvent : Int = Int.MIN_VALUE,
     val buttonResId: Int = NOT_EXISTING_RES,
     private val defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    val isCustomView : Boolean = false) : KoinComponent {
+    val isCustomView : Boolean = false,
+    controlsType: ControlsType = ControlsType.Default) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
@@ -34,13 +34,14 @@ class ViewState(
     private val defaultSizePercent = sizePercent
     private val defaultAlpha = alpha
     private val engineTypeString = engineType.toString().lowercase()
-    private val keyX = floatPreferencesKey("${engineTypeString}_${id}_x")
-    private val keyY = floatPreferencesKey("${engineTypeString}_${id}_y")
-    private val keySize = floatPreferencesKey("${engineTypeString}_${id}_size_percent")
-    private val keyAlpha = floatPreferencesKey("${engineTypeString}_${id}_alpha")
-    private val sdlKeyEventPrefsKey = intPreferencesKey("${engineTypeString}_${id}_sdl_key")
-    private val viewRenderRulePrefsKey = stringPreferencesKey("${engineTypeString}_${id}_view_render_rule")
-    private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${id}_is_deleted")
+    private val controlsTypeString = controlsType.name.lowercase()
+    private val keyX = floatPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_x")
+    private val keyY = floatPreferencesKey("${engineTypeString}_${controlsTypeString}__${id}_y")
+    private val keySize = floatPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_size_percent")
+    private val keyAlpha = floatPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_alpha")
+    private val sdlKeyEventPrefsKey = intPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_sdl_key")
+    private val viewRenderRulePrefsKey = stringPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_view_render_rule")
+    private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_is_deleted")
     private val preferencesStorage : PreferencesStorage = get()
 
     private var wasLoaded by mutableStateOf(false)

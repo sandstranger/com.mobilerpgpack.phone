@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.CustomSDLButton
 import org.libsdl.app.SDLActivity.onNativeKeyDown
@@ -16,9 +17,10 @@ class CustomSDL2Button(
     sdlKeyEvent: Int = 0,
     useToggle: Boolean = false,
     override val isQuickPanel: Boolean = false,
-    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default) :
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+    controlsType: ControlsType = ControlsType.Default ) :
     CustomSDLButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
-        useToggle, defaultViewRenderRule) {
+        useToggle, defaultViewRenderRule, controlsType) {
 
     init {
         show = !isQuickPanel

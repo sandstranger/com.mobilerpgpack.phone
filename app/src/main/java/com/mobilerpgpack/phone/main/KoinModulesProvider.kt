@@ -64,6 +64,8 @@ import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons
@@ -99,7 +101,6 @@ import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -266,6 +267,11 @@ class KoinModulesProvider(private val context: Context,
     }
 
     private val doomRpgSeriesModule = module {
+
+        single<ControlsProvider> { ControlsProvider(EngineTypes.DoomRpg, hashMapOf(
+            ControlsType.AbsoluteTouchControls to doomRPGButtons)) }.withOptions {
+            named(EngineTypes.DoomRpg.name) }
+
         single {
             val nativeLibs = arrayOf(gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
@@ -277,16 +283,17 @@ class KoinModulesProvider(private val context: Context,
                 TRANSLATOR_NATIVE_LIB_NAME,
                 DOOMRPG_MAIN_ENGINE_LIB)
 
-            DoomRpgEngineInfo(DOOMRPG_MAIN_ENGINE_LIB,
-                nativeLibs,
-                doomRPGButtons
-        ) }.withOptions {
+            DoomRpgEngineInfo(DOOMRPG_MAIN_ENGINE_LIB, nativeLibs) }.withOptions {
             named(EngineTypes.DoomRpg.toString())
             bind<IEngineInfo>()
         }
 
         single<IEngineUIController> { DoomRpgComposeSettings() }
             .withOptions { named(EngineTypes.DoomRpg.toString()) }
+
+        single<ControlsProvider> { ControlsProvider(EngineTypes.Doom2Rpg, hashMapOf(
+            ControlsType.AbsoluteTouchControls to doom2RPGButtons)) }.withOptions {
+            named(EngineTypes.Doom2Rpg.name) }
 
         single {
             val preferencesStorage : PreferencesStorage = get ()
@@ -299,9 +306,7 @@ class KoinModulesProvider(private val context: Context,
                 DOOM2RPG_MAIN_ENGINE_LIB)
 
             DoomRPGSeriesEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB,
-                nativeLibs,
-                doom2RPGButtons,
-                EngineTypes.Doom2Rpg,
+                nativeLibs, EngineTypes.Doom2Rpg,
                 preferencesStorage.pathToDoom2RpgIpaFile)
         }.withOptions {
             named(EngineTypes.Doom2Rpg.toString())
@@ -310,6 +315,10 @@ class KoinModulesProvider(private val context: Context,
 
         single<IEngineUIController> { Doom2RpgComposeSettings() }
             .withOptions { named(EngineTypes.Doom2Rpg.toString()) }
+
+        single<ControlsProvider> { ControlsProvider(EngineTypes.WolfensteinRpg, hashMapOf(
+            ControlsType.AbsoluteTouchControls to wolfensteinButtons)) }.withOptions {
+            named(EngineTypes.WolfensteinRpg.name) }
 
         single {
             val preferencesStorage : PreferencesStorage = get ()
@@ -322,9 +331,7 @@ class KoinModulesProvider(private val context: Context,
                 WOLFENSTEINRPG_MAIN_ENGINE_LIB)
 
             DoomRPGSeriesEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB,
-                nativeLibs,
-                wolfensteinButtons,
-                EngineTypes.WolfensteinRpg,
+                nativeLibs, EngineTypes.WolfensteinRpg,
                 preferencesStorage.pathToWolfensteinRpgIpaFile)
         }.withOptions {
             named(EngineTypes.WolfensteinRpg.toString())
@@ -336,6 +343,14 @@ class KoinModulesProvider(private val context: Context,
     }
 
     private val doom64RegisterModule = module {
+
+        single<ControlsProvider> { ControlsProvider(EngineTypes.Doom64ExPlus, hashMapOf(
+            ControlsType.AbsoluteTouchControls to doom64Buttons)) }.withOptions {
+            named(EngineTypes.Doom64ExPlus.name)
+            }.withOptions {
+                named(EngineTypes.Doom64ExPlusEnhanced.name)
+            }
+
         single  {
             val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(gl4esLibraryName,
@@ -345,9 +360,7 @@ class KoinModulesProvider(private val context: Context,
                 DOOM64_MAIN_ENGINE_LIB)
 
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
-                nativeLibs,
-                doom64Buttons,
-                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+                nativeLibs, preferencesStorage.doom64CommandLineArgsString) }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
             bind<IEngineInfo>()
         }
@@ -361,9 +374,7 @@ class KoinModulesProvider(private val context: Context,
                 DOOM64_ENHANCED_MAIN_ENGINE_LIB)
 
             Doom64EnhancedEngineInfo(DOOM64_ENHANCED_MAIN_ENGINE_LIB,
-                nativeLibs,
-                doom64Buttons,
-                preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+                nativeLibs, preferencesStorage.doom64CommandLineArgsString) }.withOptions {
             named(EngineTypes.Doom64ExPlusEnhanced.toString())
             bind<IEngineInfo>()
         }
@@ -383,11 +394,14 @@ class KoinModulesProvider(private val context: Context,
     }
 
     private val uZDoomRegisterModule = module {
-
         single { UZDoomPreferenceStorage() }.withOptions {
             named(EngineTypes.UZDoom.toString())
             bind<UZDoomPreferenceStorage>()
         }
+
+        single<ControlsProvider> { ControlsProvider(EngineTypes.UZDoom, hashMapOf(
+            ControlsType.AbsoluteTouchControls to psyDoomButtons)) }.withOptions {
+            named(EngineTypes.UZDoom.name) }
 
         single  {
             val preferencesStorage : UZDoomPreferenceStorage = get (named(EngineTypes.UZDoom.toString()))
@@ -407,7 +421,6 @@ class KoinModulesProvider(private val context: Context,
 
             UZDoomEngineInfo(UZDOOM_MAIN_ENGINE_LIB,
                 nativeLibs,
-                psyDoomButtons,
                 preferencesStorage.uZDoomCommandLineArgsString) }.withOptions {
             named(EngineTypes.UZDoom.toString())
             bind<IEngineInfo>()
@@ -433,15 +446,17 @@ class KoinModulesProvider(private val context: Context,
             bind<PsyDoomPreferencesStorage>()
         }
 
+        single<ControlsProvider> { ControlsProvider(EngineTypes.PsyDoom, hashMapOf(
+            ControlsType.AbsoluteTouchControls to psyDoomButtons)) }.withOptions {
+            named(EngineTypes.PsyDoom.name) }
+
         single {
             val preferencesStorage : PsyDoomPreferencesStorage = get (named(EngineTypes.PsyDoom.toString()))
             val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
 
             PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
-                nativeLibs,
-                psyDoomButtons,
-                preferencesStorage.psyDoomCommandLineArgsString)
+                nativeLibs, preferencesStorage.psyDoomCommandLineArgsString)
         }.withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<IEngineInfo>()

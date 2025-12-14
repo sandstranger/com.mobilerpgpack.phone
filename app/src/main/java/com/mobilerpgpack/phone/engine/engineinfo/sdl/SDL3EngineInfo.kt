@@ -6,7 +6,6 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL3GameActivity
 import com.mobilerpgpack.phone.engine.engineinfo.EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIconHelper
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
@@ -15,19 +14,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import org.libsdl3.app.onKeyDown
 import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
+import org.libsdl3.app.onKeyDown
 
 abstract class SDL3EngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    buttonsToDraw: Collection<IScreenControlsView>,
     activeEngineType: EngineTypes,
     pathToResourceFlow: Flow<String> = emptyFlow(),
     commandLineParamsFlow : Flow<String> = emptyFlow()) :
-    EngineInfo(mainEngineLib, allLibs, buttonsToDraw,
-        activeEngineType, pathToResourceFlow, commandLineParamsFlow) {
+    EngineInfo(mainEngineLib, allLibs, activeEngineType, pathToResourceFlow, commandLineParamsFlow) {
 
     private val mouseIcon: SDL3MouseIcon by inject()
 

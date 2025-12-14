@@ -22,9 +22,8 @@ import java.io.File
 
 class UZDoomEngineInfo (mainEngineLib: String,
                         allLibs: Array<String>,
-                        buttonsToDraw: Collection<IScreenControlsView>,
                         commandLineParamsFlow : Flow<String>) :
-    SDL2EngineInfo (mainEngineLib, allLibs, buttonsToDraw,activeEngineType = EngineTypes.UZDoom,
+    SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.UZDoom,
         commandLineParamsFlow = commandLineParamsFlow) {
 
     private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
