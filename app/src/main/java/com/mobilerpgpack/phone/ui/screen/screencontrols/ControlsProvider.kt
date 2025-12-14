@@ -14,7 +14,7 @@ class ControlsProvider (engineType: EngineTypes,
     private val activeControlTypePrefsKey = "${engineType.name}_active_controls_type"
 
     val activeControlsTypeAsFlow = preferencesStorage.getEnumValue(activeControlTypePrefsKey,
-        ControlsType::class.java,controls.keys.first())
+        ControlsType::class.java, ControlsType.Default)
 
     var activeControlsType : ControlsType
         get() = activeControlsTypeAsFlow.getBlockingValue()

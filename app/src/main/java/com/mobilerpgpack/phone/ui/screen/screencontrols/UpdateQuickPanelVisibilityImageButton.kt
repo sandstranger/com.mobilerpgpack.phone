@@ -10,9 +10,11 @@ class UpdateQuickPanelVisibilityImageButton(
     offsetYPercent: Float = 0f,
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
-    buttonResId: Int = NOT_EXISTING_RES) :
+    buttonResId: Int = NOT_EXISTING_RES,
+    defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+    controlsType: ControlsType = ControlsType.Default) :
     ImageButton(UPDATE_QUICK_PANEL_VISIBILITY_BUTTON_ID, engineType, offsetXPercent, offsetYPercent,
-        sizePercent, alpha, buttonResId) {
+        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType) {
 
     override fun onClick(context: Context) {
         screenController?.activeViewsToDraw?.forEach {

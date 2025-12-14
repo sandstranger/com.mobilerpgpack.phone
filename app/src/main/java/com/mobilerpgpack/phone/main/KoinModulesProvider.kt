@@ -68,7 +68,8 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64Buttons
+import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64AbsoluteTouchControls
+import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64OnScreenStickControls
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
@@ -345,7 +346,8 @@ class KoinModulesProvider(private val context: Context,
     private val doom64RegisterModule = module {
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.Doom64ExPlus, hashMapOf(
-            ControlsType.AbsoluteTouchControls to doom64Buttons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to doom64AbsoluteTouchControls,
+            ControlsType.OnScreenStick to doom64OnScreenStickControls)) }.withOptions {
             named(EngineTypes.Doom64ExPlus.name)
             }.withOptions {
                 named(EngineTypes.Doom64ExPlusEnhanced.name)
