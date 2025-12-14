@@ -28,7 +28,7 @@ class Doom2RpgComposeSettings : CommonDoomRpgComposeSettings() {
             stringResource(R.string.doom2_rpg_ipa_file),
             previousPathToDoom2RpgIpa,
             requestMode = RequestPathMode.File,
-            requiredFileExtensions = arrayListOf(engineInfo.requiredResourceExtension)){ selectedPath ->
+            requiredFileExtensions = engineInfo.requiredResourceExtensions){ selectedPath ->
             scope.launch { preferencesStorage.setPathToDoom2RpgIpaFile(selectedPath) }
         }
 

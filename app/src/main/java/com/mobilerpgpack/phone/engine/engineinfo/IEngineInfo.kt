@@ -19,7 +19,7 @@ interface IEngineInfo {
     val engineType : EngineTypes
     val pathToResourceIsCorrect : Boolean
     val pathToResourceExists : Boolean
-    val requiredResourceExtension : String
+    val requiredResourceExtensions : Collection<String>
     val mainLibraryName : String
     val nativeLibraries : Array<String>
     val gameActivityClazz: Class<*>
@@ -45,7 +45,7 @@ fun IEngineInfo.isResourceCorrect (activity: Activity, onCloseDialogBox :(()-> U
 
     if (!pathToResourceIsCorrect) {
         val errorMessage = activity.getString(R.string.resource_not_correct_error,
-            this.requiredResourceExtension)
+            this.requiredResourceExtensions)
         activity.showErrorDialogBox(errorMessage, onCloseDialogBox)
         return false
     }

@@ -11,11 +11,11 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import kotlin.getValue
+import androidx.compose.ui.res.stringResource
 
 class WolfensteinRpgComposeSettings : CommonDoomRpgComposeSettings(){
 
@@ -23,15 +23,14 @@ class WolfensteinRpgComposeSettings : CommonDoomRpgComposeSettings(){
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        val context = LocalContext.current
         val previousPathToWolfensteinRpgIPa by preferencesStorage.pathToWolfensteinRpgIpaFile
             .collectAsState(initial = "")
 
         RequestPath(
-            context.getString(R.string.wolfenstein_rpg_ipa_file),
+            stringResource(R.string.wolfenstein_rpg_ipa_file),
             previousPathToWolfensteinRpgIPa,
             requestMode = RequestPathMode.File,
-            requiredFileExtensions = arrayListOf(engineInfo.requiredResourceExtension)){ selectedPath ->
+            requiredFileExtensions = engineInfo.requiredResourceExtensions){ selectedPath ->
             scope.launch { preferencesStorage.setPathToWolfensteinRpgIpaFile(selectedPath) }
         }
         HorizontalDivider()

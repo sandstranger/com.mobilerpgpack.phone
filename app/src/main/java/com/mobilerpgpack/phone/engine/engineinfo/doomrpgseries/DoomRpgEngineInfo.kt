@@ -24,7 +24,7 @@ class DoomRpgEngineInfo(
 
     override fun isMouseShown() = false
 
-    override val requiredResourceExtension: String = ".zip"
+    override val requiredResourceExtensions = listOf(".zip", ".ZIP")
 
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
