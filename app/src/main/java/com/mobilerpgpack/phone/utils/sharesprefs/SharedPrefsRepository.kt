@@ -17,12 +17,12 @@ open class SharedPrefsRepository {
         loadAllEntries()
     }
 
-    inline fun <reified T : Enum<T>> getEnumValue(key: String, defaultValue: T) =
+    fun <T : Enum<T>> getEnumValue(key: String,enumClass: Class<T>, defaultValue: T) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
             .map { stringValue ->
                 if (stringValue.isNotEmpty()) {
                     try {
-                        enumValueOf<T>(stringValue)
+                        java.lang.Enum.valueOf(enumClass, stringValue)
                     } catch (_: Exception) {
                         defaultValue
                     }
@@ -31,7 +31,8 @@ open class SharedPrefsRepository {
                 }
             }
 
-    inline fun <reified T : Enum<T>> getEnumValue(key: Key<T>, defaultValue: T) = getEnumValue(key.name, defaultValue)
+    fun <T : Enum<T>> getEnumValue(key: Key<T>,enumClass: Class<T>, defaultValue: T) =
+        getEnumValue(key.name, enumClass, defaultValue)
 
     fun getStringValue(key: String, defaultValue: String = "") =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
@@ -128,17 +129,16 @@ open class SharedPrefsRepository {
         }
     }
 
-    inline fun <reified T : Enum<T>> setEnumValue(key: String, value: T) = scope.launch { setEnumValueAsync(key, value) }
+    fun <T : Enum<T>> setEnumValue(key: String, value: T) = scope.launch { setEnumValueAsync(key, value) }
 
-    inline fun <reified T : Enum<T>> setEnumValue(key: Key<T>, value: T) = setEnumValue(key.name, value)
+    fun <T : Enum<T>> setEnumValue(key: Key<T>, value: T) = setEnumValue(key.name, value)
 
-    suspend inline fun <reified T : Enum<T>> setEnumValueAsync(key: Key<T>, value: T) =
-        setEnumValueAsync(key.name, value)
+    suspend fun <T : Enum<T>> setEnumValueAsync(key: Key<T>, value: T) = setEnumValueAsync(key.name, value)
 
-    suspend inline fun <reified T : Enum<T>> setEnumValueAsync(key: String, value: T) =
+    suspend fun <T : Enum<T>> setEnumValueAsync(key: String, value: T) =
         setStringValueAsync(key, value.name)
 
-    class MutableFlow<T>(initialValue: T) {
+    private class MutableFlow<T>(initialValue: T) {
         private val mutableFlow = MutableStateFlow(initialValue)
 
         val flow: Flow<T> = mutableFlow
@@ -147,7 +147,7 @@ open class SharedPrefsRepository {
             set(value) { mutableFlow.value = value }
     }
 
-    class SharedPrefsValue(
+    private class SharedPrefsValue(
         var prefsEntry: SharedPrefsEntry,
         val floatFlow: MutableFlow<Float>? = null,
         val stringFlow: MutableFlow<String>? = null,
@@ -170,17 +170,17 @@ open class SharedPrefsRepository {
         }
     }
 
-    companion object {
+    private companion object {
         @Volatile
         private var entriesWasLoaded = false
 
         private val mutex = Mutex()
 
-        val scope: CoroutineScope = get(CoroutineScope::class.java)
+        private val scope: CoroutineScope = get(CoroutineScope::class.java)
 
-        val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
+        private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
 
-        val loadedEntries = ConcurrentHashMap<String, SharedPrefsValue>()
+        private val loadedEntries = ConcurrentHashMap<String, SharedPrefsValue>()
 
         private fun loadAllEntries() {
             if (!entriesWasLoaded) {
@@ -258,7 +258,7 @@ open class SharedPrefsRepository {
                 booleanFlow = MutableFlow(value)
             )
 
-        fun <T : Enum<T>> buildSharedPrefsValue(key: String, value: T) =
+        private fun <T : Enum<T>> buildSharedPrefsValue(key: String, value: T) =
             SharedPrefsValue(
                 SharedPrefsEntry(key, stringValue = value.name),
                 stringFlow = MutableFlow(value.name)

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = SharedPrefsDatabase.DATABASE_NAME)
-data class SharedPrefsEntry(
+internal data class SharedPrefsEntry(
     @PrimaryKey
     val key: String,
     var stringValue: String? = null,
