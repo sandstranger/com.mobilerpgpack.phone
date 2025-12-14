@@ -10,8 +10,8 @@ class ControlsProvider (engineType: EngineTypes,
                         private val controls : Map<ControlsType,Collection<IScreenControlsView>>) : KoinComponent {
 
     private val preferencesStorage : PreferencesStorage = get()
-    private val activeControlTypePrefsKey = "${engineType.name}_active_controls_type"
-    private val blockTouchCameraEventsPrefsKey = "${engineType.name}_block_touch_camera_events"
+    private val activeControlTypePrefsKey = "${engineType.name.lowercase()}_active_controls_type"
+    private val blockTouchCameraEventsPrefsKey = "${engineType.name.lowercase()}_block_touch_camera_events"
 
     val activeControlsTypeAsFlow = preferencesStorage.getEnumValue(activeControlTypePrefsKey,
         ControlsType::class.java, ControlsType.Default)
