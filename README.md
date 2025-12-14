@@ -115,6 +115,14 @@ If your device does not support vulkan render, then use legacy opengl es render
 
 ## UZDoom
 
+For running Uzdoom follow gzdoom docs - https://zdoom.org/w/index.php?title=Main_Page
+
+Uzdoom engine has rendering issues at all mobile gpu vendors, except adreno.
+
+Do not expect working vulkan render and OpenGL emulation at gpu vendors except adreno.
+
+At mobile vendors - like mali or powevr use GLES 2.0 or GLES 3.x render. 
+
 This project contains code from GZDoom android port (https://github.com/emileb/gzdoom),
 
 which is licensed under GPL v3. All modifications are clearly marked in commit history.
