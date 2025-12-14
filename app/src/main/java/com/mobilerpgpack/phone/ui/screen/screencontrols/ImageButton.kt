@@ -34,7 +34,7 @@ abstract class ImageButton(
 
     override val isQuickPanel: Boolean = false
 
-    final override var show: Boolean by mutableStateOf(true)
+    override var show: Boolean by mutableStateOf(true)
 
     final override val viewState: ViewState = ViewState(
         id,

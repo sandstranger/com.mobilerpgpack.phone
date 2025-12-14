@@ -4,16 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 
 interface IScreenControlsView {
-
     val viewState : ViewState
-
     var show : Boolean
-
     val isQuickPanel : Boolean
-
     @Composable
     fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp)
-
     fun setScreenController (screenController: IScreenController){}
 }
 
