@@ -20,9 +20,12 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.CustomSDL2Button
+import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -32,16 +35,17 @@ import kotlin.math.roundToInt
 
 abstract class SDLScreenController : ScreenController() {
 
-    private var customViews : Collection<IScreenControlsView>? = null
+    private var customViews : MutableMap<EngineTypes, MutableMap<ControlsType,Collection<IScreenControlsView>>> = mutableMapOf()
 
     protected abstract val viewWidth : Int
 
     protected abstract val viewHeight : Int
 
+    protected val controlsProvider get() =
+        get<ControlsProvider>(named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
+
     protected val engineInfo by lazy {
-        runBlocking {
-            get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.first()))
-        }
+        get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
     }
 
     @Composable
@@ -142,12 +146,11 @@ abstract class SDLScreenController : ScreenController() {
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
 
-    protected abstract fun buildCustomView (id : String, engineTypes: EngineTypes, keyCode : Int) :
-            IScreenControlsView
+    protected abstract fun buildCustomView (id : String, engineTypes: EngineTypes, keyCode : Int) : IScreenControlsView
 
     final override fun buildCustomViews(engineTypes: EngineTypes): Collection<IScreenControlsView> {
-        customViews ?: run { customViews = buildCustomViewsCollection(engineTypes)}
-        return customViews!!
+        val customViewsMap = customViews.getOrPut(engineTypes) { mutableMapOf() }
+        return customViewsMap.getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes)}
     }
 
     private fun buildCustomViewsCollection (engineTypes: EngineTypes) : Collection<IScreenControlsView>{
