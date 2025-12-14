@@ -5,7 +5,7 @@ import androidx.room.Query
 import androidx.room.Upsert
 
 @Dao
-interface SharedPrefsDao {
+internal interface SharedPrefsDao {
     @Upsert
     suspend fun upsert(entry: SharedPrefsEntry)
 
