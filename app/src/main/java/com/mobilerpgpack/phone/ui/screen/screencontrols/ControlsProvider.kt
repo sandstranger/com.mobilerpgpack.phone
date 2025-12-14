@@ -10,8 +10,8 @@ class ControlsProvider (engineType: EngineTypes,
                         private val controls : Map<ControlsType,Collection<IScreenControlsView>>) : KoinComponent {
 
     private val preferencesStorage : PreferencesStorage = get()
-
     private val activeControlTypePrefsKey = "${engineType.name}_active_controls_type"
+    private val blockTouchCameraEventsPrefsKey = "${engineType.name}_block_touch_camera_events"
 
     val activeControlsTypeAsFlow = preferencesStorage.getEnumValue(activeControlTypePrefsKey,
         ControlsType::class.java, ControlsType.Default)
@@ -27,18 +27,14 @@ class ControlsProvider (engineType: EngineTypes,
     val controlsToDraw get() = controls[activeControlsType]!!
 
     val blockTouchCameraEventsWhenOnScreenStickActiveAsFlow =
-        preferencesStorage.getBooleanValue(BLOCK_TOUCH_CAMERA_EVENTS_PREFS_KEY,true)
+        preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,true)
 
     var blockTouchCameraEventsWhenOnScreenStickActive
         get() = blockTouchCameraEventsWhenOnScreenStickActiveAsFlow.getBlockingValue() &&
                 activeControlsType == ControlsType.OnScreenStick
         set(value) {
-            preferencesStorage.setBooleanValue(BLOCK_TOUCH_CAMERA_EVENTS_PREFS_KEY, value)
+            preferencesStorage.setBooleanValue(blockTouchCameraEventsPrefsKey, value)
         }
 
     val drawControlsTypesInMenu get() = controls.size > 1
-
-    private companion object{
-        private const val BLOCK_TOUCH_CAMERA_EVENTS_PREFS_KEY = "block_touch_camera_events"
-    }
 }

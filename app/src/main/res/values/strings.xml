@@ -43,7 +43,7 @@
     <string name="wolfenstein_rpg_ipa_file">Path to Wolfenstein RPG IPA file</string>
     <string name="doom2_rpg_ipa_file">Path to Doom II RPG IPA file</string>
     <string name="path_to_doom64_folder">Path to Doom 64 folder with main wads</string>
-    <string name="controls_type">Controls type</string>
+    <string name="controls_type">Screen controls type</string>
     <string name="block_touch_camera_events">Block touch camera events, when onscreen joystick type for touch is active</string>
     <string name="command_line_args">Command Line args</string>
     <string name="path_to_uzdoom_wad_file">Path to UZDoom main wad file</string>
