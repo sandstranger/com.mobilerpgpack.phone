@@ -245,6 +245,20 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
         val controlsProvider : ControlsProvider = koinInject (named(activeEngine.name))
 
+        if (controlsProvider.drawControlsTypesInMenu){
+            ListPreferenceItem(stringResource(R.string.controls_type),
+                controlsProvider.activeControlsTypeAsFlow){
+                controlsProvider.activeControlsType = it
+            }
+            HorizontalDivider()
+
+            SwitchItem(stringResource(R.string.block_touch_camera_events),
+                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActiveAsFlow){
+                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive = it
+            }
+            HorizontalDivider()
+        }
+
         PreferenceItem(stringResource(R.string.keys_editor)) {
             drawKeysEditor = true
         }
@@ -283,21 +297,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.customOnScreenKeyboardTransparency){
             preferencesStorage.setFloatValue(preferencesStorage.customOnScreenKeyboardTransparencyPrefsKey,
                 it.coerceIn(0f, 1.0f))
-        }
-
-        if (controlsProvider.drawControlsTypesInMenu){
-            HorizontalDivider()
-            ListPreferenceItem(stringResource(R.string.controls_type),
-                controlsProvider.activeControlsTypeAsFlow){
-                controlsProvider.activeControlsType = it
-            }
-            HorizontalDivider()
-
-            HorizontalDivider()
-            SwitchItem(stringResource(R.string.block_touch_camera_events),
-                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActiveAsFlow){
-                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive = it
-            }
         }
 
         if (drawKeysEditor) {

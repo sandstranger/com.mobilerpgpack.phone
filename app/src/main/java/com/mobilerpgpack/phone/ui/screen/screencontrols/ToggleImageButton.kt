@@ -13,8 +13,10 @@ abstract class ToggleImageButton(id: String,
                                  offsetYPercent: Float = 0f,
                                  sizePercent: Float = 0.13f,
                                  alpha: Float = 0.65f,
-                                 buttonResId: Int = NOT_EXISTING_RES) :
-    ImageButton (id,engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, buttonResId) {
+                                 buttonResId: Int = NOT_EXISTING_RES,
+                                 defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
+                                 controlsType: ControlsType = ControlsType.Default):
+    ImageButton (id,engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, buttonResId,defaultViewRenderRule, controlsType) {
 
     private var currentToggleState by mutableStateOf(false)
 
