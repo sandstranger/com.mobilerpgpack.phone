@@ -11,7 +11,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.dehFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.playingRecordsFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.xlatFileCanBeUsed
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.sun.jna.Function
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -63,7 +62,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     override val pathToResource get() = runBlocking{ preferencesStorage.pathToUZDoomIWadFile.first() }
 
-    override val requiredResourceExtension = ".wad"
+    override val requiredResourceExtensions = listOf(".wad", ".WAD")
 
     override val loadGL4ES = false
 

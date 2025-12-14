@@ -91,9 +91,9 @@ abstract class EngineInfo(
         }
 
     override val pathToResourceIsCorrect: Boolean get() = pathToResourceExists &&
-            (requiredResourceExtension.isEmpty() || pathToResource.endsWith(requiredResourceExtension))
+            (requiredResourceExtensions.isEmpty() || requiredResourceExtensions.any { pathToResource.endsWith(it) })
 
-    override val requiredResourceExtension: String = ""
+    override val requiredResourceExtensions = listOf<String>()
 
     final override val nativeLibraries: Array<String> get() = allLibs
 

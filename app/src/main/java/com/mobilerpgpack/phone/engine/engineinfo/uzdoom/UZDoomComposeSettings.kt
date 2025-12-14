@@ -51,7 +51,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.pathToUZDoomIWadFile,
             preferencesStorage.pathToUZDoomIWadFilePrefsKey,
             RequestPathMode.File,
-            requiredFileExtensions = arrayListOf(zDoomEngineInfo.requiredResourceExtension)
+            requiredFileExtensions = zDoomEngineInfo.requiredResourceExtensions
         )
 
         HorizontalDivider()

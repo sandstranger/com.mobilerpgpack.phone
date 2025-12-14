@@ -42,7 +42,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     override val pathToResource get() = runBlocking{ psyDoomPreferencesStorage.pathToPsyDoomCueFile.first() }
 
-    override val requiredResourceExtension = ".cue"
+    override val requiredResourceExtensions = listOf(".cue", ".CUE")
 
     override val needToShowScreenControls = true
 
