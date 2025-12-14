@@ -609,7 +609,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.97f,
         offsetYPercent = 0.7f,
-        sizePercent = 0.08f,
+        sizePercent = 0.065f,
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE
     ),
@@ -618,7 +618,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.83f,
         offsetYPercent = 0.9f,
-        sizePercent = 0.075f,
+        sizePercent = 0.065f,
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
@@ -626,7 +626,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.72f,
         offsetYPercent = 0.85f,
-        sizePercent = 0.07f,
+        sizePercent = 0.06f,
         buttonResId = R.drawable.run,
     ),
     SDL3ImageButton(
@@ -665,7 +665,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
     SDL3OnScreenStick(
         engineType = EngineTypes.Doom64ExPlus,
         stickType = StickType.RightStick,
-        offsetXPercent = 0.5f,
+        offsetXPercent = 0.8f,
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
         controlsType = ControlsType.OnScreenStick
@@ -863,8 +863,8 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
     SDL3ImageButton(
         "attack",
         EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.8f,
-        offsetYPercent = 0.45f,
+        offsetXPercent = 0.7f,
+        offsetYPercent = 0.47f,
         sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
@@ -913,9 +913,9 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
     SDL3ImageButton(
         "use",
         EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.97f,
-        offsetYPercent = 0.7f,
-        sizePercent = 0.08f,
+        offsetXPercent = 0.99f,
+        offsetYPercent = 0.42f,
+        sizePercent = 0.065f,
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
         controlsType = ControlsType.OnScreenStick
@@ -923,18 +923,18 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
     SDL3ImageButton(
         "automap",
         EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.83f,
+        offsetXPercent = 0.73f,
         offsetYPercent = 0.9f,
-        sizePercent = 0.075f,
+        sizePercent = 0.065f,
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB,
         controlsType = ControlsType.OnScreenStick
     ),
     Doom64AutorunButton(
         EngineTypes.Doom64ExPlus,
-        offsetXPercent = 0.72f,
+        offsetXPercent = 0.62f,
         offsetYPercent = 0.85f,
-        sizePercent = 0.07f,
+        sizePercent = 0.06f,
         buttonResId = R.drawable.run,
         controlsType = ControlsType.OnScreenStick
     ),
