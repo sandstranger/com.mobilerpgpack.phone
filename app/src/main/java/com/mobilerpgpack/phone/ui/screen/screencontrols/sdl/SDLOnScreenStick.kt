@@ -304,7 +304,3 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     }
 }
 
-enum class StickType (val value : Int ) {
-    LeftStick (0),
-    RightStick (1)
-}
