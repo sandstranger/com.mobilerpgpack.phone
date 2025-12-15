@@ -26,7 +26,9 @@ class ViewState(
     val buttonResId: Int = NOT_EXISTING_RES,
     private val defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     private val isDeletedInitialState : Boolean = false,
-    controlsType: ControlsType = ControlsType.Default) : KoinComponent {
+    controlsType: ControlsType = ControlsType.Default,
+    val allowToUseViewAsToggle : Boolean = false,
+    private val useViewAsToggleInitialState : Boolean = false) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
@@ -42,6 +44,7 @@ class ViewState(
     private val sdlKeyEventPrefsKey = intPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_sdl_key")
     private val viewRenderRulePrefsKey = stringPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_view_render_rule")
     private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_is_deleted")
+    private val useViewAsTogglePrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_use_view_as_toggle")
     private val preferencesStorage : PreferencesStorage = get()
 
     private var wasLoaded by mutableStateOf(false)
@@ -55,6 +58,7 @@ class ViewState(
     var sdlKeyCode by mutableIntStateOf(defaultSdlKeyEvent)
     var viewRenderRule by mutableStateOf(defaultViewRenderRule)
     var isDeleted by mutableStateOf(isDeletedInitialState)
+    var useViewAsToggle by mutableStateOf(useViewAsToggleInitialState)
 
     suspend fun load() {
         if (wasLoaded){
@@ -69,6 +73,7 @@ class ViewState(
         viewRenderRule = enumValueOf<ViewRenderRule>(preferencesStorage.getStringValue(viewRenderRulePrefsKey,
             defaultViewRenderRule.toString()).first())
         isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isDeletedInitialState).first()
+        useViewAsToggle = preferencesStorage.getBooleanValue(useViewAsTogglePrefsKey, useViewAsToggleInitialState).first()
     }
 
     fun save() {
@@ -79,6 +84,7 @@ class ViewState(
         preferencesStorage.setIntValue( sdlKeyEventPrefsKey, sdlKeyCode)
         preferencesStorage.setStringValue(viewRenderRulePrefsKey, viewRenderRule.toString())
         preferencesStorage.setBooleanValue(isDeletedPrefsKey,isDeleted)
+        preferencesStorage.setBooleanValue(useViewAsTogglePrefsKey, useViewAsToggle)
     }
 
     fun resetToDefaults() {
@@ -89,6 +95,7 @@ class ViewState(
         sdlKeyCode = defaultSdlKeyEvent
         viewRenderRule = defaultViewRenderRule
         isDeleted = isDeletedInitialState
+        useViewAsToggle = useViewAsToggleInitialState
     }
 
     fun resetKeyEvent() {

@@ -53,6 +53,10 @@ fun EditTextItem(
     if (showDialog) {
 
         AlertDialog(
+            containerColor = MaterialTheme.colorScheme.background,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+            iconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
             onDismissRequest = { showDialog = false },
             confirmButton = {
                 TextButton(onClick = {
