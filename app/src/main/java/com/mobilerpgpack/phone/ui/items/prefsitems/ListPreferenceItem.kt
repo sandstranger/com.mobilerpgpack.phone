@@ -49,6 +49,10 @@ fun ListPreferenceItem(title: String,
 
     if (showValuesDialog){
         AlertDialog(
+            containerColor = MaterialTheme.colorScheme.background,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+            iconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
             onDismissRequest = { showValuesDialog = false },
             title = { Text(title) },
             text = {

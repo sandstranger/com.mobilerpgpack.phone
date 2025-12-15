@@ -32,16 +32,16 @@ private val md_light_onBackground = Color.Black
 private val md_light_surface = Color.White
 private val md_light_onSurface = Color.Black
 
-private val md_light_surfaceVariant = Color(0xFFE6E1E5)
-private val md_light_onSurfaceVariant = Color(0xFF1C1B1F)
+private val md_light_surfaceVariant = Color.White
+private val md_light_onSurfaceVariant = Color.Black
 
 private val md_light_error = Color(0xFFB3261E)
 private val md_light_onError = Color(0xFFFFFFFF)
 
-private val md_dark_primary = Color(0xFFB39DDB)
-private val md_dark_onPrimary = Color(0xFF2A1847)
-private val md_dark_primaryContainer = Color(0xFF42325E)
-private val md_dark_onPrimaryContainer = Color(0xFFE6DEFF)
+private val md_dark_primary = Color(0xFFD0BCFF)
+private val md_dark_onPrimary = Color(0xFF371E73)
+private val md_dark_primaryContainer = Color(0xFF4F378B)
+private val md_dark_onPrimaryContainer = Color(0xFFEADDFF)
 
 private val md_dark_secondary = Color(0xFFCCC2DC)
 private val md_dark_onSecondary = Color(0xFF332D41)
@@ -53,11 +53,11 @@ private val md_dark_onTertiary = Color(0xFF492532)
 private val md_dark_tertiaryContainer = Color(0xFF633B48)
 private val md_dark_onTertiaryContainer = Color(0xFFFFD8E4)
 
-private val md_dark_background = Color(0xFF1C1B1F)
-private val md_dark_onBackground = Color(0xFFEAE6E6)
+private val md_dark_background = Color.Black
+private val md_dark_onBackground = Color.White
 
-private val md_dark_surface = Color(0xFF1C1B1F)
-private val md_dark_onSurface = Color(0xFFE6E1E5)
+private val md_dark_surface = Color.Black
+private val md_dark_onSurface = Color.White
 
 private val md_dark_surfaceVariant = Color(0xFF49454F)
 private val md_dark_onSurfaceVariant = Color(0xFFD0C8D6)

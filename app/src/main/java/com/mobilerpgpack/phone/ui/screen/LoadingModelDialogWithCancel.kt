@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,6 +24,10 @@ fun LoadingModelDialogWithCancel(
 ) {
     if (show) {
         AlertDialog(
+            containerColor = MaterialTheme.colorScheme.background,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+            iconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
             onDismissRequest = { },
             title = { Text(stringResource(R.string.loading_model_title)) },
             text = {

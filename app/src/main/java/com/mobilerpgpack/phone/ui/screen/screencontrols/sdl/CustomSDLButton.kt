@@ -23,9 +23,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
-import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 abstract class CustomSDLButton(
     private val id: String,
@@ -41,8 +39,6 @@ abstract class CustomSDLButton(
         id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
         NOT_EXISTING_RES, useToggle, defaultViewRenderRule, controlsType), KoinComponent {
 
-    private val preferencesStorage : PreferencesStorage by inject ()
-
     final override val viewState: ViewState = ViewState(
         id,
         engineType,
@@ -54,11 +50,13 @@ abstract class CustomSDLButton(
         alpha = alpha,
         defaultViewRenderRule = defaultViewRenderRule,
         isDeletedInitialState = true,
-        controlsType = controlsType)
+        controlsType = controlsType,
+        allowToUseViewAsToggle = true,
+        useViewAsToggleInitialState = useToggle)
 
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) =
-        DrawView(modifier = BuildModifier(isEditMode, inGame),  id = id)
+        DrawView(modifier = Modifier.interactiveControlModifier(isEditMode, inGame),  id = id)
 
     private companion object {
         @Composable

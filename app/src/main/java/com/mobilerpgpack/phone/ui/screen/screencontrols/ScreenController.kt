@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,13 +21,16 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
@@ -241,12 +244,12 @@ abstract class ScreenController : KoinComponent, IScreenController {
                             preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
                             viewsToDraw.values.forEach { view ->
                                 view.viewState.apply {
-                                    val deleted = isDeleted
+                                    val wasDeletedBeforeReset = isDeleted
                                     resetToDefaults()
                                     if (!isDeleted) {
                                         clampButton(this)
                                     }
-                                    if (!deleted){
+                                    if (!wasDeletedBeforeReset || !isDeleted){
                                          save()
                                     }
                                 }
@@ -425,73 +428,103 @@ abstract class ScreenController : KoinComponent, IScreenController {
         onBack: () -> Unit,
         modifier: Modifier = Modifier
     ) {
-        var showCustomViewsEditor by remember { mutableStateOf(false) }
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground){
+            var showCustomViewsEditor by remember { mutableStateOf(false) }
 
-        Column(
-            modifier = modifier
-                .background(Color.Gray.copy(alpha = 0.6f), RoundedCornerShape(12.dp))
-                .padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (!selectedButtonId.isNullOrBlank()) {
-                Text(
-                    text = selectedButtonId,
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelMedium,
-                    fontSize = 18.sp
-                )
-            }
-
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
-                    Text(stringResource(R.string.increase_controls_alpha))
-                }
-                Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
-                    Text(stringResource(R.string.decrease_controls_alpha))
-                }
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
-                    Text(stringResource(R.string.increase_controls_size))
-                }
-                Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
-                    Text(stringResource(R.string.decrease_controls_size))
-                }
-            }
-            if (selectedButtonId!=null && viewRenderRule!=null){
-                EnumDropdown(stringResource(R.string.screen_controls_view_render_rule), viewRenderRule,
-                    onRenderRuleChange)
-            }
-
-            Row (horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { showCustomViewsEditor = true }) {
-                    Text(stringResource(R.string.add_custom_buttons))
+            Column(
+                modifier = modifier
+                    .background(Color.Gray.copy(alpha = 0.6f), RoundedCornerShape(5.dp))
+                    .padding(2.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                if (!selectedButtonId.isNullOrBlank()) {
+                    Text(
+                        text = selectedButtonId,
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontSize = 18.sp
+                    )
                 }
 
-                if (selectedButtonId!=null){
-                    Button(onClick = { onViewDeleted(selectedButtonId) }) {
-                        Text(stringResource(R.string.delete))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
+                        Text(stringResource(R.string.increase_controls_alpha))
+                    }
+                    Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
+                        Text(stringResource(R.string.decrease_controls_alpha))
+                    }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
+                        Text(stringResource(R.string.increase_controls_size))
+                    }
+                    Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
+                        Text(stringResource(R.string.decrease_controls_size))
+                    }
+                }
+
+                if (selectedButtonId!=null) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        if (viewRenderRule != null) {
+                            EnumDropdown(
+                                stringResource(R.string.screen_controls_view_render_rule),
+                                viewRenderRule,
+                                onRenderRuleChange
+                            )
+                        }
+                    }
+
+                    _activeViewsToDraw.first { it.viewState.id == selectedButtonId }.viewState.apply {
+                        if (allowToUseViewAsToggle) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(stringResource(R.string.use_as_toggle),
+                                    modifier = Modifier.wrapContentHeight(),
+                                    color = Color.White, textAlign = TextAlign.Right)
+                                Checkbox(
+                                    checked = useViewAsToggle,
+                                    onCheckedChange = {
+                                        useViewAsToggle = it
+                                        save()
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { showCustomViewsEditor = true }) {
+                        Text(stringResource(R.string.add_custom_buttons))
+                    }
+
+                    if (selectedButtonId != null) {
+                        Button(onClick = { onViewDeleted(selectedButtonId) }) {
+                            Text(stringResource(R.string.delete))
+                        }
+                    }
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onReset) {
+                        Text(stringResource(R.string.reset_controls_to_default))
+                    }
+                    if (!inGame) {
+                        Button(onClick = onBack) {
+                            Text(stringResource(R.string.close_controls_configuration))
+                        }
                     }
                 }
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = onReset) {
-                    Text(stringResource(R.string.reset_controls_to_default))
-                }
-                if (!inGame) {
-                    Button(onClick = onBack) {
-                        Text(stringResource(R.string.close_controls_configuration))
+            if (showCustomViewsEditor) {
+                DrawCustomButtonsEditor { customView ->
+                    showCustomViewsEditor = false
+                    if (customView != null) {
+                        onCustomViewSelected.invoke(customView)
                     }
-                }
-            }
-        }
-
-        if (showCustomViewsEditor){
-            DrawCustomButtonsEditor { customView ->
-                showCustomViewsEditor = false
-                if (customView!=null){
-                    onCustomViewSelected.invoke(customView)
                 }
             }
         }
@@ -507,6 +540,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val itemsColorToUse = MaterialTheme.colorScheme.onBackground
 
         AlertDialog(
+            containerColor = MaterialTheme.colorScheme.background,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+            iconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
             onDismissRequest = { onViewSelected(null) },
             confirmButton = {
                 TextButton(onClick = { onViewSelected(null) }) {
