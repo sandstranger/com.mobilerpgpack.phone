@@ -101,7 +101,8 @@
     <string name="yes_text">Да</string>
     <string name="no_text">Нет</string>
     <string name="cancel_download">Отменить загрузку</string>
-    <string name="selected_key_code">Выбранный код клавиши</string>
+    <string name="selected_key_code">Выбранный код кнопки</string>
+    <string name="select_key_code">Выбери код кнопки</string>
     <string name="uknown">Неизвестно</string>
     <string name="reset_to_default">Сбросить по умолчанию</string>
     <string name="keys_editor">Редактор клавиш</string>

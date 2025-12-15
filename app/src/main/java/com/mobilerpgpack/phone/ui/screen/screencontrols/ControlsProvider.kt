@@ -13,13 +13,20 @@ class ControlsProvider (engineType: EngineTypes,
     private val activeControlTypePrefsKey = "${engineType.name.lowercase()}_active_controls_type"
     private val blockTouchCameraEventsPrefsKey = "${engineType.name.lowercase()}_block_touch_camera_events"
 
+    private var  _blockTouchCameraEventsWhenOnScreenStickActive : Boolean? = null
+    private var _activeControlsType : ControlsType? = null
+
     val activeControlsTypeAsFlow = preferencesStorage.getEnumValue(activeControlTypePrefsKey,
         ControlsType::class.java, ControlsType.Default)
 
     var activeControlsType : ControlsType
-        get() = activeControlsTypeAsFlow.getBlockingValue()
+        get() {
+            _activeControlsType ?: run { _activeControlsType = activeControlsTypeAsFlow.getBlockingValue() }
+            return _activeControlsType!!
+        }
         set(value) {
             if (controls.containsKey(value)){
+                _activeControlsType = value
                 preferencesStorage.setEnumValue(activeControlTypePrefsKey, value)
             }
         }
@@ -29,10 +36,14 @@ class ControlsProvider (engineType: EngineTypes,
     val blockTouchCameraEventsWhenOnScreenStickActiveAsFlow =
         preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,true)
 
-    var blockTouchCameraEventsWhenOnScreenStickActive
-        get() = blockTouchCameraEventsWhenOnScreenStickActiveAsFlow.getBlockingValue() &&
-                activeControlsType == ControlsType.OnScreenStick
+    var blockTouchCameraEventsWhenOnScreenStickActive : Boolean
+        get() {
+            _blockTouchCameraEventsWhenOnScreenStickActive ?: run {
+                _blockTouchCameraEventsWhenOnScreenStickActive = blockTouchCameraEventsWhenOnScreenStickActiveAsFlow.getBlockingValue() }
+            return _blockTouchCameraEventsWhenOnScreenStickActive!! && activeControlsType == ControlsType.OnScreenStick
+        }
         set(value) {
+            _blockTouchCameraEventsWhenOnScreenStickActive = value
             preferencesStorage.setBooleanValue(blockTouchCameraEventsPrefsKey, value)
         }
 

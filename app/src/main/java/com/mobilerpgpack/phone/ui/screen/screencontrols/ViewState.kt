@@ -25,7 +25,7 @@ class ViewState(
     sdlKeyEvent : Int = Int.MIN_VALUE,
     val buttonResId: Int = NOT_EXISTING_RES,
     private val defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    val isCustomView : Boolean = false,
+    private val isDeletedInitialState : Boolean = false,
     controlsType: ControlsType = ControlsType.Default) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
@@ -54,7 +54,7 @@ class ViewState(
     var alpha by mutableFloatStateOf(defaultAlpha)
     var sdlKeyCode by mutableIntStateOf(defaultSdlKeyEvent)
     var viewRenderRule by mutableStateOf(defaultViewRenderRule)
-    var isDeleted by mutableStateOf(isCustomView)
+    var isDeleted by mutableStateOf(isDeletedInitialState)
 
     suspend fun load() {
         if (wasLoaded){
@@ -68,7 +68,7 @@ class ViewState(
         sdlKeyCode = preferencesStorage.getIntValue( sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()
         viewRenderRule = enumValueOf<ViewRenderRule>(preferencesStorage.getStringValue(viewRenderRulePrefsKey,
             defaultViewRenderRule.toString()).first())
-        isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isCustomView).first()
+        isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isDeletedInitialState).first()
     }
 
     fun save() {
@@ -88,7 +88,7 @@ class ViewState(
         alpha = defaultAlpha
         sdlKeyCode = defaultSdlKeyEvent
         viewRenderRule = defaultViewRenderRule
-        isDeleted = isCustomView
+        isDeleted = isDeletedInitialState
     }
 
     fun resetKeyEvent() {

@@ -18,10 +18,16 @@ val IScreenControlsView.allowToEditKeyEvent get() = this.viewState.allowToEditKe
 
 val IScreenControlsView.renderView : Boolean
     get() {
-        return when (this.viewState.viewRenderRule) {
-            ViewRenderRule.Default -> this.show
-            ViewRenderRule.AlwaysShow -> true
-            ViewRenderRule.Disable -> false
+        this.viewState.apply {
+            if (this.isDeleted){
+                return false
+            }
+
+            return when (viewRenderRule) {
+                ViewRenderRule.Default -> this@renderView.show
+                ViewRenderRule.AlwaysShow -> true
+                ViewRenderRule.Disable -> false
+            }
         }
     }
 

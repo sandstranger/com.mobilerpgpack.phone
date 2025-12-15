@@ -230,6 +230,7 @@
     <string name="use_standard_sdl_text_input">Use standard virtual SDL input for texts</string>
     <string name="cancel_download">Cancel download</string>
     <string name="selected_key_code">Selected key code</string>
+    <string name="select_key_code">Select key code</string>
     <string name="uknown">Unknown</string>
     <string name="reset_to_default">Reset to default</string>
     <string name="keys_editor">Key editor</string>
