@@ -537,13 +537,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
             onViewSelected(null)
             return
         }
-        val itemsColorToUse = MaterialTheme.colorScheme.onBackground
+        val itemsColorToUse = MaterialTheme.colorScheme.onSurfaceVariant
 
         AlertDialog(
-            containerColor = MaterialTheme.colorScheme.background,
-            textContentColor = MaterialTheme.colorScheme.onBackground,
-            iconContentColor = MaterialTheme.colorScheme.onBackground,
-            titleContentColor = MaterialTheme.colorScheme.onBackground,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
             onDismissRequest = { onViewSelected(null) },
             confirmButton = {
                 TextButton(onClick = { onViewSelected(null) }) {

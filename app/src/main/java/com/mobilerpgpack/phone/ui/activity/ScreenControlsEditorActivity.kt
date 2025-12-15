@@ -55,19 +55,17 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         }
 
         setContent {
-            MaterialTheme {
-                val isSystemInDarkTheme = isSystemInDarkTheme()
-                val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
-                    .collectAsState(initial = isSystemInDarkTheme)
+            val isSystemInDarkTheme = isSystemInDarkTheme()
+            val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
+                .collectAsState(initial = isSystemInDarkTheme)
 
-                Theme(darkTheme = useDarkTheme) {
-                    activeEngine.screenController.DrawScreenControls(
-                        inGame = false,
-                        activeEngine = selectedEngine,
-                        drawInSafeArea = displayInSafeArea, onBack = {
-                            this@ScreenControlsEditorActivity.finish()
-                        })
-                }
+            Theme(darkTheme = useDarkTheme) {
+                activeEngine.screenController.DrawScreenControls(
+                    inGame = false,
+                    activeEngine = selectedEngine,
+                    drawInSafeArea = displayInSafeArea, onBack = {
+                        this@ScreenControlsEditorActivity.finish()
+                    })
             }
         }
     }

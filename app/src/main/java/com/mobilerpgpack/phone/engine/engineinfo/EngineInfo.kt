@@ -282,19 +282,19 @@ abstract class EngineInfo(
 
                             if (!hideScreenControls) {
                                 controlsOverlayUI.setContent {
-                                    MaterialTheme {
-                                        val isSystemInDarkTheme = isSystemInDarkTheme()
-                                        val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
-                                            .collectAsState(initial = isSystemInDarkTheme)
+                                    val isSystemInDarkTheme = isSystemInDarkTheme()
+                                    val useDarkTheme by preferencesStorage.getUseDarkThemeValue(
+                                        isSystemInDarkTheme
+                                    ).collectAsState(initial = isSystemInDarkTheme)
 
-                                        Theme(darkTheme = useDarkTheme) {
-                                            screenController.DrawScreenControls(
-                                                inGame = true,
-                                                blockTouchCameraEvents = blockTouchCameraEvents,
-                                                activeEngine = engineType,
-                                                allowToEditControls = allowToEditScreenControlsInGame,
-                                                drawInSafeArea = displayInSafeArea)
-                                        }
+                                    Theme(darkTheme = useDarkTheme) {
+                                        screenController.DrawScreenControls(
+                                            inGame = true,
+                                            blockTouchCameraEvents = blockTouchCameraEvents,
+                                            activeEngine = engineType,
+                                            allowToEditControls = allowToEditScreenControlsInGame,
+                                            drawInSafeArea = displayInSafeArea
+                                        )
                                     }
                                 }
                             }
