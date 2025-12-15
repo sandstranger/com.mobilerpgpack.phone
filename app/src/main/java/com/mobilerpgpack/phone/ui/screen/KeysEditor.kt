@@ -73,6 +73,10 @@ fun KeysEditor(
                     Text(stringResource(R.string.close_text))
                 }
             },
+            containerColor = MaterialTheme.colorScheme.background,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+            iconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
             title = { Text(stringResource(R.string.select_button)) },
             text = {
                 LazyColumn(modifier = Modifier.fillMaxWidth(),
@@ -114,6 +118,10 @@ fun KeysEditor(
                     Text("Close")
                 }
             },
+            containerColor = MaterialTheme.colorScheme.background,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+            iconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
             title = { Text(stringResource(R.string.select_key_code)) },
             text = {
                 LazyColumn(modifier = Modifier.heightIn(max = 400.dp),
@@ -148,6 +156,10 @@ fun KeysEditor(
                 Text(stringResource(R.string.close_text))
             }
         },
+        containerColor = MaterialTheme.colorScheme.background,
+        textContentColor = MaterialTheme.colorScheme.onBackground,
+        iconContentColor = MaterialTheme.colorScheme.onBackground,
+        titleContentColor = MaterialTheme.colorScheme.onBackground,
         dismissButton = {
             TextButton(onClick = {
                 shouldReset = true

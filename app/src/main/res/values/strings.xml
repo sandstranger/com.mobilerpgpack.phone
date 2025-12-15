@@ -222,6 +222,7 @@
     <string name="close_controls_configuration">Back</string>
     <string name="select_button">Select button</string>
     <string name="close_text">Close</string>
+    <string name="use_as_toggle">Use as toggle</string>
     <string name="reset_all_resources">Reset all games resources</string>
     <string name="reset_all_resources_confirm_message">This will reset all games resources and will erase all saved data, like saved games.\nContinue?</string>
     <string name="yes_text">Yes</string>

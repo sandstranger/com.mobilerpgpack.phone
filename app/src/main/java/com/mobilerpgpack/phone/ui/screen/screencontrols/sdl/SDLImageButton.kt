@@ -31,7 +31,7 @@ abstract class SDLImageButton(
     private val alpha: Float = 0.65f,
     private val sdlKeyEvent: Int = 0,
     private val buttonResId: Int = NOT_EXISTING_RES,
-    private val useToggle: Boolean = false,
+    useToggle: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default) : IScreenControlsView {
 
@@ -49,14 +49,16 @@ abstract class SDLImageButton(
         sdlKeyEvent = sdlKeyEvent,
         alpha = alpha,
         defaultViewRenderRule = defaultViewRenderRule,
-        controlsType = controlsType)
+        controlsType = controlsType,
+        allowToUseViewAsToggle = true,
+        useViewAsToggleInitialState = useToggle)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         Image(
             painter = painterResource(id = viewState.buttonResId),
             contentDescription = id,
-            modifier = BuildModifier(isEditMode, inGame))
+            modifier = Modifier.interactiveControlModifier(isEditMode, inGame))
     }
 
     protected abstract fun onTouchDown(keyCode: Int)
@@ -64,8 +66,8 @@ abstract class SDLImageButton(
     protected abstract fun onTouchUp(keyCode: Int)
 
     @Composable
-    protected fun BuildModifier (isEditMode: Boolean, inGame: Boolean) : Modifier{
-        return if (!useToggle) Modifier
+    protected fun Modifier.interactiveControlModifier (isEditMode: Boolean, inGame: Boolean) : Modifier{
+        return if (!viewState.useViewAsToggle) this
             .fillMaxSize()
             .minimumInteractiveComponentSize()
             .pointerInput(!isEditMode && inGame) {
