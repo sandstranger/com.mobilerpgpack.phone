@@ -59,9 +59,11 @@ abstract class EngineInfo(
     private var controlsOverlayUI: View? = null
     private var layoutBinding : GameLayoutBinding? = null
 
+    protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
+
     protected open val preferencesStorage: PreferencesStorage by inject()
 
-    protected open val blockTouchCameraEvents get() = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
+    protected open val blockTouchCameraEvents : Boolean = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 
@@ -70,8 +72,6 @@ abstract class EngineInfo(
 
     protected lateinit var activity: ComponentActivity
         private set
-
-    protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
 
     protected val pathToRootUserFolder: String = get(
         named(
