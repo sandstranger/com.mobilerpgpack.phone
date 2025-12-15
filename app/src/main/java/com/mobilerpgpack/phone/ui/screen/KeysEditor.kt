@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,14 +14,20 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.getTextColor
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.allowToEditKeyEvent
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.keyCodeMap
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun KeysEditor(
@@ -30,6 +37,11 @@ fun KeysEditor(
     val modifier = Modifier
     val scope = rememberCoroutineScope()
     val buttonsToEdit = buttonStates.filter { it.allowToEditKeyEvent }
+    val preferencesStorage : PreferencesStorage = koinInject()
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
+        .collectAsState(initial = isSystemInDarkTheme)
+    val itemsColorToUse = getTextColor(useDarkTheme)
 
     LaunchedEffect(buttonsToEdit) {
         scope.launch {
@@ -87,7 +99,8 @@ fun KeysEditor(
                                 Image(
                                     painter = painterResource(id = button.viewState.buttonResId),
                                     contentDescription = button.viewState.id,
-                                    modifier = Modifier.size(32.dp)
+                                    modifier = Modifier.size(32.dp),
+                                    colorFilter = ColorFilter.tint(itemsColorToUse)
                                 )
                             }
                             Text(button.viewState.id)
@@ -106,7 +119,7 @@ fun KeysEditor(
                     Text("Close")
                 }
             },
-            title = { Text("Select Key Code") },
+            title = { Text(stringResource(R.string.select_key_code)) },
             text = {
                 LazyColumn(modifier = Modifier.heightIn(max = 400.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp))
@@ -117,9 +130,9 @@ fun KeysEditor(
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedKeyCode = pair.first
-                                    currentButton.value.viewState.sdlKeyCode = selectedKeyCode
-                                    scope.launch {
-                                        currentButton.value.viewState.save()
+                                    currentButton.value.viewState.apply {
+                                        sdlKeyCode = selectedKeyCode
+                                        save()
                                     }
                                     showKeyCodeDialog = false
                                 }) {
@@ -149,7 +162,7 @@ fun KeysEditor(
         },
         title = { Text(stringResource(R.string.keys_editor)) },
         text = {
-            Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(stringResource(R.string.select_button), style = MaterialTheme.typography.labelMedium)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -160,7 +173,8 @@ fun KeysEditor(
                         Image(
                             painter = painterResource(id = selectedButton.viewState.buttonResId),
                             contentDescription = selectedButton.viewState.id,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(32.dp),
+                            colorFilter = ColorFilter.tint(itemsColorToUse)
                         )
                     }
                     Text(selectedButton.viewState.id)
@@ -169,7 +183,7 @@ fun KeysEditor(
                 Text(stringResource(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium)
 
                 Text(modifier = Modifier.fillMaxWidth().clickable { showKeyCodeDialog = true },
-                    text = keyCodeMap[selectedKeyCode] ?: stringResource(R.string.uknown))
+                    text = keyCodeMap[selectedKeyCode] ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
             }
         }
     )

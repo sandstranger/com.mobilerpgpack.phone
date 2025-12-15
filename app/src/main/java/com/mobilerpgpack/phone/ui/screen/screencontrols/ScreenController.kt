@@ -42,6 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
@@ -73,8 +75,6 @@ import kotlin.math.roundToInt
 
 abstract class ScreenController : KoinComponent, IScreenController {
 
-    private val customViews : MutableList<IScreenControlsView> = mutableListOf()
-
     private val _activeViewsToDraw: MutableList<IScreenControlsView> = mutableListOf()
 
     protected val preferencesStorage : PreferencesStorage = get ()
@@ -92,17 +92,11 @@ abstract class ScreenController : KoinComponent, IScreenController {
         onBack: () -> Unit) {
 
         val controlsProvider : ControlsProvider = koinInject(named(activeEngine.name))
-        val views = controlsProvider.controlsToDraw
-
-        customViews.apply {
-            clear()
-            addAll(buildCustomViews(activeEngine))
-        }
 
         _activeViewsToDraw.apply {
             clear()
-            addAll(views)
-            addAll(customViews)
+            addAll(controlsProvider.controlsToDraw)
+            addAll(buildCustomViews(activeEngine))
         }
 
         val context = LocalContext.current
@@ -114,7 +108,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
-        var isSelectedViewCustomView by remember { mutableStateOf(false) }
         var selectedViewRenderRule by remember { mutableStateOf<ViewRenderRule?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
@@ -204,7 +197,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
             if (isEditMode) {
                 EditControls(
                     selectedButtonId,
-                    isSelectedViewCustomView,
                     selectedViewRenderRule,
                     inGame,
                     onAlphaChange = { delta ->
@@ -234,24 +226,21 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     onCustomViewSelected = { customView ->
                         customView.viewState.apply {
                             isDeleted = false
-                            isSelectedViewCustomView = isCustomView
                             save()
                         }
                     },
-                    onCustomViewDeleted = { viewIdToDelete ->
+                    onViewDeleted = { viewIdToDelete ->
                         viewsToDraw[viewIdToDelete]!!.viewState.apply {
-                            isDeleted = true
                             resetToDefaults()
+                            isDeleted = true
                             save()
                         }
                         selectedButtonId = null
                         selectedViewRenderRule = null
-                        isSelectedViewCustomView = false
                     },
                     onReset = {
                         selectedButtonId = null
                         selectedViewRenderRule = null
-                        isSelectedViewCustomView = false
                         coroutineScope.launch {
                             preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
                             viewsToDraw.values.forEach { view ->
@@ -271,7 +260,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     onBack = {
                         selectedButtonId = null
                         selectedViewRenderRule = null
-                        isSelectedViewCustomView = false
                         onBack()
                     },
                     modifier = Modifier.align(Alignment.Center)
@@ -300,7 +288,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 if (isEditMode) {
                                     selectedButtonId = id
                                     view.viewState.apply {
-                                        isSelectedViewCustomView = isCustomView
                                         selectedViewRenderRule = viewRenderRule
                                     }
 
@@ -431,14 +418,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
     @Composable
     private fun EditControls(
         selectedButtonId: String?,
-        isCustomViewSelected : Boolean,
         viewRenderRule: ViewRenderRule?,
         inGame: Boolean,
         onAlphaChange: (Float) -> Unit,
         onSizeChange: (Float) -> Unit,
         onRenderRuleChange : (ViewRenderRule) -> Unit,
         onCustomViewSelected : (selectedView : IScreenControlsView) -> Unit,
-        onCustomViewDeleted: (selectedButtonId : String) -> Unit,
+        onViewDeleted: (selectedButtonId : String) -> Unit,
         onReset: () -> Unit,
         onBack: () -> Unit,
         modifier: Modifier = Modifier
@@ -486,8 +472,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     Text(stringResource(R.string.add_custom_buttons))
                 }
 
-                if (selectedButtonId!=null && isCustomViewSelected){
-                    Button(onClick = { onCustomViewDeleted(selectedButtonId) }) {
+                if (selectedButtonId!=null){
+                    Button(onClick = { onViewDeleted(selectedButtonId) }) {
                         Text(stringResource(R.string.delete))
                     }
                 }
@@ -517,7 +503,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
     @Composable
     private fun DrawCustomButtonsEditor(onViewSelected: (selectedView: IScreenControlsView?) -> Unit) {
-        if (customViews.isEmpty()) {
+        val itemsToDraw = _activeViewsToDraw.filter { it.viewState.isDeleted }.toList()
+        if (itemsToDraw.isEmpty()) {
             onViewSelected(null)
             return
         }
@@ -525,7 +512,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
             .collectAsState(initial = isSystemInDarkTheme)
         val itemsColorToUse = getTextColor(useDarkTheme)
-        val itemsToDraw = customViews.filter { it.viewState.isDeleted }.toList()
 
         AlertDialog(
             onDismissRequest = { onViewSelected(null) },
@@ -547,12 +533,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            CustomSDLButton.DrawView(
-                                Modifier
-                                    .width(40.dp)
-                                    .height(40.dp), itemsColorToUse,
-                                view.viewState.id
-                            )
+                            Box(modifier = Modifier.size(40.dp)
+                                    .background(
+                                        Color.Transparent,
+                                        RoundedCornerShape(8.dp)).graphicsLayer {
+                                    colorFilter = ColorFilter.tint(itemsColorToUse)
+                                }, contentAlignment = Alignment.Center){
+                                        view.DrawView(isEditMode = false, false, 40.dp)
+                            }
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
                                 text = view.viewState.id,
