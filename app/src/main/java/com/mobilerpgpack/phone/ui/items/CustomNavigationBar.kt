@@ -11,7 +11,7 @@ import androidx.core.view.WindowCompat
 @Composable
 fun SetupNavigationBar(useDarkTheme: Boolean) {
     val activity = LocalActivity.current!!
-    val colorCodeToUse = MaterialTheme.colorScheme.background.toArgb()
+    val colorCodeToUse = MaterialTheme.colorScheme.surface.toArgb()
 
     SideEffect {
         val window = activity.window
