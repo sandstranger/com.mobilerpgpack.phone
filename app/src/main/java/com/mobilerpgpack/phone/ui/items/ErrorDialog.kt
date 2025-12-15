@@ -12,10 +12,10 @@ import com.mobilerpgpack.phone.R
 fun ShowErrorDialog (message : String,showDialog : Boolean, dismissAction : () -> Unit){
     if (showDialog) {
         AlertDialog(
-            containerColor = MaterialTheme.colorScheme.background,
-            textContentColor = MaterialTheme.colorScheme.onBackground,
-            iconContentColor = MaterialTheme.colorScheme.onBackground,
-            titleContentColor = MaterialTheme.colorScheme.onBackground,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
             title = { Text(stringResource(R.string.error)) },
             text = { Text(message) },
             confirmButton = {

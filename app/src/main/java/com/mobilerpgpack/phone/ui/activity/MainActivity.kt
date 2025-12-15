@@ -61,63 +61,62 @@ class MainActivity : ComponentActivity(), KoinComponent {
             settingsScreen.route else permissionScreen.route
 
         setContent {
-            MaterialTheme {
-                val navController = rememberNavController()
-                val isSystemInDarkTheme = isSystemInDarkTheme()
-                val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
-                    .collectAsState(initial = isSystemInDarkTheme)
+            val navController = rememberNavController()
+            val isSystemInDarkTheme = isSystemInDarkTheme()
+            val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
+                .collectAsState(initial = isSystemInDarkTheme)
 
-                Theme(darkTheme = useDarkTheme) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primary)
-                            .systemBarsPadding()
-                    ) {
-                        TopAppBar(
-                            title = {
-                                Text(
-                                    text = stringResource(R.string.app_name),
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                            },
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.primary
+            Theme(darkTheme = useDarkTheme) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.primary)
+                        .systemBarsPadding()
+                ) {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text = stringResource(R.string.app_name),
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.primary
                         )
-                        Column(modifier = Modifier.fillMaxSize()
+                    )
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        NavHost(
+                            navController = navController,
+                            startDestination = startScreen
                         ) {
-                            NavHost(
-                                navController = navController,
-                                startDestination = startScreen
-                            ) {
-                                composable(permissionScreen.route)
-                                {
-                                    permissionScreen.DrawScreen(navController) {
-                                        navController.navigate(settingsScreen.route) {
-                                            popUpTo(0) {
-                                                inclusive = true
-                                                saveState = false
-                                            }
-                                            launchSingleTop = true
+                            composable(permissionScreen.route)
+                            {
+                                permissionScreen.DrawScreen(navController) {
+                                    navController.navigate(settingsScreen.route) {
+                                        popUpTo(0) {
+                                            inclusive = true
+                                            saveState = false
                                         }
+                                        launchSingleTop = true
                                     }
                                 }
+                            }
 
-                                composable(settingsScreen.route) {
-                                    settingsScreen.DrawScreen(navController)
-                                }
+                            composable(settingsScreen.route) {
+                                settingsScreen.DrawScreen(navController)
+                            }
 
-                                psyDoomSettingsScreens.forEach {
-                                    val screen: ComposeScreen = it
-                                    composable(screen.route) {
-                                        screen.DrawScreen(navController)
-                                    }
+                            psyDoomSettingsScreens.forEach {
+                                val screen: ComposeScreen = it
+                                composable(screen.route) {
+                                    screen.DrawScreen(navController)
                                 }
+                            }
 
-                                composable(moreUZDoomSettingsScreen.route) {
-                                    moreUZDoomSettingsScreen.DrawScreen(navController)
-                                }
+                            composable(moreUZDoomSettingsScreen.route) {
+                                moreUZDoomSettingsScreen.DrawScreen(navController)
                             }
                         }
                     }
