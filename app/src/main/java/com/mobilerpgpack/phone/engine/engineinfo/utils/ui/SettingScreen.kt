@@ -17,12 +17,7 @@ abstract class SettingScreen (screenName : String) : ComposeScreen(screenName){
     override val drawBackButton = true
 
     @Composable
-    override fun DrawScreenContent(
-        innerPadding: PaddingValues,
-        navController: NavHostController,
-        textColor: Color,
-        isSystemInDarkTheme: Boolean
-    ) {
+    override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val scrollState = rememberScrollState()
 
         Column(

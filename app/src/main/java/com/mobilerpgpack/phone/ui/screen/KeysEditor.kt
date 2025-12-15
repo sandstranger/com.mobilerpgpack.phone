@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
-import com.mobilerpgpack.phone.ui.getTextColor
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.allowToEditKeyEvent
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -37,11 +36,7 @@ fun KeysEditor(
     val modifier = Modifier
     val scope = rememberCoroutineScope()
     val buttonsToEdit = buttonStates.filter { it.allowToEditKeyEvent }
-    val preferencesStorage : PreferencesStorage = koinInject()
-    val isSystemInDarkTheme = isSystemInDarkTheme()
-    val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
-        .collectAsState(initial = isSystemInDarkTheme)
-    val itemsColorToUse = getTextColor(useDarkTheme)
+    val itemsColorToUse = MaterialTheme.colorScheme.onBackground
 
     LaunchedEffect(buttonsToEdit) {
         scope.launch {
