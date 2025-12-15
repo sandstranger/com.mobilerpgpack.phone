@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,12 +38,7 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
     }
 
     @Composable
-    override fun DrawScreenContent(
-        innerPadding: PaddingValues,
-        navController: NavHostController,
-        textColor: Color,
-        isSystemInDarkTheme: Boolean
-    ) {
+    override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val activity = LocalActivity.current!!
 
         Column(
@@ -69,8 +63,7 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
                 }
             }
 
-            Text(text = stringResource(R.string.access_to_all_files), textAlign = TextAlign.Center,
-                color = textColor, fontSize = 24.sp)
+            Text(text = stringResource(R.string.access_to_all_files), textAlign = TextAlign.Center, fontSize = 24.sp)
             Button(
                 onClick = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

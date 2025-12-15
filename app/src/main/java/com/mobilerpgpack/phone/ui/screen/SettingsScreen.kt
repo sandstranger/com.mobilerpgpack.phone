@@ -57,12 +57,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
     override val drawFloatingActionButton: Boolean = !context.isTelevision
 
     @Composable
-    override fun DrawScreenContent(
-        innerPadding: PaddingValues,
-        navController: NavHostController,
-        textColor: Color,
-        isSystemInDarkTheme: Boolean
-    ) {
+    override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val activity = LocalActivity.current!!
         val scope = rememberCoroutineScope()
         val activeEngineString by preferencesStorage.activeEngineAsFlowString

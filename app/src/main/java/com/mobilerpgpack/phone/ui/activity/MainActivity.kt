@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.activity
 
-import CustomTopBar
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,7 +11,11 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -24,8 +27,6 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.ui.Theme
-import com.mobilerpgpack.phone.ui.getBackgroundColor
-import com.mobilerpgpack.phone.ui.getTopBarColor
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
@@ -49,6 +50,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
         buildScreens()
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     private fun buildScreens() {
         val settingsScreen: SettingsScreen by inject()
         val permissionScreen: PermissionScreen by inject()
@@ -64,21 +66,26 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 val isSystemInDarkTheme = isSystemInDarkTheme()
                 val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
                     .collectAsState(initial = isSystemInDarkTheme)
-                val topBarColor = getTopBarColor(useDarkTheme)
-                val backgroundColor = getBackgroundColor(useDarkTheme)
 
                 Theme(darkTheme = useDarkTheme) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(topBarColor)
+                            .background(MaterialTheme.colorScheme.primary)
                             .systemBarsPadding()
                     ) {
-                        CustomTopBar(title = stringResource(R.string.app_name), useDarkTheme)
-                        Column(
-                            modifier = Modifier
-                                .background(backgroundColor)
-                                .fillMaxSize()
+                        TopAppBar(
+                            title = {
+                                Text(
+                                    text = stringResource(R.string.app_name),
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            )
+                        )
+                        Column(modifier = Modifier.fillMaxSize()
                         ) {
                             NavHost(
                                 navController = navController,
