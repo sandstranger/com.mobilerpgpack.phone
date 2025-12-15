@@ -35,7 +35,7 @@ class SDL2ScreenController : SDLScreenController() {
             engineInfo.mouseButtonsEventsCanBeInvoked)
     }
 
-    override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int) =
+    override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int,controlsProvider: ControlsProvider) =
         CustomSDL2Button(id, engineTypes,offsetXPercent = 0.55f, offsetYPercent = 0.03f,
             sizePercent = 0.05f, sdlKeyEvent = keyCode, controlsType = controlsProvider.activeControlsType)
 

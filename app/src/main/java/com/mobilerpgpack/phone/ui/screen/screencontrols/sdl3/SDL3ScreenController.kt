@@ -2,8 +2,8 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.CustomSDL2Button
 import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 import org.libsdl3.app.SDLSurface.getNormalizedX
@@ -37,7 +37,7 @@ class SDL3ScreenController : SDLScreenController() {
         SDLSurface.getScaleGestureDetector().onTouchEvent(event)
     }
 
-    override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int) =
+    override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int,controlsProvider: ControlsProvider) =
         CustomSDL3Button(id, engineTypes,offsetXPercent = 0.55f, offsetYPercent = 0.03f,
             sizePercent = 0.05f, sdlKeyEvent = keyCode, controlsType = controlsProvider.activeControlsType)
 

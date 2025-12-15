@@ -41,9 +41,6 @@ abstract class SDLScreenController : ScreenController() {
 
     protected abstract val viewHeight : Int
 
-    protected val controlsProvider get() =
-        get<ControlsProvider>(named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
-
     protected val engineInfo by lazy {
         get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
     }
@@ -146,18 +143,21 @@ abstract class SDLScreenController : ScreenController() {
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
 
-    protected abstract fun buildCustomView (id : String, engineTypes: EngineTypes, keyCode : Int) : IScreenControlsView
+    protected abstract fun buildCustomView (id : String, engineTypes: EngineTypes,
+                                            keyCode : Int, controlsProvider: ControlsProvider) : IScreenControlsView
 
     final override fun buildCustomViews(engineTypes: EngineTypes): Collection<IScreenControlsView> {
+        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineAsFlowString
+            .getBlockingValue()))
         return customViews.getOrPut(engineTypes) { mutableMapOf() }.run {
-            getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes)}
+            getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes, controlsProvider)}
         }
     }
 
-    private fun buildCustomViewsCollection (engineTypes: EngineTypes) : Collection<IScreenControlsView>{
+    private fun buildCustomViewsCollection (engineTypes: EngineTypes, controlsProvider: ControlsProvider) : Collection<IScreenControlsView>{
         return mutableListOf<IScreenControlsView>().apply {
             keyCodeMap.forEach {
-                this.add(buildCustomView(it.value, engineTypes, it.key))
+                this.add(buildCustomView(it.value, engineTypes, it.key, controlsProvider))
             }
         }
     }
