@@ -24,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -38,7 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
@@ -116,15 +114,15 @@ abstract class ScreenController : KoinComponent, IScreenController {
         var screenWidthPx by remember { mutableFloatStateOf(0f) }
         var screenHeightPx by remember { mutableFloatStateOf(0f) }
 
-        fun clampButton(state: ViewState) {
-            if (!clampButtonsFlow) {
-                return
+        fun clampView(state: ViewState, clampForced : Boolean = false) {
+            if (clampButtonsFlow || clampForced) {
+                state.apply {
+                    offsetXPercent = offsetXPercent.coerceIn(0f, 1f - state.sizePercent)
+                    val buttonHeightPx = sizePercent * screenWidthPx
+                    val buttonHeightPercent = buttonHeightPx / screenHeightPx
+                    offsetYPercent = offsetYPercent.coerceIn(0f, 1f - buttonHeightPercent)
+                }
             }
-
-            state.offsetXPercent = state.offsetXPercent.coerceIn(0f, 1f - state.sizePercent)
-            val buttonHeightPx = state.sizePercent * screenWidthPx
-            val buttonHeightPercent = buttonHeightPx / screenHeightPx
-            state.offsetYPercent = state.offsetYPercent.coerceIn(0f, 1f - buttonHeightPercent)
         }
 
         suspend fun preloadButtons() {
@@ -133,7 +131,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 view.viewState.apply {
                     load()
                     if (!this.isDeleted){
-                        clampButton(this)
+                        clampView(this)
                         save()
                     }
                 }
@@ -225,6 +223,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     onCustomViewSelected = { customView ->
                         customView.viewState.apply {
                             isDeleted = false
+                            clampView(this, clampForced = true)
                             save()
                         }
                     },
@@ -247,7 +246,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                     val wasDeletedBeforeReset = isDeleted
                                     resetToDefaults()
                                     if (!isDeleted) {
-                                        clampButton(this)
+                                        clampView(this)
                                     }
                                     if (!wasDeletedBeforeReset || !isDeleted){
                                          save()
@@ -497,7 +496,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { showCustomViewsEditor = true }) {
-                        Text(stringResource(R.string.add_custom_buttons))
+                        Text(stringResource(R.string.add_controls_items))
                     }
 
                     if (selectedButtonId != null) {

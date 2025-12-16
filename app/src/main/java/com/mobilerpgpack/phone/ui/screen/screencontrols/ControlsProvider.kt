@@ -1,5 +1,8 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getBlockingValue
@@ -13,8 +16,8 @@ class ControlsProvider (engineType: EngineTypes,
     private val activeControlTypePrefsKey = "${engineType.name.lowercase()}_active_controls_type"
     private val blockTouchCameraEventsPrefsKey = "${engineType.name.lowercase()}_block_touch_camera_events"
 
-    private var  _blockTouchCameraEventsWhenOnScreenStickActive : Boolean? = null
-    private var _activeControlsType : ControlsType? = null
+    private var  _blockTouchCameraEventsWhenOnScreenStickActive by mutableStateOf<Boolean?>(null)
+    private var _activeControlsType by mutableStateOf<ControlsType?>(null)
 
     val activeControlsTypeAsFlow = preferencesStorage.getEnumValue(activeControlTypePrefsKey,
         ControlsType::class.java, ControlsType.Default)
