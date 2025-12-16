@@ -154,7 +154,7 @@ abstract class SDLScreenController : ScreenController() {
     private fun buildCustomViewsCollection (engineTypes: EngineTypes, controlsProvider: ControlsProvider) : Collection<IScreenControlsView>{
         return mutableListOf<IScreenControlsView>().apply {
             keyCodeMap.forEach {
-                this.add(buildCustomView(it.value, engineTypes, it.key, controlsProvider))
+                this.add(buildCustomView(it.value.keyCodeName, engineTypes, it.value.keyCode, controlsProvider))
             }
         }
     }
