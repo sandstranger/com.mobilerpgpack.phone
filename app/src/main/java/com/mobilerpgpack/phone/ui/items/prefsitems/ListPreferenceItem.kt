@@ -22,6 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.mobilerpgpack.phone.ui.getOnBackgroundColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
+import com.mobilerpgpack.phone.ui.getRadioButtonsColors
+import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -32,6 +37,11 @@ fun ListPreferenceItem(title: String,
     var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
     var activeValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
     val entriesToDraw by rememberSaveable { mutableStateOf(entries.toList()) }
+    val onSurfaceVariantColor = getOnSurfaceVariantColor()
+    val onSurfaceColor = getOnSurfaceColor()
+    val surfaceContainerHighColor = getSurfaceContainerHighColor()
+    val onBackgroundColor = getOnBackgroundColor()
+    val radioButtonsColors = getRadioButtonsColors()
 
     Row(
         modifier = Modifier
@@ -41,18 +51,18 @@ fun ListPreferenceItem(title: String,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(title, Modifier.weight(0.4f, true))
+        Text(title, Modifier.weight(0.4f, true), color = onBackgroundColor)
         Text(activeValue, modifier = Modifier.weight(0.6f).fillMaxWidth(),
             style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Right)
+            textAlign = TextAlign.Right, color = onBackgroundColor)
     }
 
     if (showValuesDialog){
         AlertDialog(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            containerColor = surfaceContainerHighColor,
+            textContentColor = onSurfaceVariantColor,
+            iconContentColor = onSurfaceVariantColor,
+            titleContentColor = onSurfaceColor,
             onDismissRequest = { showValuesDialog = false },
             title = { Text(title) },
             text = {
@@ -71,8 +81,9 @@ fun ListPreferenceItem(title: String,
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            RadioButton(selected = activeValue == stringValue, onClick = null)
-                            Text(stringValue)
+                            RadioButton(selected = activeValue == stringValue, onClick = null,
+                                colors = radioButtonsColors)
+                            Text(stringValue, color = onSurfaceVariantColor)
                         }
                     }
                 }

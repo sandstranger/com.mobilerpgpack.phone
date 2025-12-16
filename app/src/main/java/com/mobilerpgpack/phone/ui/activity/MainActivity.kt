@@ -27,6 +27,8 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.ui.Theme
+import com.mobilerpgpack.phone.ui.getOnPrimaryColor
+import com.mobilerpgpack.phone.ui.getPrimaryColor
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
@@ -66,7 +68,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
                 .collectAsState(initial = isSystemInDarkTheme)
 
-            Theme(darkTheme = useDarkTheme) {
+            Theme {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -77,11 +79,11 @@ class MainActivity : ComponentActivity(), KoinComponent {
                         title = {
                             Text(
                                 text = stringResource(R.string.app_name),
-                                color = MaterialTheme.colorScheme.onPrimary
+                                color = getOnPrimaryColor()
                             )
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = MaterialTheme.colorScheme.primary
+                            containerColor = getPrimaryColor()
                         )
                     )
                     Column(
