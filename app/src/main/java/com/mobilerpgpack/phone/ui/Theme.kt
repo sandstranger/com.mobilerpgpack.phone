@@ -148,7 +148,6 @@ fun getDividerColor () = if (useDarkTheme()) Color.White.copy(alpha = 0.3f) else
 @Composable
 fun getFabIconContainerColor() = if (useDarkTheme()) md_light_primary else md_dark_primary
 
-
 @Composable
 fun getTextFieldColors() :  TextFieldColors{
     val useDarkTheme = useDarkTheme()
