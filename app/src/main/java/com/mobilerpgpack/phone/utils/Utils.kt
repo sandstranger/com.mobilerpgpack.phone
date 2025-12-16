@@ -18,6 +18,8 @@ import java.io.InputStream
 import java.lang.reflect.Field
 import java.security.MessageDigest
 
+data class KeyCodeInfo (val keyCodeName : String, val keyCode : Int)
+
 private const val KEYCODE_PREFIX = "KEYCODE_"
 private const val UNKNOWN_KEYCODE = 0
 
@@ -26,12 +28,14 @@ private val translateKeycodeNativeDelegate by lazy {
     Function.getFunction(SDL2_NATIVE_LIB_NAME, "TranslateKeycode")
 }
 
-val keyCodeMap: Map<Int, String> by lazy {
+val keyCodeMap : Map<Int, KeyCodeInfo> by lazy {
     KeyEvent::class.java.fields
         .filter { it.name.startsWith(KEYCODE_PREFIX) && isValidKeyCode(it)  }
         .sortedBy { it.name }
         .associate { field ->
-            field.getInt(null) to field.name.replace(KEYCODE_PREFIX, "")
+            val keyCode = field.getInt(null)
+            return@associate keyCode to KeyCodeInfo(field.name.replace(KEYCODE_PREFIX, ""),
+            keyCode)
         }
 }
 
