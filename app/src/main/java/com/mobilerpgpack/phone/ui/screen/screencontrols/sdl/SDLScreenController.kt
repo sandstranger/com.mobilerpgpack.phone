@@ -20,32 +20,19 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.CustomSDL2Button
 import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
-import com.sun.jna.Function
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
 abstract class SDLScreenController : ScreenController() {
 
-    private val keyCodesArray = arrayOfNulls<Any?>(1)
-
-    private val translateKeycodeNativeDelegate by lazy {
-        Function.getFunction(sdlNativeLibName, "TranslateKeycode")
-    }
-
     private val customViews : MutableMap<EngineTypes, MutableMap<ControlsType,Collection<IScreenControlsView>>> = mutableMapOf()
-
-    protected abstract val sdlNativeLibName : String
 
     protected abstract val viewWidth : Int
 
@@ -167,17 +154,12 @@ abstract class SDLScreenController : ScreenController() {
     private fun buildCustomViewsCollection (engineTypes: EngineTypes, controlsProvider: ControlsProvider) : Collection<IScreenControlsView>{
         return mutableListOf<IScreenControlsView>().apply {
             keyCodeMap.forEach {
-                keyCodesArray[0] = it.key
-                val keyCodeResult = translateKeycodeNativeDelegate.invokeInt(keyCodesArray)
-                if (keyCodeResult != UNKNOWN_KEYCODE){
-                    this.add(buildCustomView(it.value, engineTypes, it.key, controlsProvider))
-                }
+                this.add(buildCustomView(it.value, engineTypes, it.key, controlsProvider))
             }
         }
     }
 
     private companion object{
-        private const val UNKNOWN_KEYCODE = 0
         private const val UNKNOWN_POINTER_ID = Int.MIN_VALUE
 
         private val defaultTouchDeviceId : Int by lazy {

@@ -6,6 +6,8 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
+import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
+import com.sun.jna.Function
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import org.koin.core.qualifier.named
@@ -13,13 +15,20 @@ import org.koin.java.KoinJavaComponent.get
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
+import java.lang.reflect.Field
 import java.security.MessageDigest
 
 private const val KEYCODE_PREFIX = "KEYCODE_"
+private const val UNKNOWN_KEYCODE = 0
+
+private val keyCodesArray = arrayOfNulls<Any?>(1)
+private val translateKeycodeNativeDelegate by lazy {
+    Function.getFunction(SDL2_NATIVE_LIB_NAME, "TranslateKeycode")
+}
 
 val keyCodeMap: Map<Int, String> by lazy {
     KeyEvent::class.java.fields
-        .filter { it.name.startsWith(KEYCODE_PREFIX) }
+        .filter { it.name.startsWith(KEYCODE_PREFIX) && keyCodeCanBeUsed(it)  }
         .sortedBy { it.name }
         .associate { field ->
             field.getInt(null) to field.name.replace(KEYCODE_PREFIX, "")
@@ -71,4 +80,9 @@ fun computeSHA256(inputStream: InputStream): ByteArray {
         digest.update(buffer, 0, bytesRead)
     }
     return digest.digest()
+}
+
+private fun keyCodeCanBeUsed (keyCodeField : Field) : Boolean{
+    keyCodesArray[0] = keyCodeField.getInt(null)
+    return translateKeycodeNativeDelegate.invokeInt(keyCodesArray) != UNKNOWN_KEYCODE
 }

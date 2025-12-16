@@ -9,8 +9,6 @@ import org.libsdl.app.SDLSurface
 
 class SDL2ScreenController : SDLScreenController() {
 
-    override val sdlNativeLibName get() = SDL2_NATIVE_LIB_NAME
-
     override val viewWidth: Int get() = SDLSurface.fixedWidth
 
     override val viewHeight: Int get() = SDLSurface.fixedHeight
