@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
-import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
@@ -9,7 +8,7 @@ import org.libsdl.app.SDLActivity.onNativeKeyDown
 import org.libsdl.app.SDLActivity.onNativeKeyUp
 
 class CustomSDL2Button(
-    private val id: String,
+    id: String,
     engineType: EngineTypes,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,
@@ -27,10 +26,7 @@ class CustomSDL2Button(
         show = !isQuickPanel
     }
 
-    override fun onTouchDown(keyCode: Int) {
-        Log.d("CALLED", keyCode.toString())
-        onNativeKeyDown(keyCode)
-    }
+    override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 
     override fun onTouchUp(keyCode: Int) = onNativeKeyUp(keyCode)
 }
