@@ -63,7 +63,7 @@ abstract class EngineInfo(
 
     protected open val preferencesStorage: PreferencesStorage by inject()
 
-    protected open val blockTouchCameraEvents : Boolean = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
+    protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 
