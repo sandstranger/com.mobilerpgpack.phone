@@ -26,9 +26,9 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.java.KoinJavaComponent.get
 
 private val preferencesStorage : PreferencesStorage = get(PreferencesStorage::class.java)
+private val useDarkThemeFlow = preferencesStorage.getUseDarkThemeValue(false)
 
 private val md_light_primary = Color(0xFF6750A4)
-
 private val md_light_background = Color.White
 private val md_light_onBackground = Color.Black
 private val md_light_onPrimary = Color.White
@@ -242,18 +242,12 @@ fun getCheckBoxColors() : CheckboxColors{
 
 @Composable
 fun Theme(content: @Composable () -> Unit) {
-    val darkTheme = useDarkTheme()
-    val colorScheme = when {
-        darkTheme -> darkColorScheme
-        else -> lightColorScheme
-    }
+    val colorScheme = if(useDarkTheme()) darkColorScheme else lightColorScheme
     MaterialTheme(colorScheme = colorScheme, content = content)
 }
 
 @Composable
 private fun useDarkTheme () : Boolean {
-    val isSystemInDarkTheme = isSystemInDarkTheme()
-    val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
-        .collectAsState(initial = isSystemInDarkTheme)
+    val useDarkTheme by useDarkThemeFlow.collectAsState(initial = false)
     return useDarkTheme
 }
