@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
     private val preferencesStorage = get<PreferencesStorage>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        updateTheme()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         buildScreens()
@@ -125,16 +124,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
                     SetupNavigationBar(useDarkTheme)
                 }
             }
-        }
-    }
-
-    private fun updateTheme() {
-        var useDarkTheme = false
-        runBlocking {
-            useDarkTheme = preferencesStorage.getUseDarkThemeValue().first()
-        }
-        if (useDarkTheme) {
-            setTheme(R.style.AppThemeDark)
         }
     }
 }
