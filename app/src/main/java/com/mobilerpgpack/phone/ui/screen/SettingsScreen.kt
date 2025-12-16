@@ -31,9 +31,12 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
+import com.mobilerpgpack.phone.ui.getButtonsColors
+import com.mobilerpgpack.phone.ui.getPrimaryColor
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
 import com.mobilerpgpack.phone.ui.items.SwitchItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
@@ -101,9 +104,11 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             Button(
                 onClick = { viewModel.onStartGameClicked(activeEngine, activity) },
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(), colors = getButtonsColors()
             ) {
-                Text(stringResource(R.string.start_game), textAlign = TextAlign.Center, fontSize = 22.sp)
+                Text(stringResource(R.string.start_game),
+                    textAlign = TextAlign.Center, fontSize = 22.sp, color = getPrimaryColor()
+                )
             }
 
             DrawAllSettings( innerPadding,scope, activeEngine,navController, viewModel)
@@ -142,14 +147,14 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.setActiveEngineValue(newValue)
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
         DrawResetResourcesDialog(viewModel)
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         val engineInfo : IEngineUIController = koinInject(named(activeEngine.toString()))
         engineInfo.DrawSettings(navController)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -190,24 +195,24 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.getUseDarkThemeValue( isSystemInDarkTheme()),
             preferencesStorage.useDarkThemePrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.display_in_safe_area),
             preferencesStorage.enableDisplayInSafeArea,
             preferencesStorage.displayInSafeAreaPrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextPreferenceItem(stringResource(R.string.custom_aspect_ratio), customAspectRatio,
             preferencesStorage.customAspectRatioPrefsKey.name, stringResource(R.string.custom_aspect_ratio_hint))
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextPreferenceItem(stringResource(R.string.custom_resolution),
             customScreenResolution,preferencesStorage.customScreenResolutionPrefsKey.name, stringResource(R.string.custom_resolution_hint))
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -217,16 +222,16 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawTitleText(stringResource(R.string.user_interface_settings))
         DrawEditScreenControlsSettings()
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(stringResource(R.string.use_standard_sdl_text_input),
             useStandardSDLTextInput,
             preferencesStorage.useStandardSDLTextInputPrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawMouseCustomCursorSettings()
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -245,47 +250,47 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 controlsProvider.activeControlsTypeAsFlow){
                 controlsProvider.activeControlsType = it
             }
-            HorizontalDivider()
+            DrawHorizontalDivider()
 
             SwitchItem(stringResource(R.string.block_touch_camera_events),
                 controlsProvider.blockTouchCameraEventsWhenOnScreenStickActiveAsFlow){
                 controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive = it
             }
-            HorizontalDivider()
+            DrawHorizontalDivider()
         }
 
         PreferenceItem(stringResource(R.string.keys_editor)) {
             drawKeysEditor = true
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         PreferenceItem(stringResource(R.string.configure_screen_controls)) {
             ScreenControlsEditorActivity.editControls( activity,activeEngine)
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.allow_to_edit_controls_in_game),
             preferencesStorage.editCustomScreenControlsInGame,
             preferencesStorage.editCustomScreenControlsInGamePrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.hide_custom_screen_controls),
             preferencesStorage.hideScreenControls,
             preferencesStorage.hideScreenControlsPrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.controls_autohing),
             preferencesStorage.autoHideScreenControls,
             preferencesStorage.enableControlsAutoHiding.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextPreferenceItem(
             stringResource(R.string.custom_keyboard_transparency),
@@ -309,12 +314,12 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.showCustomMouseCursor,
             preferencesStorage.showCustomMouseCursorPrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextPreferenceItem(stringResource(R.string.custom_mouse_cursor_horizontal_offset),
             preferencesStorage.offsetXMouse, preferencesStorage.OFFSET_X_MOUSE.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextPreferenceItem(stringResource(R.string.custom_mouse_cursor_vertical_offset),
             preferencesStorage.offsetYMouse, preferencesStorage.OFFSET_Y_MOUSE.name)

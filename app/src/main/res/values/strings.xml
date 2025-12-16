@@ -33,8 +33,8 @@
     <string name="custom_aspect_ratio">Custom screen aspect ratio</string>
     <string name="custom_aspect_ratio_hint">16x9</string>
     <string name="show_custom_mouse_cursor">Show custom mouse cursor. (Does not work in Doom 1 RPG)</string>
-    <string name="custom_mouse_cursor_horizontal_offset">Custom mouse cursor horizontal offset. (Useful for custom resolutions)</string>
-    <string name="custom_mouse_cursor_vertical_offset">Custom mouse cursor vertical offset. (Useful for custom resolutions)</string>
+    <string name="custom_mouse_cursor_horizontal_offset">Mouse cursor horizontal offset</string>
+    <string name="custom_mouse_cursor_vertical_offset">Mouse cursor vertical offset</string>
     <string name="allow_to_edit_controls_in_game">Enable in-game control editing</string>
     <string name="active_engine">Active engine</string>
     <string name="use_custom_file_picker">Use custom file picker (for Android TV)</string>
@@ -211,7 +211,7 @@
     <string name="choose_file_request">Select ZIP or IPA file for engine</string>
     <string name="path_to_log">Log file path</string>
     <string name="choose_directory">Select directory</string>
-    <string name="custom_resolution">Custom screen resolution (overrides “Custom screen aspect ratio”)</string>
+    <string name="custom_resolution">Custom screen resolution</string>
     <string name="custom_resolution_hint">1920x1080</string>
     <string name="dark_theme">Enable dark theme for launcher</string>
     <string name="increase_controls_size">Size+</string>

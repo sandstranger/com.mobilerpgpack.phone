@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +32,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.getOnSurfaceColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
+import com.mobilerpgpack.phone.ui.getPrimaryColor
+import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
+import com.mobilerpgpack.phone.ui.getTextButtonsColors
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.allowToEditKeyEvent
 import com.mobilerpgpack.phone.utils.keyCodeMap
@@ -46,7 +50,10 @@ fun KeysEditor(
     val modifier = Modifier
     val scope = rememberCoroutineScope()
     val buttonsToEdit = buttonStates.filter { it.allowToEditKeyEvent }
-    val itemsColorToUse = MaterialTheme.colorScheme.onSurfaceVariant
+    val onSurfaceVariantColor = getOnSurfaceVariantColor()
+    val onSurfaceColor = getOnSurfaceColor()
+    val primaryColor = getPrimaryColor()
+    val surfaceContainerHighColor = getSurfaceContainerHighColor()
 
     LaunchedEffect(buttonsToEdit) {
         scope.launch {
@@ -83,11 +90,11 @@ fun KeysEditor(
                     Text(stringResource(R.string.close_text))
                 }
             },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            title = { Text(stringResource(R.string.select_button)) },
+            containerColor = surfaceContainerHighColor,
+            textContentColor = onSurfaceVariantColor,
+            iconContentColor = onSurfaceVariantColor,
+            titleContentColor = onSurfaceColor,
+            title = { Text(stringResource(R.string.select_button), color = onSurfaceColor) },
             text = {
                 LazyColumn(modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp))
@@ -109,10 +116,10 @@ fun KeysEditor(
                                     painter = painterResource(id = button.viewState.buttonResId),
                                     contentDescription = button.viewState.id,
                                     modifier = Modifier.size(32.dp),
-                                    colorFilter = ColorFilter.tint(itemsColorToUse)
+                                    colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                                 )
                             }
-                            Text(button.viewState.id)
+                            Text(button.viewState.id, color = onSurfaceVariantColor)
                         }
                     }
                 }
@@ -124,15 +131,15 @@ fun KeysEditor(
         AlertDialog(
             onDismissRequest = { showKeyCodeDialog = false },
             confirmButton = {
-                TextButton(onClick = { showKeyCodeDialog = false }) {
-                    Text("Close")
+                TextButton(onClick = { showKeyCodeDialog = false }, colors = getTextButtonsColors()) {
+                    Text(stringResource(R.string.close_text), color = primaryColor)
                 }
             },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            title = { Text(stringResource(R.string.select_key_code)) },
+            containerColor = surfaceContainerHighColor,
+            textContentColor = onSurfaceVariantColor,
+            iconContentColor = onSurfaceVariantColor,
+            titleContentColor = onSurfaceColor,
+            title = { Text(stringResource(R.string.select_key_code), color = onSurfaceColor) },
             text = {
                 LazyColumn(modifier = Modifier.heightIn(max = 400.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp))
@@ -149,7 +156,7 @@ fun KeysEditor(
                                     }
                                     showKeyCodeDialog = false
                                 }) {
-                            Text(pair.second)
+                            Text(pair.second, color = onSurfaceVariantColor)
                         }
                      }
                 }
@@ -160,27 +167,23 @@ fun KeysEditor(
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = {
-                onDismiss()
-            }) {
-                Text(stringResource(R.string.close_text))
+            TextButton(onClick = { onDismiss() }, colors = getTextButtonsColors()) {
+                Text(stringResource(R.string.close_text), color = primaryColor)
             }
         },
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        titleContentColor = MaterialTheme.colorScheme.onSurface,
+        containerColor = surfaceContainerHighColor,
+        textContentColor = onSurfaceVariantColor,
+        iconContentColor = onSurfaceVariantColor,
+        titleContentColor = onSurfaceColor,
         dismissButton = {
-            TextButton(onClick = {
-                shouldReset = true
-            }) {
-                Text(stringResource(R.string.reset_to_default))
+            TextButton(onClick = { shouldReset = true }, colors = getTextButtonsColors() ) {
+                Text(stringResource(R.string.reset_to_default), color = primaryColor)
             }
         },
-        title = { Text(stringResource(R.string.keys_editor)) },
+        title = { Text(stringResource(R.string.keys_editor), color = onSurfaceColor) },
         text = {
             Column(modifier = modifier.heightIn(max = 400.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(3.dp,Alignment.CenterVertically)) {
-                Text(stringResource(R.string.select_button), style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(R.string.select_button), style = MaterialTheme.typography.labelMedium, color = onSurfaceVariantColor)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable { showButtonSelectDialog = true },
@@ -191,15 +194,16 @@ fun KeysEditor(
                             painter = painterResource(id = selectedButton.viewState.buttonResId),
                             contentDescription = selectedButton.viewState.id,
                             modifier = Modifier.size(32.dp),
-                            colorFilter = ColorFilter.tint(itemsColorToUse)
+                            colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                         )
                     }
-                    Text(selectedButton.viewState.id)
+                    Text(selectedButton.viewState.id, color = onSurfaceVariantColor)
                 }
 
-                Text(stringResource(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium,
+                    color = onSurfaceVariantColor)
 
-                Text(modifier = Modifier.fillMaxWidth().clickable { showKeyCodeDialog = true },
+                Text(modifier = Modifier.fillMaxWidth().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
                     text = keyCodeMap[selectedKeyCode] ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
             }
         }

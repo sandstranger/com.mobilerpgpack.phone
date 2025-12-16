@@ -14,6 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.getOnBackgroundColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
+import com.mobilerpgpack.phone.ui.getPrimaryColor
+import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
+import com.mobilerpgpack.phone.ui.getTextButtonsColors
 
 @Composable
 fun LoadingModelDialogWithCancel(
@@ -22,28 +28,34 @@ fun LoadingModelDialogWithCancel(
     onClose: () -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
+    val onSurfaceVariantColor = getOnSurfaceVariantColor()
+    val onSurfaceColor = getOnSurfaceColor()
+    val surfaceContainerHighColor = getSurfaceContainerHighColor()
+    val buttonColor = getTextButtonsColors()
+    val primaryColor = getPrimaryColor()
+
     if (show) {
         AlertDialog(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            containerColor = surfaceContainerHighColor,
+            textContentColor = onSurfaceVariantColor,
+            iconContentColor = onSurfaceVariantColor,
+            titleContentColor = onSurfaceColor,
             onDismissRequest = { },
-            title = { Text(stringResource(R.string.loading_model_title)) },
+            title = { Text(stringResource(R.string.loading_model_title), color = onSurfaceColor) },
             text = {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                    Text(stringResource(R.string.wait_text) + "\n$progress")
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = primaryColor)
+                    Text(stringResource(R.string.wait_text) + "\n$progress", color = onSurfaceVariantColor)
                 }
             },
             confirmButton = {
-                TextButton(onClick = onClose) {
-                    Text(stringResource(R.string.close_text))
+                TextButton(onClick = onClose, colors = buttonColor) {
+                    Text(stringResource(R.string.close_text), color = primaryColor)
                 }
             },
             dismissButton = {
-                TextButton(onClick = onCancel) {
-                    Text(stringResource(R.string.cancel_download))
+                TextButton(onClick = onCancel, colors = buttonColor) {
+                    Text(stringResource(R.string.cancel_download), color = primaryColor)
                 }
             }
         )

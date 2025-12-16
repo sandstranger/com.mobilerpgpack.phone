@@ -60,6 +60,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.getButtonsColors
+import com.mobilerpgpack.phone.ui.getCheckBoxColors
+import com.mobilerpgpack.phone.ui.getOnPrimaryColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
+import com.mobilerpgpack.phone.ui.getPrimaryColor
+import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
+import com.mobilerpgpack.phone.ui.getTextButtonsColors
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
@@ -427,7 +435,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
         onBack: () -> Unit,
         modifier: Modifier = Modifier
     ) {
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground){
+        val onPrimaryColor = getOnPrimaryColor()
+        val buttonColors = getButtonsColors()
+
+        CompositionLocalProvider(LocalContentColor provides onPrimaryColor){
             var showCustomViewsEditor by remember { mutableStateOf(false) }
 
             Column(
@@ -448,22 +459,22 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
-                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.increase_controls_alpha), fontSize = 12.sp)
+                        contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        Text(stringResource(R.string.increase_controls_alpha), fontSize = 12.sp, color = onPrimaryColor)
                     }
                     Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
-                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.decrease_controls_alpha), fontSize = 12.sp)
+                        contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                        Text(stringResource(R.string.decrease_controls_alpha), fontSize = 12.sp,color = onPrimaryColor)
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
-                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.increase_controls_size), fontSize = 12.sp)
+                        contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                        Text(stringResource(R.string.increase_controls_size), fontSize = 12.sp,color = onPrimaryColor)
                     }
                     Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
-                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.decrease_controls_size), fontSize = 12.sp)
+                        contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                        Text(stringResource(R.string.decrease_controls_size), fontSize = 12.sp,color = onPrimaryColor)
                     }
                 }
 
@@ -488,6 +499,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                     color = Color.White, textAlign = TextAlign.Right, fontSize = 14.sp)
                                 Checkbox(
                                     checked = useViewAsToggle,
+                                    colors = getCheckBoxColors(),
                                     onCheckedChange = {
                                         useViewAsToggle = it
                                         save()
@@ -499,25 +511,26 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { showCustomViewsEditor = true },contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.add_controls_items), fontSize = 12.sp)
+                    Button(onClick = { showCustomViewsEditor = true },
+                        contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        Text(stringResource(R.string.add_controls_items), fontSize = 12.sp, color = onPrimaryColor)
                     }
 
                     if (selectedButtonId != null) {
                         Button(onClick = { onViewDeleted(selectedButtonId) },
-                            contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                            Text(stringResource(R.string.delete), fontSize = 12.sp)
+                            contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                            Text(stringResource(R.string.delete), fontSize = 12.sp, color = onPrimaryColor)
                         }
                     }
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = onReset,contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.reset_controls_to_default), fontSize = 12.sp)
+                    Button(onClick = onReset,contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        Text(stringResource(R.string.reset_controls_to_default), fontSize = 12.sp, color = onPrimaryColor)
                     }
                     if (!inGame) {
-                        Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                            Text(stringResource(R.string.close_controls_configuration), fontSize = 12.sp)
+                        Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                            Text(stringResource(R.string.close_controls_configuration), fontSize = 12.sp, color = onPrimaryColor)
                         }
                     }
                 }
@@ -541,20 +554,23 @@ abstract class ScreenController : KoinComponent, IScreenController {
             onViewSelected(null)
             return
         }
-        val itemsColorToUse = MaterialTheme.colorScheme.onSurfaceVariant
+        val onSurfaceVariantColor = getOnSurfaceVariantColor()
+        val onSurfaceColor = getOnSurfaceColor()
+        val primaryColor = getPrimaryColor()
+        val surfaceContainerHighColor = getSurfaceContainerHighColor()
 
         AlertDialog(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            containerColor = surfaceContainerHighColor,
+            textContentColor = onSurfaceVariantColor,
+            iconContentColor = onSurfaceVariantColor,
+            titleContentColor = onSurfaceColor,
             onDismissRequest = { onViewSelected(null) },
             confirmButton = {
-                TextButton(onClick = { onViewSelected(null) }) {
-                    Text(stringResource(R.string.close_text), color = MaterialTheme.colorScheme.primary)
+                TextButton(onClick = { onViewSelected(null) }, colors = getTextButtonsColors()) {
+                    Text(stringResource(R.string.close_text), color = primaryColor)
                 }
             },
-            title = { Text(stringResource(R.string.select_button), color = itemsColorToUse) },
+            title = { Text(stringResource(R.string.select_button), color = onSurfaceColor) },
             text = {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -571,14 +587,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                     .background(
                                         Color.Transparent,
                                         RoundedCornerShape(8.dp)).graphicsLayer {
-                                    colorFilter = ColorFilter.tint(itemsColorToUse)
+                                    colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                                 }, contentAlignment = Alignment.Center){
                                         view.DrawView(isEditMode = false, false, 40.dp)
                             }
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
                                 text = view.viewState.id,
-                                color = itemsColorToUse,
+                                color = onSurfaceVariantColor,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Right
                             )

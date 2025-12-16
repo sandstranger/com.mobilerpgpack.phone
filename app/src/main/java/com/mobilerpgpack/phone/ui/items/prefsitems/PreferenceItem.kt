@@ -13,22 +13,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 
 @Composable
 fun PreferenceItem(title: String, initialValue: String = "", onClick: () -> Unit = {}) {
+    val onBackgroundColor = getOnBackgroundColor()
     Column(modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(text = title, overflow = TextOverflow.Ellipsis)
+        Text(text = title, overflow = TextOverflow.Ellipsis, color = onBackgroundColor)
 
         if (initialValue.isNotBlank()) {
             Text(
                 text = initialValue,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                overflow = TextOverflow.Ellipsis
+                color = onBackgroundColor,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
