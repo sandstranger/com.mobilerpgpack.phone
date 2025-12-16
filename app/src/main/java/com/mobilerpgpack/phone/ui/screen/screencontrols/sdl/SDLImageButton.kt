@@ -33,7 +33,8 @@ abstract class SDLImageButton(
     private val buttonResId: Int = NOT_EXISTING_RES,
     useToggle: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default) : IScreenControlsView {
+    controlsType: ControlsType = ControlsType.Default,
+    isDeleted : Boolean = false) : IScreenControlsView {
 
     private var isPressed by mutableStateOf(false)
 
@@ -51,7 +52,8 @@ abstract class SDLImageButton(
         defaultViewRenderRule = defaultViewRenderRule,
         controlsType = controlsType,
         allowToUseViewAsToggle = true,
-        useViewAsToggleInitialState = useToggle)
+        useViewAsToggleInitialState = useToggle,
+        isDeletedInitialState = isDeleted)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {

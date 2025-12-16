@@ -133,7 +133,7 @@ class AssetExtractor (private val context: Context,
     private companion object{
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
-        private const val ASSETS_CURRENT_VERSION = "1.1"
+        private const val ASSETS_CURRENT_VERSION = "1.2"
 
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
 

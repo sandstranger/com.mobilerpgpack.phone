@@ -17,9 +17,11 @@ class ShowSDL2InputImageButton(
     buttonResId: Int = ViewState.NOT_EXISTING_RES,
     keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default)  :
+    controlsType: ControlsType = ControlsType.Default,
+    isDeleted : Boolean = false)  :
     ShowSDLInputImageButton(engineType, offsetXPercent, offsetYPercent, sizePercent,
-        alpha, buttonResId, keyboardInputType, defaultViewRenderRule = defaultViewRenderRule, controlsType)
+        alpha, buttonResId, keyboardInputType,
+        defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted)
 {
     override fun onKeyDown(keyCode: Int) = org.libsdl.app.onKeyDown(keyCode, delayBeforeKeyRelease = 50L)
 

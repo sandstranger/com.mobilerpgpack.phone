@@ -15,8 +15,9 @@ abstract class ToggleImageButton(id: String,
                                  alpha: Float = 0.65f,
                                  buttonResId: Int = NOT_EXISTING_RES,
                                  defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-                                 controlsType: ControlsType = ControlsType.Default):
-    ImageButton (id,engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, buttonResId,defaultViewRenderRule, controlsType) {
+                                 controlsType: ControlsType = ControlsType.Default,
+                                 isDeleted : Boolean = false):
+    ImageButton (id,engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, buttonResId,defaultViewRenderRule, controlsType, isDeleted) {
 
     private var currentToggleState by mutableStateOf(false)
 
