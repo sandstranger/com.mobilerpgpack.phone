@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.main.SDL3_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import org.libsdl3.app.SDLActivity
@@ -10,6 +11,8 @@ import org.libsdl3.app.SDLSurface.getNormalizedX
 import org.libsdl3.app.SDLSurface.getNormalizedY
 
 class SDL3ScreenController : SDLScreenController() {
+
+    override val sdlNativeLibName get() = SDL3_NATIVE_LIB_NAME
 
     override val viewWidth: Int get() = SDLSurface.fixedWidth
 
