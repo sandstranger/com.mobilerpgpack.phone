@@ -31,9 +31,10 @@ abstract class ShowSDLInputImageButton(
     buttonResId: Int = NOT_EXISTING_RES,
     private val keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default) : KoinComponent, KeyboardListener, ExpandableStateListener,
+    controlsType: ControlsType = ControlsType.Default,
+    isDeleted : Boolean = false) : KoinComponent, KeyboardListener, ExpandableStateListener,
     ImageButton(SHOW_KEYBOARD_BUTTON_ID, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,
-        buttonResId, defaultViewRenderRule, controlsType)
+        buttonResId, defaultViewRenderRule, controlsType, isDeleted)
 {
     private val preferencesStorage : PreferencesStorage = get ()
 

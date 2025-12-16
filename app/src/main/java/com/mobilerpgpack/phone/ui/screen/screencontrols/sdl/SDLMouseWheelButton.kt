@@ -17,9 +17,9 @@ abstract class SDLMouseWheelButton(
     buttonResId: Int = ViewState.NOT_EXISTING_RES,
     override val isQuickPanel: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default) :
+    controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
-        alpha, Int.MIN_VALUE, buttonResId, useToggle = false, defaultViewRenderRule,controlsType) {
+        alpha, Int.MIN_VALUE, buttonResId, useToggle = false, defaultViewRenderRule,controlsType, isDeleted) {
 
     init {
         show = !isQuickPanel

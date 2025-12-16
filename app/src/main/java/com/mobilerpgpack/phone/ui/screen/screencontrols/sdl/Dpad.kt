@@ -33,7 +33,7 @@ abstract class Dpad(
     private val offsetYPercent: Float = 0f,
     private val sizePercent: Float = 0.25f,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default) : KoinComponent,
+    controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false) : KoinComponent,
     IScreenControlsView {
 
     private val dpadButtonState: ViewState
@@ -88,7 +88,8 @@ abstract class Dpad(
             offsetYPercent = offsetYPercent,
             sizePercent = sizePercent,
             defaultViewRenderRule = defaultViewRenderRule,
-            controlsType = controlsType
+            controlsType = controlsType,
+            isDeletedInitialState = isDeleted
         )
     }
 
