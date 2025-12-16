@@ -22,9 +22,10 @@ class Doom64AutorunButton (engineType: EngineTypes,
                            alpha: Float = 0.65f,
                            buttonResId: Int = NOT_EXISTING_RES,
                            defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-                           controlsType: ControlsType = ControlsType.Default):
+                           controlsType: ControlsType = ControlsType.Default,
+                           isDeleted : Boolean = false):
     ToggleImageButton(AUTORUN_BUTTON_ID,engineType, offsetXPercent, offsetYPercent,
-        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType), KoinComponent {
+        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted), KoinComponent {
 
     private val preferencesStorage : PreferencesStorage by inject ()
 

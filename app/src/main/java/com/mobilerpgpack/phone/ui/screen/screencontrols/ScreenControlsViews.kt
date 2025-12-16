@@ -890,6 +890,16 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
+    SDL2ImageButton(
+        "secondary_fire",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.8f,
+        offsetYPercent = 0.45f,
+        sizePercent = 0.08f,
+        buttonResId = R.drawable.crossed_pistols,
+        sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
+        isDeleted = true
+    ),
     SDL2MouseWheelButton(
         "next_weapon",
         EngineTypes.UZDoom,
@@ -1319,6 +1329,17 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
         controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "secondary_fire",
+        EngineTypes.UZDoom,
+        offsetXPercent = 0.7f,
+        offsetYPercent = 0.47f,
+        sizePercent = 0.08f,
+        buttonResId = R.drawable.crossed_pistols,
+        sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
     ),
     SDL2MouseWheelButton(
         "next_weapon",

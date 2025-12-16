@@ -50,7 +50,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 private val sizePercent: Float = 0.13f,
                                 private val alpha: Float = 0.65f,
                                 defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-                                controlsType: ControlsType = ControlsType.Default) : IScreenControlsView, KoinComponent {
+                                controlsType: ControlsType = ControlsType.Default,
+                                isDeleted : Boolean = false) : IScreenControlsView, KoinComponent {
 
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
@@ -70,7 +71,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         sizePercent = sizePercent,
         alpha = alpha,
         defaultViewRenderRule = defaultViewRenderRule,
-        controlsType = controlsType)
+        controlsType = controlsType,
+        isDeletedInitialState = isDeleted)
 
     override var show : Boolean by mutableStateOf(true)
 

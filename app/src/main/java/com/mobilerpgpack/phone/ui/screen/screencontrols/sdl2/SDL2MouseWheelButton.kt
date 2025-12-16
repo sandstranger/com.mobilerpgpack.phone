@@ -18,9 +18,9 @@ class SDL2MouseWheelButton(
     buttonResId: Int = NOT_EXISTING_RES,
     isQuickPanel: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default) :
+    controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false) :
     SDLMouseWheelButton(id, engineType, wheelUp,offsetXPercent, offsetYPercent, sizePercent,
-        alpha,buttonResId, isQuickPanel, defaultViewRenderRule = defaultViewRenderRule, controlsType){
+        alpha,buttonResId, isQuickPanel, defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted){
 
     override fun onMouseWheel (keyCode: Int, x : Float, y : Float, event: Int ) =
         SDLActivity.onNativeMouse(keyCode, event, x, y, false)
