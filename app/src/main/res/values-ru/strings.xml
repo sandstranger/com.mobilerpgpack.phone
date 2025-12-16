@@ -33,8 +33,8 @@
     <string name="custom_aspect_ratio_hint">16x9</string>
     <string name="show_custom_mouse_cursor">Показывать кастомный курсор мыши. (Не работает в Doom 1 RPG)</string>
     <string name="allow_to_edit_controls_in_game">Включить редактирование экранного управления в игре</string>
-    <string name="custom_mouse_cursor_horizontal_offset">Настраиваемое смещение курсора мыши по горизонтали (полезно для нестандартных разрешений)</string>
-    <string name="custom_mouse_cursor_vertical_offset">Настраиваемое смещение курсора мыши по вертикали (полезно для нестандартных разрешений)</string>
+    <string name="custom_mouse_cursor_horizontal_offset">Cмещение курсора мыши по горизонтали</string>
+    <string name="custom_mouse_cursor_vertical_offset">Cмещение курсора мыши по вертикали</string>
     <string name="active_engine">Активная игра</string>
     <string name="use_custom_file_picker">Использовать кастомный проводник для выбора файлов (нужно для Android TV)</string>
     <string name="start_game">Запустить игру</string>
@@ -84,7 +84,7 @@
     <string name="choose_file_request">Выберите ZIP- или IPA-файл для игры</string>
     <string name="path_to_log">Путь к файлу лога</string>
     <string name="choose_directory">Выберите директорию</string>
-    <string name="custom_resolution">Пользовательское разрешение экрана (заменяет «Пользовательское соотношение сторон экрана»)</string>
+    <string name="custom_resolution">Пользовательское разрешение экрана</string>
     <string name="custom_resolution_hint">1920x1080</string>
     <string name="dark_theme">Включить темную тему для лаунчера</string>
     <string name="increase_controls_size">Размер+</string>

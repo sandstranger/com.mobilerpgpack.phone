@@ -282,12 +282,7 @@ abstract class EngineInfo(
 
                             if (!hideScreenControls) {
                                 controlsOverlayUI.setContent {
-                                    val isSystemInDarkTheme = isSystemInDarkTheme()
-                                    val useDarkTheme by preferencesStorage.getUseDarkThemeValue(
-                                        isSystemInDarkTheme
-                                    ).collectAsState(initial = isSystemInDarkTheme)
-
-                                    Theme(darkTheme = useDarkTheme) {
+                                    Theme {
                                         screenController.DrawScreenControls(
                                             inGame = true,
                                             blockTouchCameraEvents = blockTouchCameraEvents,

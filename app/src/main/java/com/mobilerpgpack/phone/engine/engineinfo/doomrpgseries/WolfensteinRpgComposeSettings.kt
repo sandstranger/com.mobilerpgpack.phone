@@ -16,6 +16,7 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import kotlin.getValue
 import androidx.compose.ui.res.stringResource
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 
 class WolfensteinRpgComposeSettings : CommonDoomRpgComposeSettings(){
 
@@ -33,7 +34,7 @@ class WolfensteinRpgComposeSettings : CommonDoomRpgComposeSettings(){
             requiredFileExtensions = engineInfo.requiredResourceExtensions){ selectedPath ->
             scope.launch { preferencesStorage.setPathToWolfensteinRpgIpaFile(selectedPath) }
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         super.DrawSettings(navController)
     }
 }

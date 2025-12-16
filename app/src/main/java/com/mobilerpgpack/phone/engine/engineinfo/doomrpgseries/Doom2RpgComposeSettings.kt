@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import kotlinx.coroutines.launch
@@ -32,7 +33,7 @@ class Doom2RpgComposeSettings : CommonDoomRpgComposeSettings() {
             scope.launch { preferencesStorage.setPathToDoom2RpgIpaFile(selectedPath) }
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         super.DrawSettings(navController)
     }
