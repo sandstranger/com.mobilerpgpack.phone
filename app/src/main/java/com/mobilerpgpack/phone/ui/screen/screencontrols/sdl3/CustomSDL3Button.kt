@@ -8,7 +8,7 @@ import org.libsdl3.app.SDLActivity.onNativeKeyDown
 import org.libsdl3.app.SDLActivity.onNativeKeyUp
 
 class CustomSDL3Button (
-    private val id: String,
+    id: String,
     engineType: EngineTypes,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,
