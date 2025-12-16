@@ -12,8 +12,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.getBackgroundColor
@@ -21,6 +23,7 @@ import com.mobilerpgpack.phone.ui.getFabIconContainerColor
 import com.mobilerpgpack.phone.ui.getIconButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
+import com.mobilerpgpack.phone.ui.getPrimaryColor
 import org.koin.core.component.KoinComponent
 
 abstract class ComposeScreen(val route: String) : KoinComponent {
@@ -38,15 +41,19 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
     fun DrawScreen(navController: NavHostController) {
         val activity = LocalActivity.current!!
         val onSurfaceColor = getOnSurfaceColor()
+        val onBackgroundColor = getOnBackgroundColor()
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = getBackgroundColor(),
-            contentColor = getOnBackgroundColor(),
+            contentColor = onBackgroundColor,
             topBar = {
                 if (drawBackButton){
                 TopAppBar(
                     title = { },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
+                    ),
                     navigationIcon = {
                         IconButton(onClick = {
                             onBackPressedDelegate?.invoke()
@@ -55,12 +62,12 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "back",
-                                tint = getOnBackgroundColor()
+                                tint = onBackgroundColor
                             )
                         }
                     }
                 )
-                    }
+                }
             },
             floatingActionButton = {
                 if (drawFloatingActionButton) {
