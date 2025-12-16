@@ -22,6 +22,8 @@ const val SDL3_NATIVE_LIB_NAME = "SDL3"
 
 const val FMOD_NATIVE_LIB_NAME = "fmod"
 
+const val SDL3HELPER_NATIVE_LIB_NAME = "SDL3Helper"
+
 const val SDL2_NATIVE_LIB_NAME = "SDL2"
 
 const val ZMUSIC_NATIVE_LIB_NAME = "zmusic"

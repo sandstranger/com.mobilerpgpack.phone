@@ -5,6 +5,8 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 
 interface IScreenController{
 
+    var showScreenControls : Boolean
+
     val activeViewsToDraw: Collection<IScreenControlsView>
 
     @Composable

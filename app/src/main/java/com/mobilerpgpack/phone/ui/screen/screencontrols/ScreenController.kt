@@ -79,6 +79,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
     final override val activeViewsToDraw: Collection<IScreenControlsView> get() = _activeViewsToDraw
 
+    final override var showScreenControls by mutableStateOf(true)
+
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     override fun DrawScreenControls(
@@ -274,7 +276,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
                     val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
 
-                    val renderView = (view.isHideControlsButton || view.renderView || isEditMode) && !view.viewState.isDeleted
+                    val renderView = (view.isHideControlsButton || (view.renderView && showScreenControls) || isEditMode) && !view.viewState.isDeleted
 
                     if (renderView) {
                         DrawView(

@@ -18,11 +18,7 @@ class UpdateScreenControlsVisibilityImageButton(
     sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted) {
 
     override fun onClick(context: Context) {
-        screenController?.activeViewsToDraw?.forEach {
-            if (it !== this) {
-                it.show = if (it.isQuickPanel) false else !it.show
-            }
-        }
+        screenController?.apply { showScreenControls =!showScreenControls }
     }
 
     private companion object {
