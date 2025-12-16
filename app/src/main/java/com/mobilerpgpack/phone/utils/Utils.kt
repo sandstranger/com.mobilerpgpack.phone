@@ -28,7 +28,7 @@ private val translateKeycodeNativeDelegate by lazy {
 
 val keyCodeMap: Map<Int, String> by lazy {
     KeyEvent::class.java.fields
-        .filter { it.name.startsWith(KEYCODE_PREFIX) && keyCodeCanBeUsed(it)  }
+        .filter { it.name.startsWith(KEYCODE_PREFIX) && isValidKeyCode(it)  }
         .sortedBy { it.name }
         .associate { field ->
             field.getInt(null) to field.name.replace(KEYCODE_PREFIX, "")
@@ -82,7 +82,7 @@ fun computeSHA256(inputStream: InputStream): ByteArray {
     return digest.digest()
 }
 
-private fun keyCodeCanBeUsed (keyCodeField : Field) : Boolean{
+private fun isValidKeyCode (keyCodeField : Field) : Boolean{
     keyCodesArray[0] = keyCodeField.getInt(null)
     return translateKeycodeNativeDelegate.invokeInt(keyCodesArray) != UNKNOWN_KEYCODE
 }
