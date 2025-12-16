@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -288,10 +289,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                     view.viewState.apply {
                                         selectedViewRenderRule = viewRenderRule
                                     }
-
-                                    coroutineScope.launch {
-                                        preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, false)
-                                    }
+                                    preferencesStorage.setBooleanValue(clampButtonsPrefsKey, false)
                                 }
                             },
                             onDragEnd = { newX, newY ->
@@ -442,24 +440,28 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         text = selectedButtonId,
                         color = Color.White,
                         style = MaterialTheme.typography.labelMedium,
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     )
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
-                        Text(stringResource(R.string.increase_controls_alpha))
+                    Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
+                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
+                        Text(stringResource(R.string.increase_controls_alpha), fontSize = 12.sp)
                     }
-                    Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) }) {
-                        Text(stringResource(R.string.decrease_controls_alpha))
+                    Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
+                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
+                        Text(stringResource(R.string.decrease_controls_alpha), fontSize = 12.sp)
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
-                        Text(stringResource(R.string.increase_controls_size))
+                    Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
+                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
+                        Text(stringResource(R.string.increase_controls_size), fontSize = 12.sp)
                     }
-                    Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) }) {
-                        Text(stringResource(R.string.decrease_controls_size))
+                    Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
+                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
+                        Text(stringResource(R.string.decrease_controls_size), fontSize = 12.sp)
                     }
                 }
 
@@ -481,7 +483,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                             ) {
                                 Text(stringResource(R.string.use_as_toggle),
                                     modifier = Modifier.wrapContentHeight(),
-                                    color = Color.White, textAlign = TextAlign.Right)
+                                    color = Color.White, textAlign = TextAlign.Right, fontSize = 14.sp)
                                 Checkbox(
                                     checked = useViewAsToggle,
                                     onCheckedChange = {
@@ -495,24 +497,25 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { showCustomViewsEditor = true }) {
-                        Text(stringResource(R.string.add_controls_items))
+                    Button(onClick = { showCustomViewsEditor = true },contentPadding = ButtonDefaults.TextButtonContentPadding) {
+                        Text(stringResource(R.string.add_controls_items), fontSize = 12.sp)
                     }
 
                     if (selectedButtonId != null) {
-                        Button(onClick = { onViewDeleted(selectedButtonId) }) {
-                            Text(stringResource(R.string.delete))
+                        Button(onClick = { onViewDeleted(selectedButtonId) },
+                            contentPadding = ButtonDefaults.TextButtonContentPadding) {
+                            Text(stringResource(R.string.delete), fontSize = 12.sp)
                         }
                     }
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = onReset) {
-                        Text(stringResource(R.string.reset_controls_to_default))
+                    Button(onClick = onReset,contentPadding = ButtonDefaults.TextButtonContentPadding) {
+                        Text(stringResource(R.string.reset_controls_to_default), fontSize = 12.sp)
                     }
                     if (!inGame) {
-                        Button(onClick = onBack) {
-                            Text(stringResource(R.string.close_controls_configuration))
+                        Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding) {
+                            Text(stringResource(R.string.close_controls_configuration), fontSize = 12.sp)
                         }
                     }
                 }
