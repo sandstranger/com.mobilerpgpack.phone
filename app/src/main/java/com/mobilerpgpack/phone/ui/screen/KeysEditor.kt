@@ -144,7 +144,7 @@ fun KeysEditor(
                 LazyColumn(modifier = Modifier.heightIn(max = 400.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp))
                 {
-                    itemsIndexed(keyCodesToDraw, key = { _, pair -> pair.first }) { _, pair ->
+                    itemsIndexed(keyCodesToDraw, key = { _, pair -> pair.second.keyCode }) { _, pair ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -156,7 +156,7 @@ fun KeysEditor(
                                     }
                                     showKeyCodeDialog = false
                                 }) {
-                            Text(pair.second, color = onSurfaceVariantColor)
+                            Text(pair.second.keyCodeName, color = onSurfaceVariantColor)
                         }
                      }
                 }
@@ -204,7 +204,7 @@ fun KeysEditor(
                     color = onSurfaceVariantColor)
 
                 Text(modifier = Modifier.fillMaxWidth().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
-                    text = keyCodeMap[selectedKeyCode] ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
+                    text = keyCodeMap[selectedKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
             }
         }
     )
