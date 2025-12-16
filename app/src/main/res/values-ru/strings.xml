@@ -59,7 +59,7 @@
     <string name="uzdoom_mods_count">Количество модов</string>
     <string name="enable_separate_mods_support">Включить поддержку отдельных модов</string>
     <string name="path_to_mod">Путь к моду</string>
-    <string name="add_custom_buttons">Добавить кастомные кнопки</string>
+    <string name="add_controls_items">Добавить элементы управления</string>
     <string name="screen_controls_view_render_rule">Правило рендера</string>
     <string name="enable_uzdoom_playing_records">Включить поддержку восроизведения демо</string>
     <string name="uzdoom_path_to_demo_file">Путь к демо .lmp файлу</string>
