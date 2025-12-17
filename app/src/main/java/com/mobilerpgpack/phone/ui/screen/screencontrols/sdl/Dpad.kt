@@ -134,7 +134,7 @@ abstract class Dpad(
                         .size(buttonSize)
                         .minimumInteractiveComponentSize()
                         .offset(x = offsetX, y = offsetY)
-                        .pointerInput(Unit) {
+                        .pointerInput(!isEditMode && inGame) {
                             if (isEditMode || !inGame) {
                                 return@pointerInput
                             }
