@@ -63,7 +63,7 @@ abstract class ImageButton(
             modifier = Modifier
                 .fillMaxSize()
                 .minimumInteractiveComponentSize()
-                .pointerInput(Unit) {
+                .pointerInput(!isEditMode && inGame) {
                     if (isEditMode || !inGame) {
                         return@pointerInput
                     }
