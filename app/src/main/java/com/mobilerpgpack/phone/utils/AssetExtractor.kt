@@ -115,9 +115,7 @@ class AssetExtractor (private val context: Context,
         try {
             val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(assetsVersionFile.readText())
 
-            val copyAssetsForced = !ASSETS_CURRENT_VERSION
-                .equals(assetsVersionProvider.assetsVersion, true)
-
+            val copyAssetsForced = assetsVersionProvider.assetsVersion != ASSETS_CURRENT_VERSION
             if (copyAssetsForced) {
                 writeDefaultVersionToVersionsFile()
             }
@@ -133,11 +131,11 @@ class AssetExtractor (private val context: Context,
     private companion object{
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
-        private const val ASSETS_CURRENT_VERSION = "1.2"
+        private const val ASSETS_CURRENT_VERSION = 3
 
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
 
         @Serializable
-        private data class AssetsVersionProvider (val assetsVersion : String)
+        private data class AssetsVersionProvider (val assetsVersion : Int)
     }
 }
