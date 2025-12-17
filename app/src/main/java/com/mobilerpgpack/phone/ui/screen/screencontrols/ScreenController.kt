@@ -366,7 +366,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 .minimumInteractiveComponentSize()
                 .alpha(viewToDraw.viewState.alpha)
                 .background(
-                    if (isSelected && isEditMode) Color.Red.copy(alpha = 0.5f)
+                    if (isSelected && isEditMode) selectedViewBackgroundColor
                     else Color.Transparent,
                     RoundedCornerShape(8.dp)
                 )
@@ -619,6 +619,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
         private const val MIN_VIEW_SIZE : Float = 0.025f
 
         private const val MAX_VIEW_SIZE : Float = 1.0f
+
+        private val selectedViewBackgroundColor = Color.Red.copy(0.5f)
     }
 }
 
