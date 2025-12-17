@@ -16,11 +16,17 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getBlockingValue
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 
 abstract class SDLImageButton(
     private val id: String,
@@ -35,7 +41,12 @@ abstract class SDLImageButton(
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) : IScreenControlsView {
+    consumeTouchEventsByDefault : Boolean = true) : IScreenControlsView, KoinComponent {
+
+    private val engineInfo by lazy {
+        val preferencesStorage : PreferencesStorage = get()
+        get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
+    }
 
     private var isPressed by mutableStateOf(false)
 
@@ -81,7 +92,8 @@ abstract class SDLImageButton(
                 }
                 awaitEachGesture {
                     viewState.apply {
-                        val pointerPassToUse = if (consumeTouchEvents) PointerEventPass.Initial
+                        val consumeEvents = consumeTouchEvents || engineInfo.mouseButtonsEventsCanBeInvoked
+                        val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
                         else PointerEventPass.Main
                         val down = awaitFirstDown(pass = pointerPassToUse)
                         if (consumeTouchEvents){

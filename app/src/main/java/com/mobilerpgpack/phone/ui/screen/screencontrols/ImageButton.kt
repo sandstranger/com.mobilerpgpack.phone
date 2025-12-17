@@ -18,7 +18,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getBlockingValue
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 
 abstract class ImageButton(
     val id: String,
@@ -31,7 +37,12 @@ abstract class ImageButton(
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) : IScreenControlsView {
+    consumeTouchEventsByDefault : Boolean = true) : IScreenControlsView, KoinComponent {
+
+    private val engineInfo by lazy {
+        val preferencesStorage : PreferencesStorage = get()
+        get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
+    }
 
     protected var screenController : IScreenController? = null
         private set
@@ -69,7 +80,8 @@ abstract class ImageButton(
                     }
                     awaitEachGesture {
                         viewState.apply {
-                            val pointerPassToUse = if (consumeTouchEvents) PointerEventPass.Initial
+                            val consumeEvents = consumeTouchEvents || engineInfo.mouseButtonsEventsCanBeInvoked
+                            val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
                             else PointerEventPass.Main
                             val down = awaitFirstDown(pass = pointerPassToUse)
                             if (consumeTouchEvents){
