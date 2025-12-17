@@ -79,15 +79,11 @@ abstract class SDLImageButton(
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
-        var modifierToUse = Modifier.interactiveControlModifier(isEditMode, inGame)
-
-        if (isPressed){
-            modifierToUse = modifierToUse.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Green) }
-        }
-
         Image(painter = painterResource(id = viewState.buttonResId),
             contentDescription = id,
-            modifier = modifierToUse )
+            modifier = Modifier.interactiveControlModifier(isEditMode, inGame).let{
+                if (isPressed) it.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Green) } else it
+            } )
     }
 
     protected abstract fun onTouchDown(keyCode: Int)
