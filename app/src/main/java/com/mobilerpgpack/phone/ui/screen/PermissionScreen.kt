@@ -27,6 +27,7 @@ import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.getButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
+import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.getPrimaryColor
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
@@ -45,7 +46,6 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
         val activity = LocalActivity.current!!
         val onBackgroundColor = getOnBackgroundColor()
         val buttonsColor = getButtonsColors()
-        val primaryColor = getPrimaryColor()
 
         Column(
             modifier = Modifier
@@ -91,7 +91,7 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
                 Text(
                     text = stringResource(R.string.grant_permission),
                     textAlign = TextAlign.Center, fontSize = 21.sp,
-                    color = primaryColor
+                    color = getOnPrimaryColor()
                 )
             }
         }
