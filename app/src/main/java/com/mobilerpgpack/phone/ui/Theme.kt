@@ -150,24 +150,22 @@ fun getFabIconContainerColor() = if (useDarkTheme()) md_light_primary else md_da
 
 @Composable
 fun getTextFieldColors() :  TextFieldColors{
-    val useDarkTheme = useDarkTheme()
     val surfaceColor = getSurfaceContainerHighColor()
+    val onSurfaceColor = getOnSurfaceColor()
     return TextFieldDefaults.colors(
-        focusedTextColor = if (useDarkTheme) Color.White else Color.Black,
-        unfocusedTextColor = if (useDarkTheme) Color.White else Color.Black,
-        disabledTextColor = if (useDarkTheme) Color.White else Color.Black.copy(alpha = 0.4f),
+        focusedTextColor = onSurfaceColor,
+        unfocusedTextColor = onSurfaceColor,
+        disabledTextColor = onSurfaceColor.copy(0.6f),
         errorTextColor = Color.Red,
-        cursorColor = if (useDarkTheme) Color.White else Color.Black,
+        cursorColor = onSurfaceColor,
         selectionColors = TextSelectionColors(
-            handleColor = if (useDarkTheme) Color.White else Color.Black,
-            backgroundColor = if (useDarkTheme) Color.White.copy(alpha = 0.3f) else Color.Black.copy(
-                alpha = 0.2f
-            )
+            handleColor = onSurfaceColor,
+            backgroundColor = onSurfaceColor.copy(0.3f)
         ),
         focusedContainerColor = surfaceColor,
         unfocusedContainerColor = surfaceColor,
-        focusedIndicatorColor = surfaceColor,
-        unfocusedIndicatorColor = Color.Gray)
+        focusedIndicatorColor = onSurfaceColor,
+        unfocusedIndicatorColor = onSurfaceColor)
 }
 
 @Composable
@@ -233,7 +231,7 @@ fun getMenuItemColors() : MenuItemColors{
 
 @Composable
 fun getCheckBoxColors() : CheckboxColors{
-    val surfaceColor = getSurfaceColor()
+    val surfaceColor = getOnSurfaceColor()
     return CheckboxDefaults.colors(
         checkedColor = getPrimaryColor(),
         checkmarkColor = getOnPrimaryColor(),
