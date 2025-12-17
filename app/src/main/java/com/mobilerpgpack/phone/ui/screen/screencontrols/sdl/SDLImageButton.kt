@@ -1,20 +1,28 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
@@ -71,10 +79,15 @@ abstract class SDLImageButton(
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
-        Image(
-            painter = painterResource(id = viewState.buttonResId),
+        var modifierToUse = Modifier.interactiveControlModifier(isEditMode, inGame)
+
+        if (isPressed){
+            modifierToUse = modifierToUse.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Green) }
+        }
+
+        Image(painter = painterResource(id = viewState.buttonResId),
             contentDescription = id,
-            modifier = Modifier.interactiveControlModifier(isEditMode, inGame))
+            modifier = modifierToUse )
     }
 
     protected abstract fun onTouchDown(keyCode: Int)
@@ -92,27 +105,27 @@ abstract class SDLImageButton(
                 }
                 awaitEachGesture {
                     viewState.apply {
-                        val consumeEvents = consumeTouchEvents || engineInfo.mouseButtonsEventsCanBeInvoked
+                        val consumeEvents =
+                            consumeTouchEvents || engineInfo.mouseButtonsEventsCanBeInvoked
                         val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
                         else PointerEventPass.Main
                         val down = awaitFirstDown(pass = pointerPassToUse)
-                        if (consumeTouchEvents){
+                        if (consumeTouchEvents) {
                             down.consume()
                         }
                         if (!this.useViewAsToggle || !isPressed) {
                             onTouchDown(this.sdlKeyCode)
-                        }
-                        else if (this.useViewAsToggle && isPressed){
+                        } else if (this.useViewAsToggle && isPressed) {
                             onTouchUp(sdlKeyCode)
                         }
                         val up = waitForUpOrCancellation(pass = pointerPassToUse)
-                        if (consumeTouchEvents){
+                        if (consumeTouchEvents) {
                             up?.consume()
                         }
                         if (!useViewAsToggle) {
                             onTouchUp(sdlKeyCode)
                         }
-                        isPressed=!isPressed
+                        isPressed = !isPressed
                     }
                 }
             }
