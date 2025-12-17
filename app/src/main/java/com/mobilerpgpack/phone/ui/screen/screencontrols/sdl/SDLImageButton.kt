@@ -75,7 +75,7 @@ abstract class SDLImageButton(
         return this
             .fillMaxSize()
             .minimumInteractiveComponentSize()
-            .pointerInput(Unit) {
+            .pointerInput(!isEditMode && inGame) {
                 if (isEditMode || !inGame) {
                     return@pointerInput
                 }
