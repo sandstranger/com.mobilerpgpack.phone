@@ -28,7 +28,9 @@ class ViewState(
     private val isDeletedInitialState : Boolean = false,
     controlsType: ControlsType = ControlsType.Default,
     val allowToUseViewAsToggle : Boolean = false,
-    private val useViewAsToggleInitialState : Boolean = false) : KoinComponent {
+    private val useViewAsToggleInitialState : Boolean = false,
+    val alwaysConsumeTouchEvents : Boolean = true,
+    private val consumeTouchEventsInitialState : Boolean = true) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
@@ -45,6 +47,7 @@ class ViewState(
     private val viewRenderRulePrefsKey = stringPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_view_render_rule")
     private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_is_deleted")
     private val useViewAsTogglePrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_use_view_as_toggle")
+    private val consumeTouchEventsPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_consume_touch_events")
     private val preferencesStorage : PreferencesStorage = get()
 
     private var wasLoaded by mutableStateOf(false)
@@ -59,6 +62,7 @@ class ViewState(
     var viewRenderRule by mutableStateOf(defaultViewRenderRule)
     var isDeleted by mutableStateOf(isDeletedInitialState)
     var useViewAsToggle by mutableStateOf(useViewAsToggleInitialState)
+    var consumeTouchEvents by mutableStateOf(consumeTouchEventsInitialState)
 
     suspend fun load() {
         if (wasLoaded){
@@ -74,6 +78,7 @@ class ViewState(
             defaultViewRenderRule.toString()).first())
         isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isDeletedInitialState).first()
         useViewAsToggle = preferencesStorage.getBooleanValue(useViewAsTogglePrefsKey, useViewAsToggleInitialState).first()
+        consumeTouchEvents = preferencesStorage.getBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEventsInitialState).first()
     }
 
     fun save() {
@@ -85,6 +90,7 @@ class ViewState(
         preferencesStorage.setStringValue(viewRenderRulePrefsKey, viewRenderRule.toString())
         preferencesStorage.setBooleanValue(isDeletedPrefsKey,isDeleted)
         preferencesStorage.setBooleanValue(useViewAsTogglePrefsKey, useViewAsToggle)
+        preferencesStorage.setBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEvents)
     }
 
     fun resetToDefaults() {
@@ -96,6 +102,7 @@ class ViewState(
         viewRenderRule = defaultViewRenderRule
         isDeleted = isDeletedInitialState
         useViewAsToggle = useViewAsToggleInitialState
+        consumeTouchEvents = consumeTouchEventsInitialState
     }
 
     fun resetKeyEvent() {

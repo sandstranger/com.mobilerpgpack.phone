@@ -18,9 +18,10 @@ class CustomSDL3Button (
     useToggle: Boolean = false,
     override val isQuickPanel: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default) :
+    controlsType: ControlsType = ControlsType.Default,
+    consumeTouchEventsByDefault : Boolean = true) :
     CustomSDLButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
-        useToggle, defaultViewRenderRule, controlsType) {
+        useToggle, defaultViewRenderRule, controlsType, consumeTouchEventsByDefault) {
 
     init {
         show = !isQuickPanel

@@ -3,7 +3,10 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 import android.annotation.SuppressLint
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -15,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -33,7 +37,8 @@ abstract class Dpad(
     private val offsetYPercent: Float = 0f,
     private val sizePercent: Float = 0.25f,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false) : KoinComponent,
+    controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
+    consumeTouchEventsByDefault : Boolean = true) : KoinComponent,
     IScreenControlsView {
 
     private val dpadButtonState: ViewState
@@ -89,7 +94,9 @@ abstract class Dpad(
             sizePercent = sizePercent,
             defaultViewRenderRule = defaultViewRenderRule,
             controlsType = controlsType,
-            isDeletedInitialState = isDeleted
+            isDeletedInitialState = isDeleted,
+            alwaysConsumeTouchEvents = false,
+            consumeTouchEventsInitialState = consumeTouchEventsByDefault
         )
     }
 
@@ -123,23 +130,29 @@ abstract class Dpad(
                 Image(
                     painter = painterResource(painterId),
                     contentDescription = desc,
-                    modifier = Modifier.Companion
+                    modifier = Modifier
                         .size(buttonSize)
                         .minimumInteractiveComponentSize()
                         .offset(x = offsetX, y = offsetY)
-                        .pointerInput(!isEditMode && inGame) {
-                            if (isEditMode || !inGame) return@pointerInput
-
-                            detectTapGestures(
-                                onPress = {
-                                    onTouchDown(sdlKeyEvent)
-                                    try {
-                                        awaitRelease()
-                                    } finally {
-                                        onTouchUp(sdlKeyEvent)
+                        .pointerInput(Unit) {
+                            if (isEditMode || !inGame) {
+                                return@pointerInput
+                            }
+                            awaitEachGesture {
+                                viewState.apply {
+                                    val down = awaitFirstDown(pass = if (consumeTouchEvents) PointerEventPass.Initial
+                                    else PointerEventPass.Main)
+                                    if (consumeTouchEvents){
+                                        down.consume()
                                     }
+                                    onTouchDown(sdlKeyEvent)
+                                    val up = waitForUpOrCancellation()
+                                    if (consumeTouchEvents){
+                                        up?.consume()
+                                    }
+                                    onTouchUp(sdlKeyEvent)
                                 }
-                            )
+                            }
                         }
                 )
             }
