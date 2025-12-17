@@ -140,13 +140,14 @@ abstract class Dpad(
                             }
                             awaitEachGesture {
                                 viewState.apply {
-                                    val down = awaitFirstDown(pass = if (consumeTouchEvents) PointerEventPass.Initial
-                                    else PointerEventPass.Main)
+                                    val pointerPassToUse = if (consumeTouchEvents) PointerEventPass.Initial
+                                    else PointerEventPass.Main
+                                    val down = awaitFirstDown(pass = pointerPassToUse)
                                     if (consumeTouchEvents){
                                         down.consume()
                                     }
                                     onTouchDown(sdlKeyEvent)
-                                    val up = waitForUpOrCancellation()
+                                    val up = waitForUpOrCancellation(pointerPassToUse)
                                     if (consumeTouchEvents){
                                         up?.consume()
                                     }
