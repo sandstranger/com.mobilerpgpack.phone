@@ -28,7 +28,6 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.getButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
-import com.mobilerpgpack.phone.ui.getPrimaryColor
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
 class PermissionScreen : ComposeScreen (SCREEN_NAME) {
