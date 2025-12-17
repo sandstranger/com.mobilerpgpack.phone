@@ -371,6 +371,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     RoundedCornerShape(8.dp)
                 )
                 .pointerInput(isEditMode, isSelected) {
+                    if (!isEditMode) {
+                        return@pointerInput
+                    }
                     detectDragGestures(
                         onDragStart = {
                             if (isEditMode && !isSelected) {
@@ -391,6 +394,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     )
                 }
                 .pointerInput(isEditMode, isSelected) {
+                    if (!isEditMode){
+                        return@pointerInput
+                    }
                     awaitPointerEventScope {
                         while (true) {
                             val event = awaitPointerEvent()
