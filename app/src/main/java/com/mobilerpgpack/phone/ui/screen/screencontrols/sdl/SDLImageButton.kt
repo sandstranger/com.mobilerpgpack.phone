@@ -1,26 +1,26 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 
 abstract class SDLImageButton(
     private val id: String,
@@ -34,7 +34,8 @@ abstract class SDLImageButton(
     useToggle: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
-    isDeleted : Boolean = false) : IScreenControlsView {
+    isDeleted : Boolean = false,
+    consumeTouchEventsByDefault : Boolean = true) : IScreenControlsView {
 
     private var isPressed by mutableStateOf(false)
 
@@ -53,7 +54,9 @@ abstract class SDLImageButton(
         controlsType = controlsType,
         allowToUseViewAsToggle = true,
         useViewAsToggleInitialState = useToggle,
-        isDeletedInitialState = isDeleted)
+        isDeletedInitialState = isDeleted,
+        alwaysConsumeTouchEvents = false,
+        consumeTouchEventsInitialState = consumeTouchEventsByDefault)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
@@ -69,38 +72,36 @@ abstract class SDLImageButton(
 
     @Composable
     protected fun Modifier.interactiveControlModifier (isEditMode: Boolean, inGame: Boolean) : Modifier{
-        return if (!viewState.useViewAsToggle) this
+        return this
             .fillMaxSize()
             .minimumInteractiveComponentSize()
-            .pointerInput(!isEditMode && inGame) {
-                if (isEditMode || !inGame) return@pointerInput
-
-                detectTapGestures(
-                    onPress = {
-                        onTouchDown(viewState.sdlKeyCode)
-                        try {
-                            awaitRelease()
-                        } finally {
-                            onTouchUp(viewState.sdlKeyCode)
-                        }
-                    }
-                )
-            }
-        else Modifier
-            .fillMaxSize()
-            .minimumInteractiveComponentSize()
-            .clickable(indication = null,
-                interactionSource = remember { MutableInteractionSource() }) {
+            .pointerInput(Unit) {
                 if (isEditMode || !inGame) {
-                    return@clickable
+                    return@pointerInput
                 }
-                if (!isPressed){
-                    onTouchDown(viewState.sdlKeyCode)
+                awaitEachGesture {
+                    viewState.apply {
+                        val down = awaitFirstDown(pass = if (consumeTouchEvents) PointerEventPass.Initial
+                        else PointerEventPass.Main)
+                        if (consumeTouchEvents){
+                            down.consume()
+                        }
+                        if (!this.useViewAsToggle || !isPressed) {
+                            onTouchDown(this.sdlKeyCode)
+                        }
+                        else if (this.useViewAsToggle && isPressed){
+                            onTouchUp(sdlKeyCode)
+                        }
+                        val up = waitForUpOrCancellation()
+                        if (consumeTouchEvents){
+                            up?.consume()
+                        }
+                        if (!useViewAsToggle) {
+                            onTouchUp(sdlKeyCode)
+                        }
+                        isPressed=!isPressed
+                    }
                 }
-                else{
-                    onTouchUp(viewState.sdlKeyCode)
-                }
-                isPressed=!isPressed
             }
     }
 }

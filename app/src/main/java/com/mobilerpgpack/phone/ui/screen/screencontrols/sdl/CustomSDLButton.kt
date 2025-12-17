@@ -35,9 +35,10 @@ abstract class CustomSDLButton(
     sdlKeyEvent: Int = 0,
     useToggle: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default) : SDLImageButton(
+    controlsType: ControlsType = ControlsType.Default,
+    consumeTouchEventsByDefault : Boolean = true) : SDLImageButton(
         id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
-        NOT_EXISTING_RES, useToggle, defaultViewRenderRule, controlsType), KoinComponent {
+        NOT_EXISTING_RES, useToggle, defaultViewRenderRule, controlsType, consumeTouchEventsByDefault), KoinComponent {
 
     final override val viewState: ViewState = ViewState(
         id,

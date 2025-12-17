@@ -13,9 +13,10 @@ class SDL2Dpad(
     sizePercent: Float = 0.25f,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
-    isDeleted : Boolean = false) :
+    isDeleted : Boolean = false,
+    consumeTouchEventsByDefault : Boolean = true) :
     Dpad(engineType, offsetXPercent, offsetYPercent, sizePercent,
-        defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted) {
+        defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault) {
 
     override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 

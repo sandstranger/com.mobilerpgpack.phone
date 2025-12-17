@@ -1,8 +1,10 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.doom64
 
+import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ToggleImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
@@ -23,9 +25,10 @@ class Doom64AutorunButton (engineType: EngineTypes,
                            buttonResId: Int = NOT_EXISTING_RES,
                            defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
                            controlsType: ControlsType = ControlsType.Default,
-                           isDeleted : Boolean = false):
+                           isDeleted : Boolean = false,
+                           consumeTouchEventsByDefault : Boolean = true):
     ToggleImageButton(AUTORUN_BUTTON_ID,engineType, offsetXPercent, offsetYPercent,
-        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted), KoinComponent {
+        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault), KoinComponent {
 
     private val preferencesStorage : PreferencesStorage by inject ()
 
