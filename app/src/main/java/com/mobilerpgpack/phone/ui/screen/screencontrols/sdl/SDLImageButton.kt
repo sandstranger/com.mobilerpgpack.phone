@@ -86,7 +86,7 @@ abstract class SDLImageButton(
         Image(painter = painterResource(id = viewState.buttonResId),
             contentDescription = id,
             modifier = Modifier.interactiveControlModifier(isEditMode, inGame).let{
-                if (isPressed && !isEditMode && inGame)
+                if (isPressed && !isEditMode && inGame && viewState.useViewAsToggle)
                     it.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Yellow) } else it
             } )
     }

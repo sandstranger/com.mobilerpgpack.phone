@@ -118,18 +118,24 @@ fun getPrimaryColor () : Color{
 @Composable
 fun getTextButtonsColors() :  ButtonColors{
     val primaryColor = getPrimaryColor()
+    val transparentPrimaryColor = primaryColor.copy(0.4f)
     return ButtonDefaults.textButtonColors(
+        containerColor = Color.Transparent,
         contentColor = primaryColor,
-        disabledContentColor = primaryColor.copy(0.4f)
+        disabledContainerColor = transparentPrimaryColor,
+        disabledContentColor = transparentPrimaryColor
     )
 }
 
 @Composable
 fun getButtonsColors() : ButtonColors{
     val primaryColor = getPrimaryColor()
+    val onPrimaryColor = getOnPrimaryColor()
     return ButtonDefaults.buttonColors(
-        contentColor = primaryColor,
-        disabledContentColor = primaryColor.copy(0.4f)
+        containerColor = primaryColor,
+        contentColor = onPrimaryColor,
+        disabledContainerColor = primaryColor.copy(0.4f),
+        disabledContentColor = onPrimaryColor.copy(0.4f)
     )
 }
 
@@ -137,7 +143,9 @@ fun getButtonsColors() : ButtonColors{
 fun getIconButtonsColors() : IconButtonColors{
     val primaryColor = getPrimaryColor()
     return IconButtonDefaults.iconButtonColors(
+        containerColor = Color.Transparent,
         contentColor = primaryColor,
+        disabledContainerColor = primaryColor.copy(0.4f),
         disabledContentColor = primaryColor.copy(0.4f)
     )
 }
