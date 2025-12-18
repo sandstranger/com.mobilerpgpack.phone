@@ -119,7 +119,8 @@ abstract class SDLImageButton(
                         } else if (this.useViewAsToggle && isPressed) {
                             onTouchUp(sdlKeyCode)
                         }
-                        val up = waitForUpOrCancellation(pass = pointerPassToUse, ignoreOutOfBoundsTouchEvents)
+                        val up = waitForUpOrCancellation(pass = pointerPassToUse,
+                            ignoreOutOfBoundsTouchEvents)
                         if (consumeTouchEvents) {
                             up?.consume()
                         }
