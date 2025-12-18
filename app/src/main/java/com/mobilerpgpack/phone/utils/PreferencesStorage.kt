@@ -32,16 +32,14 @@ open class PreferencesStorage : SharedPrefsRepository()  {
     val pathToDoom64FolderWithMainWads = stringPreferencesKey("path_to_doom64_folder_wads")
     val pathToDoom64FolderWithMods = stringPreferencesKey("path_to_doom64_folder_mods")
     val enableDoom64ModsPrefsKey = booleanPreferencesKey("enable_doom64_mods")
-
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
-
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
-
     val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
-
     val useStandardSDLTextInputPrefsKey = booleanPreferencesKey("use_standard_sdl_text_input")
-
     val customOnScreenKeyboardTransparencyPrefsKey = floatPreferencesKey("custom_keyboard_transparency")
+    val alwaysUseFullScreenTouchModePrefsKey = booleanPreferencesKey("always_use_fullscreen_touch_mode")
+
+    val alwaysUseFullScreenTouchMode = getBooleanValue(alwaysUseFullScreenTouchModePrefsKey)
 
     val customOnScreenKeyboardTransparency = getFloatValue(customOnScreenKeyboardTransparencyPrefsKey, 1.0f)
 

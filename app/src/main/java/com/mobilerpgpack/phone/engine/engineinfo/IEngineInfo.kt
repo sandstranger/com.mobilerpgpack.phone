@@ -25,6 +25,7 @@ interface IEngineInfo {
     val gameActivityClazz: Class<*>
     val commandLineArgs : Array<String>
     val mouseButtonsEventsCanBeInvoked : Boolean
+    val touchFullScreenModeCanBeUsed : Boolean
     suspend fun initialize(activity: ComponentActivity)
     fun loadLayout()
     fun onPause()

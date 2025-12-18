@@ -29,6 +29,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.mobilerpgpack.phone.utils.invokeBool
@@ -142,6 +143,8 @@ abstract class EngineInfo(
     final override val keyboardView get() = layoutBinding?.customKeyboard
 
     final override val keyboardInputField: TextView? get() = layoutBinding?.keyboardEditText
+
+    override val touchFullScreenModeCanBeUsed: Boolean = true
 
     override val commandLineArgs: Array<String>
         get() {
@@ -260,11 +263,9 @@ abstract class EngineInfo(
 
                 if (hideScreenControls) {
                     controlsOverlayUI.visibility = View.GONE
-                } else {
-                    controlsOverlayUI = controlsOverlayUI
                 }
 
-                customKeyboard.alpha = runBlocking { preferencesStorage.customOnScreenKeyboardTransparency.first() }
+                customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
 
                 sdlContainer.post {
                     sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
