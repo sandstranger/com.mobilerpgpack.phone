@@ -33,7 +33,7 @@ abstract class SDLMouseWheelButton(
 
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    private val mouseViewState = MouseViewState(
+    val mouseViewState = MouseViewState(
         id,
         engineType,
         offsetXPercent = offsetXPercent,
