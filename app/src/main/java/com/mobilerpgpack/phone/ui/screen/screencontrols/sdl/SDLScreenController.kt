@@ -2,24 +2,30 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.view.InputDevice
 import android.view.MotionEvent
+import android.view.ViewTreeObserver
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.IntSize
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
@@ -51,6 +57,21 @@ abstract class SDLScreenController : ScreenController() {
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
+        var rootSize by remember { mutableStateOf(IntSize.Zero) }
+
+        val activity = LocalActivity.current
+        val density = LocalDensity.current
+        val rootView = activity?.window?.decorView ?: LocalView.current
+
+        DisposableEffect(rootView) {
+            val listener = ViewTreeObserver.OnGlobalLayoutListener {
+                rootSize = IntSize(rootView.width, rootView.height)
+            }
+            rootView.viewTreeObserver.addOnGlobalLayoutListener(listener)
+            onDispose {
+                rootView.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+            }
+        }
 
         Box(modifier = Modifier
                 .fillMaxSize()
@@ -137,7 +158,14 @@ abstract class SDLScreenController : ScreenController() {
                     }
                 }
         ){
-            content()
+            Box(modifier = Modifier.layout { measurable, constraints ->
+                        val width = rootSize.width.takeIf { it > 0 } ?: constraints.maxWidth
+                        val height = rootSize.height.takeIf { it > 0 } ?: constraints.maxHeight
+                        val placeable = measurable.measure(Constraints.fixed(width, height))
+                        layout(width, height) { placeable.place(0, 0) }
+                    }){
+                content()
+            }
         }
     }
 
