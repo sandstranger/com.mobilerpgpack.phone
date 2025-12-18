@@ -20,7 +20,6 @@ import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.changedToUp
-import androidx.compose.ui.input.pointer.isOutOfBounds
 import androidx.compose.ui.util.fastAll
 import androidx.compose.ui.util.fastAny
 import androidx.core.content.ContextCompat
@@ -120,8 +119,8 @@ fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolu
 }
 
 suspend fun AwaitPointerEventScope.waitForUpOrCancellation(pass: PointerEventPass = PointerEventPass.Main,
-    invokeCancellationAtOutOfBounds : Boolean): PointerInputChange? {
-    if (invokeCancellationAtOutOfBounds){
+                                                           ignoreOutOfBounds : Boolean): PointerInputChange? {
+    if (!ignoreOutOfBounds){
         return this.waitForUpOrCancellation(pass)
     }
 
