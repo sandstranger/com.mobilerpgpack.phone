@@ -33,9 +33,10 @@ abstract class ShowSDLInputImageButton(
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) : KoinComponent, KeyboardListener, ExpandableStateListener,
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) : KoinComponent, KeyboardListener, ExpandableStateListener,
     ImageButton(SHOW_KEYBOARD_BUTTON_ID, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,
-        buttonResId, defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault)
+        buttonResId, defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents)
 {
     private val preferencesStorage : PreferencesStorage = get ()
 

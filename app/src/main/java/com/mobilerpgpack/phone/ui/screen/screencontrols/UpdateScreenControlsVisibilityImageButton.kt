@@ -14,9 +14,11 @@ class UpdateScreenControlsVisibilityImageButton(
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) :
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) :
     ImageButton(HIDE_CONTROLS_BUTTON_ID, engineType, offsetXPercent, offsetYPercent,
-    sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault) {
+    sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted,
+        consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
 
     override fun onClick(context: Context) {
         screenController?.apply { showScreenControls =!showScreenControls }

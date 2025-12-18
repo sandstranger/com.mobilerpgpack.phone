@@ -15,6 +15,14 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.ui.input.pointer.AwaitPointerEventScope
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.isOutOfBounds
+import androidx.compose.ui.util.fastAll
+import androidx.compose.ui.util.fastAny
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -108,6 +116,34 @@ fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolu
             bounds.height() - bars.top - bars.bottom)
     } ?: run {
         screenResolution
+    }
+}
+
+suspend fun AwaitPointerEventScope.waitForUpOrCancellation(pass: PointerEventPass = PointerEventPass.Main,
+    invokeCancellationAtOutOfBounds : Boolean): PointerInputChange? {
+    if (invokeCancellationAtOutOfBounds){
+        return this.waitForUpOrCancellation(pass)
+    }
+
+    while (true) {
+        val event = awaitPointerEvent(pass)
+        if (event.changes.fastAll { it.changedToUp() }) {
+            // All pointers are up
+            return event.changes[0]
+        }
+
+        if (
+            event.changes.fastAny { it.isConsumed }
+        ) {
+            return null // Canceled
+        }
+
+        // Check for cancel by position consumption. We can look on the Final pass of the
+        // existing pointer event because it comes after the pass we checked above.
+        val consumeCheck = awaitPointerEvent(PointerEventPass.Final)
+        if (consumeCheck.changes.fastAny { it.isConsumed }) {
+            return null
+        }
     }
 }
 

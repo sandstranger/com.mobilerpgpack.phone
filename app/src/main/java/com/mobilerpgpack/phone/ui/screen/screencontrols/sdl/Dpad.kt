@@ -32,6 +32,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getBlockingValue
+import com.mobilerpgpack.phone.utils.waitForUpOrCancellation
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -43,7 +44,8 @@ abstract class Dpad(
     private val sizePercent: Float = 0.25f,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) : KoinComponent,
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) : KoinComponent,
     IScreenControlsView {
 
     private val engineInfo by lazy {
@@ -106,7 +108,9 @@ abstract class Dpad(
             controlsType = controlsType,
             isDeletedInitialState = isDeleted,
             alwaysConsumeTouchEvents = false,
-            consumeTouchEventsInitialState = consumeTouchEventsByDefault
+            consumeTouchEventsInitialState = consumeTouchEventsByDefault,
+            touchEventsCanIgnoreOutOfBounds = true,
+            ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents
         )
     }
 
@@ -158,7 +162,8 @@ abstract class Dpad(
                                         down.consume()
                                     }
                                     onTouchDown(sdlKeyEvent)
-                                    val up = waitForUpOrCancellation(pointerPassToUse)
+                                    val up = waitForUpOrCancellation(pointerPassToUse,
+                                        ignoreOutOfBoundsTouchEvents)
                                     if (consumeTouchEvents){
                                         up?.consume()
                                     }

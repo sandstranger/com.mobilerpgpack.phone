@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-class ViewState(
+open class ViewState(
     val id: String,
     val engineType: EngineTypes,
     offsetXPercent: Float = 0f,
@@ -30,7 +30,9 @@ class ViewState(
     val allowToUseViewAsToggle : Boolean = false,
     private val useViewAsToggleInitialState : Boolean = false,
     val alwaysConsumeTouchEvents : Boolean = true,
-    private val consumeTouchEventsInitialState : Boolean = true) : KoinComponent {
+    private val consumeTouchEventsInitialState : Boolean = true,
+    val touchEventsCanIgnoreOutOfBounds : Boolean = false,
+    private val ignoreOutOfBoundsTouchEventsInitialState : Boolean = false) : KoinComponent {
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
@@ -48,6 +50,7 @@ class ViewState(
     private val isDeletedPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_is_deleted")
     private val useViewAsTogglePrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_use_view_as_toggle")
     private val consumeTouchEventsPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_consume_touch_events")
+    private val ignoreOutOfBoundsTouchEventsPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_ignore_out_of_bounds_touch_events")
     private val preferencesStorage : PreferencesStorage = get()
 
     private var wasLoaded by mutableStateOf(false)
@@ -63,8 +66,9 @@ class ViewState(
     var isDeleted by mutableStateOf(isDeletedInitialState)
     var useViewAsToggle by mutableStateOf(useViewAsToggleInitialState)
     var consumeTouchEvents by mutableStateOf(consumeTouchEventsInitialState)
+    var ignoreOutOfBoundsTouchEvents by mutableStateOf(ignoreOutOfBoundsTouchEventsInitialState)
 
-    suspend fun load() {
+    open suspend fun load() {
         if (wasLoaded){
             return
         }
@@ -79,9 +83,10 @@ class ViewState(
         isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isDeletedInitialState).first()
         useViewAsToggle = preferencesStorage.getBooleanValue(useViewAsTogglePrefsKey, useViewAsToggleInitialState).first()
         consumeTouchEvents = preferencesStorage.getBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEventsInitialState).first()
+        ignoreOutOfBoundsTouchEvents = preferencesStorage.getBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEventsInitialState).first()
     }
 
-    fun save() {
+    open fun save() {
         preferencesStorage.setFloatValue( keyX, offsetXPercent)
         preferencesStorage.setFloatValue( keyY, offsetYPercent)
         preferencesStorage.setFloatValue( keySize, sizePercent)
@@ -91,9 +96,10 @@ class ViewState(
         preferencesStorage.setBooleanValue(isDeletedPrefsKey,isDeleted)
         preferencesStorage.setBooleanValue(useViewAsTogglePrefsKey, useViewAsToggle)
         preferencesStorage.setBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEvents)
+        preferencesStorage.setBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEvents)
     }
 
-    fun resetToDefaults() {
+    open fun resetToDefaults() {
         offsetXPercent = defaultOffsetXPercent
         offsetYPercent = defaultOffsetYPercent
         sizePercent = defaultSizePercent
@@ -103,6 +109,7 @@ class ViewState(
         isDeleted = isDeletedInitialState
         useViewAsToggle = useViewAsToggleInitialState
         consumeTouchEvents = consumeTouchEventsInitialState
+        ignoreOutOfBoundsTouchEvents = ignoreOutOfBoundsTouchEventsInitialState
     }
 
     fun resetKeyEvent() {
