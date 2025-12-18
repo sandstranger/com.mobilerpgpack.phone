@@ -191,7 +191,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             if (isEditMode) Color.DarkGray.copy(alpha = 0.5f) else Color.Transparent
         }
 
-        DrawTouchCamera(isEditMode, inGame) {
+        DrawTouchCamera(drawInSafeArea,isEditMode, inGame) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -346,7 +346,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
     }
 
     @Composable
-    protected abstract fun DrawTouchCamera(isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit)
+    protected abstract fun DrawTouchCamera(inSafeArea : Boolean,
+                                           isEditMode: Boolean, inGame: Boolean,
+                                           content: @Composable () -> Unit)
 
     protected abstract fun buildCustomViews (engineTypes: EngineTypes) : Collection<IScreenControlsView>
 
