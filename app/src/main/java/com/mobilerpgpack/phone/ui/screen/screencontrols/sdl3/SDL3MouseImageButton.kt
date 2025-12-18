@@ -21,10 +21,11 @@ class SDL3MouseImageButton(
     useToggle: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) :
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
         alpha,Int.MIN_VALUE, buttonResId,
-        useToggle = useToggle, defaultViewRenderRule = defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault) {
+        useToggle = useToggle, defaultViewRenderRule = defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
 
     init {
         show = !isQuickPanel

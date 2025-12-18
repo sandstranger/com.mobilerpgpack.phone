@@ -32,6 +32,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getBlockingValue
+import com.mobilerpgpack.phone.utils.waitForUpOrCancellation
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -49,7 +50,8 @@ abstract class SDLImageButton(
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) : IScreenControlsView, KoinComponent {
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) : IScreenControlsView, KoinComponent {
 
     private val engineInfo by lazy {
         val preferencesStorage : PreferencesStorage = get()
@@ -75,7 +77,9 @@ abstract class SDLImageButton(
         useViewAsToggleInitialState = useToggle,
         isDeletedInitialState = isDeleted,
         alwaysConsumeTouchEvents = false,
-        consumeTouchEventsInitialState = consumeTouchEventsByDefault)
+        consumeTouchEventsInitialState = consumeTouchEventsByDefault,
+        touchEventsCanIgnoreOutOfBounds = true,
+        ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
@@ -115,14 +119,16 @@ abstract class SDLImageButton(
                         } else if (this.useViewAsToggle && isPressed) {
                             onTouchUp(sdlKeyCode)
                         }
-                        val up = waitForUpOrCancellation(pass = pointerPassToUse)
+                        val up = waitForUpOrCancellation(pass = pointerPassToUse, ignoreOutOfBoundsTouchEvents)
                         if (consumeTouchEvents) {
                             up?.consume()
                         }
                         if (!useViewAsToggle) {
                             onTouchUp(sdlKeyCode)
                         }
-                        isPressed = !isPressed
+                        else{
+                            isPressed = !isPressed
+                        }
                     }
                 }
             }

@@ -36,9 +36,11 @@ abstract class CustomSDLButton(
     useToggle: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
-    consumeTouchEventsByDefault : Boolean = true) : SDLImageButton(
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) : SDLImageButton(
         id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
-        NOT_EXISTING_RES, useToggle, defaultViewRenderRule, controlsType, consumeTouchEventsByDefault), KoinComponent {
+        NOT_EXISTING_RES, useToggle, defaultViewRenderRule, controlsType,
+    consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents), KoinComponent {
 
     final override val viewState: ViewState = ViewState(
         id,
@@ -53,7 +55,11 @@ abstract class CustomSDLButton(
         isDeletedInitialState = true,
         controlsType = controlsType,
         allowToUseViewAsToggle = true,
-        useViewAsToggleInitialState = useToggle)
+        useViewAsToggleInitialState = useToggle,
+        ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents,
+        touchEventsCanIgnoreOutOfBounds = true,
+        alwaysConsumeTouchEvents = false,
+        consumeTouchEventsInitialState = consumeTouchEventsByDefault)
 
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) =

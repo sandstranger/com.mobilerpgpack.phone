@@ -22,6 +22,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getBlockingValue
+import com.mobilerpgpack.phone.utils.waitForUpOrCancellation
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -37,7 +38,8 @@ abstract class ImageButton(
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) : IScreenControlsView, KoinComponent {
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) : IScreenControlsView, KoinComponent {
 
     private val engineInfo by lazy {
         val preferencesStorage : PreferencesStorage = get()
@@ -63,7 +65,9 @@ abstract class ImageButton(
         controlsType = controlsType,
         isDeletedInitialState = isDeleted,
         alwaysConsumeTouchEvents = false,
-        consumeTouchEventsInitialState = consumeTouchEventsByDefault)
+        consumeTouchEventsInitialState = consumeTouchEventsByDefault,
+        touchEventsCanIgnoreOutOfBounds = true,
+        ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
@@ -88,7 +92,8 @@ abstract class ImageButton(
                                 down.consume()
                             }
                             onClick(context)
-                            val up = waitForUpOrCancellation(pointerPassToUse)
+                            val up = waitForUpOrCancellation(pointerPassToUse,
+                                ignoreOutOfBoundsTouchEvents)
                             if (consumeTouchEvents){
                                 up?.consume()
                             }
