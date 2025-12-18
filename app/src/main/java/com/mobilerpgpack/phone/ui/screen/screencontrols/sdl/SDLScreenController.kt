@@ -59,8 +59,7 @@ abstract class SDLScreenController : ScreenController() {
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
-
-        val rootView = LocalActivity.current!!.window.decorView
+        val rootView = LocalActivity.current!!.window.decorView.rootView
 
         DisposableEffect(rootView) {
             val listener = ViewTreeObserver.OnGlobalLayoutListener {
