@@ -7,6 +7,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -59,9 +60,7 @@ abstract class SDLScreenController : ScreenController() {
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
 
-        val activity = LocalActivity.current
-        val density = LocalDensity.current
-        val rootView = activity?.window?.decorView ?: LocalView.current
+        val rootView = LocalActivity.current!!.window.decorView
 
         DisposableEffect(rootView) {
             val listener = ViewTreeObserver.OnGlobalLayoutListener {
@@ -158,7 +157,7 @@ abstract class SDLScreenController : ScreenController() {
                     }
                 }
         ){
-            Box(modifier = Modifier.layout { measurable, constraints ->
+            Box(modifier = Modifier.safeDrawingPadding().layout { measurable, constraints ->
                         val width = rootSize.width.takeIf { it > 0 } ?: constraints.maxWidth
                         val height = rootSize.height.takeIf { it > 0 } ?: constraints.maxHeight
                         val placeable = measurable.measure(Constraints.fixed(width, height))
