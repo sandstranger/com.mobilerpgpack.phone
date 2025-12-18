@@ -22,7 +22,8 @@ class SDL3MouseImageButton(
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
-    ignoreOutOfBoundsTouchEvents : Boolean = false) :
+    ignoreOutOfBoundsTouchEvents : Boolean = false,
+    invokeWheelEventsWhilePressingDefaultState : Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
         alpha,Int.MIN_VALUE, buttonResId,
         useToggle = useToggle, defaultViewRenderRule = defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {

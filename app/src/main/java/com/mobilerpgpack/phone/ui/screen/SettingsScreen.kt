@@ -238,10 +238,9 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
     private fun DrawEditScreenControlsSettings (){
         val activity = LocalActivity.current!!
         val engineState by preferencesStorage.activeEngineAsFlowString.collectAsState(
-            initial =
-                EngineTypes.DefaultActiveEngine.toString()
-        )
+            initial = EngineTypes.DefaultActiveEngine.name)
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState) }
+        val engineInfo : IEngineInfo = koinInject(named(engineState))
         var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
         val controlsProvider : ControlsProvider = koinInject (named(activeEngine.name))
 
@@ -259,12 +258,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             DrawHorizontalDivider()
         }
 
-        PreferenceItem(stringResource(R.string.keys_editor)) {
-            drawKeysEditor = true
-        }
-
-        DrawHorizontalDivider()
-
         PreferenceItem(stringResource(R.string.configure_screen_controls)) {
             ScreenControlsEditorActivity.editControls( activity,activeEngine)
         }
@@ -277,6 +270,15 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.editCustomScreenControlsInGamePrefsKey.name)
 
         DrawHorizontalDivider()
+
+        if (engineInfo.touchFullScreenModeCanBeUsed) {
+            SwitchPreferenceItem(
+                stringResource(R.string.fullscreen_touch_mode),
+                preferencesStorage.alwaysUseFullScreenTouchMode,
+                preferencesStorage.alwaysUseFullScreenTouchModePrefsKey.name
+            )
+            DrawHorizontalDivider()
+        }
 
         SwitchPreferenceItem(
             stringResource(R.string.hide_custom_screen_controls),

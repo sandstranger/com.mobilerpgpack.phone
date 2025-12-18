@@ -106,8 +106,7 @@ abstract class SDLImageButton(
                 }
                 awaitEachGesture {
                     viewState.apply {
-                        val consumeEvents =
-                            consumeTouchEvents || engineInfo.mouseButtonsEventsCanBeInvoked
+                        val consumeEvents = consumeTouchEvents || engineInfo.mouseButtonsEventsCanBeInvoked
                         val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
                         else PointerEventPass.Main
                         val down = awaitFirstDown(pass = pointerPassToUse)
