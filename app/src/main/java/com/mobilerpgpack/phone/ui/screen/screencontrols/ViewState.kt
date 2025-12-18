@@ -34,6 +34,8 @@ open class ViewState(
     val touchEventsCanIgnoreOutOfBounds : Boolean = false,
     private val ignoreOutOfBoundsTouchEventsInitialState : Boolean = false) : KoinComponent {
 
+    protected val preferencesStorage : PreferencesStorage = get()
+
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
     private val defaultOffsetYPercent = offsetYPercent
@@ -51,7 +53,6 @@ open class ViewState(
     private val useViewAsTogglePrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_use_view_as_toggle")
     private val consumeTouchEventsPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_consume_touch_events")
     private val ignoreOutOfBoundsTouchEventsPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_ignore_out_of_bounds_touch_events")
-    private val preferencesStorage : PreferencesStorage = get()
 
     private var wasLoaded by mutableStateOf(false)
 
