@@ -46,11 +46,11 @@ abstract class SDLMouseWheelButton(
         isDeletedInitialState = isDeleted,
         invokeWheelEventsWhilePressingDefaultState = invokeWheelEventsWhilePressingDefaultState)
 
+    final override val viewState get() = mouseViewState
+
     init {
         show = !isQuickPanel
     }
-
-    override val viewState get() = mouseViewState
 
     final override fun onTouchDown(keyCode: Int) {
         if (mouseViewState.invokeWheelEventsWhilePressing){
@@ -71,7 +71,7 @@ abstract class SDLMouseWheelButton(
         val wheelPosition = if (wheelUp) 100.0f else -1f * 100f
         while (true){
             onMouseWheel(keyCode,0f, wheelPosition, MotionEvent.ACTION_SCROLL)
-            delay(100)
+            delay(32)
         }
     }
 
