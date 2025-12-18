@@ -6,7 +6,6 @@ import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -23,8 +22,6 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.IntSize
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -52,7 +49,8 @@ abstract class SDLScreenController : ScreenController() {
     }
 
     @Composable
-    final override fun DrawTouchCamera(isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
+    final override fun DrawTouchCamera(inSafeArea : Boolean,
+                                       isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
         var mWidth by remember { mutableFloatStateOf(0.0f) }
         var mHeight by remember { mutableFloatStateOf(0.0f) }
         var widthSize by remember { mutableIntStateOf(0) }
@@ -72,7 +70,6 @@ abstract class SDLScreenController : ScreenController() {
         }
 
         Box(modifier = Modifier
-                .fillMaxSize()
                 .layout { measurable, constraints ->
                     widthSize = constraints.maxWidth
                     heightSize = constraints.maxHeight
@@ -156,13 +153,15 @@ abstract class SDLScreenController : ScreenController() {
                     }
                 }
         ){
-            Box(modifier = Modifier.safeDrawingPadding().layout { measurable, constraints ->
-                        val width = rootSize.width.takeIf { it > 0 } ?: constraints.maxWidth
-                        val height = rootSize.height.takeIf { it > 0 } ?: constraints.maxHeight
-                        val placeable = measurable.measure(Constraints.fixed(width, height))
-                        layout(width, height) { placeable.place(0, 0) }
-                    }){
-                content()
+            (if (inSafeArea) Modifier.safeDrawingPadding() else Modifier).apply {
+                Box(modifier = this.layout { measurable, constraints ->
+                    val width = rootSize.width.takeIf { it > 0 } ?: constraints.maxWidth
+                    val height = rootSize.height.takeIf { it > 0 } ?: constraints.maxHeight
+                    val placeable = measurable.measure(Constraints.fixed(width, height))
+                    layout(width, height) { placeable.place(0, 0) }
+                }){
+                    content()
+                }
             }
         }
     }
