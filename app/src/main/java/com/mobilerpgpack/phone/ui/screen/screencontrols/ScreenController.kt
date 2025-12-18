@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -190,156 +191,162 @@ abstract class ScreenController : KoinComponent, IScreenController {
             if (isEditMode) Color.DarkGray.copy(alpha = 0.5f) else Color.Transparent
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(backgroundColor)
-        ) {
-            if (inGame) {
-                DrawBlockAndroidViewsBox()
-                if (!isEditMode && !blockTouchCameraEvents) {
-                    DrawTouchCamera()
+        DrawTouchCamera(isEditMode, inGame) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(backgroundColor)
+            ) {
+                if (inGame) {
+                    DrawBlockAndroidViewsBox()
                 }
-            }
 
-            if (isEditMode) {
-                EditControls(
-                    selectedButtonId,
-                    selectedViewRenderRule,
-                    inGame,
-                    onAlphaChange = { delta ->
-                        selectedButtonId?.let { id ->
-                            viewsToDraw[id]!!.viewState.apply {
-                                alpha = (alpha + delta).coerceIn(0.0f, 1f)
-                                save()
-                            }
-                        }
-                    },
-                    onSizeChange = { deltaPercent ->
-                        selectedButtonId?.let { id ->
-                            viewsToDraw[id]!!.viewState.apply {
-                                sizePercent = (sizePercent + deltaPercent).coerceIn(MIN_VIEW_SIZE, MAX_VIEW_SIZE)
-                                save()
-                            }
-                        }
-                    },
-                    onRenderRuleChange = { newRenderRule ->
-                        selectedButtonId?.let { id ->
-                            viewsToDraw[id]!!.viewState.apply {
-                                viewRenderRule = newRenderRule
-                                save()
-                            }
-                        }
-                    },
-                    onCustomViewSelected = { customView ->
-                        customView.viewState.apply {
-                            isDeleted = false
-                            clampView(this, clampForced = true)
-                            save()
-                        }
-                    },
-                    onViewDeleted = { viewIdToDelete ->
-                        viewsToDraw[viewIdToDelete]!!.viewState.apply {
-                            resetToDefaults()
-                            isDeleted = true
-                            save()
-                        }
-                        selectedButtonId = null
-                        selectedViewRenderRule = null
-                    },
-                    onReset = {
-                        selectedButtonId = null
-                        selectedViewRenderRule = null
-                        coroutineScope.launch {
-                            preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
-                            viewsToDraw.values.forEach { view ->
-                                view.viewState.apply {
-                                    val wasDeletedBeforeReset = isDeleted
-                                    resetToDefaults()
-                                    if (!isDeleted) {
-                                        clampView(this)
-                                    }
-                                    if (!wasDeletedBeforeReset || !isDeleted){
-                                         save()
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    onBack = {
-                        selectedButtonId = null
-                        selectedViewRenderRule = null
-                        onBack()
-                    },
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-
-            if (readyToDrawControls) {
-                viewsToDraw.forEach { (id, view) ->
-
-                    val sizePx: Float = screenWidthPx * view.viewState.sizePercent
-                    val sizeDp: Dp = (sizePx / density).dp
-
-                    val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
-                    val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
-
-                    val renderView = (view.isHideControlsButton || (view.renderView && showScreenControls) || isEditMode) && !view.viewState.isDeleted
-
-                    if (renderView) {
-                        DrawView(
-                            viewToDraw = view,
-                            offset = Offset(renderOffsetX, renderOffsetY),
-                            sizeDp = sizeDp,
-                            isEditMode = isEditMode,
-                            isSelected = (selectedButtonId == id),
-                            onClick = {
-                                if (isEditMode) {
-                                    selectedButtonId = id
-                                    view.viewState.apply {
-                                        selectedViewRenderRule = viewRenderRule
-                                    }
-                                    preferencesStorage.setBooleanValue(clampButtonsPrefsKey, false)
-                                }
-                            },
-                            onDragEnd = { newX, newY ->
-                                view.viewState.apply {
-                                    offsetXPercent = (newX / screenWidthPx)
-                                    offsetYPercent = (newY / screenHeightPx)
+                if (isEditMode) {
+                    EditControls(
+                        selectedButtonId,
+                        selectedViewRenderRule,
+                        inGame,
+                        onAlphaChange = { delta ->
+                            selectedButtonId?.let { id ->
+                                viewsToDraw[id]!!.viewState.apply {
+                                    alpha = (alpha + delta).coerceIn(0.0f, 1f)
                                     save()
                                 }
-                            },
-                            inGame = inGame,
-                        )
+                            }
+                        },
+                        onSizeChange = { deltaPercent ->
+                            selectedButtonId?.let { id ->
+                                viewsToDraw[id]!!.viewState.apply {
+                                    sizePercent = (sizePercent + deltaPercent).coerceIn(
+                                        MIN_VIEW_SIZE,
+                                        MAX_VIEW_SIZE
+                                    )
+                                    save()
+                                }
+                            }
+                        },
+                        onRenderRuleChange = { newRenderRule ->
+                            selectedButtonId?.let { id ->
+                                viewsToDraw[id]!!.viewState.apply {
+                                    viewRenderRule = newRenderRule
+                                    save()
+                                }
+                            }
+                        },
+                        onCustomViewSelected = { customView ->
+                            customView.viewState.apply {
+                                isDeleted = false
+                                clampView(this, clampForced = true)
+                                save()
+                            }
+                        },
+                        onViewDeleted = { viewIdToDelete ->
+                            viewsToDraw[viewIdToDelete]!!.viewState.apply {
+                                resetToDefaults()
+                                isDeleted = true
+                                save()
+                            }
+                            selectedButtonId = null
+                            selectedViewRenderRule = null
+                        },
+                        onReset = {
+                            selectedButtonId = null
+                            selectedViewRenderRule = null
+                            coroutineScope.launch {
+                                preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
+                                viewsToDraw.values.forEach { view ->
+                                    view.viewState.apply {
+                                        val wasDeletedBeforeReset = isDeleted
+                                        resetToDefaults()
+                                        if (!isDeleted) {
+                                            clampView(this)
+                                        }
+                                        if (!wasDeletedBeforeReset || !isDeleted) {
+                                            save()
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        onBack = {
+                            selectedButtonId = null
+                            selectedViewRenderRule = null
+                            onBack()
+                        },
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                if (readyToDrawControls) {
+                    viewsToDraw.forEach { (id, view) ->
+
+                        val sizePx: Float = screenWidthPx * view.viewState.sizePercent
+                        val sizeDp: Dp = (sizePx / density).dp
+
+                        val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
+                        val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
+
+                        val renderView =
+                            (view.isHideControlsButton || (view.renderView && showScreenControls) || isEditMode) && !view.viewState.isDeleted
+
+                        if (renderView) {
+                            DrawView(
+                                viewToDraw = view,
+                                offset = Offset(renderOffsetX, renderOffsetY),
+                                sizeDp = sizeDp,
+                                isEditMode = isEditMode,
+                                isSelected = (selectedButtonId == id),
+                                onClick = {
+                                    if (isEditMode) {
+                                        selectedButtonId = id
+                                        view.viewState.apply {
+                                            selectedViewRenderRule = viewRenderRule
+                                        }
+                                        preferencesStorage.setBooleanValue(
+                                            clampButtonsPrefsKey,
+                                            false
+                                        )
+                                    }
+                                },
+                                onDragEnd = { newX, newY ->
+                                    view.viewState.apply {
+                                        offsetXPercent = (newX / screenWidthPx)
+                                        offsetYPercent = (newY / screenHeightPx)
+                                        save()
+                                    }
+                                },
+                                inGame = inGame,
+                            )
+                        }
                     }
                 }
-            }
 
-            if (inGame && allowToEditControls) {
-                Image(
-                    painter = painterResource(R.drawable.cog),
-                    contentDescription = "settings_button",
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .size(60.dp)
-                        .alpha(0.75f)
-                        .minimumInteractiveComponentSize()
-                        .padding(8.dp)
-                        .then(
-                            Modifier.clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) {
-                                isEditMode = !isEditMode
-                            }
-                        )
-                )
+                if (inGame && allowToEditControls) {
+                    Image(
+                        painter = painterResource(R.drawable.cog),
+                        contentDescription = "settings_button",
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .size(60.dp)
+                            .alpha(0.75f)
+                            .minimumInteractiveComponentSize()
+                            .padding(8.dp)
+                            .then(
+                                Modifier.clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) {
+                                    isEditMode = !isEditMode
+                                }
+                            )
+                    )
+                }
             }
         }
     }
 
     @Composable
-    protected abstract fun DrawTouchCamera()
+    protected abstract fun DrawTouchCamera(isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit)
 
     protected abstract fun buildCustomViews (engineTypes: EngineTypes) : Collection<IScreenControlsView>
 

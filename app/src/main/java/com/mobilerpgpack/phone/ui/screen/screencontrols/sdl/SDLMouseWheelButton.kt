@@ -18,10 +18,11 @@ abstract class SDLMouseWheelButton(
     override val isQuickPanel: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
-    consumeTouchEventsByDefault : Boolean = true) :
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
         alpha, Int.MIN_VALUE, buttonResId, useToggle = false,
-        defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault) {
+        defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
 
     init {
         show = !isQuickPanel

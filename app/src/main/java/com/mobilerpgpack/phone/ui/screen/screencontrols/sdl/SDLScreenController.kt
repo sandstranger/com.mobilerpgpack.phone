@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.view.InputDevice
 import android.view.MotionEvent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
@@ -43,15 +45,14 @@ abstract class SDLScreenController : ScreenController() {
     }
 
     @Composable
-    final override fun DrawTouchCamera() {
+    final override fun DrawTouchCamera(isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
         var mWidth by remember { mutableFloatStateOf(0.0f) }
         var mHeight by remember { mutableFloatStateOf(0.0f) }
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
 
-        Box(
-            modifier = Modifier
+        Box(modifier = Modifier
                 .fillMaxSize()
                 .layout { measurable, constraints ->
                     widthSize = constraints.maxWidth
@@ -80,8 +81,11 @@ abstract class SDLScreenController : ScreenController() {
                         placeable.place(0, 0)
                     }
                 }
-                .alpha(0f)
-                .pointerInput(Unit) {
+                .background(Color.Transparent)
+                .pointerInput(!isEditMode && inGame) {
+                    if (isEditMode || !inGame) {
+                        return@pointerInput
+                    }
                     awaitPointerEventScope {
                         while (true) {
                             val event = awaitPointerEvent()
@@ -132,7 +136,9 @@ abstract class SDLScreenController : ScreenController() {
                         }
                     }
                 }
-        )
+        ){
+            content()
+        }
     }
 
     protected abstract fun handlePointer(pointerId: Int, pressure: Float, x: Float, y: Float,
