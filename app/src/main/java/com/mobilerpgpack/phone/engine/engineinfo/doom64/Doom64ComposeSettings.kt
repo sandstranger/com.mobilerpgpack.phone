@@ -15,6 +15,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
@@ -42,7 +43,7 @@ class Doom64ComposeSettings () :
         DrawCommandLinePreferences(preferencesStorage.doom64CommandLineArgsString,
             preferencesStorage.doom64CommandLineArgsStringPrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         RequestPath(
             stringResource(R.string.path_to_doom64_folder),
@@ -65,7 +66,7 @@ class Doom64ComposeSettings () :
             .collectAsState(initial = "")
 
         if (enableDoom64Mods) {
-            HorizontalDivider()
+            DrawHorizontalDivider()
 
             RequestPath(
                 stringResource(R.string.path_to_doom64_mods_folder),

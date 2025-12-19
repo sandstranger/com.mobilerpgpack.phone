@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLMouseWheelButton
 
 interface IScreenControlsView {
     val viewState : ViewState

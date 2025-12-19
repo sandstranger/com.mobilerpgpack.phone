@@ -10,11 +10,8 @@ import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +26,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.mobilerpgpack.phone.utils.invokeBool
@@ -36,11 +34,15 @@ import com.sun.jna.Function
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
@@ -78,6 +80,15 @@ abstract class EngineInfo(
             KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY
         )
     )
+
+    final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
+        flow {
+            while (currentCoroutineContext().isActive) {
+                emit(mouseButtonsEventsCanBeInvoked)
+                delay(16)
+            }
+        }.distinctUntilChanged()
+    }
 
     final override val mainLibraryName: String = mainEngineLib
 
@@ -143,6 +154,8 @@ abstract class EngineInfo(
 
     final override val keyboardInputField: TextView? get() = layoutBinding?.keyboardEditText
 
+    override val touchFullScreenModeCanBeUsed: Boolean = true
+
     override val commandLineArgs: Array<String>
         get() {
             if (commandLineParams.isNullOrEmpty() || !commandLineParams!!.contains("-")) {
@@ -171,6 +184,11 @@ abstract class EngineInfo(
         }
 
         wasInit = true
+
+        while (!preferencesStorage.prefsWasLoaded){
+            delay(5)
+        }
+
         this.activity = activity
         initializeCommonEngineData()
         resolution = activity.getScreenResolution()
@@ -260,11 +278,9 @@ abstract class EngineInfo(
 
                 if (hideScreenControls) {
                     controlsOverlayUI.visibility = View.GONE
-                } else {
-                    controlsOverlayUI = controlsOverlayUI
                 }
 
-                customKeyboard.alpha = runBlocking { preferencesStorage.customOnScreenKeyboardTransparency.first() }
+                customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
 
                 sdlContainer.post {
                     sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -282,12 +298,7 @@ abstract class EngineInfo(
 
                             if (!hideScreenControls) {
                                 controlsOverlayUI.setContent {
-                                    val isSystemInDarkTheme = isSystemInDarkTheme()
-                                    val useDarkTheme by preferencesStorage.getUseDarkThemeValue(
-                                        isSystemInDarkTheme
-                                    ).collectAsState(initial = isSystemInDarkTheme)
-
-                                    Theme(darkTheme = useDarkTheme) {
+                                    Theme {
                                         screenController.DrawScreenControls(
                                             inGame = true,
                                             blockTouchCameraEvents = blockTouchCameraEvents,

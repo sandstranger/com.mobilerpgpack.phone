@@ -25,6 +25,9 @@ import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.getButtonsColors
+import com.mobilerpgpack.phone.ui.getOnBackgroundColor
+import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 
 class PermissionScreen : ComposeScreen (SCREEN_NAME) {
@@ -40,6 +43,8 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val activity = LocalActivity.current!!
+        val onBackgroundColor = getOnBackgroundColor()
+        val buttonsColor = getButtonsColors()
 
         Column(
             modifier = Modifier
@@ -63,7 +68,8 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
                 }
             }
 
-            Text(text = stringResource(R.string.access_to_all_files), textAlign = TextAlign.Center, fontSize = 24.sp)
+            Text(text = stringResource(R.string.access_to_all_files),
+                textAlign = TextAlign.Center, fontSize = 24.sp, color = onBackgroundColor)
             Button(
                 onClick = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -79,11 +85,12 @@ class PermissionScreen : ComposeScreen (SCREEN_NAME) {
                     } else {
                         legacyPermissionsLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     }
-                },
+                }, colors = buttonsColor
             ) {
                 Text(
                     text = stringResource(R.string.grant_permission),
                     textAlign = TextAlign.Center, fontSize = 21.sp,
+                    color = getOnPrimaryColor()
                 )
             }
         }

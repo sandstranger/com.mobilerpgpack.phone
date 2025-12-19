@@ -16,6 +16,7 @@ import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
@@ -53,7 +54,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.psyDoomCommandLineArgsPrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         RequestPath(
             stringResource(R.string.path_to_psydoom_cue_file),
@@ -70,7 +71,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             initialValueFlow = preferencesStorage.enablePsyDoomMods,
             preferencesStorage.enablePsyDoomModsPrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         val enablePsyDoomMods by preferencesStorage.enablePsyDoomMods.collectAsState(initial = false)
 
@@ -80,7 +81,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
                 preferencesStorage.pathToPsyDoomModsFolder,
                 preferencesStorage.pathToPsyDoomModsFolderPrefsKey
             )
-            HorizontalDivider()
+            DrawHorizontalDivider()
         }
         PreferenceItem(stringResource(R.string.psydoom_more_settings)) {
             navController.navigate(MORE_SETTINGS_SCREEN)
@@ -89,35 +90,35 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     @Composable
     private fun DrawMoreSettings(navController: NavHostController) {
-        HorizontalDivider()
+        DrawHorizontalDivider()
         PreferenceItem(stringResource(R.string.psydoom_launcher_settings)) {
             navController.navigate(LAUNCHER_SETTINGS_SCREEN)
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         PreferenceItem(stringResource(R.string.psydoom_graphics_settings)) {
             navController.navigate(GRAPHICS_SETTINGS_SCREEN)
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         PreferenceItem(stringResource(R.string.psydoom_game)) {
             navController.navigate(GAME_SETTINGS_SCREEN)
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         PreferenceItem(stringResource(R.string.psydoom_input)) {
             navController.navigate(INPUT_SETTINGS_SCREEN)
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         PreferenceItem(stringResource(R.string.psydoom_audio)) {
             navController.navigate(AUDIO_SETTINGS_SCREEN)
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         PreferenceItem(stringResource(R.string.psydoom_cheats)) {
             navController.navigate(CHEATS_SETTINGS_SCREEN)
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         PreferenceItem(stringResource(R.string.psydoom_multiplayer)) {
             navController.navigate(MULTIPLAYER_SETTINGS_SCREEN)
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -130,35 +131,35 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.recordDemos, preferencesStorage.recordDemosPrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.psydoom_force_pistol_start),
             preferencesStorage.forcePistolStart, preferencesStorage.forcePistolStartPrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.psydoom_force_turbo_mode),
             preferencesStorage.turboMode, preferencesStorage.turboModePrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.psydoom_force_no_monsters),
             preferencesStorage.noMonsters, preferencesStorage.noMonstersPrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.psydoom_nm_boss_fixup),
             preferencesStorage.nmBossFixUp, preferencesStorage.nmBossFixUpPrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawNetworkSettings()
     }
@@ -172,7 +173,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.host, preferencesStorage.hostPrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         val port by preferencesStorage.port.collectAsState(initial = 0)
 
@@ -184,7 +185,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.setIntValue(preferencesStorage.portPrefsKey, port)
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         val peerType by preferencesStorage.peerType.collectAsState(initial = PeerType.Client.toString())
 
@@ -194,7 +195,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.setStringValue(preferencesStorage.peerTypePrefsKey, it.toString())
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -207,12 +208,12 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.enableVsync = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_refresh_rate),
             viewModel.outputRefreshRate) {
             viewModel.outputRefreshRate = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         DrawTitleText(stringResource(R.string.psydoom_picture_crop_settings))
 
         EditTextItem(
@@ -222,7 +223,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.topOverscanPixels = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextItem(
             stringResource(R.string.psydoom_bottom_overscan_pixels),
@@ -231,7 +232,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.bottomOverscanPixels = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextItem(
             stringResource(R.string.psydoom_logical_display_width),
@@ -240,83 +241,83 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.logicalDisplayWidth = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_general_settings))
         EditTextItem(stringResource(R.string.psydoom_vram_size), viewModel.vramSizeInMbytes) {
             viewModel.vramSizeInMbytes = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_extended_automap_colors),
             viewModel.useExtendedAutomapColors
         ) {
             viewModel.useExtendedAutomapColors = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_vulkan_render))
 
         EditTextItem(stringResource(R.string.psydoom_render_height), viewModel.renderHeight) {
             viewModel.renderHeight = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(
             stringResource(R.string.psydoom_anti_aliasing_samples),
             viewModel.antialiasingMultisamples
         ) {
             viewModel.antialiasingMultisamples = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_mimic_original_pixel_stretch),
             viewModel.vulkanPixelsStretch
         ) {
             viewModel.vulkanPixelsStretch = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_widescreen),
             viewModel.widescreenEnabled
         ) {
             viewModel.widescreenEnabled = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_extended_status_bar),
             viewModel.drawExtendedStatusBar
         ) {
             viewModel.drawExtendedStatusBar = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_disable_vulkan_render),
             viewModel.disableVulkanRender
         ) {
             viewModel.disableVulkanRender = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_triple_buffer),
             viewModel.tripleBuffer
         ) {
             viewModel.tripleBuffer = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_shading),
             viewModel.use32bitShading
         ) {
             viewModel.use32bitShading = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_brighten_automap),
             viewModel.brightenAutomap
         ) {
             viewModel.brightenAutomap = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         DrawTitleText(stringResource(R.string.psydoom_classic_render))
         SwitchItem(
             stringResource(R.string.psydoom_enhance_draw_wall_precision),
@@ -324,21 +325,21 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.enhanceWallDrawPrecision = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_floor_render_gap_fix),
             viewModel.floorGapRenderFix
         ) {
             viewModel.floorGapRenderFix = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_sky_leak_fix),
             viewModel.skyLeakFix
         ) {
             viewModel.skyLeakFix = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -351,28 +352,28 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.interpolateSectors = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_interpolate_monsters),
             viewModel.interpolateMonsters
         ) {
             viewModel.interpolateMonsters = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_interpolate_things),
             viewModel.interpolateThings
         ) {
             viewModel.interpolateThings = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_interpolate_weapon),
             viewModel.interpolateWeapon
         ) {
             viewModel.interpolateWeapon = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_counters))
 
@@ -382,7 +383,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.enableLevelTimer = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(
             stringResource(R.string.psydoom_perf_counters),
@@ -390,7 +391,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.showPerfCounters = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_miscellaneous))
 
@@ -400,7 +401,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.pauseOnFocusLost = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextItem(
             stringResource(R.string.psydoom_bob_scale),
@@ -408,20 +409,20 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.bobScale = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(
             stringResource(R.string.psydoom_heap_size),
             viewModel.heapSize
         ) {
             viewModel.heapSize = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         DrawBugFixes(viewModel)
-        HorizontalDivider()
+        DrawHorizontalDivider()
         DrawTweaks(viewModel)
-        HorizontalDivider()
+        DrawHorizontalDivider()
         DrawExtraGameSettings(viewModel)
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -434,7 +435,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.fixLineActivation = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(
             stringResource(R.string.psydoom_item_pickup_fix),
@@ -442,7 +443,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.itemPickupFix = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(
             stringResource(R.string.psydoom_fix_mutiline_crossing),
@@ -450,70 +451,70 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             viewModel.fixMultiLineCrossing = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_fix_kill_count),
             viewModel.fixKillCount
         ) {
             viewModel.fixKillCount = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_player_rocket_blast_fix),
             viewModel.playerRocketBlastFix
         ) {
             viewModel.playerRocketBlastFix = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_fix_sprite_vertical_warp),
             viewModel.fixSpriteVerticalWarp
         ) {
             viewModel.fixSpriteVerticalWarp = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_fix_view_bob_strength),
             viewModel.fixViewBobStrength
         ) {
             viewModel.fixViewBobStrength = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_fix_gravity_strength),
             viewModel.fixGravityStrength
         ) {
             viewModel.fixGravityStrength = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_lost_soul_spawn_fix),
             viewModel.useLostSoulSpawnFix
         ) {
             viewModel.useLostSoulSpawnFix = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_line_of_sight_overflow_fix),
             viewModel.useLineOfSightOverflowFix
         ) {
             viewModel.useLineOfSightOverflowFix = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_fix_outdoor_bullet_pufs),
             viewModel.fixOutdoorBulletPuffs
         ) {
             viewModel.fixOutdoorBulletPuffs = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_fix_blockng_gibs_bug),
             viewModel.fixBlockingGibsBug
         ) {
             viewModel.fixBlockingGibsBug = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_fix_sound_propagation),
             viewModel.fixSoundPropagation) {
@@ -529,47 +530,47 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.useExtendedPlayerShootRange) {
             viewModel.useExtendedPlayerShootRange = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_multimap_pickup),
             viewModel.allowMultiMapPickup) {
             viewModel.allowMultiMapPickup = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_input_latency_tweak),
             viewModel.useMoveInputLatencyTweak) {
             viewModel.useMoveInputLatencyTweak = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_ssg_delay_tweak),
             viewModel.useSuperShotgunDelayTweak) {
             viewModel.useSuperShotgunDelayTweak = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_allow_turning_cancel),
             viewModel.allowTurningCancellation) {
             viewModel.allowTurningCancellation = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_force_spawn_dm_things),
             viewModel.singlePlayerForceSpawnDmThings) {
             viewModel.singlePlayerForceSpawnDmThings = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         ListPreferenceItem(stringResource(R.string.psydoom_allow_movement_cancel),
             viewModel.allowMovementCancellation) {
             viewModel.allowMovementCancellation = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         ListPreferenceItem(stringResource(R.string.psydoom_final_doom_player_physx),
             viewModel.useFinalDoomPlayerMovement ) {
             viewModel.useFinalDoomPlayerMovement = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(
             stringResource(R.string.psydoom_lost_soul_spawn_limit),
             viewModel.lostSoulSpawnLimit) {
@@ -585,19 +586,19 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.enableMapPatchesGamePlay) {
             viewModel.enableMapPatchesGamePlay = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_visual_fixes),
             viewModel.enableMapPatchesVisual) {
             viewModel.enableMapPatchesVisual = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(
             stringResource(R.string.psydoom_fixes),
             viewModel.enableMapPatchesPsyDoom) {
             viewModel.enableMapPatchesPsyDoom = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_game_tick_rate))
 
@@ -605,7 +606,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.usePalTimings ) {
             viewModel.usePalTimings = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(stringResource(R.string.psydoom_demo_timings),
             viewModel.useDemoTimings) {
@@ -622,7 +623,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.mouseTurnSpeed) {
             viewModel.mouseTurnSpeed = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_gamepad))
 
@@ -630,33 +631,33 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.gamepadDeadZone) {
             viewModel.gamepadDeadZone = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         EditTextItem(stringResource(R.string.psydoom_high_fast_turn_speed),
             viewModel.gamepadFastTurnSpeedHigh) {
             viewModel.gamepadFastTurnSpeedHigh = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_low_fast_turn_speed),
             viewModel.gamepadFastTurnSpeedLow) {
             viewModel.gamepadFastTurnSpeedLow = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_low_turn_speed),
             viewModel.gamepadTurnSpeedLow) {
             viewModel.gamepadTurnSpeedLow = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_high_turn_speed),
             viewModel.gamepadTurnSpeedHigh) {
             viewModel.gamepadTurnSpeedHigh = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_analog_to_digital_threshold),
             viewModel.analogToDigitalThreshold) {
             viewModel.analogToDigitalThreshold = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -668,12 +669,12 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.audioBufferSize) {
             viewModel.audioBufferSize = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_spu_ram_size),
             viewModel.spuRamSize) {
             viewModel.spuRamSize = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -685,69 +686,69 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.enableDevCheatShortcuts) {
             viewModel.enableDevCheatShortcuts = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(stringResource(R.string.psydoom_developer_map_reload_key),
             viewModel.enableDevInPlaceReloadFunctionKey) {
             viewModel.enableDevInPlaceReloadFunctionKey = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(stringResource(R.string.psydoom_developer_map_reload),
             viewModel.enableDevMapAutoReload) {
             viewModel.enableDevMapAutoReload = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_cheat_key_sequences))
         EditTextItem(stringResource(R.string.psydoom_god_mode),
             viewModel.cheatKeySequenceGodMode) {
             viewModel.cheatKeySequenceGodMode = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_no_clip),
             viewModel.cheatKeySequenceNoClip) {
             viewModel.cheatKeySequenceNoClip = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_level_warp),
             viewModel.cheatKeySequenceLevelWarp) {
             viewModel.cheatKeySequenceLevelWarp = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_weapons_keys_armor_cheat),
             viewModel.cheatKeySequenceWeaponsKeysAndArmor) {
             viewModel.cheatKeySequenceWeaponsKeysAndArmor = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_weapons_armor_cheat),
             viewModel.cheatKeySequenceWeaponsAndArmor) {
             viewModel.cheatKeySequenceWeaponsAndArmor = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_map_lines_on),
             viewModel.cheatKeySequenceAllMapLinesOn) {
             viewModel.cheatKeySequenceAllMapLinesOn = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_map_things_on),
             viewModel.cheatKeySequenceAllMapThingsOn) {
             viewModel.cheatKeySequenceAllMapThingsOn = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_xray_vision),
             viewModel.cheatKeySequenceXRayVision) {
             viewModel.cheatKeySequenceXRayVision = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_vram_viewer),
             viewModel.cheatKeySequenceVramViewer) {
             viewModel.cheatKeySequenceVramViewer = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         EditTextItem(stringResource(R.string.psydoom_no_target),
             viewModel.cheatKeySequenceNoTarget) {
             viewModel.cheatKeySequenceNoTarget = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -759,36 +760,36 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.coopNoFriendlyFire) {
             viewModel.coopNoFriendlyFire = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(stringResource(R.string.psydoom_spawn_deathmatch_only_things),
             viewModel.coopForceSpawnDeathmatchThings) {
             viewModel.coopForceSpawnDeathmatchThings = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(stringResource(R.string.psydoom_preserve_keys_on_respawn),
             viewModel.coopPreserveKeys) {
             viewModel.coopPreserveKeys = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(stringResource(R.string.psydoom_preserve_weapons_on_respawn),
             viewModel.coopPreserveWeapons) {
             viewModel.coopPreserveWeapons = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         ListPreferenceItem(stringResource(R.string.psydoom_preserve_ammo_on_respawn),
             viewModel.coopPreserveAmmoFactor,) {
             viewModel.coopPreserveAmmoFactor = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(stringResource(R.string.psydoom_preserve_weapons_on_respawn),
             viewModel.coopPreserveWeapons) {
             viewModel.coopPreserveWeapons = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_deathmatch))
 
@@ -797,17 +798,17 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.dmFragLimit = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(stringResource(R.string.psydoom_disable_exits),
             viewModel.dmExitDisabled) {
             viewModel.dmExitDisabled = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
         SwitchItem(stringResource(R.string.psydoom_auto_activate_boss),
             viewModel.dmActivateBossSpecialSectors) {
             viewModel.dmActivateBossSpecialSectors = it
         }
-        HorizontalDivider()
+        DrawHorizontalDivider()
     }
 
     data class PsyDoomLauncherSettingsScreen(private val psyDoomComposeSettings: PsyDoomComposeSettings) :

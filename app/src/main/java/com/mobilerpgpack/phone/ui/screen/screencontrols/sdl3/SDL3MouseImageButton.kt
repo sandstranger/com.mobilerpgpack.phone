@@ -20,10 +20,13 @@ class SDL3MouseImageButton(
     override val isQuickPanel: Boolean = false,
     useToggle: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false) :
+    controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false,
+    invokeWheelEventsWhilePressingDefaultState : Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
         alpha,Int.MIN_VALUE, buttonResId,
-        useToggle = useToggle, defaultViewRenderRule = defaultViewRenderRule,controlsType, isDeleted) {
+        useToggle = useToggle, defaultViewRenderRule = defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
 
     init {
         show = !isQuickPanel

@@ -22,16 +22,11 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val preferencesStorage : PreferencesStorage = get()
-        var useDarkTheme = false
         runBlocking {
-            useDarkTheme = preferencesStorage.getUseDarkThemeValue().first()
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()
             engineInfo = get (named(activeEngineType))
         }
         gameResourcesFound = engineInfo.isResourceCorrect(this, onCloseDialogBox = { finish() })
-        if (useDarkTheme){
-            setTheme(R.style.AppFullScreenThemeDark)
-        }
         if (!gameResourcesFound){
             super.onCreate(savedInstanceState)
             return

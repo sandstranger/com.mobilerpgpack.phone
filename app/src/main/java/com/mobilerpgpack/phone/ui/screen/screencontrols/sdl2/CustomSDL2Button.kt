@@ -8,7 +8,7 @@ import org.libsdl.app.SDLActivity.onNativeKeyDown
 import org.libsdl.app.SDLActivity.onNativeKeyUp
 
 class CustomSDL2Button(
-    private val id: String,
+    id: String,
     engineType: EngineTypes,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,
@@ -18,9 +18,11 @@ class CustomSDL2Button(
     useToggle: Boolean = false,
     override val isQuickPanel: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
-    controlsType: ControlsType = ControlsType.Default ) :
+    controlsType: ControlsType = ControlsType.Default,
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) :
     CustomSDLButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
-        useToggle, defaultViewRenderRule, controlsType) {
+        useToggle, defaultViewRenderRule, controlsType, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
 
     init {
         show = !isQuickPanel

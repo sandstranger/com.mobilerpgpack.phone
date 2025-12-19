@@ -2,33 +2,44 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.view.InputDevice
 import android.view.MotionEvent
+import android.view.ViewTreeObserver
+import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.IntSize
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.CustomSDL2Button
 import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
@@ -45,22 +56,54 @@ abstract class SDLScreenController : ScreenController() {
         get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
     }
 
+    private val alwaysUseFullScreenMode by lazy {
+        preferencesStorage.alwaysUseFullScreenTouchMode.getBlockingValue() && engineInfo.touchFullScreenModeCanBeUsed
+    }
+
+    private val alwaysUseFullScreenModeAsFlow : Flow<Boolean> by lazy{
+        flow {
+            while (currentCoroutineContext().isActive) {
+                emit(alwaysUseFullScreenMode && !engineInfo.mouseButtonsEventsCanBeInvoked)
+                delay(50)
+            }
+        }.distinctUntilChanged()
+    }
+
     @Composable
-    final override fun DrawTouchCamera() {
+    final override fun DrawTouchCamera(inSafeArea : Boolean,
+                                       isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
+        if (!inGame){
+            Box(modifier = Modifier.fillMaxSize().background(Color.Transparent)){
+                content()
+            }
+            return
+        }
+
         var mWidth by remember { mutableFloatStateOf(0.0f) }
         var mHeight by remember { mutableFloatStateOf(0.0f) }
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
+        var rootSize by remember { mutableStateOf(IntSize.Zero) }
+        val rootView = LocalActivity.current!!.window.decorView.rootView
+        val rootModifier = if (inSafeArea) Modifier.fillMaxSize().safeDrawingPadding() else Modifier.fillMaxSize()
+        val useFullScreenMode by alwaysUseFullScreenModeAsFlow.collectAsState(initial = false)
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .layout { measurable, constraints ->
+        DisposableEffect(rootView) {
+            val listener = ViewTreeObserver.OnGlobalLayoutListener {
+                rootSize = IntSize(rootView.width, rootView.height)
+            }
+            rootView.viewTreeObserver.addOnGlobalLayoutListener(listener)
+            onDispose {
+                rootView.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+            }
+        }
+
+        Box(modifier = rootModifier.layout { measurable, constraints ->
                     widthSize = constraints.maxWidth
                     heightSize = constraints.maxHeight
 
-                    if (viewWidth > 0) {
+                    if (viewWidth > 0 && !useFullScreenMode) {
                         val myAspect = 1.0f * viewWidth / viewHeight
                         var resultWidth = widthSize.toFloat()
                         var resultHeight = resultWidth / myAspect
@@ -83,8 +126,11 @@ abstract class SDLScreenController : ScreenController() {
                         placeable.place(0, 0)
                     }
                 }
-                .alpha(0f)
-                .pointerInput(Unit) {
+                .background(Color.Transparent)
+                .pointerInput(!isEditMode) {
+                    if (isEditMode) {
+                        return@pointerInput
+                    }
                     awaitPointerEventScope {
                         while (true) {
                             val event = awaitPointerEvent()
@@ -135,7 +181,18 @@ abstract class SDLScreenController : ScreenController() {
                         }
                     }
                 }
-        )
+        ){
+            (if (inSafeArea) Modifier.safeDrawingPadding() else Modifier).apply {
+                Box(modifier = this.layout { measurable, constraints ->
+                    val width = rootSize.width.takeIf { it > 0 } ?: constraints.maxWidth
+                    val height = rootSize.height.takeIf { it > 0 } ?: constraints.maxHeight
+                    val placeable = measurable.measure(Constraints.fixed(width, height))
+                    layout(width, height) { placeable.place(0, 0) }
+                }){
+                    content()
+                }
+            }
+        }
     }
 
     protected abstract fun handlePointer(pointerId: Int, pressure: Float, x: Float, y: Float,
@@ -156,8 +213,8 @@ abstract class SDLScreenController : ScreenController() {
 
     private fun buildCustomViewsCollection (engineTypes: EngineTypes, controlsProvider: ControlsProvider) : Collection<IScreenControlsView>{
         return mutableListOf<IScreenControlsView>().apply {
-            keyCodeMap.forEach {
-                this.add(buildCustomView(it.value, engineTypes, it.key, controlsProvider))
+            keyCodeMap.values.forEach {
+                this.add(buildCustomView(it.keyCodeName, engineTypes, it.keyCode, controlsProvider))
             }
         }
     }

@@ -4,6 +4,8 @@ import android.app.Application
 import com.google.gson.Gson
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.utils.AssetExtractor
+import com.mobilerpgpack.phone.utils.IAssetExtractor
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -16,13 +18,13 @@ import org.koin.core.context.GlobalContext.startKoin
 
 class MainApplication : Application() {
 
-    private lateinit var assetExtractor: AssetExtractor
-
     override fun onCreate() {
         super.onCreate()
         setupJna()
-        copyAllAssetsFromApk()
         initializeKoin()
+        copyAllAssetsFromApk()
+        val preferencesStorage : PreferencesStorage = getKoin().get ()
+        preferencesStorage.loadAllEntries()
     }
 
     override fun onTerminate() {
@@ -33,8 +35,7 @@ class MainApplication : Application() {
     }
 
     private fun initializeKoin(){
-        val koinModulesProvider = KoinModulesProvider(this@MainApplication,
-            assetExtractor,globalScope)
+        val koinModulesProvider = KoinModulesProvider(this@MainApplication,globalScope)
         startKoin{
             androidLogger()
             androidContext(this@MainApplication)
@@ -43,14 +44,12 @@ class MainApplication : Application() {
     }
 
     private fun copyAllAssetsFromApk(){
-        assetExtractor = AssetExtractor(this, assetsToIgnoreChecking)
-        globalScope.launch {
-            assetExtractor.copyAssetsContentToInternalStorage()
-        }
+        val assetExtractor : IAssetExtractor = getKoin().get ()
+        globalScope.launch { assetExtractor.copyAssetsContentToInternalStorage() }
     }
 
     private companion object{
-        val globalScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+        val globalScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
         private fun setupJna(){
             System.setProperty("jna.nosys", "true")

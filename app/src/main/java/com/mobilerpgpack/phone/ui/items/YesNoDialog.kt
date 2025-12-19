@@ -7,24 +7,36 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.getOnSurfaceColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
+import com.mobilerpgpack.phone.ui.getPrimaryColor
+import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
+import com.mobilerpgpack.phone.ui.getTextButtonsColors
 
 @Composable
 fun ShowYesNoDialog (title: String = "", message : String,
                      positiveAction : (() -> Unit)? = null,
                      negativeAction :(() -> Unit)? = null ){
+    val onSurfaceVariantColor = getOnSurfaceVariantColor()
+    val onSurfaceColor = getOnSurfaceColor()
+    val primaryColor = getPrimaryColor()
+    val surfaceContainerHighColor = getSurfaceContainerHighColor()
+    val buttonsColors = getTextButtonsColors()
+
     AlertDialog(title = { Text(title) },
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        titleContentColor = MaterialTheme.colorScheme.onSurface,
-        text = { Text(message) },
+        containerColor = surfaceContainerHighColor,
+        textContentColor = onSurfaceVariantColor,
+        iconContentColor = onSurfaceVariantColor,
+        titleContentColor = onSurfaceColor,
+        text = { Text(message, color = onSurfaceVariantColor) },
         confirmButton = {
             TextButton(onClick = {
                 positiveAction?.invoke()
-            }) { Text(stringResource(R.string.yes_text)) }
+            }, colors = buttonsColors) { Text(stringResource(R.string.yes_text), color = primaryColor) }
         },
         onDismissRequest = { negativeAction?.invoke() },
         dismissButton = {
-            TextButton(onClick = { negativeAction?.invoke() }) { Text(stringResource(R.string.no_text)) }
+            TextButton(onClick = { negativeAction?.invoke() }, colors = buttonsColors) { Text(stringResource(R.string.no_text),
+                color = primaryColor) }
         })
 }
