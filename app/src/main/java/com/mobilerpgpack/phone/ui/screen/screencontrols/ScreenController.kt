@@ -566,8 +566,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     }
 
                     Button(onClick = {
-                        viewToEdit.viewState.resetToDefaultsFromViewEditor()
-                        viewToEdit.viewState.save() },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        viewToEdit.viewState.apply {
+                            resetToDefaultsFromViewEditor()
+                            save()
+                        } },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
                         Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
                     }
 
