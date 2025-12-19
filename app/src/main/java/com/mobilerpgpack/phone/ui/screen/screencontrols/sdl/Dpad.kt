@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -200,15 +201,14 @@ abstract class Dpad(
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-
-        return modifier.pointerInput(!isEditMode, viewState.consumeTouchEvents, mouseButtonsEventsCanBeInvoked,
-            viewState.ignoreOutOfBoundsTouchEvents) {
+        val currentMouseButtonsState by rememberUpdatedState(mouseButtonsEventsCanBeInvoked)
+        return modifier.pointerInput(!isEditMode) {
             if (isEditMode) {
                 return@pointerInput
             }
             awaitEachGesture {
                 viewState.apply {
-                    val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
+                    val consumeEvents = consumeTouchEvents || currentMouseButtonsState
                     val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
                     val down = awaitFirstDown(pass = pointerPassToUse)
                     if (consumeEvents){
