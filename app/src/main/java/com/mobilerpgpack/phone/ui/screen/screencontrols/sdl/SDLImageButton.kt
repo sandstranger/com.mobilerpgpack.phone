@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -106,11 +107,13 @@ abstract class SDLImageButton(
             return modifierTouse
         }
 
+        if (!viewState.useViewAsToggle){
+            isPressed = false
+        }
+
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-
-        return modifierTouse.pointerInput(!isEditMode, mouseButtonsEventsCanBeInvoked,
-            viewState.consumeTouchEvents, isPressed,viewState.useViewAsToggle, viewState.sdlKeyCode,viewState.ignoreOutOfBoundsTouchEvents) {
+        return modifierTouse.pointerInput(!isEditMode) {
                 if (isEditMode) {
                     return@pointerInput
                 }
