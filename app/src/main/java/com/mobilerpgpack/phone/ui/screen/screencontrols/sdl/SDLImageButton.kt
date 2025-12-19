@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -108,16 +109,15 @@ abstract class SDLImageButton(
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-
-        return modifierTouse.pointerInput(!isEditMode, mouseButtonsEventsCanBeInvoked,
-            viewState.consumeTouchEvents, isPressed,viewState.useViewAsToggle, viewState.sdlKeyCode,viewState.ignoreOutOfBoundsTouchEvents) {
+        val currentMouseButtonsState by rememberUpdatedState(mouseButtonsEventsCanBeInvoked)
+        return modifierTouse.pointerInput(!isEditMode) {
                 if (isEditMode) {
                     return@pointerInput
                 }
 
                 awaitEachGesture {
                     viewState.apply {
-                        val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
+                        val consumeEvents = consumeTouchEvents || currentMouseButtonsState
                         val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
                         else PointerEventPass.Main
                         val down = awaitFirstDown(pass = pointerPassToUse)
