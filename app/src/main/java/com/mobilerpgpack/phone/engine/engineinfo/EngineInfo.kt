@@ -34,11 +34,15 @@ import com.sun.jna.Function
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
@@ -76,6 +80,15 @@ abstract class EngineInfo(
             KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY
         )
     )
+
+    final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
+        flow {
+            while (currentCoroutineContext().isActive) {
+                emit(mouseButtonsEventsCanBeInvoked)
+                delay(16)
+            }
+        }.distinctUntilChanged()
+    }
 
     final override val mainLibraryName: String = mainEngineLib
 

@@ -544,7 +544,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             },
             text = {
                 Column( modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally){
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -563,6 +563,12 @@ abstract class ScreenController : KoinComponent, IScreenController {
                             fontSize = 18.sp,
                             textAlign = TextAlign.Right
                         )
+                    }
+
+                    Button(onClick = {
+                        viewToEdit.viewState.resetToDefaultsFromViewEditor()
+                        viewToEdit.viewState.save() },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
                     }
 
                     Column( modifier = Modifier.fillMaxHeight().verticalScroll(scrollState),
@@ -616,11 +622,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                     Text(modifier = Modifier.widthIn(min = 100.dp).wrapContentHeight().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
                                         text = keyCodeMap[sdlKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
                                 }
-                            }
-                            Button(onClick = {
-                                resetToDefaultsFromViewEditor()
-                                save() },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
-                                Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
                             }
                         }
                     }

@@ -60,12 +60,14 @@ abstract class SDLScreenController : ScreenController() {
         preferencesStorage.alwaysUseFullScreenTouchMode.getBlockingValue() && engineInfo.touchFullScreenModeCanBeUsed
     }
 
-    private fun alwaysUseFullScreenModeAsFlow(): Flow<Boolean> = flow {
-        while (currentCoroutineContext().isActive) {
-            emit(alwaysUseFullScreenMode && !engineInfo.mouseButtonsEventsCanBeInvoked)
-            delay(50)
-        }
-    }.distinctUntilChanged()
+    private val alwaysUseFullScreenModeAsFlow : Flow<Boolean> by lazy{
+        flow {
+            while (currentCoroutineContext().isActive) {
+                emit(alwaysUseFullScreenMode && !engineInfo.mouseButtonsEventsCanBeInvoked)
+                delay(50)
+            }
+        }.distinctUntilChanged()
+    }
 
     @Composable
     final override fun DrawTouchCamera(inSafeArea : Boolean,
@@ -85,7 +87,7 @@ abstract class SDLScreenController : ScreenController() {
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
         val rootView = LocalActivity.current!!.window.decorView.rootView
         val rootModifier = if (inSafeArea) Modifier.fillMaxSize().safeDrawingPadding() else Modifier.fillMaxSize()
-        val useFullScreenMode by alwaysUseFullScreenModeAsFlow().collectAsState(initial = false)
+        val useFullScreenMode by alwaysUseFullScreenModeAsFlow.collectAsState(initial = false)
 
         DisposableEffect(rootView) {
             val listener = ViewTreeObserver.OnGlobalLayoutListener {
@@ -171,7 +173,6 @@ abstract class SDLScreenController : ScreenController() {
                                         trackedPointerId = UNKNOWN_POINTER_ID
                                     }
                                 }
-                                change.consume()
                             }
 
                             event.motionEvent?.let {

@@ -10,6 +10,7 @@ import com.mobilerpgpack.phone.main.buildFullLibraryName
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.utils.showErrorDialogBox
 import com.quantuminventions.customkeyboard.components.keyboard.CustomisedKeyboardView
+import kotlinx.coroutines.flow.Flow
 
 interface IEngineInfo {
     val rootView : View?
@@ -20,6 +21,7 @@ interface IEngineInfo {
     val pathToResourceIsCorrect : Boolean
     val pathToResourceExists : Boolean
     val requiredResourceExtensions : Collection<String>
+    val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean>
     val mainLibraryName : String
     val nativeLibraries : Array<String>
     val gameActivityClazz: Class<*>
