@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +36,9 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.waitForUpOrCancellation
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
+import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -141,36 +147,10 @@ abstract class Dpad(
                 offsetX: Dp = 0.dp,
                 offsetY: Dp = 0.dp
             ) {
-                Image(
-                    painter = painterResource(painterId),
+                Image(painter = painterResource(painterId),
                     contentDescription = desc,
-                    modifier = Modifier
-                        .size(buttonSize)
-                        .minimumInteractiveComponentSize()
-                        .offset(x = offsetX, y = offsetY)
-                        .pointerInput(!isEditMode && inGame) {
-                            if (isEditMode || !inGame) {
-                                return@pointerInput
-                            }
-                            awaitEachGesture {
-                                viewState.apply {
-                                    val consumeEvents = consumeTouchEvents || engineInfo.mouseButtonsEventsCanBeInvoked
-                                    val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
-                                    else PointerEventPass.Main
-                                    val down = awaitFirstDown(pass = pointerPassToUse)
-                                    if (consumeTouchEvents){
-                                        down.consume()
-                                    }
-                                    onTouchDown(sdlKeyEvent)
-                                    val up = waitForUpOrCancellation(pointerPassToUse,
-                                        ignoreOutOfBoundsTouchEvents)
-                                    if (consumeTouchEvents){
-                                        up?.consume()
-                                    }
-                                    onTouchUp(sdlKeyEvent)
-                                }
-                            }
-                        }
+                    modifier = Modifier.interactiveControlModifier(isEditMode, inGame,buttonSize,
+                        offsetX, offsetY, sdlKeyEvent)
                 )
             }
 
@@ -197,6 +177,53 @@ abstract class Dpad(
     protected abstract fun onTouchDown(keyCode: Int)
 
     protected abstract fun onTouchUp(keyCode: Int)
+
+    @Composable
+    private fun Modifier.interactiveControlModifier(isEditMode: Boolean, inGame: Boolean,
+                                                    buttonSize : Dp,  offsetX: Dp,
+                                                    offsetY: Dp,
+                                                    sdlKeyEvent : Int): Modifier {
+        val modifier = this.size(buttonSize)
+            .minimumInteractiveComponentSize()
+            .offset(x = offsetX, y = offsetY)
+
+        if (!inGame) {
+            return modifier
+        }
+
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val activeEngineString by preferencesStorage.activeEngineAsFlowString.collectAsState("")
+
+        if (activeEngineString.isEmpty()){
+            return modifier
+        }
+
+        val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
+        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+
+        return modifier.pointerInput(!isEditMode, viewState.consumeTouchEvents, mouseButtonsEventsCanBeInvoked,
+            viewState.ignoreOutOfBoundsTouchEvents) {
+            if (isEditMode || !inGame) {
+                return@pointerInput
+            }
+            awaitEachGesture {
+                viewState.apply {
+                    val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
+                    val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
+                    val down = awaitFirstDown(pass = pointerPassToUse)
+                    if (consumeEvents){
+                        down.consume()
+                    }
+                    onTouchDown(sdlKeyEvent)
+                    val up = waitForUpOrCancellation(pointerPassToUse, ignoreOutOfBoundsTouchEvents)
+                    if (consumeEvents){
+                        up?.consume()
+                    }
+                    onTouchUp(sdlKeyEvent)
+                }
+            }
+        }
+    }
 
     private companion object {
         private const val DPAD_ID = "dpad"

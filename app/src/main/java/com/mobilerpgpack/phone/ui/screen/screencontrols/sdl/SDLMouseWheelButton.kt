@@ -31,7 +31,7 @@ abstract class SDLMouseWheelButton(
         alpha, Int.MIN_VALUE, buttonResId, useToggle = false,
         defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
 
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     private val mouseViewState = MouseViewState(
         id,
@@ -71,7 +71,7 @@ abstract class SDLMouseWheelButton(
         val wheelPosition = if (wheelUp) 100.0f else -1f * 100f
         while (true){
             onMouseWheel(keyCode,0f, wheelPosition, MotionEvent.ACTION_SCROLL)
-            delay(32)
+            delay(250)
         }
     }
 

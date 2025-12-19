@@ -17,14 +17,30 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.ShowSDL3InputImageButton
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
-const val LEFT_MOUSE_BUTTON_ID = 1
-
 val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
     SDL2Dpad(
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.5f,
         sizePercent = 0.25f,
+    ),
+    SDL2ImageButton(
+        "move_left",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.previous,
+        sdlKeyEvent = KeyEvent.KEYCODE_A
+    ),
+    SDL2ImageButton(
+        "move_right",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.23f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.next,
+        sdlKeyEvent = KeyEvent.KEYCODE_D
     ),
     SDL2ImageButton(
         "attack",
@@ -2128,6 +2144,24 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         sizePercent = 0.25f,
     ),
     SDL2ImageButton(
+        "move_left",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.previous,
+        sdlKeyEvent = KeyEvent.KEYCODE_A
+    ),
+    SDL2ImageButton(
+        "move_right",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.23f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.next,
+        sdlKeyEvent = KeyEvent.KEYCODE_D
+    ),
+    SDL2ImageButton(
         "attack",
         EngineTypes.DoomRpg,
         offsetXPercent = 0.76f,
@@ -2204,6 +2238,24 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.05f,
         offsetYPercent = 0.5f,
         sizePercent = 0.25f
+    ),
+    SDL2ImageButton(
+        "move_left",
+        EngineTypes.Doom2Rpg,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.previous,
+        sdlKeyEvent = KeyEvent.KEYCODE_A
+    ),
+    SDL2ImageButton(
+        "move_right",
+        EngineTypes.Doom2Rpg,
+        offsetXPercent = 0.23f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.next,
+        sdlKeyEvent = KeyEvent.KEYCODE_D
     ),
     SDL2ImageButton(
         "attack",
