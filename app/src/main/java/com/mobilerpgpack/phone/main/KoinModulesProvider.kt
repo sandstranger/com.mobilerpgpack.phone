@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.main
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.loader.AssetsProvider
 import com.codekidlabs.storagechooser.StorageChooser
 import com.google.mlkit.common.model.RemoteModel
 import com.google.mlkit.nl.translate.TranslateRemoteModel
@@ -82,6 +83,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.uzDoomOnScreenStickContr
 import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
+import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
@@ -112,9 +114,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
-class KoinModulesProvider(private val context: Context,
-                          private val assetExtractor: IAssetExtractor,
-                          private val scope: CoroutineScope) : KoinComponent  {
+class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
 
     private val clampButtonsMap = HashMap<EngineTypes, Key<Boolean>>()
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
@@ -133,7 +133,11 @@ class KoinModulesProvider(private val context: Context,
             named(USER_ROOT_FOLDER_NAMED_KEY)
             createdAtStart()
         }
-        single { assetExtractor }.bind()
+        single { assetsToIgnoreChecking }.withOptions {
+            named(AssetExtractor.ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME)
+            bind<Collection<String>>()
+        }
+        singleOf <IAssetExtractor> (::AssetExtractor)
         single <SharedPrefsDao> { SharedPrefsDatabase.createInstance().dao() }
     }
 

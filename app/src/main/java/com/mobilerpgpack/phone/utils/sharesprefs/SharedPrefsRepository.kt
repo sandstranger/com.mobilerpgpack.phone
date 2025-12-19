@@ -15,9 +15,7 @@ open class SharedPrefsRepository {
 
     val prefsWasLoaded get() = _prefsWasLoaded
 
-    init {
-        loadAllEntries()
-    }
+    fun loadAllEntries () = SharedPrefsRepository.loadAllEntries()
 
     fun <T : Enum<T>> getEnumValue(key: String,enumClass: Class<T>, defaultValue: T) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
