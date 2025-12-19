@@ -107,6 +107,10 @@ abstract class SDLImageButton(
             return modifierTouse
         }
 
+        if (!viewState.useViewAsToggle){
+            isPressed = false
+        }
+
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val currentMouseButtonsState by rememberUpdatedState(mouseButtonsEventsCanBeInvoked)
