@@ -203,7 +203,7 @@ abstract class Dpad(
 
         return modifier.pointerInput(!isEditMode, viewState.consumeTouchEvents, mouseButtonsEventsCanBeInvoked,
             viewState.ignoreOutOfBoundsTouchEvents) {
-            if (isEditMode || !inGame) {
+            if (isEditMode) {
                 return@pointerInput
             }
             awaitEachGesture {
