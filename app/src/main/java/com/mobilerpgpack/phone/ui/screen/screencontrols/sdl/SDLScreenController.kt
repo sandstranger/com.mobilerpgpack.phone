@@ -99,6 +99,15 @@ abstract class SDLScreenController : ScreenController() {
             }
         }
 
+        if (isEditMode){
+            if (trackedPointerId != UNKNOWN_POINTER_ID){
+                handlePointer(trackedPointerId, 0f, 0f, 0f,
+                    mWidth, mHeight, MotionEvent.ACTION_UP,
+                    defaultTouchDeviceId)
+            }
+            trackedPointerId = UNKNOWN_POINTER_ID
+        }
+
         Box(modifier = rootModifier.layout { measurable, constraints ->
                     widthSize = constraints.maxWidth
                     heightSize = constraints.maxHeight
