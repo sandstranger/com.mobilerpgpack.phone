@@ -9,12 +9,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class AssetExtractor (private val context: Context,
-                      private val assetToIgnoreChecking : Collection<String> = emptyList()) : IAssetExtractor {
+class AssetExtractor : IAssetExtractor, KoinComponent {
+
+    private val context: Context = get()
+
+    private val assetToIgnoreChecking : Collection<String> = get (named(ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME))
 
     @Volatile
     private var assetsCopying = false
@@ -128,7 +134,9 @@ class AssetExtractor (private val context: Context,
         }
     }
 
-    private companion object{
+    companion object{
+        const val ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME = "assets_to_ignore"
+
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
         private const val ASSETS_CURRENT_VERSION = 3
