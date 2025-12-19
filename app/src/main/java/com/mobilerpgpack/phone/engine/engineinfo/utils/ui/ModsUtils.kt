@@ -40,7 +40,6 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun DrawModsSupport(mods: ModsModel) {
     val buttonsColors = getButtonsColors()
     val onPrimaryColor = getOnPrimaryColor()
-    val onBackgroundColor = getOnBackgroundColor()
 
     DrawHorizontalDivider()
 
@@ -78,7 +77,8 @@ fun DrawModsSupport(mods: ModsModel) {
 
         DrawHorizontalDivider()
 
-        SwitchItem(stringResource(R.string.enable_mods_autoupdate),mods.enableModsAutoUpdateInFolder){
+        SwitchItem(stringResource(R.string.enable_mods_autoupdate),
+            mods.enableModsAutoUpdateInFolder){
             mods.enableModsAutoUpdateInFolder = it
         }
 

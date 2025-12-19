@@ -222,7 +222,7 @@
     <string name="increase_controls_alpha">Alpha+</string>
     <string name="reset_controls_to_default">Reset to defaults</string>
     <string name="close_controls_configuration">Back</string>
-    <string name="select_button">Select button</string>
+    <string name="select_view">Select view</string>
     <string name="close_text">Close</string>
     <string name="use_as_toggle">Use as toggle</string>
     <string name="reset_all_resources">Reset all games resources</string>
@@ -236,6 +236,8 @@
     <string name="select_key_code">Select key code</string>
     <string name="uknown">Unknown</string>
     <string name="reset_to_default">Reset to default</string>
+    <string name="reset_key_code_to_default">Reset keycode default</string>
     <string name="keys_editor">Key editor</string>
+    <string name="view_editor">%1$s view editor</string>
     <string name="controls_autohing">Enable auto-hiding of screen controls (does not work in Doom RPG)</string>
 </resources>

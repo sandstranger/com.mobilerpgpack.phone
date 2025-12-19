@@ -158,14 +158,20 @@ fun getFabIconContainerColor() = if (useDarkTheme()) md_light_primary else md_da
 
 @Composable
 fun getTextFieldColors() :  TextFieldColors{
-    val surfaceColor = getSurfaceContainerHighColor()
-    val onSurfaceColor = getOnSurfaceColor()
+    val surfaceColor = getOnSurfaceVariantColor()
+    val onSurfaceColor = getSurfaceColor()
     return TextFieldDefaults.colors(
         focusedTextColor = onSurfaceColor,
         unfocusedTextColor = onSurfaceColor,
         disabledTextColor = onSurfaceColor.copy(0.6f),
         errorTextColor = Color.Red,
         cursorColor = onSurfaceColor,
+        errorLeadingIconColor = surfaceColor,
+        focusedTrailingIconColor = surfaceColor,
+        errorTrailingIconColor = surfaceColor,
+        focusedLeadingIconColor = surfaceColor,
+        unfocusedLeadingIconColor = surfaceColor,
+        unfocusedTrailingIconColor = surfaceColor,
         selectionColors = TextSelectionColors(
             handleColor = onSurfaceColor,
             backgroundColor = onSurfaceColor.copy(0.3f)
