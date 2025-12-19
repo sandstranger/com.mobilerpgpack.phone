@@ -197,10 +197,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     .fillMaxSize()
                     .background(backgroundColor)
             ) {
-                if (inGame) {
-                    DrawBlockAndroidViewsBox()
-                }
-
                 if (isEditMode) {
                     EditControls(
                         selectedButtonId,
@@ -419,21 +415,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
         ) {
             viewToDraw.DrawView(isEditMode,inGame,sizeDp)
         }
-    }
-
-    @Composable
-    private fun DrawBlockAndroidViewsBox() {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .pointerInput(Unit) {
-                    awaitPointerEventScope {
-                        while (true) {
-                            awaitPointerEvent()
-                        }
-                    }
-                }
-        )
     }
 
     @Composable

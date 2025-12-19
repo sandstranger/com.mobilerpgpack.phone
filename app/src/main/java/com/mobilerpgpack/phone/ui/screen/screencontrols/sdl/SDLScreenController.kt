@@ -171,6 +171,7 @@ abstract class SDLScreenController : ScreenController() {
                                         trackedPointerId = UNKNOWN_POINTER_ID
                                     }
                                 }
+                                change.consume()
                             }
 
                             event.motionEvent?.let {
