@@ -42,4 +42,9 @@ class MouseViewState(id: String,
         super.resetToDefaults()
         invokeWheelEventsWhilePressing = invokeWheelEventsWhilePressingDefaultState
     }
+
+    override fun resetToDefaultsFromViewEditor(){
+        super.resetToDefaultsFromViewEditor()
+        invokeWheelEventsWhilePressing = invokeWheelEventsWhilePressingDefaultState
+    }
 }

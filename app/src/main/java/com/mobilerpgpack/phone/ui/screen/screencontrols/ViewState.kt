@@ -113,9 +113,12 @@ open class ViewState(
         ignoreOutOfBoundsTouchEvents = ignoreOutOfBoundsTouchEventsInitialState
     }
 
-    fun resetKeyEvent() {
+    open fun resetToDefaultsFromViewEditor(){
         sdlKeyCode = defaultSdlKeyEvent
-        save()
+        viewRenderRule = defaultViewRenderRule
+        useViewAsToggle = useViewAsToggleInitialState
+        consumeTouchEvents = consumeTouchEventsInitialState
+        ignoreOutOfBoundsTouchEvents = ignoreOutOfBoundsTouchEventsInitialState
     }
 
     internal companion object{

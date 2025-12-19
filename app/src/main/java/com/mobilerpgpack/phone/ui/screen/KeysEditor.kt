@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
@@ -76,7 +77,6 @@ fun KeysEditor(
 
     if (shouldReset) {
         LaunchedEffect(buttonsToEdit) {
-            buttonsToEdit.forEach { it.viewState.resetKeyEvent() }
             selectedKeyCode = currentButton.value.viewState.sdlKeyCode
             shouldReset = false
         }
@@ -94,7 +94,7 @@ fun KeysEditor(
             textContentColor = onSurfaceVariantColor,
             iconContentColor = onSurfaceVariantColor,
             titleContentColor = onSurfaceColor,
-            title = { Text(stringResource(R.string.select_button), color = onSurfaceColor) },
+            title = { Text(stringResource(R.string.select_view), color = onSurfaceColor) },
             text = {
                 LazyColumn(modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp))
@@ -183,7 +183,7 @@ fun KeysEditor(
         title = { Text(stringResource(R.string.keys_editor), color = onSurfaceColor) },
         text = {
             Column(modifier = modifier.heightIn(max = 400.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(3.dp,Alignment.CenterVertically)) {
-                Text(stringResource(R.string.select_button), style = MaterialTheme.typography.labelMedium, color = onSurfaceVariantColor)
+                Text(stringResource(R.string.select_view), style = MaterialTheme.typography.labelMedium, color = onSurfaceVariantColor)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable { showButtonSelectDialog = true },
@@ -203,7 +203,7 @@ fun KeysEditor(
                 Text(stringResource(R.string.selected_key_code), style = MaterialTheme.typography.labelMedium,
                     color = onSurfaceVariantColor)
 
-                Text(modifier = Modifier.fillMaxWidth().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
+                Text(modifier = Modifier.widthIn(min = 50.dp).clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
                     text = keyCodeMap[selectedKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
             }
         }

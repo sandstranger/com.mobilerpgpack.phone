@@ -95,19 +95,20 @@
     <string name="increase_controls_alpha">Альфа+</string>
     <string name="reset_controls_to_default">Сбросить настройки</string>
     <string name="close_controls_configuration">Назад</string>
-    <string name="select_button">Выбрать кнопку</string>
+    <string name="select_view">Выбрать вью</string>
     <string name="close_text">Закрыть</string>
     <string name="reset_all_resources">Сбросить все игровые ресурсы</string>
     <string name="resources_not_ready">Игровые ресурсы еще не были скопированы, поэтому невозможно запустить игру </string>
     <string name="reset_all_resources_confirm_message">Это сбросит все игровые ресурсы и удалит все сохранённые данные, в частности все сохранения игр.\nПродолжить?</string>
     <string name="yes_text">Да</string>
-    <string name="use_as_toggle">Использовать как toggle</string>
+    <string name="use_as_toggle">Использовать как переключатель</string>
     <string name="no_text">Нет</string>
     <string name="cancel_download">Отменить загрузку</string>
     <string name="selected_key_code">Выбранный код кнопки</string>
     <string name="select_key_code">Выбери код кнопки</string>
     <string name="uknown">Неизвестно</string>
     <string name="reset_to_default">Сбросить по умолчанию</string>
+    <string name="reset_key_code_to_default">Сбросить код кнопки</string>
     <string name="keys_editor">Редактор клавиш</string>
     <string name="controls_autohing">Включить автоматическое скрытие экранного управления (не работает в Doom RPG)</string>
     <string name="path_to_psydoom_cue_file">Путь к cue-файлу PSX Doom</string>
@@ -235,4 +236,5 @@
     <string name="psydoom_auto_activate_boss">Авто-активация специальных секторов боссов</string>
     <string name="psydoom_peer_type">Тип пира</string>
     <string name="psydoom_refresh_rate">Частота обновления</string>
+    <string name="view_editor">%1$s редактор вью</string>
 </resources>
