@@ -43,9 +43,9 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val useStandardSDLTextInputPrefsKey = booleanPreferencesKey("use_standard_sdl_text_input")
     val customOnScreenKeyboardTransparencyPrefsKey = floatPreferencesKey("custom_keyboard_transparency")
     val alwaysUseFullScreenTouchModePrefsKey = booleanPreferencesKey("always_use_fullscreen_touch_mode")
-    val useAndroidTVStartGameButtonPrefsKey = booleanPreferencesKey("use_android_tv_start_game_button")
+    val useFloatingStartGameButtonPrefsKey = booleanPreferencesKey("use_floating_start_game_button")
 
-    val useAndroidTVStartGameButton = getBooleanValue(useAndroidTVStartGameButtonPrefsKey, context.isTelevision)
+    val useFloatingStartGameButton = getBooleanValue(useFloatingStartGameButtonPrefsKey, !context.isTelevision)
 
     val alwaysUseFullScreenTouchMode = getBooleanValue(alwaysUseFullScreenTouchModePrefsKey, true)
 
