@@ -125,8 +125,8 @@ abstract class SDLScreenController : ScreenController() {
                     }
                 }
                 .background(Color.Transparent)
-                .pointerInput(!isEditMode && inGame) {
-                    if (isEditMode || !inGame) {
+                .pointerInput(!isEditMode) {
+                    if (isEditMode) {
                         return@pointerInput
                     }
                     awaitPointerEventScope {
