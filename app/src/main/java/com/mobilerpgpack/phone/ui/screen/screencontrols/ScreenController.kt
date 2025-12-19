@@ -9,7 +9,6 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -188,7 +187,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         backgroundColor = if (!inGame) {
             Color.DarkGray
         } else {
-            if (isEditMode) Color.DarkGray.copy(alpha = 0.5f) else Color.Transparent
+            if (isEditMode) transparentDarkColor else Color.Transparent
         }
 
         DrawTouchCamera(drawInSafeArea,isEditMode, inGame) {
@@ -611,6 +610,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
         private const val MAX_VIEW_SIZE : Float = 1.0f
 
         private val selectedViewBackgroundColor = Color.Red.copy(0.5f)
+
+        private val transparentDarkColor = Color.DarkGray.copy(alpha = 0.5f)
     }
 }
 
