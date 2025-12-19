@@ -102,14 +102,13 @@ abstract class ImageButton(
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        val currentMouseButtonsState by rememberUpdatedState(mouseButtonsEventsCanBeInvoked)
         return modifier.pointerInput(!isEditMode) {
             if (isEditMode) {
                 return@pointerInput
             }
             awaitEachGesture {
                 viewState.apply {
-                    val consumeEvents = consumeTouchEvents || currentMouseButtonsState
+                    val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                     val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
                     val down = awaitFirstDown(pass = pointerPassToUse)
                     if (consumeEvents) {
