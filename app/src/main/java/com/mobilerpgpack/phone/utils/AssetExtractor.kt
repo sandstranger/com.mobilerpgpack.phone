@@ -20,7 +20,8 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private val context: Context = get()
 
-    private val assetToIgnoreChecking : Collection<String> = get (named(ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME))
+    private val assetToIgnoreChecking : Collection<String> = get (
+        named(ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME))
 
     @Volatile
     private var assetsCopying = false
@@ -139,7 +140,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
-        private const val ASSETS_CURRENT_VERSION = 3
+        private const val ASSETS_CURRENT_VERSION = 4
 
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
 

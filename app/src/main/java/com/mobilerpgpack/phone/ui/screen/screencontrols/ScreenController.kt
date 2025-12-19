@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -33,9 +36,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,8 +73,10 @@ import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
 import com.mobilerpgpack.phone.ui.getPrimaryColor
 import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import com.mobilerpgpack.phone.ui.getTextButtonsColors
+import com.mobilerpgpack.phone.ui.items.CheckBox
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.keyCodeMap
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -116,7 +123,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
-        var selectedViewRenderRule by remember { mutableStateOf<ViewRenderRule?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
         var readyToDrawControls by remember { mutableStateOf(false) }
@@ -199,7 +205,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 if (isEditMode) {
                     EditControls(
                         selectedButtonId,
-                        selectedViewRenderRule,
                         inGame,
                         onAlphaChange = { delta ->
                             selectedButtonId?.let { id ->
@@ -220,14 +225,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 }
                             }
                         },
-                        onRenderRuleChange = { newRenderRule ->
-                            selectedButtonId?.let { id ->
-                                viewsToDraw[id]!!.viewState.apply {
-                                    viewRenderRule = newRenderRule
-                                    save()
-                                }
-                            }
-                        },
                         onCustomViewSelected = { customView ->
                             customView.viewState.apply {
                                 isDeleted = false
@@ -242,11 +239,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 save()
                             }
                             selectedButtonId = null
-                            selectedViewRenderRule = null
                         },
                         onReset = {
                             selectedButtonId = null
-                            selectedViewRenderRule = null
                             coroutineScope.launch {
                                 preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
                                 viewsToDraw.values.forEach { view ->
@@ -265,7 +260,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         },
                         onBack = {
                             selectedButtonId = null
-                            selectedViewRenderRule = null
                             onBack()
                         },
                         modifier = Modifier.align(Alignment.Center)
@@ -294,9 +288,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 onClick = {
                                     if (isEditMode) {
                                         selectedButtonId = id
-                                        view.viewState.apply {
-                                            selectedViewRenderRule = viewRenderRule
-                                        }
                                         preferencesStorage.setBooleanValue(
                                             clampButtonsPrefsKey,
                                             false
@@ -419,11 +410,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
     @Composable
     private fun EditControls(
         selectedButtonId: String?,
-        viewRenderRule: ViewRenderRule?,
         inGame: Boolean,
         onAlphaChange: (Float) -> Unit,
         onSizeChange: (Float) -> Unit,
-        onRenderRuleChange : (ViewRenderRule) -> Unit,
         onCustomViewSelected : (selectedView : IScreenControlsView) -> Unit,
         onViewDeleted: (selectedButtonId : String) -> Unit,
         onReset: () -> Unit,
@@ -432,9 +421,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
     ) {
         val onPrimaryColor = getOnPrimaryColor()
         val buttonColors = getButtonsColors()
-
         CompositionLocalProvider(LocalContentColor provides onPrimaryColor){
             var showCustomViewsEditor by remember { mutableStateOf(false) }
+            var showViewEditor by remember { mutableStateOf(false) }
 
             Column(
                 modifier = modifier
@@ -448,102 +437,202 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         text = selectedButtonId,
                         color = Color.White,
                         style = MaterialTheme.typography.labelMedium,
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     )
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
                         contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
-                        Text(stringResource(R.string.increase_controls_alpha), fontSize = 12.sp, color = onPrimaryColor)
+                        Text(stringResource(R.string.increase_controls_alpha), color = onPrimaryColor)
                     }
                     Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
                         contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                        Text(stringResource(R.string.decrease_controls_alpha), fontSize = 12.sp,color = onPrimaryColor)
+                        Text(stringResource(R.string.decrease_controls_alpha),color = onPrimaryColor)
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
                         contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                        Text(stringResource(R.string.increase_controls_size), fontSize = 12.sp,color = onPrimaryColor)
+                        Text(stringResource(R.string.increase_controls_size),color = onPrimaryColor)
                     }
                     Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
                         contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                        Text(stringResource(R.string.decrease_controls_size), fontSize = 12.sp,color = onPrimaryColor)
+                        Text(stringResource(R.string.decrease_controls_size),color = onPrimaryColor)
                     }
                 }
 
                 if (selectedButtonId!=null) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        if (viewRenderRule != null) {
-                            EnumDropdown(
-                                stringResource(R.string.screen_controls_view_render_rule),
-                                viewRenderRule,
-                                onRenderRuleChange
-                            )
-                        }
-                    }
-
-                    _activeViewsToDraw.first { it.viewState.id == selectedButtonId }.viewState.apply {
-                        if (allowToUseViewAsToggle) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(stringResource(R.string.use_as_toggle),
-                                    modifier = Modifier.wrapContentHeight(),
-                                    color = Color.White, textAlign = TextAlign.Right, fontSize = 14.sp)
-                                Checkbox(
-                                    checked = useViewAsToggle,
-                                    colors = getCheckBoxColors(),
-                                    onCheckedChange = {
-                                        useViewAsToggle = it
-                                        save()
-                                    }
-                                )
-                            }
-                        }
+                    Button(onClick = { showViewEditor = true },
+                        contentPadding = ButtonDefaults.TextButtonContentPadding,
+                        colors = buttonColors) {
+                        Text(stringResource(R.string.view_editor, selectedButtonId),
+                            color = onPrimaryColor
+                        )
                     }
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { showCustomViewsEditor = true },
                         contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
-                        Text(stringResource(R.string.add_controls_items), fontSize = 12.sp, color = onPrimaryColor)
+                        Text(stringResource(R.string.add_controls_items), color = onPrimaryColor)
                     }
 
                     if (selectedButtonId != null) {
                         Button(onClick = { onViewDeleted(selectedButtonId) },
                             contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                            Text(stringResource(R.string.delete), fontSize = 12.sp, color = onPrimaryColor)
+                            Text(stringResource(R.string.delete),  color = onPrimaryColor)
                         }
                     }
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = onReset,contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
-                        Text(stringResource(R.string.reset_controls_to_default), fontSize = 12.sp, color = onPrimaryColor)
+                        Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
                     }
                     if (!inGame) {
                         Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                            Text(stringResource(R.string.close_controls_configuration), fontSize = 12.sp, color = onPrimaryColor)
+                            Text(stringResource(R.string.close_controls_configuration), color = onPrimaryColor)
                         }
                     }
                 }
             }
 
             if (showCustomViewsEditor) {
-                DrawCustomButtonsEditor { customView ->
+                DrawCustomViewsEditor { customView ->
                     showCustomViewsEditor = false
                     if (customView != null) {
                         onCustomViewSelected.invoke(customView)
                     }
                 }
             }
+
+            if (showViewEditor){
+                DrawViewEditor(_activeViewsToDraw.first { it.viewState.id == selectedButtonId }) {
+                    showViewEditor = false
+                }
+            }
         }
     }
 
     @Composable
-    private fun DrawCustomButtonsEditor(onViewSelected: (selectedView: IScreenControlsView?) -> Unit) {
+    private fun DrawViewEditor (viewToEdit : IScreenControlsView, onViewEditorClosed : () -> Unit ){
+        val onSurfaceVariantColor = getOnSurfaceVariantColor()
+        val onSurfaceColor = getOnSurfaceColor()
+        val primaryColor = getPrimaryColor()
+        val surfaceContainerHighColor = getSurfaceContainerHighColor()
+        val buttonColors = getButtonsColors()
+        val onPrimaryColor = getOnPrimaryColor()
+        var showKeyCodeDialog by remember { mutableStateOf(false) }
+        val keyCodeMap = remember { keyCodeMap }
+        val keyCodesToDraw by remember { mutableStateOf(keyCodeMap.toList()) }
+
+        AlertDialog(
+            containerColor = surfaceContainerHighColor,
+            textContentColor = onSurfaceVariantColor,
+            iconContentColor = onSurfaceVariantColor,
+            titleContentColor = onSurfaceColor,
+            onDismissRequest = { onViewEditorClosed() },
+            confirmButton = {
+                TextButton(onClick = { onViewEditorClosed() }, colors = getTextButtonsColors()) {
+                    Text(stringResource(R.string.close_text), color = primaryColor)
+                }
+            },
+            title = { Text(stringResource(R.string.view_editor, viewToEdit.viewState.id),
+                color = onSurfaceColor) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(3.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(modifier = Modifier.size(60.dp)
+                            .background(Color.Transparent,
+                                RoundedCornerShape(8.dp)).graphicsLayer {
+                                colorFilter = ColorFilter.tint(onSurfaceVariantColor)
+                            }, contentAlignment = Alignment.Center){
+                            viewToEdit.DrawView(isEditMode = false, false, 60.dp)
+                        }
+                        Text(modifier = Modifier.wrapContentHeight(),
+                            text = viewToEdit.viewState.id,
+                            color = onSurfaceVariantColor,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Right
+                        )
+                    }
+
+                    viewToEdit.viewState.apply {
+                        EnumDropdown(
+                            stringResource(R.string.screen_controls_view_render_rule),
+                            viewRenderRule
+                        ){
+                            viewRenderRule = it
+                            save()
+                        }
+
+                        CheckBox(stringResource(R.string.use_as_toggle),useViewAsToggle ){
+                            useViewAsToggle = it
+                            save()
+                        }
+
+                        if (sdlKeyCode!= Int.MIN_VALUE){
+                            Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
+                                verticalAlignment = Alignment.CenterVertically){
+                                Text( modifier = Modifier.wrapContentHeight(), text = stringResource(R.string.selected_key_code),
+                                    color = onSurfaceVariantColor)
+
+                                Text(modifier = Modifier.widthIn(min = 100.dp).wrapContentHeight().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
+                                    text = keyCodeMap[sdlKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
+                            }
+                        }
+                        Button(onClick = {
+                            resetToDefaultsFromViewEditor()
+                            save() },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                            Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
+                        }
+                    }
+                }
+            })
+
+        if (showKeyCodeDialog) {
+            AlertDialog( modifier = Modifier.fillMaxSize(),
+                onDismissRequest = { showKeyCodeDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showKeyCodeDialog = false }, colors = getTextButtonsColors()) {
+                        Text(stringResource(R.string.close_text), color = primaryColor)
+                    }
+                },
+                containerColor = surfaceContainerHighColor,
+                textContentColor = onSurfaceVariantColor,
+                iconContentColor = onSurfaceVariantColor,
+                titleContentColor = onSurfaceColor,
+                title = { Text(stringResource(R.string.select_key_code), color = onSurfaceColor) },
+                text = {
+                    LazyColumn(modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp))
+                    {
+                        itemsIndexed(keyCodesToDraw, key = { _, pair -> pair.second.keyCode }) { _, pair ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        viewToEdit.viewState.apply {
+                                            sdlKeyCode = pair.first
+                                            save()
+                                        }
+                                        showKeyCodeDialog = false
+                                    }) {
+                                Text(pair.second.keyCodeName, color = onSurfaceVariantColor)
+                            }
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    @Composable
+    private fun DrawCustomViewsEditor(onViewSelected: (selectedView: IScreenControlsView?) -> Unit) {
         val itemsToDraw = _activeViewsToDraw.filter { it.viewState.isDeleted }.toList()
         if (itemsToDraw.isEmpty()) {
             onViewSelected(null)
@@ -555,6 +644,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val surfaceContainerHighColor = getSurfaceContainerHighColor()
 
         AlertDialog(
+            modifier = Modifier.fillMaxSize(),
             containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
             iconContentColor = onSurfaceVariantColor,
@@ -565,7 +655,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     Text(stringResource(R.string.close_text), color = primaryColor)
                 }
             },
-            title = { Text(stringResource(R.string.select_button), color = onSurfaceColor) },
+            title = { Text(stringResource(R.string.select_view), color = onSurfaceColor) },
             text = {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
