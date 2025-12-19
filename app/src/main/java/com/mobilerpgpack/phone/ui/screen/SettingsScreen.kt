@@ -51,11 +51,11 @@ import org.koin.core.qualifier.named
 
 class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
-    private var useAndroidTVStartGameButton by mutableStateOf(false)
+    private var useFloatingStartGameButton by mutableStateOf(true)
 
     private val preferencesStorage : PreferencesStorage = get ()
 
-    override val drawFloatingActionButton: Boolean get() = !useAndroidTVStartGameButton
+    override val drawFloatingActionButton: Boolean get() = useFloatingStartGameButton
 
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
@@ -69,8 +69,8 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             enumValueOf<EngineTypes>(activeEngineString)
         }
 
-        LaunchedEffect(preferencesStorage.useAndroidTVStartGameButton) {
-            useAndroidTVStartGameButton = preferencesStorage.useAndroidTVStartGameButton.first()
+        LaunchedEffect(preferencesStorage.useFloatingStartGameButton) {
+            useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton.first()
         }
 
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
@@ -152,10 +152,10 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
-        SwitchPreferenceItem(stringResource(R.string.use_android_tv_start_game_button),
-            preferencesStorage.useAndroidTVStartGameButton,
-            preferencesStorage.useAndroidTVStartGameButtonPrefsKey.name){
-            useAndroidTVStartGameButton = it
+        SwitchPreferenceItem(stringResource(R.string.use_floating_start_game_button),
+            preferencesStorage.useFloatingStartGameButton,
+            preferencesStorage.useFloatingStartGameButtonPrefsKey.name){
+            useFloatingStartGameButton = it
         }
 
         DrawHorizontalDivider()
