@@ -22,7 +22,7 @@ fun CheckBox (title : String,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(title, modifier = Modifier.wrapContentHeight(),
-            color = getOnSurfaceVariantColor(), textAlign = TextAlign.Right)
+            color = getOnSurfaceVariantColor(), textAlign = TextAlign.Left)
         Checkbox(
             checked = initialValue,
             colors = getCheckBoxColors(),

@@ -102,6 +102,9 @@
     <string name="reset_all_resources_confirm_message">Это сбросит все игровые ресурсы и удалит все сохранённые данные, в частности все сохранения игр.\nПродолжить?</string>
     <string name="yes_text">Да</string>
     <string name="use_as_toggle">Использовать как переключатель</string>
+    <string name="consume_touch_events">Поглощать события тача</string>
+    <string name="ignore_out_of_bounds_touch_events">Игнорировать события тача, выходящие за пределы вью</string>
+    <string name="invoke_wheel_events">Вызывать события колеса постоянно при нажатии на вью</string>
     <string name="no_text">Нет</string>
     <string name="cancel_download">Отменить загрузку</string>
     <string name="selected_key_code">Выбранный код кнопки</string>
