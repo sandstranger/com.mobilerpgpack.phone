@@ -225,6 +225,9 @@
     <string name="select_view">Select view</string>
     <string name="close_text">Close</string>
     <string name="use_as_toggle">Use as toggle</string>
+    <string name="consume_touch_events">Consume touch events</string>
+    <string name="ignore_out_of_bounds_touch_events">Ignore out of bounds touch events</string>
+    <string name="invoke_wheel_events">Invoke wheel events permanently while pressing view</string>
     <string name="reset_all_resources">Reset all games resources</string>
     <string name="reset_all_resources_confirm_message">This will reset all games resources and will erase all saved data, like saved games.\nContinue?</string>
     <string name="yes_text">Yes</string>

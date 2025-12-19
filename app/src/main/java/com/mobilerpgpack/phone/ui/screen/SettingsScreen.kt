@@ -85,7 +85,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 navController, settingsScreenViewModel
             )
         } else {
-            DrawAllSettings( innerPadding, scope, activeEngine,navController, settingsScreenViewModel)
+            DrawAllSettings( innerPadding, activeEngine,navController, settingsScreenViewModel)
         }
     }
 
@@ -114,14 +114,13 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 )
             }
 
-            DrawAllSettings( innerPadding,scope, activeEngine,navController, viewModel)
+            DrawAllSettings( innerPadding, activeEngine,navController, viewModel)
         }
     }
 
     @Composable
     private fun DrawAllSettings(
         innerPadding: PaddingValues,
-        scope: CoroutineScope,
         activeEngine: EngineTypes,
         navController: NavHostController,
         viewModel: SettingsScreenViewModel) {
@@ -252,7 +251,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             initial = EngineTypes.DefaultActiveEngine.name)
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState) }
         val engineInfo : IEngineInfo = koinInject(named(engineState))
-        var drawKeysEditor by rememberSaveable { mutableStateOf(false) }
         val controlsProvider : ControlsProvider = koinInject (named(activeEngine.name))
 
         if (controlsProvider.drawControlsTypesInMenu){
@@ -310,12 +308,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.customOnScreenKeyboardTransparency){
             preferencesStorage.setFloatValue(preferencesStorage.customOnScreenKeyboardTransparencyPrefsKey,
                 it.coerceIn(0f, 1.0f))
-        }
-
-        if (drawKeysEditor) {
-            KeysEditor(controlsProvider.controlsToDraw) {
-                drawKeysEditor = false
-            }
         }
     }
 
