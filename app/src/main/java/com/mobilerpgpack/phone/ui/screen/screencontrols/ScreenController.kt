@@ -11,14 +11,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,9 +39,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,8 +68,18 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.getButtonsColors
+import com.mobilerpgpack.phone.ui.getCheckBoxColors
+import com.mobilerpgpack.phone.ui.getOnPrimaryColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceColor
+import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
+import com.mobilerpgpack.phone.ui.getPrimaryColor
+import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
+import com.mobilerpgpack.phone.ui.getTextButtonsColors
+import com.mobilerpgpack.phone.ui.items.CheckBox
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.keyCodeMap
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -78,6 +96,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
     protected val preferencesStorage : PreferencesStorage = get ()
 
     final override val activeViewsToDraw: Collection<IScreenControlsView> get() = _activeViewsToDraw
+
+    final override var showScreenControls by mutableStateOf(true)
 
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
@@ -106,7 +126,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
-        var selectedViewRenderRule by remember { mutableStateOf<ViewRenderRule?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
         var readyToDrawControls by remember { mutableStateOf(false) }
@@ -177,159 +196,148 @@ abstract class ScreenController : KoinComponent, IScreenController {
         backgroundColor = if (!inGame) {
             Color.DarkGray
         } else {
-            if (isEditMode) Color.DarkGray.copy(alpha = 0.5f) else Color.Transparent
+            if (isEditMode) transparentDarkColor else Color.Transparent
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(backgroundColor)
-        ) {
-            if (inGame) {
-                DrawBlockAndroidViewsBox()
-                if (!isEditMode && !blockTouchCameraEvents) {
-                    DrawTouchCamera()
-                }
-            }
-
-            if (isEditMode) {
-                EditControls(
-                    selectedButtonId,
-                    selectedViewRenderRule,
-                    inGame,
-                    onAlphaChange = { delta ->
-                        selectedButtonId?.let { id ->
-                            viewsToDraw[id]!!.viewState.apply {
-                                alpha = (alpha + delta).coerceIn(0.0f, 1f)
-                                save()
-                            }
-                        }
-                    },
-                    onSizeChange = { deltaPercent ->
-                        selectedButtonId?.let { id ->
-                            viewsToDraw[id]!!.viewState.apply {
-                                sizePercent = (sizePercent + deltaPercent).coerceIn(MIN_VIEW_SIZE, MAX_VIEW_SIZE)
-                                save()
-                            }
-                        }
-                    },
-                    onRenderRuleChange = { newRenderRule ->
-                        selectedButtonId?.let { id ->
-                            viewsToDraw[id]!!.viewState.apply {
-                                viewRenderRule = newRenderRule
-                                save()
-                            }
-                        }
-                    },
-                    onCustomViewSelected = { customView ->
-                        customView.viewState.apply {
-                            isDeleted = false
-                            clampView(this, clampForced = true)
-                            save()
-                        }
-                    },
-                    onViewDeleted = { viewIdToDelete ->
-                        viewsToDraw[viewIdToDelete]!!.viewState.apply {
-                            resetToDefaults()
-                            isDeleted = true
-                            save()
-                        }
-                        selectedButtonId = null
-                        selectedViewRenderRule = null
-                    },
-                    onReset = {
-                        selectedButtonId = null
-                        selectedViewRenderRule = null
-                        coroutineScope.launch {
-                            preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
-                            viewsToDraw.values.forEach { view ->
-                                view.viewState.apply {
-                                    val wasDeletedBeforeReset = isDeleted
-                                    resetToDefaults()
-                                    if (!isDeleted) {
-                                        clampView(this)
-                                    }
-                                    if (!wasDeletedBeforeReset || !isDeleted){
-                                         save()
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    onBack = {
-                        selectedButtonId = null
-                        selectedViewRenderRule = null
-                        onBack()
-                    },
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-
-            if (readyToDrawControls) {
-                viewsToDraw.forEach { (id, view) ->
-
-                    val sizePx: Float = screenWidthPx * view.viewState.sizePercent
-                    val sizeDp: Dp = (sizePx / density).dp
-
-                    val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
-                    val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
-
-                    val renderView = (view.isHideControlsButton || view.renderView || isEditMode) && !view.viewState.isDeleted
-
-                    if (renderView) {
-                        DrawView(
-                            viewToDraw = view,
-                            offset = Offset(renderOffsetX, renderOffsetY),
-                            sizeDp = sizeDp,
-                            isEditMode = isEditMode,
-                            isSelected = (selectedButtonId == id),
-                            onClick = {
-                                if (isEditMode) {
-                                    selectedButtonId = id
-                                    view.viewState.apply {
-                                        selectedViewRenderRule = viewRenderRule
-                                    }
-                                    preferencesStorage.setBooleanValue(clampButtonsPrefsKey, false)
-                                }
-                            },
-                            onDragEnd = { newX, newY ->
-                                view.viewState.apply {
-                                    offsetXPercent = (newX / screenWidthPx)
-                                    offsetYPercent = (newY / screenHeightPx)
+        DrawTouchCamera(drawInSafeArea,isEditMode, inGame) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(backgroundColor)
+            ) {
+                if (isEditMode) {
+                    EditControls(
+                        selectedButtonId,
+                        inGame,
+                        onAlphaChange = { delta ->
+                            selectedButtonId?.let { id ->
+                                viewsToDraw[id]!!.viewState.apply {
+                                    alpha = (alpha + delta).coerceIn(0.0f, 1f)
                                     save()
                                 }
-                            },
-                            inGame = inGame,
-                        )
+                            }
+                        },
+                        onSizeChange = { deltaPercent ->
+                            selectedButtonId?.let { id ->
+                                viewsToDraw[id]!!.viewState.apply {
+                                    sizePercent = (sizePercent + deltaPercent).coerceIn(
+                                        MIN_VIEW_SIZE,
+                                        MAX_VIEW_SIZE
+                                    )
+                                    save()
+                                }
+                            }
+                        },
+                        onCustomViewSelected = { customView ->
+                            customView.viewState.apply {
+                                isDeleted = false
+                                clampView(this, clampForced = true)
+                                save()
+                            }
+                        },
+                        onViewDeleted = { viewIdToDelete ->
+                            viewsToDraw[viewIdToDelete]!!.viewState.apply {
+                                resetToDefaults()
+                                isDeleted = true
+                                save()
+                            }
+                            selectedButtonId = null
+                        },
+                        onReset = {
+                            selectedButtonId = null
+                            coroutineScope.launch {
+                                preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
+                                viewsToDraw.values.forEach { view ->
+                                    view.viewState.apply {
+                                        val wasDeletedBeforeReset = isDeleted
+                                        resetToDefaults()
+                                        if (!isDeleted) {
+                                            clampView(this)
+                                        }
+                                        if (!wasDeletedBeforeReset || !isDeleted) {
+                                            save()
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        onBack = {
+                            selectedButtonId = null
+                            onBack()
+                        },
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                if (readyToDrawControls) {
+                    viewsToDraw.forEach { (id, view) ->
+
+                        val sizePx: Float = screenWidthPx * view.viewState.sizePercent
+                        val sizeDp: Dp = (sizePx / density).dp
+
+                        val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
+                        val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
+
+                        val renderView =
+                            (view.isHideControlsButton || (view.renderView && showScreenControls) || isEditMode) && !view.viewState.isDeleted
+
+                        if (renderView) {
+                            DrawView(
+                                viewToDraw = view,
+                                offset = Offset(renderOffsetX, renderOffsetY),
+                                sizeDp = sizeDp,
+                                isEditMode = isEditMode,
+                                isSelected = (selectedButtonId == id),
+                                onClick = {
+                                    if (isEditMode) {
+                                        selectedButtonId = id
+                                        preferencesStorage.setBooleanValue(
+                                            clampButtonsPrefsKey,
+                                            false
+                                        )
+                                    }
+                                },
+                                onDragEnd = { newX, newY ->
+                                    view.viewState.apply {
+                                        offsetXPercent = (newX / screenWidthPx)
+                                        offsetYPercent = (newY / screenHeightPx)
+                                        save()
+                                    }
+                                },
+                                inGame = inGame,
+                            )
+                        }
                     }
                 }
-            }
 
-            if (inGame && allowToEditControls) {
-                Image(
-                    painter = painterResource(R.drawable.cog),
-                    contentDescription = "settings_button",
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .size(60.dp)
-                        .alpha(0.75f)
-                        .minimumInteractiveComponentSize()
-                        .padding(8.dp)
-                        .then(
-                            Modifier.clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) {
-                                isEditMode = !isEditMode
-                            }
-                        )
-                )
+                if (inGame && allowToEditControls) {
+                    Image(
+                        painter = painterResource(R.drawable.cog),
+                        contentDescription = "settings_button",
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .size(60.dp)
+                            .alpha(0.75f)
+                            .minimumInteractiveComponentSize()
+                            .padding(8.dp)
+                            .then(
+                                Modifier.clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() }
+                                ) {
+                                    isEditMode = !isEditMode
+                                }
+                            )
+                    )
+                }
             }
         }
     }
 
     @Composable
-    protected abstract fun DrawTouchCamera()
+    protected abstract fun DrawTouchCamera(inSafeArea : Boolean,
+                                           isEditMode: Boolean, inGame: Boolean,
+                                           content: @Composable () -> Unit)
 
     protected abstract fun buildCustomViews (engineTypes: EngineTypes) : Collection<IScreenControlsView>
 
@@ -356,11 +364,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 .minimumInteractiveComponentSize()
                 .alpha(viewToDraw.viewState.alpha)
                 .background(
-                    if (isSelected && isEditMode) Color.Red.copy(alpha = 0.5f)
+                    if (isSelected && isEditMode) selectedViewBackgroundColor
                     else Color.Transparent,
                     RoundedCornerShape(8.dp)
                 )
                 .pointerInput(isEditMode, isSelected) {
+                    if (!isEditMode) {
+                        return@pointerInput
+                    }
                     detectDragGestures(
                         onDragStart = {
                             if (isEditMode && !isSelected) {
@@ -381,6 +392,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     )
                 }
                 .pointerInput(isEditMode, isSelected) {
+                    if (!isEditMode){
+                        return@pointerInput
+                    }
                     awaitPointerEventScope {
                         while (true) {
                             val event = awaitPointerEvent()
@@ -397,36 +411,22 @@ abstract class ScreenController : KoinComponent, IScreenController {
     }
 
     @Composable
-    private fun DrawBlockAndroidViewsBox() {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .pointerInput(Unit) {
-                    awaitPointerEventScope {
-                        while (true) {
-                            awaitPointerEvent()
-                        }
-                    }
-                }
-        )
-    }
-
-    @Composable
     private fun EditControls(
         selectedButtonId: String?,
-        viewRenderRule: ViewRenderRule?,
         inGame: Boolean,
         onAlphaChange: (Float) -> Unit,
         onSizeChange: (Float) -> Unit,
-        onRenderRuleChange : (ViewRenderRule) -> Unit,
         onCustomViewSelected : (selectedView : IScreenControlsView) -> Unit,
         onViewDeleted: (selectedButtonId : String) -> Unit,
         onReset: () -> Unit,
         onBack: () -> Unit,
         modifier: Modifier = Modifier
     ) {
-        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground){
+        val onPrimaryColor = getOnPrimaryColor()
+        val buttonColors = getButtonsColors()
+        CompositionLocalProvider(LocalContentColor provides onPrimaryColor){
             var showCustomViewsEditor by remember { mutableStateOf(false) }
+            var showViewEditor by remember { mutableStateOf(false) }
 
             Column(
                 modifier = modifier
@@ -440,119 +440,257 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         text = selectedButtonId,
                         color = Color.White,
                         style = MaterialTheme.typography.labelMedium,
-                        fontSize = 16.sp
+                        fontSize = 18.sp
                     )
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
-                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.increase_controls_alpha), fontSize = 12.sp)
+                        contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        Text(stringResource(R.string.increase_controls_alpha), color = onPrimaryColor,fontSize = 13.sp)
                     }
                     Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
-                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.decrease_controls_alpha), fontSize = 12.sp)
+                        contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                        Text(stringResource(R.string.decrease_controls_alpha),color = onPrimaryColor,fontSize = 13.sp)
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
-                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.increase_controls_size), fontSize = 12.sp)
+                        contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                        Text(stringResource(R.string.increase_controls_size),color = onPrimaryColor,fontSize = 13.sp)
                     }
                     Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
-                        contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.decrease_controls_size), fontSize = 12.sp)
+                        contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                        Text(stringResource(R.string.decrease_controls_size),color = onPrimaryColor,fontSize = 13.sp)
                     }
                 }
 
                 if (selectedButtonId!=null) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        if (viewRenderRule != null) {
-                            EnumDropdown(
-                                stringResource(R.string.screen_controls_view_render_rule),
-                                viewRenderRule,
-                                onRenderRuleChange
-                            )
-                        }
-                    }
-
-                    _activeViewsToDraw.first { it.viewState.id == selectedButtonId }.viewState.apply {
-                        if (allowToUseViewAsToggle) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(stringResource(R.string.use_as_toggle),
-                                    modifier = Modifier.wrapContentHeight(),
-                                    color = Color.White, textAlign = TextAlign.Right, fontSize = 14.sp)
-                                Checkbox(
-                                    checked = useViewAsToggle,
-                                    onCheckedChange = {
-                                        useViewAsToggle = it
-                                        save()
-                                    }
-                                )
-                            }
-                        }
+                    Button(onClick = { showViewEditor = true },
+                        contentPadding = ButtonDefaults.TextButtonContentPadding,
+                        colors = buttonColors) {
+                        Text(stringResource(R.string.view_editor, selectedButtonId),
+                            color = onPrimaryColor,fontSize = 13.sp
+                        )
                     }
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { showCustomViewsEditor = true },contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.add_controls_items), fontSize = 12.sp)
+                    Button(onClick = { showCustomViewsEditor = true },
+                        contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        Text(stringResource(R.string.add_controls_items), color = onPrimaryColor,fontSize = 13.sp)
                     }
 
                     if (selectedButtonId != null) {
                         Button(onClick = { onViewDeleted(selectedButtonId) },
-                            contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                            Text(stringResource(R.string.delete), fontSize = 12.sp)
+                            contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                            Text(stringResource(R.string.delete),  color = onPrimaryColor,fontSize = 13.sp)
                         }
                     }
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = onReset,contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                        Text(stringResource(R.string.reset_controls_to_default), fontSize = 12.sp)
+                    Button(onClick = onReset,contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor, fontSize = 13.sp)
                     }
                     if (!inGame) {
-                        Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding) {
-                            Text(stringResource(R.string.close_controls_configuration), fontSize = 12.sp)
+                        Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                            Text(stringResource(R.string.close_controls_configuration), color = onPrimaryColor,fontSize = 13.sp)
                         }
                     }
                 }
             }
 
             if (showCustomViewsEditor) {
-                DrawCustomButtonsEditor { customView ->
+                DrawCustomViewsEditor { customView ->
                     showCustomViewsEditor = false
                     if (customView != null) {
                         onCustomViewSelected.invoke(customView)
                     }
                 }
             }
+
+            if (showViewEditor){
+                DrawViewEditor(_activeViewsToDraw.first { it.viewState.id == selectedButtonId }) {
+                    showViewEditor = false
+                }
+            }
         }
     }
 
     @Composable
-    private fun DrawCustomButtonsEditor(onViewSelected: (selectedView: IScreenControlsView?) -> Unit) {
+    private fun DrawViewEditor (viewToEdit : IScreenControlsView, onViewEditorClosed : () -> Unit ){
+        val onSurfaceVariantColor = getOnSurfaceVariantColor()
+        val onSurfaceColor = getOnSurfaceColor()
+        val primaryColor = getPrimaryColor()
+        val surfaceContainerHighColor = getSurfaceContainerHighColor()
+        val buttonColors = getButtonsColors()
+        val onPrimaryColor = getOnPrimaryColor()
+        var showKeyCodeDialog by remember { mutableStateOf(false) }
+        val keyCodeMap = remember { keyCodeMap }
+        val keyCodesToDraw by remember { mutableStateOf(keyCodeMap.toList()) }
+        val scrollState = rememberScrollState()
+
+        AlertDialog(modifier = Modifier.fillMaxHeight(),
+            containerColor = surfaceContainerHighColor,
+            textContentColor = onSurfaceVariantColor,
+            iconContentColor = onSurfaceVariantColor,
+            titleContentColor = onSurfaceColor,
+            onDismissRequest = { onViewEditorClosed() },
+            confirmButton = {
+                TextButton(onClick = { onViewEditorClosed() }, colors = getTextButtonsColors()) {
+                    Text(stringResource(R.string.close_text), color = primaryColor)
+                }
+            },
+            text = {
+                Column( modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally){
+
+                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(modifier = Modifier.size(50.dp)
+                            .background(Color.Transparent,
+                                RoundedCornerShape(8.dp)).graphicsLayer {
+                                colorFilter = ColorFilter.tint(onSurfaceVariantColor)
+                            }, contentAlignment = Alignment.Center){
+                            viewToEdit.DrawView(isEditMode = false, false, 50.dp)
+                        }
+                        Text(modifier = Modifier.wrapContentHeight(),
+                            text = viewToEdit.viewState.id,
+                            color = onSurfaceVariantColor,
+                            fontSize = 18.sp,
+                            textAlign = TextAlign.Right
+                        )
+                    }
+
+                    Button(onClick = {
+                        viewToEdit.viewState.resetToDefaultsFromViewEditor()
+                        viewToEdit.viewState.save() },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                        Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
+                    }
+
+                    Column( modifier = Modifier.fillMaxHeight().verticalScroll(scrollState),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally){
+                        viewToEdit.viewState.apply {
+                            EnumDropdown(
+                                stringResource(R.string.screen_controls_view_render_rule),
+                                viewRenderRule
+                            ){
+                                viewRenderRule = it
+                                save()
+                            }
+
+                            if (allowToUseViewAsToggle) {
+                                CheckBox(stringResource(R.string.use_as_toggle), useViewAsToggle) {
+                                    useViewAsToggle = it
+                                    save()
+                                }
+                            }
+
+                            if (!alwaysConsumeTouchEvents){
+                                CheckBox(stringResource(R.string.consume_touch_events), consumeTouchEvents) {
+                                    consumeTouchEvents = it
+                                    save()
+                                }
+                            }
+
+                            if (touchEventsCanIgnoreOutOfBounds){
+                                CheckBox(stringResource(R.string.ignore_out_of_bounds_touch_events),
+                                    ignoreOutOfBoundsTouchEvents) {
+                                    ignoreOutOfBoundsTouchEvents = it
+                                    save()
+                                }
+                            }
+
+                            if (this is MouseViewState){
+                                CheckBox(stringResource(R.string.invoke_wheel_events),
+                                    invokeWheelEventsWhilePressing) {
+                                    invokeWheelEventsWhilePressing = it
+                                    save()
+                                }
+                            }
+
+                            if (sdlKeyCode!= Int.MIN_VALUE){
+                                Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
+                                    verticalAlignment = Alignment.CenterVertically){
+                                    Text( modifier = Modifier.wrapContentHeight(), text = stringResource(R.string.selected_key_code),
+                                        color = onSurfaceVariantColor)
+
+                                    Text(modifier = Modifier.widthIn(min = 100.dp).wrapContentHeight().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
+                                        text = keyCodeMap[sdlKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
+                                }
+                            }
+                        }
+                    }
+                }
+
+            })
+
+        if (showKeyCodeDialog) {
+            AlertDialog( modifier = Modifier.fillMaxSize(),
+                onDismissRequest = { showKeyCodeDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showKeyCodeDialog = false }, colors = getTextButtonsColors()) {
+                        Text(stringResource(R.string.close_text), color = primaryColor)
+                    }
+                },
+                containerColor = surfaceContainerHighColor,
+                textContentColor = onSurfaceVariantColor,
+                iconContentColor = onSurfaceVariantColor,
+                titleContentColor = onSurfaceColor,
+                title = { Text(stringResource(R.string.select_key_code), color = onSurfaceColor) },
+                text = {
+                    LazyColumn(modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp))
+                    {
+                        itemsIndexed(keyCodesToDraw, key = { _, pair -> pair.second.keyCode }) { _, pair ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        viewToEdit.viewState.apply {
+                                            sdlKeyCode = pair.first
+                                            save()
+                                        }
+                                        showKeyCodeDialog = false
+                                    }) {
+                                Text(pair.second.keyCodeName, color = onSurfaceVariantColor)
+                            }
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    @Composable
+    private fun DrawCustomViewsEditor(onViewSelected: (selectedView: IScreenControlsView?) -> Unit) {
         val itemsToDraw = _activeViewsToDraw.filter { it.viewState.isDeleted }.toList()
         if (itemsToDraw.isEmpty()) {
             onViewSelected(null)
             return
         }
-        val itemsColorToUse = MaterialTheme.colorScheme.onSurfaceVariant
+        val onSurfaceVariantColor = getOnSurfaceVariantColor()
+        val onSurfaceColor = getOnSurfaceColor()
+        val primaryColor = getPrimaryColor()
+        val surfaceContainerHighColor = getSurfaceContainerHighColor()
 
         AlertDialog(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.fillMaxSize(),
+            containerColor = surfaceContainerHighColor,
+            textContentColor = onSurfaceVariantColor,
+            iconContentColor = onSurfaceVariantColor,
+            titleContentColor = onSurfaceColor,
             onDismissRequest = { onViewSelected(null) },
             confirmButton = {
-                TextButton(onClick = { onViewSelected(null) }) {
-                    Text(stringResource(R.string.close_text), color = MaterialTheme.colorScheme.primary)
+                TextButton(onClick = { onViewSelected(null) }, colors = getTextButtonsColors()) {
+                    Text(stringResource(R.string.close_text), color = primaryColor)
                 }
             },
-            title = { Text(stringResource(R.string.select_button), color = itemsColorToUse) },
+            title = { Text(stringResource(R.string.select_view), color = onSurfaceColor) },
             text = {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -569,14 +707,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                     .background(
                                         Color.Transparent,
                                         RoundedCornerShape(8.dp)).graphicsLayer {
-                                    colorFilter = ColorFilter.tint(itemsColorToUse)
+                                    colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                                 }, contentAlignment = Alignment.Center){
                                         view.DrawView(isEditMode = false, false, 40.dp)
                             }
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
                                 text = view.viewState.id,
-                                color = itemsColorToUse,
+                                color = onSurfaceVariantColor,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Right
                             )
@@ -595,6 +733,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
         private const val MIN_VIEW_SIZE : Float = 0.025f
 
         private const val MAX_VIEW_SIZE : Float = 1.0f
+
+        private val selectedViewBackgroundColor = Color.Red.copy(0.5f)
+
+        private val transparentDarkColor = Color.DarkGray.copy(alpha = 0.5f)
     }
 }
 

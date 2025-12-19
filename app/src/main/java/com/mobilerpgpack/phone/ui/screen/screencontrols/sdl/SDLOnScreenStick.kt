@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.util.Log
+import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +24,13 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerId
+import androidx.compose.ui.input.pointer.changedToDown
+import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -142,11 +149,15 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         var currentX by remember { mutableFloatStateOf(-1f) }
         var currentY by remember { mutableFloatStateOf(-1f) }
         var down by remember { mutableStateOf(false) }
+        var dragId by remember { mutableStateOf<PointerId?>(null) }
 
         var canvasW by remember { mutableIntStateOf(0) }
         var canvasH by remember { mutableIntStateOf(0) }
 
         if (isEditMode || !inGame){
+            currentX = -1f
+            currentY = -1f
+            dragId = null
             down = false
         }
 
@@ -166,38 +177,56 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     if (isEditMode || !inGame) {
                         return@pointerInput
                     }
-                    detectDragGestures(
-                        onDragStart = { offset ->
-                            down = true
-                            currentX = offset.x
-                            currentY = offset.y
-                        },
-                        onDrag = { change, _ ->
-                            currentX = change.position.x
-                            currentY = change.position.y
-                            val strokeWidthPx = 2.dp.toPx()
-                            onDrag(
-                                canvasW,
-                                canvasH,
-                                strokeWidthPx,
-                                currentX,
-                                currentY,
-                                onUpdateStick
-                            )
-                        },
-                        onDragEnd = {
-                            down = false
-                            currentX = -1f
-                            currentY = -1f
-                            onUpdateStick(0f, 0f)
-                        },
-                        onDragCancel = {
-                            down = false
-                            currentX = -1f
-                            currentY = -1f
-                            onUpdateStick( 0f, 0f)
+
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent()
+                            for (change in event.changes) {
+                                val pid = change.id
+                                val pos = change.position
+                                val x = pos.x
+                                val y = pos.y
+
+                                when {
+                                    change.changedToDown() -> {
+                                        if (dragId == null) {
+                                            dragId = pid
+                                            down = true
+                                            currentX = x
+                                            currentY = y
+                                        }
+                                    }
+
+                                    change.changedToUp() || !change.pressed -> {
+                                        if (dragId !=null && dragId == pid){
+                                            down = false
+                                            currentX = -1f
+                                            currentY = -1f
+                                            onUpdateStick(0f, 0f)
+                                            dragId = null
+                                        }
+                                    }
+
+                                    change.positionChanged() -> {
+                                        if (dragId !=null && dragId == pid) {
+                                            currentX = x
+                                            currentY = y
+                                            val strokeWidthPx = 2.dp.toPx()
+                                            onDrag(
+                                                canvasW,
+                                                canvasH,
+                                                strokeWidthPx,
+                                                currentX,
+                                                currentY,
+                                                onUpdateStick
+                                            )
+                                        }
+                                    }
+                                }
+                                change.consume()
+                            }
                         }
-                    )
+                    }
                 }
         ) {
             val w = canvasW.toFloat().takeIf { it > 0f } ?: size.width
@@ -258,6 +287,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                              naxes: Int, axis_mask: Int, nhats: Int, nballs: Int) : Int
 
     protected abstract fun onNativeJoy(device_id: Int, axis: Int, value: Float)
+
 
     private fun onDrag(
         canvasW: Int,

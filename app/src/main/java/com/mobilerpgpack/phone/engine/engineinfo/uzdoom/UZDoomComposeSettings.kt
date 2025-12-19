@@ -12,6 +12,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
@@ -44,7 +45,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.uZDoomCommandLineArgsPrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         RequestPath(
             stringResource(R.string.path_to_uzdoom_wad_file),
@@ -54,7 +55,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             requiredFileExtensions = zDoomEngineInfo.requiredResourceExtensions
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         ListPreferenceItem(
             stringResource(R.string.uzdoom_rendering_api),
@@ -62,7 +63,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.renderAPI = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         ListPreferenceItem(
             stringResource(R.string.uzdoom_rendering_gles_version),
@@ -72,14 +73,14 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.setStringValue(preferencesStorage.uzDoomGLESVersionPrefsKey, it)
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.uzdoom_enable_light_shaders),
             preferencesStorage.enableLightShaders,
             preferencesStorage.enableLightShadersPrefsKey.name)
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_lights),
@@ -88,7 +89,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.autoLoadLights = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_brightmaps),
@@ -97,7 +98,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.autoLoadBrightMaps = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_widescreen),
@@ -106,7 +107,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.autoLoadWideScreen = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         PreferenceItem(stringResource(R.string.more_uzdoom_settings)) {
             navController.navigate(MORE_SETTINGS_SCREEN)
@@ -126,7 +127,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.uzDoomMods.save()
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         if (viewModel.uzDoomMods.enableDemoPlayingSupport.value!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_demo_file),
@@ -138,7 +139,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
                 viewModel.uzDoomMods.save()
             }
 
-            HorizontalDivider()
+            DrawHorizontalDivider()
         }
 
         SwitchItem(
@@ -149,7 +150,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.uzDoomMods.save()
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         if (viewModel.uzDoomMods.enableBehSupport.value!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_beh_file),
@@ -161,7 +162,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
                 viewModel.uzDoomMods.save()
             }
 
-            HorizontalDivider()
+            DrawHorizontalDivider()
         }
 
         SwitchItem(
@@ -172,7 +173,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.uzDoomMods.save()
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         if (viewModel.uzDoomMods.enableDehSupport.value!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_deh_file),
@@ -184,7 +185,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
                 viewModel.uzDoomMods.save()
             }
 
-            HorizontalDivider()
+            DrawHorizontalDivider()
         }
 
         SwitchItem(
@@ -195,7 +196,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.uzDoomMods.save()
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         if (viewModel.uzDoomMods.enableXLatSupport.value!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_xlat_file),
@@ -206,7 +207,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
                 viewModel.uzDoomMods.save()
             }
 
-            HorizontalDivider()
+            DrawHorizontalDivider()
         }
     }
 
