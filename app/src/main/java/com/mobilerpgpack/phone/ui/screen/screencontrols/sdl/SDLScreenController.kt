@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -88,6 +89,7 @@ abstract class SDLScreenController : ScreenController() {
         val rootView = LocalActivity.current!!.window.decorView.rootView
         val rootModifier = if (inSafeArea) Modifier.fillMaxSize().safeDrawingPadding() else Modifier.fillMaxSize()
         val useFullScreenMode by alwaysUseFullScreenModeAsFlow.collectAsState(initial = false)
+        var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
 
         DisposableEffect(rootView) {
             val listener = ViewTreeObserver.OnGlobalLayoutListener {
@@ -97,6 +99,15 @@ abstract class SDLScreenController : ScreenController() {
             onDispose {
                 rootView.viewTreeObserver.removeOnGlobalLayoutListener(listener)
             }
+        }
+
+        if (isEditMode){
+            if (trackedPointerId != UNKNOWN_POINTER_ID){
+                handlePointer(trackedPointerId, 0f, 0f, 0f,
+                    mWidth, mHeight, MotionEvent.ACTION_UP,
+                    touchId ?: defaultTouchDeviceId)
+            }
+            trackedPointerId = UNKNOWN_POINTER_ID
         }
 
         Box(modifier = rootModifier.layout { measurable, constraints ->
@@ -142,9 +153,10 @@ abstract class SDLScreenController : ScreenController() {
                                 val pressure = (change.pressure).coerceAtMost(1.0f)
 
                                 fun handlePointer(touchAction: Int) {
+                                    touchId = event.motionEvent?.deviceId ?: defaultTouchDeviceId
                                     handlePointer(trackedPointerId, pressure, x, y,
                                         mWidth, mHeight,touchAction,
-                                        event.motionEvent?.deviceId ?: defaultTouchDeviceId)
+                                        touchId!!)
                                 }
 
                                 when {
