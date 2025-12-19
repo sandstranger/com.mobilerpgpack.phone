@@ -174,6 +174,11 @@ abstract class EngineInfo(
         }
 
         wasInit = true
+
+        while (!preferencesStorage.prefsWasLoaded){
+            delay(5)
+        }
+
         this.activity = activity
         initializeCommonEngineData()
         resolution = activity.getScreenResolution()
