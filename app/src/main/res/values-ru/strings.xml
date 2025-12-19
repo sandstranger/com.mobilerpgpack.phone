@@ -4,6 +4,7 @@
     <string name="translation_model_title">Модель перевода</string>
     <string name="downloaded_text">Загружено</string>
     <string name="bytes_text">байт</string>
+    <string name="use_android_tv_start_game_button">Использовать кнопку старта игры из Android TV</string>
     <string name="fullscreen_touch_mode">Использовать полноэкранный сенсорный режим при кастомном соотношении сторон экрана</string>
     <string name="unknown_size">Неизвестный размер</string>
     <string name="nllb200_translate_description">Модель машинного перевода, поддерживающая 200 языков (только для высокопроизводительных устройств с большим объемом оперативной памяти)</string>

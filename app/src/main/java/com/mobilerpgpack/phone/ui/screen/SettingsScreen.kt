@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen
 
-import android.content.Context
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,8 +42,8 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.isTelevision
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.get
@@ -51,14 +51,15 @@ import org.koin.core.qualifier.named
 
 class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
+    private var useAndroidTVStartGameButton by mutableStateOf(false)
+
     private val preferencesStorage : PreferencesStorage = get ()
 
-    private val context : Context = get ()
-
-    override val drawFloatingActionButton: Boolean = !context.isTelevision
+    override val drawFloatingActionButton: Boolean get() = !useAndroidTVStartGameButton
 
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
+
         val activity = LocalActivity.current!!
         val scope = rememberCoroutineScope()
         val activeEngineString by preferencesStorage.activeEngineAsFlowString
@@ -66,6 +67,10 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         val activeEngine = rememberSaveable(activeEngineString) {
             enumValueOf<EngineTypes>(activeEngineString)
+        }
+
+        LaunchedEffect(preferencesStorage.useAndroidTVStartGameButton) {
+            useAndroidTVStartGameButton = preferencesStorage.useAndroidTVStartGameButton.first()
         }
 
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
@@ -143,6 +148,14 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             stringResource(R.string.active_engine),
             activeEngine) { newValue ->
             preferencesStorage.setActiveEngineValue(newValue)
+        }
+
+        DrawHorizontalDivider()
+
+        SwitchPreferenceItem(stringResource(R.string.use_android_tv_start_game_button),
+            preferencesStorage.useAndroidTVStartGameButton,
+            preferencesStorage.useAndroidTVStartGameButtonPrefsKey.name){
+            useAndroidTVStartGameButton = it
         }
 
         DrawHorizontalDivider()
