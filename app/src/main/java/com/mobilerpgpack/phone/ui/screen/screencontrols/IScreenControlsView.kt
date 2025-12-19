@@ -15,8 +15,6 @@ interface IScreenControlsView {
 
 val IScreenControlsView.isHideControlsButton get() = this is UpdateScreenControlsVisibilityImageButton
 
-val IScreenControlsView.isMouseWheelButton get() = this is SDLMouseWheelButton
-
 val IScreenControlsView.allowToEditKeyEvent get() = this.viewState.allowToEditKeyEvent
 
 val IScreenControlsView.renderView : Boolean

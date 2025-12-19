@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -21,7 +22,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -444,21 +447,21 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { onAlphaChange(SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
                         contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
-                        Text(stringResource(R.string.increase_controls_alpha), color = onPrimaryColor)
+                        Text(stringResource(R.string.increase_controls_alpha), color = onPrimaryColor,fontSize = 13.sp)
                     }
                     Button(onClick = { onAlphaChange(-SCREEN_ITEMS_CHANGE_ALPHA_OFFSET) },
                         contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                        Text(stringResource(R.string.decrease_controls_alpha),color = onPrimaryColor)
+                        Text(stringResource(R.string.decrease_controls_alpha),color = onPrimaryColor,fontSize = 13.sp)
                     }
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { onSizeChange(SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
                         contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                        Text(stringResource(R.string.increase_controls_size),color = onPrimaryColor)
+                        Text(stringResource(R.string.increase_controls_size),color = onPrimaryColor,fontSize = 13.sp)
                     }
                     Button(onClick = { onSizeChange(-SCREEN_ITEMS_CHANGE_SIZE_OFFSET) },
                         contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                        Text(stringResource(R.string.decrease_controls_size),color = onPrimaryColor)
+                        Text(stringResource(R.string.decrease_controls_size),color = onPrimaryColor,fontSize = 13.sp)
                     }
                 }
 
@@ -467,7 +470,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         contentPadding = ButtonDefaults.TextButtonContentPadding,
                         colors = buttonColors) {
                         Text(stringResource(R.string.view_editor, selectedButtonId),
-                            color = onPrimaryColor
+                            color = onPrimaryColor,fontSize = 13.sp
                         )
                     }
                 }
@@ -475,24 +478,24 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { showCustomViewsEditor = true },
                         contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
-                        Text(stringResource(R.string.add_controls_items), color = onPrimaryColor)
+                        Text(stringResource(R.string.add_controls_items), color = onPrimaryColor,fontSize = 13.sp)
                     }
 
                     if (selectedButtonId != null) {
                         Button(onClick = { onViewDeleted(selectedButtonId) },
                             contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                            Text(stringResource(R.string.delete),  color = onPrimaryColor)
+                            Text(stringResource(R.string.delete),  color = onPrimaryColor,fontSize = 13.sp)
                         }
                     }
                 }
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = onReset,contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
-                        Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
+                        Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor, fontSize = 13.sp)
                     }
                     if (!inGame) {
                         Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                            Text(stringResource(R.string.close_controls_configuration), color = onPrimaryColor)
+                            Text(stringResource(R.string.close_controls_configuration), color = onPrimaryColor,fontSize = 13.sp)
                         }
                     }
                 }
@@ -526,8 +529,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
         var showKeyCodeDialog by remember { mutableStateOf(false) }
         val keyCodeMap = remember { keyCodeMap }
         val keyCodesToDraw by remember { mutableStateOf(keyCodeMap.toList()) }
+        val scrollState = rememberScrollState()
 
-        AlertDialog(
+        AlertDialog(modifier = Modifier.fillMaxHeight(),
             containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
             iconContentColor = onSurfaceVariantColor,
@@ -538,20 +542,20 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     Text(stringResource(R.string.close_text), color = primaryColor)
                 }
             },
-            title = { Text(stringResource(R.string.view_editor, viewToEdit.viewState.id),
-                color = onSurfaceColor) },
             text = {
-                Column(verticalArrangement = Arrangement.spacedBy(3.dp),
+                Column( modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally){
+
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Box(modifier = Modifier.size(60.dp)
+                        Box(modifier = Modifier.size(50.dp)
                             .background(Color.Transparent,
                                 RoundedCornerShape(8.dp)).graphicsLayer {
                                 colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                             }, contentAlignment = Alignment.Center){
-                            viewToEdit.DrawView(isEditMode = false, false, 60.dp)
+                            viewToEdit.DrawView(isEditMode = false, false, 50.dp)
                         }
                         Text(modifier = Modifier.wrapContentHeight(),
                             text = viewToEdit.viewState.id,
@@ -561,37 +565,67 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         )
                     }
 
-                    viewToEdit.viewState.apply {
-                        EnumDropdown(
-                            stringResource(R.string.screen_controls_view_render_rule),
-                            viewRenderRule
-                        ){
-                            viewRenderRule = it
-                            save()
-                        }
-
-                        CheckBox(stringResource(R.string.use_as_toggle),useViewAsToggle ){
-                            useViewAsToggle = it
-                            save()
-                        }
-
-                        if (sdlKeyCode!= Int.MIN_VALUE){
-                            Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
-                                verticalAlignment = Alignment.CenterVertically){
-                                Text( modifier = Modifier.wrapContentHeight(), text = stringResource(R.string.selected_key_code),
-                                    color = onSurfaceVariantColor)
-
-                                Text(modifier = Modifier.widthIn(min = 100.dp).wrapContentHeight().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
-                                    text = keyCodeMap[sdlKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
+                    Column( modifier = Modifier.fillMaxHeight().verticalScroll(scrollState),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally){
+                        viewToEdit.viewState.apply {
+                            EnumDropdown(
+                                stringResource(R.string.screen_controls_view_render_rule),
+                                viewRenderRule
+                            ){
+                                viewRenderRule = it
+                                save()
                             }
-                        }
-                        Button(onClick = {
-                            resetToDefaultsFromViewEditor()
-                            save() },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
-                            Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
+
+                            if (allowToUseViewAsToggle) {
+                                CheckBox(stringResource(R.string.use_as_toggle), useViewAsToggle) {
+                                    useViewAsToggle = it
+                                    save()
+                                }
+                            }
+
+                            if (!alwaysConsumeTouchEvents){
+                                CheckBox(stringResource(R.string.consume_touch_events), consumeTouchEvents) {
+                                    consumeTouchEvents = it
+                                    save()
+                                }
+                            }
+
+                            if (touchEventsCanIgnoreOutOfBounds){
+                                CheckBox(stringResource(R.string.ignore_out_of_bounds_touch_events),
+                                    ignoreOutOfBoundsTouchEvents) {
+                                    ignoreOutOfBoundsTouchEvents = it
+                                    save()
+                                }
+                            }
+
+                            if (this is MouseViewState){
+                                CheckBox(stringResource(R.string.invoke_wheel_events),
+                                    invokeWheelEventsWhilePressing) {
+                                    invokeWheelEventsWhilePressing = it
+                                    save()
+                                }
+                            }
+
+                            if (sdlKeyCode!= Int.MIN_VALUE){
+                                Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
+                                    verticalAlignment = Alignment.CenterVertically){
+                                    Text( modifier = Modifier.wrapContentHeight(), text = stringResource(R.string.selected_key_code),
+                                        color = onSurfaceVariantColor)
+
+                                    Text(modifier = Modifier.widthIn(min = 100.dp).wrapContentHeight().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
+                                        text = keyCodeMap[sdlKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
+                                }
+                            }
+                            Button(onClick = {
+                                resetToDefaultsFromViewEditor()
+                                save() },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
+                                Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
+                            }
                         }
                     }
                 }
+
             })
 
         if (showKeyCodeDialog) {
