@@ -4,6 +4,8 @@
     <string name="translation_model_title">Модель перевода</string>
     <string name="downloaded_text">Загружено</string>
     <string name="bytes_text">байт</string>
+    <string name="use_floating_start_game_button">Использовать плавающую кнопку старта игры</string>
+    <string name="fullscreen_touch_mode">Использовать полноэкранный сенсорный режим при кастомном соотношении сторон экрана</string>
     <string name="unknown_size">Неизвестный размер</string>
     <string name="nllb200_translate_description">Модель машинного перевода, поддерживающая 200 языков (только для высокопроизводительных устройств с большим объемом оперативной памяти)</string>
     <string name="bing_translate_description">Основан на онлайн-переводчике Bing. Нестабилен. Может быть забанен в любой момент</string>
@@ -33,8 +35,8 @@
     <string name="custom_aspect_ratio_hint">16x9</string>
     <string name="show_custom_mouse_cursor">Показывать кастомный курсор мыши. (Не работает в Doom 1 RPG)</string>
     <string name="allow_to_edit_controls_in_game">Включить редактирование экранного управления в игре</string>
-    <string name="custom_mouse_cursor_horizontal_offset">Настраиваемое смещение курсора мыши по горизонтали (полезно для нестандартных разрешений)</string>
-    <string name="custom_mouse_cursor_vertical_offset">Настраиваемое смещение курсора мыши по вертикали (полезно для нестандартных разрешений)</string>
+    <string name="custom_mouse_cursor_horizontal_offset">Cмещение курсора мыши по горизонтали</string>
+    <string name="custom_mouse_cursor_vertical_offset">Cмещение курсора мыши по вертикали</string>
     <string name="active_engine">Активная игра</string>
     <string name="use_custom_file_picker">Использовать кастомный проводник для выбора файлов (нужно для Android TV)</string>
     <string name="start_game">Запустить игру</string>
@@ -84,7 +86,7 @@
     <string name="choose_file_request">Выберите ZIP- или IPA-файл для игры</string>
     <string name="path_to_log">Путь к файлу лога</string>
     <string name="choose_directory">Выберите директорию</string>
-    <string name="custom_resolution">Пользовательское разрешение экрана (заменяет «Пользовательское соотношение сторон экрана»)</string>
+    <string name="custom_resolution">Пользовательское разрешение экрана</string>
     <string name="custom_resolution_hint">1920x1080</string>
     <string name="dark_theme">Включить темную тему для лаунчера</string>
     <string name="increase_controls_size">Размер+</string>
@@ -93,19 +95,23 @@
     <string name="increase_controls_alpha">Альфа+</string>
     <string name="reset_controls_to_default">Сбросить настройки</string>
     <string name="close_controls_configuration">Назад</string>
-    <string name="select_button">Выбрать кнопку</string>
+    <string name="select_view">Выбрать вью</string>
     <string name="close_text">Закрыть</string>
     <string name="reset_all_resources">Сбросить все игровые ресурсы</string>
     <string name="resources_not_ready">Игровые ресурсы еще не были скопированы, поэтому невозможно запустить игру </string>
     <string name="reset_all_resources_confirm_message">Это сбросит все игровые ресурсы и удалит все сохранённые данные, в частности все сохранения игр.\nПродолжить?</string>
     <string name="yes_text">Да</string>
-    <string name="use_as_toggle">Использовать как toggle</string>
+    <string name="use_as_toggle">Использовать как переключатель</string>
+    <string name="consume_touch_events">Поглощать события тача</string>
+    <string name="ignore_out_of_bounds_touch_events">Игнорировать события тача, выходящие за пределы вью</string>
+    <string name="invoke_wheel_events">Вызывать события колеса постоянно при нажатии на вью</string>
     <string name="no_text">Нет</string>
     <string name="cancel_download">Отменить загрузку</string>
     <string name="selected_key_code">Выбранный код кнопки</string>
     <string name="select_key_code">Выбери код кнопки</string>
     <string name="uknown">Неизвестно</string>
     <string name="reset_to_default">Сбросить по умолчанию</string>
+    <string name="reset_key_code_to_default">Сбросить код кнопки</string>
     <string name="keys_editor">Редактор клавиш</string>
     <string name="controls_autohing">Включить автоматическое скрытие экранного управления (не работает в Doom RPG)</string>
     <string name="path_to_psydoom_cue_file">Путь к cue-файлу PSX Doom</string>
@@ -233,4 +239,5 @@
     <string name="psydoom_auto_activate_boss">Авто-активация специальных секторов боссов</string>
     <string name="psydoom_peer_type">Тип пира</string>
     <string name="psydoom_refresh_rate">Частота обновления</string>
+    <string name="view_editor">%1$s редактор вью</string>
 </resources>

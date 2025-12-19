@@ -17,6 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mobilerpgpack.phone.ui.getOnBackgroundColor
+import com.mobilerpgpack.phone.ui.getSwitchItemColors
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -26,7 +28,7 @@ fun SwitchItem(
     enabled: Boolean = true,
     onCheckedChange : ((Boolean) -> Unit)? = null) {
     var checkedState by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
-    val color = LocalContentColor.current
+    val color = getOnBackgroundColor()
     val disabledColor = color.copy(alpha = 0.38f)
 
     Row(
@@ -48,6 +50,7 @@ fun SwitchItem(
         Switch(
             checked = checkedState,
             onCheckedChange = null,
+            colors = getSwitchItemColors(),
             enabled = enabled
         )
     }

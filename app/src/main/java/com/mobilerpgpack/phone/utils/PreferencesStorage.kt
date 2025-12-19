@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.utils
 
+import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsRepository
@@ -7,8 +8,12 @@ import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.floatPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.intPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
-open class PreferencesStorage : SharedPrefsRepository()  {
+open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
+
+    private val context : Context = get()
 
     val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
     val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
@@ -32,16 +37,17 @@ open class PreferencesStorage : SharedPrefsRepository()  {
     val pathToDoom64FolderWithMainWads = stringPreferencesKey("path_to_doom64_folder_wads")
     val pathToDoom64FolderWithMods = stringPreferencesKey("path_to_doom64_folder_mods")
     val enableDoom64ModsPrefsKey = booleanPreferencesKey("enable_doom64_mods")
-
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
-
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
-
     val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
-
     val useStandardSDLTextInputPrefsKey = booleanPreferencesKey("use_standard_sdl_text_input")
-
     val customOnScreenKeyboardTransparencyPrefsKey = floatPreferencesKey("custom_keyboard_transparency")
+    val alwaysUseFullScreenTouchModePrefsKey = booleanPreferencesKey("always_use_fullscreen_touch_mode")
+    val useFloatingStartGameButtonPrefsKey = booleanPreferencesKey("use_floating_start_game_button")
+
+    val useFloatingStartGameButton = getBooleanValue(useFloatingStartGameButtonPrefsKey, !context.isTelevision)
+
+    val alwaysUseFullScreenTouchMode = getBooleanValue(alwaysUseFullScreenTouchModePrefsKey, true)
 
     val customOnScreenKeyboardTransparency = getFloatValue(customOnScreenKeyboardTransparencyPrefsKey, 1.0f)
 

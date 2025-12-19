@@ -20,7 +20,9 @@ open class DoomRPGSeriesEngineInfo(
 
     final override val mouseButtonsEventsCanBeInvoked: Boolean = true
 
-    override fun isMouseShown() = true
+    override val requiredResourceExtensions = listOf(".ipa", ".IPA")
+
+    final override val touchFullScreenModeCanBeUsed: Boolean = false
 
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -38,6 +40,6 @@ open class DoomRPGSeriesEngineInfo(
         translationManager.activeEngine = engineType
     }
 
-    override val requiredResourceExtensions = listOf(".ipa", ".IPA")
+    override fun isMouseShown() = true
 }
 

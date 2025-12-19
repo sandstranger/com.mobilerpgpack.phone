@@ -13,9 +13,12 @@ class UpdateQuickPanelVisibilityImageButton(
     buttonResId: Int = NOT_EXISTING_RES,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
-    isDeleted : Boolean = false) :
+    isDeleted : Boolean = false,
+    consumeTouchEventsByDefault : Boolean = true,
+    ignoreOutOfBoundsTouchEvents : Boolean = false) :
     ImageButton(UPDATE_QUICK_PANEL_VISIBILITY_BUTTON_ID, engineType, offsetXPercent, offsetYPercent,
-        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted) {
+        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted,
+        consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
 
     override fun onClick(context: Context) {
         screenController?.activeViewsToDraw?.forEach {

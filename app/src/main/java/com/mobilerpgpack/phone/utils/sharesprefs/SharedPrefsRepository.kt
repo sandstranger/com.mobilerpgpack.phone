@@ -13,9 +13,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 open class SharedPrefsRepository {
 
-    init {
-        loadAllEntries()
-    }
+    val prefsWasLoaded get() = _prefsWasLoaded
+
+    fun loadAllEntries () = SharedPrefsRepository.loadAllEntries()
 
     fun <T : Enum<T>> getEnumValue(key: String,enumClass: Class<T>, defaultValue: T) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow!!.flow
@@ -172,19 +172,17 @@ open class SharedPrefsRepository {
 
     private companion object {
         @Volatile
-        private var entriesWasLoaded = false
-
+        private var loadAllEntriesWasCalled = false
+        @Volatile
+        private var _prefsWasLoaded = false
         private val mutex = Mutex()
-
         private val scope: CoroutineScope = get(CoroutineScope::class.java)
-
         private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
-
         private val loadedEntries = ConcurrentHashMap<String, SharedPrefsValue>()
 
         private fun loadAllEntries() {
-            if (!entriesWasLoaded) {
-                entriesWasLoaded = true
+            if (!loadAllEntriesWasCalled) {
+                loadAllEntriesWasCalled = true
                 scope.launch { loadAllEntriesAsync() }
             }
         }
@@ -199,6 +197,7 @@ open class SharedPrefsRepository {
                         loadedEntries[entry.key]!!.updateEntry(entry)
                     }
                 }
+                _prefsWasLoaded = true
             }
         }
 

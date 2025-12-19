@@ -17,14 +17,30 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.ShowSDL3InputImageButton
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
-const val LEFT_MOUSE_BUTTON_ID = 1
-
 val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
     SDL2Dpad(
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.5f,
         sizePercent = 0.25f,
+    ),
+    SDL2ImageButton(
+        "move_left",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.previous,
+        sdlKeyEvent = KeyEvent.KEYCODE_A
+    ),
+    SDL2ImageButton(
+        "move_right",
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.23f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.next,
+        sdlKeyEvent = KeyEvent.KEYCODE_D
     ),
     SDL2ImageButton(
         "attack",
@@ -281,7 +297,9 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.45f,
         sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
-        sdlKeyEvent = KeyEvent.KEYCODE_ENTER
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
+        consumeTouchEventsByDefault = false,
+        ignoreOutOfBoundsTouchEvents = true
     ),
     SDL2MouseWheelButton(
         "next_weapon",
@@ -552,7 +570,9 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        ignoreOutOfBoundsTouchEvents = true,
+        consumeTouchEventsByDefault = false
     ),
     SDL2MouseWheelButton(
         "next_weapon",
@@ -888,7 +908,9 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.45f,
         sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
-        sdlKeyEvent = KeyEvent.KEYCODE_ENTER
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
+        ignoreOutOfBoundsTouchEvents = true,
+        consumeTouchEventsByDefault = false
     ),
     SDL2ImageButton(
         "secondary_fire",
@@ -898,7 +920,9 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.08f,
         buttonResId = R.drawable.crossed_pistols,
         sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
-        isDeleted = true
+        isDeleted = true,
+        ignoreOutOfBoundsTouchEvents = true,
+        consumeTouchEventsByDefault = false
     ),
     SDL2MouseWheelButton(
         "next_weapon",
@@ -1328,7 +1352,9 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        ignoreOutOfBoundsTouchEvents = true,
+        consumeTouchEventsByDefault = false
     ),
     SDL2ImageButton(
         "secondary_fire",
@@ -1339,7 +1365,9 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.crossed_pistols,
         sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
         controlsType = ControlsType.OnScreenStick,
-        isDeleted = true
+        isDeleted = true,
+        ignoreOutOfBoundsTouchEvents = true,
+        consumeTouchEventsByDefault = false
     ),
     SDL2MouseWheelButton(
         "next_weapon",
@@ -1703,7 +1731,9 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.45f,
         sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
-        sdlKeyEvent = KeyEvent.KEYCODE_ENTER
+        sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
+        ignoreOutOfBoundsTouchEvents = true,
+        consumeTouchEventsByDefault = false
     ),
     SDL3ImageButton(
         "quick_save",
@@ -2006,7 +2036,9 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        ignoreOutOfBoundsTouchEvents = true,
+        consumeTouchEventsByDefault = false
     ),
     SDL3ImageButton(
         "quick_save",
@@ -2112,6 +2144,24 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         sizePercent = 0.25f,
     ),
     SDL2ImageButton(
+        "move_left",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.previous,
+        sdlKeyEvent = KeyEvent.KEYCODE_A
+    ),
+    SDL2ImageButton(
+        "move_right",
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.23f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.next,
+        sdlKeyEvent = KeyEvent.KEYCODE_D
+    ),
+    SDL2ImageButton(
         "attack",
         EngineTypes.DoomRpg,
         offsetXPercent = 0.76f,
@@ -2188,6 +2238,24 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.05f,
         offsetYPercent = 0.5f,
         sizePercent = 0.25f
+    ),
+    SDL2ImageButton(
+        "move_left",
+        EngineTypes.Doom2Rpg,
+        offsetXPercent = 0.05f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.previous,
+        sdlKeyEvent = KeyEvent.KEYCODE_A
+    ),
+    SDL2ImageButton(
+        "move_right",
+        EngineTypes.Doom2Rpg,
+        offsetXPercent = 0.23f,
+        offsetYPercent = 0.35f,
+        sizePercent = 0.07f,
+        buttonResId = R.drawable.next,
+        sdlKeyEvent = KeyEvent.KEYCODE_D
     ),
     SDL2ImageButton(
         "attack",

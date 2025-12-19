@@ -16,6 +16,7 @@ import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
@@ -77,7 +78,7 @@ open class CommonDoomRpgComposeSettings :
             }
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.allow_downloading_over_mobile_network),
@@ -87,11 +88,11 @@ open class CommonDoomRpgComposeSettings :
             translationModelsDownloader.allowDownloadingOveMobile = it
         }
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         DrawPreloadModelsSetting()
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.use_sdl_ttf_for_rendering),
@@ -99,7 +100,7 @@ open class CommonDoomRpgComposeSettings :
             preferencesStorage.useSDLTTFForFontsRenderingPrefsKey.name
         )
 
-        HorizontalDivider()
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.use_ai_for_text_translations),

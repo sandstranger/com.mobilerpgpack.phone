@@ -5,7 +5,9 @@
     <string name="downloaded_text">Downloaded</string>
     <string name="bytes_text">bytes</string>
     <string name="unknown_size">Unknown size</string>
+    <string name="use_floating_start_game_button">Use floating start game button</string>
     <string name="translation_model_title">Translation model</string>
+    <string name="fullscreen_touch_mode">Use fullscreen touch mode in custom screen aspect ratios</string>
     <string name="bing_translate_description">Based on the online Bing translation service. Unstable. Can be banned at any moment</string>
     <string name="nllb200_translate_description">Machine translation model, which supports 200 languages (only for high-end devices with big amount of RAM)</string>
     <string name="google_translate_description">Online google translation service. Unstable. Can be banned at any moment</string>
@@ -33,8 +35,8 @@
     <string name="custom_aspect_ratio">Custom screen aspect ratio</string>
     <string name="custom_aspect_ratio_hint">16x9</string>
     <string name="show_custom_mouse_cursor">Show custom mouse cursor. (Does not work in Doom 1 RPG)</string>
-    <string name="custom_mouse_cursor_horizontal_offset">Custom mouse cursor horizontal offset. (Useful for custom resolutions)</string>
-    <string name="custom_mouse_cursor_vertical_offset">Custom mouse cursor vertical offset. (Useful for custom resolutions)</string>
+    <string name="custom_mouse_cursor_horizontal_offset">Mouse cursor horizontal offset</string>
+    <string name="custom_mouse_cursor_vertical_offset">Mouse cursor vertical offset</string>
     <string name="allow_to_edit_controls_in_game">Enable in-game control editing</string>
     <string name="active_engine">Active engine</string>
     <string name="use_custom_file_picker">Use custom file picker (for Android TV)</string>
@@ -211,7 +213,7 @@
     <string name="choose_file_request">Select ZIP or IPA file for engine</string>
     <string name="path_to_log">Log file path</string>
     <string name="choose_directory">Select directory</string>
-    <string name="custom_resolution">Custom screen resolution (overrides “Custom screen aspect ratio”)</string>
+    <string name="custom_resolution">Custom screen resolution</string>
     <string name="custom_resolution_hint">1920x1080</string>
     <string name="dark_theme">Enable dark theme for launcher</string>
     <string name="increase_controls_size">Size+</string>
@@ -220,9 +222,12 @@
     <string name="increase_controls_alpha">Alpha+</string>
     <string name="reset_controls_to_default">Reset to defaults</string>
     <string name="close_controls_configuration">Back</string>
-    <string name="select_button">Select button</string>
+    <string name="select_view">Select view</string>
     <string name="close_text">Close</string>
     <string name="use_as_toggle">Use as toggle</string>
+    <string name="consume_touch_events">Consume touch events</string>
+    <string name="ignore_out_of_bounds_touch_events">Ignore out of bounds touch events</string>
+    <string name="invoke_wheel_events">Invoke wheel events permanently while pressing view</string>
     <string name="reset_all_resources">Reset all games resources</string>
     <string name="reset_all_resources_confirm_message">This will reset all games resources and will erase all saved data, like saved games.\nContinue?</string>
     <string name="yes_text">Yes</string>
@@ -234,6 +239,8 @@
     <string name="select_key_code">Select key code</string>
     <string name="uknown">Unknown</string>
     <string name="reset_to_default">Reset to default</string>
+    <string name="reset_key_code_to_default">Reset keycode default</string>
     <string name="keys_editor">Key editor</string>
+    <string name="view_editor">%1$s view editor</string>
     <string name="controls_autohing">Enable auto-hiding of screen controls (does not work in Doom RPG)</string>
 </resources>

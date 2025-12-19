@@ -55,11 +55,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         }
 
         setContent {
-            val isSystemInDarkTheme = isSystemInDarkTheme()
-            val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
-                .collectAsState(initial = isSystemInDarkTheme)
-
-            Theme(darkTheme = useDarkTheme) {
+            Theme {
                 activeEngine.screenController.DrawScreenControls(
                     inGame = false,
                     activeEngine = selectedEngine,
