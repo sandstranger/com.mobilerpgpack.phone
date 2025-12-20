@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                         .background(MaterialTheme.colorScheme.primary)
                         .systemBarsPadding()
                 ) {
-                    TopAppBar( modifier = Modifier.fillMaxWidth().height(50.dp),
+                    TopAppBar( modifier = Modifier.fillMaxWidth().height(40.dp),
                         title = {
                             Text(
                                 text = stringResource(R.string.app_name),
