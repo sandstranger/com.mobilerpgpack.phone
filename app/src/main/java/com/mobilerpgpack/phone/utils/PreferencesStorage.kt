@@ -40,7 +40,6 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
     val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
-    val useStandardSDLTextInputPrefsKey = booleanPreferencesKey("use_standard_sdl_text_input")
     val customOnScreenKeyboardTransparencyPrefsKey = floatPreferencesKey("custom_keyboard_transparency")
     val alwaysUseFullScreenTouchModePrefsKey = booleanPreferencesKey("always_use_fullscreen_touch_mode")
     val useFloatingStartGameButtonPrefsKey = booleanPreferencesKey("use_floating_start_game_button")
@@ -50,8 +49,6 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val alwaysUseFullScreenTouchMode = getBooleanValue(alwaysUseFullScreenTouchModePrefsKey, true)
 
     val customOnScreenKeyboardTransparency = getFloatValue(customOnScreenKeyboardTransparencyPrefsKey, 1.0f)
-
-    val useStandardSDLTextInput = getBooleanValue(useStandardSDLTextInputPrefsKey)
 
     val translationModelType = getStringValue(
         translationModelTypePrefsKey,
@@ -127,8 +124,7 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     suspend fun setPathToDoomRpgZipFile(valueToSave: String) =
         setStringValueAsync(pathToDoomRpgZipFilePrefsKey, valueToSave)
 
-    fun getUseDarkThemeValue(initialValue: Boolean = false) =
-        getBooleanValue(useDarkThemePrefsKey, initialValue)
+    fun getUseDarkThemeValue() = getBooleanValue(useDarkThemePrefsKey)
 
     fun setActiveEngineValue(valueToSave: EngineTypes) =
         setStringValue(activeEnginePrefsKey, valueToSave.toString())

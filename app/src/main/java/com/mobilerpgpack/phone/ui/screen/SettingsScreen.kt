@@ -198,7 +198,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         SwitchPreferenceItem(
             stringResource(R.string.dark_theme),
-            preferencesStorage.getUseDarkThemeValue( isSystemInDarkTheme()),
+            preferencesStorage.getUseDarkThemeValue(),
             preferencesStorage.useDarkThemePrefsKey.name)
 
         DrawHorizontalDivider()
