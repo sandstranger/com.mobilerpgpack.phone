@@ -59,6 +59,8 @@ abstract class SDLImageButton(
     consumeTouchEventsByDefault : Boolean = true,
     ignoreOutOfBoundsTouchEvents : Boolean = false) : IScreenControlsView, KoinComponent {
 
+    private var wasPressed by mutableStateOf(false)
+
     private var isPressed by mutableStateOf(false)
 
     final override var show: Boolean by mutableStateOf(true)
@@ -110,8 +112,11 @@ abstract class SDLImageButton(
             return modifierTouse
         }
 
-        if (!viewState.useViewAsToggle){
+        if ((isEditMode && (wasPressed || isPressed)) ||
+            (!viewState.useViewAsToggle && isPressed)){
+            wasPressed = false
             isPressed = false
+            onTouchUp(sdlKeyEvent)
         }
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
@@ -132,6 +137,7 @@ abstract class SDLImageButton(
                             down.consume()
                         }
                         if (!this.useViewAsToggle) {
+                            wasPressed = true
                             onTouchUp(this.sdlKeyCode)
                             onTouchDown(this.sdlKeyCode)
                         } else {
@@ -149,6 +155,7 @@ abstract class SDLImageButton(
                             up?.consume()
                         }
                         if (!useViewAsToggle) {
+                            wasPressed = false
                             onTouchUp(sdlKeyCode)
                         }
                     }

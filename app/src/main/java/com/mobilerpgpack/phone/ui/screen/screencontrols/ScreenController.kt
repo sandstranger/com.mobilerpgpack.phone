@@ -264,6 +264,24 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 }
 
                 if (readyToDrawControls) {
+                    if (inGame && allowToEditControls) {
+                        Image(
+                            painter = painterResource(R.drawable.cog),
+                            contentDescription = "settings_button",
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .size(60.dp)
+                                .alpha(0.5f)
+                                .minimumInteractiveComponentSize()
+                                .padding(8.dp)
+                                .clickable(indication = null,
+                                    interactionSource = null
+                                ){
+                                    isEditMode = !isEditMode
+                                }
+                        )
+                    }
+
                     viewsToDraw.forEach { (id, view) ->
 
                         val sizePx: Float = screenWidthPx * view.viewState.sizePercent
@@ -302,24 +320,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
                             )
                         }
                     }
-                }
-
-                if (inGame && allowToEditControls) {
-                    Image(
-                        painter = painterResource(R.drawable.cog),
-                        contentDescription = "settings_button",
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .size(60.dp)
-                            .alpha(0.5f)
-                            .minimumInteractiveComponentSize()
-                            .padding(8.dp)
-                            .clickable(indication = null,
-                                interactionSource = null
-                            ){
-                                isEditMode = !isEditMode
-                            }
-                    )
                 }
             }
         }
