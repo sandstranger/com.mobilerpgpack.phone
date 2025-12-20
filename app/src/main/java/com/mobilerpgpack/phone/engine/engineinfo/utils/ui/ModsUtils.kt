@@ -62,7 +62,7 @@ fun DrawModsSupport(mods: ModsModel) {
                 }
 
                 if (!pathToModsFolder.value.isNullOrEmpty()) {
-                    Button( onClick = {
+                    Button( modifier = Modifier.padding(end = 4.dp), onClick = {
                         pathToModsFolder.value = ""
                         save()
                     }, colors = buttonsColors
