@@ -18,7 +18,7 @@ fun EditTextPreferenceItem(
     keyboardType: KeyboardType = KeyboardType.Text,
     onValueChanged: ((String) -> Unit)? = null) {
     val preferencesStorage : PreferencesStorage = koinInject()
-    EditTextItem(title,value, hint, keyboardType = keyboardType){
+    EditTextItem(title,value, hint, updateTextValueForced = true, keyboardType = keyboardType){
         if (key.isNotEmpty()){
             preferencesStorage.setStringValue(key, it)
         }
