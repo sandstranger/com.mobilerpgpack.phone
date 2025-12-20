@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,11 +55,6 @@ abstract class Dpad(
     consumeTouchEventsByDefault : Boolean = true,
     ignoreOutOfBoundsTouchEvents : Boolean = false) : KoinComponent,
     IScreenControlsView {
-
-    private val engineInfo by lazy {
-        val preferencesStorage : PreferencesStorage = get()
-        get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
-    }
 
     private val dpadButtonState: ViewState
 
@@ -201,6 +197,13 @@ abstract class Dpad(
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        var wasPressed by rememberSaveable { mutableStateOf(false)}
+
+        if (isEditMode && wasPressed){
+            wasPressed = false
+            onTouchUp(sdlKeyEvent)
+        }
+
         return modifier.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
             if (isEditMode) {
                 return@pointerInput
@@ -213,12 +216,14 @@ abstract class Dpad(
                     if (consumeEvents){
                         down.consume()
                     }
+                    wasPressed = true
                     onTouchUp(sdlKeyEvent)
                     onTouchDown(sdlKeyEvent)
                     val up = waitForUpOrCancellation(pointerPassToUse, ignoreOutOfBoundsTouchEvents)
                     if (consumeEvents){
                         up?.consume()
                     }
+                    wasPressed = false
                     onTouchUp(sdlKeyEvent)
                 }
             }
