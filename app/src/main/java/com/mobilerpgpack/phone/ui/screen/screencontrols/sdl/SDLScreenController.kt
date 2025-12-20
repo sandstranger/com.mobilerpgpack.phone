@@ -35,12 +35,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
@@ -57,17 +51,8 @@ abstract class SDLScreenController : ScreenController() {
         get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
     }
 
-    private val alwaysUseFullScreenMode by lazy {
+    private val alwaysUseTouchFullScreenMode by lazy {
         preferencesStorage.alwaysUseFullScreenTouchMode.getBlockingValue() && engineInfo.touchFullScreenModeCanBeUsed
-    }
-
-    private val alwaysUseFullScreenModeAsFlow : Flow<Boolean> by lazy{
-        flow {
-            while (currentCoroutineContext().isActive) {
-                emit(alwaysUseFullScreenMode && !engineInfo.mouseButtonsEventsCanBeInvoked)
-                delay(50)
-            }
-        }.distinctUntilChanged()
     }
 
     @Composable
@@ -92,7 +77,8 @@ abstract class SDLScreenController : ScreenController() {
         val rootModifier = if (inSafeArea) Modifier
             .fillMaxSize()
             .safeDrawingPadding() else Modifier.fillMaxSize()
-        val useFullScreenMode by alwaysUseFullScreenModeAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val useTouchFullScreenMode = alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
 
         DisposableEffect(rootView) {
@@ -118,7 +104,7 @@ abstract class SDLScreenController : ScreenController() {
                 widthSize = constraints.maxWidth
                 heightSize = constraints.maxHeight
 
-                if (viewWidth > 0 && !useFullScreenMode) {
+                if (viewWidth > 0 && !useTouchFullScreenMode) {
                     val myAspect = 1.0f * viewWidth / viewHeight
                     var resultWidth = widthSize.toFloat()
                     var resultHeight = resultWidth / myAspect
