@@ -74,9 +74,6 @@ abstract class SDLScreenController : ScreenController() {
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
         val rootView = LocalActivity.current!!.window.decorView.rootView
-        val rootModifier = if (inSafeArea) Modifier
-            .fillMaxSize()
-            .safeDrawingPadding() else Modifier.fillMaxSize()
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode = alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
@@ -99,7 +96,7 @@ abstract class SDLScreenController : ScreenController() {
             trackedPointerId = UNKNOWN_POINTER_ID
         }
 
-        Box(modifier = rootModifier
+        Box(modifier = Modifier.fillMaxSize()
             .layout { measurable, constraints ->
                 widthSize = constraints.maxWidth
                 heightSize = constraints.maxHeight
