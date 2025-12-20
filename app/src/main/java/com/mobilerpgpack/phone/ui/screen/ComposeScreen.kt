@@ -46,17 +46,18 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
     fun DrawScreen(navController: NavHostController) {
         val onSurfaceColor = getOnSurfaceColor()
         val onBackgroundColor = getOnBackgroundColor()
+        val backgroundColor = getBackgroundColor()
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = getBackgroundColor(),
+            containerColor = backgroundColor,
             contentColor = onBackgroundColor,
             topBar = {
                 if (drawBackButton){
                 TopAppBar( modifier = Modifier.fillMaxWidth().height(30.dp),
                     title = { },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = getBackgroundColor()
+                        containerColor = backgroundColor
                     ),
                     navigationIcon = {
                         IconButton(onClick = {
