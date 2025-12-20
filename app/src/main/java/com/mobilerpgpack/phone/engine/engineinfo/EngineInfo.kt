@@ -331,10 +331,10 @@ abstract class EngineInfo(
                                                 contentDescription = "keyboard_button",
                                                 modifier = Modifier
                                                     .align(Alignment.TopStart)
-                                                    .size(80.dp)
+                                                    .size(70.dp)
                                                     .alpha(0.5f)
                                                     .minimumInteractiveComponentSize()
-                                                    .padding(8.dp)
+                                                    .padding(2.dp)
                                                     .clickable(indication = null, interactionSource = null
                                                     ){
                                                         sdlKeyboard.showKeyboard(useReturnButton = true, keyboardInputType)
