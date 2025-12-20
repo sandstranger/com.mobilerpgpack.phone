@@ -91,8 +91,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     @Composable
     private fun DrawStick(isEditMode: Boolean, inGame: Boolean) {
 
-        fun updateStick(x: Float, y: Float) {
-            if (isEditMode || !inGame){
+        fun updateStick(x: Float, y: Float, invokeUpdateStickEventForced : Boolean = false) {
+            if ((isEditMode || !inGame) && !invokeUpdateStickEventForced){
                 return
             }
 
@@ -144,7 +144,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     private fun DrawStick(
         isEditMode: Boolean,
         inGame: Boolean,
-        onUpdateStick: (Float, Float) -> Unit
+        onUpdateStick: (Float, Float, Boolean) -> Unit
     ) {
         var currentX by remember { mutableFloatStateOf(-1f) }
         var currentY by remember { mutableFloatStateOf(-1f) }
@@ -154,7 +154,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         var canvasW by remember { mutableIntStateOf(0) }
         var canvasH by remember { mutableIntStateOf(0) }
 
-        if (isEditMode || !inGame){
+        if (isEditMode && inGame && (dragId!=null || down)){
+            onUpdateStick(0f, 0f, true)
             currentX = -1f
             currentY = -1f
             dragId = null
@@ -202,7 +203,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                             down = false
                                             currentX = -1f
                                             currentY = -1f
-                                            onUpdateStick(0f, 0f)
+                                            onUpdateStick(0f, 0f, false)
                                             dragId = null
                                         }
                                     }
@@ -295,7 +296,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         strokeWidthPx: Float,
         currentX: Float,
         currentY: Float,
-        onUpdateStick: (Float, Float) -> Unit
+        onUpdateStick: (Float, Float, Boolean) -> Unit
     ) {
         val w = canvasW.toFloat().takeIf { it > 0f } ?: return
         val h = canvasH.toFloat().takeIf { it > 0f } ?: return
@@ -326,7 +327,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         val normX = ((drawX - centerX) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
         val normY = ((drawY - centerY) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
 
-        onUpdateStick(normX, normY)
+        onUpdateStick(normX, normY,false)
     }
 
     private companion object{
