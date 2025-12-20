@@ -45,15 +45,17 @@ fun DrawModsSupport(mods: ModsModel) {
 
     SwitchItem(stringResource(R.string.enable_separate_mods_support),
         mods.enableModsSupport.value!!) {
-        mods.enableModsSupport.value = it
-        mods.save()
+        mods.apply {
+            enableModsSupport.value = it
+            save()
+        }
     }
 
     DrawHorizontalDivider()
 
     if (mods.enableModsSupport.value!!) {
         Row (verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = Modifier.weight(0.65f)) {
+            Box(modifier = Modifier.weight(0.8f)) {
                 RequestPath(
                     stringResource(R.string.path_to_mods_folder),
                     mods.pathToModsFolder.value!!) {
@@ -62,9 +64,11 @@ fun DrawModsSupport(mods: ModsModel) {
             }
 
             if (!mods.pathToModsFolder.value.isNullOrEmpty()) {
-                Button(modifier = Modifier.weight(0.35f).height(40.dp), onClick = {
-                    mods.pathToModsFolder.value = ""
-                    mods.save()
+                Button(modifier = Modifier.weight(0.2f).height(40.dp), onClick = {
+                    mods.apply {
+                        pathToModsFolder.value = ""
+                        save()
+                    }
                 }, colors = buttonsColors) {
                     Text(
                         text = stringResource(R.string.clear),
