@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,9 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -54,8 +51,8 @@ fun DrawModsSupport(mods: ModsModel) {
         DrawHorizontalDivider()
 
         if (enableModsSupport.value!!) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(modifier = Modifier.weight(0.8f)) {
+            Row(verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row (modifier = Modifier.weight(0.8f)) {
                     RequestPath(
                         stringResource(R.string.path_to_mods_folder),
                         pathToModsFolder.value!!
@@ -65,13 +62,10 @@ fun DrawModsSupport(mods: ModsModel) {
                 }
 
                 if (!pathToModsFolder.value.isNullOrEmpty()) {
-                    Button(
-                        modifier = Modifier
-                            .weight(0.2f)
-                            .height(40.dp), onClick = {
-                            pathToModsFolder.value = ""
-                            save()
-                        }, colors = buttonsColors
+                    Button( onClick = {
+                        pathToModsFolder.value = ""
+                        save()
+                    }, colors = buttonsColors
                     ) {
                         Text(
                             text = stringResource(R.string.clear),
