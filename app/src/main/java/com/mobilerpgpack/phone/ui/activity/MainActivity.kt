@@ -18,7 +18,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getBackgroundColor
-import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
+import com.mobilerpgpack.phone.ui.items.SetupSystemBars
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             settingsScreen.route else permissionScreen.route
 
         setContent {
+            SetupSystemBars()
             val navController = rememberNavController()
 
             Theme {
@@ -89,7 +90,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
                             }
                         }
                     }
-                    SetupNavigationBar()
                 }
             }
         }

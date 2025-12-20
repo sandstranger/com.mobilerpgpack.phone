@@ -74,6 +74,7 @@ abstract class EngineInfo(
     private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
 
     private var controlsOverlayUI: View? = null
+
     private var layoutBinding : GameLayoutBinding? = null
 
     protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
@@ -167,7 +168,7 @@ abstract class EngineInfo(
             "resumeSound")
     }
 
-    override val touchFullScreenModeCanBeUsed: Boolean = true
+    override val fullTouchFullScreenModeCanBeUsed: Boolean = true
 
     override val commandLineArgs: Array<String>
         get() {
@@ -250,10 +251,9 @@ abstract class EngineInfo(
 
     final override fun loadLayout(){
         activity.hideSystemBarsAndWait  {
-            if (displayInSafeArea && !safeAreaWasApplied) {
+            if (displayInSafeArea){
                 activity.displayInSafeArea()
                 onSafeAreaApplied(activity.getScreenResolution(true))
-                safeAreaWasApplied = true
             }
         }
         inflateControlsLayout()
