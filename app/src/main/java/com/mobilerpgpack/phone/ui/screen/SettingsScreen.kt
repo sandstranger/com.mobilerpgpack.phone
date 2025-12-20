@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +15,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -268,7 +266,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
-        if (engineInfo.touchFullScreenModeCanBeUsed) {
+        if (engineInfo.fullTouchFullScreenModeCanBeUsed) {
             SwitchPreferenceItem(
                 stringResource(R.string.fullscreen_touch_mode),
                 preferencesStorage.alwaysUseFullScreenTouchMode,

@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
+import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +34,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -56,6 +58,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
@@ -111,19 +114,19 @@ abstract class ScreenController : KoinComponent, IScreenController {
             addAll(buildCustomViews(activeEngine))
         }
 
-        val context = LocalContext.current
+        val activity = LocalActivity.current!!
         val configuration = LocalConfiguration.current
-        val density = context.resources.displayMetrics.density
+        val density = activity.resources.displayMetrics.density
         val coroutineScope = rememberCoroutineScope()
 
         val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngine) }
-
-        var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
+        val viewsToDraw by remember { mutableStateOf(mutableMapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
         var readyToDrawControls by remember { mutableStateOf(false) }
         val clampButtonsFlow by preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true).collectAsStateWithLifecycle(true)
+        var allContentLoaded by remember { mutableStateOf(false) }
 
         var screenWidthPx by remember { mutableFloatStateOf(0f) }
         var screenHeightPx by remember { mutableFloatStateOf(0f) }
@@ -150,7 +153,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     }
                 }
             }
-            viewsToDraw = loadedMap
+            viewsToDraw.apply {
+                clear()
+                this.putAll(loadedMap)
+            }
         }
 
         _activeViewsToDraw.forEach {
@@ -158,27 +164,36 @@ abstract class ScreenController : KoinComponent, IScreenController {
         }
 
         if (drawInSafeArea) {
-            val activity = LocalActivity.current!!
-            var screenResolutionCalculated by remember { mutableStateOf(false) }
-            var allContentLoaded by remember { mutableStateOf(false) }
-            activity.window.decorView.post {
-                val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
-                val metrics = activity.window.decorView.resources.displayMetrics
-                val systemBarsInsets = insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-                )
+            activity.window.decorView.rootView.apply {
+                DisposableEffect(this) {
+                    val listener = ViewTreeObserver.OnGlobalLayoutListener {
+                        val insets = ViewCompat.getRootWindowInsets(this@apply)!!
+                        val metrics = resources.displayMetrics
+                        val systemBarsInsets = insets.getInsets(
+                            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+                        )
 
-                screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
-                screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
-                screenResolutionCalculated = true
-                readyToDrawControls = allContentLoaded
+                        screenWidthPx =
+                            (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
+                        screenHeightPx =
+                            (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
+
+                        if (!allContentLoaded) {
+                            allContentLoaded = true
+                            coroutineScope.launch {
+                                preloadButtons()
+                                readyToDrawControls = true
+                            }
+                        }
+                    }
+                    viewTreeObserver.addOnGlobalLayoutListener(listener)
+                    onDispose {
+                        viewTreeObserver.removeOnGlobalLayoutListener(listener)
+                    }
+                }
             }
-            LaunchedEffect(Unit) {
-                preloadButtons()
-                allContentLoaded = true
-                readyToDrawControls = screenResolutionCalculated
-            }
-        } else {
+        }
+        else{
             screenWidthPx = configuration.screenWidthDp * density
             screenHeightPx = configuration.screenHeightDp * density
             LaunchedEffect(Unit) {
