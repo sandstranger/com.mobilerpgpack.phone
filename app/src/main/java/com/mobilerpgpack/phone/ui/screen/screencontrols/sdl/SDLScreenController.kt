@@ -74,7 +74,9 @@ abstract class SDLScreenController : ScreenController() {
     final override fun DrawTouchCamera(inSafeArea : Boolean,
                                        isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
         if (!inGame){
-            Box(modifier = Modifier.fillMaxSize().background(Color.Transparent)){
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Transparent)){
                 content()
             }
             return
@@ -87,7 +89,9 @@ abstract class SDLScreenController : ScreenController() {
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
         val rootView = LocalActivity.current!!.window.decorView.rootView
-        val rootModifier = if (inSafeArea) Modifier.fillMaxSize().safeDrawingPadding() else Modifier.fillMaxSize()
+        val rootModifier = if (inSafeArea) Modifier
+            .fillMaxSize()
+            .safeDrawingPadding() else Modifier.fillMaxSize()
         val useFullScreenMode by alwaysUseFullScreenModeAsFlow.collectAsState(initial = false)
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
 
@@ -101,98 +105,100 @@ abstract class SDLScreenController : ScreenController() {
             }
         }
 
-        if (isEditMode){
-            if (trackedPointerId != UNKNOWN_POINTER_ID){
-                handlePointer(trackedPointerId, 0f, 0f, 0f,
-                    mWidth, mHeight, MotionEvent.ACTION_UP,
-                    touchId ?: defaultTouchDeviceId)
-            }
+        if (isEditMode && trackedPointerId != UNKNOWN_POINTER_ID) {
+            handlePointer(trackedPointerId, 0f, 0f, 0f,
+                mWidth, mHeight, MotionEvent.ACTION_UP,
+                touchId ?: defaultTouchDeviceId
+            )
             trackedPointerId = UNKNOWN_POINTER_ID
         }
 
-        Box(modifier = rootModifier.layout { measurable, constraints ->
-                    widthSize = constraints.maxWidth
-                    heightSize = constraints.maxHeight
+        Box(modifier = rootModifier
+            .layout { measurable, constraints ->
+                widthSize = constraints.maxWidth
+                heightSize = constraints.maxHeight
 
-                    if (viewWidth > 0 && !useFullScreenMode) {
-                        val myAspect = 1.0f * viewWidth / viewHeight
-                        var resultWidth = widthSize.toFloat()
-                        var resultHeight = resultWidth / myAspect
-                        if (resultHeight > heightSize) {
-                            resultHeight = heightSize.toFloat()
-                            resultWidth = resultHeight * myAspect
-                        }
-                        mWidth = resultWidth
-                        mHeight = resultHeight
-                    } else {
-                        mWidth = widthSize.toFloat()
-                        mHeight = heightSize.toFloat()
+                if (viewWidth > 0 && !useFullScreenMode) {
+                    val myAspect = 1.0f * viewWidth / viewHeight
+                    var resultWidth = widthSize.toFloat()
+                    var resultHeight = resultWidth / myAspect
+                    if (resultHeight > heightSize) {
+                        resultHeight = heightSize.toFloat()
+                        resultWidth = resultHeight * myAspect
                     }
-
-                    val placeable = measurable.measure(
-                        Constraints.fixed(mWidth.roundToInt(), mHeight.roundToInt())
-                    )
-
-                    layout(mWidth.roundToInt(), mHeight.roundToInt()) {
-                        placeable.place(0, 0)
-                    }
+                    mWidth = resultWidth
+                    mHeight = resultHeight
+                } else {
+                    mWidth = widthSize.toFloat()
+                    mHeight = heightSize.toFloat()
                 }
-                .background(Color.Transparent)
-                .pointerInput(!isEditMode) {
-                    if (isEditMode) {
-                        return@pointerInput
-                    }
-                    awaitPointerEventScope {
-                        while (true) {
-                            val event = awaitPointerEvent()
-                            for (change in event.changes) {
-                                val pid = change.id.value.toInt()
-                                val pos = change.position
-                                val x = pos.x
-                                val y = pos.y
-                                val pressure = (change.pressure).coerceAtMost(1.0f)
 
-                                fun handlePointer(touchAction: Int) {
-                                    touchId = event.motionEvent?.deviceId ?: defaultTouchDeviceId
-                                    handlePointer(trackedPointerId, pressure, x, y,
-                                        mWidth, mHeight,touchAction,
-                                        touchId!!)
+                val placeable = measurable.measure(
+                    Constraints.fixed(mWidth.roundToInt(), mHeight.roundToInt())
+                )
+
+                layout(mWidth.roundToInt(), mHeight.roundToInt()) {
+                    placeable.place(0, 0)
+                }
+            }
+            .background(Color.Transparent)
+            .pointerInput(!isEditMode) {
+                if (isEditMode) {
+                    return@pointerInput
+                }
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        for (change in event.changes) {
+                            val pid = change.id.value.toInt()
+                            val pos = change.position
+                            val x = pos.x
+                            val y = pos.y
+                            val pressure = (change.pressure).coerceAtMost(1.0f)
+
+                            fun handlePointer(touchAction: Int) {
+                                touchId = event.motionEvent?.deviceId ?: defaultTouchDeviceId
+                                handlePointer(
+                                    trackedPointerId, pressure, x, y,
+                                    mWidth, mHeight, touchAction,
+                                    touchId!!
+                                )
+                            }
+
+                            when {
+                                change.changedToDown() -> {
+                                    if (trackedPointerId == UNKNOWN_POINTER_ID) {
+                                        trackedPointerId = pid
+                                        handlePointer(MotionEvent.ACTION_DOWN)
+                                    }
                                 }
 
-                                when {
-                                    change.changedToDown() -> {
-                                        if (trackedPointerId==UNKNOWN_POINTER_ID) {
-                                            trackedPointerId = pid
-                                            handlePointer(MotionEvent.ACTION_DOWN)
-                                        }
-                                    }
-
-                                    change.changedToUp() -> {
-                                        if (trackedPointerId == pid){
-                                            handlePointer(MotionEvent.ACTION_UP)
-                                            trackedPointerId = UNKNOWN_POINTER_ID
-                                        }
-                                    }
-
-                                    change.positionChanged() -> {
-                                        if (trackedPointerId == pid) {
-                                            handlePointer(MotionEvent.ACTION_MOVE)
-                                        }
-                                    }
-
-                                    !change.pressed && trackedPointerId == pid -> {
-                                        handlePointer(MotionEvent.ACTION_CANCEL)
+                                change.changedToUp() -> {
+                                    if (trackedPointerId == pid) {
+                                        handlePointer(MotionEvent.ACTION_UP)
                                         trackedPointerId = UNKNOWN_POINTER_ID
                                     }
                                 }
-                            }
 
-                            event.motionEvent?.let {
-                                onMotionEventFinished(it)
+                                change.positionChanged() -> {
+                                    if (trackedPointerId == pid) {
+                                        handlePointer(MotionEvent.ACTION_MOVE)
+                                    }
+                                }
+
+                                !change.pressed && trackedPointerId == pid -> {
+                                    handlePointer(MotionEvent.ACTION_CANCEL)
+                                    trackedPointerId = UNKNOWN_POINTER_ID
+                                }
                             }
+                        }
+
+                        event.motionEvent?.let {
+                            onMotionEventFinished(it)
                         }
                     }
                 }
+            }
         ){
             (if (inSafeArea) Modifier.safeDrawingPadding() else Modifier).apply {
                 Box(modifier = this.layout { measurable, constraints ->
