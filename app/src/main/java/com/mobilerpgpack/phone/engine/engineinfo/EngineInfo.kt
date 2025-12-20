@@ -280,6 +280,8 @@ abstract class EngineInfo(
                     controlsOverlayUI.visibility = View.GONE
                 }
 
+                this@EngineInfo.controlsOverlayUI = controlsOverlayUI
+
                 customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
 
                 sdlContainer.post {
