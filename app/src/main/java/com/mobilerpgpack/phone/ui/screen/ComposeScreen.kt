@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -43,7 +44,6 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun DrawScreen(navController: NavHostController) {
-        val activity = LocalActivity.current!!
         val onSurfaceColor = getOnSurfaceColor()
         val onBackgroundColor = getOnBackgroundColor()
 
@@ -82,7 +82,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
                     ) {
                         Icon(
                             Icons.Default.PlayArrow,
-                            contentDescription = activity.getString(R.string.start_game),
+                            contentDescription = stringResource(R.string.start_game),
                             tint = onSurfaceColor
                         )
                     }
