@@ -20,7 +20,7 @@ class ShowSDLKeyboardButton(
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
     buttonResId: Int = NOT_EXISTING_RES,
-    private val keyboardInputType : CustomKeyboardView.KeyboardType = CustomKeyboardView.KeyboardType.QWERTY,
+    private val keyboardInputType : CustomKeyboardView.KeyboardType = SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,

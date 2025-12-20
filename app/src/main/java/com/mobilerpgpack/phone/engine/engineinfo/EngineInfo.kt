@@ -84,7 +84,7 @@ abstract class EngineInfo(
 
     protected abstract val sdlKeyboard : SDLKeyboard
 
-    protected open val keyboardInputType : CustomKeyboardView.KeyboardType = CustomKeyboardView.KeyboardType.QWERTY
+    protected open val keyboardInputType : CustomKeyboardView.KeyboardType = SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 
