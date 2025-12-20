@@ -29,8 +29,8 @@ import org.koin.core.component.inject
 class MainActivity : ComponentActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
+        super.onCreate(savedInstanceState)
         buildScreens()
     }
 
