@@ -20,6 +20,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
@@ -32,6 +33,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
     private val preferencesStorage : PreferencesStorage by inject ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         val selectedEngine = getSelectedEngineType()
@@ -40,11 +42,13 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         var activeEngine : IEngineInfo
 
         runBlocking {
+            while (!preferencesStorage.prefsWasLoaded){
+                delay(10)
+            }
+
             displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
             activeEngine = get (named(selectedEngine.toString()))
         }
-
-        enableEdgeToEdge()
 
         window.decorView.post {
             hideSystemBarsAndWait {

@@ -249,7 +249,6 @@ abstract class EngineInfo(
     }
 
     final override fun loadLayout(){
-        activity.enableEdgeToEdge()
         activity.hideSystemBarsAndWait  {
             if (displayInSafeArea && !safeAreaWasApplied) {
                 activity.displayInSafeArea()
@@ -333,7 +332,7 @@ abstract class EngineInfo(
                                                     .size(70.dp)
                                                     .alpha(0.5f)
                                                     .minimumInteractiveComponentSize()
-                                                    .padding(2.dp)
+                                                    .padding(8.dp)
                                                     .clickable(indication = null, interactionSource = null
                                                     ){
                                                         sdlKeyboard.showKeyboard(useReturnButton = true, keyboardInputType)
@@ -344,10 +343,10 @@ abstract class EngineInfo(
                                                 contentDescription = "escape_button",
                                                 modifier = Modifier
                                                     .align(Alignment.TopEnd)
-                                                    .size(70.dp)
+                                                    .size(60.dp)
                                                     .alpha(0.5f)
                                                     .minimumInteractiveComponentSize()
-                                                    .padding(2.dp)
+                                                    .padding(8.dp)
                                                     .clickable(indication = null, interactionSource = null
                                                     ){
                                                         onBackPressed()
