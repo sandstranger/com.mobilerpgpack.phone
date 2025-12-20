@@ -53,6 +53,7 @@ abstract class SDLMouseWheelButton(
     }
 
     final override fun onTouchDown(keyCode: Int) {
+        scope.coroutineContext.cancelChildren()
         if (mouseViewState.invokeWheelEventsWhilePressing){
             scope.launch { mouseWheelAsync(keyCode) }
         }
