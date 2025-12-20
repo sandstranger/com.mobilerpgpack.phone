@@ -326,8 +326,7 @@ abstract class EngineInfo(
                                 showKeyboardUiOverlay.setContent {
                                     Theme {
                                         Box(modifier = Modifier.fillMaxSize()) {
-                                            Image(
-                                                painter = painterResource(R.drawable.keyboard),
+                                            Image(painter = painterResource(R.drawable.keyboard),
                                                 contentDescription = "keyboard_button",
                                                 modifier = Modifier
                                                     .align(Alignment.TopStart)
@@ -338,6 +337,20 @@ abstract class EngineInfo(
                                                     .clickable(indication = null, interactionSource = null
                                                     ){
                                                         sdlKeyboard.showKeyboard(useReturnButton = true, keyboardInputType)
+                                                    }
+                                            )
+
+                                            Image(painter = painterResource(R.drawable.pause),
+                                                contentDescription = "escape_button",
+                                                modifier = Modifier
+                                                    .align(Alignment.TopEnd)
+                                                    .size(70.dp)
+                                                    .alpha(0.5f)
+                                                    .minimumInteractiveComponentSize()
+                                                    .padding(2.dp)
+                                                    .clickable(indication = null, interactionSource = null
+                                                    ){
+                                                        onBackPressed()
                                                     }
                                             )
                                         }
