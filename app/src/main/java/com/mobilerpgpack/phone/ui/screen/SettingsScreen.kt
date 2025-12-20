@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -103,7 +104,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             Button(
                 onClick = { viewModel.onStartGameClicked(activeEngine, activity) },
                 modifier = Modifier
-                    .fillMaxWidth(), colors = getButtonsColors()
+                    .fillMaxWidth().padding(start = 4.dp, end = 4.dp), colors = getButtonsColors()
             ) {
                 Text(stringResource(R.string.start_game),
                     textAlign = TextAlign.Center, fontSize = 22.sp, color = getOnPrimaryColor()
