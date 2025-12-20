@@ -85,3 +85,6 @@ url=https://github.com/sandstranger/libsndfile.git
 [submodule "third_party/libmp3lame/src/main/jni/libmp3lame-android"]
 	path = third_party/libmp3lame/src/main/jni/libmp3lame-android
 url=https://github.com/sandstranger/libmp3lame-android.git
+[submodule "app/src/main/jni/perfect_dark"]
+	path = app/src/main/jni/perfect_dark
+	url = https://github.com/sandstranger/perfect_dark.git
