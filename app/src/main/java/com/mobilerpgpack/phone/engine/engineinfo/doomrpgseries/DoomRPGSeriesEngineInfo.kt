@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.translator.ITranslationManager
+import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import org.koin.core.component.inject
@@ -23,6 +24,8 @@ open class DoomRPGSeriesEngineInfo(
     override val requiredResourceExtensions = listOf(".ipa", ".IPA")
 
     final override val touchFullScreenModeCanBeUsed: Boolean = false
+
+    final override val keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
 
     override suspend fun initialize(activity: ComponentActivity) {
         super.initialize(activity)

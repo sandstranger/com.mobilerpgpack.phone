@@ -10,19 +10,33 @@ import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.BuildConfig
+import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -30,6 +44,7 @@ import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.mobilerpgpack.phone.utils.invokeBool
+import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import com.sun.jna.Function
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +81,10 @@ abstract class EngineInfo(
     protected open val preferencesStorage: PreferencesStorage by inject()
 
     protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
+
+    protected abstract val sdlKeyboard : SDLKeyboard
+
+    protected open val keyboardInputType : CustomKeyboardView.KeyboardType = SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
 
     protected val scope = CoroutineScope(Dispatchers.Default)
 
@@ -148,12 +167,6 @@ abstract class EngineInfo(
             "resumeSound")
     }
 
-    final override val rootView get() = layoutBinding?.sdlContainer
-
-    final override val keyboardView get() = layoutBinding?.customKeyboard
-
-    final override val keyboardInputField: TextView? get() = layoutBinding?.keyboardEditText
-
     override val touchFullScreenModeCanBeUsed: Boolean = true
 
     override val commandLineArgs: Array<String>
@@ -205,8 +218,6 @@ abstract class EngineInfo(
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
         commandLineParams = commandLineParamsFlow.firstOrNull()
 
-        onUseSdlStandardTextInputValueChanged(preferencesStorage.useStandardSDLTextInput.first())
-
         val customAspectRatio = preferencesStorage.customAspectRatio.first()
         val customScreenResolution = preferencesStorage.customScreenResolution.first()
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
@@ -249,8 +260,6 @@ abstract class EngineInfo(
         inflateControlsLayout()
     }
 
-    protected abstract fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput : Boolean)
-
     protected abstract fun setScreenResolution(screenResolution: ScreenResolution)
 
     protected open fun isMouseShown(): Boolean = true
@@ -272,12 +281,17 @@ abstract class EngineInfo(
                     )
                 )
 
+                this@EngineInfo.sdlKeyboard.initialize(keyboardEditText, customKeyboard)
+
                 if (!showCustomMouseCursor) {
                     mouseOverlayUI.visibility = View.GONE
                 }
 
                 if (hideScreenControls) {
                     controlsOverlayUI.visibility = View.GONE
+                }
+                else{
+                    this@EngineInfo.controlsOverlayUI = controlsOverlayUI
                 }
 
                 customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
@@ -308,6 +322,27 @@ abstract class EngineInfo(
                                         )
                                     }
                                 }
+
+                                showKeyboardUiOverlay.setContent {
+                                    Theme {
+                                        Box(modifier = Modifier.fillMaxSize()) {
+                                            Image(
+                                                painter = painterResource(R.drawable.keyboard),
+                                                contentDescription = "keyboard_button",
+                                                modifier = Modifier
+                                                    .align(Alignment.TopStart)
+                                                    .size(70.dp)
+                                                    .alpha(0.5f)
+                                                    .minimumInteractiveComponentSize()
+                                                    .padding(2.dp)
+                                                    .clickable(indication = null, interactionSource = null
+                                                    ){
+                                                        sdlKeyboard.showKeyboard(useReturnButton = true, keyboardInputType)
+                                                    }
+                                            )
+                                        }
+                                    }
+                                }
                             }
 
                             sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -336,8 +371,10 @@ abstract class EngineInfo(
             if (needToShowControls != needToShowControlsLastState) {
                 this@EngineInfo.activity.runOnUiThread {
                     if (needToShowControls) {
+                        this@EngineInfo.layoutBinding!!.showKeyboardUiOverlay.visibility = View.GONE
                         this@EngineInfo.controlsOverlayUI!!.visibility = View.VISIBLE
                     } else {
+                        this@EngineInfo.layoutBinding!!.showKeyboardUiOverlay.visibility = View.VISIBLE
                         this@EngineInfo.controlsOverlayUI!!.visibility = View.GONE
                     }
                 }

@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -23,10 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import org.koin.java.KoinJavaComponent.get
-
-private val preferencesStorage : PreferencesStorage = get(PreferencesStorage::class.java)
-private val useDarkThemeFlow = preferencesStorage.getUseDarkThemeValue(false)
+import org.koin.compose.koinInject
 
 private val md_light_primary = Color(0xFF6750A4)
 private val md_light_background = Color.White
@@ -260,6 +256,8 @@ fun Theme(content: @Composable () -> Unit) {
 
 @Composable
 private fun useDarkTheme () : Boolean {
+    val preferencesStorage : PreferencesStorage = koinInject()
+    val useDarkThemeFlow = preferencesStorage.getUseDarkThemeValue()
     val useDarkTheme by useDarkThemeFlow.collectAsState(initial = false)
     return useDarkTheme
 }
