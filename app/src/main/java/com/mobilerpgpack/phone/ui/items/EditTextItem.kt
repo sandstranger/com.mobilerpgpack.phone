@@ -14,6 +14,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -41,7 +42,7 @@ fun EditTextItem(
     onValueChange: ((String) -> Unit)? = null
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
-    var currentTextValue by rememberSaveable(value) { mutableStateOf(value) }
+    var currentTextValue by rememberSaveable { mutableStateOf(value) }
     val onSurfaceVariantColor = getOnSurfaceVariantColor()
     val onSurfaceColor = getOnSurfaceColor()
     val primaryColor = getPrimaryColor()
@@ -50,7 +51,9 @@ fun EditTextItem(
     val onBackgroundColor = getOnBackgroundColor()
     val hintColor = Color.Gray
     val textColor = if (currentTextValue.isEmpty() && hint.isNotEmpty()) hintColor else onBackgroundColor
-    val showText = currentTextValue.isNotEmpty() || hint.isNotEmpty()
+    var textToShowWhenDialogBoxActive by rememberSaveable { mutableStateOf(currentTextValue) }
+    val showText = if (showDialog) textToShowWhenDialogBoxActive.isNotEmpty() else
+        currentTextValue.isNotEmpty() || hint.isNotEmpty()
 
     if (currentTextValue!=value && !showDialog && updateTextValueForced){
         currentTextValue = value
@@ -66,7 +69,8 @@ fun EditTextItem(
 
         if (showText) {
             Text(
-                text = currentTextValue.ifEmpty { hint },
+                text = if (showDialog) textToShowWhenDialogBoxActive.ifEmpty { hint }
+                else currentTextValue.ifEmpty { hint },
                 style = MaterialTheme.typography.bodyMedium,
                 color = textColor,
             )
@@ -75,6 +79,7 @@ fun EditTextItem(
 
     if (showDialog) {
         val savedTextValue by rememberSaveable { mutableStateOf(currentTextValue)}
+        textToShowWhenDialogBoxActive = savedTextValue
         AlertDialog(
             containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
