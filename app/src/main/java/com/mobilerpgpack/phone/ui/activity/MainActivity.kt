@@ -10,8 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.ui.Theme
+import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
@@ -35,7 +34,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
         buildScreens()
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     private fun buildScreens() {
         val settingsScreen: SettingsScreen by inject()
         val permissionScreen: PermissionScreen by inject()
@@ -52,7 +50,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.primary)
+                        .background(getBackgroundColor())
                         .systemBarsPadding()
                 ) {
                     Column(
