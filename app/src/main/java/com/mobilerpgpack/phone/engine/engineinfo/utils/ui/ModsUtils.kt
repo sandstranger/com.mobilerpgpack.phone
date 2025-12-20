@@ -89,7 +89,8 @@ fun DrawModsSupport(mods: ModsModel) {
 
             EditTextItem(
                 stringResource(R.string.uzdoom_mods_count),
-                modsCount
+                modsCount,
+                updateTextValueForced = true
             ) {
                 modsCount = it
             }

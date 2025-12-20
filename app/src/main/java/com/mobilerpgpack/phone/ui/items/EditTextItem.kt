@@ -36,11 +36,12 @@ fun EditTextItem(
     value: String,
     hint: String = "",
     singleLine : Boolean = true,
+    updateTextValueForced : Boolean = false,
     keyboardType : KeyboardType = KeyboardType.Text,
     onValueChange: ((String) -> Unit)? = null
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
-    var tempValue by rememberSaveable(value) { mutableStateOf(value) }
+    var currentTextValue by rememberSaveable(value) { mutableStateOf(value) }
     val onSurfaceVariantColor = getOnSurfaceVariantColor()
     val onSurfaceColor = getOnSurfaceColor()
     val primaryColor = getPrimaryColor()
@@ -48,8 +49,12 @@ fun EditTextItem(
     val textButtonsColor = getTextButtonsColors()
     val onBackgroundColor = getOnBackgroundColor()
     val hintColor = Color.Gray
-    val textColor = if (tempValue.isEmpty() && hint.isNotEmpty()) hintColor else onBackgroundColor
-    val showText = tempValue.isNotEmpty() || hint.isNotEmpty()
+    val textColor = if (currentTextValue.isEmpty() && hint.isNotEmpty()) hintColor else onBackgroundColor
+    val showText = currentTextValue.isNotEmpty() || hint.isNotEmpty()
+
+    if (currentTextValue!=value && !showDialog && updateTextValueForced){
+        currentTextValue = value
+    }
 
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -61,7 +66,7 @@ fun EditTextItem(
 
         if (showText) {
             Text(
-                text = tempValue.ifEmpty { hint },
+                text = currentTextValue.ifEmpty { hint },
                 style = MaterialTheme.typography.bodyMedium,
                 color = textColor,
             )
@@ -69,31 +74,36 @@ fun EditTextItem(
     }
 
     if (showDialog) {
+        val savedTextValue by rememberSaveable { mutableStateOf(currentTextValue)}
         AlertDialog(
             containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
             iconContentColor = onSurfaceVariantColor,
             titleContentColor = onSurfaceColor,
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = {
+                currentTextValue = savedTextValue
+                showDialog = false },
             confirmButton = {
                 TextButton(onClick = {
-                    onValueChange?.invoke(tempValue)
+                    onValueChange?.invoke(currentTextValue)
                     showDialog = false
                 }, colors = textButtonsColor) {
                     Text(stringResource(R.string.ok_text), color = primaryColor)
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDialog = false }, colors = textButtonsColor) {
+                TextButton(onClick = {
+                    currentTextValue = savedTextValue
+                    showDialog = false }, colors = textButtonsColor) {
                     Text(stringResource(R.string.cancel_text), color = primaryColor)
                 }
             },
             title = { Text(text = title, color = onSurfaceColor) },
             text = {
                 OutlinedTextField(
-                    value = tempValue,
-                    onValueChange = { tempValue = it },
-                    placeholder = { if (tempValue.isEmpty() && hint.isNotEmpty()) {
+                    value = currentTextValue,
+                    onValueChange = { currentTextValue = it },
+                    placeholder = { if (currentTextValue.isEmpty() && hint.isNotEmpty()) {
                         Text(hint, color = hintColor)
                     } },
                     singleLine = singleLine,
@@ -112,9 +122,10 @@ fun <T> EditTextItem(
     value: T,
     hint: String = "",
     singleLine : Boolean = true,
+    updateTextValueForced : Boolean = false,
     keyboardType : KeyboardType = KeyboardType.Text,
     onValueChange: ((String) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine, keyboardType, onValueChange)
+    EditTextItem(title, value.toString(), hint, singleLine,updateTextValueForced, keyboardType, onValueChange)
 }
 
 @Composable
@@ -123,8 +134,9 @@ fun EditTextItem(
     value: Int,
     hint: String = "",
     singleLine : Boolean = true,
+    updateTextValueForced : Boolean = false,
     onValueChange: ((Int) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Number){
+    EditTextItem(title, value.toString(), hint, singleLine, updateTextValueForced, keyboardType = KeyboardType.Number){
         val newValue = it.toIntOrNull() ?: 0
         onValueChange?.invoke(newValue)
     }
@@ -136,8 +148,9 @@ fun EditTextItem(
     value: Float,
     hint: String = "",
     singleLine : Boolean = true,
+    updateTextValueForced : Boolean = false,
     onValueChange: ((Float) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Decimal){
+    EditTextItem(title, value.toString(), hint, singleLine, updateTextValueForced, keyboardType = KeyboardType.Decimal){
         val newValue = it.toFloatOrNull() ?: 0.0f
         onValueChange?.invoke(newValue)
     }
