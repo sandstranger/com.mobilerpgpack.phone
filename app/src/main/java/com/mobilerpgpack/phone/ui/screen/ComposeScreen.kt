@@ -53,7 +53,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
             contentColor = onBackgroundColor,
             topBar = {
                 if (drawBackButton){
-                TopAppBar( modifier = Modifier.fillMaxWidth().height(35.dp),
+                TopAppBar( modifier = Modifier.fillMaxWidth().height(30.dp),
                     title = { },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = getPrimaryColor()
