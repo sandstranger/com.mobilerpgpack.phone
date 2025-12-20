@@ -279,9 +279,9 @@ abstract class EngineInfo(
                 if (hideScreenControls) {
                     controlsOverlayUI.visibility = View.GONE
                 }
-
-                this@EngineInfo.controlsOverlayUI = controlsOverlayUI
-
+                else{
+                    this@EngineInfo.controlsOverlayUI = controlsOverlayUI
+                }
                 customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
 
                 sdlContainer.post {
