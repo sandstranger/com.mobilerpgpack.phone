@@ -173,7 +173,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     canvasW = size.width
                     canvasH = size.height
                 }
-                .pointerInput(!isEditMode && inGame) {
+                .pointerInput(isEditMode,inGame) {
                     if (isEditMode || !inGame) {
                         return@pointerInput
                     }
