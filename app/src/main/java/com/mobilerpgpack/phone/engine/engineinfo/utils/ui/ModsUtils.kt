@@ -111,11 +111,13 @@ private fun DrawModsLazyColumn(mods: ModsModel){
     val onPrimaryColor = getOnPrimaryColor()
     val onBackgroundColor = getOnBackgroundColor()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        mods.mods.apply {
-            add(to.index, removeAt(from.index))
+        mods.apply {
+            mods.mods.apply {
+                add(to.index, removeAt(from.index))
+            }
+            updateComposeModsList()
+            save()
         }
-        mods.updateComposeModsList()
-        mods.save()
     }
 
     LazyColumn(modifier = Modifier.heightIn(max = 300.dp)
