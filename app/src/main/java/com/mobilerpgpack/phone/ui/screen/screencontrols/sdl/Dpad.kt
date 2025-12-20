@@ -201,7 +201,7 @@ abstract class Dpad(
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        return modifier.pointerInput(!isEditMode) {
+        return modifier.pointerInput(!isEditMode, mouseButtonsEventsCanBeInvoked) {
             if (isEditMode) {
                 return@pointerInput
             }
@@ -213,6 +213,7 @@ abstract class Dpad(
                     if (consumeEvents){
                         down.consume()
                     }
+                    onTouchUp(sdlKeyEvent)
                     onTouchDown(sdlKeyEvent)
                     val up = waitForUpOrCancellation(pointerPassToUse, ignoreOutOfBoundsTouchEvents)
                     if (consumeEvents){
