@@ -223,17 +223,8 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     private fun DrawUserInterfaceSettings() {
-        val useStandardSDLTextInput by preferencesStorage.useStandardSDLTextInput
-            .collectAsState(initial = false)
-
         DrawTitleText(stringResource(R.string.user_interface_settings))
         DrawEditScreenControlsSettings()
-        DrawHorizontalDivider()
-
-        SwitchPreferenceItem(stringResource(R.string.use_standard_sdl_text_input),
-            useStandardSDLTextInput,
-            preferencesStorage.useStandardSDLTextInputPrefsKey.name)
-
         DrawHorizontalDivider()
 
         DrawMouseCustomCursorSettings()

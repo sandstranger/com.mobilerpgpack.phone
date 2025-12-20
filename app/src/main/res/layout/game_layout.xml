@@ -21,6 +21,7 @@
         android:id="@+id/mouse_overlayUI"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:layout_gravity="top|start" />
 
     <androidx.compose.ui.platform.ComposeView
@@ -28,6 +29,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top|start" />
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/show_keyboard_ui_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_gravity="top|start"
+        android:src="@drawable/keyboard"/>
 
     <com.quantuminventions.customkeyboard.components.keyboard.CustomisedKeyboardView
         android:id="@+id/custom_keyboard"

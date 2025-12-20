@@ -6,6 +6,9 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL2GameActivity
 import com.mobilerpgpack.phone.engine.engineinfo.EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
 import com.mobilerpgpack.phone.utils.ScreenResolution
@@ -28,6 +31,8 @@ abstract class SDL2EngineInfo(
 
     private val mouseIcon: SDL2MouseIcon by inject()
 
+    final override val sdlKeyboard: SDLKeyboard by inject (named(KeyboardType.SDL2Keyboard.name))
+
     final override val gameActivityClazz: Class<*> = SDL2GameActivity::class.java
 
     final override val screenController: IScreenController by inject(
@@ -40,10 +45,6 @@ abstract class SDL2EngineInfo(
     override fun DrawMouseIcon() {
         super.DrawMouseIcon()
         mouseIcon.DrawMouseIcon()
-    }
-
-    final override fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput: Boolean) {
-        SDLActivity.useStandardSDLInput = useSdlTextStandardInput
     }
 
     final override fun onBackPressed(): Boolean {
