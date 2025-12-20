@@ -137,7 +137,6 @@ abstract class EngineInfo(
     protected open val loadGL4ES : Boolean = true
 
     private var wasInit = false
-    private var safeAreaWasApplied = false
     private var needToShowControlsLastState: Boolean = false
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
