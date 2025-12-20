@@ -563,7 +563,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     }
 
                     Column( modifier = Modifier.verticalScroll(scrollState),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
                         horizontalAlignment = Alignment.CenterHorizontally){
                         viewToEdit.viewState.apply {
                             EnumDropdown(
