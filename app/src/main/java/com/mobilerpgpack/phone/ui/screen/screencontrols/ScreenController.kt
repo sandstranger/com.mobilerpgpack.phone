@@ -522,8 +522,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val keyCodesToDraw by remember { mutableStateOf(keyCodeMap.toList()) }
         val scrollState = rememberScrollState()
 
-        AlertDialog(modifier = Modifier.fillMaxHeight(),
-            containerColor = surfaceContainerHighColor,
+        AlertDialog(containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
             iconContentColor = onSurfaceVariantColor,
             titleContentColor = onSurfaceColor,
@@ -534,8 +533,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 }
             },
             text = {
-                Column( modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally){
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -564,7 +562,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
                     }
 
-                    Column( modifier = Modifier.fillMaxHeight().verticalScroll(scrollState),
+                    Column( modifier = Modifier.verticalScroll(scrollState),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally){
                         viewToEdit.viewState.apply {

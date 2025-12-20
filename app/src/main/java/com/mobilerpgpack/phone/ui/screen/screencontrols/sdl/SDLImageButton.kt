@@ -117,7 +117,7 @@ abstract class SDLImageButton(
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
 
-        return modifierTouse.pointerInput(!isEditMode, mouseButtonsEventsCanBeInvoked) {
+        return modifierTouse.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
                 if (isEditMode) {
                     return@pointerInput
                 }
