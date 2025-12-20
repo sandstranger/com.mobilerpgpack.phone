@@ -7,7 +7,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.ui.Modifier
@@ -17,7 +16,6 @@ import androidx.navigation.compose.rememberNavController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.ui.Theme
-import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.items.SetupSystemBars
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
@@ -29,7 +27,7 @@ import org.koin.core.component.inject
 class MainActivity : ComponentActivity(), KoinComponent {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         buildScreens()
     }
@@ -48,47 +46,40 @@ class MainActivity : ComponentActivity(), KoinComponent {
             val navController = rememberNavController()
 
             Theme {
-                Column(
+                NavHost(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(getBackgroundColor())
-                        .systemBarsPadding()
+                        .background(androidx.compose.ui.graphics.Color.Transparent)
+                        .systemBarsPadding(),
+                    navController = navController,
+                    startDestination = startScreen
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        NavHost(
-                            navController = navController,
-                            startDestination = startScreen
-                        ) {
-                            composable(permissionScreen.route)
-                            {
-                                permissionScreen.DrawScreen(navController) {
-                                    navController.navigate(settingsScreen.route) {
-                                        popUpTo(0) {
-                                            inclusive = true
-                                            saveState = false
-                                        }
-                                        launchSingleTop = true
-                                    }
+                    composable(permissionScreen.route)
+                    {
+                        permissionScreen.DrawScreen(navController) {
+                            navController.navigate(settingsScreen.route) {
+                                popUpTo(0) {
+                                    inclusive = true
+                                    saveState = false
                                 }
-                            }
-
-                            composable(settingsScreen.route) {
-                                settingsScreen.DrawScreen(navController)
-                            }
-
-                            psyDoomSettingsScreens.forEach {
-                                val screen: ComposeScreen = it
-                                composable(screen.route) {
-                                    screen.DrawScreen(navController)
-                                }
-                            }
-
-                            composable(moreUZDoomSettingsScreen.route) {
-                                moreUZDoomSettingsScreen.DrawScreen(navController)
+                                launchSingleTop = true
                             }
                         }
+                    }
+
+                    composable(settingsScreen.route) {
+                        settingsScreen.DrawScreen(navController)
+                    }
+
+                    psyDoomSettingsScreens.forEach {
+                        val screen: ComposeScreen = it
+                        composable(screen.route) {
+                            screen.DrawScreen(navController)
+                        }
+                    }
+
+                    composable(moreUZDoomSettingsScreen.route) {
+                        moreUZDoomSettingsScreen.DrawScreen(navController)
                     }
                 }
             }
