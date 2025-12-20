@@ -25,6 +25,7 @@ import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getFabIconContainerColor
 import com.mobilerpgpack.phone.ui.getIconButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
+import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
 import com.mobilerpgpack.phone.ui.getPrimaryColor
 import org.koin.core.component.KoinComponent
@@ -52,10 +53,10 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
             contentColor = onBackgroundColor,
             topBar = {
                 if (drawBackButton){
-                TopAppBar( modifier = Modifier.fillMaxWidth().height(45.dp),
+                TopAppBar( modifier = Modifier.fillMaxWidth().height(35.dp),
                     title = { },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent
+                        containerColor = getPrimaryColor()
                     ),
                     navigationIcon = {
                         IconButton(onClick = {
@@ -65,7 +66,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "back",
-                                tint = onBackgroundColor
+                                tint = getOnPrimaryColor()
                             )
                         }
                     }
