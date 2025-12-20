@@ -7,7 +7,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,8 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,17 +33,11 @@ import com.mobilerpgpack.phone.ui.items.SetupNavigationBar
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
-import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
 
 class MainActivity : ComponentActivity(), KoinComponent {
-
-    private val preferencesStorage = get<PreferencesStorage>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,9 +57,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
         setContent {
             val navController = rememberNavController()
-            val isSystemInDarkTheme = isSystemInDarkTheme()
-            val useDarkTheme by preferencesStorage.getUseDarkThemeValue(isSystemInDarkTheme)
-                .collectAsState(initial = isSystemInDarkTheme)
 
             Theme {
                 Column(
@@ -77,7 +65,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                         .background(MaterialTheme.colorScheme.primary)
                         .systemBarsPadding()
                 ) {
-                    TopAppBar( modifier = Modifier.fillMaxWidth().height(50.dp),
+                    TopAppBar( modifier = Modifier.fillMaxWidth().height(40.dp),
                         title = {
                             Text(
                                 text = stringResource(R.string.app_name),
@@ -124,7 +112,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                             }
                         }
                     }
-                    SetupNavigationBar(useDarkTheme)
+                    SetupNavigationBar()
                 }
             }
         }

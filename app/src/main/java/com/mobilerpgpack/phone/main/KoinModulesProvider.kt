@@ -74,8 +74,12 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64OnScreenStickContr
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomAbsoluteTouchControls
 import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomOnScreenStickControls
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Keyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.uzDoomAbsoluteTouchControls
@@ -139,6 +143,15 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
         singleOf <IAssetExtractor> (::AssetExtractor)
         single <SharedPrefsDao> { SharedPrefsDatabase.createInstance().dao() }
+
+        singleOf(::SDL2Keyboard).withOptions {
+            named(KeyboardType.SDL2Keyboard.name)
+            bind<SDLKeyboard>()
+        }
+        singleOf(::SDL3Keyboard).withOptions {
+            named(KeyboardType.SDL3Keyboard.name)
+            bind<SDLKeyboard>()
+        }
     }
 
     private val httpModule = module {

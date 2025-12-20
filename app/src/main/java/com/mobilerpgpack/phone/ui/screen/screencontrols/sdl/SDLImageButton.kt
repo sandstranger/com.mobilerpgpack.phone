@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -9,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -113,7 +116,8 @@ abstract class SDLImageButton(
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        return modifierTouse.pointerInput(!isEditMode) {
+
+        return modifierTouse.pointerInput(!isEditMode, mouseButtonsEventsCanBeInvoked) {
                 if (isEditMode) {
                     return@pointerInput
                 }
@@ -128,6 +132,7 @@ abstract class SDLImageButton(
                             down.consume()
                         }
                         if (!this.useViewAsToggle) {
+                            onTouchUp(this.sdlKeyCode)
                             onTouchDown(this.sdlKeyCode)
                         } else {
                             if (!isPressed){
