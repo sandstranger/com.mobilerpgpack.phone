@@ -66,8 +66,12 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     override val loadGL4ES = false
 
+    override val touchFullScreenModeCanBeUsed = true
+
+    override val needToShowScreenControls = true
+
     override val mouseButtonsEventsCanBeInvoked = false
-    
+
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
