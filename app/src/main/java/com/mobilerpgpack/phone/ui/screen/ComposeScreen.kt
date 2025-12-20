@@ -56,7 +56,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
                 TopAppBar( modifier = Modifier.fillMaxWidth().height(30.dp),
                     title = { },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = getPrimaryColor()
+                        containerColor = getBackgroundColor()
                     ),
                     navigationIcon = {
                         IconButton(onClick = {
@@ -66,7 +66,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "back",
-                                tint = getOnPrimaryColor()
+                                tint = onBackgroundColor
                             )
                         }
                     }
