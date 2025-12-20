@@ -201,7 +201,7 @@ abstract class Dpad(
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        return modifier.pointerInput(!isEditMode, mouseButtonsEventsCanBeInvoked) {
+        return modifier.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
             if (isEditMode) {
                 return@pointerInput
             }
