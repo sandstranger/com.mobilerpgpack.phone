@@ -1,48 +1,46 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.view.KeyEvent
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import android.widget.EditText
+import android.widget.TextView
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
-import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.quantuminventions.customkeyboard.components.expandableView.ExpandableState
 import com.quantuminventions.customkeyboard.components.expandableView.ExpandableStateListener
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
+import com.quantuminventions.customkeyboard.components.keyboard.CustomisedKeyboardView
 import com.quantuminventions.customkeyboard.components.keyboard.KeyboardListener
 import com.quantuminventions.customkeyboard.components.keyboard.controllers.KeyboardController
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
-import org.koin.core.qualifier.named
-import kotlin.getValue
 
 abstract class SDLKeyboard : KoinComponent, KeyboardListener, ExpandableStateListener {
     private var keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE
     private var useReturnButton = false
     private var wasInit = false
+    private var keyboardInputField : TextView? = null
+    private var keyboardView : CustomisedKeyboardView? = null
     private val keyCodesProvider : IKeyCodesProvider by inject ()
 
-    private val engineInfo by lazy {
-        val preferencesStorage : PreferencesStorage = get ()
-        get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
+    fun initialize(keyboardInputField : EditText, keyboardView : CustomisedKeyboardView){
+        if (this.keyboardInputField==null || this.keyboardView==null){
+            this.keyboardInputField = keyboardInputField
+            this.keyboardView = keyboardView
+        }
     }
 
     fun showKeyboard(useReturnButton : Boolean = false,
                      keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE){
         this.keyboardInputType = keyboardInputType
         this.useReturnButton = useReturnButton
-        if (engineInfo.keyboardInputField == null || engineInfo.keyboardView == null){
+        if (keyboardInputField == null || keyboardView == null){
             return
         }
         setupKeyboard()
-        engineInfo.keyboardInputField?.apply {
+        keyboardInputField?.apply {
             text = ""
             requestFocus()
             clearFocus()
         }
-        engineInfo.rootView!!.requestFocus()
     }
 
     final override fun characterClicked(c: Char) {
@@ -69,9 +67,8 @@ abstract class SDLKeyboard : KoinComponent, KeyboardListener, ExpandableStateLis
         when (state) {
             ExpandableState.COLLAPSED,
             ExpandableState.COLLAPSING -> {
-                engineInfo.keyboardInputField!!.text = ""
-                engineInfo.keyboardView!!.clearFocus()
-                engineInfo.rootView!!.requestFocus()
+                keyboardInputField!!.text = ""
+                keyboardView!!.clearFocus()
             }
             else -> {}
         }
@@ -86,10 +83,10 @@ abstract class SDLKeyboard : KoinComponent, KeyboardListener, ExpandableStateLis
             return
         }
         wasInit = true
-        engineInfo.keyboardView?.apply {
+        keyboardView?.apply {
             setKeyCodeListener (this@SDLKeyboard)
             registerListener(this@SDLKeyboard)
-            registerEditText(keyboardInputType, engineInfo.keyboardInputField!!)
+            registerEditText(keyboardInputType, keyboardInputField!!)
         }
     }
 

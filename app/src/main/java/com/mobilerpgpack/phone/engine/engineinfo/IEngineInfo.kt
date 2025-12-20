@@ -13,10 +13,7 @@ import com.quantuminventions.customkeyboard.components.keyboard.CustomisedKeyboa
 import kotlinx.coroutines.flow.Flow
 
 interface IEngineInfo {
-    val rootView : View?
     val screenController : IScreenController
-    val keyboardView : CustomisedKeyboardView?
-    val keyboardInputField : TextView?
     val engineType : EngineTypes
     val pathToResourceIsCorrect : Boolean
     val pathToResourceExists : Boolean

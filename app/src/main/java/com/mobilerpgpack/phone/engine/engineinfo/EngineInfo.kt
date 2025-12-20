@@ -167,12 +167,6 @@ abstract class EngineInfo(
             "resumeSound")
     }
 
-    final override val rootView get() = layoutBinding?.sdlContainer
-
-    final override val keyboardView get() = layoutBinding?.customKeyboard
-
-    final override val keyboardInputField: TextView? get() = layoutBinding?.keyboardEditText
-
     override val touchFullScreenModeCanBeUsed: Boolean = true
 
     override val commandLineArgs: Array<String>
@@ -286,6 +280,8 @@ abstract class EngineInfo(
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                 )
+
+                this@EngineInfo.sdlKeyboard.initialize(keyboardEditText, customKeyboard)
 
                 if (!showCustomMouseCursor) {
                     mouseOverlayUI.visibility = View.GONE
