@@ -81,25 +81,27 @@ fun DrawModsSupport(mods: ModsModel) {
 
         DrawHorizontalDivider()
 
-        SwitchItem(stringResource(R.string.enable_mods_autoupdate),
-            mods.enableModsAutoUpdateInFolder){
-            mods.enableModsAutoUpdateInFolder = it
-        }
+        mods.apply {
+            SwitchItem(stringResource(R.string.enable_mods_autoupdate),
+                enableModsAutoUpdateInFolder){
+                enableModsAutoUpdateInFolder = it
+            }
 
-        DrawHorizontalDivider()
-
-        EditTextItem(
-            stringResource(R.string.uzdoom_mods_count),
-            mods.modsCount
-        ) {
-            mods.modsCount = it
-        }
-
-        DrawHorizontalDivider()
-
-        if (mods.modsCount > 0) {
-            DrawModsLazyColumn(mods)
             DrawHorizontalDivider()
+
+            EditTextItem(
+                stringResource(R.string.uzdoom_mods_count),
+                modsCount
+            ) {
+                modsCount = it
+            }
+
+            DrawHorizontalDivider()
+
+            if (modsCount > 0) {
+                DrawModsLazyColumn(mods)
+                DrawHorizontalDivider()
+            }
         }
     }
 }
