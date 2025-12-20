@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.ui.Theme
+import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.items.SetupSystemBars
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
@@ -49,7 +50,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 NavHost(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(androidx.compose.ui.graphics.Color.Transparent)
+                        .background(getBackgroundColor())
                         .systemBarsPadding(),
                     navController = navController,
                     startDestination = startScreen
