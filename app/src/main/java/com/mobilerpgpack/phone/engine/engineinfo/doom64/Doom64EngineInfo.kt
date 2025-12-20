@@ -25,7 +25,7 @@ open class Doom64EngineInfo(
     SDL3EngineInfo(mainEngineLib, allLibs,
         EngineTypes.Doom64ExPlus,emptyFlow(),commandLineParamsFlow) {
 
-    override val pathToResource get() = runBlocking { preferencesStorage.pathToDoom64MainWadsFolder.first() }
+    private val screenResolutionArray = arrayOfNulls<Any?>(2)
 
     private var customScreenResolutionWasApplied = false
 
@@ -40,6 +40,10 @@ open class Doom64EngineInfo(
         Function.getFunction(mainEngineLib,
             "RecalculateScreenResolution")
     }
+
+    override val pathToResource get() = runBlocking { preferencesStorage.pathToDoom64MainWadsFolder.first() }
+
+    override val fullTouchFullScreenModeCanBeUsed = false
 
     override val commandLineArgs: Array<String>
         get() {
@@ -83,7 +87,9 @@ open class Doom64EngineInfo(
         super.onSafeAreaApplied(screenResolution)
         if (!customScreenResolutionWasApplied) {
             setupScreenResolutionToEnv(screenResolution)
-            recalculateScreenResolution.invokeVoid(arrayOf(screenResolution.screenWidth, screenResolution.screenHeight))
+            screenResolutionArray[0] = screenResolution.screenWidth
+            screenResolutionArray[1] = screenResolution.screenHeight
+            recalculateScreenResolution.invokeVoid(screenResolutionArray)
         }
     }
 

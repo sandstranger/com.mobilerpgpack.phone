@@ -11,6 +11,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
@@ -50,11 +52,9 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
             activeEngine = get (named(selectedEngine.toString()))
         }
 
-        window.decorView.post {
-            hideSystemBarsAndWait {
-                if (displayInSafeArea) {
-                    displayInSafeArea()
-                }
+        hideSystemBarsAndWait {
+            if (displayInSafeArea) {
+                displayInSafeArea()
             }
         }
 
