@@ -6,6 +6,10 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL3GameActivity
 import com.mobilerpgpack.phone.engine.engineinfo.EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Keyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIconHelper
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
@@ -14,7 +18,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 import org.libsdl3.app.onKeyDown
 
@@ -30,6 +33,8 @@ abstract class SDL3EngineInfo(
 
     final override val gameActivityClazz: Class<*> = SDL3GameActivity::class.java
 
+    final override val sdlKeyboard: SDLKeyboard by inject (named(KeyboardType.SDL3Keyboard.name))
+
     final override val screenController: IScreenController by inject(
         named(SDL3ScreenController.SDL3_SCREEN_CONTROLLER_NAME)
     )
@@ -40,10 +45,6 @@ abstract class SDL3EngineInfo(
     override fun DrawMouseIcon() {
         super.DrawMouseIcon()
         mouseIcon.DrawMouseIcon()
-    }
-
-    final override fun onUseSdlStandardTextInputValueChanged(useSdlTextStandardInput: Boolean) {
-        SDLActivity.useStandardSDLInput = useSdlTextStandardInput
     }
 
     final override fun onBackPressed(): Boolean {

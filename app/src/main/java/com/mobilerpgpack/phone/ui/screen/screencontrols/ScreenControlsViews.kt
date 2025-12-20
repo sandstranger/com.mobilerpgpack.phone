@@ -4,17 +4,17 @@ import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64.Doom64AutorunButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.ShowSDL2InputImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.ShowSDL3InputImageButton
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
 val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
@@ -123,7 +123,8 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    ShowSDL2InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL2Keyboard,
         EngineTypes.WolfensteinRpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
@@ -373,7 +374,8 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
-    ShowSDL2InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL2Keyboard,
         EngineTypes.PsyDoom,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,
@@ -654,7 +656,8 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_TAB,
         controlsType = ControlsType.OnScreenStick
     ),
-    ShowSDL2InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL2Keyboard,
         EngineTypes.PsyDoom,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,
@@ -1067,7 +1070,8 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_R,
         defaultViewRenderRule = ViewRenderRule.Disable
     ),
-    ShowSDL2InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL2Keyboard,
         EngineTypes.UZDoom,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,
@@ -1527,7 +1531,8 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         defaultViewRenderRule = ViewRenderRule.Disable,
         controlsType = ControlsType.OnScreenStick
     ),
-    ShowSDL2InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL2Keyboard,
         EngineTypes.UZDoom,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,
@@ -1805,7 +1810,8 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    ShowSDL3InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL3Keyboard,
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,
@@ -2118,7 +2124,8 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE,
         controlsType = ControlsType.OnScreenStick
     ),
-    ShowSDL3InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL3Keyboard,
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,
@@ -2222,7 +2229,8 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         sizePercent = 0.06f,
         buttonResId = R.drawable.toggles
     ),
-    ShowSDL2InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL2Keyboard,
         EngineTypes.DoomRpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
@@ -2347,7 +2355,8 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.bot,
         sdlKeyEvent = KeyEvent.KEYCODE_B
     ),
-    ShowSDL2InputImageButton(
+    ShowSDLKeyboardButton(
+        KeyboardType.SDL2Keyboard,
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,
