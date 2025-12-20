@@ -42,7 +42,6 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -59,9 +58,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
-
         val activity = LocalActivity.current!!
-        val scope = rememberCoroutineScope()
         val activeEngineString by preferencesStorage.activeEngineAsFlowString
             .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
 
@@ -69,7 +66,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             enumValueOf<EngineTypes>(activeEngineString)
         }
 
-        LaunchedEffect(preferencesStorage.useFloatingStartGameButton) {
+        LaunchedEffect(Unit) {
             useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton.first()
         }
 
@@ -81,7 +78,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         if (!drawFloatingActionButton) {
             DrawTelevisionSettings(innerPadding,
-                scope, activeEngine,
+                activeEngine,
                 navController, settingsScreenViewModel
             )
         } else {
@@ -92,7 +89,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
     @Composable
     private fun DrawTelevisionSettings(
         innerPadding: PaddingValues,
-        scope: CoroutineScope,
         activeEngine: EngineTypes,
         navController: NavHostController,
         viewModel: SettingsScreenViewModel
