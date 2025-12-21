@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -14,6 +14,8 @@ https://github.com/Styd051/DOOM64-EX-Plus-Enhanced
 https://github.com/BodbDearg/PsyDoom
 
 https://github.com/UZDoom/UZDoom
+
+https://github.com/fgsfdsfgs/perfect_dark
 
 # System Requirements
 
@@ -193,6 +195,8 @@ DOOM64-EX-Plus-Enhanced engine source code: [Licence](https://github.com/Styd051
 PsyDoom engine source code: [Licence](https://github.com/BodbDearg/PsyDoom/blob/master/LICENSE) 	https://github.com/BodbDearg/PsyDoom
 
 UZDoom engine source code: [Licence](https://github.com/UZDoom/UZDoom/blob/trunk/LICENSE) 	https://github.com/UZDoom/UZDoom
+
+Perfect Dark source code: [Licence](https://github.com/fgsfdsfgs/perfect_dark/blob/port/LICENSE) https://github.com/fgsfdsfgs/perfect_dark
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
