@@ -11,7 +11,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
-import com.mobilerpgpack.phone.ui.items.AutoUpdatedEditTextItem
+import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
@@ -208,48 +208,44 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
 
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_refresh_rate),
-            viewModel.outputRefreshRate) {
+        EditTextItem(stringResource(R.string.psydoom_refresh_rate),
+            viewModel.outputRefreshRate, updateTextValueForced = true) {
             viewModel.outputRefreshRate = it
-            viewModel.outputRefreshRate
         }
         DrawHorizontalDivider()
         DrawTitleText(stringResource(R.string.psydoom_picture_crop_settings))
 
-        AutoUpdatedEditTextItem(
+        EditTextItem(
             stringResource(R.string.psydoom_top_overscan_pixels),
-            viewModel.topOverscanPixels
+            viewModel.topOverscanPixels, updateTextValueForced = true
         ) {
             viewModel.topOverscanPixels = it
-            viewModel.topOverscanPixels
         }
 
         DrawHorizontalDivider()
 
-        AutoUpdatedEditTextItem(
+        EditTextItem(
             stringResource(R.string.psydoom_bottom_overscan_pixels),
-            viewModel.bottomOverscanPixels
+            viewModel.bottomOverscanPixels, updateTextValueForced = true
         ) {
             viewModel.bottomOverscanPixels = it
-            viewModel.bottomOverscanPixels
         }
 
         DrawHorizontalDivider()
 
-        AutoUpdatedEditTextItem(
+        EditTextItem(
             stringResource(R.string.psydoom_logical_display_width),
-            viewModel.logicalDisplayWidth
+            viewModel.logicalDisplayWidth, updateTextValueForced = true
         ) {
             viewModel.logicalDisplayWidth = it
-            viewModel.logicalDisplayWidth
         }
 
         DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_general_settings))
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_vram_size), viewModel.vramSizeInMbytes) {
+        EditTextItem(stringResource(R.string.psydoom_vram_size),
+            viewModel.vramSizeInMbytes, updateTextValueForced = true) {
             viewModel.vramSizeInMbytes = it
-            viewModel.vramSizeInMbytes
         }
         DrawHorizontalDivider()
         SwitchItem(
@@ -262,17 +258,16 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawTitleText(stringResource(R.string.psydoom_vulkan_render))
 
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_render_height), viewModel.renderHeight) {
+        EditTextItem(stringResource(R.string.psydoom_render_height),
+            viewModel.renderHeight, updateTextValueForced = true) {
             viewModel.renderHeight = it
-            viewModel.renderHeight
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(
+        EditTextItem(
             stringResource(R.string.psydoom_anti_aliasing_samples),
-            viewModel.antialiasingMultisamples
+            viewModel.antialiasingMultisamples, updateTextValueForced = true
         ) {
             viewModel.antialiasingMultisamples = it
-            viewModel.antialiasingMultisamples
         }
         DrawHorizontalDivider()
         SwitchItem(
@@ -409,20 +404,18 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
         DrawHorizontalDivider()
 
-        AutoUpdatedEditTextItem(
+        EditTextItem(
             stringResource(R.string.psydoom_bob_scale),
-            viewModel.bobScale
+            viewModel.bobScale, updateTextValueForced = true
         ) {
             viewModel.bobScale = it
-            viewModel.bobScale
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(
+        EditTextItem(
             stringResource(R.string.psydoom_heap_size),
-            viewModel.heapSize
+            viewModel.heapSize, updateTextValueForced = true
         ) {
             viewModel.heapSize = it
-            viewModel.heapSize
         }
         DrawHorizontalDivider()
         DrawBugFixes(viewModel)
@@ -579,11 +572,10 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             viewModel.useFinalDoomPlayerMovement = it
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(
+        EditTextItem(
             stringResource(R.string.psydoom_lost_soul_spawn_limit),
-            viewModel.lostSoulSpawnLimit) {
+            viewModel.lostSoulSpawnLimit, updateTextValueForced = true) {
             viewModel.lostSoulSpawnLimit = it
-            viewModel.lostSoulSpawnLimit
         }
     }
 
@@ -628,50 +620,43 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
         DrawTitleText(stringResource(R.string.psydoom_mouse))
 
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_mouse_turn_speed),
-            viewModel.mouseTurnSpeed) {
+        EditTextItem(stringResource(R.string.psydoom_mouse_turn_speed),
+            viewModel.mouseTurnSpeed, updateTextValueForced = true) {
             viewModel.mouseTurnSpeed = it
-            viewModel.mouseTurnSpeed
         }
         DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_gamepad))
 
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_dead_zone),
-            viewModel.gamepadDeadZone) {
+        EditTextItem(stringResource(R.string.psydoom_dead_zone),
+            viewModel.gamepadDeadZone, updateTextValueForced = true) {
             viewModel.gamepadDeadZone = it
-            viewModel.gamepadDeadZone
         }
         DrawHorizontalDivider()
 
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_high_fast_turn_speed),
-            viewModel.gamepadFastTurnSpeedHigh) {
+        EditTextItem(stringResource(R.string.psydoom_high_fast_turn_speed),
+            viewModel.gamepadFastTurnSpeedHigh, updateTextValueForced = true) {
             viewModel.gamepadFastTurnSpeedHigh = it
-            viewModel.gamepadFastTurnSpeedHigh
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_low_fast_turn_speed),
-            viewModel.gamepadFastTurnSpeedLow) {
+        EditTextItem(stringResource(R.string.psydoom_low_fast_turn_speed),
+            viewModel.gamepadFastTurnSpeedLow, updateTextValueForced = true) {
             viewModel.gamepadFastTurnSpeedLow = it
-            viewModel.gamepadFastTurnSpeedLow
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_low_turn_speed),
-            viewModel.gamepadTurnSpeedLow) {
+        EditTextItem(stringResource(R.string.psydoom_low_turn_speed),
+            viewModel.gamepadTurnSpeedLow, updateTextValueForced = true) {
             viewModel.gamepadTurnSpeedLow = it
-            viewModel.gamepadTurnSpeedLow
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_high_turn_speed),
-            viewModel.gamepadTurnSpeedHigh) {
+        EditTextItem(stringResource(R.string.psydoom_high_turn_speed),
+            viewModel.gamepadTurnSpeedHigh, updateTextValueForced = true) {
             viewModel.gamepadTurnSpeedHigh = it
-            viewModel.gamepadTurnSpeedHigh
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_analog_to_digital_threshold),
-            viewModel.analogToDigitalThreshold) {
+        EditTextItem(stringResource(R.string.psydoom_analog_to_digital_threshold),
+            viewModel.analogToDigitalThreshold, updateTextValueForced = true) {
             viewModel.analogToDigitalThreshold = it
-            viewModel.analogToDigitalThreshold
         }
         DrawHorizontalDivider()
     }
@@ -681,16 +666,14 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
         DrawTitleText(stringResource(R.string.psydoom_audio))
 
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_audio_buffer_size),
-            viewModel.audioBufferSize) {
+        EditTextItem(stringResource(R.string.psydoom_audio_buffer_size),
+            viewModel.audioBufferSize, updateTextValueForced = true) {
             viewModel.audioBufferSize = it
-            viewModel.audioBufferSize
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_spu_ram_size),
-            viewModel.spuRamSize) {
+        EditTextItem(stringResource(R.string.psydoom_spu_ram_size),
+            viewModel.spuRamSize, updateTextValueForced = true) {
             viewModel.spuRamSize = it
-            viewModel.spuRamSize
         }
         DrawHorizontalDivider()
     }
@@ -717,64 +700,54 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         DrawHorizontalDivider()
 
         DrawTitleText(stringResource(R.string.psydoom_cheat_key_sequences))
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_god_mode),
-            viewModel.cheatKeySequenceGodMode) {
+        EditTextItem(stringResource(R.string.psydoom_god_mode),
+            viewModel.cheatKeySequenceGodMode, updateTextValueForced = true) {
             viewModel.cheatKeySequenceGodMode = it
-            viewModel.cheatKeySequenceGodMode
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_no_clip),
-            viewModel.cheatKeySequenceNoClip) {
+        EditTextItem(stringResource(R.string.psydoom_no_clip),
+            viewModel.cheatKeySequenceNoClip, updateTextValueForced = true) {
             viewModel.cheatKeySequenceNoClip = it
-            viewModel.cheatKeySequenceNoClip
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_level_warp),
-            viewModel.cheatKeySequenceLevelWarp) {
+        EditTextItem(stringResource(R.string.psydoom_level_warp),
+            viewModel.cheatKeySequenceLevelWarp, updateTextValueForced = true) {
             viewModel.cheatKeySequenceLevelWarp = it
-            viewModel.cheatKeySequenceLevelWarp
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_weapons_keys_armor_cheat),
-            viewModel.cheatKeySequenceWeaponsKeysAndArmor) {
+        EditTextItem(stringResource(R.string.psydoom_weapons_keys_armor_cheat),
+            viewModel.cheatKeySequenceWeaponsKeysAndArmor, updateTextValueForced = true) {
             viewModel.cheatKeySequenceWeaponsKeysAndArmor = it
-            viewModel.cheatKeySequenceWeaponsKeysAndArmor
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_weapons_armor_cheat),
-            viewModel.cheatKeySequenceWeaponsAndArmor) {
+        EditTextItem(stringResource(R.string.psydoom_weapons_armor_cheat),
+            viewModel.cheatKeySequenceWeaponsAndArmor, updateTextValueForced = true) {
             viewModel.cheatKeySequenceWeaponsAndArmor = it
-            viewModel.cheatKeySequenceWeaponsAndArmor
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_map_lines_on),
-            viewModel.cheatKeySequenceAllMapLinesOn) {
+        EditTextItem(stringResource(R.string.psydoom_map_lines_on),
+            viewModel.cheatKeySequenceAllMapLinesOn, updateTextValueForced = true) {
             viewModel.cheatKeySequenceAllMapLinesOn = it
-            viewModel.cheatKeySequenceAllMapLinesOn
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_map_things_on),
-            viewModel.cheatKeySequenceAllMapThingsOn) {
+        EditTextItem(stringResource(R.string.psydoom_map_things_on),
+            viewModel.cheatKeySequenceAllMapThingsOn, updateTextValueForced = true) {
             viewModel.cheatKeySequenceAllMapThingsOn = it
-            viewModel.cheatKeySequenceAllMapThingsOn
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_xray_vision),
-            viewModel.cheatKeySequenceXRayVision) {
+        EditTextItem(stringResource(R.string.psydoom_xray_vision),
+            viewModel.cheatKeySequenceXRayVision, updateTextValueForced = true) {
             viewModel.cheatKeySequenceXRayVision = it
-            viewModel.cheatKeySequenceXRayVision
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_vram_viewer),
-            viewModel.cheatKeySequenceVramViewer) {
+        EditTextItem(stringResource(R.string.psydoom_vram_viewer),
+            viewModel.cheatKeySequenceVramViewer, updateTextValueForced = true) {
             viewModel.cheatKeySequenceVramViewer = it
-            viewModel.cheatKeySequenceVramViewer
         }
         DrawHorizontalDivider()
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_no_target),
-            viewModel.cheatKeySequenceNoTarget) {
+        EditTextItem(stringResource(R.string.psydoom_no_target),
+            viewModel.cheatKeySequenceNoTarget, updateTextValueForced = true) {
             viewModel.cheatKeySequenceNoTarget = it
-            viewModel.cheatKeySequenceNoTarget
         }
         DrawHorizontalDivider()
     }
@@ -821,10 +794,9 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawTitleText(stringResource(R.string.psydoom_deathmatch))
 
-        AutoUpdatedEditTextItem(stringResource(R.string.psydoom_frag_limit),
-            viewModel.dmFragLimit) {
+        EditTextItem(stringResource(R.string.psydoom_frag_limit),
+            viewModel.dmFragLimit, updateTextValueForced = true) {
             viewModel.dmFragLimit = it
-            viewModel.dmFragLimit
         }
 
         DrawHorizontalDivider()
