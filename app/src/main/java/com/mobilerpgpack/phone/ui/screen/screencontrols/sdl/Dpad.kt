@@ -1,24 +1,18 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
-import android.annotation.SuppressLint
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,13 +31,9 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.waitForUpOrCancellation
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.qualifier.named
 
 abstract class Dpad(
@@ -118,13 +108,15 @@ abstract class Dpad(
         )
     }
 
-    @SuppressLint("UnusedBoxWithConstraintsScope")
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
-        BoxWithConstraints(
-            modifier = Modifier.fillMaxSize(),
+        Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
+            if (inGame && !isEditMode) {
+                Box(modifier = Modifier.commonDpadModifier())
+            }
+
             val buttonSize = size * 0.4f
             val offsetAmount = size * 0.33f
 
@@ -151,7 +143,6 @@ abstract class Dpad(
                         offsetX, offsetY, sdlKeyEvent)
                 )
             }
-
             for (button in dpadButtons) {
                 if (button.id in dpadDownCollection) {
                     dpadButton(
@@ -177,11 +168,47 @@ abstract class Dpad(
     protected abstract fun onTouchUp(keyCode: Int)
 
     @Composable
+    private fun Modifier.commonDpadModifier(): Modifier {
+        val modifier = this.fillMaxSize()
+
+        val preferencesStorage: PreferencesStorage = koinInject()
+        val activeEngineString by preferencesStorage.activeEngineAsFlowString.collectAsState("")
+
+        if (activeEngineString.isEmpty()) {
+            return modifier
+        }
+
+        val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
+        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
+            initial = false
+        )
+
+        return modifier.pointerInput( mouseButtonsEventsCanBeInvoked) {
+            awaitEachGesture {
+                viewState.apply {
+                    val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
+                    val pointerPassToUse =
+                        if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
+                    val down = awaitFirstDown(pass = pointerPassToUse)
+                    if (consumeEvents) {
+                        down.consume()
+                    }
+                    val up = waitForUpOrCancellation(pointerPassToUse, false)
+                    if (consumeEvents) {
+                        up?.consume()
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
     private fun Modifier.interactiveControlModifier(isEditMode: Boolean, inGame: Boolean,
                                                     buttonSize : Dp,  offsetX: Dp,
                                                     offsetY: Dp,
                                                     sdlKeyEvent : Int): Modifier {
-        val modifier = this.size(buttonSize)
+        val modifier = this
+            .size(buttonSize)
             .minimumInteractiveComponentSize()
             .offset(x = offsetX, y = offsetY)
 
