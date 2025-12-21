@@ -92,7 +92,7 @@ fun DrawModsSupport(mods: ModsModel) {
                 modsCount,
                 updateTextValueForced = true
             ) {
-                modsCount = it
+                modsCount = it.coerceAtLeast(0)
             }
 
             DrawHorizontalDivider()
