@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -158,5 +159,68 @@ fun EditTextItem(
     EditTextItem(title, value.toString(), hint, singleLine, updateTextValueForced, keyboardType = KeyboardType.Decimal){
         val newValue = it.toFloatOrNull() ?: 0.0f
         onValueChange?.invoke(newValue)
+    }
+}
+
+@Composable
+fun <T> AutoUpdatedEditTextItem(
+    title: String,
+    value: T,
+    hint: String = "",
+    singleLine : Boolean = true,
+    keyboardType : KeyboardType = KeyboardType.Text,
+    onValueChange: ((String) -> T)? = null){
+    var currentValue by rememberSaveable { mutableStateOf(value.toString())}
+    EditTextItem(title, currentValue, hint, singleLine,true, keyboardType){
+        onValueChange?.invoke(it)?.toString()?.run {
+            currentValue = this
+        }
+    }
+}
+
+@Composable
+fun AutoUpdatedEditTextItem(
+    title: String,
+    value: Int,
+    hint: String = "",
+    singleLine : Boolean = true,
+    onValueChange: ((Int) -> Int)? = null){
+    var currentValue by rememberSaveable { mutableStateOf(value.toString())}
+    EditTextItem(title, currentValue, hint, singleLine, true, keyboardType = KeyboardType.Number){
+        onValueChange?.invoke(it.toIntOrNull() ?: 0)?.toString()?.run {
+            currentValue = this
+        }
+    }
+}
+
+@Composable
+fun AutoUpdatedEditTextItem(
+    title: String,
+    value: Float,
+    hint: String = "",
+    singleLine : Boolean = true,
+    onValueChange: ((Float) -> Float)? = null){
+    var currentValue by rememberSaveable { mutableStateOf(value.toString()) }
+    EditTextItem(title, currentValue, hint, singleLine, true, keyboardType = KeyboardType.Decimal){
+        onValueChange?.invoke(it.toFloatOrNull() ?: 0.0f)?.toString()?.run {
+            currentValue = this
+        }
+    }
+}
+
+@Composable
+fun AutoUpdatedEditTextItem(
+    title: String,
+    value: String,
+    hint: String = "",
+    singleLine : Boolean = true,
+    keyboardType : KeyboardType = KeyboardType.Text,
+    onValueChange: ((String) -> String)? = null
+) {
+    var currentValue by rememberSaveable { mutableStateOf(value)}
+    EditTextItem(title,currentValue, hint, singleLine, updateTextValueForced = true, keyboardType){
+        onValueChange?.invoke(it)?.run {
+            currentValue = this
+        }
     }
 }
