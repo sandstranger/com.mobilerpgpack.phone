@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
+import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +34,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -56,6 +58,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
@@ -93,6 +96,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
     final override var showScreenControls by mutableStateOf(true)
 
+    final override var showQuickPanelItems by mutableStateOf(false)
+
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     override fun DrawScreenControls(
@@ -111,19 +116,19 @@ abstract class ScreenController : KoinComponent, IScreenController {
             addAll(buildCustomViews(activeEngine))
         }
 
-        val context = LocalContext.current
+        val activity = LocalActivity.current!!
         val configuration = LocalConfiguration.current
-        val density = context.resources.displayMetrics.density
+        val density = activity.resources.displayMetrics.density
         val coroutineScope = rememberCoroutineScope()
 
         val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngine) }
-
-        var viewsToDraw by remember { mutableStateOf(mapOf<String, IScreenControlsView>()) }
+        val viewsToDraw by remember { mutableStateOf(mutableMapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
         var readyToDrawControls by remember { mutableStateOf(false) }
         val clampButtonsFlow by preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true).collectAsStateWithLifecycle(true)
+        var allContentLoaded by remember { mutableStateOf(false) }
 
         var screenWidthPx by remember { mutableFloatStateOf(0f) }
         var screenHeightPx by remember { mutableFloatStateOf(0f) }
@@ -150,35 +155,45 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     }
                 }
             }
-            viewsToDraw = loadedMap
+            viewsToDraw.apply {
+                clear()
+                this.putAll(loadedMap)
+            }
         }
 
-        _activeViewsToDraw.forEach {
-            it.setScreenController(this)
-        }
+        _activeViewsToDraw.forEach { it.screenController = this }
 
         if (drawInSafeArea) {
-            val activity = LocalActivity.current!!
-            var screenResolutionCalculated by remember { mutableStateOf(false) }
-            var allContentLoaded by remember { mutableStateOf(false) }
-            activity.window.decorView.post {
-                val insets = ViewCompat.getRootWindowInsets(activity.window.decorView)!!
-                val metrics = activity.window.decorView.resources.displayMetrics
-                val systemBarsInsets = insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-                )
+            activity.window.decorView.rootView.apply {
+                DisposableEffect(this) {
+                    val listener = ViewTreeObserver.OnGlobalLayoutListener {
+                        val insets = ViewCompat.getRootWindowInsets(this@apply)!!
+                        val metrics = resources.displayMetrics
+                        val systemBarsInsets = insets.getInsets(
+                            WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+                        )
 
-                screenWidthPx = (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
-                screenHeightPx = (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
-                screenResolutionCalculated = true
-                readyToDrawControls = allContentLoaded
+                        screenWidthPx =
+                            (metrics.widthPixels - systemBarsInsets.left - systemBarsInsets.right).toFloat()
+                        screenHeightPx =
+                            (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
+
+                        if (!allContentLoaded) {
+                            allContentLoaded = true
+                            coroutineScope.launch {
+                                preloadButtons()
+                                readyToDrawControls = true
+                            }
+                        }
+                    }
+                    viewTreeObserver.addOnGlobalLayoutListener(listener)
+                    onDispose {
+                        viewTreeObserver.removeOnGlobalLayoutListener(listener)
+                    }
+                }
             }
-            LaunchedEffect(Unit) {
-                preloadButtons()
-                allContentLoaded = true
-                readyToDrawControls = screenResolutionCalculated
-            }
-        } else {
+        }
+        else{
             screenWidthPx = configuration.screenWidthDp * density
             screenHeightPx = configuration.screenHeightDp * density
             LaunchedEffect(Unit) {
@@ -193,7 +208,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             if (isEditMode) transparentDarkColor else Color.Transparent
         }
 
-        DrawTouchCamera(drawInSafeArea,isEditMode, inGame) {
+        DrawTouchCamera(blockTouchCameraEvents,drawInSafeArea,isEditMode, inGame) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -264,6 +279,24 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 }
 
                 if (readyToDrawControls) {
+                    if (inGame && allowToEditControls) {
+                        Image(
+                            painter = painterResource(R.drawable.cog),
+                            contentDescription = "settings_button",
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .size(60.dp)
+                                .alpha(0.5f)
+                                .minimumInteractiveComponentSize()
+                                .padding(8.dp)
+                                .clickable(indication = null,
+                                    interactionSource = null
+                                ){
+                                    isEditMode = !isEditMode
+                                }
+                        )
+                    }
+
                     viewsToDraw.forEach { (id, view) ->
 
                         val sizePx: Float = screenWidthPx * view.viewState.sizePercent
@@ -272,8 +305,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
                         val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
 
-                        val renderView =
-                            (view.isHideControlsButton || (view.renderView && showScreenControls) || isEditMode) && !view.viewState.isDeleted
+                        val renderView = !view.viewState.isDeleted && (isEditMode || view.renderView)
 
                         if (renderView) {
                             DrawView(
@@ -303,30 +335,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         }
                     }
                 }
-
-                if (inGame && allowToEditControls) {
-                    Image(
-                        painter = painterResource(R.drawable.cog),
-                        contentDescription = "settings_button",
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .size(60.dp)
-                            .alpha(0.5f)
-                            .minimumInteractiveComponentSize()
-                            .padding(8.dp)
-                            .clickable(indication = null,
-                                interactionSource = null
-                            ){
-                                isEditMode = !isEditMode
-                            }
-                    )
-                }
             }
         }
     }
 
     @Composable
-    protected abstract fun DrawTouchCamera(inSafeArea : Boolean,
+    protected abstract fun DrawTouchCamera(blockTouchCameraEvents: Boolean,
+                                           inSafeArea : Boolean,
                                            isEditMode: Boolean, inGame: Boolean,
                                            content: @Composable () -> Unit)
 
@@ -522,8 +537,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val keyCodesToDraw by remember { mutableStateOf(keyCodeMap.toList()) }
         val scrollState = rememberScrollState()
 
-        AlertDialog(modifier = Modifier.fillMaxHeight(),
-            containerColor = surfaceContainerHighColor,
+        AlertDialog(containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
             iconContentColor = onSurfaceVariantColor,
             titleContentColor = onSurfaceColor,
@@ -534,8 +548,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 }
             },
             text = {
-                Column( modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalAlignment = Alignment.CenterHorizontally){
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -564,8 +577,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor)
                     }
 
-                    Column( modifier = Modifier.fillMaxHeight().verticalScroll(scrollState),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    Column( modifier = Modifier.verticalScroll(scrollState),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
                         horizontalAlignment = Alignment.CenterHorizontally){
                         viewToEdit.viewState.apply {
                             EnumDropdown(
@@ -594,6 +607,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 CheckBox(stringResource(R.string.ignore_out_of_bounds_touch_events),
                                     ignoreOutOfBoundsTouchEvents) {
                                     ignoreOutOfBoundsTouchEvents = it
+                                    save()
+                                }
+                            }
+
+                            if (!viewToEdit.isUpdateQuickPanelStateButton){
+                                CheckBox(stringResource(R.string.show_in_quick_panel),
+                                    showInQuickPanel) {
+                                    showInQuickPanel = it
                                     save()
                                 }
                             }

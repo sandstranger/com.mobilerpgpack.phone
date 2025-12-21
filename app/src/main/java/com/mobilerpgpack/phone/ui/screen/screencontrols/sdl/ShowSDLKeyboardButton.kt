@@ -25,9 +25,11 @@ class ShowSDLKeyboardButton(
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
-    ignoreOutOfBoundsTouchEvents : Boolean = false) : KoinComponent,
+    ignoreOutOfBoundsTouchEvents : Boolean = false,
+    showInQuickPanel : Boolean = false) : KoinComponent,
     ImageButton(SHOW_KEYBOARD_BUTTON_ID, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,
-        buttonResId, defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents)
+        buttonResId, defaultViewRenderRule, controlsType, isDeleted,
+        consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents,showInQuickPanel)
 {
     private val keyboard : SDLKeyboard by inject (named(keyboardType.name))
 

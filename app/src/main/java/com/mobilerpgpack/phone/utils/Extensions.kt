@@ -147,28 +147,23 @@ suspend fun AwaitPointerEventScope.waitForUpOrCancellation(pass: PointerEventPas
 }
 
 fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
-    val decorView = window.decorView
-    var callbackWasCalled = false
-
-    decorView.post{
-        decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                decorView.postDelayed({
-                    ViewCompat.getRootWindowInsets(decorView)?.let {
-                        if (!it.isVisible(WindowInsetsCompat.Type.systemBars())) {
-                            decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                            if (!callbackWasCalled) {
-                                callbackWasCalled = true
+    window.decorView.apply {
+        post{
+            viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    postDelayed({
+                        ViewCompat.getRootWindowInsets(this@apply)?.let {
+                            if (!it.isVisible(WindowInsetsCompat.Type.systemBars())) {
                                 callback()
                             }
+                        } ?: run {
+                            viewTreeObserver.removeOnGlobalLayoutListener(this)
                         }
-                    } ?: run {
-                        decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    }
-                }, 50)
-            }
-        })
-        hideSystemBars()
+                    }, 16)
+                }
+            })
+            hideSystemBars()
+        }
     }
 }
 

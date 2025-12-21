@@ -11,6 +11,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
@@ -20,6 +22,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
@@ -32,6 +35,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
     private val preferencesStorage : PreferencesStorage by inject ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         val selectedEngine = getSelectedEngineType()
@@ -40,17 +44,17 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         var activeEngine : IEngineInfo
 
         runBlocking {
+            while (!preferencesStorage.prefsWasLoaded){
+                delay(10)
+            }
+
             displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
             activeEngine = get (named(selectedEngine.toString()))
         }
 
-        enableEdgeToEdge()
-
-        window.decorView.post {
-            hideSystemBarsAndWait {
-                if (displayInSafeArea) {
-                    displayInSafeArea()
-                }
+        hideSystemBarsAndWait {
+            if (displayInSafeArea) {
+                displayInSafeArea()
             }
         }
 

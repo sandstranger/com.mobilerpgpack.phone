@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,9 +12,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,61 +38,69 @@ fun DrawModsSupport(mods: ModsModel) {
     val buttonsColors = getButtonsColors()
     val onPrimaryColor = getOnPrimaryColor()
 
-    DrawHorizontalDivider()
-
-    SwitchItem(stringResource(R.string.enable_separate_mods_support),
-        mods.enableModsSupport.value!!) {
-        mods.enableModsSupport.value = it
-        mods.save()
-    }
-
-    DrawHorizontalDivider()
-
-    if (mods.enableModsSupport.value!!) {
-        Row (verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = Modifier.weight(0.65f)) {
-                RequestPath(
-                    stringResource(R.string.path_to_mods_folder),
-                    mods.pathToModsFolder.value!!) {
-                    mods.pathToModsFolder.value = it
-                }
-            }
-
-            if (!mods.pathToModsFolder.value.isNullOrEmpty()) {
-                Button(modifier = Modifier.weight(0.35f).height(40.dp), onClick = {
-                    mods.pathToModsFolder.value = ""
-                    mods.save()
-                }, colors = buttonsColors) {
-                    Text(
-                        text = stringResource(R.string.clear),
-                        textAlign = TextAlign.Center,
-                        color = onPrimaryColor
-                    )
-                }
-            }
-        }
-
+    mods.apply {
         DrawHorizontalDivider()
 
-        SwitchItem(stringResource(R.string.enable_mods_autoupdate),
-            mods.enableModsAutoUpdateInFolder){
-            mods.enableModsAutoUpdateInFolder = it
-        }
-
-        DrawHorizontalDivider()
-
-        EditTextItem(
-            stringResource(R.string.uzdoom_mods_count),
-            mods.modsCount
+        SwitchItem(
+            stringResource(R.string.enable_separate_mods_support),
+            enableModsSupport.value!!
         ) {
-            mods.modsCount = it
+            enableModsSupport.value = it
+            save()
         }
-
         DrawHorizontalDivider()
 
-        if (mods.modsCount > 0) {
-            DrawModsLazyColumn(mods)
+        if (enableModsSupport.value!!) {
+            Row(verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                Row (modifier = Modifier.weight(0.8f)) {
+                    RequestPath(
+                        stringResource(R.string.path_to_mods_folder),
+                        pathToModsFolder.value!!
+                    ) {
+                        pathToModsFolder.value = it
+                    }
+                }
+
+                if (!pathToModsFolder.value.isNullOrEmpty()) {
+                    Button( modifier = Modifier.padding(end = 4.dp), onClick = {
+                        pathToModsFolder.value = ""
+                        save()
+                    }, colors = buttonsColors
+                    ) {
+                        Text(
+                            text = stringResource(R.string.clear),
+                            textAlign = TextAlign.Center,
+                            color = onPrimaryColor
+                        )
+                    }
+                }
+            }
+
             DrawHorizontalDivider()
+
+            SwitchItem(
+                stringResource(R.string.enable_mods_autoupdate),
+                enableModsAutoUpdateInFolder
+            ) {
+                enableModsAutoUpdateInFolder = it
+            }
+
+            DrawHorizontalDivider()
+
+            EditTextItem(
+                stringResource(R.string.uzdoom_mods_count),
+                modsCount,
+                updateTextValueForced = true
+            ) {
+                modsCount = it
+            }
+
+            DrawHorizontalDivider()
+
+            if (modsCount > 0) {
+                DrawModsLazyColumn(mods)
+                DrawHorizontalDivider()
+            }
         }
     }
 }
@@ -107,15 +112,18 @@ private fun DrawModsLazyColumn(mods: ModsModel){
     val onPrimaryColor = getOnPrimaryColor()
     val onBackgroundColor = getOnBackgroundColor()
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        mods.mods.apply {
-            add(to.index, removeAt(from.index))
+        mods.apply {
+            this.mods.apply {
+                add(to.index, removeAt(from.index))
+            }
+            updateComposeModsList()
+            save()
         }
-        mods.updateComposeModsList()
-        mods.save()
     }
 
-    LazyColumn(modifier = Modifier.heightIn(max = 300.dp)
-            .padding(top = 2.dp, bottom = 2.dp),
+    LazyColumn(modifier = Modifier
+        .heightIn(max = 300.dp)
+        .padding(top = 2.dp, bottom = 2.dp),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {

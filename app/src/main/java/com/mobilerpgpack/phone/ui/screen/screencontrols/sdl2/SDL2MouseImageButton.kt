@@ -17,19 +17,15 @@ class SDL2MouseImageButton(
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = 0,
     buttonResId: Int = NOT_EXISTING_RES,
-    override val isQuickPanel: Boolean = false,
     useToggle: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
-    ignoreOutOfBoundsTouchEvents : Boolean = false) :
+    ignoreOutOfBoundsTouchEvents : Boolean = false,
+    showInQuickPanel : Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
         alpha,sdlKeyEvent, buttonResId, useToggle = useToggle, defaultViewRenderRule = defaultViewRenderRule,
-        controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
-
-    init {
-        show = !isQuickPanel
-    }
+        controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents,showInQuickPanel) {
 
     override fun onTouchDown(keyCode: Int) =
         SDLActivity.onVirtualMouse(keyCode, MotionEvent.ACTION_DOWN)

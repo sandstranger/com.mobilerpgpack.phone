@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
@@ -20,6 +21,7 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     private var wasPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         val preferencesStorage : PreferencesStorage = get()
         runBlocking {
             val activeEngineType = preferencesStorage.activeEngineAsFlowString.first()

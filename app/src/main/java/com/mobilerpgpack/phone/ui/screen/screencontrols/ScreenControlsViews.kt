@@ -24,6 +24,14 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.5f,
         sizePercent = 0.25f,
     ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+        isDeleted = true
+    ),
     SDL2ImageButton(
         "move_left",
         EngineTypes.WolfensteinRpg,
@@ -169,7 +177,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.first_number,
         sdlKeyEvent = KeyEvent.KEYCODE_1,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "second_number",
@@ -179,7 +187,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.second_number,
         sdlKeyEvent = KeyEvent.KEYCODE_2,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "third_number",
@@ -189,7 +197,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.third_number,
         sdlKeyEvent = KeyEvent.KEYCODE_3,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "fourth_number",
@@ -199,7 +207,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.fourth_number,
         sdlKeyEvent = KeyEvent.KEYCODE_4,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "five_number",
@@ -209,7 +217,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.five_number,
         sdlKeyEvent = KeyEvent.KEYCODE_5,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "six_number",
@@ -219,7 +227,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.six_number,
         sdlKeyEvent = KeyEvent.KEYCODE_6,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "seven_number",
@@ -229,7 +237,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.seven_number,
         sdlKeyEvent = KeyEvent.KEYCODE_7,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "eight_number",
@@ -239,7 +247,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.eight_number,
         sdlKeyEvent = KeyEvent.KEYCODE_8,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "delete",
@@ -249,7 +257,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.delete_icon,
         sdlKeyEvent = KeyEvent.KEYCODE_DEL,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "pan",
@@ -259,7 +267,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.follow,
         sdlKeyEvent = KeyEvent.KEYCODE_F,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "zoom_in",
@@ -269,7 +277,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_in,
         sdlKeyEvent = KeyEvent.KEYCODE_EQUALS,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "zoom_out",
@@ -279,7 +287,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_out,
         sdlKeyEvent = KeyEvent.KEYCODE_MINUS,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "demo_player",
@@ -289,7 +297,7 @@ val psyDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.screen_record,
         sdlKeyEvent = KeyEvent.KEYCODE_V,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "attack",
@@ -429,7 +437,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.first_number,
         sdlKeyEvent = KeyEvent.KEYCODE_1,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -440,7 +448,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.second_number,
         sdlKeyEvent = KeyEvent.KEYCODE_2,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -451,7 +459,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.third_number,
         sdlKeyEvent = KeyEvent.KEYCODE_3,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -462,7 +470,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.fourth_number,
         sdlKeyEvent = KeyEvent.KEYCODE_4,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -473,7 +481,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.five_number,
         sdlKeyEvent = KeyEvent.KEYCODE_5,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -484,7 +492,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.six_number,
         sdlKeyEvent = KeyEvent.KEYCODE_6,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -495,7 +503,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.seven_number,
         sdlKeyEvent = KeyEvent.KEYCODE_7,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -506,7 +514,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.eight_number,
         sdlKeyEvent = KeyEvent.KEYCODE_8,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -517,7 +525,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.delete_icon,
         sdlKeyEvent = KeyEvent.KEYCODE_DEL,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -528,7 +536,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.follow,
         sdlKeyEvent = KeyEvent.KEYCODE_F,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -539,7 +547,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_in,
         sdlKeyEvent = KeyEvent.KEYCODE_EQUALS,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -550,7 +558,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_out,
         sdlKeyEvent = KeyEvent.KEYCODE_MINUS,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -561,7 +569,7 @@ val psyDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.screen_record,
         sdlKeyEvent = KeyEvent.KEYCODE_V,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -702,7 +710,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zero_number,
         sdlKeyEvent = KeyEvent.KEYCODE_0,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "first_number",
@@ -712,7 +720,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.first_number,
         sdlKeyEvent = KeyEvent.KEYCODE_1,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "second_number",
@@ -722,7 +730,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.second_number,
         sdlKeyEvent = KeyEvent.KEYCODE_2,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "third_number",
@@ -732,7 +740,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.third_number,
         sdlKeyEvent = KeyEvent.KEYCODE_3,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "fourth_number",
@@ -742,7 +750,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.fourth_number,
         sdlKeyEvent = KeyEvent.KEYCODE_4,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "five_number",
@@ -752,7 +760,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.five_number,
         sdlKeyEvent = KeyEvent.KEYCODE_5,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "six_number",
@@ -762,7 +770,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.six_number,
         sdlKeyEvent = KeyEvent.KEYCODE_6,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "seven_number",
@@ -772,7 +780,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.seven_number,
         sdlKeyEvent = KeyEvent.KEYCODE_7,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "eight_number",
@@ -782,7 +790,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.eight_number,
         sdlKeyEvent = KeyEvent.KEYCODE_8,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "nine_number",
@@ -792,7 +800,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.nine_number,
         sdlKeyEvent = KeyEvent.KEYCODE_9,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "pan",
@@ -802,7 +810,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.follow,
         sdlKeyEvent = KeyEvent.KEYCODE_F,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "zoom_in",
@@ -812,7 +820,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_in,
         sdlKeyEvent = KeyEvent.KEYCODE_EQUALS,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "zoom_out",
@@ -822,7 +830,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_out,
         sdlKeyEvent = KeyEvent.KEYCODE_MINUS,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "say",
@@ -832,7 +840,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.nothing_to_say,
         sdlKeyEvent = KeyEvent.KEYCODE_T,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "previous_item",
@@ -842,7 +850,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.previous,
         sdlKeyEvent = KeyEvent.KEYCODE_LEFT_BRACKET,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "next_item",
@@ -852,7 +860,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.next,
         sdlKeyEvent = KeyEvent.KEYCODE_RIGHT_BRACKET,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "drop_item",
@@ -862,7 +870,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.delete_icon,
         sdlKeyEvent = KeyEvent.KEYCODE_DEL,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "query_item",
@@ -872,7 +880,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.items,
         sdlKeyEvent = KeyEvent.KEYCODE_Q,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "toggle_grid",
@@ -882,7 +890,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.grid,
         sdlKeyEvent = KeyEvent.KEYCODE_G,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "toggle_texture",
@@ -892,7 +900,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.texture,
         sdlKeyEvent = KeyEvent.KEYCODE_P,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "open_console",
@@ -902,7 +910,7 @@ val uzDoomAbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.terminal,
         sdlKeyEvent = KeyEvent.KEYCODE_GRAVE,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL2ImageButton(
         "attack",
@@ -1125,7 +1133,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zero_number,
         sdlKeyEvent = KeyEvent.KEYCODE_0,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1136,7 +1144,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.first_number,
         sdlKeyEvent = KeyEvent.KEYCODE_1,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1147,7 +1155,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.second_number,
         sdlKeyEvent = KeyEvent.KEYCODE_2,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1158,7 +1166,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.third_number,
         sdlKeyEvent = KeyEvent.KEYCODE_3,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1169,7 +1177,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.fourth_number,
         sdlKeyEvent = KeyEvent.KEYCODE_4,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1180,7 +1188,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.five_number,
         sdlKeyEvent = KeyEvent.KEYCODE_5,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1191,7 +1199,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.six_number,
         sdlKeyEvent = KeyEvent.KEYCODE_6,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1202,7 +1210,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.seven_number,
         sdlKeyEvent = KeyEvent.KEYCODE_7,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1213,7 +1221,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.eight_number,
         sdlKeyEvent = KeyEvent.KEYCODE_8,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1224,7 +1232,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.nine_number,
         sdlKeyEvent = KeyEvent.KEYCODE_9,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1235,7 +1243,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.follow,
         sdlKeyEvent = KeyEvent.KEYCODE_F,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1246,7 +1254,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_in,
         sdlKeyEvent = KeyEvent.KEYCODE_EQUALS,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1257,7 +1265,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_out,
         sdlKeyEvent = KeyEvent.KEYCODE_MINUS,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1268,7 +1276,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.nothing_to_say,
         sdlKeyEvent = KeyEvent.KEYCODE_T,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1279,7 +1287,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.previous,
         sdlKeyEvent = KeyEvent.KEYCODE_LEFT_BRACKET,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1290,7 +1298,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.next,
         sdlKeyEvent = KeyEvent.KEYCODE_RIGHT_BRACKET,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1301,7 +1309,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.delete_icon,
         sdlKeyEvent = KeyEvent.KEYCODE_DEL,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1312,7 +1320,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.items,
         sdlKeyEvent = KeyEvent.KEYCODE_Q,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1323,7 +1331,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.grid,
         sdlKeyEvent = KeyEvent.KEYCODE_G,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1334,7 +1342,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.texture,
         sdlKeyEvent = KeyEvent.KEYCODE_P,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1345,7 +1353,7 @@ val uzDoomOnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.terminal,
         sdlKeyEvent = KeyEvent.KEYCODE_GRAVE,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -1577,7 +1585,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zero_number,
         sdlKeyEvent = KeyEvent.KEYCODE_0,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "first_number",
@@ -1587,7 +1595,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.first_number,
         sdlKeyEvent = KeyEvent.KEYCODE_1,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "second_number",
@@ -1597,7 +1605,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.second_number,
         sdlKeyEvent = KeyEvent.KEYCODE_2,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "third_number",
@@ -1607,7 +1615,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.third_number,
         sdlKeyEvent = KeyEvent.KEYCODE_3,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "fourth_number",
@@ -1617,7 +1625,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.fourth_number,
         sdlKeyEvent = KeyEvent.KEYCODE_4,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "five_number",
@@ -1627,7 +1635,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.five_number,
         sdlKeyEvent = KeyEvent.KEYCODE_5,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "six_number",
@@ -1637,7 +1645,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.six_number,
         sdlKeyEvent = KeyEvent.KEYCODE_6,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "seven_number",
@@ -1647,7 +1655,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.seven_number,
         sdlKeyEvent = KeyEvent.KEYCODE_7,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "eight_number",
@@ -1657,7 +1665,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.eight_number,
         sdlKeyEvent = KeyEvent.KEYCODE_8,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "nine_number",
@@ -1667,7 +1675,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.nine_number,
         sdlKeyEvent = KeyEvent.KEYCODE_9,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "zoom_in",
@@ -1677,7 +1685,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_in,
         sdlKeyEvent = KeyEvent.KEYCODE_F7,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "zoom_out",
@@ -1687,7 +1695,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_out,
         sdlKeyEvent = KeyEvent.KEYCODE_F6,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "terminal",
@@ -1697,7 +1705,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.terminal,
         sdlKeyEvent = KeyEvent.KEYCODE_GRAVE,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "pan_zoom",
@@ -1707,7 +1715,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.magnifying_glass,
         sdlKeyEvent = KeyEvent.KEYCODE_Q,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "follow_mode",
@@ -1717,7 +1725,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.follow,
         sdlKeyEvent = KeyEvent.KEYCODE_F,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "delete",
@@ -1727,7 +1735,7 @@ val doom64AbsoluteTouchControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.delete_icon,
         sdlKeyEvent = KeyEvent.KEYCODE_FORWARD_DEL,
-        isQuickPanel = true
+        showInQuickPanel = true
     ),
     SDL3ImageButton(
         "attack",
@@ -1866,7 +1874,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zero_number,
         sdlKeyEvent = KeyEvent.KEYCODE_0,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1877,7 +1885,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.first_number,
         sdlKeyEvent = KeyEvent.KEYCODE_1,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1888,7 +1896,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.second_number,
         sdlKeyEvent = KeyEvent.KEYCODE_2,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1899,7 +1907,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.third_number,
         sdlKeyEvent = KeyEvent.KEYCODE_3,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1910,7 +1918,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.fourth_number,
         sdlKeyEvent = KeyEvent.KEYCODE_4,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1921,7 +1929,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.five_number,
         sdlKeyEvent = KeyEvent.KEYCODE_5,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1932,7 +1940,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.six_number,
         sdlKeyEvent = KeyEvent.KEYCODE_6,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1943,7 +1951,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.seven_number,
         sdlKeyEvent = KeyEvent.KEYCODE_7,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1954,7 +1962,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.eight_number,
         sdlKeyEvent = KeyEvent.KEYCODE_8,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1965,7 +1973,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.nine_number,
         sdlKeyEvent = KeyEvent.KEYCODE_9,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1976,7 +1984,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_in,
         sdlKeyEvent = KeyEvent.KEYCODE_F7,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1987,7 +1995,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.zoom_out,
         sdlKeyEvent = KeyEvent.KEYCODE_F6,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -1998,7 +2006,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.terminal,
         sdlKeyEvent = KeyEvent.KEYCODE_GRAVE,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -2009,7 +2017,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.magnifying_glass,
         sdlKeyEvent = KeyEvent.KEYCODE_Q,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -2020,7 +2028,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.follow,
         sdlKeyEvent = KeyEvent.KEYCODE_F,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -2031,7 +2039,7 @@ val doom64OnScreenStickControls: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.delete_icon,
         sdlKeyEvent = KeyEvent.KEYCODE_FORWARD_DEL,
-        isQuickPanel = true,
+        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL3ImageButton(
@@ -2150,6 +2158,14 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.5f,
         sizePercent = 0.25f,
     ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+        isDeleted = true
+    ),
     SDL2ImageButton(
         "move_left",
         EngineTypes.DoomRpg,
@@ -2246,6 +2262,14 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.05f,
         offsetYPercent = 0.5f,
         sizePercent = 0.25f
+    ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.Doom2Rpg,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+        isDeleted = true
     ),
     SDL2ImageButton(
         "move_left",

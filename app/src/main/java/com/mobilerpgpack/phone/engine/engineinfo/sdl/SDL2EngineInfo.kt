@@ -54,6 +54,10 @@ abstract class SDL2EngineInfo(
         return true
     }
 
+    final override fun updateUseStandardSDLInputState(useStandardSDLInput: Boolean) {
+        SDLActivity.useStandardSDLInput = useStandardSDLInput
+    }
+
     override fun setScreenResolution(screenResolution: ScreenResolution) {
         SDLSurface.fixedWidth = screenResolution.screenWidth
         SDLSurface.fixedHeight = screenResolution.screenHeight
