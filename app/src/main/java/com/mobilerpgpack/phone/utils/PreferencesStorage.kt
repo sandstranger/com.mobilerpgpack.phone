@@ -43,8 +43,11 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val customOnScreenKeyboardTransparencyPrefsKey = floatPreferencesKey("custom_keyboard_transparency")
     val alwaysUseFullScreenTouchModePrefsKey = booleanPreferencesKey("always_use_fullscreen_touch_mode")
     val useFloatingStartGameButtonPrefsKey = booleanPreferencesKey("use_floating_start_game_button")
+    val alwaysShowKeyboardButtonPrefsKey = booleanPreferencesKey("always_show_keyboard_button")
 
     val useFloatingStartGameButton = getBooleanValue(useFloatingStartGameButtonPrefsKey, !context.isTelevision)
+
+    val alwaysShowKeyboardButton = getBooleanValue(alwaysShowKeyboardButtonPrefsKey, true)
 
     val alwaysUseFullScreenTouchMode = getBooleanValue(alwaysUseFullScreenTouchModePrefsKey, true)
 
