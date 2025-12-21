@@ -15,9 +15,10 @@ class SDL3OnScreenStick(engineType: EngineTypes,
                         alpha: Float = 0.65f,
                         defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
                         controlsType: ControlsType = ControlsType.Default,
-                        isDeleted : Boolean = false) :
+                        isDeleted : Boolean = false,
+                        showInQuickPanel : Boolean = false) :
     SDLOnScreenStick(engineType, stickType,offsetXPercent,
-        offsetYPercent, sizePercent, alpha, defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted) {
+        offsetYPercent, sizePercent, alpha, defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted, showInQuickPanel) {
 
     override fun nativeAddJoystick(
         device_id: Int,

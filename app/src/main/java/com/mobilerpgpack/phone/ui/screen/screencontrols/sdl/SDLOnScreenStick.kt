@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
@@ -58,7 +59,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 private val alpha: Float = 0.65f,
                                 defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
                                 controlsType: ControlsType = ControlsType.Default,
-                                isDeleted : Boolean = false) : IScreenControlsView, KoinComponent {
+                                isDeleted : Boolean = false,
+                                showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
@@ -70,7 +72,9 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         }
     }
 
-    override val viewState: ViewState = ViewState(
+    final override var screenController: IScreenController? = null
+
+    final override val viewState: ViewState = ViewState(
         if (stickType == StickType.LeftStick) LEFT_STICK_ID else RIGHT_STICK_ID,
         engineType,
         offsetXPercent = offsetXPercent,
@@ -79,18 +83,14 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         alpha = alpha,
         defaultViewRenderRule = defaultViewRenderRule,
         controlsType = controlsType,
-        isDeletedInitialState = isDeleted)
-
-    override var show : Boolean by mutableStateOf(true)
-
-    override val isQuickPanel: Boolean = false
+        isDeletedInitialState = isDeleted,
+        showInQuickPanelInitialState = showInQuickPanel)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) = DrawStick(isEditMode, inGame)
 
     @Composable
     private fun DrawStick(isEditMode: Boolean, inGame: Boolean) {
-
         fun updateStick(x: Float, y: Float, invokeUpdateStickEventForced : Boolean = false) {
             if ((isEditMode || !inGame) && !invokeUpdateStickEventForced){
                 return

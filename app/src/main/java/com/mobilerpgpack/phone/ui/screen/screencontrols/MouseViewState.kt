@@ -17,11 +17,12 @@ class MouseViewState(id: String,
                      defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
                      isDeletedInitialState : Boolean = false,
                      controlsType: ControlsType = ControlsType.Default,
-                     private val invokeWheelEventsWhilePressingDefaultState : Boolean = false) :
+                     private val invokeWheelEventsWhilePressingDefaultState : Boolean = false,
+                     private val showInQuickPanelInitialState : Boolean = false) :
     ViewState (id, engineType, offsetXPercent, offsetYPercent, sizePercent,
     alpha, sdlKeyEvent, buttonResId,defaultViewRenderRule,isDeletedInitialState,controlsType,
         false,false,true,true,
-        false,false) {
+        false,false, showInQuickPanelInitialState) {
 
     private val invokeWheelEventsWhilePressingPrefsKey = "invoke_wheel_events_while_pressing"
 

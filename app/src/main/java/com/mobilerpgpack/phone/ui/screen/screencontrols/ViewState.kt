@@ -32,7 +32,8 @@ open class ViewState(
     val alwaysConsumeTouchEvents : Boolean = true,
     private val consumeTouchEventsInitialState : Boolean = true,
     val touchEventsCanIgnoreOutOfBounds : Boolean = false,
-    private val ignoreOutOfBoundsTouchEventsInitialState : Boolean = false) : KoinComponent {
+    private val ignoreOutOfBoundsTouchEventsInitialState : Boolean = false,
+    private val showInQuickPanelInitialState : Boolean = false) : KoinComponent {
 
     protected val preferencesStorage : PreferencesStorage = get()
 
@@ -53,6 +54,7 @@ open class ViewState(
     private val useViewAsTogglePrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_use_view_as_toggle")
     private val consumeTouchEventsPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_consume_touch_events")
     private val ignoreOutOfBoundsTouchEventsPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_ignore_out_of_bounds_touch_events")
+    private val showInQuickPanelPrefsKey = "${engineTypeString}_${controlsTypeString}_${id}_show_in_quick_panel"
 
     private var wasLoaded by mutableStateOf(false)
 
@@ -68,6 +70,7 @@ open class ViewState(
     var useViewAsToggle by mutableStateOf(useViewAsToggleInitialState)
     var consumeTouchEvents by mutableStateOf(consumeTouchEventsInitialState)
     var ignoreOutOfBoundsTouchEvents by mutableStateOf(ignoreOutOfBoundsTouchEventsInitialState)
+    var showInQuickPanel by mutableStateOf(showInQuickPanelInitialState)
 
     open suspend fun load() {
         if (wasLoaded){
@@ -85,6 +88,7 @@ open class ViewState(
         useViewAsToggle = preferencesStorage.getBooleanValue(useViewAsTogglePrefsKey, useViewAsToggleInitialState).first()
         consumeTouchEvents = preferencesStorage.getBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEventsInitialState).first()
         ignoreOutOfBoundsTouchEvents = preferencesStorage.getBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEventsInitialState).first()
+        showInQuickPanel = preferencesStorage.getBooleanValue(showInQuickPanelPrefsKey, showInQuickPanel).first()
     }
 
     open fun save() {
@@ -98,6 +102,7 @@ open class ViewState(
         preferencesStorage.setBooleanValue(useViewAsTogglePrefsKey, useViewAsToggle)
         preferencesStorage.setBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEvents)
         preferencesStorage.setBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEvents)
+        preferencesStorage.setBooleanValue(showInQuickPanelPrefsKey, showInQuickPanel)
     }
 
     open fun resetToDefaults() {
@@ -111,6 +116,7 @@ open class ViewState(
         useViewAsToggle = useViewAsToggleInitialState
         consumeTouchEvents = consumeTouchEventsInitialState
         ignoreOutOfBoundsTouchEvents = ignoreOutOfBoundsTouchEventsInitialState
+        showInQuickPanel = showInQuickPanelInitialState
     }
 
     open fun resetToDefaultsFromViewEditor(){
@@ -119,6 +125,7 @@ open class ViewState(
         useViewAsToggle = useViewAsToggleInitialState
         consumeTouchEvents = consumeTouchEventsInitialState
         ignoreOutOfBoundsTouchEvents = ignoreOutOfBoundsTouchEventsInitialState
+        showInQuickPanel = showInQuickPanelInitialState
     }
 
     internal companion object{

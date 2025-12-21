@@ -32,6 +32,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
@@ -53,16 +54,15 @@ abstract class Dpad(
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
-    ignoreOutOfBoundsTouchEvents : Boolean = false) : KoinComponent,
+    ignoreOutOfBoundsTouchEvents : Boolean = false,
+    showInQuickPanel : Boolean = false) : KoinComponent,
     IScreenControlsView {
 
     private val dpadButtonState: ViewState
 
     private val dpadButtons: Collection<ViewState>
 
-    final override var show: Boolean by mutableStateOf(true)
-
-    final override val isQuickPanel: Boolean = false
+    final override var screenController: IScreenController? = null
 
     final override val viewState: ViewState get() = dpadButtonState
 
@@ -113,7 +113,8 @@ abstract class Dpad(
             alwaysConsumeTouchEvents = false,
             consumeTouchEventsInitialState = consumeTouchEventsByDefault,
             touchEventsCanIgnoreOutOfBounds = true,
-            ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents
+            ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents,
+            showInQuickPanelInitialState = showInQuickPanel
         )
     }
 
