@@ -79,10 +79,7 @@ abstract class SDLImageButton(
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         Image(painter = painterResource(id = viewState.buttonResId),
             contentDescription = id,
-            modifier = Modifier.interactiveControlModifier(isEditMode, inGame).let{
-                if (isPressed && !isEditMode && inGame && viewState.useViewAsToggle)
-                    it.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Yellow) } else it
-            } )
+            modifier = Modifier.interactiveControlModifier(isEditMode, inGame))
     }
 
     protected abstract fun onTouchDown(keyCode: Int)
@@ -151,6 +148,9 @@ abstract class SDLImageButton(
                         }
                     }
                 }
-            }
+            }.let{
+            if (isPressed && !isEditMode && viewState.useViewAsToggle)
+                it.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Yellow) } else it
+        }
     }
 }
