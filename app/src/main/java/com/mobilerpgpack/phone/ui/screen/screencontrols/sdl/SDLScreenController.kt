@@ -57,7 +57,7 @@ abstract class SDLScreenController : ScreenController() {
     }
 
     @Composable
-    final override fun DrawTouchCamera(inSafeArea : Boolean,
+    final override fun DrawTouchCamera(blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
                                        isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
 
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
@@ -96,8 +96,6 @@ abstract class SDLScreenController : ScreenController() {
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode = alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
-        val controlsProvider : ControlsProvider = koinInject(named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
-        val blockTouchCameraEvents = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
 
         if (isEditMode && trackedPointerId != UNKNOWN_POINTER_ID) {
             handlePointer(trackedPointerId, 0f, 0f, 0f,
