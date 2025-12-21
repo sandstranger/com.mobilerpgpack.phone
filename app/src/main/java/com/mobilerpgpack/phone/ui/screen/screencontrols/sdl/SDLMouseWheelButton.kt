@@ -21,15 +21,16 @@ abstract class SDLMouseWheelButton(
     sizePercent: Float = 0.13f,
     alpha: Float = 0.65f,
     buttonResId: Int = ViewState.NOT_EXISTING_RES,
-    override val isQuickPanel: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
     ignoreOutOfBoundsTouchEvents : Boolean = false,
-    invokeWheelEventsWhilePressingDefaultState : Boolean = false) :
+    invokeWheelEventsWhilePressingDefaultState : Boolean = false,
+    showInQuickPanel : Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
         alpha, Int.MIN_VALUE, buttonResId, useToggle = false,
-        defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
+        defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault,
+        ignoreOutOfBoundsTouchEvents, showInQuickPanel) {
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -44,15 +45,13 @@ abstract class SDLMouseWheelButton(
         defaultViewRenderRule = defaultViewRenderRule,
         controlsType = controlsType,
         isDeletedInitialState = isDeleted,
-        invokeWheelEventsWhilePressingDefaultState = invokeWheelEventsWhilePressingDefaultState)
+        invokeWheelEventsWhilePressingDefaultState = invokeWheelEventsWhilePressingDefaultState,
+        showInQuickPanelInitialState = showInQuickPanel)
 
     final override val viewState get() = mouseViewState
 
-    init {
-        show = !isQuickPanel
-    }
-
     final override fun onTouchDown(keyCode: Int) {
+        scope.coroutineContext.cancelChildren()
         if (mouseViewState.invokeWheelEventsWhilePressing){
             scope.launch { mouseWheelAsync(keyCode) }
         }

@@ -30,12 +30,14 @@ abstract class SDLKeyboard : KoinComponent, KeyboardListener, ExpandableStateLis
 
     fun showKeyboard(useReturnButton : Boolean = false,
                      keyboardInputType : CustomKeyboardView.KeyboardType = DEFAULT_KEYBOARD_INPUT_TYPE){
-        this.keyboardInputType = keyboardInputType
-        this.useReturnButton = useReturnButton
         if (keyboardInputField == null || keyboardView == null){
             return
         }
-        setupKeyboard()
+        this.useReturnButton = useReturnButton
+        if (!wasInit) {
+            this.keyboardInputType = keyboardInputType
+            setupKeyboard()
+        }
         keyboardInputField?.apply {
             text = ""
             requestFocus()

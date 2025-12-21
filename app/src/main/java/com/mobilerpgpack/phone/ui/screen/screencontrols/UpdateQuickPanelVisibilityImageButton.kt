@@ -18,13 +18,11 @@ class UpdateQuickPanelVisibilityImageButton(
     ignoreOutOfBoundsTouchEvents : Boolean = false) :
     ImageButton(UPDATE_QUICK_PANEL_VISIBILITY_BUTTON_ID, engineType, offsetXPercent, offsetYPercent,
         sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted,
-        consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
+        consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents, false) {
 
     override fun onClick(context: Context) {
-        screenController?.activeViewsToDraw?.forEach {
-            if (it.isQuickPanel) {
-                it.show = !it.show
-            }
+        screenController?.apply {
+            showQuickPanelItems = !showQuickPanelItems
         }
     }
 

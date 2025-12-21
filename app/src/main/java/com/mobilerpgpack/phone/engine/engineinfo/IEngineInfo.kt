@@ -1,15 +1,12 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.app.Activity
-import android.view.View
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.buildFullLibraryName
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.utils.showErrorDialogBox
-import com.quantuminventions.customkeyboard.components.keyboard.CustomisedKeyboardView
 import kotlinx.coroutines.flow.Flow
 
 interface IEngineInfo {
@@ -24,7 +21,7 @@ interface IEngineInfo {
     val gameActivityClazz: Class<*>
     val commandLineArgs : Array<String>
     val mouseButtonsEventsCanBeInvoked : Boolean
-    val touchFullScreenModeCanBeUsed : Boolean
+    val fullTouchFullScreenModeCanBeUsed : Boolean
     suspend fun initialize(activity: ComponentActivity)
     fun loadLayout()
     fun onPause()

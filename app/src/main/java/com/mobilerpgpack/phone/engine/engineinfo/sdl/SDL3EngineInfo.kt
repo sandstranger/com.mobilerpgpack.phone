@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
+import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 import org.libsdl3.app.onKeyDown
 
@@ -52,6 +53,10 @@ abstract class SDL3EngineInfo(
             onKeyDown(KeyEvent.KEYCODE_ESCAPE, delayBeforeKeyRelease = 50L)
         }
         return true
+    }
+
+    final override fun updateUseStandardSDLInputState(useStandardSDLInput: Boolean) {
+        SDLActivity.useStandardSDLInput = useStandardSDLInput
     }
 
     override fun setScreenResolution(screenResolution: ScreenResolution) {

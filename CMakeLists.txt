@@ -126,8 +126,8 @@ else ()
     set(ZMUSIC_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/zmusic/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libzmusic.so")
 endif ()
 
-set(RE2C_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/lzdoom_tools/re2c.exe")
-set(LEMON_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/lzdoom_tools/lemon.exe")
+set(RE2C_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/uzdoom_tools/re2c.exe")
+set(LEMON_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/uzdoom_tools/lemon.exe")
 
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 
@@ -138,6 +138,7 @@ add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
 add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
 add_subdirectory("${APP_ROOT_DIR}/UZDoom")
+#add_subdirectory("${APP_ROOT_DIR}/perfect_dark")
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
