@@ -27,9 +27,11 @@ class Doom64AutorunButton (engineType: EngineTypes,
                            controlsType: ControlsType = ControlsType.Default,
                            isDeleted : Boolean = false,
                            consumeTouchEventsByDefault : Boolean = true,
-                           ignoreOutOfBoundsTouchEvents : Boolean = false):
+                           ignoreOutOfBoundsTouchEvents : Boolean = false,
+                           showInQuickPanel : Boolean = false):
     ToggleImageButton(AUTORUN_BUTTON_ID,engineType, offsetXPercent, offsetYPercent,
-        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents), KoinComponent {
+        sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted,
+        consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents, showInQuickPanel), KoinComponent {
 
     private val preferencesStorage : PreferencesStorage by inject ()
 
