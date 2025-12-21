@@ -96,6 +96,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
     final override var showScreenControls by mutableStateOf(true)
 
+    final override var showQuickPanelItems by mutableStateOf(false)
+
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     override fun DrawScreenControls(
@@ -159,9 +161,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             }
         }
 
-        _activeViewsToDraw.forEach {
-            it.setScreenController(this)
-        }
+        _activeViewsToDraw.forEach { it.screenController = this }
 
         if (drawInSafeArea) {
             activity.window.decorView.rootView.apply {
@@ -305,8 +305,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
                         val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
 
-                        val renderView =
-                            (view.isHideControlsButton || (view.renderView && showScreenControls) || isEditMode) && !view.viewState.isDeleted
+                        val renderView = !view.viewState.isDeleted && (isEditMode || view.renderView)
 
                         if (renderView) {
                             DrawView(
@@ -608,6 +607,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 CheckBox(stringResource(R.string.ignore_out_of_bounds_touch_events),
                                     ignoreOutOfBoundsTouchEvents) {
                                     ignoreOutOfBoundsTouchEvents = it
+                                    save()
+                                }
+                            }
+
+                            if (!viewToEdit.isUpdateQuickPanelStateButton){
+                                CheckBox(stringResource(R.string.show_in_quick_panel),
+                                    showInQuickPanel) {
+                                    showInQuickPanel = it
                                     save()
                                 }
                             }

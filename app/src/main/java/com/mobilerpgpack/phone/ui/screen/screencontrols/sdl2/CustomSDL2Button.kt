@@ -16,17 +16,14 @@ class CustomSDL2Button(
     alpha: Float = 0.65f,
     sdlKeyEvent: Int = 0,
     useToggle: Boolean = false,
-    override val isQuickPanel: Boolean = false,
     defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
     controlsType: ControlsType = ControlsType.Default,
     consumeTouchEventsByDefault : Boolean = true,
-    ignoreOutOfBoundsTouchEvents : Boolean = false) :
+    ignoreOutOfBoundsTouchEvents : Boolean = false,
+    showInQuickPanel : Boolean = false) :
     CustomSDLButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha, sdlKeyEvent,
-        useToggle, defaultViewRenderRule, controlsType, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
-
-    init {
-        show = !isQuickPanel
-    }
+        useToggle, defaultViewRenderRule, controlsType, consumeTouchEventsByDefault,
+        ignoreOutOfBoundsTouchEvents, showInQuickPanel) {
 
     override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 

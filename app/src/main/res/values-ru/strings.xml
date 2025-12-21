@@ -47,6 +47,7 @@
     <string name="path_to_doom64_folder">Путь к папке Doom 64 с главными WAD-файлами</string>
     <string name="command_line_args">Аргументы командной строки</string>
     <string name="controls_type">Тип экранного управления</string>
+    <string name="show_in_quick_panel">Отображать в панели быстрого доступа</string>
     <string name="block_touch_camera_events">Блокировать события сенсорной камеры, когда активен джойстик для управления тачем</string>
     <string name="path_to_uzdoom_wad_file">Путь к главному wad файлу для UZDoom</string>
     <string name="path_to_mods_folder">Путь к папке с модами. Это перезапишет текущую историю модов</string>
