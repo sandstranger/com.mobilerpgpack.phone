@@ -24,6 +24,14 @@ val wolfensteinButtons : Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.5f,
         sizePercent = 0.25f,
     ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.WolfensteinRpg,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+        isDeleted = true
+    ),
     SDL2ImageButton(
         "move_left",
         EngineTypes.WolfensteinRpg,
@@ -2150,6 +2158,14 @@ val doomRPGButtons : Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.5f,
         sizePercent = 0.25f,
     ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.DoomRpg,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+        isDeleted = true
+    ),
     SDL2ImageButton(
         "move_left",
         EngineTypes.DoomRpg,
@@ -2246,6 +2262,14 @@ val doom2RPGButtons : Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.05f,
         offsetYPercent = 0.5f,
         sizePercent = 0.25f
+    ),
+    UpdateQuickPanelVisibilityImageButton(
+        EngineTypes.Doom2Rpg,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.quick_panel,
+        isDeleted = true
     ),
     SDL2ImageButton(
         "move_left",
