@@ -78,7 +78,7 @@ abstract class ImageButton(
     protected abstract fun onClick(context: Context)
 
     @Composable
-    private fun Modifier.interactiveControlModifier(isEditMode: Boolean, inGame: Boolean): Modifier {
+    protected fun Modifier.interactiveControlModifier(isEditMode: Boolean, inGame: Boolean): Modifier {
         val modifier = this.fillMaxSize().minimumInteractiveComponentSize()
 
         if (!inGame){
