@@ -259,6 +259,12 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
+        SwitchPreferenceItem(stringResource(R.string.always_show_keyboard_button),
+            preferencesStorage.alwaysShowKeyboardButton,
+            preferencesStorage.alwaysShowKeyboardButtonPrefsKey.name)
+
+        DrawHorizontalDivider()
+
         SwitchPreferenceItem(
             stringResource(R.string.allow_to_edit_controls_in_game),
             preferencesStorage.editCustomScreenControlsInGame,

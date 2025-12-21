@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.engineinfo
 import android.annotation.SuppressLint
 import android.os.Process
 import android.system.Os
+import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -72,6 +73,8 @@ abstract class EngineInfo(
     activeEngineType: EngineTypes,
     private val pathToResourceFlow: Flow<String>,
     private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
+
+    private var alwaysShowKeyboardButton = false
 
     private var controlsOverlayUI: View? = null
 
@@ -217,6 +220,7 @@ abstract class EngineInfo(
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
         commandLineParams = commandLineParamsFlow.firstOrNull()
+        alwaysShowKeyboardButton = preferencesStorage.alwaysShowKeyboardButton.first()
 
         val customAspectRatio = preferencesStorage.customAspectRatio.first()
         val customScreenResolution = preferencesStorage.customScreenResolution.first()
@@ -264,107 +268,125 @@ abstract class EngineInfo(
 
     protected open fun onSafeAreaApplied (screenResolution : ScreenResolution){}
 
+    protected abstract fun updateUseStandardSDLInputState (useStandardSDLInput : Boolean)
+
     @Composable
     protected open fun DrawMouseIcon() {}
 
     private fun inflateControlsLayout() {
-        if (showCustomMouseCursor || !hideScreenControls) {
-            layoutBinding = GameLayoutBinding.inflate(activity.layoutInflater)
-            layoutBinding?.apply {
-                activity.window.addContentView(
-                    root,
-                    ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
+        layoutBinding = GameLayoutBinding.inflate(activity.layoutInflater)
+        layoutBinding?.apply {
+            activity.window.addContentView(
+                root,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
                 )
+            )
 
-                this@EngineInfo.sdlKeyboard.initialize(keyboardEditText, customKeyboard)
+            this@EngineInfo.sdlKeyboard.initialize(keyboardEditText, customKeyboard)
 
-                if (!showCustomMouseCursor) {
-                    mouseOverlayUI.visibility = View.GONE
-                }
+            if (!showCustomMouseCursor) {
+                mouseOverlayUI.visibility = View.GONE
+            }
 
-                if (hideScreenControls) {
-                    controlsOverlayUI.visibility = View.GONE
+            if (hideScreenControls) {
+                controlsOverlayUI.visibility = View.GONE
+            } else {
+                this@EngineInfo.controlsOverlayUI = controlsOverlayUI
+            }
+
+            if (hideScreenControls){
+                if (alwaysShowKeyboardButton){
+                    showKeyboardUiOverlay.visibility = View.VISIBLE
                 }
                 else{
-                    this@EngineInfo.controlsOverlayUI = controlsOverlayUI
+                    updateUseStandardSDLInputState(useStandardSDLInput = true)
                 }
+            }
 
-                customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
+            customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
 
-                sdlContainer.post {
-                    sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
-                        ViewTreeObserver.OnGlobalLayoutListener {
-                        override fun onGlobalLayout() {
+            sdlContainer.post {
+                sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
 
-                            if (showCustomMouseCursor) {
-                                mouseOverlayUI.setContent {
-                                    AutoMouseModeComposable(layoutBinding!!)
-                                    if (isCursorVisible) {
-                                        DrawMouseIcon()
-                                    }
+                        if (showCustomMouseCursor) {
+                            mouseOverlayUI.setContent {
+                                AutoMouseModeComposable(layoutBinding!!)
+                                if (isCursorVisible) {
+                                    DrawMouseIcon()
                                 }
                             }
+                        }
 
-                            if (!hideScreenControls) {
-                                controlsOverlayUI.setContent {
-                                    Theme {
-                                        screenController.DrawScreenControls(
-                                            inGame = true,
-                                            blockTouchCameraEvents = blockTouchCameraEvents,
-                                            activeEngine = engineType,
-                                            allowToEditControls = allowToEditScreenControlsInGame,
-                                            drawInSafeArea = displayInSafeArea
+                        if (!hideScreenControls) {
+                            controlsOverlayUI.setContent {
+                                Theme {
+                                    screenController.DrawScreenControls(
+                                        inGame = true,
+                                        blockTouchCameraEvents = blockTouchCameraEvents,
+                                        activeEngine = engineType,
+                                        allowToEditControls = allowToEditScreenControlsInGame,
+                                        drawInSafeArea = displayInSafeArea
+                                    )
+                                }
+                            }
+                        }
+                        showKeyboardUiOverlay.setContent {
+                            val showOnlyVirtualKeyboardButton = hideScreenControls && alwaysShowKeyboardButton
+
+                            Theme {
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    Image(
+                                        painter = painterResource(R.drawable.keyboard),
+                                        contentDescription = "keyboard_button",
+                                        modifier = Modifier
+                                            .align(Alignment.TopStart)
+                                            .size(70.dp)
+                                            .alpha(0.5f)
+                                            .minimumInteractiveComponentSize()
+                                            .padding(8.dp)
+                                            .clickable(
+                                                indication = null, interactionSource = null
+                                            ) {
+                                                sdlKeyboard.showKeyboard(
+                                                    useReturnButton = true,
+                                                    keyboardInputType
+                                                )
+                                            }
+                                    )
+
+                                    if (!showOnlyVirtualKeyboardButton) {
+                                        Image(
+                                            painter = painterResource(R.drawable.pause),
+                                            contentDescription = "escape_button",
+                                            modifier = Modifier
+                                                .align(Alignment.TopEnd)
+                                                .size(60.dp)
+                                                .alpha(0.5f)
+                                                .minimumInteractiveComponentSize()
+                                                .padding(8.dp)
+                                                .clickable(
+                                                    indication = null,
+                                                    interactionSource = null
+                                                ) {
+                                                    onBackPressed()
+                                                }
                                         )
                                     }
                                 }
-
-                                showKeyboardUiOverlay.setContent {
-                                    Theme {
-                                        Box(modifier = Modifier.fillMaxSize()) {
-                                            Image(painter = painterResource(R.drawable.keyboard),
-                                                contentDescription = "keyboard_button",
-                                                modifier = Modifier
-                                                    .align(Alignment.TopStart)
-                                                    .size(70.dp)
-                                                    .alpha(0.5f)
-                                                    .minimumInteractiveComponentSize()
-                                                    .padding(8.dp)
-                                                    .clickable(indication = null, interactionSource = null
-                                                    ){
-                                                        sdlKeyboard.showKeyboard(useReturnButton = true, keyboardInputType)
-                                                    }
-                                            )
-
-                                            Image(painter = painterResource(R.drawable.pause),
-                                                contentDescription = "escape_button",
-                                                modifier = Modifier
-                                                    .align(Alignment.TopEnd)
-                                                    .size(60.dp)
-                                                    .alpha(0.5f)
-                                                    .minimumInteractiveComponentSize()
-                                                    .padding(8.dp)
-                                                    .clickable(indication = null, interactionSource = null
-                                                    ){
-                                                        onBackPressed()
-                                                    }
-                                            )
-                                        }
-                                    }
-                                }
                             }
-
-                            sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
                         }
-                    })
+                        sdlContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
 
-                    if (enableControlsAutoHidingFeature) {
-                        needToShowControlsLastState = true
-                        scope.launch {
-                            changeScreenControlsVisibility()
-                        }
+                if (enableControlsAutoHidingFeature) {
+                    needToShowControlsLastState = true
+                    scope.launch {
+                        changeScreenControlsVisibility()
                     }
                 }
             }
