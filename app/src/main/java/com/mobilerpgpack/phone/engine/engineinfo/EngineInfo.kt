@@ -108,7 +108,7 @@ abstract class EngineInfo(
         flow {
             while (currentCoroutineContext().isActive) {
                 emit(mouseButtonsEventsCanBeInvoked)
-                delay(16)
+                delay(ONE_FRAME)
             }
         }.distinctUntilChanged()
     }
@@ -202,7 +202,7 @@ abstract class EngineInfo(
         wasInit = true
 
         while (!preferencesStorage.prefsWasLoaded){
-            delay(5)
+            delay(ONE_FRAME)
         }
 
         this.activity = activity
@@ -398,7 +398,7 @@ abstract class EngineInfo(
             return
         }
 
-        while (true) {
+        while (currentCoroutineContext().isActive) {
             val needToShowControls: Boolean = this.needToShowScreenControls
 
             if (needToShowControls != needToShowControlsLastState) {
@@ -413,7 +413,7 @@ abstract class EngineInfo(
                 }
             }
             needToShowControlsLastState = needToShowControls
-            delay(200)
+            delay(ONE_FRAME)
         }
     }
 
@@ -509,5 +509,6 @@ abstract class EngineInfo(
 
     private companion object {
         private const val RESOLUTION_DELIMITER = "x"
+        private const val ONE_FRAME = 16L
     }
 }
