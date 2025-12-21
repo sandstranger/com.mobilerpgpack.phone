@@ -25,7 +25,8 @@ class SDL3ImageButton(
     showInQuickPanel : Boolean = false) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
         alpha,sdlKeyEvent, buttonResId, useToggle = useToggle,
-        defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
+        defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault,
+        ignoreOutOfBoundsTouchEvents, showInQuickPanel) {
 
     override fun onTouchDown(keyCode: Int) = onNativeKeyDown(keyCode)
 
