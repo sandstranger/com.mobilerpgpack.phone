@@ -35,7 +35,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         return iniValues.getOrPut(key){
             iniConfig.run {
                 IniValue().apply {
-                    floatValue = if (containsKey(key)){ getFloat(key) } else 0f
+                    floatValue = if (containsKey(key)) getFloat(key) else 0f
                     iniValueType = IniValueType.Float
                 }
             }
@@ -49,7 +49,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         return iniValues.getOrPut(key){
             iniConfig.run {
                 IniValue().apply {
-                    booleanValue = if (containsKey(key)){ getBoolean(key) } else false
+                    booleanValue = if (containsKey(key)) getBoolean(key) else false
                     iniValueType = IniValueType.Boolean
                 }
             }
@@ -64,7 +64,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         return iniValues.getOrPut(key){
             iniConfig.run {
                 IniValue().apply {
-                    stringValue = if (containsKey(key)){ getString(key) } else ""
+                    stringValue = if (containsKey(key)) getString(key) else ""
                     iniValueType = IniValueType.String
                 }
             }
@@ -79,7 +79,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         return iniValues.getOrPut(key){
             iniConfig.run {
                 IniValue().apply {
-                    intValue = if (containsKey(key)){ getInt(key) } else 0
+                    intValue = if (containsKey(key)) getInt(key) else 0
                     iniValueType = IniValueType.Int
                 }
             }
