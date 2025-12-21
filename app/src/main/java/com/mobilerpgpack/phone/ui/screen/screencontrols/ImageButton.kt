@@ -44,14 +44,10 @@ abstract class ImageButton(
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
-    ignoreOutOfBoundsTouchEvents : Boolean = false) : IScreenControlsView, KoinComponent {
+    ignoreOutOfBoundsTouchEvents : Boolean = false,
+    showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
-    protected var screenController: IScreenController? = null
-        private set
-
-    override val isQuickPanel: Boolean = false
-
-    override var show: Boolean by mutableStateOf(true)
+    final override var screenController: IScreenController? = null
 
     final override val viewState: ViewState = ViewState(
         id,
@@ -67,7 +63,8 @@ abstract class ImageButton(
         alwaysConsumeTouchEvents = false,
         consumeTouchEventsInitialState = consumeTouchEventsByDefault,
         touchEventsCanIgnoreOutOfBounds = true,
-        ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents
+        ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents,
+        showInQuickPanelInitialState = showInQuickPanel
     )
 
     @Composable
@@ -76,10 +73,6 @@ abstract class ImageButton(
             contentDescription = id,
             modifier = Modifier.interactiveControlModifier(isEditMode, inGame)
         )
-    }
-
-    override fun setScreenController(screenController: IScreenController) {
-        this.screenController = screenController
     }
 
     protected abstract fun onClick(context: Context)
