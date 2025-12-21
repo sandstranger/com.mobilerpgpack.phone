@@ -35,6 +35,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
+import org.koin.compose.koinInject
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
@@ -95,6 +96,8 @@ abstract class SDLScreenController : ScreenController() {
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode = alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
+        val controlsProvider : ControlsProvider = koinInject(named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
+        val blockTouchCameraEvents = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
 
         if (isEditMode && trackedPointerId != UNKNOWN_POINTER_ID) {
             handlePointer(trackedPointerId, 0f, 0f, 0f,
@@ -133,8 +136,8 @@ abstract class SDLScreenController : ScreenController() {
                 }
             }
             .background(Color.Transparent)
-            .pointerInput(!isEditMode) {
-                if (isEditMode) {
+            .pointerInput(isEditMode, blockTouchCameraEvents) {
+                if (isEditMode || blockTouchCameraEvents) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {
