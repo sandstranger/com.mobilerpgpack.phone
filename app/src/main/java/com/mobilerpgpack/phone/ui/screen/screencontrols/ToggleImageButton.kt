@@ -18,9 +18,11 @@ abstract class ToggleImageButton(id: String,
                                  controlsType: ControlsType = ControlsType.Default,
                                  isDeleted : Boolean = false,
                                  consumeTouchEventsByDefault : Boolean = true,
-                                 ignoreOutOfBoundsTouchEvents : Boolean = false):
+                                 ignoreOutOfBoundsTouchEvents : Boolean = false,
+                                 showInQuickPanel : Boolean = false):
     ImageButton (id,engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,
-        buttonResId,defaultViewRenderRule, controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents) {
+        buttonResId,defaultViewRenderRule, controlsType, isDeleted,
+        consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents, showInQuickPanel) {
 
     private var currentToggleState by mutableStateOf(false)
 

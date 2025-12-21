@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,12 +15,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -103,7 +102,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             Button(
                 onClick = { viewModel.onStartGameClicked(activeEngine, activity) },
                 modifier = Modifier
-                    .fillMaxWidth(), colors = getButtonsColors()
+                    .fillMaxWidth().padding(start = 4.dp, end = 4.dp), colors = getButtonsColors()
             ) {
                 Text(stringResource(R.string.start_game),
                     textAlign = TextAlign.Center, fontSize = 22.sp, color = getOnPrimaryColor()
@@ -260,6 +259,12 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
+        SwitchPreferenceItem(stringResource(R.string.always_show_keyboard_button),
+            preferencesStorage.alwaysShowKeyboardButton,
+            preferencesStorage.alwaysShowKeyboardButtonPrefsKey.name)
+
+        DrawHorizontalDivider()
+
         SwitchPreferenceItem(
             stringResource(R.string.allow_to_edit_controls_in_game),
             preferencesStorage.editCustomScreenControlsInGame,
@@ -267,7 +272,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
-        if (engineInfo.touchFullScreenModeCanBeUsed) {
+        if (engineInfo.fullTouchFullScreenModeCanBeUsed) {
             SwitchPreferenceItem(
                 stringResource(R.string.fullscreen_touch_mode),
                 preferencesStorage.alwaysUseFullScreenTouchMode,

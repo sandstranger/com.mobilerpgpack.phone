@@ -3,6 +3,8 @@ package com.mobilerpgpack.phone.ui.screen
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
@@ -16,12 +18,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getFabIconContainerColor
 import com.mobilerpgpack.phone.ui.getIconButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
+import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
 import com.mobilerpgpack.phone.ui.getPrimaryColor
 import org.koin.core.component.KoinComponent
@@ -39,20 +44,20 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun DrawScreen(navController: NavHostController) {
-        val activity = LocalActivity.current!!
         val onSurfaceColor = getOnSurfaceColor()
         val onBackgroundColor = getOnBackgroundColor()
+        val backgroundColor = getBackgroundColor()
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = getBackgroundColor(),
+            containerColor = backgroundColor,
             contentColor = onBackgroundColor,
             topBar = {
                 if (drawBackButton){
-                TopAppBar(
+                TopAppBar( modifier = Modifier.fillMaxWidth().height(30.dp),
                     title = { },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent
+                        containerColor = backgroundColor
                     ),
                     navigationIcon = {
                         IconButton(onClick = {
@@ -78,7 +83,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
                     ) {
                         Icon(
                             Icons.Default.PlayArrow,
-                            contentDescription = activity.getString(R.string.start_game),
+                            contentDescription = stringResource(R.string.start_game),
                             tint = onSurfaceColor
                         )
                     }

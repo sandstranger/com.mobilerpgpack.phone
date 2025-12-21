@@ -12,6 +12,6 @@ import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 fun DrawTitleText (title: String){
     Text(title,
         style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.padding(start = 2.dp), color = getOnBackgroundColor())
+        modifier = Modifier.padding(start = 4.dp), color = getOnBackgroundColor())
 }
 

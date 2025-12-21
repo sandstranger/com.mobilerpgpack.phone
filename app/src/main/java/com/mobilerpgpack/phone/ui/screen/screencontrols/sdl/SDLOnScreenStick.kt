@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
@@ -58,7 +59,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 private val alpha: Float = 0.65f,
                                 defaultViewRenderRule: ViewRenderRule = ViewRenderRule.Default,
                                 controlsType: ControlsType = ControlsType.Default,
-                                isDeleted : Boolean = false) : IScreenControlsView, KoinComponent {
+                                isDeleted : Boolean = false,
+                                showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
@@ -70,7 +72,9 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         }
     }
 
-    override val viewState: ViewState = ViewState(
+    final override var screenController: IScreenController? = null
+
+    final override val viewState: ViewState = ViewState(
         if (stickType == StickType.LeftStick) LEFT_STICK_ID else RIGHT_STICK_ID,
         engineType,
         offsetXPercent = offsetXPercent,
@@ -79,20 +83,16 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         alpha = alpha,
         defaultViewRenderRule = defaultViewRenderRule,
         controlsType = controlsType,
-        isDeletedInitialState = isDeleted)
-
-    override var show : Boolean by mutableStateOf(true)
-
-    override val isQuickPanel: Boolean = false
+        isDeletedInitialState = isDeleted,
+        showInQuickPanelInitialState = showInQuickPanel)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) = DrawStick(isEditMode, inGame)
 
     @Composable
     private fun DrawStick(isEditMode: Boolean, inGame: Boolean) {
-
-        fun updateStick(x: Float, y: Float) {
-            if (isEditMode || !inGame){
+        fun updateStick(x: Float, y: Float, invokeUpdateStickEventForced : Boolean = false) {
+            if ((isEditMode || !inGame) && !invokeUpdateStickEventForced){
                 return
             }
 
@@ -144,7 +144,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     private fun DrawStick(
         isEditMode: Boolean,
         inGame: Boolean,
-        onUpdateStick: (Float, Float) -> Unit
+        onUpdateStick: (Float, Float, Boolean) -> Unit
     ) {
         var currentX by remember { mutableFloatStateOf(-1f) }
         var currentY by remember { mutableFloatStateOf(-1f) }
@@ -154,7 +154,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         var canvasW by remember { mutableIntStateOf(0) }
         var canvasH by remember { mutableIntStateOf(0) }
 
-        if (isEditMode || !inGame){
+        if (isEditMode && inGame && (dragId!=null || down)){
+            onUpdateStick(0f, 0f, true)
             currentX = -1f
             currentY = -1f
             dragId = null
@@ -173,7 +174,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     canvasW = size.width
                     canvasH = size.height
                 }
-                .pointerInput(!isEditMode && inGame) {
+                .pointerInput(isEditMode,inGame) {
                     if (isEditMode || !inGame) {
                         return@pointerInput
                     }
@@ -202,7 +203,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                             down = false
                                             currentX = -1f
                                             currentY = -1f
-                                            onUpdateStick(0f, 0f)
+                                            onUpdateStick(0f, 0f, false)
                                             dragId = null
                                         }
                                     }
@@ -295,7 +296,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         strokeWidthPx: Float,
         currentX: Float,
         currentY: Float,
-        onUpdateStick: (Float, Float) -> Unit
+        onUpdateStick: (Float, Float, Boolean) -> Unit
     ) {
         val w = canvasW.toFloat().takeIf { it > 0f } ?: return
         val h = canvasH.toFloat().takeIf { it > 0f } ?: return
@@ -326,7 +327,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         val normX = ((drawX - centerX) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
         val normY = ((drawY - centerY) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
 
-        onUpdateStick(normX, normY)
+        onUpdateStick(normX, normY,false)
     }
 
     private companion object{

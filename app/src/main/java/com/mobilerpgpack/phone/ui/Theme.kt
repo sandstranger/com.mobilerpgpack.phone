@@ -255,7 +255,7 @@ fun Theme(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun useDarkTheme () : Boolean {
+fun useDarkTheme () : Boolean {
     val preferencesStorage : PreferencesStorage = koinInject()
     val useDarkThemeFlow = preferencesStorage.getUseDarkThemeValue()
     val useDarkTheme by useDarkThemeFlow.collectAsState(initial = false)

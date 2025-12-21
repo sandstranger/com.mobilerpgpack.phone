@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -10,9 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,22 +21,15 @@ import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.waitForUpOrCancellation
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.qualifier.named
 
 abstract class SDLImageButton(
@@ -57,11 +46,14 @@ abstract class SDLImageButton(
     controlsType: ControlsType = ControlsType.Default,
     isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
-    ignoreOutOfBoundsTouchEvents : Boolean = false) : IScreenControlsView, KoinComponent {
+    ignoreOutOfBoundsTouchEvents : Boolean = false,
+    showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
+
+    private var wasPressed by mutableStateOf(false)
 
     private var isPressed by mutableStateOf(false)
 
-    final override var show: Boolean by mutableStateOf(true)
+    final override var screenController: IScreenController? = null
 
     override val viewState: ViewState = ViewState(
         id,
@@ -80,7 +72,8 @@ abstract class SDLImageButton(
         alwaysConsumeTouchEvents = false,
         consumeTouchEventsInitialState = consumeTouchEventsByDefault,
         touchEventsCanIgnoreOutOfBounds = true,
-        ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents)
+        ignoreOutOfBoundsTouchEventsInitialState = ignoreOutOfBoundsTouchEvents,
+        showInQuickPanelInitialState = showInQuickPanel)
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
@@ -110,14 +103,17 @@ abstract class SDLImageButton(
             return modifierTouse
         }
 
-        if (!viewState.useViewAsToggle){
+        if ((isEditMode && (wasPressed || isPressed)) ||
+            (!viewState.useViewAsToggle && isPressed)){
+            wasPressed = false
             isPressed = false
+            onTouchUp(sdlKeyEvent)
         }
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
 
-        return modifierTouse.pointerInput(!isEditMode, mouseButtonsEventsCanBeInvoked) {
+        return modifierTouse.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
                 if (isEditMode) {
                     return@pointerInput
                 }
@@ -132,6 +128,7 @@ abstract class SDLImageButton(
                             down.consume()
                         }
                         if (!this.useViewAsToggle) {
+                            wasPressed = true
                             onTouchUp(this.sdlKeyCode)
                             onTouchDown(this.sdlKeyCode)
                         } else {
@@ -149,6 +146,7 @@ abstract class SDLImageButton(
                             up?.consume()
                         }
                         if (!useViewAsToggle) {
+                            wasPressed = false
                             onTouchUp(sdlKeyCode)
                         }
                     }

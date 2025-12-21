@@ -35,12 +35,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
+import org.koin.compose.koinInject
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
@@ -57,28 +52,39 @@ abstract class SDLScreenController : ScreenController() {
         get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
     }
 
-    private val alwaysUseFullScreenMode by lazy {
-        preferencesStorage.alwaysUseFullScreenTouchMode.getBlockingValue() && engineInfo.touchFullScreenModeCanBeUsed
-    }
-
-    private val alwaysUseFullScreenModeAsFlow : Flow<Boolean> by lazy{
-        flow {
-            while (currentCoroutineContext().isActive) {
-                emit(alwaysUseFullScreenMode && !engineInfo.mouseButtonsEventsCanBeInvoked)
-                delay(50)
-            }
-        }.distinctUntilChanged()
+    private val alwaysUseTouchFullScreenMode by lazy {
+        preferencesStorage.alwaysUseFullScreenTouchMode.getBlockingValue() && engineInfo.fullTouchFullScreenModeCanBeUsed
     }
 
     @Composable
-    final override fun DrawTouchCamera(inSafeArea : Boolean,
+    final override fun DrawTouchCamera(blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
                                        isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
-        if (!inGame){
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Transparent)){
-                content()
+
+        var rootSize by remember { mutableStateOf(IntSize.Zero) }
+
+        LocalActivity.current!!.window.decorView.rootView.apply {
+            DisposableEffect(this) {
+                val listener = ViewTreeObserver.OnGlobalLayoutListener {
+                    rootSize = IntSize(width, height)
+                }
+                viewTreeObserver.addOnGlobalLayoutListener(listener)
+                onDispose {
+                    viewTreeObserver.removeOnGlobalLayoutListener(listener)
+                }
             }
+        }
+
+        val contentModifier = (if (inSafeArea) Modifier.safeDrawingPadding() else Modifier).run {
+             return@run this.layout { measurable, constraints ->
+                val width = rootSize.width.takeIf { it > 0 } ?: constraints.maxWidth
+                val height = rootSize.height.takeIf { it > 0 } ?: constraints.maxHeight
+                val placeable = measurable.measure(Constraints.fixed(width, height))
+                layout(width, height) { placeable.place(0, 0) }
+            }
+        }
+
+        if (!inGame){
+            Box(modifier = contentModifier){ content() }
             return
         }
 
@@ -87,23 +93,9 @@ abstract class SDLScreenController : ScreenController() {
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
-        var rootSize by remember { mutableStateOf(IntSize.Zero) }
-        val rootView = LocalActivity.current!!.window.decorView.rootView
-        val rootModifier = if (inSafeArea) Modifier
-            .fillMaxSize()
-            .safeDrawingPadding() else Modifier.fillMaxSize()
-        val useFullScreenMode by alwaysUseFullScreenModeAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val useTouchFullScreenMode = alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
-
-        DisposableEffect(rootView) {
-            val listener = ViewTreeObserver.OnGlobalLayoutListener {
-                rootSize = IntSize(rootView.width, rootView.height)
-            }
-            rootView.viewTreeObserver.addOnGlobalLayoutListener(listener)
-            onDispose {
-                rootView.viewTreeObserver.removeOnGlobalLayoutListener(listener)
-            }
-        }
 
         if (isEditMode && trackedPointerId != UNKNOWN_POINTER_ID) {
             handlePointer(trackedPointerId, 0f, 0f, 0f,
@@ -113,12 +105,12 @@ abstract class SDLScreenController : ScreenController() {
             trackedPointerId = UNKNOWN_POINTER_ID
         }
 
-        Box(modifier = rootModifier
+        Box(modifier = Modifier.fillMaxSize()
             .layout { measurable, constraints ->
                 widthSize = constraints.maxWidth
                 heightSize = constraints.maxHeight
 
-                if (viewWidth > 0 && !useFullScreenMode) {
+                if (viewWidth > 0 && !useTouchFullScreenMode) {
                     val myAspect = 1.0f * viewWidth / viewHeight
                     var resultWidth = widthSize.toFloat()
                     var resultHeight = resultWidth / myAspect
@@ -142,8 +134,8 @@ abstract class SDLScreenController : ScreenController() {
                 }
             }
             .background(Color.Transparent)
-            .pointerInput(!isEditMode) {
-                if (isEditMode) {
+            .pointerInput(isEditMode, blockTouchCameraEvents) {
+                if (isEditMode || blockTouchCameraEvents) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {
@@ -200,16 +192,7 @@ abstract class SDLScreenController : ScreenController() {
                 }
             }
         ){
-            (if (inSafeArea) Modifier.safeDrawingPadding() else Modifier).apply {
-                Box(modifier = this.layout { measurable, constraints ->
-                    val width = rootSize.width.takeIf { it > 0 } ?: constraints.maxWidth
-                    val height = rootSize.height.takeIf { it > 0 } ?: constraints.maxHeight
-                    val placeable = measurable.measure(Constraints.fixed(width, height))
-                    layout(width, height) { placeable.place(0, 0) }
-                }){
-                    content()
-                }
-            }
+            Box(modifier = contentModifier){ content() }
         }
     }
 
