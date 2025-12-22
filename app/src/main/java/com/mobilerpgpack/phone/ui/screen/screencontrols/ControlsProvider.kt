@@ -28,7 +28,6 @@ class ControlsProvider (engineType: EngineTypes,
     var blockTouchCameraEventsWhenOnScreenStickActive : Boolean
         get() {
             return preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,true)
-                    && activeControlsType == ControlsType.OnScreenStick
         }
         set(value) {
             preferencesStorage.setBooleanValue(blockTouchCameraEventsPrefsKey, value)
