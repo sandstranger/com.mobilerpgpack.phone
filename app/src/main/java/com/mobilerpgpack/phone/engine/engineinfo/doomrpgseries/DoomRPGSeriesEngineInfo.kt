@@ -14,8 +14,8 @@ open class DoomRPGSeriesEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
     activeEngineType: EngineTypes,
-    pathToResourceFlow: Flow<String>) :
-    SDL2EngineInfo(mainEngineLib, allLibs, activeEngineType, pathToResourceFlow) {
+    pathToResource: String) :
+    SDL2EngineInfo(mainEngineLib, allLibs, activeEngineType, pathToResource) {
 
     private val translationManager: ITranslationManager by inject()
 
@@ -27,11 +27,11 @@ open class DoomRPGSeriesEngineInfo(
 
     final override val keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
 
-    override suspend fun initialize(activity: ComponentActivity) {
+    override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
 
-        val useSdlTTFForTextRendering = preferencesStorage.useSDLTTFForFontsRendering.first()
-        val enableMachineTranslation = preferencesStorage.enableGameMachineTextTranslation.first()
+        val useSdlTTFForTextRendering = preferencesStorage.useSDLTTFForFontsRendering
+        val enableMachineTranslation = preferencesStorage.enableGameMachineTextTranslation
 
         Os.setenv("ENABLE_SDL_TTF", useSdlTTFForTextRendering.toString().lowercase(), true)
         Os.setenv(

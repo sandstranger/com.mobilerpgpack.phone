@@ -23,14 +23,3 @@ fun SwitchPreferenceItem(
         onValueChanged(it)
     }
 }
-
-@Composable
-fun SwitchPreferenceItem(
-    title: String,
-    initialValueFlow: Flow<Boolean>,
-    key: String = "",
-    enabled: Boolean = true,
-    onValueChanged : (Boolean) -> Unit = { } ) {
-    val initialValue by initialValueFlow.collectAsState(initial = false)
-    SwitchPreferenceItem(title, initialValue, key, enabled, onValueChanged)
-}

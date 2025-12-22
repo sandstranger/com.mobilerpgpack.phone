@@ -94,12 +94,7 @@ abstract class SDLImageButton(
         }
 
         val preferencesStorage : PreferencesStorage = koinInject()
-        val activeEngineString by preferencesStorage.activeEngineAsFlowString.collectAsState("")
-
-        if (activeEngineString.isEmpty()){
-            return modifierTouse
-        }
-
+        val activeEngineString = preferencesStorage.activeEngineString
         if ((isEditMode && (wasPressed || isPressed)) ||
             (!viewState.useViewAsToggle && isPressed)){
             wasPressed = false

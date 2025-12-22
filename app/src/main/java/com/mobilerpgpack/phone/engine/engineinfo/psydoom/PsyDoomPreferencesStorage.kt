@@ -31,27 +31,27 @@ class PsyDoomPreferencesStorage : PreferencesStorage() {
 
     val enablePsyDoomModsPrefsKey = booleanPreferencesKey("enable_psydoom_mods")
 
-    val pathToPsyDoomCueFile = getStringValue(pathToPsyDoomCueFilePrefsKey)
+    val pathToPsyDoomCueFile get() = getStringValue(pathToPsyDoomCueFilePrefsKey)
 
-    val recordDemos = getBooleanValue(recordDemosPrefsKey)
+    val recordDemos get() = getBooleanValue(recordDemosPrefsKey)
 
-    val forcePistolStart = getBooleanValue(forcePistolStartPrefsKey)
+    val forcePistolStart get() = getBooleanValue(forcePistolStartPrefsKey)
 
-    val turboMode = getBooleanValue(turboModePrefsKey)
+    val turboMode get() = getBooleanValue(turboModePrefsKey)
 
-    val noMonsters = getBooleanValue(noMonstersPrefsKey)
+    val noMonsters get() = getBooleanValue(noMonstersPrefsKey)
 
-    val nmBossFixUp = getBooleanValue(nmBossFixUpPrefsKey)
+    val nmBossFixUp get() = getBooleanValue(nmBossFixUpPrefsKey)
 
-    val host = getStringValue(hostPrefsKey)
+    val host get() = getStringValue(hostPrefsKey)
 
-    val port = getIntValue(portPrefsKey, 0)
+    val port get() = getIntValue(portPrefsKey, 0)
 
-    val peerType = getStringValue(peerTypePrefsKey, PeerType.Client.toString())
+    val peerType get() = getStringValue(peerTypePrefsKey, PeerType.Client.toString())
 
-    val pathToPsyDoomModsFolder = getStringValue(pathToPsyDoomModsFolderPrefsKey)
+    val pathToPsyDoomModsFolder get() = getStringValue(pathToPsyDoomModsFolderPrefsKey)
 
-    val psyDoomCommandLineArgsString = getStringValue(psyDoomCommandLineArgsPrefsKey)
+    val psyDoomCommandLineArgsString get() = getStringValue(psyDoomCommandLineArgsPrefsKey)
 
-    val enablePsyDoomMods = getBooleanValue(enablePsyDoomModsPrefsKey)
+    val enablePsyDoomMods get() = getBooleanValue(enablePsyDoomModsPrefsKey)
 }

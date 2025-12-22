@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -50,12 +51,9 @@ open class CommonDoomRpgComposeSettings :
     @Composable
     private fun DrawTranslationModelSettings() {
         val scope = rememberCoroutineScope()
-
-        val activeTranslationTypeString by preferencesStorage.translationModelType
-            .collectAsState(initial = TranslationType.DefaultTranslationType.toString())
-
-        val translationModelEntries = buildTranslationsDescription()
-        val initialModelValue = translationModelEntries.first { it.startsWith(activeTranslationTypeString) }
+        val activeTranslationTypeString = preferencesStorage.translationModelType
+        val translationModelEntries = rememberSaveable {buildTranslationsDescription() }
+        val initialModelValue = rememberSaveable(activeTranslationTypeString) { translationModelEntries.first { it.startsWith(activeTranslationTypeString) }}
         val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
         LaunchedEffect(!isModelDownloaded) {
@@ -71,11 +69,9 @@ open class CommonDoomRpgComposeSettings :
             initialModelValue,
             translationModelEntries
         ) { newValue ->
-            scope.launch {
-                val translationModelType = TranslationType.getTranslationType(newValue)
-                translationManager.activeTranslationType = translationModelType
-                preferencesStorage.setTranslationModelTypeValue(translationModelType)
-            }
+            val translationModelType = TranslationType.getTranslationType(newValue)
+            translationManager.activeTranslationType = translationModelType
+            preferencesStorage.setTranslationModelTypeValue(translationModelType)
         }
 
         DrawHorizontalDivider()
@@ -112,10 +108,7 @@ open class CommonDoomRpgComposeSettings :
 
     @Composable
     private fun DrawPreloadModelsSetting(vm: DownloadViewModel = koinViewModel()) {
-        val context = LocalContext.current
-        val activeTranslationTypeString by preferencesStorage.translationModelType
-            .collectAsState(initial = "")
-
+        val activeTranslationTypeString = preferencesStorage.translationModelType
         LaunchedEffect(activeTranslationTypeString) {
             if (activeTranslationTypeString != "") {
                 vm.onTranslationTypeChanged(activeTranslationTypeString)
