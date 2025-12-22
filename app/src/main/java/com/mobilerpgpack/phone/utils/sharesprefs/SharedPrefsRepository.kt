@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
@@ -46,6 +47,11 @@ open class SharedPrefsRepository {
 
     fun getIntValue(key: Key<Int>, defaultValue: Int = 0) = getIntValue(key.name, defaultValue)
 
+    fun getLongValue(key: String, defaultValue: Long = 0L) =
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.longValue
+
+    fun getLongValue(key: Key<Long>, defaultValue: Long = 0L) = getLongValue(key.name, defaultValue)
+
     fun getBooleanValue(key: String, defaultValue: Boolean = false) =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.booleanValue
 
@@ -85,6 +91,20 @@ open class SharedPrefsRepository {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.intValue = value
             intValue = value
+            dao.upsert(prefsEntry)
+        }
+    }
+
+    fun setLongValue(key: Key<Long>, value: Long) = setLongValue(key.name, value)
+
+    fun setLongValue(key: String, value: Long) = scope.launch { setLongValueAsync(key, value) }
+
+    suspend fun setLongValueAsync(key: Key<Long>, value: Long) = setLongValueAsync(key.name, value)
+
+    suspend fun setLongValueAsync(key: String, value: Long) {
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
+            prefsEntry.longValue = value
+            longValue = value
             dao.upsert(prefsEntry)
         }
     }
@@ -145,6 +165,7 @@ open class SharedPrefsRepository {
         var stringValue by mutableStateOf("")
         var intValue by mutableIntStateOf(0)
         var booleanValue by mutableStateOf(false)
+        var longValue by mutableLongStateOf(0L)
         var doubleValue by mutableDoubleStateOf(0.0)
 
         fun updateEntry(newPrefsEntry: SharedPrefsEntry) {
@@ -155,6 +176,7 @@ open class SharedPrefsRepository {
                 doubleValue = it.doubleValue
                 booleanValue = it.booleanValue
                 intValue = it.intValue
+                longValue = it.longValue
             }
         }
     }
@@ -198,6 +220,7 @@ open class SharedPrefsRepository {
                     booleanValue = it.booleanValue
                     doubleValue = it.doubleValue
                     intValue = it.intValue
+                    longValue = it.longValue
                 }
             }
         }
@@ -220,6 +243,11 @@ open class SharedPrefsRepository {
         private fun buildSharedPrefsValue(key: String, value: Double) =
             SharedPrefsValue(SharedPrefsEntry(key, doubleValue = value)).apply {
                 doubleValue = value
+            }
+
+        private fun buildSharedPrefsValue(key: String, value: Long) =
+            SharedPrefsValue(SharedPrefsEntry(key, longValue = value)).apply {
+                longValue = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Boolean) =
