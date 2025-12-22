@@ -20,7 +20,7 @@ open class SharedPrefsRepository {
     fun loadAllEntries () = SharedPrefsRepository.loadAllEntries()
 
     fun <T : Enum<T>> getEnumValue(key: String,enumClass: Class<T>, defaultValue: T) : T =
-        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringValue
             .let { stringValue ->
                 if (stringValue.isNotEmpty()) {
                     try {
@@ -37,29 +37,29 @@ open class SharedPrefsRepository {
         getEnumValue(key.name, enumClass, defaultValue)
 
     fun getStringValue(key: String, defaultValue: String = "") =
-        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringFlow
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringValue
 
     fun getStringValue(key: Key<String>, defaultValue: String = "") = getStringValue(key.name, defaultValue)
 
     fun getIntValue(key: String, defaultValue: Int = 0) =
-        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.intFlow
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.intValue
 
     fun getIntValue(key: Key<Int>, defaultValue: Int = 0) = getIntValue(key.name, defaultValue)
 
     fun getBooleanValue(key: String, defaultValue: Boolean = false) =
-        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.booleanFlow
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.booleanValue
 
     fun getBooleanValue(key: Key<Boolean>, defaultValue: Boolean = false) = getBooleanValue(key.name, defaultValue)
 
     fun getFloatValue(key: Key<Float>, defaultValue: Float = 0.0f) = getFloatValue(key.name, defaultValue)
 
     fun getFloatValue(key: String, defaultValue: Float = 0.0f) =
-        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.floatFlow
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.floatValue
 
     fun getDoubleValue(key: Key<Double>, defaultValue: Double = 0.0) = getDoubleValue(key.name, defaultValue)
 
     fun getDoubleValue(key: String, defaultValue: Double = 0.0) =
-        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.doubleFlow
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.doubleValue
 
     fun setStringValue(key: Key<String>, value: String) = setStringValue(key.name, value)
 
@@ -70,7 +70,7 @@ open class SharedPrefsRepository {
     suspend fun setStringValueAsync(key: String, value: String) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.stringValue = value
-            stringFlow = value
+            stringValue = value
             dao.upsert(prefsEntry)
         }
     }
@@ -84,7 +84,7 @@ open class SharedPrefsRepository {
     suspend fun setIntValueAsync(key: String, value: Int) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.intValue = value
-            intFlow = value
+            intValue = value
             dao.upsert(prefsEntry)
         }
     }
@@ -98,7 +98,7 @@ open class SharedPrefsRepository {
     suspend fun setBooleanValueAsync(key: String, value: Boolean) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.booleanValue = value
-            booleanFlow = value
+            booleanValue = value
             dao.upsert(prefsEntry)
         }
     }
@@ -112,7 +112,7 @@ open class SharedPrefsRepository {
     suspend fun setFloatValueAsync(key: String, value: Float) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.floatValue = value
-            floatFlow = value
+            floatValue = value
             dao.upsert(prefsEntry)
         }
     }
@@ -126,7 +126,7 @@ open class SharedPrefsRepository {
     suspend fun setDoubleValueAsync(key: String, value: Double) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.doubleValue = value
-            doubleFlow = value
+            doubleValue = value
             dao.upsert(prefsEntry)
         }
     }
@@ -141,22 +141,20 @@ open class SharedPrefsRepository {
         setStringValueAsync(key, value.name)
 
     private class SharedPrefsValue(var prefsEntry: SharedPrefsEntry) {
-        var floatFlow by mutableFloatStateOf(0f)
-        var stringFlow by mutableStateOf("")
-        var intFlow by mutableIntStateOf(0)
-        var booleanFlow by mutableStateOf(false)
-        var doubleFlow by mutableDoubleStateOf(0.0)
+        var floatValue by mutableFloatStateOf(0f)
+        var stringValue by mutableStateOf("")
+        var intValue by mutableIntStateOf(0)
+        var booleanValue by mutableStateOf(false)
+        var doubleValue by mutableDoubleStateOf(0.0)
 
         fun updateEntry(newPrefsEntry: SharedPrefsEntry) {
             prefsEntry = newPrefsEntry
-            newPrefsEntry.apply {
-                when {
-                    floatValue != null -> floatFlow = floatValue!!
-                    intValue != null -> intFlow = intValue!!
-                    booleanValue != null -> booleanFlow= booleanValue!!
-                    doubleValue != null -> doubleFlow = doubleValue!!
-                    stringValue != null -> stringFlow = stringValue!!
-                }
+            newPrefsEntry.also {
+                floatValue = it.floatValue
+                stringValue = it.stringValue
+                doubleValue = it.doubleValue
+                booleanValue = it.booleanValue
+                intValue = it.intValue
             }
         }
     }
@@ -193,46 +191,45 @@ open class SharedPrefsRepository {
         }
 
         private fun buildSharedPrefsValue(entry: SharedPrefsEntry): SharedPrefsValue? {
-            entry.run {
-                return when {
-                    stringValue != null -> SharedPrefsValue(entry).apply { stringFlow = stringValue!! }
-                    intValue != null -> SharedPrefsValue(entry).apply { intFlow = intValue!! }
-                    booleanValue != null -> SharedPrefsValue(entry).apply { booleanFlow = booleanValue!! }
-                    doubleValue != null -> SharedPrefsValue(entry).apply { doubleFlow = doubleValue!! }
-                    floatValue != null ->  SharedPrefsValue(entry).apply { floatFlow = floatValue!! }
-                    else -> null
+            entry.let {
+                return SharedPrefsValue(entry).apply {
+                    stringValue = it.stringValue
+                    floatValue = it.floatValue
+                    booleanValue = it.booleanValue
+                    doubleValue = it.doubleValue
+                    intValue = it.intValue
                 }
             }
         }
 
         private fun buildSharedPrefsValue(key: String, value: String) =
             SharedPrefsValue(SharedPrefsEntry(key, stringValue = value)).apply {
-                stringFlow = value
+                stringValue = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Int) =
             SharedPrefsValue(SharedPrefsEntry(key, intValue = value)).apply {
-                intFlow = value
+                intValue = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Float) =
             SharedPrefsValue(SharedPrefsEntry(key, floatValue = value)).apply {
-                floatFlow = value
+                floatValue = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Double) =
             SharedPrefsValue(SharedPrefsEntry(key, doubleValue = value)).apply {
-                doubleFlow = value
+                doubleValue = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Boolean) =
             SharedPrefsValue(SharedPrefsEntry(key, booleanValue = value)).apply {
-                booleanFlow = value
+                booleanValue = value
             }
 
         private fun <T : Enum<T>> buildSharedPrefsValue(key: String, value: T) =
             SharedPrefsValue(SharedPrefsEntry(key, stringValue = value.name)).apply {
-                stringFlow = value.name
+                stringValue = value.name
             }
     }
 }
