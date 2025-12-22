@@ -56,6 +56,7 @@ else ()
     endif ()
 endif ()
 
+set(GL_LIBRARY ${OPENGL_opengl_LIBRARY})
 set(SDL2_MIXER_DIR ${CMAKE_SOURCE_DIR}/third_party/sdl2-mixer/src/main/jni/SDL_mixer)
 set(SDL2_MIXER_INCLUDE_DIR ${SDL2_MIXER_DIR}/include)
 if (IS_DEBUG_BUILD)
@@ -138,7 +139,7 @@ add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
 add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
 add_subdirectory("${APP_ROOT_DIR}/UZDoom")
-#add_subdirectory("${APP_ROOT_DIR}/perfect_dark")
+add_subdirectory("${APP_ROOT_DIR}/perfect_dark")
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
