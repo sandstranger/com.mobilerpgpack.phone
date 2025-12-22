@@ -14,12 +14,12 @@ class UZDoomPreferenceStorage :PreferencesStorage() {
 
     val uzDoomGLESVersionPrefsKey = stringPreferencesKey("uzdoom_gles_version")
 
-    val pathToUZDoomIWadFile = getStringValue(pathToUZDoomIWadFilePrefsKey)
+    val pathToUZDoomIWadFile get() = getStringValue(pathToUZDoomIWadFilePrefsKey)
 
-    val enableLightShaders = getBooleanValue(enableLightShadersPrefsKey)
+    val enableLightShaders get() = getBooleanValue(enableLightShadersPrefsKey)
 
-    val uzDoomGLESVersion = getStringValue(uzDoomGLESVersionPrefsKey,
+    val uzDoomGLESVersion get() = getStringValue(uzDoomGLESVersionPrefsKey,
         UZDoomGLESVersion.OpenGLES_2_0.toString())
 
-    val uZDoomCommandLineArgsString = getStringValue(uZDoomCommandLineArgsPrefsKey)
+    val uZDoomCommandLineArgsString get() = getStringValue(uZDoomCommandLineArgsPrefsKey)
 }

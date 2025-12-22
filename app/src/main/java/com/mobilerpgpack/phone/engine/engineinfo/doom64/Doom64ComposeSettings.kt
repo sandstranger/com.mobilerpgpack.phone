@@ -1,16 +1,11 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doom64
 
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.main.KoinModulesProvider
@@ -18,7 +13,6 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -37,9 +31,7 @@ class Doom64ComposeSettings () :
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        val previousPathToDoom64WadsFolder by preferencesStorage.pathToDoom64MainWadsFolder
-            .collectAsState(initial = "")
-
+        val previousPathToDoom64WadsFolder = preferencesStorage.pathToDoom64MainWadsFolder
         DrawCommandLinePreferences(preferencesStorage.doom64CommandLineArgsString,
             preferencesStorage.doom64CommandLineArgsStringPrefsKey.name)
 
@@ -48,13 +40,12 @@ class Doom64ComposeSettings () :
         RequestPath(
             stringResource(R.string.path_to_doom64_folder),
             previousPathToDoom64WadsFolder) { selectedPath ->
-            scope.launch { preferencesStorage.setPathToDoom64MainWadsFolder(selectedPath) }
+            preferencesStorage.setPathToDoom64MainWadsFolder(selectedPath)
         }
 
         DrawModsSupport(modsModel)
 
-        val enableDoom64ModsFlow = preferencesStorage.enableDoom64Mods
-        val enableDoom64Mods by enableDoom64ModsFlow.collectAsState(initial = false)
+        val enableDoom64Mods = preferencesStorage.enableDoom64Mods
 
         SwitchPreferenceItem(
             stringResource(R.string.enable_doom64_mods),
@@ -62,17 +53,16 @@ class Doom64ComposeSettings () :
             preferencesStorage.enableDoom64ModsPrefsKey.name
         )
 
-        val previousPathToDoom64ModsFolder by preferencesStorage.pathToDoom64ModsFolder
-            .collectAsState(initial = "")
+        val previousPathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder
 
         if (enableDoom64Mods) {
             DrawHorizontalDivider()
 
             RequestPath(
                 stringResource(R.string.path_to_doom64_mods_folder),
-                previousPathToDoom64ModsFolder
+                previousPathToDoom64ModsFolder,
             ){ selectedPath ->
-                scope.launch { preferencesStorage.setPathToDoom64ModsFolder(selectedPath) }
+                 preferencesStorage.setPathToDoom64ModsFolder(selectedPath)
             }
         }
     }

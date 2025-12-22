@@ -166,10 +166,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
     private val allowDownloadingModelsOverMobile : Boolean
         get() {
-            return runBlocking {
-                val preferencesStorage : PreferencesStorage = get ()
-                preferencesStorage.allowDownloadingModelsOverMobile.first()
-            }
+            val preferencesStorage : PreferencesStorage = get ()
+            return preferencesStorage.allowDownloadingModelsOverMobile
         }
 
     private val translationModule = module {
@@ -246,7 +244,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single <ITranslationModel> {
             val preferencesStorage : PreferencesStorage = get ()
-            var activeTranslationModelType = runBlocking { enumValueOf<TranslationType>(preferencesStorage.translationModelType.first()) }
+            var activeTranslationModelType = enumValueOf<TranslationType>(preferencesStorage.translationModelType)
             get<Map<TranslationType, ITranslationModel>>()[activeTranslationModelType]!! }
             .withOptions {
             named(ACTIVE_TRANSLATION_MODEL_KEY)

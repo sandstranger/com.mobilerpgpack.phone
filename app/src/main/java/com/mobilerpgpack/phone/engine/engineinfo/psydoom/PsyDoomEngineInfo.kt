@@ -15,9 +15,9 @@ import java.io.File
 
 class PsyDoomEngineInfo(mainEngineLib: String,
                         allLibs: Array<String>,
-                        commandLineParamsFlow : Flow<String>) :
+                        commandLineParams: String ) :
     SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.PsyDoom,
-        commandLineParamsFlow = commandLineParamsFlow) {
+        commandLineParams = commandLineParams) {
 
     private val modsModel : ModsModel by inject (named(EngineTypes.PsyDoom.toString()))
 
@@ -40,7 +40,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     override val preferencesStorage = psyDoomPreferencesStorage
 
-    override val pathToResource get() = runBlocking{ psyDoomPreferencesStorage.pathToPsyDoomCueFile.first() }
+    override val pathToResource get() = runBlocking{ psyDoomPreferencesStorage.pathToPsyDoomCueFile }
 
     override val requiredResourceExtensions = listOf(".cue", ".CUE")
 
@@ -55,98 +55,97 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             val baseCommandLineArgs = super.commandLineArgs
 
             return mutableListOf<String>().let {
-                it +=baseCommandLineArgs
+                it += baseCommandLineArgs
 
-                runBlocking {
+                val pathToCue = psyDoomPreferencesStorage.pathToPsyDoomCueFile
 
-                    val pathToCue = psyDoomPreferencesStorage.pathToPsyDoomCueFile.first()
+                if (pathToCue.isNotEmpty() && File(pathToCue).exists() &&
+                    !baseCommandLineArgs.contains(CUE_COMMAND)
+                ) {
+                    it += CUE_COMMAND
+                    it += pathToCue
+                }
 
-                    if (pathToCue.isNotEmpty() && File(pathToCue).exists() &&
-                        !baseCommandLineArgs.contains(CUE_COMMAND)) {
-                        it += CUE_COMMAND
-                        it += pathToCue
+                if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed) {
+                    it += FILE_COMMAND
+
+                    modsModel.mods.forEach { mod: Mod ->
+                        if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()) {
+                            it += mod.pathToMod.value!!
+                        }
                     }
+                }
 
-                    if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
-                        it += FILE_COMMAND
+                val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods
 
-                        modsModel.mods.forEach { mod : Mod ->
-                            if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()){
-                                it+=mod.pathToMod.value!!
-                            }
+                if (enablePsyDoomMods) {
+                    val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder
+
+                    if (modsFolder.isNotEmpty() && File(modsFolder).exists() &&
+                        !baseCommandLineArgs.contains(DATA_DIR_COMMAND)
+                    ) {
+                        it += DATA_DIR_COMMAND
+                        it += modsFolder
+                    }
+                }
+
+                val usePistolStart = psyDoomPreferencesStorage.forcePistolStart
+
+                if (usePistolStart && !baseCommandLineArgs.contains(PISTOL_START_COMMAND)) {
+                    it += PISTOL_START_COMMAND
+                }
+
+                val recordDemos = psyDoomPreferencesStorage.recordDemos
+
+                if (recordDemos && !baseCommandLineArgs.contains(RECORD_DEMOS_COMMAND)) {
+                    it += RECORD_DEMOS_COMMAND
+                }
+
+                val turboMode = psyDoomPreferencesStorage.turboMode
+
+                if (turboMode && !baseCommandLineArgs.contains(TURBO_COMMAND)) {
+                    it += TURBO_COMMAND
+                }
+
+                val noMonsters = psyDoomPreferencesStorage.noMonsters
+
+                if (noMonsters && !baseCommandLineArgs.contains(NO_MONSTERS_COMMAND)) {
+                    it += NO_MONSTERS_COMMAND
+                }
+
+                val nmBossFixup = psyDoomPreferencesStorage.nmBossFixUp
+
+                if (nmBossFixup && !baseCommandLineArgs.contains(BOSS_FIX_COMMAND)) {
+                    it += BOSS_FIX_COMMAND
+                }
+
+                val host = psyDoomPreferencesStorage.host
+                val addHost = host.isNotEmpty() && host.isNotBlank()
+
+                val port = psyDoomPreferencesStorage.port
+                val addPort = port > 0
+
+                val peerType = enumValueOf<PeerType>(psyDoomPreferencesStorage.peerType)
+
+                when (peerType) {
+                    PeerType.Server -> {
+                        if (addPort && !baseCommandLineArgs.contains(SERVER_COMMAND)) {
+                            it += "-server"
+                            it += port.toString()
                         }
                     }
 
-                    val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods.first()
+                    PeerType.Client -> {
+                        if ((addPort || addHost) && !baseCommandLineArgs.contains(CLIENT_COMMAND)) {
+                            it += CLIENT_COMMAND
 
-                    if (enablePsyDoomMods) {
-                        val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder.first()
-
-                        if (modsFolder.isNotEmpty() && File(modsFolder).exists() &&
-                            !baseCommandLineArgs.contains(DATA_DIR_COMMAND)
-                        ) {
-                            it += DATA_DIR_COMMAND
-                            it += modsFolder
-                        }
-                    }
-
-                    val usePistolStart = psyDoomPreferencesStorage.forcePistolStart.first()
-
-                    if (usePistolStart && !baseCommandLineArgs.contains(PISTOL_START_COMMAND)){
-                        it += PISTOL_START_COMMAND
-                    }
-
-                    val recordDemos = psyDoomPreferencesStorage.recordDemos.first()
-
-                    if (recordDemos && !baseCommandLineArgs.contains(RECORD_DEMOS_COMMAND)){
-                        it += RECORD_DEMOS_COMMAND
-                    }
-
-                    val turboMode = psyDoomPreferencesStorage.turboMode.first()
-
-                    if (turboMode && !baseCommandLineArgs.contains(TURBO_COMMAND)){
-                        it += TURBO_COMMAND
-                    }
-
-                    val noMonsters = psyDoomPreferencesStorage.noMonsters.first()
-
-                    if (noMonsters && !baseCommandLineArgs.contains(NO_MONSTERS_COMMAND)){
-                        it += NO_MONSTERS_COMMAND
-                    }
-
-                    val nmBossFixup = psyDoomPreferencesStorage.nmBossFixUp.first()
-
-                    if (nmBossFixup && !baseCommandLineArgs.contains(BOSS_FIX_COMMAND)){
-                        it += BOSS_FIX_COMMAND
-                    }
-
-                    val host = psyDoomPreferencesStorage.host.first()
-                    val addHost = host.isNotEmpty() && host.isNotBlank()
-
-                    val port = psyDoomPreferencesStorage.port.first()
-                    val addPort = port > 0
-
-                    val peerType = enumValueOf<PeerType>(psyDoomPreferencesStorage.peerType.first())
-
-                    when (peerType) {
-                        PeerType.Server -> {
-                            if (addPort && !baseCommandLineArgs.contains(SERVER_COMMAND)){
-                                it +="-server"
-                                it += port.toString()
-                            }
-                        }
-                        PeerType.Client -> {
-                            if ((addPort || addHost) && !baseCommandLineArgs.contains(CLIENT_COMMAND)){
-                                it += CLIENT_COMMAND
-
-                                it += if (!addPort){
-                                    host
-                                } else{
-                                    if (!addHost){
-                                        "localhost:$port"
-                                    } else{
-                                        "$host:$port"
-                                    }
+                            it += if (!addPort) {
+                                host
+                            } else {
+                                if (!addHost) {
+                                    "localhost:$port"
+                                } else {
+                                    "$host:$port"
                                 }
                             }
                         }

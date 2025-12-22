@@ -72,23 +72,23 @@ open class ViewState(
     var ignoreOutOfBoundsTouchEvents by mutableStateOf(ignoreOutOfBoundsTouchEventsInitialState)
     var showInQuickPanel by mutableStateOf(showInQuickPanelInitialState)
 
-    open suspend fun load() {
+    open fun load() {
         if (wasLoaded){
             return
         }
         wasLoaded = true
-        offsetXPercent = preferencesStorage.getFloatValue( keyX, defaultOffsetXPercent).first()
-        offsetYPercent = preferencesStorage.getFloatValue( keyY, defaultOffsetYPercent).first()
-        sizePercent = preferencesStorage.getFloatValue( keySize, defaultSizePercent).first()
-        alpha = preferencesStorage.getFloatValue(keyAlpha, defaultAlpha).first()
-        sdlKeyCode = preferencesStorage.getIntValue( sdlKeyEventPrefsKey, defaultSdlKeyEvent).first()
+        offsetXPercent = preferencesStorage.getFloatValue( keyX, defaultOffsetXPercent)
+        offsetYPercent = preferencesStorage.getFloatValue( keyY, defaultOffsetYPercent)
+        sizePercent = preferencesStorage.getFloatValue( keySize, defaultSizePercent)
+        alpha = preferencesStorage.getFloatValue(keyAlpha, defaultAlpha)
+        sdlKeyCode = preferencesStorage.getIntValue( sdlKeyEventPrefsKey, defaultSdlKeyEvent)
         viewRenderRule = enumValueOf<ViewRenderRule>(preferencesStorage.getStringValue(viewRenderRulePrefsKey,
-            defaultViewRenderRule.toString()).first())
-        isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isDeletedInitialState).first()
-        useViewAsToggle = preferencesStorage.getBooleanValue(useViewAsTogglePrefsKey, useViewAsToggleInitialState).first()
-        consumeTouchEvents = preferencesStorage.getBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEventsInitialState).first()
-        ignoreOutOfBoundsTouchEvents = preferencesStorage.getBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEventsInitialState).first()
-        showInQuickPanel = preferencesStorage.getBooleanValue(showInQuickPanelPrefsKey, showInQuickPanel).first()
+            defaultViewRenderRule.toString()))
+        isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isDeletedInitialState)
+        useViewAsToggle = preferencesStorage.getBooleanValue(useViewAsTogglePrefsKey, useViewAsToggleInitialState)
+        consumeTouchEvents = preferencesStorage.getBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEventsInitialState)
+        ignoreOutOfBoundsTouchEvents = preferencesStorage.getBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEventsInitialState)
+        showInQuickPanel = preferencesStorage.getBooleanValue(showInQuickPanelPrefsKey, showInQuickPanel)
     }
 
     open fun save() {

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -117,17 +118,17 @@ abstract class Dpad(
                 Box(modifier = Modifier.commonDpadModifier())
             }
 
-            val buttonSize = size * 0.4f
-            val offsetAmount = size * 0.33f
+            val buttonSize = remember (size) { size * 0.4f}
+            val offsetAmount = remember (size) { size * 0.33f }
 
-            val offsetYStorage = hashMapOf(
+            val offsetYStorage = remember (offsetAmount) { hashMapOf(
                 DPAD_UP to -offsetAmount,
                 DPAD_DOWN to offsetAmount
-            )
-            val offsetXStorage = hashMapOf(
+            ) }
+            val offsetXStorage = remember (size) { hashMapOf(
                 DPAD_LEFT to -offsetAmount,
                 DPAD_RIGHT to offsetAmount
-            )
+            ) }
 
             @Composable
             fun dpadButton(
@@ -172,12 +173,7 @@ abstract class Dpad(
         val modifier = this.fillMaxSize()
 
         val preferencesStorage: PreferencesStorage = koinInject()
-        val activeEngineString by preferencesStorage.activeEngineAsFlowString.collectAsState("")
-
-        if (activeEngineString.isEmpty()) {
-            return modifier
-        }
-
+        val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
             initial = false
@@ -217,12 +213,7 @@ abstract class Dpad(
         }
 
         val preferencesStorage : PreferencesStorage = koinInject()
-        val activeEngineString by preferencesStorage.activeEngineAsFlowString.collectAsState("")
-
-        if (activeEngineString.isEmpty()){
-            return modifier
-        }
-
+        val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         var wasPressed by rememberSaveable { mutableStateOf(false)}

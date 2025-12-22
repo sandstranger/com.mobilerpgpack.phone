@@ -22,15 +22,13 @@ class Doom2RpgComposeSettings : CommonDoomRpgComposeSettings() {
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        val previousPathToDoom2RpgIpa by preferencesStorage.pathToDoom2RpgIpaFile
-            .collectAsState(initial = "")
-
+        val previousPathToDoom2RpgIpa = preferencesStorage.pathToDoom2RpgIpaFile
         RequestPath(
             stringResource(R.string.doom2_rpg_ipa_file),
             previousPathToDoom2RpgIpa,
             requestMode = RequestPathMode.File,
             requiredFileExtensions = engineInfo.requiredResourceExtensions){ selectedPath ->
-            scope.launch { preferencesStorage.setPathToDoom2RpgIpaFile(selectedPath) }
+            preferencesStorage.setPathToDoom2RpgIpaFile(selectedPath)
         }
 
         DrawHorizontalDivider()

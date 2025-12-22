@@ -33,6 +33,7 @@ import com.mobilerpgpack.phone.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import java.io.Serializable
 
 data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
@@ -77,6 +78,15 @@ fun Activity.showMessageDialogBox (title: String = "", messageToShow : String,
             onDismiss { onCloseDialogBox?.invoke() }
             positiveButton(R.string.ok_text)
         }
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T : Serializable> Intent.getValueFromIntent (name : String, clazz : Class<T>) : T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        this.getSerializableExtra(name,clazz)
+    } else {
+        this.getSerializableExtra(name) as? T
     }
 }
 

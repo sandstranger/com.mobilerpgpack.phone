@@ -12,18 +12,15 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.playingRecordsFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.xlatFileCanBeUsed
 import com.sun.jna.Function
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
 class UZDoomEngineInfo (mainEngineLib: String,
                         allLibs: Array<String>,
-                        commandLineParamsFlow : Flow<String>) :
+                        commandLineParams : String) :
     SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.UZDoom,
-        commandLineParamsFlow = commandLineParamsFlow) {
+        commandLineParams = commandLineParams) {
 
     private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
 
@@ -60,7 +57,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
     override val preferencesStorage by inject <UZDoomPreferenceStorage>(named(
         EngineTypes.UZDoom.toString()))
 
-    override val pathToResource get() = runBlocking{ preferencesStorage.pathToUZDoomIWadFile.first() }
+    override val pathToResource get() = preferencesStorage.pathToUZDoomIWadFile
 
     override val requiredResourceExtensions = listOf(".wad", ".WAD")
 
@@ -71,70 +68,69 @@ class UZDoomEngineInfo (mainEngineLib: String,
             val baseCommandLineArgs = super.commandLineArgs
 
             return mutableListOf<String>().let {
-                it +=baseCommandLineArgs
+                it += baseCommandLineArgs
 
-                runBlocking {
-                    val pathToWadFile = preferencesStorage.pathToUZDoomIWadFile.first()
-                    if (pathToWadFile.isNotEmpty() && File(pathToWadFile).exists() &&
-                        !baseCommandLineArgs.contains(IWAD_COMMAND)){
-                        it += IWAD_COMMAND
-                        it += pathToWadFile
-                    }
+                val pathToWadFile = preferencesStorage.pathToUZDoomIWadFile
+                if (pathToWadFile.isNotEmpty() && File(pathToWadFile).exists() &&
+                    !baseCommandLineArgs.contains(IWAD_COMMAND)
+                ) {
+                    it += IWAD_COMMAND
+                    it += pathToWadFile
+                }
 
-                    if (!baseCommandLineArgs.contains(CONFIG_FILE_COMMAND)){
-                        it += CONFIG_FILE_COMMAND
-                        it += pathToUZDoomConfigsFile
-                    }
+                if (!baseCommandLineArgs.contains(CONFIG_FILE_COMMAND)) {
+                    it += CONFIG_FILE_COMMAND
+                    it += pathToUZDoomConfigsFile
+                }
 
-                    if (!baseCommandLineArgs.contains(SAVE_DIR_COMMAND)){
-                        it += SAVE_DIR_COMMAND
-                        it += pathToUZDoomUserFolder
-                    }
+                if (!baseCommandLineArgs.contains(SAVE_DIR_COMMAND)) {
+                    it += SAVE_DIR_COMMAND
+                    it += pathToUZDoomUserFolder
+                }
 
-                    if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
-                        it +=FILE_COMMAND
+                if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed) {
+                    it += FILE_COMMAND
 
-                        modsModel.mods.forEach { mod : Mod ->
-                            if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()){
-                                it+=mod.pathToMod.value!!
-                            }
+                    modsModel.mods.forEach { mod: Mod ->
+                        if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()) {
+                            it += mod.pathToMod.value!!
                         }
                     }
+                }
 
-                    if (!baseCommandLineArgs.contains(PLAY_DEMO_COMMAND) && modsModel.playingRecordsFileCanBeUsed){
-                        it +=PLAY_DEMO_COMMAND
-                        it +=modsModel.pathToDemoFile.value!!
-                    }
+                if (!baseCommandLineArgs.contains(PLAY_DEMO_COMMAND) && modsModel.playingRecordsFileCanBeUsed) {
+                    it += PLAY_DEMO_COMMAND
+                    it += modsModel.pathToDemoFile.value!!
+                }
 
-                    if (!baseCommandLineArgs.contains(XLAT_FILE_COMMAND) && modsModel.xlatFileCanBeUsed){
-                        it +=XLAT_FILE_COMMAND
-                        it +=modsModel.pathToXLatFile.value!!
-                    }
+                if (!baseCommandLineArgs.contains(XLAT_FILE_COMMAND) && modsModel.xlatFileCanBeUsed) {
+                    it += XLAT_FILE_COMMAND
+                    it += modsModel.pathToXLatFile.value!!
+                }
 
-                    if (!baseCommandLineArgs.contains(DEH_COMMAND) && modsModel.dehFileCanBeUsed){
-                        it +=DEH_COMMAND
-                        it +=modsModel.pathToDehFile.value!!
-                    }
+                if (!baseCommandLineArgs.contains(DEH_COMMAND) && modsModel.dehFileCanBeUsed) {
+                    it += DEH_COMMAND
+                    it += modsModel.pathToDehFile.value!!
+                }
 
-                    if (!baseCommandLineArgs.contains(BEH_COMMAND) && modsModel.behFileCanBeUsed){
-                        it +=BEH_COMMAND
-                        it +=modsModel.pathToBehFile.value!!
-                    }
+                if (!baseCommandLineArgs.contains(BEH_COMMAND) && modsModel.behFileCanBeUsed) {
+                    it += BEH_COMMAND
+                    it += modsModel.pathToBehFile.value!!
                 }
 
                 it.toTypedArray()
             }
         }
 
-    override suspend fun initialize(activity: ComponentActivity) {
+    override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToUZDoomUserFolder, true)
-        enableLightShaders = preferencesStorage.enableLightShaders.first()
+        enableLightShaders = preferencesStorage.enableLightShaders
     }
 
     override fun onNativeLibrariesLoaded() {
         updateGLLiteShaderStateNativeDelegate.invokeVoid(arrayOf(enableLightShaders))
-        val glesVersion = runBlocking { enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion.first()) }.value
+        val glesVersion = enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion).value
         updateHarmGLESVersionNativeDelegate.invokeVoid(arrayOf(glesVersion))
     }
 

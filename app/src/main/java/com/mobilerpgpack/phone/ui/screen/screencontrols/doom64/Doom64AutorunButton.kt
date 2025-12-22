@@ -1,17 +1,13 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.doom64
 
-import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ToggleImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Function
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -39,11 +35,7 @@ class Doom64AutorunButton (engineType: EngineTypes,
 
     private val onAutoRunStateChangedNativeDelegate by lazy {
         val mainEngineLibName = preferencesStorage.let {
-            var activeEngine : String
-            runBlocking {
-                activeEngine = it.activeEngineAsFlowString.first()
-            }
-            get <IEngineInfo> (named(activeEngine)).mainLibraryName
+            get <IEngineInfo> (named(it.activeEngineString)).mainLibraryName
         }
         Function.getFunction(mainEngineLibName,
             "OnAutoRunStateChanged")

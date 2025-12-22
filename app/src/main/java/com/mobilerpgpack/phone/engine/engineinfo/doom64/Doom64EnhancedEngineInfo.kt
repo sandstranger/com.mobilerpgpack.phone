@@ -7,8 +7,8 @@ import java.io.File
 
 class Doom64EnhancedEngineInfo(mainEngineLib: String,
                                allLibs: Array<String>,
-                               commandLineParamsFlow : Flow<String>
-) : Doom64EngineInfo(mainEngineLib,allLibs, commandLineParamsFlow) {
+                               commandLineParams : String
+) : Doom64EngineInfo(mainEngineLib,allLibs, commandLineParams) {
 
     override val engineType: EngineTypes = EngineTypes.Doom64ExPlusEnhanced
 

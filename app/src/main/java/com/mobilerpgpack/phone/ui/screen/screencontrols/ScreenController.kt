@@ -118,7 +118,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         val activity = LocalActivity.current!!
         val configuration = LocalConfiguration.current
-        val density = activity.resources.displayMetrics.density
+        val density = remember (activity.resources.displayMetrics.density) {
+            activity.resources.displayMetrics.density }
         val coroutineScope = rememberCoroutineScope()
 
         val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngine) }
@@ -127,14 +128,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
         var isEditMode by remember { mutableStateOf((!inGame)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
         var readyToDrawControls by remember { mutableStateOf(false) }
-        val clampButtonsFlow by preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true).collectAsStateWithLifecycle(true)
+        val clampButtons = preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true)
         var allContentLoaded by remember { mutableStateOf(false) }
 
         var screenWidthPx by remember { mutableFloatStateOf(0f) }
         var screenHeightPx by remember { mutableFloatStateOf(0f) }
 
         fun clampView(state: ViewState, clampForced : Boolean = false) {
-            if (clampButtonsFlow || clampForced) {
+            if (clampButtons || clampForced) {
                 state.apply {
                     offsetXPercent = offsetXPercent.coerceIn(0f, 1f - state.sizePercent)
                     val buttonHeightPx = sizePercent * screenWidthPx
@@ -144,7 +145,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             }
         }
 
-        suspend fun preloadButtons() {
+        fun preloadButtons() {
             val loadedMap = _activeViewsToDraw.associateBy { it.viewState.id }
             loadedMap.values.forEach { view ->
                 view.viewState.apply {
@@ -180,10 +181,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
                         if (!allContentLoaded) {
                             allContentLoaded = true
-                            coroutineScope.launch {
-                                preloadButtons()
-                                readyToDrawControls = true
-                            }
+                            preloadButtons()
+                            readyToDrawControls = true
                         }
                     }
                     viewTreeObserver.addOnGlobalLayoutListener(listener)
@@ -196,10 +195,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
         else{
             screenWidthPx = configuration.screenWidthDp * density
             screenHeightPx = configuration.screenHeightDp * density
-            LaunchedEffect(Unit) {
-                preloadButtons()
-                readyToDrawControls = true
-            }
+            preloadButtons()
+            readyToDrawControls = true
         }
 
         backgroundColor = if (!inGame) {

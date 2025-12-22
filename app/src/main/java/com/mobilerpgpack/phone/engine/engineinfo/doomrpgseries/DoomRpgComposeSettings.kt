@@ -1,9 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -15,7 +12,6 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import kotlin.getValue
 
 class DoomRpgComposeSettings : CommonDoomRpgComposeSettings() {
 
@@ -23,15 +19,13 @@ class DoomRpgComposeSettings : CommonDoomRpgComposeSettings() {
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        val savedPathToDoomRpgZip by preferencesStorage.pathToDoomRpgZipFile
-            .collectAsState(initial = "")
-
+        val savedPathToDoomRpgZip = preferencesStorage.pathToDoomRpgZipFile
         RequestPath(
             stringResource(R.string.doom_rpg_zip_file),
             savedPathToDoomRpgZip,
             requestMode = RequestPathMode.File,
             requiredFileExtensions = engineInfo.requiredResourceExtensions){ selectedPath ->
-            scope.launch { preferencesStorage.setPathToDoomRpgZipFile(selectedPath) }
+            preferencesStorage.setPathToDoomRpgZipFile(selectedPath)
         }
         DrawHorizontalDivider()
         super.DrawSettings(navController)

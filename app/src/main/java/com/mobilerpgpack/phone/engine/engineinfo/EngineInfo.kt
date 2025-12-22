@@ -71,8 +71,8 @@ abstract class EngineInfo(
     mainEngineLib: String,
     private val allLibs: Array<String>,
     activeEngineType: EngineTypes,
-    private val pathToResourceFlow: Flow<String>,
-    private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
+    private val pathToResourceFlow: String,
+    private val commandLineParams : String = "") : KoinComponent, IEngineInfo {
 
     private var alwaysShowKeyboardButton = false
 
@@ -135,9 +135,12 @@ abstract class EngineInfo(
 
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
 
-    protected open val pathToResource : String get() = runBlocking { pathToResourceFlow.first() }
+    protected open val pathToResource : String get() = runBlocking { pathToResourceFlow }
 
     protected open val loadGL4ES : Boolean = true
+
+    protected open val enableControlsAutoHidingFeature get() = preferencesStorage.autoHideScreenControls &&
+            !hideScreenControls
 
     private var wasInit = false
     private var needToShowControlsLastState: Boolean = false
@@ -145,10 +148,7 @@ abstract class EngineInfo(
     private var showCustomMouseCursor: Boolean = false
     private var allowToEditScreenControlsInGame = false
     private var isCursorVisible by mutableStateOf(false)
-    private var enableControlsAutoHidingFeature = false
     private var displayInSafeArea: Boolean = false
-
-    private var commandLineParams : String? = ""
 
     private val needToShowScreenControlsNativeDelegate by lazy {
         Function.getFunction(mainEngineLib,
@@ -174,14 +174,14 @@ abstract class EngineInfo(
 
     override val commandLineArgs: Array<String>
         get() {
-            if (commandLineParams.isNullOrEmpty() || !commandLineParams!!.contains("-")) {
+            if (commandLineParams.isEmpty() || !commandLineParams.contains("-")) {
                 return emptyArray()
             }
 
             try {
                 val args = arrayListOf<String>()
 
-                commandLineParams!!.split(" ".toRegex()).forEach {
+                commandLineParams.split(" ".toRegex()).forEach {
                     val trimmedString = it.trim()
                     if (trimmedString.isNotBlank() && trimmedString.isNotEmpty()) {
                         args += trimmedString
@@ -194,16 +194,12 @@ abstract class EngineInfo(
             }
         }
 
-    override suspend fun initialize(activity: ComponentActivity) {
+    override fun initialize(activity: ComponentActivity) {
         if (wasInit){
             return
         }
 
         wasInit = true
-
-        while (!preferencesStorage.prefsWasLoaded){
-            delay(ONE_FRAME)
-        }
 
         this.activity = activity
         initializeCommonEngineData()
@@ -212,18 +208,14 @@ abstract class EngineInfo(
         Os.setenv("PATH_TO_RESOURCES",
             File(pathToResource).absolutePath, true)
 
-        hideScreenControls = preferencesStorage.hideScreenControls.first()
-        enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls.first()
-                && engineType != EngineTypes.DoomRpg && !hideScreenControls
+        hideScreenControls = preferencesStorage.hideScreenControls
+        allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame
+        showCustomMouseCursor = preferencesStorage.showCustomMouseCursor
+        displayInSafeArea = preferencesStorage.enableDisplayInSafeArea
+        alwaysShowKeyboardButton = preferencesStorage.alwaysShowKeyboardButton
 
-        allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame.first()
-        showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
-        displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
-        commandLineParams = commandLineParamsFlow.firstOrNull()
-        alwaysShowKeyboardButton = preferencesStorage.alwaysShowKeyboardButton.first()
-
-        val customAspectRatio = preferencesStorage.customAspectRatio.first()
-        val customScreenResolution = preferencesStorage.customScreenResolution.first()
+        val customAspectRatio = preferencesStorage.customAspectRatio
+        val customScreenResolution = preferencesStorage.customScreenResolution
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
 
         if (!customAspectRatio.isEmpty() && !customScreenResolutionWasSet) {
@@ -305,7 +297,7 @@ abstract class EngineInfo(
                 }
             }
 
-            customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
+            customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency
 
             sdlContainer.post {
                 sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :

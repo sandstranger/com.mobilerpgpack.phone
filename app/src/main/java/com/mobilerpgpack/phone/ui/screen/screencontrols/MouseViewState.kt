@@ -28,10 +28,10 @@ class MouseViewState(id: String,
 
     var invokeWheelEventsWhilePressing by mutableStateOf(invokeWheelEventsWhilePressingDefaultState)
 
-    override suspend fun load() {
+    override fun load() {
         super.load()
         invokeWheelEventsWhilePressing = preferencesStorage.getBooleanValue(invokeWheelEventsWhilePressingPrefsKey,
-            invokeWheelEventsWhilePressingDefaultState).first()
+            invokeWheelEventsWhilePressingDefaultState)
     }
 
     override fun save() {

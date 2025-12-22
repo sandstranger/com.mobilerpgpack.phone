@@ -1,9 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.util.Log
-import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,11 +22,9 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerId
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.onSizeChanged
@@ -42,7 +38,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -66,10 +61,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     private val axisY = stickType.value * 2 + 1
 
     protected val engineInfo by lazy {
-        runBlocking {
-            val preferencesStorage : PreferencesStorage = get()
-            get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.first()))
-        }
+        val preferencesStorage : PreferencesStorage = get()
+        get <IEngineInfo> (named(preferencesStorage.activeEngineString))
     }
 
     final override var screenController: IScreenController? = null
