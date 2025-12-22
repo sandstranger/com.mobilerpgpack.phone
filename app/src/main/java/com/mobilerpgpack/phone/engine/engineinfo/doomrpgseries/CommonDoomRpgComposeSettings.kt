@@ -87,9 +87,9 @@ open class CommonDoomRpgComposeSettings :
                     initialModelValue = newValue
                 }
             }
-        }
 
-        DrawHorizontalDivider()
+            DrawHorizontalDivider()
+        }
 
         SwitchPreferenceItem(
             stringResource(R.string.allow_downloading_over_mobile_network),
