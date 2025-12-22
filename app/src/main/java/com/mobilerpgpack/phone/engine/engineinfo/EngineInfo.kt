@@ -37,6 +37,7 @@ import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
@@ -84,7 +85,8 @@ abstract class EngineInfo(
 
     protected open val preferencesStorage: PreferencesStorage by inject()
 
-    protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
+    protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.run {
+        blockTouchCameraEventsWhenOnScreenStickActive && activeControlsType == ControlsType.OnScreenStick }
 
     protected abstract val sdlKeyboard : SDLKeyboard
 
