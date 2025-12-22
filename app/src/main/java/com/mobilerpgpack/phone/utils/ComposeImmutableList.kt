@@ -1,8 +1,6 @@
 package com.mobilerpgpack.phone.utils
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateListOf
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -24,7 +22,8 @@ class ComposeImmutableList <T> () {
     @Transient
     private var wasInit = false
 
-    private var _composeList by mutableStateOf(emptyList<T>())
+    @Transient
+    private var _composeList = mutableStateListOf<T>()
 
     val sourceList get() = _sourceList
 
@@ -34,7 +33,8 @@ class ComposeImmutableList <T> () {
         get() = _count.value
         set(value) {
             _count.value = value
-            _composeList = _sourceList.let {
+            _composeList.clear()
+            _composeList+= _sourceList.also {
                 if (value ==0){
                     it.clear()
                 }
@@ -43,13 +43,12 @@ class ComposeImmutableList <T> () {
                         defaultValue(index)
                     }
                 }
-                it.toList()
             }
             onCountValueChanged?.invoke()
         }
 
     init {
-        _composeList = _sourceList.toList()
+        _composeList += _sourceList
         _count.value ?: run { _count.value = 0 }
     }
 
@@ -62,6 +61,9 @@ class ComposeImmutableList <T> () {
     }
 
     fun updateComposeList () {
-        _composeList = _sourceList.toList()
+        _composeList.apply {
+            clear()
+            addAll(_sourceList)
+        }
     }
 }

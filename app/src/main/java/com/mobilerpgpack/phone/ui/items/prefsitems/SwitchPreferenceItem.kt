@@ -1,11 +1,8 @@
 package com.mobilerpgpack.phone.ui.items.prefsitems
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.flow.Flow
 import org.koin.compose.koinInject
 
 @Composable

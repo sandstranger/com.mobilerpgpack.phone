@@ -118,17 +118,17 @@ abstract class Dpad(
                 Box(modifier = Modifier.commonDpadModifier())
             }
 
-            val buttonSize = remember (size) { size * 0.4f}
-            val offsetAmount = remember (size) { size * 0.33f }
+            val buttonSize by remember (size) { mutableStateOf(size * 0.4f)}
+            val offsetAmount by remember (size) { mutableStateOf(size * 0.33f) }
 
-            val offsetYStorage = remember (offsetAmount) { hashMapOf(
+            val offsetYStorage by remember (offsetAmount) { mutableStateOf(hashMapOf(
                 DPAD_UP to -offsetAmount,
                 DPAD_DOWN to offsetAmount
-            ) }
-            val offsetXStorage = remember (size) { hashMapOf(
+            )) }
+            val offsetXStorage by remember (offsetAmount) { mutableStateOf(hashMapOf(
                 DPAD_LEFT to -offsetAmount,
                 DPAD_RIGHT to offsetAmount
-            ) }
+            )) }
 
             @Composable
             fun dpadButton(

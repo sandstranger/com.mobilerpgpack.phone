@@ -41,7 +41,8 @@ abstract class MouseIcon {
         val offsetYMouse = preferencesStorage.offsetYMouse
         val sdlWidth = remember { fixedWidth }
         val sdlHeight = remember { fixedHeight }
-        val screenResolution = remember { activity.getScreenResolution(drawInSafeArea = false) }
+        val screenResolution by remember (activity.window.decorView)
+        { mutableStateOf(activity.getScreenResolution(drawInSafeArea = false)) }
 
         LaunchedEffect(Unit) {
             while (true) {

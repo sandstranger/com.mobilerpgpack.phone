@@ -40,8 +40,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         val selectedEngineType = intent
             .getValueFromIntent(EXTRA_ENGINE_TYPE, EngineTypes::class.java)!!
         val activeEngine : IEngineInfo = get (named(selectedEngineType.name))
-        val displayInSafeArea = intent.getValueFromIntent(DISPLAY_IN_SAFE_AREA_KEY,
-            Boolean::class.java)!!
+        val displayInSafeArea = intent.getBooleanExtra(DISPLAY_IN_SAFE_AREA_KEY, false)
 
         hideSystemBarsAndWait {
             if (displayInSafeArea) {
@@ -67,8 +66,8 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
         fun editControls(context: Context, engineType: EngineTypes, displayInSafeArea : Boolean) {
             with (Intent(context, ScreenControlsEditorActivity::class.java)){
-                this.putExtra(EXTRA_ENGINE_TYPE, engineType)
-                this.putExtra(DISPLAY_IN_SAFE_AREA_KEY, displayInSafeArea)
+                putExtra(EXTRA_ENGINE_TYPE, engineType)
+                putExtra(DISPLAY_IN_SAFE_AREA_KEY, displayInSafeArea)
                 context.startActivity(this)
             }
         }
