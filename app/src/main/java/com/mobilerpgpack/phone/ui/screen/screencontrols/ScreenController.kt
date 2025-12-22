@@ -38,6 +38,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -88,7 +89,7 @@ import kotlin.math.roundToInt
 
 abstract class ScreenController : KoinComponent, IScreenController {
 
-    private val _activeViewsToDraw: MutableList<IScreenControlsView> = mutableListOf()
+    private val _activeViewsToDraw: MutableList<IScreenControlsView> = mutableStateListOf()
 
     protected val preferencesStorage : PreferencesStorage = get ()
 
@@ -109,11 +110,12 @@ abstract class ScreenController : KoinComponent, IScreenController {
         onBack: () -> Unit) {
 
         val controlsProvider : ControlsProvider = koinInject(named(activeEngine.name))
+        val customViews = remember { buildCustomViews(activeEngine) }
 
         _activeViewsToDraw.apply {
             clear()
             addAll(controlsProvider.controlsToDraw)
-            addAll(buildCustomViews(activeEngine))
+            addAll(customViews)
         }
 
         val activity = LocalActivity.current!!
