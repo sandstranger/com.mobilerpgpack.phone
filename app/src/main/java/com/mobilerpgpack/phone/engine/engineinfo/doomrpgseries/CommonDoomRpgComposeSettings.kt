@@ -58,14 +58,10 @@ open class CommonDoomRpgComposeSettings :
     @Composable
     private fun DrawTranslationModelSettings() {
         val activeTranslationTypeString = preferencesStorage.translationModelType
-        val configuration = LocalConfiguration.current
-        val translationModelEntries = buildTranslationsDescription()
-        var initialModelValue by rememberSaveable { mutableStateOf("") }
+        val translationModelEntries = retain { buildTranslationsDescription() }
+        var initialModelValue by rememberSaveable { mutableStateOf(translationModelEntries.first {
+            it.startsWith(activeTranslationTypeString) }) }
         val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
-
-        LaunchedEffect( configuration.locales[0],Unit) {
-            initialModelValue = translationModelEntries.first { it.startsWith(activeTranslationTypeString) }
-        }
 
         LaunchedEffect(isModelDownloaded) {
             if (!isModelDownloaded) {
@@ -75,21 +71,19 @@ open class CommonDoomRpgComposeSettings :
 
         DrawTitleText(stringResource(R.string.translation_settings))
 
-        if (initialModelValue.isNotEmpty() && translationModelEntries.isNotEmpty()) {
-            ListPreferenceItem(
-                stringResource(R.string.translation_model_title),
-                initialModelValue,
-                translationModelEntries, updateForced = true
-            ) { newValue ->
-                with(TranslationType.getTranslationType(newValue)){
-                    translationManager.activeTranslationType = this
-                    preferencesStorage.setTranslationModelTypeValue(this)
-                    initialModelValue = newValue
-                }
+        ListPreferenceItem(
+            stringResource(R.string.translation_model_title),
+            initialModelValue,
+            translationModelEntries, updateForced = true
+        ) { newValue ->
+            with(TranslationType.getTranslationType(newValue)) {
+                translationManager.activeTranslationType = this
+                preferencesStorage.setTranslationModelTypeValue(this)
+                initialModelValue = newValue
             }
-
-            DrawHorizontalDivider()
         }
+
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.allow_downloading_over_mobile_network),
