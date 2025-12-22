@@ -6,9 +6,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.sun.jna.Function
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -40,7 +37,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     override val preferencesStorage = psyDoomPreferencesStorage
 
-    override val pathToResource get() = runBlocking{ psyDoomPreferencesStorage.pathToPsyDoomCueFile }
+    override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueFile
 
     override val requiredResourceExtensions = listOf(".cue", ".CUE")
 

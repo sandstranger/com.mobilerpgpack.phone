@@ -1,19 +1,16 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
-import android.util.Log
 import com.mobilerpgpack.ctranslate2proxy.Translator
-import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent.getKoin
 import java.io.File
 
 abstract class BaseM2M100TranslationModel(
@@ -135,8 +132,6 @@ abstract class BaseM2M100TranslationModel(
     }
 
     private fun onAssetsFinishCopy (){
-        runBlocking {
-            needToDownloadModel()
-        }
+        scope.launch { needToDownloadModel() }
     }
 }
