@@ -24,10 +24,10 @@ abstract class SDL2EngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
     activeEngineType: EngineTypes,
-    pathToResourceFlow: Flow<String> = emptyFlow(),
-    commandLineParamsFlow : Flow<String> = emptyFlow()) :
+    pathToResource: String = "",
+    commandLineParams : String = "") :
     EngineInfo(mainEngineLib, allLibs, activeEngineType,
-        pathToResourceFlow, commandLineParamsFlow) {
+        pathToResource, commandLineParams) {
 
     private val mouseIcon: SDL2MouseIcon by inject()
 

@@ -21,6 +21,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import com.mobilerpgpack.phone.utils.getValueFromIntent
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -29,28 +30,18 @@ import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
+import java.io.Serializable
 
 class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
-
-    private val preferencesStorage : PreferencesStorage by inject ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
-        val selectedEngine = getSelectedEngineType()
-
-        var displayInSafeArea = false
-        var activeEngine : IEngineInfo
-
-        runBlocking {
-            while (!preferencesStorage.prefsWasLoaded){
-                delay(10)
-            }
-
-            displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
-            activeEngine = get (named(selectedEngine.toString()))
-        }
+        val selectedEngineType = intent
+            .getValueFromIntent(EXTRA_ENGINE_TYPE, EngineTypes::class.java)!!
+        val activeEngine : IEngineInfo = get (named(selectedEngineType.name))
+        val displayInSafeArea = intent.getValueFromIntent(DISPLAY_IN_SAFE_AREA_KEY,
+            Boolean::class.java)!!
 
         hideSystemBarsAndWait {
             if (displayInSafeArea) {
@@ -62,7 +53,7 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
             Theme {
                 activeEngine.screenController.DrawScreenControls(
                     inGame = false,
-                    activeEngine = selectedEngine,
+                    activeEngine = selectedEngineType,
                     drawInSafeArea = displayInSafeArea, onBack = {
                         this@ScreenControlsEditorActivity.finish()
                     })
@@ -70,21 +61,14 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         }
     }
 
-    private fun getSelectedEngineType () : EngineTypes {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent?.getSerializableExtra(EXTRA_ENGINE_TYPE,EngineTypes::class.java) ?: EngineTypes.DefaultActiveEngine
-        } else {
-            intent?.getSerializableExtra(EXTRA_ENGINE_TYPE) as? EngineTypes
-                ?: EngineTypes.DefaultActiveEngine
-        }
-    }
-
     companion object{
         private const val EXTRA_ENGINE_TYPE = "extra_engine_type"
+        private const val DISPLAY_IN_SAFE_AREA_KEY = "display_in_safe_area"
 
-        fun editControls(context: Context, engineType: EngineTypes) {
+        fun editControls(context: Context, engineType: EngineTypes, displayInSafeArea : Boolean) {
             with (Intent(context, ScreenControlsEditorActivity::class.java)){
                 this.putExtra(EXTRA_ENGINE_TYPE, engineType)
+                this.putExtra(DISPLAY_IN_SAFE_AREA_KEY, displayInSafeArea)
                 context.startActivity(this)
             }
         }

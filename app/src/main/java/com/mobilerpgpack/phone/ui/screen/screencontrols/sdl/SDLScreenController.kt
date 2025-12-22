@@ -35,7 +35,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
-import org.koin.compose.koinInject
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
@@ -49,11 +48,11 @@ abstract class SDLScreenController : ScreenController() {
     protected abstract val viewHeight : Int
 
     protected val engineInfo by lazy {
-        get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
+        get <IEngineInfo> (named(preferencesStorage.activeEngineString))
     }
 
     private val alwaysUseTouchFullScreenMode by lazy {
-        preferencesStorage.alwaysUseFullScreenTouchMode.getBlockingValue() && engineInfo.fullTouchFullScreenModeCanBeUsed
+        preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.fullTouchFullScreenModeCanBeUsed
     }
 
     @Composable
@@ -205,8 +204,8 @@ abstract class SDLScreenController : ScreenController() {
                                             keyCode : Int, controlsProvider: ControlsProvider) : IScreenControlsView
 
     final override fun buildCustomViews(engineTypes: EngineTypes): Collection<IScreenControlsView> {
-        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineAsFlowString
-            .getBlockingValue()))
+        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineString
+            ))
         return customViews.getOrPut(engineTypes) { mutableMapOf() }.run {
             getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes, controlsProvider)}
         }

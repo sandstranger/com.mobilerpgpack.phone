@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -67,13 +68,12 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchPreferenceItem(
             stringResource(R.string.enable_psydoom_mods),
-            initialValueFlow = preferencesStorage.enablePsyDoomMods,
+             preferencesStorage.enablePsyDoomMods,
             preferencesStorage.enablePsyDoomModsPrefsKey.name)
 
         DrawHorizontalDivider()
 
-        val enablePsyDoomMods by preferencesStorage.enablePsyDoomMods.collectAsState(initial = false)
-
+        val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods
         if (enablePsyDoomMods) {
             RequestPath(
                 stringResource(R.string.path_to_psydoom_mods_folder),
@@ -174,23 +174,20 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
-        val port by preferencesStorage.port.collectAsState(initial = 0)
-
         EditTextPreferenceItem(
             stringResource(R.string.psydoom_port),
-            port.toString()
+            preferencesStorage.port
         ) {
-            val port = it.toIntOrNull() ?: 0
-            preferencesStorage.setIntValue(preferencesStorage.portPrefsKey, port)
+            preferencesStorage.setIntValue(preferencesStorage.portPrefsKey, it)
         }
 
         DrawHorizontalDivider()
 
-        val peerType by preferencesStorage.peerType.collectAsState(initial = PeerType.Client.toString())
+        val peerType = remember (preferencesStorage.peerType) {
+            enumValueOf<PeerType>(preferencesStorage.peerType) }
 
         ListPreferenceItem(
-            stringResource(R.string.psydoom_peer_type),
-            enumValueOf<PeerType>(peerType)) {
+            stringResource(R.string.psydoom_peer_type), peerType) {
             preferencesStorage.setStringValue(preferencesStorage.peerTypePrefsKey, it.toString())
         }
 

@@ -20,6 +20,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.compose.koinInject
@@ -250,14 +252,14 @@ fun getCheckBoxColors() : CheckboxColors{
 
 @Composable
 fun Theme(content: @Composable () -> Unit) {
-    val colorScheme = if(useDarkTheme()) darkColorScheme else lightColorScheme
+    val useDarkTheme = useDarkTheme()
+    val colorScheme = remember (useDarkTheme) { if(useDarkTheme)
+        darkColorScheme else lightColorScheme }
     MaterialTheme(colorScheme = colorScheme, content = content)
 }
 
 @Composable
 fun useDarkTheme () : Boolean {
     val preferencesStorage : PreferencesStorage = koinInject()
-    val useDarkThemeFlow = preferencesStorage.getUseDarkThemeValue()
-    val useDarkTheme by useDarkThemeFlow.collectAsState(initial = false)
-    return useDarkTheme
-}
+    return preferencesStorage.getUseDarkThemeValue()
+ }

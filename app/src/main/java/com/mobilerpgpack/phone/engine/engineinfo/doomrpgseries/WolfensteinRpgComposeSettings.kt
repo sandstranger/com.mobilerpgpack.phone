@@ -24,15 +24,13 @@ class WolfensteinRpgComposeSettings : CommonDoomRpgComposeSettings(){
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        val previousPathToWolfensteinRpgIPa by preferencesStorage.pathToWolfensteinRpgIpaFile
-            .collectAsState(initial = "")
-
+        val previousPathToWolfensteinRpgIPa = preferencesStorage.pathToWolfensteinRpgIpaFile
         RequestPath(
             stringResource(R.string.wolfenstein_rpg_ipa_file),
             previousPathToWolfensteinRpgIPa,
             requestMode = RequestPathMode.File,
             requiredFileExtensions = engineInfo.requiredResourceExtensions){ selectedPath ->
-            scope.launch { preferencesStorage.setPathToWolfensteinRpgIpaFile(selectedPath) }
+            preferencesStorage.setPathToWolfensteinRpgIpaFile(selectedPath)
         }
         DrawHorizontalDivider()
         super.DrawSettings(navController)
