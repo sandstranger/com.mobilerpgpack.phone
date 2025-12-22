@@ -31,7 +31,6 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
     val useSDLTTFForFontsRenderingPrefsKey = booleanPreferencesKey("sdl_ttf_render")
     val gamesMachineTranslationsPrefsKey = booleanPreferencesKey("enable_games_translation")
-    val enableLauncherTextTranslationPrefsKey = booleanPreferencesKey("enable_launcher_translation")
     val allowDownloadingModelsOverMobilePrefsKey = booleanPreferencesKey("allow_downloading_over_mobile")
     val translationModelTypePrefsKey = stringPreferencesKey("translation_model_type")
     val pathToDoom64FolderWithMainWads = stringPreferencesKey("path_to_doom64_folder_wads")
@@ -44,6 +43,9 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val alwaysUseFullScreenTouchModePrefsKey = booleanPreferencesKey("always_use_fullscreen_touch_mode")
     val useFloatingStartGameButtonPrefsKey = booleanPreferencesKey("use_floating_start_game_button")
     val alwaysShowKeyboardButtonPrefsKey = booleanPreferencesKey("always_show_keyboard_button")
+    val useTouchScreenInGamesMenuPrefsKey = booleanPreferencesKey("use_touchscreen_in_games_menu")
+
+    val useTouchScreenInGamesMenu get() = getBooleanValue(useTouchScreenInGamesMenuPrefsKey, true)
 
     val useFloatingStartGameButton get() = getBooleanValue(useFloatingStartGameButtonPrefsKey, !context.isTelevision)
 
