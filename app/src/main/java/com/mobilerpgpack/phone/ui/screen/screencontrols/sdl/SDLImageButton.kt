@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,10 +50,6 @@ abstract class SDLImageButton(
     consumeTouchEventsByDefault : Boolean = true,
     ignoreOutOfBoundsTouchEvents : Boolean = false,
     showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
-
-    private var wasPressed by mutableStateOf(false)
-
-    private var isPressed by mutableStateOf(false)
 
     final override var screenController: IScreenController? = null
 
@@ -93,6 +91,9 @@ abstract class SDLImageButton(
             return modifierTouse
         }
 
+        var wasPressed by rememberSaveable {mutableStateOf(false) }
+        var isPressed by rememberSaveable { mutableStateOf(false) }
+
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
         if ((isEditMode && (wasPressed || isPressed)) ||
@@ -103,7 +104,14 @@ abstract class SDLImageButton(
         }
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) { mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
+        val ignoreOutOfBoundsTouchEvents by remember (viewState.ignoreOutOfBoundsTouchEvents)
+        { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
+        val consumeTouchEvents by remember (viewState.consumeTouchEvents)
+        { mutableStateOf(viewState.consumeTouchEvents) }
+        val useViewAsToggle by remember (viewState.useViewAsToggle) { mutableStateOf(viewState.useViewAsToggle) }
+        val sdlKeyCode by remember (viewState.sdlKeyCode) { mutableStateOf(viewState.sdlKeyCode) }
 
         return with(modifierTouse.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
                 if (isEditMode) {
@@ -111,7 +119,6 @@ abstract class SDLImageButton(
                 }
 
                 awaitEachGesture {
-                    viewState.apply {
                         val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                         val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
                         else PointerEventPass.Main
@@ -119,13 +126,14 @@ abstract class SDLImageButton(
                         if (consumeEvents) {
                             down.consume()
                         }
-                        if (!this.useViewAsToggle) {
+                        if (!useViewAsToggle) {
                             wasPressed = true
-                            onTouchUp(this.sdlKeyCode)
-                            onTouchDown(this.sdlKeyCode)
+                            onTouchUp(sdlKeyCode)
+                            onTouchDown(sdlKeyCode)
                         } else {
                             if (!isPressed){
-                                onTouchDown(this.sdlKeyCode)
+                                onTouchUp(sdlKeyCode)
+                                onTouchDown(sdlKeyCode)
                             }
                             else{
                                 onTouchUp(sdlKeyCode)
@@ -140,11 +148,10 @@ abstract class SDLImageButton(
                         if (!useViewAsToggle) {
                             wasPressed = false
                             onTouchUp(sdlKeyCode)
-                        }
                     }
                 }
             }){
-            if (isPressed && !isEditMode && viewState.useViewAsToggle)
+            if (isPressed && !isEditMode && useViewAsToggle)
                 this.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Yellow) } else this
         }
     }

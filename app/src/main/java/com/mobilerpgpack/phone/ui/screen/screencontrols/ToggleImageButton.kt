@@ -49,5 +49,5 @@ abstract class ToggleImageButton(id: String,
         onToggleStateChanged(isActive)
     }
 
-    protected abstract fun  onToggleStateChanged (isActive : Boolean)
+    protected abstract fun onToggleStateChanged (isActive : Boolean)
 }

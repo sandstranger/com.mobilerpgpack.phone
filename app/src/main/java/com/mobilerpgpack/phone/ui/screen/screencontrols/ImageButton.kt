@@ -9,6 +9,8 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -71,7 +73,9 @@ abstract class ImageButton(
 
     @Composable
     protected fun Modifier.interactiveControlModifier(isEditMode: Boolean, inGame: Boolean): Modifier {
-        val modifier = this.fillMaxSize().minimumInteractiveComponentSize()
+        val modifier = this
+            .fillMaxSize()
+            .minimumInteractiveComponentSize()
 
         if (!inGame){
             return modifier
@@ -81,25 +85,32 @@ abstract class ImageButton(
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) {
+            mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
+        val consumeTouchEvents by remember (viewState.consumeTouchEvents)
+        { mutableStateOf(viewState.consumeTouchEvents) }
+        val ignoreOutOfBoundsTouchEvents by remember (viewState.ignoreOutOfBoundsTouchEvents)
+        { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
+
         return modifier.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
             if (isEditMode) {
                 return@pointerInput
             }
             awaitEachGesture {
-                viewState.apply {
-                    val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
-                    val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
-                    val down = awaitFirstDown(pass = pointerPassToUse)
-                    if (consumeEvents) {
-                        down.consume()
-                    }
-                    onClick(context)
-                    val up = waitForUpOrCancellation(pointerPassToUse, ignoreOutOfBoundsTouchEvents
-                    )
-                    if (consumeEvents) {
-                        up?.consume()
-                    }
+                val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
+                val pointerPassToUse =
+                    if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
+                val down = awaitFirstDown(pass = pointerPassToUse)
+                if (consumeEvents) {
+                    down.consume()
+                }
+                onClick(context)
+                val up = waitForUpOrCancellation(
+                    pointerPassToUse, ignoreOutOfBoundsTouchEvents
+                )
+                if (consumeEvents) {
+                    up?.consume()
                 }
             }
         }
