@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import org.koin.java.KoinJavaComponent.get
 
-@Database(entities = [SharedPrefsEntry::class], version = 1)
+@Database(entities = [SharedPrefsEntry::class], version = 2, exportSchema = false)
 internal abstract class SharedPrefsDatabase : RoomDatabase() {
 
     abstract fun dao(): SharedPrefsDao
@@ -19,7 +19,7 @@ internal abstract class SharedPrefsDatabase : RoomDatabase() {
             val context : Context = get (Context::class.java)
             return Room.databaseBuilder(context.applicationContext,
                 SharedPrefsDatabase::class.java,
-                FULL_DATABASE_NAME).build()
+                FULL_DATABASE_NAME).fallbackToDestructiveMigration(true).build()
         }
     }
 }
