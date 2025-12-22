@@ -105,7 +105,7 @@ abstract class SDLImageButton(
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
 
-        return modifierTouse.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
+        return with(modifierTouse.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
                 if (isEditMode) {
                     return@pointerInput
                 }
@@ -143,9 +143,9 @@ abstract class SDLImageButton(
                         }
                     }
                 }
-            }.let{
+            }){
             if (isPressed && !isEditMode && viewState.useViewAsToggle)
-                it.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Yellow) } else it
+                this.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Yellow) } else this
         }
     }
 }

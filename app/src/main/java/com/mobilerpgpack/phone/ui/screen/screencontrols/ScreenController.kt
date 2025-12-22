@@ -531,7 +531,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val onPrimaryColor = getOnPrimaryColor()
         var showKeyCodeDialog by remember { mutableStateOf(false) }
         val keyCodeMap = remember { keyCodeMap }
-        val keyCodesToDraw by remember { mutableStateOf(keyCodeMap.toList()) }
+        val keyCodesToDraw = remember (keyCodeMap) { keyCodeMap.toList() }
         val scrollState = rememberScrollState()
 
         AlertDialog(containerColor = surfaceContainerHighColor,
@@ -679,7 +679,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
     @Composable
     private fun DrawCustomViewsEditor(onViewSelected: (selectedView: IScreenControlsView?) -> Unit) {
-        val itemsToDraw = _activeViewsToDraw.filter { it.viewState.isDeleted }.toList()
+        val itemsToDraw = remember { _activeViewsToDraw.filter { it.viewState.isDeleted }.toList() }
         if (itemsToDraw.isEmpty()) {
             onViewSelected(null)
             return
