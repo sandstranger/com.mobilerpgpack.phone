@@ -112,11 +112,12 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val controlsProvider : ControlsProvider = koinInject(named(activeEngine.name))
         val customViews = remember { buildCustomViews(activeEngine) }
         val commonsViewsToDraw = remember { controlsProvider.controlsToDraw }
-
-        _activeViewsToDraw.apply {
-            clear()
-            addAll(commonsViewsToDraw)
-            addAll(customViews)
+        val activeViewsToDraw = remember {
+            _activeViewsToDraw.apply {
+                clear()
+                addAll(commonsViewsToDraw)
+                addAll(customViews)
+            }
         }
 
         val activity = LocalActivity.current!!
@@ -149,7 +150,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         }
 
         fun preloadButtons() {
-            val loadedMap = _activeViewsToDraw.associateBy { it.viewState.id }
+            val loadedMap = activeViewsToDraw.associateBy { it.viewState.id }
             loadedMap.values.forEach { view ->
                 view.viewState.apply {
                     load()
@@ -165,7 +166,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
             }
         }
 
-        _activeViewsToDraw.forEach { it.screenController = this }
+        activeViewsToDraw.forEach { it.screenController = this }
 
         if (drawInSafeArea) {
             activity.window.decorView.rootView.apply {
@@ -517,7 +518,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
             }
 
             if (showViewEditor){
-                DrawViewEditor(_activeViewsToDraw.first { it.viewState.id == selectedButtonId }) {
+                val viewToDraw by remember (selectedButtonId)
+                { mutableStateOf(_activeViewsToDraw.first { it.viewState.id == selectedButtonId }) }
+                DrawViewEditor(viewToDraw) {
                     showViewEditor = false
                 }
             }
