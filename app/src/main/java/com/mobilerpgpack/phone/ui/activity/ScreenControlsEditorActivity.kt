@@ -2,35 +2,19 @@ package com.mobilerpgpack.phone.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.Theme
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
-import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.getValueFromIntent
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
-import org.koin.android.ext.android.inject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
-import java.io.Serializable
 
 class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
 
