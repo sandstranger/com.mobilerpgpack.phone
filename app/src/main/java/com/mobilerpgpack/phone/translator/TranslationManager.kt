@@ -77,6 +77,15 @@ class TranslationManager : KoinComponent, ITranslationManager {
     private val translateCb : TranslateTextCallback
     private val getTranslationCb : GetTranslatedTextCallback
 
+    private val isTranslationSupportedFlow : Flow<Boolean> by lazy {
+        flow {
+            while (currentCoroutineContext().isActive) {
+                emit(isTranslationSupported())
+                delay(500)
+            }
+        }.distinctUntilChanged()
+    }
+
     override val translationModel: ITranslationModel get() = _translationModel
 
     override var inGame = false
@@ -124,12 +133,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
         }
     }
 
-    override fun isTranslationSupportedAsFlow(): Flow<Boolean> = flow {
-        while (currentCoroutineContext().isActive) {
-            emit(isTranslationSupported())
-            delay(500)
-        }
-    }.distinctUntilChanged()
+    override fun isTranslationSupportedAsFlow() = isTranslationSupportedFlow
     
     override fun isTargetLocaleSupported () : Boolean = _translationModel.isLocaleSupported(targetLocale)
 
