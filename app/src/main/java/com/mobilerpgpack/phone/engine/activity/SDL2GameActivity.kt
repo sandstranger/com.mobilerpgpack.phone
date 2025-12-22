@@ -27,8 +27,8 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
             while (!preferencesStorage.prefsWasLoaded){
                 delay(ONE_FRAME_DELAY)
             }
-            engineInfo = get (named(preferencesStorage.activeEngineString))
         }
+        engineInfo = get (named(preferencesStorage.activeEngineString))
         gameResourcesFound = engineInfo.isResourceCorrect(this, onCloseDialogBox = { finish() })
         if (!gameResourcesFound){
             super.onCreate(savedInstanceState)
