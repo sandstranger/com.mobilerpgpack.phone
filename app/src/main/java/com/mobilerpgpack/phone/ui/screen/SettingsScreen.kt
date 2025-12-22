@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -88,10 +91,12 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         viewModel: SettingsScreenViewModel
     ) {
         val activity = LocalActivity.current!!
+        val transparentColor = remember { Color.Transparent }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(transparentColor)
                 .padding(innerPadding)
         ) {
             Button(
@@ -115,10 +120,12 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         navController: NavHostController,
         viewModel: SettingsScreenViewModel) {
         val scrollState = rememberScrollState()
+        val transparentColor = remember { Color.Transparent }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(transparentColor)
                 .padding(innerPadding)
                 .verticalScroll(scrollState),
         ) {
