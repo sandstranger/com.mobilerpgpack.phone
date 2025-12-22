@@ -758,7 +758,6 @@ abstract class ScreenController : KoinComponent, IScreenController {
         private val selectedViewBackgroundColor = Color.Red.copy(0.5f)
 
         private val transparentDarkColor = Color.DarkGray.copy(alpha = 0.5f)
-
     }
 }
 
