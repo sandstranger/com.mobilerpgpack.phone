@@ -10,10 +10,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.invokeBool
 import com.sun.jna.Function
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -41,7 +37,7 @@ open class Doom64EngineInfo(
             "RecalculateScreenResolution")
     }
 
-    override val pathToResource get() = runBlocking { preferencesStorage.pathToDoom64MainWadsFolder }
+    override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder
 
     override val fullTouchFullScreenModeCanBeUsed = false
 
@@ -61,7 +57,7 @@ open class Doom64EngineInfo(
                     }
                 }
 
-                val pathToDoom64ModsFolder = runBlocking { getPathToDoom64ModsFolder()}
+                val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
 
                 if (!baseCommandLineArgs.contains(MODS_COMMAND) && pathToDoom64ModsFolder.isNotEmpty()){
                     it +=MODS_COMMAND
