@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.main
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.loader.AssetsProvider
 import com.codekidlabs.storagechooser.StorageChooser
 import com.google.mlkit.common.model.RemoteModel
 import com.google.mlkit.nl.translate.TranslateRemoteModel
@@ -99,8 +98,6 @@ import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -189,7 +186,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             MLKitTranslationModel.getRemoteModel(modelCache,langCode) }
 
         single <MLKitTranslationModel> {  MLKitTranslationModel(get(),
-            TranslationManager.sourceLocale, targetLocale, allowDownloadingModelsOverMobile) }
+            TranslationManager.SOURCE_LOCALE, targetLocale, allowDownloadingModelsOverMobile) }
 
         val pathToOptModel = "${pathToUserFolder}${File.separator}opus-ct2-en-ru"
         val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
