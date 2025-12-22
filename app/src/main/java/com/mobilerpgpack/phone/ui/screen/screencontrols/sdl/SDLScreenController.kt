@@ -93,10 +93,18 @@ abstract class SDLScreenController : ScreenController() {
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        val useTouchFullScreenMode = alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked
+        val useTouchFullScreenMode by rememberSaveable(alwaysUseTouchFullScreenMode,mouseButtonsEventsCanBeInvoked) {
+            mutableStateOf(alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked) }
+        val blockTouchEventsSaved by rememberSaveable(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
+        val useTouchScreenInGamesMenu by rememberSaveable(preferencesStorage.useTouchScreenInGamesMenu) {
+            mutableStateOf(preferencesStorage.useTouchScreenInGamesMenu)
+        }
+        val blockTouchScreen by rememberSaveable(isEditMode,useTouchScreenInGamesMenu, mouseButtonsEventsCanBeInvoked, blockTouchEventsSaved) {
+            mutableStateOf(isEditMode || blockTouchEventsSaved || (mouseButtonsEventsCanBeInvoked && !useTouchScreenInGamesMenu) )
+        }
 
-        if (isEditMode && trackedPointerId != UNKNOWN_POINTER_ID) {
+        if ((isEditMode || blockTouchScreen) && trackedPointerId != UNKNOWN_POINTER_ID) {
             handlePointer(trackedPointerId, 0f, 0f, 0f,
                 mWidth, mHeight, MotionEvent.ACTION_UP,
                 touchId ?: defaultTouchDeviceId
@@ -133,8 +141,8 @@ abstract class SDLScreenController : ScreenController() {
                 }
             }
             .background(Color.Transparent)
-            .pointerInput(isEditMode, blockTouchCameraEvents) {
-                if (isEditMode || blockTouchCameraEvents) {
+            .pointerInput(blockTouchScreen) {
+                if (blockTouchScreen) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {

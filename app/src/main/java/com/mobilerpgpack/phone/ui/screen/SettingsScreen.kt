@@ -272,6 +272,13 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
+        SwitchPreferenceItem(
+            stringResource(R.string.use_touchscreen_in_games_menu),
+            preferencesStorage.useTouchScreenInGamesMenu,
+            preferencesStorage.useTouchScreenInGamesMenuPrefsKey.name
+        )
+        DrawHorizontalDivider()
+
         if (engineInfo.fullTouchFullScreenModeCanBeUsed) {
             SwitchPreferenceItem(
                 stringResource(R.string.fullscreen_touch_mode),

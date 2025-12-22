@@ -6,6 +6,7 @@
     <string name="bytes_text">bytes</string>
     <string name="unknown_size">Unknown size</string>
     <string name="use_floating_start_game_button">Use floating start game button</string>
+    <string name="use_touchscreen_in_games_menu">Enable touchscreen in games menu</string>
     <string name="translation_model_title">Translation model</string>
     <string name="fullscreen_touch_mode">Use fullscreen touch mode in custom screen aspect ratios</string>
     <string name="bing_translate_description">Based on the online Bing translation service. Unstable. Can be banned at any moment</string>
