@@ -89,7 +89,7 @@ import kotlin.math.roundToInt
 
 abstract class ScreenController : KoinComponent, IScreenController {
 
-    private val _activeViewsToDraw: MutableList<IScreenControlsView> = mutableStateListOf()
+    private val _activeViewsToDraw: MutableList<IScreenControlsView> by mutableStateOf(mutableListOf())
 
     protected val preferencesStorage : PreferencesStorage = get ()
 
