@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import org.koin.java.KoinJavaComponent.get
 
-@Database(entities = [SharedPrefsEntry::class], version = 2, exportSchema = false)
+@Database(entities = [SharedPrefsEntry::class], version = 3, exportSchema = false)
 internal abstract class SharedPrefsDatabase : RoomDatabase() {
 
     abstract fun dao(): SharedPrefsDao

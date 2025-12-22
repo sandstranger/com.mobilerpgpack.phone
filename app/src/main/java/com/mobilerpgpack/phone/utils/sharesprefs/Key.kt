@@ -5,6 +5,9 @@ data class Key<T>(val name: String)
 @JvmName("intKey")
 fun intPreferencesKey(name: String): Key<Int> = Key(name)
 
+@JvmName("longKey")
+fun longPreferencesKey(name: String): Key<Long> = Key(name)
+
 @JvmName("doubleKey")
 fun doublePreferencesKey(name: String): Key<Double> = Key(name)
 
