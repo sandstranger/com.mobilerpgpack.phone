@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.utils.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
@@ -19,10 +21,12 @@ abstract class SettingScreen (screenName : String) : ComposeScreen(screenName){
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val scrollState = rememberScrollState()
+        val transparentColor = remember { Color.Transparent }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(transparentColor)
                 .padding(innerPadding)
                 .verticalScroll(scrollState)
         ) {

@@ -45,12 +45,13 @@ class MainActivity : ComponentActivity(), KoinComponent {
         setContent {
             SetupSystemBars()
             val navController = rememberNavController()
+            val backgroundColor = getBackgroundColor()
 
             Theme {
                 NavHost(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(getBackgroundColor())
+                        .background(backgroundColor)
                         .systemBarsPadding(),
                     navController = navController,
                     startDestination = startScreen
