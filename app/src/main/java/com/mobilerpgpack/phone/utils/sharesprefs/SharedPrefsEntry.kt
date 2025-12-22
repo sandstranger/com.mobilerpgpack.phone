@@ -11,5 +11,6 @@ internal data class SharedPrefsEntry(
     var intValue: Int = 0,
     var booleanValue: Boolean = false,
     var doubleValue: Double = 0.0,
-    var floatValue: Float = 0f
+    var floatValue: Float = 0f,
+    var longValue: Long = 0L
 )
