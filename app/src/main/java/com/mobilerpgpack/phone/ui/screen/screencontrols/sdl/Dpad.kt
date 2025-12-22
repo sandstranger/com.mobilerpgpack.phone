@@ -175,24 +175,26 @@ abstract class Dpad(
         val preferencesStorage: PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
+        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
             initial = false
         )
+        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) {
+            mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
+        val consumeTouchEvents by remember (viewState.consumeTouchEvents)
+        { mutableStateOf(viewState.consumeTouchEvents) }
 
-        return modifier.pointerInput( mouseButtonsEventsCanBeInvoked) {
+        return modifier.pointerInput(mouseButtonsEventsCanBeInvoked) {
             awaitEachGesture {
-                viewState.apply {
-                    val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
-                    val pointerPassToUse =
-                        if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
-                    val down = awaitFirstDown(pass = pointerPassToUse)
-                    if (consumeEvents) {
-                        down.consume()
-                    }
-                    val up = waitForUpOrCancellation(pointerPassToUse, false)
-                    if (consumeEvents) {
-                        up?.consume()
-                    }
+                val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
+                val pointerPassToUse =
+                    if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
+                val down = awaitFirstDown(pass = pointerPassToUse)
+                if (consumeEvents) {
+                    down.consume()
+                }
+                val up = waitForUpOrCancellation(pointerPassToUse, false)
+                if (consumeEvents) {
+                    up?.consume()
                 }
             }
         }
@@ -215,8 +217,15 @@ abstract class Dpad(
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         var wasPressed by rememberSaveable { mutableStateOf(false)}
+        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) {
+            mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
+        val consumeTouchEvents by remember (viewState.consumeTouchEvents)
+        { mutableStateOf(viewState.consumeTouchEvents) }
+        val sdlKeyCode by rememberSaveable  (sdlKeyEvent) { mutableStateOf(sdlKeyEvent) }
+        val ignoreOutOfBoundsTouchEvents by remember (viewState.ignoreOutOfBoundsTouchEvents)
+        { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
 
         if (isEditMode && wasPressed){
             wasPressed = false
@@ -228,7 +237,6 @@ abstract class Dpad(
                 return@pointerInput
             }
             awaitEachGesture {
-                viewState.apply {
                     val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                     val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
                     val down = awaitFirstDown(pass = pointerPassToUse)
@@ -236,15 +244,14 @@ abstract class Dpad(
                         down.consume()
                     }
                     wasPressed = true
-                    onTouchUp(sdlKeyEvent)
-                    onTouchDown(sdlKeyEvent)
+                    onTouchUp(sdlKeyCode)
+                    onTouchDown(sdlKeyCode)
                     val up = waitForUpOrCancellation(pointerPassToUse, ignoreOutOfBoundsTouchEvents)
                     if (consumeEvents){
                         up?.consume()
                     }
                     wasPressed = false
-                    onTouchUp(sdlKeyEvent)
-                }
+                    onTouchUp(sdlKeyCode)
             }
         }
     }
