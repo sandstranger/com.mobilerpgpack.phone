@@ -111,10 +111,11 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         val controlsProvider : ControlsProvider = koinInject(named(activeEngine.name))
         val customViews = remember { buildCustomViews(activeEngine) }
+        val commonsViewsToDraw = remember { controlsProvider.controlsToDraw }
 
         _activeViewsToDraw.apply {
             clear()
-            addAll(controlsProvider.controlsToDraw)
+            addAll(commonsViewsToDraw)
             addAll(customViews)
         }
 
