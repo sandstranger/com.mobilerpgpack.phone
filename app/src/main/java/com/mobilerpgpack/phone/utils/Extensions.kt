@@ -30,6 +30,7 @@ import androidx.window.layout.WindowMetricsCalculator
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -169,7 +170,7 @@ fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
                         } ?: run {
                             viewTreeObserver.removeOnGlobalLayoutListener(this)
                         }
-                    }, 16)
+                    }, ONE_FRAME_DELAY)
                 }
             })
             hideSystemBars()

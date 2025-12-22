@@ -3,14 +3,11 @@ package com.mobilerpgpack.phone.engine.engineinfo
 import android.annotation.SuppressLint
 import android.os.Process
 import android.system.Os
-import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -34,6 +31,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
+import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
@@ -42,7 +40,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
-import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.mobilerpgpack.phone.utils.invokeBool
@@ -55,13 +52,9 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -106,38 +99,9 @@ abstract class EngineInfo(
         )
     )
 
-    final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
-        flow {
-            while (currentCoroutineContext().isActive) {
-                emit(mouseButtonsEventsCanBeInvoked)
-                delay(ONE_FRAME)
-            }
-        }.distinctUntilChanged()
-    }
-
-    final override val mainLibraryName: String = mainEngineLib
-
-    override val engineType: EngineTypes = activeEngineType
-
-    final override val pathToResourceExists : Boolean
-        get() {
-            val pathToResource = this.pathToResource
-            return pathToResource.isNotEmpty() &&
-                    File(pathToResource).exists()
-        }
-
-    override val pathToResourceIsCorrect: Boolean get() = pathToResourceExists &&
-            (requiredResourceExtensions.isEmpty() || requiredResourceExtensions.any { pathToResource.endsWith(it) })
-
-    override val requiredResourceExtensions = listOf<String>()
-
-    final override val nativeLibraries: Array<String> get() = allLibs
-
-    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
-
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
 
-    protected open val pathToResource : String get() = runBlocking { pathToResourceFlow }
+    protected open val pathToResource : String get() = pathToResourceFlow
 
     protected open val loadGL4ES : Boolean = true
 
@@ -171,6 +135,35 @@ abstract class EngineInfo(
         Function.getFunction(mainEngineLib,
             "resumeSound")
     }
+
+    final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
+        flow {
+            while (currentCoroutineContext().isActive) {
+                emit(mouseButtonsEventsCanBeInvoked)
+                delay(ONE_FRAME_DELAY)
+            }
+        }.distinctUntilChanged()
+    }
+
+    override val mainLibraryName: String = mainEngineLib
+
+    override val engineType: EngineTypes = activeEngineType
+
+    final override val pathToResourceExists : Boolean
+        get() {
+            val pathToResource = this.pathToResource
+            return pathToResource.isNotEmpty() &&
+                    File(pathToResource).exists()
+        }
+
+    override val pathToResourceIsCorrect: Boolean get() = pathToResourceExists &&
+            (requiredResourceExtensions.isEmpty() || requiredResourceExtensions.any { pathToResource.endsWith(it) })
+
+    override val requiredResourceExtensions = listOf<String>()
+
+    override val nativeLibraries: Array<String> get() = allLibs
+
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
 
     override val fullTouchFullScreenModeCanBeUsed: Boolean = true
 
@@ -407,7 +400,7 @@ abstract class EngineInfo(
                 }
             }
             needToShowControlsLastState = needToShowControls
-            delay(ONE_FRAME)
+            delay(ONE_FRAME_DELAY)
         }
     }
 
@@ -503,6 +496,5 @@ abstract class EngineInfo(
 
     private companion object {
         private const val RESOLUTION_DELIMITER = "x"
-        private const val ONE_FRAME = 16L
     }
 }
