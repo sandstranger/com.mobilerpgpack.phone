@@ -222,7 +222,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         onAlphaChange = { delta ->
                             selectedButtonId?.let { id ->
                                 viewsToDraw[id]!!.viewState.apply {
-                                    alpha = (alpha + delta).coerceIn(0.0f, 1f)
+                                    alpha = (alpha + delta).coerceIn(MIN_VIEW_ALPHA, MAX_VIEW_ALPHA)
                                     save()
                                 }
                             }
@@ -751,9 +751,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         private const val MAX_VIEW_SIZE : Float = 1.0f
 
+        private const val MIN_VIEW_ALPHA : Float = 0f
+
+        private const val MAX_VIEW_ALPHA : Float = 1.0f
+
         private val selectedViewBackgroundColor = Color.Red.copy(0.5f)
 
         private val transparentDarkColor = Color.DarkGray.copy(alpha = 0.5f)
+
     }
 }
 
