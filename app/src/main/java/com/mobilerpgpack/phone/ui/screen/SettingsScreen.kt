@@ -56,6 +56,10 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     override val drawFloatingActionButton: Boolean get() = useFloatingStartGameButton
 
+    init {
+        useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton
+    }
+
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val activity = LocalActivity.current!!
@@ -64,8 +68,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         val activeEngine = rememberSaveable(activeEngineString) {
             enumValueOf<EngineTypes>(activeEngineString)
         }
-
-        useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton
 
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
 
