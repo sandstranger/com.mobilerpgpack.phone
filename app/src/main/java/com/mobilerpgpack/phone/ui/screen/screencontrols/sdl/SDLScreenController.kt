@@ -51,7 +51,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
     protected abstract val viewHeight : Int
 
     @Composable
-    final override fun DrawTouchScreen(blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
+    final override fun DrawTouchScreen(activeEngine : EngineTypes, blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
                                        isEditMode: Boolean, inGame: Boolean, content: @Composable () -> Unit) {
 
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
@@ -83,7 +83,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         val preferencesStorage : PreferencesStorage = koinInject()
-        val engineInfo : IEngineInfo = koinInject(named(preferencesStorage.activeEngineString))
+        val engineInfo : IEngineInfo = koinInject(named(activeEngine.name))
         var mWidth by remember { mutableFloatStateOf(0.0f) }
         var mHeight by remember { mutableFloatStateOf(0.0f) }
         var widthSize by remember { mutableIntStateOf(0) }
