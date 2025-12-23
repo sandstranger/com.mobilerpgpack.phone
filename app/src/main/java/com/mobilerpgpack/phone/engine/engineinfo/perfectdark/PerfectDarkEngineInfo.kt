@@ -49,7 +49,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
             val baseCommandLineArgs = super.commandLineArgs
             return with(mutableListOf<String>()){
                 this += baseCommandLineArgs
-                
+
                 val pathToRom = pathToResource
                 if (!baseCommandLineArgs.contains(ROM_FILE_COMMAND) &&
                     pathToRom.isNotEmpty() && File(pathToRom).exists()){
