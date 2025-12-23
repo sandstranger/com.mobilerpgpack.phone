@@ -129,6 +129,8 @@ abstract class Dpad(
                 DPAD_LEFT to -offsetAmount,
                 DPAD_RIGHT to offsetAmount
             )) }
+            val dpadDownCollection = rememberSaveable { dpadDownCollection }
+            val dpadLeftCollection = rememberSaveable {dpadLeftCollection }
 
             @Composable
             fun dpadButton(
