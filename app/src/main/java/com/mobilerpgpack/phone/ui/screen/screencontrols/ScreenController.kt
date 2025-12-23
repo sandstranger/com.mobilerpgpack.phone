@@ -135,7 +135,7 @@ abstract class ScreenController : IScreenController {
                 if (isEditMode) transparentDarkColor else Color.Transparent
             }) }
         var readyToDrawControls by remember { mutableStateOf(false) }
-        var clampButtons by rememberSaveable {
+        var clampButtons by remember {
             mutableStateOf(preferencesStorage.getClampButtonsValue(clampButtonsPrefsKey))
         }
         var screenWidthPx by remember { mutableFloatStateOf(configuration.screenWidthDp * density) }
@@ -200,11 +200,9 @@ abstract class ScreenController : IScreenController {
                 }
             }
         }
-        else{
-            if (!readyToDrawControls) {
-                preloadButtons()
-                readyToDrawControls = true
-            }
+        else if (!readyToDrawControls) {
+            preloadButtons()
+            readyToDrawControls = true
         }
 
         DrawTouchScreen(activeEngineSaved,blockTouchCameraEvents,
