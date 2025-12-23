@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +16,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -26,9 +24,7 @@ import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.getFabIconContainerColor
 import com.mobilerpgpack.phone.ui.getIconButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
-import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
-import com.mobilerpgpack.phone.ui.getPrimaryColor
 import org.koin.core.component.KoinComponent
 
 abstract class ComposeScreen(val route: String) : KoinComponent {
@@ -47,6 +43,8 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
         val onSurfaceColor = getOnSurfaceColor()
         val onBackgroundColor = getOnBackgroundColor()
         val backgroundColor = getBackgroundColor()
+        val fabIconContainerColor = getFabIconContainerColor()
+        val iconButtonsColor = getIconButtonsColors()
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -63,7 +61,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
                         IconButton(onClick = {
                             onBackPressedDelegate?.invoke()
                             navController.navigateUp()
-                        }, colors = getIconButtonsColors()) {
+                        }, colors = iconButtonsColor) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "back",
@@ -79,7 +77,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
                     FloatingActionButton(
                         onClick = { onFloatingActionButtonClickedDelegate?.invoke() },
                         contentColor = onSurfaceColor,
-                        containerColor = getFabIconContainerColor()
+                        containerColor = fabIconContainerColor
                     ) {
                         Icon(
                             Icons.Default.PlayArrow,
