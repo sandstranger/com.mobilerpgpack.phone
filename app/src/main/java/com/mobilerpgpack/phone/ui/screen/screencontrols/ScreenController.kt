@@ -207,7 +207,8 @@ abstract class ScreenController : IScreenController {
             if (isEditMode) transparentDarkColor else Color.Transparent
         }
 
-        DrawTouchScreen(blockTouchCameraEvents,drawInSafeAreaSaved,isEditMode, inGameSaved) {
+        DrawTouchScreen(activeEngineSaved,blockTouchCameraEvents,
+            drawInSafeAreaSaved,isEditMode, inGameSaved) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -339,7 +340,8 @@ abstract class ScreenController : IScreenController {
     }
 
     @Composable
-    protected abstract fun DrawTouchScreen(blockTouchCameraEvents: Boolean,
+    protected abstract fun DrawTouchScreen(activeEngine : EngineTypes,
+                                           blockTouchCameraEvents: Boolean,
                                            inSafeArea : Boolean,
                                            isEditMode: Boolean, inGame: Boolean,
                                            content: @Composable () -> Unit)
