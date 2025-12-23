@@ -119,22 +119,22 @@ abstract class EngineInfo(
     private var displayInSafeArea: Boolean = false
 
     private val needToShowScreenControlsNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
+        Function.getFunction(mainLibraryName,
             "needToShowScreenControls")
     }
 
     private val needToInvokeMouseButtonsEventsDelegate by lazy {
-        Function.getFunction(mainEngineLib,
+        Function.getFunction(mainLibraryName,
             "needToInvokeMouseButtonsEvents")
     }
 
     private val pauseSoundNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
+        Function.getFunction(mainLibraryName,
             "pauseSound")
     }
 
     private val resumeSoundNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
+        Function.getFunction(mainLibraryName,
             "resumeSound")
     }
 

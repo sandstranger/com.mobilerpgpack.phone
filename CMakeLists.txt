@@ -56,7 +56,6 @@ else ()
     endif ()
 endif ()
 
-set(GL_LIBRARY ${OPENGL_opengl_LIBRARY})
 set(SDL2_MIXER_DIR ${CMAKE_SOURCE_DIR}/third_party/sdl2-mixer/src/main/jni/SDL_mixer)
 set(SDL2_MIXER_INCLUDE_DIR ${SDL2_MIXER_DIR}/include)
 if (IS_DEBUG_BUILD)

@@ -44,6 +44,8 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
             PerfectDarkRomTypes.JPN -> perfectDarkPreferencesStorage.pathToJpnRom
         }
 
+    override val loadGL4ES = false
+
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
@@ -105,7 +107,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
     }
 
     private companion object{
-        private const val OPENGL_2_1_VERSION = "2.1"
+        private const val OPENGL_2_1_VERSION = "3.0es"
         private const val GL_VERSION_COMMAND = "--gl-version"
         private const val SKIP_INTROS_COMMAND = "--skip-intro"
         private const val PORTABLE_COMMAND = "--portable"
