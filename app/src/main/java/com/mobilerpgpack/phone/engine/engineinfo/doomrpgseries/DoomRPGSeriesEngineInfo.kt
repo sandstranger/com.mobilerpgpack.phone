@@ -14,8 +14,8 @@ open class DoomRPGSeriesEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
     activeEngineType: EngineTypes,
-    pathToResource: String) :
-    SDL2EngineInfo(mainEngineLib, allLibs, activeEngineType, pathToResource) {
+    override val pathToResource: String) :
+    SDL2EngineInfo(mainEngineLib, allLibs, activeEngineType) {
 
     private val translationManager: ITranslationManager by inject()
 
