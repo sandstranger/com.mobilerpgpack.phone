@@ -74,7 +74,7 @@ open class CommonDoomRpgComposeSettings :
         ListPreferenceItem(
             stringResource(R.string.translation_model_title),
             initialModelValue,
-            translationModelEntries, updateForced = true
+            translationModelEntries
         ) { newValue ->
             with(TranslationType.getTranslationType(newValue)) {
                 translationManager.activeTranslationType = this
