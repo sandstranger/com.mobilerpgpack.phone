@@ -299,10 +299,12 @@ abstract class EngineInfo(
                 sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-
                         if (showCustomMouseCursor) {
                             mouseOverlayUI.setContent {
-                                AutoMouseModeComposable(layoutBinding!!)
+                                val binding = remember { layoutBinding!! }
+                                val isCursorVisible by rememberSaveable(isCursorVisible) {
+                                    mutableStateOf(isCursorVisible)}
+                                AutoMouseModeComposable(binding)
                                 if (isCursorVisible) {
                                     DrawMouseIcon()
                                 }
@@ -325,6 +327,7 @@ abstract class EngineInfo(
                         showKeyboardUiOverlay.setContent {
                             val showOnlyVirtualKeyboardButton = rememberSaveable {
                                 hideScreenControls && alwaysShowKeyboardButton }
+                            val sdlKeyboard = remember { sdlKeyboard }
 
                             Theme {
                                 Box(modifier = Modifier.fillMaxSize()) {
