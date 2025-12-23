@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.utils
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -146,21 +147,21 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                 FileReader(this).use {
                     iniConfig.read(it)
                 }
-
+                loaded = true
                 iniValues.forEach {
-                    if (iniConfig.containsKey(it.key)){
-                        it.value.apply {
-                            when (iniValueType) {
-                                IniValueType.Float -> floatValue = getFloatValue(it.key)
-                                IniValueType.String -> stringValue = getStringValue(it.key)
-                                IniValueType.Int -> intValue = getIntValue(it.key)
-                                IniValueType.Boolean -> booleanValue = getBooleanValue(it.key)
+                    with(iniConfig) {
+                        if (containsKey(it.key)) {
+                            it.value.apply {
+                                when (iniValueType) {
+                                    IniValueType.Float -> floatValue = getFloat(it.key)
+                                    IniValueType.String -> stringValue = getString(it.key)
+                                    IniValueType.Int -> intValue = getInt(it.key)
+                                    IniValueType.Boolean -> booleanValue = getBoolean(it.key)
+                                }
                             }
                         }
                     }
                 }
-
-                loaded = true
             }
         }
     }

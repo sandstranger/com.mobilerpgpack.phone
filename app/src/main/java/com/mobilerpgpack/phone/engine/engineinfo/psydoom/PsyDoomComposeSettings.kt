@@ -3,7 +3,9 @@ package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -38,9 +40,10 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
-        viewModel.initialize()
+        val showView by rememberSaveable (viewModel.showView) {
+            mutableStateOf(viewModel.showView) }
 
-        if (viewModel.showView) {
+        if (showView) {
             DrawPsyDoomCommonSettings(viewModel,navController)
         }
     }
