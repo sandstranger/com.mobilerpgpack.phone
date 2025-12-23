@@ -297,7 +297,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.DoomRpg.name) }
 
         single {
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
@@ -321,7 +322,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single {
             val preferencesStorage : PreferencesStorage = get ()
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
@@ -346,7 +348,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single {
             val preferencesStorage : PreferencesStorage = get ()
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
@@ -367,27 +370,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     private val doom64RegisterModule = module {
-        single { arrayOf(gl4esLibraryName,
-            SDL2_NATIVE_LIB_NAME,
-            PerfectDarkRomTypes.NTSC.mainLibraryName,
-            ) }.withOptions {
-            named(PerfectDarkRomTypes.NTSC.name)
-        }
-
-        single { arrayOf(gl4esLibraryName,
-            SDL2_NATIVE_LIB_NAME,
-            PerfectDarkRomTypes.PAL.mainLibraryName,
-            ) }.withOptions {
-            named(PerfectDarkRomTypes.PAL.name)
-        }
-
-        single { arrayOf(gl4esLibraryName,
-            SDL2_NATIVE_LIB_NAME,
-            PerfectDarkRomTypes.JPN.mainLibraryName,
-            ) }.withOptions {
-            named(PerfectDarkRomTypes.JPN.name)
-        }
-
         single<ControlsProvider> { ControlsProvider(EngineTypes.Doom64ExPlus, hashMapOf(
             ControlsType.AbsoluteTouchControls to doom64AbsoluteTouchControls,
             ControlsType.OnScreenStick to doom64OnScreenStickControls)) }.withOptions {
@@ -397,7 +379,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             }
 
         single  {
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 FMOD_NATIVE_LIB_NAME,
@@ -410,7 +393,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
 
         single  {
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 FMOD_NATIVE_LIB_NAME,
@@ -448,7 +432,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.UZDoom.name) }
 
         single  {
-            val nativeLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
@@ -495,7 +480,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single {
             val preferencesStorage : PsyDoomPreferencesStorage = get (named(EngineTypes.PsyDoom.toString()))
-            val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                FREETYPE_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
 
             PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
@@ -540,6 +526,27 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     private val perfectDarkKoinModule = module{
+        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomTypes.NTSC.mainLibraryName,
+        ) }.withOptions {
+            named(PerfectDarkRomTypes.NTSC.name)
+        }
+
+        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomTypes.PAL.mainLibraryName,
+        ) }.withOptions {
+            named(PerfectDarkRomTypes.PAL.name)
+        }
+
+        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomTypes.JPN.mainLibraryName,
+        ) }.withOptions {
+            named(PerfectDarkRomTypes.JPN.name)
+        }
+
         single { PerfectDarkPreferencesStorage() }.withOptions {
             named(EngineTypes.PerfectDark.name)
             bind<PerfectDarkPreferencesStorage>()

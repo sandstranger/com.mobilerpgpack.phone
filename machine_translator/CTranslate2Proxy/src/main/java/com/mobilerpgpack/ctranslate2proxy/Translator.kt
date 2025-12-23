@@ -45,6 +45,7 @@ abstract class Translator {
         private val dotsWithSpacingRegex = Regex("[.!?](?=\\p{L})")
 
         init {
+            System.loadLibrary("c++_shared")
             System.loadLibrary("omp")
             System.loadLibrary(if (BuildConfig.DEBUG) "spdlogd" else "spdlog")
             System.loadLibrary("ctranslate2")
