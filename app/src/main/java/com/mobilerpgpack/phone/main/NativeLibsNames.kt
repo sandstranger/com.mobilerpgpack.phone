@@ -32,6 +32,8 @@ const val PERFECT_DARK_PAL_NATIVE_LIB_NAME = "pd-pal-final"
 
 const val SDL2_NATIVE_LIB_NAME = "SDL2"
 
+const val C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME = "c++_shared"
+
 const val ZMUSIC_NATIVE_LIB_NAME = "zmusic"
 
 const val OPENAL_NATIVE_LIB_NAME = "openal"
