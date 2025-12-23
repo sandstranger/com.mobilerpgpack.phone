@@ -13,8 +13,7 @@ import java.io.File
 class PsyDoomEngineInfo(mainEngineLib: String,
                         allLibs: Array<String>,
                         commandLineParams: String ) :
-    SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.PsyDoom,
-        commandLineParams = commandLineParams) {
+    SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.PsyDoom) {
 
     private val modsModel : ModsModel by inject (named(EngineTypes.PsyDoom.toString()))
 
@@ -34,6 +33,8 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     private val registerJoysticksNativeDelegate by lazy {
         Function.getFunction(mainEngineLib, "RegisterJoysticks")
     }
+
+    override val commandLineParams: String get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString
 
     override val preferencesStorage = psyDoomPreferencesStorage
 

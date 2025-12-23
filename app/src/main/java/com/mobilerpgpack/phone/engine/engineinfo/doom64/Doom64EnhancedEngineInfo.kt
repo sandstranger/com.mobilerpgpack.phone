@@ -6,9 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 class Doom64EnhancedEngineInfo(mainEngineLib: String,
-                               allLibs: Array<String>,
-                               commandLineParams : String
-) : Doom64EngineInfo(mainEngineLib,allLibs, commandLineParams) {
+                               allLibs: Array<String>
+) : Doom64EngineInfo(mainEngineLib,allLibs) {
 
     override val engineType: EngineTypes = EngineTypes.Doom64ExPlusEnhanced
 

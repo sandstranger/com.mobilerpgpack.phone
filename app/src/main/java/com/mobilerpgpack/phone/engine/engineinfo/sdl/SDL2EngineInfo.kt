@@ -20,11 +20,8 @@ import org.libsdl.app.onKeyDown
 abstract class SDL2EngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    activeEngineType: EngineTypes,
-    pathToResource: String = "",
-    commandLineParams : String = "") :
-    EngineInfo(mainEngineLib, allLibs, activeEngineType,
-        pathToResource, commandLineParams) {
+    activeEngineType: EngineTypes) :
+    EngineInfo(mainEngineLib, allLibs, activeEngineType) {
 
     private val mouseIcon: SDL2MouseIcon by inject()
 

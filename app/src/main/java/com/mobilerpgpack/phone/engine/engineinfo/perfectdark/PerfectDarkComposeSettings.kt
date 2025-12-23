@@ -11,6 +11,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
@@ -32,6 +33,11 @@ class PerfectDarkComposeSettings : IEngineUIController {
         var enableModsSupport by rememberSaveable(preferencesStorage.enablePerfectDarkModsSupport) {
             mutableStateOf(preferencesStorage.enablePerfectDarkModsSupport)
         }
+
+        DrawCommandLinePreferences(preferencesStorage.commandLineArgs,
+            preferencesStorage.commandLineArgsPrefsKey.name)
+
+        DrawHorizontalDivider()
 
         ListPreferenceItem(stringResource(R.string.perfect_dark_rom_type),
             romType){

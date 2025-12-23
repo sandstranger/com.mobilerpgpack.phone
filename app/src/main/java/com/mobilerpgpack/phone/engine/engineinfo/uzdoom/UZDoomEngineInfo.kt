@@ -17,10 +17,8 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 class UZDoomEngineInfo (mainEngineLib: String,
-                        allLibs: Array<String>,
-                        commandLineParams : String) :
-    SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.UZDoom,
-        commandLineParams = commandLineParams) {
+                        allLibs: Array<String>) :
+    SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.UZDoom) {
 
     private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
 
@@ -52,10 +50,12 @@ class UZDoomEngineInfo (mainEngineLib: String,
             "UpdateHarmGLESVersion")
     }
 
-    private var enableLightShaders = false
+    private val enableLightShaders get() = preferencesStorage.enableLightShaders
 
     override val preferencesStorage by inject <UZDoomPreferenceStorage>(named(
         EngineTypes.UZDoom.toString()))
+
+    override val commandLineParams: String get() = preferencesStorage.uZDoomCommandLineArgsString
 
     override val pathToResource get() = preferencesStorage.pathToUZDoomIWadFile
 
@@ -125,7 +125,6 @@ class UZDoomEngineInfo (mainEngineLib: String,
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToUZDoomUserFolder, true)
-        enableLightShaders = preferencesStorage.enableLightShaders
     }
 
     override fun onNativeLibrariesLoaded() {

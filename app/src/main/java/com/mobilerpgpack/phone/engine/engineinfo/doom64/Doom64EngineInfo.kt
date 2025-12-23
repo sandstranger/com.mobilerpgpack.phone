@@ -16,10 +16,8 @@ import java.io.File
 
 open class Doom64EngineInfo(
     mainEngineLib: String,
-    allLibs: Array<String>,
-    commandLineParamsFlow : String) :
-    SDL3EngineInfo(mainEngineLib, allLibs,
-        EngineTypes.Doom64ExPlus,"",commandLineParamsFlow) {
+    allLibs: Array<String>) :
+    SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Doom64ExPlus) {
 
     private val screenResolutionArray = arrayOfNulls<Any?>(2)
 
@@ -36,6 +34,8 @@ open class Doom64EngineInfo(
         Function.getFunction(mainEngineLib,
             "RecalculateScreenResolution")
     }
+
+    override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString
 
     override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder
 
