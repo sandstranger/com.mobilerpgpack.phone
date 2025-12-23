@@ -131,6 +131,7 @@ abstract class Dpad(
             )) }
             val dpadDownCollection = rememberSaveable { dpadDownCollection }
             val dpadLeftCollection = rememberSaveable {dpadLeftCollection }
+            val dpadButtons = remember { dpadButtons }
 
             @Composable
             fun dpadButton(
