@@ -103,6 +103,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val blockTouchScreen by rememberSaveable(isEditMode,useTouchScreenInGamesMenu, mouseButtonsEventsCanBeInvoked, blockTouchEventsSaved) {
             mutableStateOf(isEditMode || blockTouchEventsSaved || (mouseButtonsEventsCanBeInvoked && !useTouchScreenInGamesMenu) )
         }
+        val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
+        val UNKNOWN_POINTER_ID = rememberSaveable { UNKNOWN_POINTER_ID }
 
         if ((isEditMode || blockTouchScreen) && trackedPointerId != UNKNOWN_POINTER_ID) {
             handlePointer(trackedPointerId, 0f, 0f, 0f,
