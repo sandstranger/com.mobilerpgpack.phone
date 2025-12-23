@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,7 +27,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_
 import org.koin.core.component.KoinComponent
 
 abstract class CustomSDLButton(
-    private val id: String,
+    id: String,
     engineType: EngineTypes,
     offsetXPercent: Float = 0f,
     offsetYPercent: Float = 0f,
@@ -64,8 +65,10 @@ abstract class CustomSDLButton(
         showInQuickPanelInitialState = showInQuickPanel)
 
     @Composable
-    final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) =
-        DrawView(modifier = Modifier.interactiveControlModifier(isEditMode, inGame),  id = id)
+    final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+        val viewState = remember { viewState }
+        DrawView(modifier = Modifier.interactiveControlModifier(isEditMode, inGame), id = viewState.id)
+    }
 
     private companion object {
         @Composable
