@@ -27,7 +27,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.qualifier.named
 
 abstract class ImageButton(
-    val id: String,
+    id: String,
     val engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
@@ -63,8 +63,9 @@ abstract class ImageButton(
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+        val viewState = remember { viewState }
         Image(painter = painterResource(id = viewState.buttonResId),
-            contentDescription = id,
+            contentDescription = viewState.id,
             modifier = Modifier.interactiveControlModifier(isEditMode, inGame)
         )
     }
@@ -81,6 +82,7 @@ abstract class ImageButton(
             return modifier
         }
 
+        val viewState = remember { viewState }
         val context = LocalContext.current
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString

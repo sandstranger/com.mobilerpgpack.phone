@@ -174,7 +174,7 @@ abstract class Dpad(
     @Composable
     private fun Modifier.commonDpadModifier(): Modifier {
         val modifier = this.fillMaxSize()
-
+        val viewState = remember { viewState }
         val preferencesStorage: PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
@@ -217,6 +217,7 @@ abstract class Dpad(
             return modifier
         }
 
+        val viewState = remember { viewState }
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
