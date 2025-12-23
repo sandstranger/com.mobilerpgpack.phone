@@ -10,7 +10,7 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
-class PerfectDarkEngineInfo  : SDL2EngineInfo
+class PerfectDarkEngineInfo : SDL2EngineInfo
     ("", emptyArray(), EngineTypes.PerfectDark) {
 
     private val pathToHomeDirectory = pathToRootUserFolder + File.separator +"perfect_dark"
@@ -77,6 +77,14 @@ class PerfectDarkEngineInfo  : SDL2EngineInfo
                     this += pathToSavesDirectory
                 }
 
+                if (!baseCommandLineArgs.contains(SKIP_INTROS_COMMAND) &&
+                    perfectDarkPreferencesStorage.skipIntroCutScenes){
+                    this += SKIP_INTROS_COMMAND
+                }
+
+                this += GL_VERSION_COMMAND
+                this + OPENGL_2_1_VERSION
+                
                 this.toTypedArray()
             }
         }
@@ -95,6 +103,9 @@ class PerfectDarkEngineInfo  : SDL2EngineInfo
     }
 
     private companion object{
+        private const val OPENGL_2_1_VERSION = "2.1"
+        private const val GL_VERSION_COMMAND = "--gl-version"
+        private const val SKIP_INTROS_COMMAND = "--skip-intro"
         private const val PORTABLE_COMMAND = "--portable"
         private const val ROM_FILE_COMMAND = "--rom-file"
         private const val BASE_DIR_COMMAND = "--basedir"
