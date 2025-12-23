@@ -77,17 +77,13 @@ import com.mobilerpgpack.phone.utils.keyCodeMap
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
-abstract class ScreenController : KoinComponent, IScreenController {
+abstract class ScreenController : IScreenController {
 
-    private val _activeViewsToDraw: MutableList<IScreenControlsView> by mutableStateOf(mutableListOf())
-
-    protected val preferencesStorage : PreferencesStorage = get ()
+    private val _activeViewsToDraw: MutableList<IScreenControlsView> = mutableListOf()
 
     final override val activeViewsToDraw: Collection<IScreenControlsView> get() = _activeViewsToDraw
 
@@ -105,6 +101,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         drawInSafeArea : Boolean,
         onBack: () -> Unit) {
 
+        val preferencesStorage : PreferencesStorage = koinInject()
         val onBackSaved = remember { onBack }
         val allowToEditControlsSaved = rememberSaveable(allowToEditControls) { allowToEditControls }
         val activeEngineSaved = rememberSaveable(activeEngine) {activeEngine}
@@ -128,7 +125,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val coroutineScope = rememberCoroutineScope()
 
         val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngineSaved) }
-        val viewsToDraw by remember { mutableStateOf(mutableMapOf<String, IScreenControlsView>()) }
+        val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by remember { mutableStateOf((!inGameSaved)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
