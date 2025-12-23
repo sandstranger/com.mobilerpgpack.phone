@@ -35,7 +35,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.qualifier.named
 
 abstract class SDLImageButton(
-    private val id: String,
+    id: String,
     engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
@@ -75,8 +75,9 @@ abstract class SDLImageButton(
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+        val viewState = remember { viewState }
         Image(painter = painterResource(id = viewState.buttonResId),
-            contentDescription = id,
+            contentDescription = viewState.id,
             modifier = Modifier.interactiveControlModifier(isEditMode, inGame))
     }
 
@@ -91,6 +92,7 @@ abstract class SDLImageButton(
             return modifierTouse
         }
 
+        val viewState = remember { viewState }
         var wasPressed by rememberSaveable {mutableStateOf(false) }
         var isPressed by rememberSaveable { mutableStateOf(false) }
 

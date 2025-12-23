@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,8 +37,10 @@ abstract class ToggleImageButton(id: String,
 
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+        val viewState = remember { viewState }
+        val isActive by remember (isActive) { mutableStateOf(isActive) }
         Image(painter = painterResource(id = viewState.buttonResId),
-            contentDescription = id,
+            contentDescription = viewState.id,
             modifier = Modifier.interactiveControlModifier(isEditMode, inGame).let{
                 if (isActive && !isEditMode && inGame)
                     it.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Yellow) } else it
