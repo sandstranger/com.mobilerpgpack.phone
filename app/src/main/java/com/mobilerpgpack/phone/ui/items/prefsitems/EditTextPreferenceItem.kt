@@ -20,6 +20,7 @@ fun EditTextPreferenceItem(
     keyboardType: KeyboardType = KeyboardType.Text,
     onValueChanged: ((String) -> Unit)? = null) {
     val preferencesStorage : PreferencesStorage = koinInject()
+    val key = rememberSaveable(key) { key }
     EditTextItem(title,value, hint, keyboardType = keyboardType){
         if (key.isNotEmpty()){
             preferencesStorage.setStringValue(key, it)
@@ -37,6 +38,7 @@ fun EditTextPreferenceItem(
     hint: String = "",
     onValueChanged: ((Float) -> Unit)? = null){
     val preferencesStorage : PreferencesStorage = koinInject()
+    val key = rememberSaveable(key) { key }
     val stringValue = rememberSaveable (value) { value.toString() }
     EditTextPreferenceItem(title, stringValue, "", hint, KeyboardType.Decimal){
         val newValue = it.toFloatOrNull() ?: 0f
@@ -56,6 +58,7 @@ fun EditTextPreferenceItem(
     hint: String = "",
     onValueChanged: ((Int) -> Unit)? = null){
     val preferencesStorage : PreferencesStorage = koinInject()
+    val key = rememberSaveable(key) { key }
     val stringValue = rememberSaveable (value) { value.toString() }
     EditTextPreferenceItem(title, stringValue, "", hint,KeyboardType.Number){
         val newValue = it.toIntOrNull() ?: 0
