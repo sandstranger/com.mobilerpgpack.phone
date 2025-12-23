@@ -31,7 +31,6 @@ import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 fun ListPreferenceItem(title: String,
                        initialValue: String,
                        entries : Collection<String>,
-                       updateForced : Boolean = false,
                        onValueChange : ((String) -> Unit)? = null){
     var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
     var activeValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
@@ -41,10 +40,6 @@ fun ListPreferenceItem(title: String,
     val surfaceContainerHighColor = getSurfaceContainerHighColor()
     val onBackgroundColor = getOnBackgroundColor()
     val radioButtonsColors = getRadioButtonsColors()
-
-    if (activeValue != initialValue && updateForced){
-        activeValue = initialValue
-    }
 
     Row(
         modifier = Modifier
