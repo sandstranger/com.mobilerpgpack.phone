@@ -310,8 +310,8 @@ abstract class ScreenController : IScreenController {
                         val renderOffsetY by remember (viewState.offsetYPercent,
                             screenHeightPx ) { mutableFloatStateOf(viewState.offsetYPercent * screenHeightPx) }
 
-                        val renderView by remember (viewState.isDeleted,viewState.showInQuickPanel,
-                                showScreenControls, showQuickPanelItems, isEditMode, inGameSaved) {
+                        val renderView by remember (viewState.isDeleted, viewState.viewRenderRule,
+                            viewState.showInQuickPanel, showScreenControls, showQuickPanelItems, isEditMode, inGameSaved) {
                             mutableStateOf(!viewState.isDeleted && (isEditMode || view.renderView)) }
 
                         if (renderView) {
