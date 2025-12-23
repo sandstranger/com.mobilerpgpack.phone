@@ -1,13 +1,23 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
+import com.mobilerpgpack.phone.utils.PreferencesStorage
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.qualifier.named
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
 
 class SDL2ScreenController : SDLScreenController() {
+
+    private val engineInfo by lazy {
+        with(get <PreferencesStorage>()){
+            get <IEngineInfo> (named(activeEngineString))
+        }
+    }
 
     override val viewWidth: Int get() = SDLSurface.fixedWidth
 

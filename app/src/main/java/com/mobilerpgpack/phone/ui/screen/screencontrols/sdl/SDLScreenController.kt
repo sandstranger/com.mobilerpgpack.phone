@@ -33,27 +33,22 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
+import org.koin.compose.koinInject
+import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
-abstract class SDLScreenController : ScreenController() {
+abstract class SDLScreenController : ScreenController(), KoinComponent {
 
     private val customViews : MutableMap<EngineTypes, MutableMap<ControlsType,Collection<IScreenControlsView>>> = mutableMapOf()
 
     protected abstract val viewWidth : Int
 
     protected abstract val viewHeight : Int
-
-    protected val engineInfo by lazy {
-        get <IEngineInfo> (named(preferencesStorage.activeEngineString))
-    }
-
-    private val alwaysUseTouchFullScreenMode by lazy {
-        preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.fullTouchFullScreenModeCanBeUsed
-    }
 
     @Composable
     final override fun DrawTouchScreen(blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
@@ -87,14 +82,19 @@ abstract class SDLScreenController : ScreenController() {
             return
         }
 
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val engineInfo : IEngineInfo = koinInject(named(preferencesStorage.activeEngineString))
         var mWidth by remember { mutableFloatStateOf(0.0f) }
         var mHeight by remember { mutableFloatStateOf(0.0f) }
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        val useTouchFullScreenMode by rememberSaveable(alwaysUseTouchFullScreenMode,mouseButtonsEventsCanBeInvoked) {
-            mutableStateOf(alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked) }
+        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvoked by rememberSaveable(mouseButtonsEventsCanBeInvokedFlow) { mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
+        val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
+            engineInfo.fullTouchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
+            mutableStateOf(preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.fullTouchFullScreenModeCanBeUsed &&
+                    !mouseButtonsEventsCanBeInvoked) }
         val blockTouchEventsSaved by rememberSaveable(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
         val useTouchScreenInGamesMenu by rememberSaveable(preferencesStorage.useTouchScreenInGamesMenu) {
@@ -212,8 +212,8 @@ abstract class SDLScreenController : ScreenController() {
                                             keyCode : Int, controlsProvider: ControlsProvider) : IScreenControlsView
 
     final override fun buildCustomViews(engineTypes: EngineTypes): Collection<IScreenControlsView> {
-        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineString
-            ))
+        val preferencesStorage : PreferencesStorage = get ()
+        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineString))
         return customViews.getOrPut(engineTypes) { mutableMapOf() }.run {
             getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes, controlsProvider)}
         }
