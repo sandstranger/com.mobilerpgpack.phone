@@ -69,7 +69,10 @@ fun DrawModsSupport(mods: ModsModel) {
                     }
                 }
 
-                if (!pathToModsFolder.value.isNullOrEmpty()) {
+                val pathToModsFolderSaved by remember (pathToModsFolder.value) {
+                    mutableStateOf(pathToModsFolder.value) }
+
+                if (!pathToModsFolderSaved.isNullOrEmpty()) {
                     Button( modifier = Modifier.padding(end = 4.dp), onClick = {
                         pathToModsFolder.value = ""
                         save()
@@ -103,6 +106,8 @@ fun DrawModsSupport(mods: ModsModel) {
             }
 
             DrawHorizontalDivider()
+
+            val modsCount by remember (modsCount) { mutableStateOf(modsCount) }
 
             if (modsCount > 0) {
                 DrawModsLazyColumn(mods)
@@ -158,9 +163,11 @@ private fun DrawModsLazyColumn(mods: ModsModel){
                                     save()
                                 }
                             }
+                            val pathToMod by remember (mod.pathToMod.value) {
+                                mutableStateOf(mod.pathToMod.value) }
 
                             Column {
-                                if (!mod.pathToMod.value.isNullOrEmpty()) {
+                                if (!pathToMod.isNullOrEmpty()) {
                                     Button(onClick = {
                                         mod.pathToMod.value = ""
                                         save()
