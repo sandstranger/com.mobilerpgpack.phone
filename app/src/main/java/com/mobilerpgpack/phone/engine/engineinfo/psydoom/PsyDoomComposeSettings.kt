@@ -26,16 +26,12 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
-
-    private val engineInfo : IEngineInfo by inject (named(EngineTypes.PsyDoom.toString()))
-
-    private val preferencesStorage: PsyDoomPreferencesStorage by inject(
-        named(EngineTypes.PsyDoom.toString()))
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
@@ -51,6 +47,8 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     @Composable
     private fun DrawPsyDoomCommonSettings(viewModel: PsyDoomComposeSettingsViewModel,
                                           navController: NavHostController) {
+        val engineInfo : IEngineInfo  = koinInject (named(EngineTypes.PsyDoom.name))
+        val preferencesStorage: PsyDoomPreferencesStorage = koinInject(named(EngineTypes.PsyDoom.name))
 
         DrawCommandLinePreferences(
             preferencesStorage.psyDoomCommandLineArgsString,
@@ -125,7 +123,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     @Composable
     private fun DrawLauncherSettings() {
-
+        val preferencesStorage: PsyDoomPreferencesStorage = koinInject(named(EngineTypes.PsyDoom.name))
         DrawTitleText(stringResource(R.string.psydoom_launcher_settings))
 
         SwitchPreferenceItem(
@@ -168,6 +166,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
     @Composable
     private fun DrawNetworkSettings() {
+        val preferencesStorage: PsyDoomPreferencesStorage = koinInject(named(EngineTypes.PsyDoom.name))
         DrawTitleText(stringResource(R.string.psydoom_network_settings_title))
 
         EditTextPreferenceItem(

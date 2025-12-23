@@ -22,20 +22,17 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
-    private val zDoomEngineInfo: IEngineInfo by inject(named(EngineTypes.UZDoom.toString()))
-
-    private val preferencesStorage: UZDoomPreferenceStorage by inject(
-        named(EngineTypes.UZDoom.toString())
-    )
-
     @Composable
     override fun DrawSettings(navController: NavHostController) {
+        val zDoomEngineInfo : IEngineInfo = koinInject(named(EngineTypes.UZDoom.name))
+        val preferencesStorage : UZDoomPreferenceStorage = koinInject(named(EngineTypes.UZDoom.name))
         val viewModel: UZDoomComposeSettingsViewModel = koinViewModel()
         val showView by rememberSaveable (viewModel.showView) {
             mutableStateOf(viewModel.showView) }
