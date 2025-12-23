@@ -29,8 +29,8 @@ inline fun <reified T : Enum<T>> EnumDropdown(
     initialValue: T? = null,
     crossinline onValueChange: (T) -> Unit = {}) {
     var expanded by rememberSaveable { mutableStateOf(false) }
-    var selectedValue by remember (initialValue) { mutableStateOf(initialValue) }
-    val enumValues = remember { enumValues<T>() }
+    var selectedValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
+    val enumValues = rememberSaveable { enumValues<T>() }
     val surfaceColor = getSurfaceColor()
 
     ExposedDropdownMenuBox(

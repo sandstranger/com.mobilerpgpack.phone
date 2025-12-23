@@ -25,7 +25,7 @@ fun CheckBox (title : String,
     Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(title, modifier = Modifier.wrapContentHeight(),
+        Text(title, modifier = Modifier.weight(0.9f).wrapContentHeight(),
             color = getOnSurfaceVariantColor(), textAlign = TextAlign.Left)
         Checkbox(
             checked = currentValue,
