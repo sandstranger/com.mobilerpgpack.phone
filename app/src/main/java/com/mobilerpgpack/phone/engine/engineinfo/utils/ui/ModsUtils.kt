@@ -15,6 +15,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -41,16 +45,19 @@ fun DrawModsSupport(mods: ModsModel) {
     mods.apply {
         DrawHorizontalDivider()
 
+        val enableModsSupport by rememberSaveable(this.enableModsSupport.value) {
+            mutableStateOf(enableModsSupport.value!!) }
+
         SwitchItem(
             stringResource(R.string.enable_separate_mods_support),
-            enableModsSupport.value!!
+            enableModsSupport
         ) {
-            enableModsSupport.value = it
+            this@apply.enableModsSupport.value = it
             save()
         }
         DrawHorizontalDivider()
 
-        if (enableModsSupport.value!!) {
+        if (enableModsSupport) {
             Row(verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                 Row (modifier = Modifier.weight(0.8f)) {
                     RequestPath(
@@ -120,63 +127,74 @@ private fun DrawModsLazyColumn(mods: ModsModel){
         }
     }
 
-    LazyColumn(modifier = Modifier
-        .heightIn(max = 300.dp)
-        .padding(top = 2.dp, bottom = 2.dp),
-        state = lazyListState,
-        verticalArrangement = Arrangement.spacedBy(5.dp),
-    ) {
-        itemsIndexed(mods.modsComposeCollection, key = { _, mod -> mod.key }) { _, mod ->
-            ReorderableItem(reorderableLazyListState, key = mod.key) {
-                Column {
-                    DrawHorizontalDivider()
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(modifier = Modifier.weight(0.88f)) {
-                            RequestPath(stringResource(R.string.path_to_mod),
-                                mod.pathToMod.value ?: "",
-                                requestMode = RequestPathMode.File,
-                                requiredFileExtensions = mods.allowedModsExtensions
-                            ) {
-                                mod.pathToMod.value = it
-                                mods.save()
-                            }
-                        }
+    mods.apply {
+        val modsCollection by remember(modsComposeCollection) {
+            mutableStateOf(modsComposeCollection)
+        }
 
-                        Column {
-                            if (!mod.pathToMod.value.isNullOrEmpty()) {
+        LazyColumn(
+            modifier = Modifier
+                .heightIn(max = 300.dp)
+                .padding(top = 2.dp, bottom = 2.dp),
+            state = lazyListState,
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            itemsIndexed(modsCollection, key = { _, mod -> mod.key }) { _, mod ->
+                ReorderableItem(reorderableLazyListState, key = mod.key) {
+                    Column {
+                        DrawHorizontalDivider()
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(modifier = Modifier.weight(0.88f)) {
+                                RequestPath(
+                                    stringResource(R.string.path_to_mod),
+                                    mod.pathToMod.value ?: "",
+                                    requestMode = RequestPathMode.File,
+                                    requiredFileExtensions = allowedModsExtensions
+                                ) {
+                                    mod.pathToMod.value = it
+                                    save()
+                                }
+                            }
+
+                            Column {
+                                if (!mod.pathToMod.value.isNullOrEmpty()) {
+                                    Button(onClick = {
+                                        mod.pathToMod.value = ""
+                                        save()
+                                    }, colors = buttonsColors) {
+                                        Text(
+                                            text = stringResource(R.string.clear),
+                                            textAlign = TextAlign.Center,
+                                            color = onPrimaryColor
+                                        )
+                                    }
+                                }
+
                                 Button(onClick = {
-                                    mod.pathToMod.value = ""
-                                    mods.save() }, colors = buttonsColors) {
+                                    this@apply.mods -= mod
+                                    --modsCount
+                                    updateComposeModsList()
+                                    save()
+                                }, colors = buttonsColors) {
                                     Text(
-                                        text = stringResource(R.string.clear),
+                                        text = stringResource(R.string.delete),
                                         textAlign = TextAlign.Center,
                                         color = onPrimaryColor
                                     )
                                 }
                             }
 
-                            Button(onClick = {
-                                mods.mods -=mod
-                                --mods.modsCount
-                                mods.updateComposeModsList()
-                                mods.save() }, colors = buttonsColors) {
-                                Text(
-                                    text = stringResource(R.string.delete),
-                                    textAlign = TextAlign.Center,
-                                    color = onPrimaryColor
-                                )
-                            }
+                            Icon(
+                                modifier = Modifier
+                                    .draggableHandle()
+                                    .weight(0.12f),
+                                imageVector = Icons.Default.DragHandle,
+                                contentDescription = null,
+                                tint = onBackgroundColor,
+                            )
                         }
-
-                        Icon(modifier = Modifier
-                            .draggableHandle()
-                            .weight(0.12f),
-                            imageVector = Icons.Default.DragHandle,
-                            contentDescription = null,
-                            tint = onBackgroundColor,
-                        )
+                        DrawHorizontalDivider()
                     }
-                    DrawHorizontalDivider()
                 }
             }
         }

@@ -20,6 +20,9 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRPGSeriesEngi
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomCheatsSettingsScreen
@@ -106,6 +109,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.createdAtStart
 import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
@@ -449,7 +453,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 named(EngineTypes.UZDoom.toString())
                 bind<IEngineUIController>()
             }
-        viewModelOf(::UZDoomComposeSettingsViewModel)
+
+        viewModel { UZDoomComposeSettingsViewModel().also { it.initialize() } }
         singleOf(::UZDoomMoreSettingsScreen).bind()
 
         single<UZDoomModsModel> { ModsFilesUpdater(UZDoomModsModel.load()).updateFiles() }.withOptions {
@@ -507,16 +512,43 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 inputSettings, audioSettings,cheatsSettings,multiplayerSettings)
         }.withOptions { bind<Collection<SettingScreen>>() }
 
-        viewModelOf(::PsyDoomComposeSettingsViewModel)
+        viewModel { PsyDoomComposeSettingsViewModel().also { it.initialize() } }
         singleOf(::PsyDoomMoreSettingsScreen).bind()
         single <ModsModel> { ModsFilesUpdater( PsyDoomModsModel.load()).updateFiles() }.withOptions {
             named(EngineTypes.PsyDoom.toString())
         }
     }
 
+    private val perfectDarkKoinModule = module{
+        single { PerfectDarkPreferencesStorage() }.withOptions {
+            named(EngineTypes.PerfectDark.name)
+            bind<PerfectDarkPreferencesStorage>()
+        }
+
+        single<ControlsProvider> { ControlsProvider(EngineTypes.PerfectDark, hashMapOf(
+            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControls,
+            ControlsType.OnScreenStick to psyDoomOnScreenStickControls)) }.withOptions {
+            named(EngineTypes.PerfectDark.name) }
+
+        singleOf(::PerfectDarkComposeSettings).withOptions {
+            named(EngineTypes.PerfectDark.name)
+            bind<IEngineUIController>()
+        }
+
+        single {
+            val preferencesStorage : PerfectDarkPreferencesStorage = get (
+                named(EngineTypes.PerfectDark.name))
+            PerfectDarkEngineInfo("")
+        }.withOptions {
+            named(EngineTypes.PerfectDark.toString())
+            bind<IEngineInfo>()
+        }
+    }
+
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
-            composeModule, doomRpgSeriesModule, doom64RegisterModule, psyDoomRegisterModule,uZDoomRegisterModule)
+            composeModule, doomRpgSeriesModule, doom64RegisterModule,
+            psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule)
     }
 
     private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {
