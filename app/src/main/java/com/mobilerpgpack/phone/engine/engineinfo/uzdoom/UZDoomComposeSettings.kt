@@ -66,10 +66,12 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
+        val stringCollection = rememberSaveable { UZDoomGLESVersion.stringCollection }
+
         ListPreferenceItem(
             stringResource(R.string.uzdoom_rendering_gles_version),
             preferencesStorage.uzDoomGLESVersion,
-            UZDoomGLESVersion.stringCollection
+            stringCollection
         ) {
             preferencesStorage.setStringValue(preferencesStorage.uzDoomGLESVersionPrefsKey, it)
         }
