@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.utils
 import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsRepository
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.floatPreferencesKey
@@ -123,6 +124,8 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
 
     fun setPathToDoomRpgZipFile(valueToSave: String) =
         setStringValue(pathToDoomRpgZipFilePrefsKey, valueToSave)
+
+    fun getClampButtonsValue (key : Key<Boolean>, defaultValue : Boolean = true) = getBooleanValue( key, defaultValue)
 
     fun getUseDarkThemeValue() = getBooleanValue(useDarkThemePrefsKey)
 

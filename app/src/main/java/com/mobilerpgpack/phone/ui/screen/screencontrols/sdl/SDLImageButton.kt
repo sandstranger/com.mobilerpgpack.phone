@@ -8,6 +8,7 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -113,9 +114,12 @@ abstract class SDLImageButton(
         val consumeTouchEvents by remember (viewState.consumeTouchEvents)
         { mutableStateOf(viewState.consumeTouchEvents) }
         val useViewAsToggle by remember (viewState.useViewAsToggle) { mutableStateOf(viewState.useViewAsToggle) }
-        val sdlKeyCode by remember (viewState.sdlKeyCode) { mutableStateOf(viewState.sdlKeyCode) }
+        val sdlKeyCode by remember (viewState.sdlKeyCode) { mutableIntStateOf(viewState.sdlKeyCode) }
+        val colorFilterToUse by remember (isPressed, isEditMode, useViewAsToggle) { mutableStateOf(
+            ColorFilter.tint(if (isPressed && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
+        ) }
 
-        return with(modifierTouse.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
+        return modifierTouse.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
                 if (isEditMode) {
                     return@pointerInput
                 }
@@ -152,9 +156,6 @@ abstract class SDLImageButton(
                             onTouchUp(sdlKeyCode)
                     }
                 }
-            }){
-            if (isPressed && !isEditMode && useViewAsToggle)
-                this.graphicsLayer { colorFilter = ColorFilter.tint(color = Color.Yellow) } else this
-        }
+            }.graphicsLayer { colorFilter = colorFilterToUse }
     }
 }

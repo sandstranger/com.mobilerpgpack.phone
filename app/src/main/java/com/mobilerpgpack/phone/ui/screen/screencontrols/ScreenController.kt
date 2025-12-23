@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
@@ -120,21 +121,25 @@ abstract class ScreenController : IScreenController {
 
         val activity = LocalActivity.current!!
         val configuration = LocalConfiguration.current
+        val rootView = remember { activity.window.decorView.rootView }
         val density = remember (activity.resources.displayMetrics.density) {
             activity.resources.displayMetrics.density }
-        val coroutineScope = rememberCoroutineScope()
-
         val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngineSaved) }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by remember { mutableStateOf((!inGameSaved)) }
-        var backgroundColor by remember { mutableStateOf(Color.Transparent) }
+        val backgroundColor by remember (inGameSaved, isEditMode) {
+            mutableStateOf(if (!inGameSaved) {
+                Color.DarkGray
+            } else {
+                if (isEditMode) transparentDarkColor else Color.Transparent
+            }) }
         var readyToDrawControls by remember { mutableStateOf(false) }
-        val clampButtons = preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true)
-        var allContentLoaded by remember { mutableStateOf(false) }
-
-        var screenWidthPx by remember { mutableFloatStateOf(0f) }
-        var screenHeightPx by remember { mutableFloatStateOf(0f) }
+        var clampButtons by rememberSaveable {
+            mutableStateOf(preferencesStorage.getClampButtonsValue(clampButtonsPrefsKey))
+        }
+        var screenWidthPx by remember { mutableFloatStateOf(configuration.screenWidthDp * density) }
+        var screenHeightPx by remember { mutableFloatStateOf(configuration.screenHeightDp * density) }
 
         fun clampView(state: ViewState, clampForced : Boolean = false) {
             if (clampButtons || clampForced) {
@@ -164,10 +169,12 @@ abstract class ScreenController : IScreenController {
             }
         }
 
-        activeViewsToDraw.forEach { it.screenController = this }
+        if (!readyToDrawControls) {
+            activeViewsToDraw.forEach { it.screenController = this }
+        }
 
         if (drawInSafeAreaSaved) {
-            activity.window.decorView.rootView.apply {
+            rootView.apply {
                 DisposableEffect(this) {
                     val listener = ViewTreeObserver.OnGlobalLayoutListener {
                         val insets = ViewCompat.getRootWindowInsets(this@apply)!!
@@ -181,8 +188,7 @@ abstract class ScreenController : IScreenController {
                         screenHeightPx =
                             (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
 
-                        if (!allContentLoaded) {
-                            allContentLoaded = true
+                        if (!readyToDrawControls) {
                             preloadButtons()
                             readyToDrawControls = true
                         }
@@ -195,16 +201,10 @@ abstract class ScreenController : IScreenController {
             }
         }
         else{
-            screenWidthPx = configuration.screenWidthDp * density
-            screenHeightPx = configuration.screenHeightDp * density
-            preloadButtons()
-            readyToDrawControls = true
-        }
-
-        backgroundColor = if (!inGameSaved) {
-            Color.DarkGray
-        } else {
-            if (isEditMode) transparentDarkColor else Color.Transparent
+            if (!readyToDrawControls) {
+                preloadButtons()
+                readyToDrawControls = true
+            }
         }
 
         DrawTouchScreen(activeEngineSaved,blockTouchCameraEvents,
@@ -254,18 +254,17 @@ abstract class ScreenController : IScreenController {
                         },
                         onReset = {
                             selectedButtonId = null
-                            coroutineScope.launch {
-                                preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
-                                viewsToDraw.values.forEach { view ->
-                                    view.viewState.apply {
-                                        val wasDeletedBeforeReset = isDeleted
-                                        resetToDefaults()
-                                        if (!isDeleted) {
-                                            clampView(this)
-                                        }
-                                        if (!wasDeletedBeforeReset || !isDeleted) {
-                                            save()
-                                        }
+                            preferencesStorage.setBooleanValue(clampButtonsPrefsKey, true)
+                            clampButtons = true
+                            viewsToDraw.values.forEach { view ->
+                                view.viewState.apply {
+                                    val wasDeletedBeforeReset = isDeleted
+                                    resetToDefaults()
+                                    if (!isDeleted) {
+                                        clampView(this, true)
+                                    }
+                                    if (!wasDeletedBeforeReset || !isDeleted) {
+                                        save()
                                     }
                                 }
                             }
@@ -289,23 +288,33 @@ abstract class ScreenController : IScreenController {
                                 .alpha(0.5f)
                                 .minimumInteractiveComponentSize()
                                 .padding(8.dp)
-                                .clickable(indication = null,
+                                .clickable(
+                                    indication = null,
                                     interactionSource = null
-                                ){
+                                ) {
                                     isEditMode = !isEditMode
                                 }
                         )
                     }
 
                     viewsToDraw.forEach { (id, view) ->
+                        val id = remember (id){ id }
+                        val view = remember (view) { view }
+                        val viewState = remember (view.viewState) { view.viewState }
+                        val sizePx: Float by remember (screenWidthPx,viewState.sizePercent ) {
+                            mutableFloatStateOf(screenWidthPx * view.viewState.sizePercent) }
+                        val sizeDp: Dp by remember (sizePx, density) {
+                            mutableStateOf( (sizePx / density).dp) }
 
-                        val sizePx: Float = screenWidthPx * view.viewState.sizePercent
-                        val sizeDp: Dp = (sizePx / density).dp
+                        val renderOffsetX by remember (viewState.offsetXPercent,screenWidthPx) {
+                            mutableFloatStateOf(viewState.offsetXPercent * screenWidthPx)
+                        }
+                        val renderOffsetY by remember (viewState.offsetYPercent,
+                            screenHeightPx ) { mutableFloatStateOf(viewState.offsetYPercent * screenHeightPx) }
 
-                        val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
-                        val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
-
-                        val renderView = !view.viewState.isDeleted && (isEditMode || view.renderView)
+                        val renderView by remember (viewState.isDeleted,viewState.showInQuickPanel,
+                                showScreenControls, showQuickPanelItems, isEditMode, inGameSaved) {
+                            mutableStateOf(!viewState.isDeleted && (isEditMode || view.renderView)) }
 
                         if (renderView) {
                             DrawView(
@@ -321,6 +330,7 @@ abstract class ScreenController : IScreenController {
                                             clampButtonsPrefsKey,
                                             false
                                         )
+                                        clampButtons = false
                                     }
                                 },
                                 onDragEnd = { newX, newY ->
@@ -358,7 +368,14 @@ abstract class ScreenController : IScreenController {
         isSelected: Boolean,
         onClick: () -> Unit,
         onDragEnd: (x: Float, y: Float) -> Unit) {
-        var position by remember(viewToDraw.viewState.id) { mutableStateOf(offset) }
+        val viewToDraw = remember (viewToDraw){ viewToDraw }
+        val viewState = remember (viewToDraw.viewState){ viewToDraw.viewState }
+        var position by remember(viewState.id) { mutableStateOf(offset) }
+        val intOffset by remember (viewState.id, position){ mutableStateOf(IntOffset(position.x.roundToInt(),
+            position.y.roundToInt())) }
+        val alpha by remember (viewState.alpha){ mutableFloatStateOf(viewState.alpha) }
+        val color by remember (isSelected, isEditMode){ mutableStateOf(if (isSelected && isEditMode) selectedViewBackgroundColor
+        else Color.Transparent) }
 
         LaunchedEffect(offset) {
             position = offset
@@ -366,15 +383,11 @@ abstract class ScreenController : IScreenController {
 
         Box(
             modifier = Modifier
-                .offset { IntOffset(position.x.roundToInt(), position.y.roundToInt()) }
+                .offset { intOffset }
                 .size(sizeDp)
                 .minimumInteractiveComponentSize()
-                .alpha(viewToDraw.viewState.alpha)
-                .background(
-                    if (isSelected && isEditMode) selectedViewBackgroundColor
-                    else Color.Transparent,
-                    RoundedCornerShape(8.dp)
-                )
+                .alpha(alpha)
+                .background(color, RoundedCornerShape(8.dp))
                 .pointerInput(isEditMode, isSelected) {
                     if (!isEditMode) {
                         return@pointerInput
@@ -399,7 +412,7 @@ abstract class ScreenController : IScreenController {
                     )
                 }
                 .pointerInput(isEditMode, isSelected) {
-                    if (!isEditMode){
+                    if (!isEditMode) {
                         return@pointerInput
                     }
                     awaitPointerEventScope {
@@ -558,9 +571,13 @@ abstract class ScreenController : IScreenController {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Box(modifier = Modifier.size(50.dp)
-                            .background(Color.Transparent,
-                                RoundedCornerShape(8.dp)).graphicsLayer {
+                        Box(modifier = Modifier
+                            .size(50.dp)
+                            .background(
+                                Color.Transparent,
+                                RoundedCornerShape(8.dp)
+                            )
+                            .graphicsLayer {
                                 colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                             }, contentAlignment = Alignment.Center){
                             viewToEdit.DrawView(isEditMode = false, false, 50.dp)
@@ -637,7 +654,10 @@ abstract class ScreenController : IScreenController {
                                     Text( modifier = Modifier.wrapContentHeight(), text = stringResource(R.string.selected_key_code),
                                         color = onSurfaceVariantColor)
 
-                                    Text(modifier = Modifier.widthIn(min = 100.dp).wrapContentHeight().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
+                                    Text(modifier = Modifier
+                                        .widthIn(min = 100.dp)
+                                        .wrapContentHeight()
+                                        .clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
                                         text = keyCodeMap[sdlKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
                                 }
                             }
@@ -724,10 +744,13 @@ abstract class ScreenController : IScreenController {
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(modifier = Modifier.size(40.dp)
-                                    .background(
-                                        Color.Transparent,
-                                        RoundedCornerShape(8.dp)).graphicsLayer {
+                            Box(modifier = Modifier
+                                .size(40.dp)
+                                .background(
+                                    Color.Transparent,
+                                    RoundedCornerShape(8.dp)
+                                )
+                                .graphicsLayer {
                                     colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                                 }, contentAlignment = Alignment.Center){
                                         view.DrawView(isEditMode = false, false, 40.dp)
