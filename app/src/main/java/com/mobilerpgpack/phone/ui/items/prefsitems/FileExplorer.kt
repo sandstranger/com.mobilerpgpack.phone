@@ -34,6 +34,7 @@ fun RequestPath(explorerItemTitle: String,
     val activity = LocalActivity.current!!
     var showErrorDialogBox by rememberSaveable { mutableStateOf(false) }
     var errorMessageToShow by rememberSaveable { mutableStateOf("")}
+    val key = remember (key) { key }
     var currentPath by rememberSaveable(previousSavedPath)
     {
         mutableStateOf(previousSavedPath)
