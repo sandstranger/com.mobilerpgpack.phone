@@ -1,6 +1,10 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doom64
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -38,13 +42,17 @@ class Doom64ComposeSettings () :
 
         DrawModsSupport(modsModel)
 
-        val enableDoom64Mods = preferencesStorage.enableDoom64Mods
+        var enableDoom64Mods by rememberSaveable(preferencesStorage.enableDoom64Mods) {
+            mutableStateOf(preferencesStorage.enableDoom64Mods)
+        }
 
         SwitchPreferenceItem(
             stringResource(R.string.enable_doom64_mods),
             initialValue = enableDoom64Mods,
             preferencesStorage.enableDoom64ModsPrefsKey.name
-        )
+        ){
+            enableDoom64Mods = it
+        }
 
         val previousPathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder
 

@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -67,14 +68,19 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawModsSupport(viewModel.modsModel)
 
+        var enablePsyDoomMods by rememberSaveable(preferencesStorage.enablePsyDoomMods) {
+            mutableStateOf(preferencesStorage.enablePsyDoomMods)
+        }
+
         SwitchPreferenceItem(
             stringResource(R.string.enable_psydoom_mods),
-             preferencesStorage.enablePsyDoomMods,
-            preferencesStorage.enablePsyDoomModsPrefsKey.name)
+            enablePsyDoomMods,
+            preferencesStorage.enablePsyDoomModsPrefsKey.name){
+            enablePsyDoomMods = it
+        }
 
         DrawHorizontalDivider()
 
-        val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods
         if (enablePsyDoomMods) {
             RequestPath(
                 stringResource(R.string.path_to_psydoom_mods_folder),
