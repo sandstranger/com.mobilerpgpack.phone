@@ -20,6 +20,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -322,7 +323,8 @@ abstract class EngineInfo(
                             }
                         }
                         showKeyboardUiOverlay.setContent {
-                            val showOnlyVirtualKeyboardButton = hideScreenControls && alwaysShowKeyboardButton
+                            val showOnlyVirtualKeyboardButton = rememberSaveable {
+                                hideScreenControls && alwaysShowKeyboardButton }
 
                             Theme {
                                 Box(modifier = Modifier.fillMaxSize()) {
