@@ -539,7 +539,7 @@ abstract class ScreenController : IScreenController {
         val keyCodeMap = remember { keyCodeMap }
         val keyCodesToDraw = remember (keyCodeMap) { keyCodeMap.toList() }
         val scrollState = rememberScrollState()
-        val viewState = remember { viewToEdit.viewState }
+        val viewState = remember (viewToEdit.viewState) { viewToEdit.viewState }
 
         AlertDialog(containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
@@ -665,7 +665,7 @@ abstract class ScreenController : IScreenController {
                         verticalArrangement = Arrangement.spacedBy(8.dp))
                     {
                         itemsIndexed(keyCodesToDraw, key = { _, pair -> pair.second.keyCode }) { _, pair ->
-                            val pair = remember { pair }
+                            val pair = remember (pair) { pair }
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -717,8 +717,8 @@ abstract class ScreenController : IScreenController {
                     itemsIndexed(itemsToDraw, key = { _, view ->
                         view.viewState.id
                     }) { _, view ->
-                        val viewState = remember { view.viewState }
-                        val view = remember { view }
+                        val view = remember (view) { view }
+                        val viewState = remember (view.viewState)  { view.viewState }
                         Row(
                             modifier = Modifier.clickable { onViewSelected(view) },
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
