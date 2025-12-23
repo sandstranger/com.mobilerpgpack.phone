@@ -56,8 +56,8 @@ abstract class SDLScreenController : ScreenController() {
     }
 
     @Composable
-    final override fun DrawTouchCamera(blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
-                                       isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
+    final override fun DrawTouchScreen(blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
+                                       isEditMode: Boolean, inGame: Boolean, content: @Composable () -> Unit) {
 
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
 

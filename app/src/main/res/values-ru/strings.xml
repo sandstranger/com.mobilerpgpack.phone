@@ -6,7 +6,7 @@
     <string name="bytes_text">байт</string>
     <string name="use_floating_start_game_button">Использовать плавающую кнопку старта игры</string>
     <string name="use_touchscreen_in_games_menu">Включить тачскрин в меню игр</string>
-    <string name="fullscreen_touch_mode">Использовать полноэкранный сенсорный режим при кастомном соотношении сторон экрана</string>
+    <string name="fullscreen_touch_mode">Использовать тачскрин во весь экран при кастомном соотношении сторон экрана</string>
     <string name="unknown_size">Неизвестный размер</string>
     <string name="nllb200_translate_description">Модель машинного перевода, поддерживающая 200 языков (только для высокопроизводительных устройств с большим объемом оперативной памяти)</string>
     <string name="bing_translate_description">Основан на онлайн-переводчике Bing. Нестабилен. Может быть забанен в любой момент</string>

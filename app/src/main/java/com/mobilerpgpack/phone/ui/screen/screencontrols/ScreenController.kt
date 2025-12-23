@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -38,10 +37,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,18 +52,15 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.getButtonsColors
@@ -109,8 +105,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
         drawInSafeArea : Boolean,
         onBack: () -> Unit) {
 
-        val controlsProvider : ControlsProvider = koinInject(named(activeEngine.name))
-        val customViews = remember { buildCustomViews(activeEngine) }
+        val onBackSaved = remember { onBack }
+        val allowToEditControlsSaved = rememberSaveable(allowToEditControls) { allowToEditControls }
+        val activeEngineSaved = rememberSaveable(activeEngine) {activeEngine}
+        val drawInSafeAreaSaved = rememberSaveable(drawInSafeArea) { drawInSafeArea }
+        val inGameSaved = rememberSaveable(inGame) { inGame }
+        val controlsProvider : ControlsProvider = koinInject(named(activeEngineSaved.name))
+        val customViews = remember { buildCustomViews(activeEngineSaved) }
         val commonsViewsToDraw = remember { controlsProvider.controlsToDraw }
         val activeViewsToDraw = remember {
             _activeViewsToDraw.apply {
@@ -126,10 +127,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
             activity.resources.displayMetrics.density }
         val coroutineScope = rememberCoroutineScope()
 
-        val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngine) }
+        val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngineSaved) }
         val viewsToDraw by remember { mutableStateOf(mutableMapOf<String, IScreenControlsView>()) }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
-        var isEditMode by remember { mutableStateOf((!inGame)) }
+        var isEditMode by remember { mutableStateOf((!inGameSaved)) }
         var backgroundColor by remember { mutableStateOf(Color.Transparent) }
         var readyToDrawControls by remember { mutableStateOf(false) }
         val clampButtons = preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true)
@@ -168,7 +169,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         activeViewsToDraw.forEach { it.screenController = this }
 
-        if (drawInSafeArea) {
+        if (drawInSafeAreaSaved) {
             activity.window.decorView.rootView.apply {
                 DisposableEffect(this) {
                     val listener = ViewTreeObserver.OnGlobalLayoutListener {
@@ -203,13 +204,13 @@ abstract class ScreenController : KoinComponent, IScreenController {
             readyToDrawControls = true
         }
 
-        backgroundColor = if (!inGame) {
+        backgroundColor = if (!inGameSaved) {
             Color.DarkGray
         } else {
             if (isEditMode) transparentDarkColor else Color.Transparent
         }
 
-        DrawTouchCamera(blockTouchCameraEvents,drawInSafeArea,isEditMode, inGame) {
+        DrawTouchScreen(blockTouchCameraEvents,drawInSafeAreaSaved,isEditMode, inGameSaved) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -218,7 +219,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 if (isEditMode) {
                     EditControls(
                         selectedButtonId,
-                        inGame,
+                        inGameSaved,
                         onAlphaChange = { delta ->
                             selectedButtonId?.let { id ->
                                 viewsToDraw[id]!!.viewState.apply {
@@ -273,14 +274,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         },
                         onBack = {
                             selectedButtonId = null
-                            onBack()
+                            onBackSaved()
                         },
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
                 if (readyToDrawControls) {
-                    if (inGame && allowToEditControls) {
+                    if (inGameSaved && allowToEditControlsSaved) {
                         Image(
                             painter = painterResource(R.drawable.cog),
                             contentDescription = "settings_button",
@@ -331,7 +332,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                         save()
                                     }
                                 },
-                                inGame = inGame,
+                                inGame = inGameSaved,
                             )
                         }
                     }
@@ -341,7 +342,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
     }
 
     @Composable
-    protected abstract fun DrawTouchCamera(blockTouchCameraEvents: Boolean,
+    protected abstract fun DrawTouchScreen(blockTouchCameraEvents: Boolean,
                                            inSafeArea : Boolean,
                                            isEditMode: Boolean, inGame: Boolean,
                                            content: @Composable () -> Unit)
