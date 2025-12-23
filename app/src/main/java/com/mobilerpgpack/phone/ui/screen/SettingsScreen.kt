@@ -52,17 +52,18 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     private var useFloatingStartGameButton by mutableStateOf(true)
 
-    private val preferencesStorage : PreferencesStorage = get ()
-
     override val drawFloatingActionButton: Boolean get() = useFloatingStartGameButton
 
     init {
-        useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton
+        with(get<PreferencesStorage>()){
+            this@SettingsScreen.useFloatingStartGameButton = useFloatingStartGameButton
+        }
     }
 
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val activity = LocalActivity.current!!
+        val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
 
         val activeEngine = rememberSaveable(activeEngineString) {
@@ -140,6 +141,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
     @Composable
     private fun DrawCommonSettings(activeEngine: EngineTypes,
         viewModel: SettingsScreenViewModel, navController: NavHostController) {
+        val preferencesStorage : PreferencesStorage = koinInject()
         DrawTitleText(stringResource(R.string.common_settings))
 
         ListPreferenceItem(
@@ -190,6 +192,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     private fun DrawGraphicsSettings() {
+        val preferencesStorage : PreferencesStorage = koinInject()
 
         DrawTitleText(stringResource(R.string.graphics_settings))
         val customScreenResolution = preferencesStorage.customScreenResolution
@@ -232,6 +235,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     private fun DrawEditScreenControlsSettings (){
+        val preferencesStorage : PreferencesStorage = koinInject()
         val activity = LocalActivity.current!!
         val engineState = preferencesStorage.activeEngineString
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState) }
@@ -312,6 +316,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     private fun DrawMouseCustomCursorSettings (){
+        val preferencesStorage : PreferencesStorage = koinInject()
 
         SwitchPreferenceItem(
             stringResource(R.string.show_custom_mouse_cursor),

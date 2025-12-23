@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,9 +28,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.component.inject
 
 class MainActivity : ComponentActivity(), KoinComponent {
     private val scope = CoroutineScope(Dispatchers.Main)
@@ -54,20 +55,18 @@ class MainActivity : ComponentActivity(), KoinComponent {
     }
 
     private fun buildScreens() {
-        val settingsScreen: SettingsScreen by inject()
-        val permissionScreen: PermissionScreen by inject()
-        val psyDoomSettingsScreens by inject<Collection<SettingScreen>>()
-        val moreUZDoomSettingsScreen by inject<UZDoomMoreSettingsScreen>()
-
-        val startScreen: String = if (this@MainActivity.isExternalStoragePermissionGranted())
-            settingsScreen.route else permissionScreen.route
-
         setContent {
-            SetupSystemBars()
+            val settingsScreen: SettingsScreen = koinInject()
+            val permissionScreen: PermissionScreen = koinInject()
+            val psyDoomSettingsScreens = koinInject<Collection<SettingScreen>>()
+            val moreUZDoomSettingsScreen = koinInject<UZDoomMoreSettingsScreen>()
+            val startScreen: String = remember { if (this@MainActivity.isExternalStoragePermissionGranted())
+                settingsScreen.route else permissionScreen.route }
             val navController = rememberNavController()
             val backgroundColor = getBackgroundColor()
 
             Theme {
+                SetupSystemBars()
                 NavHost(
                     modifier = Modifier
                         .fillMaxSize()

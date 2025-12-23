@@ -8,29 +8,22 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
-import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 class Doom64ComposeSettings () :
     KoinComponent, IEngineUIController {
 
-    private val scope : CoroutineScope by inject(named(KoinModulesProvider.COROUTINES_SCOPE))
-
-    private val preferencesStorage : PreferencesStorage by inject()
-
-    private val modsModel : ModsModel by inject (named(EngineTypes.Doom64ExPlus.toString()))
-
     @Composable
     override fun DrawSettings(navController: NavHostController) {
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val modsModel : ModsModel = koinInject (named(EngineTypes.Doom64ExPlus.name))
         val previousPathToDoom64WadsFolder = preferencesStorage.pathToDoom64MainWadsFolder
         DrawCommandLinePreferences(preferencesStorage.doom64CommandLineArgsString,
             preferencesStorage.doom64CommandLineArgsStringPrefsKey.name)
