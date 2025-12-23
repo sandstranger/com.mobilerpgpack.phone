@@ -374,6 +374,7 @@ abstract class ScreenController : IScreenController {
         val alpha by remember (viewState.alpha){ mutableFloatStateOf(viewState.alpha) }
         val color by remember (isSelected, isEditMode){ mutableStateOf(if (isSelected && isEditMode) selectedViewBackgroundColor
         else Color.Transparent) }
+        val shape = remember { RoundedCornerShape(8.dp) }
 
         LaunchedEffect(offset) {
             position = offset
@@ -385,7 +386,7 @@ abstract class ScreenController : IScreenController {
                 .size(sizeDp)
                 .minimumInteractiveComponentSize()
                 .alpha(alpha)
-                .background(color, RoundedCornerShape(8.dp))
+                .background(color, shape)
                 .pointerInput(isEditMode, isSelected) {
                     if (!isEditMode) {
                         return@pointerInput
@@ -442,13 +443,14 @@ abstract class ScreenController : IScreenController {
     ) {
         val onPrimaryColor = getOnPrimaryColor()
         val buttonColors = getButtonsColors()
+        val shape = remember { RoundedCornerShape(5.dp) }
         CompositionLocalProvider(LocalContentColor provides onPrimaryColor){
             var showCustomViewsEditor by remember { mutableStateOf(false) }
             var showViewEditor by remember { mutableStateOf(false) }
 
             Column(
                 modifier = modifier
-                    .background(Color.Gray.copy(alpha = 0.6f), RoundedCornerShape(5.dp))
+                    .background(Color.Gray.copy(alpha = 0.6f), shape)
                     .padding(2.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -551,6 +553,7 @@ abstract class ScreenController : IScreenController {
         val keyCodesToDraw = remember (keyCodeMap) { keyCodeMap.toList() }
         val scrollState = rememberScrollState()
         val viewState = remember (viewToEdit.viewState) { viewToEdit.viewState }
+        val color = remember { Color.Transparent }
 
         AlertDialog(containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
@@ -571,10 +574,7 @@ abstract class ScreenController : IScreenController {
                     ) {
                         Box(modifier = Modifier
                             .size(50.dp)
-                            .background(
-                                Color.Transparent,
-                                RoundedCornerShape(8.dp)
-                            )
+                            .background(color)
                             .graphicsLayer {
                                 colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                             }, contentAlignment = Alignment.Center){
@@ -714,6 +714,7 @@ abstract class ScreenController : IScreenController {
         val onSurfaceColor = getOnSurfaceColor()
         val primaryColor = getPrimaryColor()
         val surfaceContainerHighColor = getSurfaceContainerHighColor()
+        val color = remember { Color.Transparent }
 
         AlertDialog(
             modifier = Modifier.fillMaxSize(),
@@ -744,10 +745,7 @@ abstract class ScreenController : IScreenController {
                         ) {
                             Box(modifier = Modifier
                                 .size(40.dp)
-                                .background(
-                                    Color.Transparent,
-                                    RoundedCornerShape(8.dp)
-                                )
+                                .background(color)
                                 .graphicsLayer {
                                     colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                                 }, contentAlignment = Alignment.Center){
