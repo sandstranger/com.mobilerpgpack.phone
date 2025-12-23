@@ -23,6 +23,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgCom
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkRomTypes
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomCheatsSettingsScreen
@@ -36,7 +37,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettingsV
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsFilesUpdater
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsFilesUpdater.Companion.updateFiles
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
@@ -366,6 +367,26 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     private val doom64RegisterModule = module {
+        single { arrayOf(gl4esLibraryName,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomTypes.NTSC.mainLibraryName,
+            ) }.withOptions {
+            named(PerfectDarkRomTypes.NTSC.name)
+        }
+
+        single { arrayOf(gl4esLibraryName,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomTypes.PAL.mainLibraryName,
+            ) }.withOptions {
+            named(PerfectDarkRomTypes.PAL.name)
+        }
+
+        single { arrayOf(gl4esLibraryName,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomTypes.JPN.mainLibraryName,
+            ) }.withOptions {
+            named(PerfectDarkRomTypes.JPN.name)
+        }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.Doom64ExPlus, hashMapOf(
             ControlsType.AbsoluteTouchControls to doom64AbsoluteTouchControls,
@@ -376,7 +397,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             }
 
         single  {
-            val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(gl4esLibraryName,
                 SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
@@ -384,13 +404,12 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 DOOM64_MAIN_ENGINE_LIB)
 
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
-                nativeLibs, preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+                nativeLibs) }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
             bind<IEngineInfo>()
         }
 
         single  {
-            val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(gl4esLibraryName,
                 SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
@@ -398,7 +417,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 DOOM64_ENHANCED_MAIN_ENGINE_LIB)
 
             Doom64EnhancedEngineInfo(DOOM64_ENHANCED_MAIN_ENGINE_LIB,
-                nativeLibs, preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+                nativeLibs) }.withOptions {
             named(EngineTypes.Doom64ExPlusEnhanced.toString())
             bind<IEngineInfo>()
         }
@@ -410,7 +429,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 named(EngineTypes.Doom64ExPlusEnhanced.toString())
             }
 
-        single<ModsModel> { ModsFilesUpdater(Doom64ModsModel.load()).updateFiles() }.withOptions {
+        single<ModsModel> { Doom64ModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
         }.withOptions {
             named(EngineTypes.Doom64ExPlusEnhanced.toString())
@@ -429,7 +448,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.UZDoom.name) }
 
         single  {
-            val preferencesStorage : UZDoomPreferenceStorage = get (named(EngineTypes.UZDoom.toString()))
             val nativeLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
@@ -445,8 +463,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 UZDOOM_MAIN_ENGINE_LIB)
 
             UZDoomEngineInfo(UZDOOM_MAIN_ENGINE_LIB,
-                nativeLibs,
-                preferencesStorage.uZDoomCommandLineArgsString) }.withOptions {
+                nativeLibs) }.withOptions {
             named(EngineTypes.UZDoom.toString())
             bind<IEngineInfo>()
         }
@@ -460,7 +477,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         viewModel { UZDoomComposeSettingsViewModel().also { it.initialize() } }
         singleOf(::UZDoomMoreSettingsScreen).bind()
 
-        single<UZDoomModsModel> { ModsFilesUpdater(UZDoomModsModel.load()).updateFiles() }.withOptions {
+        single<UZDoomModsModel> { UZDoomModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.UZDoom.toString())
         }
     }
@@ -517,7 +534,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         viewModel { PsyDoomComposeSettingsViewModel().also { it.initialize() } }
         singleOf(::PsyDoomMoreSettingsScreen).bind()
-        single <ModsModel> { ModsFilesUpdater( PsyDoomModsModel.load()).updateFiles() }.withOptions {
+        single <ModsModel> { PsyDoomModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.PsyDoom.toString())
         }
     }
@@ -538,11 +555,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             bind<IEngineUIController>()
         }
 
-        single {
-            val preferencesStorage : PerfectDarkPreferencesStorage = get (
-                named(EngineTypes.PerfectDark.name))
-            PerfectDarkEngineInfo("")
-        }.withOptions {
+        singleOf(::PerfectDarkEngineInfo).withOptions {
             named(EngineTypes.PerfectDark.toString())
             bind<IEngineInfo>()
         }

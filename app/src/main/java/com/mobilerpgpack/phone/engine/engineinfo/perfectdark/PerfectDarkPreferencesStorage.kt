@@ -13,8 +13,10 @@ class PerfectDarkPreferencesStorage : PreferencesStorage() {
     val romTypePrefsKey = enumPreferencesKey<PerfectDarkRomTypes> ("perfect_dark_rom_type")
     val enablePerfectDarkModsSupportPrefsKey = booleanPreferencesKey("enable_perfect_dark_roms_support")
     val pathToPerfectDarkModsFolderPrefsKey = stringPreferencesKey("path_to_perfect_dark_mods_folder")
+    val commandLineArgsPrefsKey = stringPreferencesKey("perfect_dark_command_line_args")
 
-    val pathToNTSCRom  get() = getStringValue(pathToNTSCRomPrefsKey)
+    val commandLineArgs get() = getStringValue(commandLineArgsPrefsKey)
+    val pathToNTSCRom get() = getStringValue(pathToNTSCRomPrefsKey)
     val pathToPalRom get() = getStringValue(pathToPalRomPrefsKey)
     val pathToJpnRom get() = getStringValue(pathToJpnRomPrefsKey)
     val pathToPerfectDarkModsFolder get() = getStringValue(pathToPerfectDarkModsFolderPrefsKey)

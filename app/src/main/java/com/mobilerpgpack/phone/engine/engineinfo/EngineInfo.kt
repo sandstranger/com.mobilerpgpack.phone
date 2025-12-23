@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.engineinfo
 import android.annotation.SuppressLint
 import android.os.Process
 import android.system.Os
+import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -65,9 +66,7 @@ import java.io.File
 abstract class EngineInfo(
     mainEngineLib: String,
     private val allLibs: Array<String>,
-    activeEngineType: EngineTypes,
-    private val pathToResourceFlow: String,
-    private val commandLineParams : String = "") : KoinComponent, IEngineInfo {
+    activeEngineType: EngineTypes) : KoinComponent, IEngineInfo {
 
     private var alwaysShowKeyboardButton = false
 
@@ -102,7 +101,9 @@ abstract class EngineInfo(
 
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
 
-    protected open val pathToResource : String get() = pathToResourceFlow
+    protected open val commandLineParams : String = ""
+
+    protected abstract val pathToResource : String
 
     protected open val loadGL4ES : Boolean = true
 
