@@ -539,6 +539,7 @@ abstract class ScreenController : IScreenController {
         val keyCodeMap = remember { keyCodeMap }
         val keyCodesToDraw = remember (keyCodeMap) { keyCodeMap.toList() }
         val scrollState = rememberScrollState()
+        val viewState = remember { viewToEdit.viewState }
 
         AlertDialog(containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
@@ -565,7 +566,7 @@ abstract class ScreenController : IScreenController {
                             viewToEdit.DrawView(isEditMode = false, false, 50.dp)
                         }
                         Text(modifier = Modifier.wrapContentHeight(),
-                            text = viewToEdit.viewState.id,
+                            text = viewState.id,
                             color = onSurfaceVariantColor,
                             fontSize = 18.sp,
                             textAlign = TextAlign.Right
@@ -573,7 +574,7 @@ abstract class ScreenController : IScreenController {
                     }
 
                     Button(onClick = {
-                        viewToEdit.viewState.apply {
+                        viewState.apply {
                             resetToDefaultsFromViewEditor()
                             save()
                         } },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
@@ -583,7 +584,7 @@ abstract class ScreenController : IScreenController {
                     Column( modifier = Modifier.verticalScroll(scrollState),
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                         horizontalAlignment = Alignment.CenterHorizontally){
-                        viewToEdit.viewState.apply {
+                        viewState.apply {
                             EnumDropdown(
                                 stringResource(R.string.screen_controls_view_render_rule),
                                 viewRenderRule
@@ -664,11 +665,12 @@ abstract class ScreenController : IScreenController {
                         verticalArrangement = Arrangement.spacedBy(8.dp))
                     {
                         itemsIndexed(keyCodesToDraw, key = { _, pair -> pair.second.keyCode }) { _, pair ->
+                            val pair = remember { pair }
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        viewToEdit.viewState.apply {
+                                        viewState.apply {
                                             sdlKeyCode = pair.first
                                             save()
                                         }
@@ -715,6 +717,8 @@ abstract class ScreenController : IScreenController {
                     itemsIndexed(itemsToDraw, key = { _, view ->
                         view.viewState.id
                     }) { _, view ->
+                        val viewState = remember { view.viewState }
+                        val view = remember { view }
                         Row(
                             modifier = Modifier.clickable { onViewSelected(view) },
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -730,7 +734,7 @@ abstract class ScreenController : IScreenController {
                             }
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
-                                text = view.viewState.id,
+                                text = viewState.id,
                                 color = onSurfaceVariantColor,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Right
