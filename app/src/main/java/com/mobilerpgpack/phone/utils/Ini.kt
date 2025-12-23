@@ -148,8 +148,8 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                     iniConfig.read(it)
                 }
                 loaded = true
+                with(iniConfig) {
                 iniValues.forEach {
-                    with(iniConfig) {
                         if (containsKey(it.key)) {
                             it.value.apply {
                                 when (iniValueType) {
