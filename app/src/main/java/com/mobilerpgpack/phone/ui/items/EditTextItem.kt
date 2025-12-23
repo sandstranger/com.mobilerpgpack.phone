@@ -41,6 +41,7 @@ fun EditTextItem(
     keyboardType : KeyboardType = KeyboardType.Text,
     onValueChange: ((String) -> Unit)? = null
 ) {
+    val hint = rememberSaveable(hint) { hint }
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var currentTextValue by rememberSaveable (value) { mutableStateOf(value) }
     val onSurfaceVariantColor = getOnSurfaceVariantColor()

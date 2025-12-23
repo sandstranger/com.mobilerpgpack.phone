@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +28,7 @@ inline fun <reified T : Enum<T>> EnumDropdown(
     title: String,
     initialValue: T? = null,
     crossinline onValueChange: (T) -> Unit = {}) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
     var selectedValue by remember (initialValue) { mutableStateOf(initialValue) }
     val enumValues = remember { enumValues<T>() }
     val surfaceColor = getSurfaceColor()
