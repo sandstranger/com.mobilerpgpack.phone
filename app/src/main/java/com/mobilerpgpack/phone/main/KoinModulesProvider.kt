@@ -65,6 +65,7 @@ import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
+import com.mobilerpgpack.phone.ui.items.viewmodel.FileExplorerViewModel
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
@@ -257,6 +258,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
     @Suppress("DEPRECATION")
     private val composeModule = module {
+        viewModelOf(::FileExplorerViewModel)
+
         factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
             StorageChooser.Builder()
                 .withActivity(activity)
