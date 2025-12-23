@@ -1,13 +1,25 @@
 package com.mobilerpgpack.phone.engine.engineinfo.perfectdark
 
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.enumPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 
 class PerfectDarkPreferencesStorage : PreferencesStorage() {
-
     val pathToNTSCRomPrefsKey = stringPreferencesKey("path_to_ntsc_rom")
     val pathToPalRomPrefsKey = stringPreferencesKey("path_to_pal_rom")
     val pathToJpnRomPrefsKey = stringPreferencesKey("path_to_jpn_rom")
+    val skipIntroCutScenesPrefsKey = booleanPreferencesKey("skip_perfect_dark_intro")
+    val romTypePrefsKey = enumPreferencesKey<PerfectDarkRomTypes> ("perfect_dark_rom_type")
+    val enablePerfectDarkModsSupportPrefsKey = booleanPreferencesKey("enable_perfect_dark_roms_support")
+    val pathToPerfectDarkModsFolderPrefsKey = stringPreferencesKey("path_to_perfect_dark_mods_folder")
 
-
+    val pathToNTSCRom  get() = getStringValue(pathToNTSCRomPrefsKey)
+    val pathToPalRom get() = getStringValue(pathToPalRomPrefsKey)
+    val pathToJpnRom get() = getStringValue(pathToJpnRomPrefsKey)
+    val pathToPerfectDarkModsFolder get() = getStringValue(pathToPerfectDarkModsFolderPrefsKey)
+    val enablePerfectDarkModsSupport get() = getBooleanValue(enablePerfectDarkModsSupportPrefsKey, false)
+    val skipIntroCutScenes get() = getBooleanValue(skipIntroCutScenesPrefsKey, true)
+    val romType get() = getEnumValue(romTypePrefsKey, PerfectDarkRomTypes::class.java,
+        PerfectDarkRomTypes.DefaultRomType)
 }
