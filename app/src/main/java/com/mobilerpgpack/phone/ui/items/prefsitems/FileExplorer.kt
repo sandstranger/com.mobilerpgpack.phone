@@ -22,8 +22,8 @@ fun RequestPath(explorerItemTitle: String,
                 requiredFileExtensions : Collection<String> = emptyList(),
                 onPathSelected: ((String) -> Unit)? = null) {
     val activity = LocalActivity.current!!
-    var showErrorDialogBox by rememberSaveable(false) { mutableStateOf(false) }
-    var errorMessageToShow by rememberSaveable("") { mutableStateOf("")}
+    var showErrorDialogBox by rememberSaveable { mutableStateOf(false) }
+    var errorMessageToShow by rememberSaveable { mutableStateOf("")}
     var currentPath by rememberSaveable(previousSavedPath)
     {
         mutableStateOf(previousSavedPath)
