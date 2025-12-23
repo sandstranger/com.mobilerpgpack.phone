@@ -41,7 +41,6 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 fun DrawModsSupport(mods: ModsModel) {
     val buttonsColors = getButtonsColors()
     val onPrimaryColor = getOnPrimaryColor()
-    val mods = remember { mods }
 
     mods.apply {
         DrawHorizontalDivider()
@@ -123,7 +122,6 @@ private fun DrawModsLazyColumn(mods: ModsModel){
     val buttonsColors = getButtonsColors()
     val onPrimaryColor = getOnPrimaryColor()
     val onBackgroundColor = getOnBackgroundColor()
-    val mods = remember { mods }
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
         mods.apply {
             this.mods.apply {
@@ -147,7 +145,6 @@ private fun DrawModsLazyColumn(mods: ModsModel){
             verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             itemsIndexed(modsCollection, key = { _, mod -> mod.key }) { _, mod ->
-                val mod = remember { mod }
                 ReorderableItem(reorderableLazyListState, key = mod.key) {
                     Column {
                         DrawHorizontalDivider()
