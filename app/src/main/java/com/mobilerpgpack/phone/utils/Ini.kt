@@ -147,9 +147,8 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                 FileReader(this).use {
                     iniConfig.read(it)
                 }
-                loaded = true
                 with(iniConfig) {
-                iniValues.forEach {
+                    iniValues.forEach {
                         if (containsKey(it.key)) {
                             it.value.apply {
                                 when (iniValueType) {
@@ -162,6 +161,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                         }
                     }
                 }
+                loaded = true
             }
         }
     }
