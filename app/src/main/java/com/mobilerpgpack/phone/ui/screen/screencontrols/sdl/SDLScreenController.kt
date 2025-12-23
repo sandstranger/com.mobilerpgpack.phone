@@ -55,8 +55,10 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                        isEditMode: Boolean, inGame: Boolean, content: @Composable () -> Unit) {
 
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
+        val activity = LocalActivity.current!!
+        val rootView = remember { activity.window.decorView.rootView }
 
-        LocalActivity.current!!.window.decorView.rootView.apply {
+        rootView.apply {
             DisposableEffect(this) {
                 val listener = ViewTreeObserver.OnGlobalLayoutListener {
                     rootSize = IntSize(width, height)
