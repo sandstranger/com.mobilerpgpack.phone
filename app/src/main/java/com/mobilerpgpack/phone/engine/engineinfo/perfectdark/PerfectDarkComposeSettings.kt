@@ -27,8 +27,8 @@ class PerfectDarkComposeSettings : IEngineUIController {
             koinInject(named(EngineTypes.PerfectDark.name))
         val engineInfo : IEngineInfo = koinInject(named(EngineTypes.PerfectDark.name))
         val requiredFileExtensions = rememberSaveable {engineInfo.requiredResourceExtensions}
-        var romType by rememberSaveable(preferencesStorage.romType) {
-            mutableStateOf(preferencesStorage.romType)
+        var romVersion by rememberSaveable(preferencesStorage.romVersion) {
+            mutableStateOf(preferencesStorage.romVersion)
         }
         var enableModsSupport by rememberSaveable(preferencesStorage.enablePerfectDarkModsSupport) {
             mutableStateOf(preferencesStorage.enablePerfectDarkModsSupport)
@@ -39,28 +39,28 @@ class PerfectDarkComposeSettings : IEngineUIController {
 
         DrawHorizontalDivider()
 
-        ListPreferenceItem(stringResource(R.string.perfect_dark_rom_type),
-            romType){
-            preferencesStorage.setEnumValue(preferencesStorage.romTypePrefsKey,it)
-            romType = it
+        ListPreferenceItem(stringResource(R.string.perfect_dark_rom_version),
+            romVersion){
+            preferencesStorage.setEnumValue(preferencesStorage.romVersionPrefsKey,it)
+            romVersion = it
         }
 
         DrawHorizontalDivider()
 
-        when (romType) {
-            PerfectDarkRomTypes.NTSC -> {
+        when (romVersion) {
+            PerfectDarkRomVersions.NTSC -> {
                 RequestPath(stringResource(R.string.path_to_ntsc_perfect_dark_rom),
                     preferencesStorage.pathToNTSCRom,
                     preferencesStorage.pathToNTSCRomPrefsKey, requestMode = RequestPathMode.File,
                     requiredFileExtensions = requiredFileExtensions)
             }
-            PerfectDarkRomTypes.PAL -> {
+            PerfectDarkRomVersions.PAL -> {
                 RequestPath(stringResource(R.string.path_to_pal_perfect_dark_rom),
                     preferencesStorage.pathToPalRom,
                     preferencesStorage.pathToPalRomPrefsKey, requestMode = RequestPathMode.File,
                     requiredFileExtensions = requiredFileExtensions)
             }
-            PerfectDarkRomTypes.JPN -> {
+            PerfectDarkRomVersions.JPN -> {
                 RequestPath(stringResource(R.string.path_to_jpn_perfect_dark_rom),
                     preferencesStorage.pathToJpnRom,
                     preferencesStorage.pathToJpnRomPrefsKey, requestMode = RequestPathMode.File,

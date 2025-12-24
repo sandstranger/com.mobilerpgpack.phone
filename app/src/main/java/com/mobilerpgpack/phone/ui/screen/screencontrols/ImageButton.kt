@@ -95,7 +95,7 @@ abstract class ImageButton(
         val ignoreOutOfBoundsTouchEvents by remember (viewState.ignoreOutOfBoundsTouchEvents)
         { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
 
-        return modifier.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
+        return modifier.pointerInput(isEditMode) {
             if (isEditMode) {
                 return@pointerInput
             }
