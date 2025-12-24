@@ -72,12 +72,15 @@ import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64AbsoluteTouchControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64OnScreenStickControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
-import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomAbsoluteTouchControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomOnScreenStickControls
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom2RPGControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64AbsoluteTouchControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64OnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doomRPGControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoomAbsoluteTouchControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoomOnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.uzDoomAbsoluteTouchControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.uzDoomOnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.wolfensteinRpgLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
@@ -86,9 +89,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenControlle
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Keyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.uzDoomAbsoluteTouchControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.uzDoomOnScreenStickControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
@@ -293,7 +293,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     private val doomRpgSeriesModule = module {
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.DoomRpg, hashMapOf(
-            ControlsType.AbsoluteTouchControls to doomRPGButtons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to doomRPGControlsLayout
+        )) }.withOptions {
             named(EngineTypes.DoomRpg.name) }
 
         single {
@@ -317,7 +318,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             .withOptions { named(EngineTypes.DoomRpg.toString()) }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.Doom2Rpg, hashMapOf(
-            ControlsType.AbsoluteTouchControls to doom2RPGButtons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to doom2RPGControlsLayout
+        )) }.withOptions {
             named(EngineTypes.Doom2Rpg.name) }
 
         single {
@@ -343,7 +345,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             .withOptions { named(EngineTypes.Doom2Rpg.toString()) }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.WolfensteinRpg, hashMapOf(
-            ControlsType.AbsoluteTouchControls to wolfensteinButtons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to wolfensteinRpgLayout
+        )) }.withOptions {
             named(EngineTypes.WolfensteinRpg.name) }
 
         single {
@@ -371,8 +374,9 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
     private val doom64RegisterModule = module {
         single<ControlsProvider> { ControlsProvider(EngineTypes.Doom64ExPlus, hashMapOf(
-            ControlsType.AbsoluteTouchControls to doom64AbsoluteTouchControls,
-            ControlsType.OnScreenStick to doom64OnScreenStickControls)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to doom64AbsoluteTouchControlsLayout,
+            ControlsType.OnScreenStick to doom64OnScreenStickControlsLayout
+        )) }.withOptions {
             named(EngineTypes.Doom64ExPlus.name)
             }.withOptions {
                 named(EngineTypes.Doom64ExPlusEnhanced.name)
@@ -427,8 +431,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.UZDoom, hashMapOf(
-            ControlsType.AbsoluteTouchControls to uzDoomAbsoluteTouchControls,
-            ControlsType.OnScreenStick to uzDoomOnScreenStickControls)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to uzDoomAbsoluteTouchControlsLayout,
+            ControlsType.OnScreenStick to uzDoomOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.UZDoom.name) }
 
         single  {
@@ -474,8 +478,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.PsyDoom, hashMapOf(
-            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControls,
-            ControlsType.OnScreenStick to psyDoomOnScreenStickControls)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControlsLayout,
+            ControlsType.OnScreenStick to psyDoomOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.PsyDoom.name) }
 
         single {
@@ -553,8 +557,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.PerfectDark, hashMapOf(
-            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControls,
-            ControlsType.OnScreenStick to psyDoomOnScreenStickControls)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControlsLayout,
+            ControlsType.OnScreenStick to psyDoomOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.PerfectDark.name) }
 
         singleOf(::PerfectDarkComposeSettings).withOptions {
