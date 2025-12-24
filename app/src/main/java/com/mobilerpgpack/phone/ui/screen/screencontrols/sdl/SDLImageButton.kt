@@ -119,13 +119,13 @@ abstract class SDLImageButton(
             ColorFilter.tint(if (isPressed && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
         ) }
 
-        return modifierTouse.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
+        return modifierTouse.pointerInput(isEditMode) {
                 if (isEditMode) {
                     return@pointerInput
                 }
 
                 awaitEachGesture {
-                        val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
+                        val consumeEvents = consumeTouchEvents
                         val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
                         else PointerEventPass.Main
                         val down = awaitFirstDown(pass = pointerPassToUse)

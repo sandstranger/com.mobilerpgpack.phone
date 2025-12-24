@@ -23,7 +23,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgCom
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkPreferencesStorage
-import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkRomTypes
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkRomVersions
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomCheatsSettingsScreen
@@ -532,23 +532,23 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     private val perfectDarkKoinModule = module{
         single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
             SDL2_NATIVE_LIB_NAME,
-            PerfectDarkRomTypes.NTSC.mainLibraryName,
+            PerfectDarkRomVersions.NTSC.mainLibraryName,
         ) }.withOptions {
-            named(PerfectDarkRomTypes.NTSC.name)
+            named(PerfectDarkRomVersions.NTSC.name)
         }
 
         single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
             SDL2_NATIVE_LIB_NAME,
-            PerfectDarkRomTypes.PAL.mainLibraryName,
+            PerfectDarkRomVersions.PAL.mainLibraryName,
         ) }.withOptions {
-            named(PerfectDarkRomTypes.PAL.name)
+            named(PerfectDarkRomVersions.PAL.name)
         }
 
         single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
             SDL2_NATIVE_LIB_NAME,
-            PerfectDarkRomTypes.JPN.mainLibraryName,
+            PerfectDarkRomVersions.JPN.mainLibraryName,
         ) }.withOptions {
-            named(PerfectDarkRomTypes.JPN.name)
+            named(PerfectDarkRomVersions.JPN.name)
         }
 
         single { PerfectDarkPreferencesStorage() }.withOptions {

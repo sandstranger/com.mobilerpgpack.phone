@@ -10,7 +10,7 @@ class PerfectDarkPreferencesStorage : PreferencesStorage() {
     val pathToPalRomPrefsKey = stringPreferencesKey("path_to_pal_rom")
     val pathToJpnRomPrefsKey = stringPreferencesKey("path_to_jpn_rom")
     val skipIntroCutScenesPrefsKey = booleanPreferencesKey("skip_perfect_dark_intro")
-    val romTypePrefsKey = enumPreferencesKey<PerfectDarkRomTypes> ("perfect_dark_rom_type")
+    val romVersionPrefsKey = enumPreferencesKey<PerfectDarkRomVersions> ("perfect_dark_rom_version")
     val enablePerfectDarkModsSupportPrefsKey = booleanPreferencesKey("enable_perfect_dark_roms_support")
     val pathToPerfectDarkModsFolderPrefsKey = stringPreferencesKey("path_to_perfect_dark_mods_folder")
     val commandLineArgsPrefsKey = stringPreferencesKey("perfect_dark_command_line_args")
@@ -22,6 +22,6 @@ class PerfectDarkPreferencesStorage : PreferencesStorage() {
     val pathToPerfectDarkModsFolder get() = getStringValue(pathToPerfectDarkModsFolderPrefsKey)
     val enablePerfectDarkModsSupport get() = getBooleanValue(enablePerfectDarkModsSupportPrefsKey, false)
     val skipIntroCutScenes get() = getBooleanValue(skipIntroCutScenesPrefsKey, true)
-    val romType get() = getEnumValue(romTypePrefsKey, PerfectDarkRomTypes::class.java,
-        PerfectDarkRomTypes.DefaultRomType)
+    val romVersion get() = getEnumValue(romVersionPrefsKey, PerfectDarkRomVersions::class.java,
+        PerfectDarkRomVersions.DefaultRomType)
 }

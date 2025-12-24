@@ -252,5 +252,5 @@
     <string name="enable_mods_support">Enable mods support</string>
     <string name="path_to_common_mods_folder">Path to mods folder</string>
     <string name="skip_perfect_dark_intro_cutscenes">Skip intro cutscenes</string>
-    <string name="perfect_dark_rom_type">Rom type</string>
+    <string name="perfect_dark_rom_version">Rom version</string>
 </resources>

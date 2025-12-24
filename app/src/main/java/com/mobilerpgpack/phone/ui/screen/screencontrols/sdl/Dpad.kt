@@ -236,7 +236,7 @@ abstract class Dpad(
             onTouchUp(sdlKeyEvent)
         }
 
-        return modifier.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
+        return modifier.pointerInput(isEditMode) {
             if (isEditMode) {
                 return@pointerInput
             }
