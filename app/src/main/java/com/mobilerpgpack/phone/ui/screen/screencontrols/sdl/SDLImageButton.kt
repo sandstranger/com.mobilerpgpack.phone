@@ -107,8 +107,7 @@ abstract class SDLImageButton(
         }
 
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) { mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
+        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val ignoreOutOfBoundsTouchEvents by remember (viewState.ignoreOutOfBoundsTouchEvents)
         { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
         val consumeTouchEvents by remember (viewState.consumeTouchEvents)
@@ -125,7 +124,7 @@ abstract class SDLImageButton(
                 }
 
                 awaitEachGesture {
-                        val consumeEvents = consumeTouchEvents
+                        val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                         val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial
                         else PointerEventPass.Main
                         val down = awaitFirstDown(pass = pointerPassToUse)
