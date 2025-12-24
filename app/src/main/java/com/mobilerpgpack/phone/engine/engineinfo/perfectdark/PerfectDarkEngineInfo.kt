@@ -25,7 +25,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
             .pathToPerfectDarkModsFolder else ""
     }
 
-    private val romType get() = perfectDarkPreferencesStorage.romType
+    private val romVersion get() = perfectDarkPreferencesStorage.romVersion
 
     override val preferencesStorage: PreferencesStorage get() = perfectDarkPreferencesStorage
 
@@ -33,15 +33,15 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
 
     override val requiredResourceExtensions = listOf(".z64", ".Z64")
 
-    override val mainLibraryName: String by lazy { romType.mainLibraryName }
+    override val mainLibraryName: String by lazy { romVersion.mainLibraryName }
 
-    override val nativeLibraries by lazy { get<Array<String>> (named(romType.name)) }
+    override val nativeLibraries by lazy { get<Array<String>> (named(romVersion.name)) }
 
     override val pathToResource get() =
-        when (romType) {
-            PerfectDarkRomTypes.NTSC -> perfectDarkPreferencesStorage.pathToNTSCRom
-            PerfectDarkRomTypes.PAL -> perfectDarkPreferencesStorage.pathToPalRom
-            PerfectDarkRomTypes.JPN -> perfectDarkPreferencesStorage.pathToJpnRom
+        when (romVersion) {
+            PerfectDarkRomVersions.NTSC -> perfectDarkPreferencesStorage.pathToNTSCRom
+            PerfectDarkRomVersions.PAL -> perfectDarkPreferencesStorage.pathToPalRom
+            PerfectDarkRomVersions.JPN -> perfectDarkPreferencesStorage.pathToJpnRom
         }
 
     override val loadGL4ES = false

@@ -247,7 +247,7 @@
     <string name="path_to_pal_perfect_dark_rom">Путь к PAL .z64 ROM</string>
     <string name="path_to_jpn_perfect_dark_rom">Путь к JPN .z64 ROM</string>
     <string name="skip_perfect_dark_intro_cutscenes">Пропускать вступительные кат-сцены</string>
-    <string name="perfect_dark_rom_type">Тип ROM</string>
+    <string name="perfect_dark_rom_version">Версия ROM</string>
     <string name="enable_mods_support">Включить поддержку модов</string>
     <string name="path_to_common_mods_folder">Путь к папке с модами</string>
 </resources>
