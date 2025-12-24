@@ -12,6 +12,7 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -178,11 +179,9 @@ abstract class Dpad(
         val preferencesStorage: PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
+        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
             initial = false
         )
-        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) {
-            mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
         val consumeTouchEvents by remember (viewState.consumeTouchEvents)
         { mutableStateOf(viewState.consumeTouchEvents) }
 
@@ -221,13 +220,11 @@ abstract class Dpad(
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
         val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         var wasPressed by rememberSaveable { mutableStateOf(false)}
-        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) {
-            mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
         val consumeTouchEvents by remember (viewState.consumeTouchEvents)
         { mutableStateOf(viewState.consumeTouchEvents) }
-        val sdlKeyCode by rememberSaveable  (sdlKeyEvent) { mutableStateOf(sdlKeyEvent) }
+        val sdlKeyCode by rememberSaveable  (sdlKeyEvent) { mutableIntStateOf(sdlKeyEvent) }
         val ignoreOutOfBoundsTouchEvents by remember (viewState.ignoreOutOfBoundsTouchEvents)
         { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
 
