@@ -122,7 +122,7 @@ abstract class ScreenController : IScreenController {
 
         val activity = LocalActivity.current!!
         val configuration = LocalConfiguration.current
-        val rootView = remember { activity.window.decorView.rootView }
+        val rootView = activity.window.decorView.rootView
         val controlsType = rememberSaveable { controlsProvider.activeControlsType }
         val density = remember (activity.resources.displayMetrics.density) {
             activity.resources.displayMetrics.density }
