@@ -152,6 +152,9 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         val showInQuickPanel by remember (viewState.showInQuickPanel) {
             mutableStateOf(viewState.showInQuickPanel)
         }
+        val viewRenderRule by remember (viewState.viewRenderRule) {
+            mutableStateOf(viewState.viewRenderRule)
+        }
 
         fun clearResources(){
             if (inGame && (dragId!=null || down)){
@@ -163,7 +166,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             }
         }
 
-        LaunchedEffect (isEditMode, inGame, showInQuickPanel) {
+        LaunchedEffect (isEditMode, inGame, showInQuickPanel, viewRenderRule) {
             clearResources()
         }
 
@@ -185,7 +188,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     canvasW = size.width
                     canvasH = size.height
                 }
-                .pointerInput(isEditMode,inGame, showInQuickPanel) {
+                .pointerInput(isEditMode,inGame, showInQuickPanel, viewRenderRule) {
                     if (isEditMode || !inGame) {
                         return@pointerInput
                     }
