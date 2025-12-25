@@ -87,7 +87,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
                 }
 
                 this += GL_VERSION_COMMAND
-                this + OPENGL_2_1_VERSION
+                this + OPENGL_ES_3_0_VERSION
 
                 this.toTypedArray()
             }
@@ -107,7 +107,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
     }
 
     private companion object{
-        private const val OPENGL_2_1_VERSION = "3.0es"
+        private const val OPENGL_ES_3_0_VERSION = "3.0es"
         private const val GL_VERSION_COMMAND = "--gl-version"
         private const val SKIP_INTROS_COMMAND = "--skip-intro"
         private const val PORTABLE_COMMAND = "--portable"

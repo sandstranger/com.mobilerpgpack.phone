@@ -16,12 +16,6 @@ import org.libsdl3.app.SDLSurface.getNormalizedY
 
 class SDL3ScreenController : SDLScreenController() {
 
-    private val engineInfo by lazy {
-        with(get <PreferencesStorage>()){
-            get <IEngineInfo> (named(activeEngineString))
-        }
-    }
-
     override val viewWidth: Int get() = SDLSurface.fixedWidth
 
     override val viewHeight: Int get() = SDLSurface.fixedHeight
@@ -34,13 +28,14 @@ class SDL3ScreenController : SDLScreenController() {
         viewWidth: Float,
         viewHeight: Float,
         eventAction: Int,
-        touchDeviceId: Int
+        touchDeviceId: Int,
+        invokeMousePressingEvents: Boolean
     ) {
         val normalizedX = getNormalizedX(x)
         val normalizedY = getNormalizedY(y)
         SDLActivity.onNativeTouch(touchDeviceId, pointerId,
             eventAction, normalizedX, normalizedY, pressure,
-            engineInfo.mouseButtonsEventsCanBeInvoked)
+            invokeMousePressingEvents)
     }
 
     override fun onMotionEventFinished(event: MotionEvent) {

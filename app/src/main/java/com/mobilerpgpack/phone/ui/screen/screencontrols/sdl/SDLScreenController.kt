@@ -36,6 +36,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.keyCodeMap
+import org.checkerframework.common.reflection.qual.Invoke
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -113,8 +114,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             if (trackedPointerId != UNKNOWN_POINTER_ID) {
                 handlePointer(trackedPointerId, 0f, 0f, 0f,
                     mWidth, mHeight, MotionEvent.ACTION_UP,
-                    touchId ?: defaultTouchDeviceId
-                )
+                    touchId ?: defaultTouchDeviceId, false)
                 trackedPointerId = UNKNOWN_POINTER_ID
             }
         }
@@ -167,8 +167,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                 handlePointer(
                                     trackedPointerId, pressure, x, y,
                                     mWidth, mHeight, touchAction,
-                                    touchId!!
-                                )
+                                    touchId!!,
+                                    mouseButtonsEventsCanBeInvoked)
                             }
 
                             when {
@@ -211,7 +211,9 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
     }
 
     protected abstract fun handlePointer(pointerId: Int, pressure: Float, x: Float, y: Float,
-                                         viewWidth : Float, viewHeight : Float,eventAction : Int, touchDeviceId : Int)
+                                         viewWidth : Float, viewHeight : Float,eventAction : Int,
+                                         touchDeviceId : Int,
+                                         invokeMousePressingEvents : Boolean)
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
 
