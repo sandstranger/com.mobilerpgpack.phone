@@ -141,6 +141,16 @@ All credits for Gles 3.x native render support to glKarin - https://github.com/g
 
 This project is ALSO licensed under GPL v3.
 
+## Perfect Dark
+
+For running perfect dark follow these docs - https://github.com/fgsfdsfgs/perfect_dark?tab=readme-ov-file#perfect-dark-port
+
+All Roms binaries neeed to hase .z64 or .Z64 file extensions. Otherwise, the game will not start.
+
+For running perfect dark - your device need to support OPEN GL ES 3.0 render. Otherwise, the game will not start again.
+
+This perfect dark port also supported legacy ARMV7 devices without any issues.
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
