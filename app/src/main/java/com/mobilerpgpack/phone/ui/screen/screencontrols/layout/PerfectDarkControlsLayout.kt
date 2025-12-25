@@ -47,7 +47,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         "attack",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.8f,
-        offsetYPercent = 0.45f,
+        offsetYPercent = 0.5f,
         sizePercent = 0.11f,
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
@@ -55,7 +55,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         ignoreOutOfBoundsTouchEvents = true
     ),
     SDL2MouseWheelButton(
-        "next_weapon",
+        "prev_weapon",
         EngineTypes.PerfectDark,
         wheelUp = true,
         offsetXPercent = 0.85f,
@@ -64,22 +64,13 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         buttonResId = R.drawable.next_weapon,
     ),
     SDL2MouseWheelButton(
-        "prev_weapon",
+        "next_weapon",
         EngineTypes.PerfectDark,
         wheelUp = false,
         offsetXPercent = 0.85f,
         offsetYPercent = 0.32f,
         sizePercent = 0.06f,
         buttonResId = R.drawable.prev_weapon,
-    ),
-    SDL2ImageButton(
-        "autorun",
-        EngineTypes.PerfectDark,
-        offsetXPercent = 0.72f,
-        offsetYPercent = 0.85f,
-        sizePercent = 0.06f,
-        sdlKeyEvent = KeyEvent.KEYCODE_CAPS_LOCK,
-        buttonResId = R.drawable.run,
     ),
     SDL2ImageButton(
         "escape",
@@ -91,46 +82,75 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
     SDL2ImageButton(
-        "quick_save",
-        EngineTypes.PerfectDark,
-        offsetXPercent = 0.75f,
-        offsetYPercent = 0.03f,
-        sizePercent = 0.05f,
-        buttonResId = R.drawable.save,
-        sdlKeyEvent = KeyEvent.KEYCODE_F5
-    ),
-    SDL2ImageButton(
-        "quick_load",
-        EngineTypes.PerfectDark,
-        offsetXPercent = 0.83f,
-        offsetYPercent = 0.03f,
-        sizePercent = 0.05f,
-        buttonResId = R.drawable.load,
-        sdlKeyEvent = KeyEvent.KEYCODE_F9
-    ),
-    SDL2ImageButton(
         "use",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.97f,
         offsetYPercent = 0.7f,
-        sizePercent = 0.065f,
+        sizePercent = 0.06f,
         buttonResId = R.drawable.use,
-        sdlKeyEvent = KeyEvent.KEYCODE_SPACE
+        sdlKeyEvent = KeyEvent.KEYCODE_E
     ),
     SDL2ImageButton(
-        "automap",
+        "aim_mode",
         EngineTypes.PerfectDark,
-        offsetXPercent = 0.83f,
+        offsetXPercent = 0.89f,
         offsetYPercent = 0.9f,
-        sizePercent = 0.065f,
-        buttonResId = R.drawable.automap,
-        sdlKeyEvent = KeyEvent.KEYCODE_TAB
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.zoom,
+        sdlKeyEvent = KeyEvent.KEYCODE_Z,
+        useToggle = true
+    ),
+    SDL2ImageButton(
+        "reload",
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.79f,
+        offsetYPercent = 0.88f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.machine_gun_magazine,
+        sdlKeyEvent = KeyEvent.KEYCODE_R
+    ),
+    SDL2ImageButton(
+        "fire_mode",
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.99f,
+        offsetYPercent = 0.25f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.reload_gun,
+        sdlKeyEvent = KeyEvent.KEYCODE_F
+    ),
+    SDL2ImageButton(
+        "radial_menu",
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.99f,
+        offsetYPercent = 0.43f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.circles_ext,
+        sdlKeyEvent = KeyEvent.KEYCODE_Q,
+        useToggle = true
+    ),
+    SDL2ImageButton(
+        "full_crouch",
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.69f,
+        offsetYPercent = 0.88f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.smash_arrows,
+        sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT
+    ),
+    SDL2ImageButton(
+        "half_crouch",
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.6f,
+        offsetYPercent = 0.88f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.crouch,
+        sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT
     ),
     ShowSDLKeyboardButton(
         KeyboardType.SDL2Keyboard,
         EngineTypes.PerfectDark,
-        offsetXPercent = 0.75f,
-        offsetYPercent = 0.15f,
+        offsetXPercent = 0.76f,
+        offsetYPercent = 0.005f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard
     ),
