@@ -35,8 +35,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
     val activeEngineString = remember (preferencesStorage.activeEngineString) {
         preferencesStorage.activeEngineString }
     val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-    val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-    val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) { mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
+    val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
     val ignoreOutOfBoundsTouchEvents by remember (viewState.ignoreOutOfBoundsTouchEvents)
     { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
     val consumeTouchEvents by remember (viewState.consumeTouchEvents)
