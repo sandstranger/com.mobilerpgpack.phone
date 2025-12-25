@@ -45,7 +45,7 @@ abstract class ToggleImageButton(id: String,
 
         Image(painter = painterResource(id = viewState.buttonResId),
             contentDescription = viewState.id,
-            modifier = Modifier.interactiveControlModifier(isEditMode, inGame).graphicsLayer {
+            modifier = Modifier.interactiveControlModifier(isEditMode, inGame, changeItemColor = false).graphicsLayer {
                 colorFilter = colorFilterToUse } )
     }
 

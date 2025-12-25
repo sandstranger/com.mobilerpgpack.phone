@@ -63,7 +63,8 @@ abstract class ImageButton(
     protected abstract fun onClick(context: Context)
 
     @Composable
-    protected fun Modifier.interactiveControlModifier(isEditMode: Boolean, inGame: Boolean): Modifier {
+    protected fun Modifier.interactiveControlModifier(isEditMode: Boolean, inGame: Boolean,
+                                                      changeItemColor : Boolean = true): Modifier {
         val modifier = this
             .fillMaxSize()
             .minimumInteractiveComponentSize()
@@ -73,7 +74,7 @@ abstract class ImageButton(
         }
 
         val context = LocalContext.current
-        return modifier.touchListenerModifier(isEditMode, viewState, onTouchDown = {
+        return modifier.touchListenerModifier(isEditMode, viewState,changeItemColor, onTouchDown = {
             onClick(context)
         })
     }
