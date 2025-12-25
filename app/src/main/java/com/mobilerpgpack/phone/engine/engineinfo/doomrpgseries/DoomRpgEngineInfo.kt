@@ -8,7 +8,7 @@ import org.libsdl.app.SDLSurface
 class DoomRpgEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>) :
-    DoomRPGSeriesEngineInfo(mainEngineLib, allLibs,  EngineTypes.DoomRpg, "") {
+    DoomRPGSeriesEngineInfo(mainEngineLib, allLibs,  EngineTypes.DoomRpg) {
 
     private var savedDoomRpgScreenWidth: Int = 0
     private var savedDoomRpgScreenHeight: Int = 0

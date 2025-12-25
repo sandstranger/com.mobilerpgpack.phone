@@ -15,10 +15,12 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RPGEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRPGSeriesEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRPGEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
@@ -324,7 +326,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.Doom2Rpg.name) }
 
         single {
-            val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
                 gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
@@ -334,9 +335,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 TRANSLATOR_NATIVE_LIB_NAME,
                 DOOM2RPG_MAIN_ENGINE_LIB)
 
-            DoomRPGSeriesEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB,
-                nativeLibs, EngineTypes.Doom2Rpg,
-                preferencesStorage.pathToDoom2RpgIpaFile)
+            Doom2RPGEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB, nativeLibs)
         }.withOptions {
             named(EngineTypes.Doom2Rpg.toString())
             bind<IEngineInfo>()
@@ -351,7 +350,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.WolfensteinRpg.name) }
 
         single {
-            val preferencesStorage : PreferencesStorage = get ()
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
                 gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
@@ -361,9 +359,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 TRANSLATOR_NATIVE_LIB_NAME,
                 WOLFENSTEINRPG_MAIN_ENGINE_LIB)
 
-            DoomRPGSeriesEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB,
-                nativeLibs, EngineTypes.WolfensteinRpg,
-                preferencesStorage.pathToWolfensteinRpgIpaFile)
+            WolfensteinRPGEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB, nativeLibs)
         }.withOptions {
             named(EngineTypes.WolfensteinRpg.toString())
             bind<IEngineInfo>()

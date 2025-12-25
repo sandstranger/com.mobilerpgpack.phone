@@ -6,15 +6,12 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import org.koin.core.component.inject
 
-open class DoomRPGSeriesEngineInfo(
+abstract class DoomRPGSeriesEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    activeEngineType: EngineTypes,
-    override val pathToResource: String) :
+    activeEngineType: EngineTypes) :
     SDL2EngineInfo(mainEngineLib, allLibs, activeEngineType) {
 
     private val translationManager: ITranslationManager by inject()
