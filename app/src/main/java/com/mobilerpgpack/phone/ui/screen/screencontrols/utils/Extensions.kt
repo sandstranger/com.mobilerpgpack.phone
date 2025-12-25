@@ -29,6 +29,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
                                     onTouchDown : () -> Unit = {}, onTouchUp : () -> Unit = {}) : Modifier {
 
     var isPressed by rememberSaveable { mutableStateOf(false) }
+    val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
     val viewState = remember { viewState }
     val preferencesStorage : PreferencesStorage = koinInject()
     val activeEngineString = remember (preferencesStorage.activeEngineString) {
