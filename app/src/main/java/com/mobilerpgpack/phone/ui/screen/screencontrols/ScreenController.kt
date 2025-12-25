@@ -126,7 +126,7 @@ abstract class ScreenController : IScreenController {
         val controlsType = rememberSaveable { controlsProvider.activeControlsType }
         val density = remember (activity.resources.displayMetrics.density) {
             activity.resources.displayMetrics.density }
-        val clampButtonsPrefsKey = remember { booleanPreferencesKey("${activeEngine.name.lowercase()}_${controlsType.name.lowercase()}") }
+        val clampButtonsPrefsKey = remember { booleanPreferencesKey("${activeEngineSaved.name.lowercase()}_${controlsType.name.lowercase()}") }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by rememberSaveable { mutableStateOf((!inGameSaved)) }
