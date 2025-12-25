@@ -84,6 +84,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.uzDoom
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.uzDoomOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.wolfensteinRpgLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkAbsoluteTouchControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
@@ -555,7 +556,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.PerfectDark, hashMapOf(
             ControlsType.AbsoluteTouchControls to perfectDarkAbsoluteTouchControlsLayout,
-            ControlsType.OnScreenStick to psyDoomOnScreenStickControlsLayout)) }.withOptions {
+            ControlsType.OnScreenStick to perfectDarkOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.PerfectDark.name) }
 
         singleOf(::PerfectDarkComposeSettings).withOptions {
@@ -564,7 +565,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
 
         singleOf(::PerfectDarkEngineInfo).withOptions {
-            named(EngineTypes.PerfectDark.toString())
+            named(EngineTypes.PerfectDark.name)
             bind<IEngineInfo>()
         }
     }
