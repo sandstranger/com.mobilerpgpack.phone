@@ -1,24 +1,12 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
-import android.util.Log
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
-import com.mobilerpgpack.phone.utils.PreferencesStorage
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.qualifier.named
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
 
 class SDL2ScreenController : SDLScreenController() {
-
-    private val engineInfo by lazy {
-        with(get <PreferencesStorage>()){
-            get <IEngineInfo> (named(activeEngineString))
-        }
-    }
 
     override val viewWidth: Int get() = SDLSurface.fixedWidth
 
@@ -32,13 +20,14 @@ class SDL2ScreenController : SDLScreenController() {
         viewWidth: Float,
         viewHeight: Float,
         eventAction: Int,
-        touchDeviceId: Int
+        touchDeviceId: Int,
+        invokeMousePressingEvents: Boolean
     ) {
         val normalizedX = x / viewWidth
         val normalizedY = y / viewHeight
         SDLActivity.onNativeTouch(touchDeviceId, pointerId,
             eventAction, normalizedX, normalizedY, pressure,
-            engineInfo.mouseButtonsEventsCanBeInvoked)
+            invokeMousePressingEvents)
     }
 
     override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int,
