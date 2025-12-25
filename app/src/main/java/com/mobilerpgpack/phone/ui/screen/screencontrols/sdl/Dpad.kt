@@ -108,12 +108,12 @@ abstract class Dpad(
             contentAlignment = Alignment.Center
         ) {
             if (inGame && !isEditMode) {
-                Box(modifier = Modifier.fillMaxSize().touchListenerModifier(false,viewState))
+                Box(modifier = Modifier.fillMaxSize().minimumInteractiveComponentSize()
+                    .touchListenerModifier(false,viewState))
             }
 
             val buttonSize by remember (size) { mutableStateOf(size * 0.4f)}
             val offsetAmount by remember (size) { mutableStateOf(size * 0.33f) }
-
             val offsetYStorage = remember (offsetAmount) { hashMapOf(
                 DPAD_UP to -offsetAmount,
                 DPAD_DOWN to offsetAmount

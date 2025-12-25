@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.utils
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.isOutOfBounds
 import androidx.compose.ui.input.pointer.pointerInput
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.compose.koinInject
@@ -46,18 +48,30 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
     val colorFilterToUse by remember (isPressed, isEditMode, useViewAsToggle) { mutableStateOf(
         ColorFilter.tint(if (isPressed && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
     ) }
+    val showInQuickPanel by remember (viewState.showInQuickPanel) {
+        mutableStateOf(viewState.showInQuickPanel)
+    }
 
-    LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
-        ignoreOutOfBoundsTouchEvents, useViewAsToggle,sdlKeyCode) {
-        if (isEditMode){
-            pointerId = null
-        }
+    fun clearResources(){
+        pointerId = null
         isPressed = false
         onTouchUp()
     }
 
+    LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
+        ignoreOutOfBoundsTouchEvents, useViewAsToggle,sdlKeyCode,showInQuickPanel) {
+        clearResources()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            clearResources()
+        }
+    }
+
     return this.pointerInput(isEditMode,mouseButtonsEventsCanBeInvoked,
-        consumeTouchEvents, ignoreOutOfBoundsTouchEvents, useViewAsToggle, sdlKeyCode) {
+        consumeTouchEvents, ignoreOutOfBoundsTouchEvents, useViewAsToggle,
+        sdlKeyCode,showInQuickPanel) {
         if (isEditMode) {
             return@pointerInput
         }
