@@ -127,7 +127,7 @@ abstract class ScreenController : IScreenController {
         val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngineSaved) }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
-        var isEditMode by remember { mutableStateOf((!inGameSaved)) }
+        var isEditMode by rememberSaveable { mutableStateOf((!inGameSaved)) }
         val backgroundColor by remember (inGameSaved, isEditMode) {
             mutableStateOf(if (!inGameSaved) {
                 Color.DarkGray
