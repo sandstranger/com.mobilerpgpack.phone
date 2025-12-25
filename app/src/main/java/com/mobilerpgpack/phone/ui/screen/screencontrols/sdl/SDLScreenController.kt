@@ -57,6 +57,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
         val activity = LocalActivity.current!!
         val rootView = remember { activity.window.decorView.rootView }
+        val inGame = remember { inGame }
 
         rootView.apply {
             DisposableEffect(this) {

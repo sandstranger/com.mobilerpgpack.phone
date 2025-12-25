@@ -53,6 +53,7 @@ abstract class ImageButton(
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         val viewState = remember { viewState }
+        val inGame = remember { inGame }
         Image(painter = painterResource(id = viewState.buttonResId),
             contentDescription = viewState.id,
             modifier = Modifier.interactiveControlModifier(isEditMode, inGame)
