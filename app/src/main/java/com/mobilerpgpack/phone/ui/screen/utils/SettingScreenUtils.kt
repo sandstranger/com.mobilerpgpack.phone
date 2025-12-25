@@ -6,7 +6,7 @@ import com.mobilerpgpack.phone.translator.models.TranslationType
 import org.koin.java.KoinJavaComponent.get
 
 fun buildTranslationsDescription () : Collection<String>{
-    val result : MutableList<String> = mutableListOf()
+    val result = mutableListOf<String>()
     val context : Context = get(Context::class.java)
 
     for (type in TranslationType.entries) {

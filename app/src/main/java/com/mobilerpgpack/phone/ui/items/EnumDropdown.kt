@@ -2,20 +2,25 @@
 
 package com.mobilerpgpack.phone.ui.items
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.dp
-import com.mobilerpgpack.phone.ui.getMenuItemColors
-import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
 import com.mobilerpgpack.phone.ui.getSurfaceColor
-import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import com.mobilerpgpack.phone.ui.getTextFieldColors
 
 @Composable
@@ -23,9 +28,9 @@ inline fun <reified T : Enum<T>> EnumDropdown(
     title: String,
     initialValue: T? = null,
     crossinline onValueChange: (T) -> Unit = {}) {
-    var expanded by remember { mutableStateOf(false) }
-    var selectedValue by remember (initialValue) { mutableStateOf(initialValue) }
-    val enumValues = remember { enumValues<T>() }
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    var selectedValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
+    val enumValues = rememberSaveable { enumValues<T>() }
     val surfaceColor = getSurfaceColor()
 
     ExposedDropdownMenuBox(

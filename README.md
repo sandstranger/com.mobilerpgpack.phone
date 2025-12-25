@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -14,6 +14,8 @@ https://github.com/Styd051/DOOM64-EX-Plus-Enhanced
 https://github.com/BodbDearg/PsyDoom
 
 https://github.com/UZDoom/UZDoom
+
+https://github.com/fgsfdsfgs/perfect_dark
 
 # System Requirements
 
@@ -139,6 +141,16 @@ All credits for Gles 3.x native render support to glKarin - https://github.com/g
 
 This project is ALSO licensed under GPL v3.
 
+## Perfect Dark
+
+For running perfect dark follow these docs - https://github.com/fgsfdsfgs/perfect_dark?tab=readme-ov-file#perfect-dark-port
+
+All Rom binaries neeed to have .z64 or .Z64 file extensions. Otherwise, the game will not start.
+
+For running perfect dark - your device need to support OPEN GL ES 3.0 render. Otherwise, the game will not start again.
+
+This perfect dark port also supported legacy ARMV7 devices without any issues.
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
@@ -193,6 +205,8 @@ DOOM64-EX-Plus-Enhanced engine source code: [Licence](https://github.com/Styd051
 PsyDoom engine source code: [Licence](https://github.com/BodbDearg/PsyDoom/blob/master/LICENSE) 	https://github.com/BodbDearg/PsyDoom
 
 UZDoom engine source code: [Licence](https://github.com/UZDoom/UZDoom/blob/trunk/LICENSE) 	https://github.com/UZDoom/UZDoom
+
+Perfect Dark source code: [Licence](https://github.com/fgsfdsfgs/perfect_dark/blob/port/LICENSE) https://github.com/fgsfdsfgs/perfect_dark
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 

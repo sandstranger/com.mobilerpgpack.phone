@@ -3,6 +3,8 @@ package com.mobilerpgpack.phone.ui.items.prefsitems
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.input.KeyboardType
 import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -18,7 +20,8 @@ fun EditTextPreferenceItem(
     keyboardType: KeyboardType = KeyboardType.Text,
     onValueChanged: ((String) -> Unit)? = null) {
     val preferencesStorage : PreferencesStorage = koinInject()
-    EditTextItem(title,value, hint, updateTextValueForced = true, keyboardType = keyboardType){
+    val key = rememberSaveable(key) { key }
+    EditTextItem(title,value, hint, keyboardType = keyboardType){
         if (key.isNotEmpty()){
             preferencesStorage.setStringValue(key, it)
         }
@@ -27,28 +30,17 @@ fun EditTextPreferenceItem(
 }
 
 @Composable
-fun EditTextPreferenceItem(
-    title: String,
-    valueFlow: Flow<String>,
-    key : String = "",
-    hint: String = "",
-    keyboardType: KeyboardType = KeyboardType.Text,
-    onValueChanged: ((String) -> Unit)? = null){
-    val initialValue by valueFlow.collectAsState(initial = "")
-    EditTextPreferenceItem(title, initialValue, key, hint,keyboardType, onValueChanged)
-}
-
-@Composable
 @JvmName("EditTextPreferenceItemFloat")
 fun EditTextPreferenceItem(
     title: String,
-    valueFlow: Flow<Float>,
+    value: Float,
     key : String = "",
     hint: String = "",
     onValueChanged: ((Float) -> Unit)? = null){
     val preferencesStorage : PreferencesStorage = koinInject()
-    val initialValue by valueFlow.collectAsState(initial = 0f)
-    EditTextPreferenceItem(title, initialValue.toString(), "", hint, KeyboardType.Decimal){
+    val key = rememberSaveable(key) { key }
+    val stringValue = rememberSaveable (value) { value.toString() }
+    EditTextPreferenceItem(title, stringValue, "", hint, KeyboardType.Decimal){
         val newValue = it.toFloatOrNull() ?: 0f
         if (key.isNotEmpty()){
             preferencesStorage.setFloatValue(key,newValue)
@@ -61,13 +53,14 @@ fun EditTextPreferenceItem(
 @JvmName("EditTextPreferenceItemInt")
 fun EditTextPreferenceItem(
     title: String,
-    valueFlow: Flow<Int>,
+    value: Int,
     key : String = "",
     hint: String = "",
     onValueChanged: ((Int) -> Unit)? = null){
     val preferencesStorage : PreferencesStorage = koinInject()
-    val initialValue by valueFlow.collectAsState(initial = 0)
-    EditTextPreferenceItem(title, initialValue.toString(), "", hint,KeyboardType.Number){
+    val key = rememberSaveable(key) { key }
+    val stringValue = rememberSaveable (value) { value.toString() }
+    EditTextPreferenceItem(title, stringValue, "", hint,KeyboardType.Number){
         val newValue = it.toIntOrNull() ?: 0
         if (key.isNotEmpty()){
             preferencesStorage.setIntValue(key, newValue)

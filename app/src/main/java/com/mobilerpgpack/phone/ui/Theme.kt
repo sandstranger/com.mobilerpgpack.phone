@@ -20,6 +20,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.compose.koinInject
@@ -67,56 +70,39 @@ private val darkColorScheme = darkColorScheme(
     onSurfaceVariant = md_dark_onSurfaceVariant)
 
 @Composable
-fun getBackgroundColor () : Color{
-    return if (useDarkTheme()) md_dark_background else md_light_background
-}
+fun getBackgroundColor () = getColor { if (it) md_dark_background else md_light_background }
 
 @Composable
-fun getSurfaceContainerHighColor () : Color{
-    return if (useDarkTheme()) md_dark_surfaceContainerHigh else md_light_surfaceContainerHigh
-}
+fun getSurfaceContainerHighColor () = getColor { if (it) md_dark_surfaceContainerHigh else md_light_surfaceContainerHigh }
 
 @Composable
-fun getSurfaceColor () : Color{
-    return if (useDarkTheme()) md_dark_surface else md_light_surface
-}
+fun getSurfaceColor () = getColor { if (it) md_dark_surface else md_light_surface }
 
 @Composable
-fun getSurfaceVariantColor () : Color{
-    return if (useDarkTheme()) md_dark_surfaceVariant else md_light_surfaceVariant
-}
+fun getSurfaceVariantColor () = getColor { if (it) md_dark_surfaceVariant else md_light_surfaceVariant }
 
 @Composable
-fun getOnSurfaceVariantColor () : Color{
-    return if (useDarkTheme()) md_dark_onSurfaceVariant else md_light_onSurfaceVariant
-}
+fun getOnSurfaceVariantColor () = getColor { if (it) md_dark_onSurfaceVariant else md_light_onSurfaceVariant }
 
 @Composable
-fun getOnSurfaceColor () : Color{
-    return if (useDarkTheme()) md_dark_onSurface else md_light_onSurface
-}
+fun getOnSurfaceColor () = getColor { if (it) md_dark_onSurface else md_light_onSurface }
 
 @Composable
-fun getOnBackgroundColor () : Color{
-    return if (useDarkTheme()) md_dark_onBackground else md_light_onBackground
-}
+fun getOnBackgroundColor () = getColor { if (it) md_dark_onBackground else md_light_onBackground }
 
 @Composable
-fun getOnPrimaryColor () : Color{
-    return if (useDarkTheme()) md_dark_onPrimary else md_light_onPrimary
-}
+fun getOnPrimaryColor () = getColor { if (it) md_dark_onPrimary else md_light_onPrimary }
 
 @Composable
-fun getPrimaryColor () : Color{
-    return if (useDarkTheme()) md_dark_primary else md_light_primary
-}
+fun getPrimaryColor () = getColor { if (it) md_dark_primary else md_light_primary }
 
 @Composable
 fun getTextButtonsColors() :  ButtonColors{
     val primaryColor = getPrimaryColor()
-    val transparentPrimaryColor = primaryColor.copy(0.4f)
+    val transparentPrimaryColor by remember (primaryColor) { mutableStateOf(primaryColor.copy(0.4f)) }
+    val transparentColor = remember { Color.Transparent }
     return ButtonDefaults.textButtonColors(
-        containerColor = Color.Transparent,
+        containerColor = transparentColor,
         contentColor = primaryColor,
         disabledContainerColor = transparentPrimaryColor,
         disabledContentColor = transparentPrimaryColor
@@ -127,39 +113,45 @@ fun getTextButtonsColors() :  ButtonColors{
 fun getButtonsColors() : ButtonColors{
     val primaryColor = getPrimaryColor()
     val onPrimaryColor = getOnPrimaryColor()
+    val disabledContainerColor by remember (primaryColor) { mutableStateOf(primaryColor.copy(0.4f)) }
+    val disabledContentColor by remember (onPrimaryColor) { mutableStateOf(onPrimaryColor.copy(0.4f)) }
     return ButtonDefaults.buttonColors(
         containerColor = primaryColor,
         contentColor = onPrimaryColor,
-        disabledContainerColor = primaryColor.copy(0.4f),
-        disabledContentColor = onPrimaryColor.copy(0.4f)
+        disabledContainerColor = disabledContainerColor,
+        disabledContentColor = disabledContentColor
     )
 }
 
 @Composable
 fun getIconButtonsColors() : IconButtonColors{
     val primaryColor = getPrimaryColor()
+    val disabledColor by remember (primaryColor) { mutableStateOf(primaryColor.copy(0.4f)) }
+    val transparentColor = remember { Color.Transparent }
     return IconButtonDefaults.iconButtonColors(
-        containerColor = Color.Transparent,
+        containerColor = transparentColor,
         contentColor = primaryColor,
-        disabledContainerColor = primaryColor.copy(0.4f),
-        disabledContentColor = primaryColor.copy(0.4f)
+        disabledContainerColor = disabledColor,
+        disabledContentColor = disabledColor
     )
 }
 
 @Composable
-fun getDividerColor () = if (useDarkTheme()) Color.White.copy(alpha = 0.3f) else Color.Black.copy(alpha = 0.2f)
+fun getDividerColor () = getColor { if (it) Color.White.copy(alpha = 0.3f) else Color.Black.copy(alpha = 0.2f) }
 
 @Composable
-fun getFabIconContainerColor() = if (useDarkTheme()) md_light_primary else md_dark_primary
+fun getFabIconContainerColor() = getColor { if (it) md_light_primary else md_dark_primary }
 
 @Composable
 fun getTextFieldColors() :  TextFieldColors{
     val surfaceColor = getOnSurfaceVariantColor()
     val onSurfaceColor = getSurfaceColor()
+    val disabledTextColor by remember (onSurfaceColor) { mutableStateOf(onSurfaceColor.copy(0.6f)) }
+    val backgroundColor by remember (onSurfaceColor){ mutableStateOf(onSurfaceColor.copy(0.3f)) }
     return TextFieldDefaults.colors(
         focusedTextColor = onSurfaceColor,
         unfocusedTextColor = onSurfaceColor,
-        disabledTextColor = onSurfaceColor.copy(0.6f),
+        disabledTextColor = disabledTextColor,
         errorTextColor = Color.Red,
         cursorColor = onSurfaceColor,
         errorLeadingIconColor = surfaceColor,
@@ -170,7 +162,7 @@ fun getTextFieldColors() :  TextFieldColors{
         unfocusedTrailingIconColor = surfaceColor,
         selectionColors = TextSelectionColors(
             handleColor = onSurfaceColor,
-            backgroundColor = onSurfaceColor.copy(0.3f)
+            backgroundColor = backgroundColor
         ),
         focusedContainerColor = surfaceColor,
         unfocusedContainerColor = surfaceColor,
@@ -181,26 +173,34 @@ fun getTextFieldColors() :  TextFieldColors{
 @Composable
 fun getRadioButtonsColors () : RadioButtonColors {
     val onSurfaceVariantColor = getOnSurfaceVariantColor()
+    val disabledSelectedColor by remember (onSurfaceVariantColor)
+    { mutableStateOf(onSurfaceVariantColor.copy(alpha = 0.4f)) }
+    val disabledUnselectedColor by remember (onSurfaceVariantColor) { mutableStateOf(onSurfaceVariantColor.copy(alpha = 0.2f)) }
     return RadioButtonDefaults.colors(
         selectedColor = getPrimaryColor(),
         unselectedColor = onSurfaceVariantColor,
-        disabledSelectedColor = onSurfaceVariantColor.copy(alpha = 0.4f),
-        disabledUnselectedColor = onSurfaceVariantColor.copy(alpha = 0.2f)
+        disabledSelectedColor = disabledSelectedColor,
+        disabledUnselectedColor = disabledUnselectedColor
     )
 }
 
 @Composable
 fun getSwitchItemColors () : SwitchColors {
     val primaryColor = getPrimaryColor()
+    val grayColor = remember { Color.Gray }
+    val uncheckedTrackColor = remember { grayColor.copy(alpha = 0.5f) }
+    val disabledCheckedThumbColor = remember { grayColor.copy(alpha = 0.4f) }
+    val disabledColor = remember { grayColor.copy(alpha = 0.2f) }
+    val disabledUncheckedTrackColor = remember { grayColor.copy(alpha = 0.1f) }
     return SwitchDefaults.colors(
         checkedThumbColor = getBackgroundColor(),
         uncheckedThumbColor = Color.Gray,
         checkedTrackColor = primaryColor,
-        uncheckedTrackColor = Color.Gray.copy(alpha = 0.5f),
-        disabledCheckedThumbColor = Color.Gray.copy(alpha = 0.4f),
-        disabledUncheckedThumbColor = Color.Gray.copy(alpha = 0.2f),
-        disabledCheckedTrackColor = Color.Gray.copy(alpha = 0.2f),
-        disabledUncheckedTrackColor = Color.Gray.copy(alpha = 0.1f)
+        uncheckedTrackColor = uncheckedTrackColor,
+        disabledCheckedThumbColor = disabledCheckedThumbColor,
+        disabledUncheckedThumbColor = disabledColor,
+        disabledCheckedTrackColor = disabledColor,
+        disabledUncheckedTrackColor = disabledUncheckedTrackColor
     )
 }
 
@@ -208,56 +208,70 @@ fun getSwitchItemColors () : SwitchColors {
 fun getEditTextFieldColors() :  TextFieldColors{
     val useDarkTheme = useDarkTheme()
     val primaryColor = getPrimaryColor()
+    val onSurfaceColor = getOnSurfaceColor()
+    val disabledColor by remember (useDarkTheme) { mutableStateOf(if (useDarkTheme) Color.White.copy(0.4f) else Color.Black.copy(alpha = 0.4f))}
+    val backgroundSelectionColor by remember (useDarkTheme) { mutableStateOf(if (useDarkTheme) Color.White.copy(0.2f)
+    else Color.Black.copy(alpha = 0.2f)) }
+    val grayColor = remember { Color.Gray }
+    val transparentColor = remember { Color.Transparent }
+    val redColor = remember { Color.Red }
     return TextFieldDefaults.colors(
-        focusedTextColor = if (useDarkTheme) Color.White else Color.Black,
-        unfocusedTextColor = if (useDarkTheme) Color.White else Color.Black,
-        disabledTextColor = if (useDarkTheme) Color.White else Color.Black.copy(alpha = 0.4f),
-        errorTextColor = Color.Red,
-        cursorColor = if (useDarkTheme) Color.White else Color.Black,
+        focusedTextColor = onSurfaceColor,
+        unfocusedTextColor = onSurfaceColor,
+        disabledTextColor = disabledColor,
+        errorTextColor = redColor,
+        cursorColor = onSurfaceColor,
         selectionColors = TextSelectionColors(
-            handleColor = if (useDarkTheme) Color.White else Color.Black,
-            backgroundColor = if (useDarkTheme) Color.White.copy(alpha = 0.3f) else Color.Black.copy(
-                alpha = 0.2f
-            )
+            handleColor = onSurfaceColor,
+            backgroundColor = backgroundSelectionColor
         ),
-        focusedContainerColor = Color.Transparent,
-        unfocusedContainerColor = Color.Transparent ,
+        focusedContainerColor = transparentColor,
+        unfocusedContainerColor = transparentColor ,
         focusedIndicatorColor = primaryColor,
-        unfocusedIndicatorColor = Color.Gray)
+        unfocusedIndicatorColor = grayColor)
 }
 
 @Composable
 fun getMenuItemColors() : MenuItemColors{
     val onBackgroundColor = getOnBackgroundColor()
+    val grayColor = remember { Color.Gray }
     return MenuItemColors(
         textColor = onBackgroundColor,
         leadingIconColor = onBackgroundColor,
         trailingIconColor = onBackgroundColor,
-        disabledTextColor = Color.Gray,
-        disabledLeadingIconColor = Color.Gray,
-        disabledTrailingIconColor = Color.Gray
+        disabledTextColor = grayColor,
+        disabledLeadingIconColor = grayColor,
+        disabledTrailingIconColor = grayColor
     )
 }
 
 @Composable
 fun getCheckBoxColors() : CheckboxColors{
     val surfaceColor = getOnSurfaceColor()
+    val uncheckedColor by remember (surfaceColor) { mutableStateOf(surfaceColor.copy(alpha = 0.6f)) }
     return CheckboxDefaults.colors(
         checkedColor = getPrimaryColor(),
         checkmarkColor = getOnPrimaryColor(),
-        uncheckedColor = surfaceColor.copy(alpha = 0.6f))
+        uncheckedColor = uncheckedColor)
 }
 
 @Composable
 fun Theme(content: @Composable () -> Unit) {
-    val colorScheme = if(useDarkTheme()) darkColorScheme else lightColorScheme
+    val useDarkTheme = useDarkTheme()
+    val colorScheme by remember (useDarkTheme) { mutableStateOf(if(useDarkTheme)
+        darkColorScheme else lightColorScheme) }
     MaterialTheme(colorScheme = colorScheme, content = content)
 }
 
 @Composable
 fun useDarkTheme () : Boolean {
     val preferencesStorage : PreferencesStorage = koinInject()
-    val useDarkThemeFlow = preferencesStorage.getUseDarkThemeValue()
-    val useDarkTheme by useDarkThemeFlow.collectAsState(initial = false)
-    return useDarkTheme
+    return preferencesStorage.getUseDarkThemeValue()
+ }
+
+@Composable
+private fun getColor (colorGetter: (Boolean) -> Color) : Color{
+    val useDarkTheme = useDarkTheme()
+    val color by remember (useDarkTheme) { mutableStateOf(colorGetter(useDarkTheme)) }
+    return color
 }

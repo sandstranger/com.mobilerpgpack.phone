@@ -9,7 +9,9 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 abstract class SDLMouseWheelButton(
@@ -68,7 +70,7 @@ abstract class SDLMouseWheelButton(
 
     private suspend fun mouseWheelAsync(keyCode: Int){
         val wheelPosition = if (wheelUp) 100.0f else -1f * 100f
-        while (true){
+        while (currentCoroutineContext().isActive){
             onMouseWheel(keyCode,0f, wheelPosition, MotionEvent.ACTION_SCROLL)
             delay(250)
         }

@@ -10,20 +10,14 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.invokeBool
 import com.sun.jna.Function
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
 open class Doom64EngineInfo(
     mainEngineLib: String,
-    allLibs: Array<String>,
-    commandLineParamsFlow : Flow<String>) :
-    SDL3EngineInfo(mainEngineLib, allLibs,
-        EngineTypes.Doom64ExPlus,emptyFlow(),commandLineParamsFlow) {
+    allLibs: Array<String>) :
+    SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Doom64ExPlus) {
 
     private val screenResolutionArray = arrayOfNulls<Any?>(2)
 
@@ -41,7 +35,9 @@ open class Doom64EngineInfo(
             "RecalculateScreenResolution")
     }
 
-    override val pathToResource get() = runBlocking { preferencesStorage.pathToDoom64MainWadsFolder.first() }
+    override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString
+
+    override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder
 
     override val fullTouchFullScreenModeCanBeUsed = false
 
@@ -61,7 +57,7 @@ open class Doom64EngineInfo(
                     }
                 }
 
-                val pathToDoom64ModsFolder = runBlocking { getPathToDoom64ModsFolder()}
+                val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
 
                 if (!baseCommandLineArgs.contains(MODS_COMMAND) && pathToDoom64ModsFolder.isNotEmpty()){
                     it +=MODS_COMMAND
@@ -72,7 +68,7 @@ open class Doom64EngineInfo(
             }
         }
 
-    override suspend fun initialize(activity: ComponentActivity) {
+    override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
     }
@@ -103,14 +99,14 @@ open class Doom64EngineInfo(
         Os.setenv("SCREEN_HEIGHT", screenResolution.screenHeight.toString(), true)
     }
 
-    private suspend fun getPathToDoom64ModsFolder(): String {
-        val enableDoom64Mods = preferencesStorage.enableDoom64Mods.first()
+    private fun getPathToDoom64ModsFolder(): String {
+        val enableDoom64Mods = preferencesStorage.enableDoom64Mods
 
         if (!enableDoom64Mods) {
             return ""
         }
 
-        var pathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder.first()
+        var pathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder
 
         if (pathToDoom64ModsFolder.isEmpty()){
             return ""

@@ -1,15 +1,14 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
 import android.util.Log
-import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -24,11 +23,9 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.PointerId
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.onSizeChanged
@@ -38,12 +35,10 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -66,10 +61,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     private val axisY = stickType.value * 2 + 1
 
     protected val engineInfo by lazy {
-        runBlocking {
-            val preferencesStorage : PreferencesStorage = get()
-            get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.first()))
-        }
+        val preferencesStorage : PreferencesStorage = get()
+        get <IEngineInfo> (named(preferencesStorage.activeEngineString))
     }
 
     final override var screenController: IScreenController? = null
@@ -146,6 +139,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         inGame: Boolean,
         onUpdateStick: (Float, Float, Boolean) -> Unit
     ) {
+        val inGame = remember { inGame }
+        val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
         var currentX by remember { mutableFloatStateOf(-1f) }
         var currentY by remember { mutableFloatStateOf(-1f) }
         var down by remember { mutableStateOf(false) }
@@ -154,12 +149,14 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         var canvasW by remember { mutableIntStateOf(0) }
         var canvasH by remember { mutableIntStateOf(0) }
 
-        if (isEditMode && inGame && (dragId!=null || down)){
-            onUpdateStick(0f, 0f, true)
-            currentX = -1f
-            currentY = -1f
-            dragId = null
-            down = false
+        LaunchedEffect (isEditMode, inGame) {
+            if (isEditMode && inGame && (dragId!=null || down)){
+                onUpdateStick(0f, 0f, true)
+                currentX = -1f
+                currentY = -1f
+                dragId = null
+                down = false
+            }
         }
 
         Canvas(
