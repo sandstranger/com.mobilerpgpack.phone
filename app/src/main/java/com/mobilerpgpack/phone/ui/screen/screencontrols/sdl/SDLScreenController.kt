@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
-import android.util.Log
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
@@ -36,7 +35,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -87,7 +85,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         val preferencesStorage : PreferencesStorage = koinInject()
-        val engineInfo : IEngineInfo = koinInject(named(activeEngine.name))
+        val activeEngine = remember (activeEngine) { activeEngine.name }
+        val engineInfo : IEngineInfo = koinInject(named(activeEngine))
         var mWidth by remember { mutableFloatStateOf(0.0f) }
         var mHeight by remember { mutableFloatStateOf(0.0f) }
         var widthSize by remember { mutableIntStateOf(0) }
@@ -174,7 +173,6 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
 
                             when {
                                 change.changedToDown() -> {
-                                    Log.d("CALLED", "CALLED" + trackedPointerId.toString())
                                     if (trackedPointerId == UNKNOWN_POINTER_ID) {
                                         trackedPointerId = pid
                                         handlePointer(MotionEvent.ACTION_DOWN)
