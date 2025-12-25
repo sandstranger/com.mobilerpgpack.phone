@@ -50,7 +50,7 @@
     <string name="controls_type">Тип экранного управления</string>
     <string name="show_in_quick_panel">Отображать в панели быстрого доступа</string>
     <string name="always_show_keyboard_button">Всегда показывать экранную кнопку клавиатуры, даже если экранное управление отключено</string>
-    <string name="block_touch_camera_events">Блокировать события сенсорной камеры, когда активен джойстик для управления тачем</string>
+    <string name="block_touch_camera_events">Блокировать тачскрин, когда активен джойстик для управления тачем</string>
     <string name="path_to_uzdoom_wad_file">Путь к главному wad файлу для UZDoom</string>
     <string name="path_to_mods_folder">Путь к папке с модами. Это перезапишет текущую историю модов</string>
     <string name="enable_mods_autoupdate">Включить автоматическое обновление модов при запуске приложения, если папка с модами выбрана</string>

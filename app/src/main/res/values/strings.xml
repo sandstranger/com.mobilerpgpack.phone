@@ -49,7 +49,7 @@
     <string name="controls_type">Screen controls type</string>
     <string name="show_in_quick_panel">Show in quick panel</string>
     <string name="always_show_keyboard_button">Always show keyboard onscreen button, even when screen controls completely disabled</string>
-    <string name="block_touch_camera_events">Block touch camera events, when onscreen joystick type for touch is active</string>
+    <string name="block_touch_camera_events">Block touchscreen, when onscreen joystick type for touch is active</string>
     <string name="command_line_args">Command Line args</string>
     <string name="path_to_uzdoom_wad_file">Path to UZDoom main wad file</string>
     <string name="path_to_mods_folder">Path to mods folder. This will overwrite current mod history</string>
