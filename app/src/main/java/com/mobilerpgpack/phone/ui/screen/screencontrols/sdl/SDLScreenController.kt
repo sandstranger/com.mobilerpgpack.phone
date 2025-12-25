@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
+import android.util.Log
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -91,7 +93,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) { mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
         val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
             engineInfo.fullTouchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
             mutableStateOf(preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.fullTouchFullScreenModeCanBeUsed &&
@@ -107,12 +110,14 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
         val UNKNOWN_POINTER_ID = rememberSaveable { UNKNOWN_POINTER_ID }
 
-        if ((isEditMode || blockTouchScreen) && trackedPointerId != UNKNOWN_POINTER_ID) {
-            handlePointer(trackedPointerId, 0f, 0f, 0f,
-                mWidth, mHeight, MotionEvent.ACTION_UP,
-                touchId ?: defaultTouchDeviceId
-            )
-            trackedPointerId = UNKNOWN_POINTER_ID
+        LaunchedEffect(isEditMode, blockTouchScreen) {
+            if ((isEditMode || blockTouchScreen) && trackedPointerId != UNKNOWN_POINTER_ID) {
+                handlePointer(trackedPointerId, 0f, 0f, 0f,
+                    mWidth, mHeight, MotionEvent.ACTION_UP,
+                    touchId ?: defaultTouchDeviceId
+                )
+                trackedPointerId = UNKNOWN_POINTER_ID
+            }
         }
 
         Box(modifier = Modifier.fillMaxSize()
@@ -144,7 +149,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                 }
             }
             .background(Color.Transparent)
-            .pointerInput(blockTouchScreen,mouseButtonsEventsCanBeInvoked) {
+            .pointerInput(blockTouchScreen) {
                 if (blockTouchScreen) {
                     return@pointerInput
                 }
@@ -169,6 +174,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
 
                             when {
                                 change.changedToDown() -> {
+                                    Log.d("CALLED", "CALLED" + trackedPointerId.toString())
                                     if (trackedPointerId == UNKNOWN_POINTER_ID) {
                                         trackedPointerId = pid
                                         handlePointer(MotionEvent.ACTION_DOWN)
