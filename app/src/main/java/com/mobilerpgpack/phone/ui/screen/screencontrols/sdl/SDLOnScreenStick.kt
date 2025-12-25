@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -145,17 +146,30 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         var currentY by remember { mutableFloatStateOf(-1f) }
         var down by remember { mutableStateOf(false) }
         var dragId by remember { mutableStateOf<PointerId?>(null) }
-
         var canvasW by remember { mutableIntStateOf(0) }
         var canvasH by remember { mutableIntStateOf(0) }
+        val viewState = remember { viewState }
+        val showInQuickPanel by remember (viewState.showInQuickPanel) {
+            mutableStateOf(viewState.showInQuickPanel)
+        }
 
-        LaunchedEffect (isEditMode, inGame) {
-            if (isEditMode && inGame && (dragId!=null || down)){
+        fun clearResources(){
+            if (inGame && (dragId!=null || down)){
                 onUpdateStick(0f, 0f, true)
                 currentX = -1f
                 currentY = -1f
                 dragId = null
                 down = false
+            }
+        }
+
+        LaunchedEffect (isEditMode, inGame, showInQuickPanel) {
+            clearResources()
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                clearResources()
             }
         }
 
@@ -171,7 +185,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     canvasW = size.width
                     canvasH = size.height
                 }
-                .pointerInput(isEditMode,inGame) {
+                .pointerInput(isEditMode,inGame, showInQuickPanel) {
                     if (isEditMode || !inGame) {
                         return@pointerInput
                     }
