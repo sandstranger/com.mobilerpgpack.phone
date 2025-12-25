@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +12,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,7 +43,6 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.flow.first
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.get
@@ -51,22 +52,22 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     private var useFloatingStartGameButton by mutableStateOf(true)
 
-    private val preferencesStorage : PreferencesStorage = get ()
-
     override val drawFloatingActionButton: Boolean get() = useFloatingStartGameButton
+
+    init {
+        with(get<PreferencesStorage>()){
+            this@SettingsScreen.useFloatingStartGameButton = useFloatingStartGameButton
+        }
+    }
 
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val activity = LocalActivity.current!!
-        val activeEngineString by preferencesStorage.activeEngineAsFlowString
-            .collectAsState(initial = EngineTypes.DefaultActiveEngine.toString())
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val activeEngineString = preferencesStorage.activeEngineString
 
         val activeEngine = rememberSaveable(activeEngineString) {
             enumValueOf<EngineTypes>(activeEngineString)
-        }
-
-        LaunchedEffect(Unit) {
-            useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton.first()
         }
 
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
@@ -93,10 +94,12 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         viewModel: SettingsScreenViewModel
     ) {
         val activity = LocalActivity.current!!
+        val transparentColor = remember { Color.Transparent }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(transparentColor)
                 .padding(innerPadding)
         ) {
             Button(
@@ -120,10 +123,12 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         navController: NavHostController,
         viewModel: SettingsScreenViewModel) {
         val scrollState = rememberScrollState()
+        val transparentColor = remember { Color.Transparent }
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(transparentColor)
                 .padding(innerPadding)
                 .verticalScroll(scrollState),
         ) {
@@ -136,6 +141,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
     @Composable
     private fun DrawCommonSettings(activeEngine: EngineTypes,
         viewModel: SettingsScreenViewModel, navController: NavHostController) {
+        val preferencesStorage : PreferencesStorage = koinInject()
         DrawTitleText(stringResource(R.string.common_settings))
 
         ListPreferenceItem(
@@ -186,14 +192,11 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     private fun DrawGraphicsSettings() {
+        val preferencesStorage : PreferencesStorage = koinInject()
 
         DrawTitleText(stringResource(R.string.graphics_settings))
-
-        val customScreenResolution by preferencesStorage.customScreenResolution
-            .collectAsState(initial = "")
-
-        val customAspectRatio by preferencesStorage.customAspectRatio
-            .collectAsState(initial = "")
+        val customScreenResolution = preferencesStorage.customScreenResolution
+        val customAspectRatio = preferencesStorage.customAspectRatio
 
         SwitchPreferenceItem(
             stringResource(R.string.dark_theme),
@@ -232,29 +235,30 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     private fun DrawEditScreenControlsSettings (){
+        val preferencesStorage : PreferencesStorage = koinInject()
         val activity = LocalActivity.current!!
-        val engineState by preferencesStorage.activeEngineAsFlowString.collectAsState(
-            initial = EngineTypes.DefaultActiveEngine.name)
+        val engineState = preferencesStorage.activeEngineString
         val activeEngine = rememberSaveable(engineState) { enumValueOf<EngineTypes>(engineState) }
         val engineInfo : IEngineInfo = koinInject(named(engineState))
         val controlsProvider : ControlsProvider = koinInject (named(activeEngine.name))
 
         if (controlsProvider.drawControlsTypesInMenu){
             ListPreferenceItem(stringResource(R.string.controls_type),
-                controlsProvider.activeControlsTypeAsFlow){
+                controlsProvider.activeControlsType){
                 controlsProvider.activeControlsType = it
             }
             DrawHorizontalDivider()
 
             SwitchItem(stringResource(R.string.block_touch_camera_events),
-                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActiveAsFlow){
+                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive){
                 controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive = it
             }
             DrawHorizontalDivider()
         }
 
         PreferenceItem(stringResource(R.string.configure_screen_controls)) {
-            ScreenControlsEditorActivity.editControls( activity,activeEngine)
+            ScreenControlsEditorActivity.editControls( activity,activeEngine,
+                preferencesStorage.enableDisplayInSafeArea)
         }
 
         DrawHorizontalDivider()
@@ -270,6 +274,13 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.editCustomScreenControlsInGame,
             preferencesStorage.editCustomScreenControlsInGamePrefsKey.name)
 
+        DrawHorizontalDivider()
+
+        SwitchPreferenceItem(
+            stringResource(R.string.use_touchscreen_in_games_menu),
+            preferencesStorage.useTouchScreenInGamesMenu,
+            preferencesStorage.useTouchScreenInGamesMenuPrefsKey.name
+        )
         DrawHorizontalDivider()
 
         if (engineInfo.fullTouchFullScreenModeCanBeUsed) {
@@ -305,6 +316,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     private fun DrawMouseCustomCursorSettings (){
+        val preferencesStorage : PreferencesStorage = koinInject()
 
         SwitchPreferenceItem(
             stringResource(R.string.show_custom_mouse_cursor),

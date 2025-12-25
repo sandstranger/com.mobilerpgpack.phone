@@ -15,13 +15,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.ui.input.pointer.AwaitPointerEventScope
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.changedToUp
-import androidx.compose.ui.util.fastAll
-import androidx.compose.ui.util.fastAny
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -30,9 +23,11 @@ import androidx.window.layout.WindowMetricsCalculator
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import java.io.Serializable
 
 data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
@@ -80,6 +75,15 @@ fun Activity.showMessageDialogBox (title: String = "", messageToShow : String,
     }
 }
 
+@Suppress("UNCHECKED_CAST")
+fun <T : Serializable> Intent.getValueFromIntent (name : String, clazz : Class<T>) : T? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        this.getSerializableExtra(name,clazz)
+    } else {
+        this.getSerializableExtra(name) as? T
+    }
+}
+
 fun <T> Flow<T>.getBlockingValue() = runBlocking { first() }
 
 fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
@@ -118,34 +122,6 @@ fun Activity.getScreenResolution(drawInSafeArea : Boolean = false): ScreenResolu
     }
 }
 
-suspend fun AwaitPointerEventScope.waitForUpOrCancellation(pass: PointerEventPass = PointerEventPass.Main,
-                                                           ignoreOutOfBounds : Boolean): PointerInputChange? {
-    if (!ignoreOutOfBounds){
-        return this.waitForUpOrCancellation(pass)
-    }
-
-    while (true) {
-        val event = awaitPointerEvent(pass)
-        if (event.changes.fastAll { it.changedToUp() }) {
-            // All pointers are up
-            return event.changes[0]
-        }
-
-        if (
-            event.changes.fastAny { it.isConsumed }
-        ) {
-            return null // Canceled
-        }
-
-        // Check for cancel by position consumption. We can look on the Final pass of the
-        // existing pointer event because it comes after the pass we checked above.
-        val consumeCheck = awaitPointerEvent(PointerEventPass.Final)
-        if (consumeCheck.changes.fastAny { it.isConsumed }) {
-            return null
-        }
-    }
-}
-
 fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
     window.decorView.apply {
         post{
@@ -159,7 +135,7 @@ fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
                         } ?: run {
                             viewTreeObserver.removeOnGlobalLayoutListener(this)
                         }
-                    }, 16)
+                    }, ONE_FRAME_DELAY)
                 }
             })
             hideSystemBars()

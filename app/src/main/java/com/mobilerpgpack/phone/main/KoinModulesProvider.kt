@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.main
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.loader.AssetsProvider
 import com.codekidlabs.storagechooser.StorageChooser
 import com.google.mlkit.common.model.RemoteModel
 import com.google.mlkit.nl.translate.TranslateRemoteModel
@@ -16,11 +15,17 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RPGEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRPGSeriesEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRPGEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkRomVersions
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomAudioSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettings.PsyDoomCheatsSettingsScreen
@@ -34,7 +39,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomComposeSettingsV
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.psydoom.PsyDoomPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Doom64ModsModel
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsFilesUpdater
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsFilesUpdater.Companion.updateFiles
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
@@ -63,17 +68,23 @@ import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
+import com.mobilerpgpack.phone.ui.items.viewmodel.FileExplorerViewModel
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom2RPGButtons
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64AbsoluteTouchControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64OnScreenStickControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doomRPGButtons
-import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomAbsoluteTouchControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.psyDoomOnScreenStickControls
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom2RPGControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64AbsoluteTouchControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64OnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doomRPGControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoomAbsoluteTouchControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoomOnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.uzDoomAbsoluteTouchControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.uzDoomOnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.wolfensteinRpgLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkAbsoluteTouchControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
@@ -82,9 +93,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenControlle
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Keyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
-import com.mobilerpgpack.phone.ui.screen.screencontrols.uzDoomAbsoluteTouchControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.uzDoomOnScreenStickControls
-import com.mobilerpgpack.phone.ui.screen.screencontrols.wolfensteinButtons
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
@@ -99,8 +107,6 @@ import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -109,6 +115,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.createdAtStart
 import org.koin.core.module.dsl.named
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.withOptions
 import org.koin.core.qualifier.named
@@ -166,10 +173,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
     private val allowDownloadingModelsOverMobile : Boolean
         get() {
-            return runBlocking {
-                val preferencesStorage : PreferencesStorage = get ()
-                preferencesStorage.allowDownloadingModelsOverMobile.first()
-            }
+            val preferencesStorage : PreferencesStorage = get ()
+            return preferencesStorage.allowDownloadingModelsOverMobile
         }
 
     private val translationModule = module {
@@ -191,7 +196,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             MLKitTranslationModel.getRemoteModel(modelCache,langCode) }
 
         single <MLKitTranslationModel> {  MLKitTranslationModel(get(),
-            TranslationManager.sourceLocale, targetLocale, allowDownloadingModelsOverMobile) }
+            TranslationManager.SOURCE_LOCALE, targetLocale, allowDownloadingModelsOverMobile) }
 
         val pathToOptModel = "${pathToUserFolder}${File.separator}opus-ct2-en-ru"
         val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
@@ -246,7 +251,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single <ITranslationModel> {
             val preferencesStorage : PreferencesStorage = get ()
-            var activeTranslationModelType = runBlocking { enumValueOf<TranslationType>(preferencesStorage.translationModelType.first()) }
+            var activeTranslationModelType = enumValueOf<TranslationType>(preferencesStorage.translationModelType)
             get<Map<TranslationType, ITranslationModel>>()[activeTranslationModelType]!! }
             .withOptions {
             named(ACTIVE_TRANSLATION_MODEL_KEY)
@@ -258,6 +263,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
     @Suppress("DEPRECATION")
     private val composeModule = module {
+        viewModelOf(::FileExplorerViewModel)
+
         factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
             StorageChooser.Builder()
                 .withActivity(activity)
@@ -290,11 +297,13 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     private val doomRpgSeriesModule = module {
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.DoomRpg, hashMapOf(
-            ControlsType.AbsoluteTouchControls to doomRPGButtons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to doomRPGControlsLayout
+        )) }.withOptions {
             named(EngineTypes.DoomRpg.name) }
 
         single {
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
@@ -313,12 +322,13 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             .withOptions { named(EngineTypes.DoomRpg.toString()) }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.Doom2Rpg, hashMapOf(
-            ControlsType.AbsoluteTouchControls to doom2RPGButtons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to doom2RPGControlsLayout
+        )) }.withOptions {
             named(EngineTypes.Doom2Rpg.name) }
 
         single {
-            val preferencesStorage : PreferencesStorage = get ()
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
@@ -326,9 +336,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 TRANSLATOR_NATIVE_LIB_NAME,
                 DOOM2RPG_MAIN_ENGINE_LIB)
 
-            DoomRPGSeriesEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB,
-                nativeLibs, EngineTypes.Doom2Rpg,
-                preferencesStorage.pathToDoom2RpgIpaFile)
+            Doom2RPGEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB, nativeLibs)
         }.withOptions {
             named(EngineTypes.Doom2Rpg.toString())
             bind<IEngineInfo>()
@@ -338,12 +346,13 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             .withOptions { named(EngineTypes.Doom2Rpg.toString()) }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.WolfensteinRpg, hashMapOf(
-            ControlsType.AbsoluteTouchControls to wolfensteinButtons)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to wolfensteinRpgLayout
+        )) }.withOptions {
             named(EngineTypes.WolfensteinRpg.name) }
 
         single {
-            val preferencesStorage : PreferencesStorage = get ()
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
@@ -351,9 +360,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 TRANSLATOR_NATIVE_LIB_NAME,
                 WOLFENSTEINRPG_MAIN_ENGINE_LIB)
 
-            DoomRPGSeriesEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB,
-                nativeLibs, EngineTypes.WolfensteinRpg,
-                preferencesStorage.pathToWolfensteinRpgIpaFile)
+            WolfensteinRPGEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB, nativeLibs)
         }.withOptions {
             named(EngineTypes.WolfensteinRpg.toString())
             bind<IEngineInfo>()
@@ -364,39 +371,39 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     private val doom64RegisterModule = module {
-
         single<ControlsProvider> { ControlsProvider(EngineTypes.Doom64ExPlus, hashMapOf(
-            ControlsType.AbsoluteTouchControls to doom64AbsoluteTouchControls,
-            ControlsType.OnScreenStick to doom64OnScreenStickControls)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to doom64AbsoluteTouchControlsLayout,
+            ControlsType.OnScreenStick to doom64OnScreenStickControlsLayout
+        )) }.withOptions {
             named(EngineTypes.Doom64ExPlus.name)
             }.withOptions {
                 named(EngineTypes.Doom64ExPlusEnhanced.name)
             }
 
         single  {
-            val preferencesStorage : PreferencesStorage = get ()
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 FMOD_NATIVE_LIB_NAME,
                 DOOM64_MAIN_ENGINE_LIB)
 
             Doom64EngineInfo(DOOM64_MAIN_ENGINE_LIB,
-                nativeLibs, preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+                nativeLibs) }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
             bind<IEngineInfo>()
         }
 
         single  {
-            val preferencesStorage : PreferencesStorage = get ()
-            val nativeLibs = arrayOf(gl4esLibraryName,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
                 SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 FMOD_NATIVE_LIB_NAME,
                 DOOM64_ENHANCED_MAIN_ENGINE_LIB)
 
             Doom64EnhancedEngineInfo(DOOM64_ENHANCED_MAIN_ENGINE_LIB,
-                nativeLibs, preferencesStorage.doom64CommandLineArgsString) }.withOptions {
+                nativeLibs) }.withOptions {
             named(EngineTypes.Doom64ExPlusEnhanced.toString())
             bind<IEngineInfo>()
         }
@@ -408,7 +415,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 named(EngineTypes.Doom64ExPlusEnhanced.toString())
             }
 
-        single<ModsModel> { ModsFilesUpdater(Doom64ModsModel.load()).updateFiles() }.withOptions {
+        single<ModsModel> { Doom64ModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
         }.withOptions {
             named(EngineTypes.Doom64ExPlusEnhanced.toString())
@@ -422,13 +429,13 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.UZDoom, hashMapOf(
-            ControlsType.AbsoluteTouchControls to uzDoomAbsoluteTouchControls,
-            ControlsType.OnScreenStick to uzDoomOnScreenStickControls)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to uzDoomAbsoluteTouchControlsLayout,
+            ControlsType.OnScreenStick to uzDoomOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.UZDoom.name) }
 
         single  {
-            val preferencesStorage : UZDoomPreferenceStorage = get (named(EngineTypes.UZDoom.toString()))
-            val nativeLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
@@ -443,8 +450,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 UZDOOM_MAIN_ENGINE_LIB)
 
             UZDoomEngineInfo(UZDOOM_MAIN_ENGINE_LIB,
-                nativeLibs,
-                preferencesStorage.uZDoomCommandLineArgsString) }.withOptions {
+                nativeLibs) }.withOptions {
             named(EngineTypes.UZDoom.toString())
             bind<IEngineInfo>()
         }
@@ -454,10 +460,11 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 named(EngineTypes.UZDoom.toString())
                 bind<IEngineUIController>()
             }
-        viewModelOf(::UZDoomComposeSettingsViewModel)
+
+        viewModel { UZDoomComposeSettingsViewModel().also { it.initialize() } }
         singleOf(::UZDoomMoreSettingsScreen).bind()
 
-        single<UZDoomModsModel> { ModsFilesUpdater(UZDoomModsModel.load()).updateFiles() }.withOptions {
+        single<UZDoomModsModel> { UZDoomModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.UZDoom.toString())
         }
     }
@@ -469,13 +476,14 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
 
         single<ControlsProvider> { ControlsProvider(EngineTypes.PsyDoom, hashMapOf(
-            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControls,
-            ControlsType.OnScreenStick to psyDoomOnScreenStickControls)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to psyDoomAbsoluteTouchControlsLayout,
+            ControlsType.OnScreenStick to psyDoomOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.PsyDoom.name) }
 
         single {
             val preferencesStorage : PsyDoomPreferencesStorage = get (named(EngineTypes.PsyDoom.toString()))
-            val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                FREETYPE_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
 
             PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
@@ -512,16 +520,60 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 inputSettings, audioSettings,cheatsSettings,multiplayerSettings)
         }.withOptions { bind<Collection<SettingScreen>>() }
 
-        viewModelOf(::PsyDoomComposeSettingsViewModel)
+        viewModel { PsyDoomComposeSettingsViewModel().also { it.initialize() } }
         singleOf(::PsyDoomMoreSettingsScreen).bind()
-        single <ModsModel> { ModsFilesUpdater( PsyDoomModsModel.load()).updateFiles() }.withOptions {
+        single <ModsModel> { PsyDoomModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.PsyDoom.toString())
+        }
+    }
+
+    private val perfectDarkKoinModule = module{
+        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomVersions.NTSC.mainLibraryName,
+        ) }.withOptions {
+            named(PerfectDarkRomVersions.NTSC.name)
+        }
+
+        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomVersions.PAL.mainLibraryName,
+        ) }.withOptions {
+            named(PerfectDarkRomVersions.PAL.name)
+        }
+
+        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+            SDL2_NATIVE_LIB_NAME,
+            PerfectDarkRomVersions.JPN.mainLibraryName,
+        ) }.withOptions {
+            named(PerfectDarkRomVersions.JPN.name)
+        }
+
+        single { PerfectDarkPreferencesStorage() }.withOptions {
+            named(EngineTypes.PerfectDark.name)
+            bind<PerfectDarkPreferencesStorage>()
+        }
+
+        single<ControlsProvider> { ControlsProvider(EngineTypes.PerfectDark, hashMapOf(
+            ControlsType.AbsoluteTouchControls to perfectDarkAbsoluteTouchControlsLayout,
+            ControlsType.OnScreenStick to perfectDarkOnScreenStickControlsLayout)) }.withOptions {
+            named(EngineTypes.PerfectDark.name) }
+
+        singleOf(::PerfectDarkComposeSettings).withOptions {
+            named(EngineTypes.PerfectDark.name)
+            bind<IEngineUIController>()
+        }
+
+        singleOf(::PerfectDarkEngineInfo).withOptions {
+            named(EngineTypes.PerfectDark.name)
+            bind<IEngineInfo>()
         }
     }
 
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
-            composeModule, doomRpgSeriesModule, doom64RegisterModule, psyDoomRegisterModule,uZDoomRegisterModule)
+            composeModule, doomRpgSeriesModule, doom64RegisterModule,
+            psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule)
     }
 
     private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {

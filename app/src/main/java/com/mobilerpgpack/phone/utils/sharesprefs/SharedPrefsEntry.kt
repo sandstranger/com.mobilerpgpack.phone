@@ -7,9 +7,10 @@ import androidx.room.PrimaryKey
 internal data class SharedPrefsEntry(
     @PrimaryKey
     val key: String,
-    var stringValue: String? = null,
-    var intValue: Int? = null,
-    var booleanValue: Boolean? = null,
-    var doubleValue: Double? = null,
-    var floatValue: Float? = null
+    var stringValue: String = "",
+    var intValue: Int = 0,
+    var booleanValue: Boolean = false,
+    var doubleValue: Double = 0.0,
+    var floatValue: Float = 0f,
+    var longValue: Long = 0L
 )

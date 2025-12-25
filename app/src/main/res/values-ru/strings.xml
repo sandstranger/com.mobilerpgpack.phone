@@ -5,7 +5,8 @@
     <string name="downloaded_text">Загружено</string>
     <string name="bytes_text">байт</string>
     <string name="use_floating_start_game_button">Использовать плавающую кнопку старта игры</string>
-    <string name="fullscreen_touch_mode">Использовать полноэкранный сенсорный режим при кастомном соотношении сторон экрана</string>
+    <string name="use_touchscreen_in_games_menu">Включить тачскрин в меню игр</string>
+    <string name="fullscreen_touch_mode">Использовать тачскрин во весь экран при кастомном соотношении сторон экрана</string>
     <string name="unknown_size">Неизвестный размер</string>
     <string name="nllb200_translate_description">Модель машинного перевода, поддерживающая 200 языков (только для высокопроизводительных устройств с большим объемом оперативной памяти)</string>
     <string name="bing_translate_description">Основан на онлайн-переводчике Bing. Нестабилен. Может быть забанен в любой момент</string>
@@ -49,7 +50,7 @@
     <string name="controls_type">Тип экранного управления</string>
     <string name="show_in_quick_panel">Отображать в панели быстрого доступа</string>
     <string name="always_show_keyboard_button">Всегда показывать экранную кнопку клавиатуры, даже если экранное управление отключено</string>
-    <string name="block_touch_camera_events">Блокировать события сенсорной камеры, когда активен джойстик для управления тачем</string>
+    <string name="block_touch_camera_events">Блокировать тачскрин, когда активен джойстик для управления тачем</string>
     <string name="path_to_uzdoom_wad_file">Путь к главному wad файлу для UZDoom</string>
     <string name="path_to_mods_folder">Путь к папке с модами. Это перезапишет текущую историю модов</string>
     <string name="enable_mods_autoupdate">Включить автоматическое обновление модов при запуске приложения, если папка с модами выбрана</string>
@@ -242,4 +243,11 @@
     <string name="psydoom_peer_type">Тип пира</string>
     <string name="psydoom_refresh_rate">Частота обновления</string>
     <string name="view_editor">%1$s редактор вью</string>
+    <string name="path_to_ntsc_perfect_dark_rom">Путь к NTSC .z64 ROM</string>
+    <string name="path_to_pal_perfect_dark_rom">Путь к PAL .z64 ROM</string>
+    <string name="path_to_jpn_perfect_dark_rom">Путь к JPN .z64 ROM</string>
+    <string name="skip_perfect_dark_intro_cutscenes">Пропускать вступительные кат-сцены</string>
+    <string name="perfect_dark_rom_version">Версия ROM</string>
+    <string name="enable_mods_support">Включить поддержку модов</string>
+    <string name="path_to_common_mods_folder">Путь к папке с модами</string>
 </resources>

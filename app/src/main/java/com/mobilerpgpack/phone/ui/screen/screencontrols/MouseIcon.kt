@@ -37,11 +37,12 @@ abstract class MouseIcon {
         val preferencesStorage = koinInject<PreferencesStorage>()
         val activity = LocalActivity.current!!
         var iconOffset by remember { mutableStateOf(IntOffset.Zero) }
-        val offsetXMouse by preferencesStorage.offsetXMouse.collectAsState(initial = 0f)
-        val offsetYMouse by preferencesStorage.offsetYMouse.collectAsState(initial = 0f)
-        val sdlWidth = fixedWidth
-        val sdlHeight = fixedHeight
-        val screenResolution = activity.getScreenResolution(drawInSafeArea = false)
+        val offsetXMouse = preferencesStorage.offsetXMouse
+        val offsetYMouse = preferencesStorage.offsetYMouse
+        val sdlWidth = remember { fixedWidth }
+        val sdlHeight = remember { fixedHeight }
+        val screenResolution by remember (activity.window.decorView)
+        { mutableStateOf(activity.getScreenResolution(drawInSafeArea = false)) }
 
         LaunchedEffect(Unit) {
             while (true) {

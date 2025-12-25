@@ -6,11 +6,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 find_package(ZLIB REQUIRED)
 
-if (${ANDROID_ABI} STREQUAL "arm64-v8a" OR ${ANDROID_ABI} STREQUAL "armeabi-v7a")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -munaligned-access")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -munaligned-access")
-endif ()
-
 set(IS_DEBUG_BUILD OFF)
 if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(IS_DEBUG_BUILD ON)
@@ -138,7 +133,16 @@ add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
 add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
 add_subdirectory("${APP_ROOT_DIR}/UZDoom")
-#add_subdirectory("${APP_ROOT_DIR}/perfect_dark")
+
+set(ROM_CONFIGS jpn-final ntsc-final pal-final)
+
+foreach(ROM_ID IN LISTS ROM_CONFIGS)
+    set(BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/build_${ROM_ID}")
+    file(MAKE_DIRECTORY ${BUILD_DIR})
+    set(CACHE_FILE "${BUILD_DIR}/CMakeCache.txt")
+    set(ROMID ${ROM_ID} CACHE STRING "ROM ID" FORCE)
+    add_subdirectory("${APP_ROOT_DIR}/perfect_dark" "${BUILD_DIR}")
+endforeach()
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})

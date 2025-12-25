@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -33,14 +34,16 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
-import com.mobilerpgpack.phone.utils.getBlockingValue
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.keyCodeMap
+import org.checkerframework.common.reflection.qual.Invoke
 import org.koin.compose.koinInject
+import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
-abstract class SDLScreenController : ScreenController() {
+abstract class SDLScreenController : ScreenController(), KoinComponent {
 
     private val customViews : MutableMap<EngineTypes, MutableMap<ControlsType,Collection<IScreenControlsView>>> = mutableMapOf()
 
@@ -48,21 +51,16 @@ abstract class SDLScreenController : ScreenController() {
 
     protected abstract val viewHeight : Int
 
-    protected val engineInfo by lazy {
-        get <IEngineInfo> (named(preferencesStorage.activeEngineAsFlowString.getBlockingValue()))
-    }
-
-    private val alwaysUseTouchFullScreenMode by lazy {
-        preferencesStorage.alwaysUseFullScreenTouchMode.getBlockingValue() && engineInfo.fullTouchFullScreenModeCanBeUsed
-    }
-
     @Composable
-    final override fun DrawTouchCamera(blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
-                                       isEditMode: Boolean, inGame: Boolean,content: @Composable () -> Unit) {
+    final override fun DrawTouchScreen(activeEngine : EngineTypes, blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
+                                       isEditMode: Boolean, inGame: Boolean, content: @Composable () -> Unit) {
 
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
+        val activity = LocalActivity.current!!
+        val rootView = remember { activity.window.decorView.rootView }
+        val inGame = remember { inGame }
 
-        LocalActivity.current!!.window.decorView.rootView.apply {
+        rootView.apply {
             DisposableEffect(this) {
                 val listener = ViewTreeObserver.OnGlobalLayoutListener {
                     rootSize = IntSize(width, height)
@@ -88,21 +86,37 @@ abstract class SDLScreenController : ScreenController() {
             return
         }
 
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val activeEngine = remember (activeEngine) { activeEngine.name }
+        val engineInfo : IEngineInfo = koinInject(named(activeEngine))
         var mWidth by remember { mutableFloatStateOf(0.0f) }
         var mHeight by remember { mutableFloatStateOf(0.0f) }
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        val useTouchFullScreenMode = alwaysUseTouchFullScreenMode && !mouseButtonsEventsCanBeInvoked
+        val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
+            engineInfo.fullTouchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
+            mutableStateOf(preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.fullTouchFullScreenModeCanBeUsed &&
+                    !mouseButtonsEventsCanBeInvoked) }
+        val blockTouchEventsSaved by rememberSaveable(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
+        val useTouchScreenInGamesMenu by rememberSaveable(preferencesStorage.useTouchScreenInGamesMenu) {
+            mutableStateOf(preferencesStorage.useTouchScreenInGamesMenu)
+        }
+        val blockTouchScreen by rememberSaveable(isEditMode,useTouchScreenInGamesMenu, mouseButtonsEventsCanBeInvoked, blockTouchEventsSaved) {
+            mutableStateOf(isEditMode || blockTouchEventsSaved || (mouseButtonsEventsCanBeInvoked && !useTouchScreenInGamesMenu) )
+        }
+        val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
+        val UNKNOWN_POINTER_ID = rememberSaveable { UNKNOWN_POINTER_ID }
 
-        if (isEditMode && trackedPointerId != UNKNOWN_POINTER_ID) {
-            handlePointer(trackedPointerId, 0f, 0f, 0f,
-                mWidth, mHeight, MotionEvent.ACTION_UP,
-                touchId ?: defaultTouchDeviceId
-            )
-            trackedPointerId = UNKNOWN_POINTER_ID
+        LaunchedEffect(isEditMode, blockTouchScreen, mouseButtonsEventsCanBeInvoked) {
+            if (trackedPointerId != UNKNOWN_POINTER_ID) {
+                handlePointer(trackedPointerId, 0f, 0f, 0f,
+                    mWidth, mHeight, MotionEvent.ACTION_UP,
+                    touchId ?: defaultTouchDeviceId, false)
+                trackedPointerId = UNKNOWN_POINTER_ID
+            }
         }
 
         Box(modifier = Modifier.fillMaxSize()
@@ -134,8 +148,8 @@ abstract class SDLScreenController : ScreenController() {
                 }
             }
             .background(Color.Transparent)
-            .pointerInput(isEditMode, blockTouchCameraEvents) {
-                if (isEditMode || blockTouchCameraEvents) {
+            .pointerInput(isEditMode,mouseButtonsEventsCanBeInvoked,blockTouchScreen) {
+                if (isEditMode || blockTouchScreen) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {
@@ -153,8 +167,8 @@ abstract class SDLScreenController : ScreenController() {
                                 handlePointer(
                                     trackedPointerId, pressure, x, y,
                                     mWidth, mHeight, touchAction,
-                                    touchId!!
-                                )
+                                    touchId!!,
+                                    mouseButtonsEventsCanBeInvoked)
                             }
 
                             when {
@@ -197,7 +211,9 @@ abstract class SDLScreenController : ScreenController() {
     }
 
     protected abstract fun handlePointer(pointerId: Int, pressure: Float, x: Float, y: Float,
-                                         viewWidth : Float, viewHeight : Float,eventAction : Int, touchDeviceId : Int)
+                                         viewWidth : Float, viewHeight : Float,eventAction : Int,
+                                         touchDeviceId : Int,
+                                         invokeMousePressingEvents : Boolean)
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
 
@@ -205,8 +221,8 @@ abstract class SDLScreenController : ScreenController() {
                                             keyCode : Int, controlsProvider: ControlsProvider) : IScreenControlsView
 
     final override fun buildCustomViews(engineTypes: EngineTypes): Collection<IScreenControlsView> {
-        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineAsFlowString
-            .getBlockingValue()))
+        val preferencesStorage : PreferencesStorage = get ()
+        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineString))
         return customViews.getOrPut(engineTypes) { mutableMapOf() }.run {
             getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes, controlsProvider)}
         }

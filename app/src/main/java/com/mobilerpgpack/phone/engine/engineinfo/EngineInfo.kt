@@ -8,9 +8,7 @@ import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,6 +21,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,14 +33,15 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
+import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
+import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
-import com.mobilerpgpack.phone.utils.getBlockingValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.mobilerpgpack.phone.utils.invokeBool
@@ -54,13 +54,9 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -70,9 +66,7 @@ import java.io.File
 abstract class EngineInfo(
     mainEngineLib: String,
     private val allLibs: Array<String>,
-    activeEngineType: EngineTypes,
-    private val pathToResourceFlow: Flow<String>,
-    private val commandLineParamsFlow : Flow<String> = emptyFlow()) : KoinComponent, IEngineInfo {
+    activeEngineType: EngineTypes) : KoinComponent, IEngineInfo {
 
     private var alwaysShowKeyboardButton = false
 
@@ -84,7 +78,8 @@ abstract class EngineInfo(
 
     protected open val preferencesStorage: PreferencesStorage by inject()
 
-    protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive
+    protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.run {
+        blockTouchCameraEventsWhenOnScreenStickActive && activeControlsType == ControlsType.OnScreenStick }
 
     protected abstract val sdlKeyboard : SDLKeyboard
 
@@ -104,16 +99,55 @@ abstract class EngineInfo(
         )
     )
 
+    protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
+
+    protected open val commandLineParams : String = ""
+
+    protected abstract val pathToResource : String
+
+    protected open val loadGL4ES : Boolean = true
+
+    protected open val enableControlsAutoHidingFeature get() = preferencesStorage.autoHideScreenControls &&
+            !hideScreenControls
+
+    private var wasInit = false
+    private var needToShowControlsLastState: Boolean = false
+    private var hideScreenControls: Boolean = false
+    private var showCustomMouseCursor: Boolean = false
+    private var allowToEditScreenControlsInGame = false
+    private var isCursorVisible by mutableStateOf(false)
+    private var displayInSafeArea: Boolean = false
+
+    private val needToShowScreenControlsNativeDelegate by lazy {
+        Function.getFunction(mainLibraryName,
+            "needToShowScreenControls")
+    }
+
+    private val needToInvokeMouseButtonsEventsDelegate by lazy {
+        Function.getFunction(mainLibraryName,
+            "needToInvokeMouseButtonsEvents")
+    }
+
+    private val pauseSoundNativeDelegate by lazy {
+        Function.getFunction(mainLibraryName,
+            "pauseSound")
+    }
+
+    private val resumeSoundNativeDelegate by lazy {
+        Function.getFunction(mainLibraryName,
+            "resumeSound")
+    }
+
     final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
         flow {
             while (currentCoroutineContext().isActive) {
                 emit(mouseButtonsEventsCanBeInvoked)
-                delay(16)
+                delay(ONE_FRAME_DELAY)
             }
         }.distinctUntilChanged()
     }
 
-    final override val mainLibraryName: String = mainEngineLib
+    override val mainLibraryName: String = mainEngineLib
 
     override val engineType: EngineTypes = activeEngineType
 
@@ -129,59 +163,22 @@ abstract class EngineInfo(
 
     override val requiredResourceExtensions = listOf<String>()
 
-    final override val nativeLibraries: Array<String> get() = allLibs
+    override val nativeLibraries: Array<String> get() = allLibs
 
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
-
-    protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
-
-    protected open val pathToResource : String get() = runBlocking { pathToResourceFlow.first() }
-
-    protected open val loadGL4ES : Boolean = true
-
-    private var wasInit = false
-    private var needToShowControlsLastState: Boolean = false
-    private var hideScreenControls: Boolean = false
-    private var showCustomMouseCursor: Boolean = false
-    private var allowToEditScreenControlsInGame = false
-    private var isCursorVisible by mutableStateOf(false)
-    private var enableControlsAutoHidingFeature = false
-    private var displayInSafeArea: Boolean = false
-
-    private var commandLineParams : String? = ""
-
-    private val needToShowScreenControlsNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "needToShowScreenControls")
-    }
-
-    private val needToInvokeMouseButtonsEventsDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "needToInvokeMouseButtonsEvents")
-    }
-
-    private val pauseSoundNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "pauseSound")
-    }
-
-    private val resumeSoundNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "resumeSound")
-    }
 
     override val fullTouchFullScreenModeCanBeUsed: Boolean = true
 
     override val commandLineArgs: Array<String>
         get() {
-            if (commandLineParams.isNullOrEmpty() || !commandLineParams!!.contains("-")) {
+            if (commandLineParams.isEmpty() || !commandLineParams.contains("-")) {
                 return emptyArray()
             }
 
             try {
                 val args = arrayListOf<String>()
 
-                commandLineParams!!.split(" ".toRegex()).forEach {
+                commandLineParams.split(" ".toRegex()).forEach {
                     val trimmedString = it.trim()
                     if (trimmedString.isNotBlank() && trimmedString.isNotEmpty()) {
                         args += trimmedString
@@ -194,16 +191,12 @@ abstract class EngineInfo(
             }
         }
 
-    override suspend fun initialize(activity: ComponentActivity) {
+    override fun initialize(activity: ComponentActivity) {
         if (wasInit){
             return
         }
 
         wasInit = true
-
-        while (!preferencesStorage.prefsWasLoaded){
-            delay(5)
-        }
 
         this.activity = activity
         initializeCommonEngineData()
@@ -212,18 +205,14 @@ abstract class EngineInfo(
         Os.setenv("PATH_TO_RESOURCES",
             File(pathToResource).absolutePath, true)
 
-        hideScreenControls = preferencesStorage.hideScreenControls.first()
-        enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls.first()
-                && engineType != EngineTypes.DoomRpg && !hideScreenControls
+        hideScreenControls = preferencesStorage.hideScreenControls
+        allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame
+        showCustomMouseCursor = preferencesStorage.showCustomMouseCursor
+        displayInSafeArea = preferencesStorage.enableDisplayInSafeArea
+        alwaysShowKeyboardButton = preferencesStorage.alwaysShowKeyboardButton
 
-        allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame.first()
-        showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.first()
-        displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.first()
-        commandLineParams = commandLineParamsFlow.firstOrNull()
-        alwaysShowKeyboardButton = preferencesStorage.alwaysShowKeyboardButton.first()
-
-        val customAspectRatio = preferencesStorage.customAspectRatio.first()
-        val customScreenResolution = preferencesStorage.customScreenResolution.first()
+        val customAspectRatio = preferencesStorage.customAspectRatio
+        val customScreenResolution = preferencesStorage.customScreenResolution
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
 
         if (!customAspectRatio.isEmpty() && !customScreenResolutionWasSet) {
@@ -305,16 +294,18 @@ abstract class EngineInfo(
                 }
             }
 
-            customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.getBlockingValue()
+            customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency
 
             sdlContainer.post {
                 sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
-
                         if (showCustomMouseCursor) {
                             mouseOverlayUI.setContent {
-                                AutoMouseModeComposable(layoutBinding!!)
+                                val binding = remember { layoutBinding!! }
+                                val isCursorVisible by rememberSaveable(isCursorVisible) {
+                                    mutableStateOf(isCursorVisible)}
+                                AutoMouseModeComposable(binding)
                                 if (isCursorVisible) {
                                     DrawMouseIcon()
                                 }
@@ -335,7 +326,9 @@ abstract class EngineInfo(
                             }
                         }
                         showKeyboardUiOverlay.setContent {
-                            val showOnlyVirtualKeyboardButton = hideScreenControls && alwaysShowKeyboardButton
+                            val showOnlyVirtualKeyboardButton = rememberSaveable {
+                                hideScreenControls && alwaysShowKeyboardButton }
+                            val sdlKeyboard = remember { sdlKeyboard }
 
                             Theme {
                                 Box(modifier = Modifier.fillMaxSize()) {
@@ -398,7 +391,7 @@ abstract class EngineInfo(
             return
         }
 
-        while (true) {
+        while (currentCoroutineContext().isActive) {
             val needToShowControls: Boolean = this.needToShowScreenControls
 
             if (needToShowControls != needToShowControlsLastState) {
@@ -413,7 +406,7 @@ abstract class EngineInfo(
                 }
             }
             needToShowControlsLastState = needToShowControls
-            delay(200)
+            delay(ONE_FRAME_DELAY)
         }
     }
 

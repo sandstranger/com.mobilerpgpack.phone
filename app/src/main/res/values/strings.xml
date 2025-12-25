@@ -6,8 +6,9 @@
     <string name="bytes_text">bytes</string>
     <string name="unknown_size">Unknown size</string>
     <string name="use_floating_start_game_button">Use floating start game button</string>
+    <string name="use_touchscreen_in_games_menu">Enable touchscreen in games menu</string>
     <string name="translation_model_title">Translation model</string>
-    <string name="fullscreen_touch_mode">Use fullscreen touch mode in custom screen aspect ratios</string>
+    <string name="fullscreen_touch_mode">Use fullscreen touchscreen in custom screen aspect ratios</string>
     <string name="bing_translate_description">Based on the online Bing translation service. Unstable. Can be banned at any moment</string>
     <string name="nllb200_translate_description">Machine translation model, which supports 200 languages (only for high-end devices with big amount of RAM)</string>
     <string name="google_translate_description">Online google translation service. Unstable. Can be banned at any moment</string>
@@ -48,7 +49,7 @@
     <string name="controls_type">Screen controls type</string>
     <string name="show_in_quick_panel">Show in quick panel</string>
     <string name="always_show_keyboard_button">Always show keyboard onscreen button, even when screen controls completely disabled</string>
-    <string name="block_touch_camera_events">Block touch camera events, when onscreen joystick type for touch is active</string>
+    <string name="block_touch_camera_events">Block touchscreen, when onscreen joystick type for touch is active</string>
     <string name="command_line_args">Command Line args</string>
     <string name="path_to_uzdoom_wad_file">Path to UZDoom main wad file</string>
     <string name="path_to_mods_folder">Path to mods folder. This will overwrite current mod history</string>
@@ -245,4 +246,11 @@
     <string name="keys_editor">Key editor</string>
     <string name="view_editor">%1$s view editor</string>
     <string name="controls_autohing">Enable auto-hiding of screen controls (does not work in Doom RPG)</string>
+    <string name="path_to_ntsc_perfect_dark_rom">Path to NTSC .z64 ROM</string>
+    <string name="path_to_pal_perfect_dark_rom">Path to PAL .z64 ROM</string>
+    <string name="path_to_jpn_perfect_dark_rom">Path to JPN .z64 ROM</string>
+    <string name="enable_mods_support">Enable mods support</string>
+    <string name="path_to_common_mods_folder">Path to mods folder</string>
+    <string name="skip_perfect_dark_intro_cutscenes">Skip intro cutscenes</string>
+    <string name="perfect_dark_rom_version">Rom version</string>
 </resources>

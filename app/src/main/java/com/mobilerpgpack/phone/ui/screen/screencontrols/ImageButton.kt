@@ -2,38 +2,21 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.content.Context
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
-import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.getBlockingValue
-import com.mobilerpgpack.phone.utils.waitForUpOrCancellation
-import kotlinx.coroutines.flow.first
-import org.koin.compose.koinInject
+import com.mobilerpgpack.phone.ui.screen.screencontrols.utils.touchListenerModifier
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.qualifier.named
 
 abstract class ImageButton(
-    val id: String,
+    id: String,
     val engineType: EngineTypes,
     private val offsetXPercent: Float = 0f,
     private val offsetYPercent: Float = 0f,
@@ -69,8 +52,10 @@ abstract class ImageButton(
 
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+        val viewState = remember { viewState }
+        val inGame = remember { inGame }
         Image(painter = painterResource(id = viewState.buttonResId),
-            contentDescription = id,
+            contentDescription = viewState.id,
             modifier = Modifier.interactiveControlModifier(isEditMode, inGame)
         )
     }
@@ -79,42 +64,17 @@ abstract class ImageButton(
 
     @Composable
     protected fun Modifier.interactiveControlModifier(isEditMode: Boolean, inGame: Boolean): Modifier {
-        val modifier = this.fillMaxSize().minimumInteractiveComponentSize()
+        val modifier = this
+            .fillMaxSize()
+            .minimumInteractiveComponentSize()
 
         if (!inGame){
             return modifier
         }
 
         val context = LocalContext.current
-        val preferencesStorage : PreferencesStorage = koinInject()
-        val activeEngineString by preferencesStorage.activeEngineAsFlowString.collectAsState("")
-
-        if (activeEngineString.isEmpty()){
-            return modifier
-        }
-
-        val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        return modifier.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
-            if (isEditMode) {
-                return@pointerInput
-            }
-            awaitEachGesture {
-                viewState.apply {
-                    val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
-                    val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
-                    val down = awaitFirstDown(pass = pointerPassToUse)
-                    if (consumeEvents) {
-                        down.consume()
-                    }
-                    onClick(context)
-                    val up = waitForUpOrCancellation(pointerPassToUse, ignoreOutOfBoundsTouchEvents
-                    )
-                    if (consumeEvents) {
-                        up?.consume()
-                    }
-                }
-            }
-        }
+        return modifier.touchListenerModifier(isEditMode, viewState, onTouchDown = {
+            onClick(context)
+        })
     }
 }
