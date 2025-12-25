@@ -17,7 +17,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RPGEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RpgComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRPGSeriesEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRPGEngineInfo
@@ -127,7 +126,6 @@ import java.io.File
 
 class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
 
-    private val clampButtonsMap = HashMap<EngineTypes, Key<Boolean>>()
     private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
 
     val allModules : List<Module>
@@ -275,8 +273,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 StorageChooser.DIRECTORY_CHOOSER else StorageChooser.FILE_PICKER)
                 .build()
         }
-
-        factory { (engineType : EngineTypes) -> getClampButtonPrefsKey(engineType) }
 
         viewModelOf(::DownloadViewModel)
         viewModelOf(::SettingsScreenViewModel)
@@ -574,10 +570,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
             psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule)
-    }
-
-    private fun getClampButtonPrefsKey (engineType: EngineTypes) = clampButtonsMap.getOrPut(engineType) {
-        booleanPreferencesKey("clamp_${engineType.toString().lowercase()}_buttons")
     }
 
     companion object{

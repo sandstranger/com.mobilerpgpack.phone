@@ -76,6 +76,7 @@ import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.keyCodeMap
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
+import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -122,9 +123,10 @@ abstract class ScreenController : IScreenController {
         val activity = LocalActivity.current!!
         val configuration = LocalConfiguration.current
         val rootView = remember { activity.window.decorView.rootView }
+        val controlsType = rememberSaveable { controlsProvider.activeControlsType }
         val density = remember (activity.resources.displayMetrics.density) {
             activity.resources.displayMetrics.density }
-        val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngineSaved) }
+        val clampButtonsPrefsKey = remember { booleanPreferencesKey("${activeEngine.name.lowercase()}_${controlsType.name.lowercase()}") }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
         var isEditMode by rememberSaveable { mutableStateOf((!inGameSaved)) }
