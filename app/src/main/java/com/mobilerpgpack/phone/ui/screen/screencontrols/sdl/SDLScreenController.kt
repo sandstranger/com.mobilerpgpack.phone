@@ -110,12 +110,22 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
         val UNKNOWN_POINTER_ID = rememberSaveable { UNKNOWN_POINTER_ID }
 
-        LaunchedEffect(isEditMode, blockTouchScreen, mouseButtonsEventsCanBeInvoked) {
+        fun clearResources(){
             if (trackedPointerId != UNKNOWN_POINTER_ID) {
                 handlePointer(trackedPointerId, 0f, 0f, 0f,
                     mWidth, mHeight, MotionEvent.ACTION_UP,
                     touchId ?: defaultTouchDeviceId, false)
                 trackedPointerId = UNKNOWN_POINTER_ID
+            }
+        }
+
+        LaunchedEffect(isEditMode, blockTouchScreen, mouseButtonsEventsCanBeInvoked) {
+            clearResources()
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                clearResources()
             }
         }
 
