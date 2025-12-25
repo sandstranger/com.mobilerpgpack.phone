@@ -109,7 +109,7 @@ abstract class Dpad(
         ) {
             if (inGame && !isEditMode) {
                 Box(modifier = Modifier.fillMaxSize().minimumInteractiveComponentSize()
-                    .touchListenerModifier(false,viewState))
+                    .touchListenerModifier(false,viewState, changeItemColor = false))
             }
 
             val buttonSize by remember (size) { mutableStateOf(size * 0.4f)}
@@ -179,7 +179,7 @@ abstract class Dpad(
         }
 
         val sdlKeyCode by rememberSaveable  (sdlKeyEvent) { mutableIntStateOf(sdlKeyEvent) }
-        return modifier.touchListenerModifier(isEditMode, viewState, onTouchDown = {
+        return modifier.touchListenerModifier(isEditMode, viewState, changeItemColor = false, onTouchDown = {
             onTouchDown(sdlKeyCode)
         }, onTouchUp = {
             onTouchUp(sdlKeyCode)
