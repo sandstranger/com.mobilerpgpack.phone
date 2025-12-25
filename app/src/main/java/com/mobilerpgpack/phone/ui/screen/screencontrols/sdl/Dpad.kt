@@ -102,6 +102,7 @@ abstract class Dpad(
 
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
+        val inGame = remember { inGame }
         Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {

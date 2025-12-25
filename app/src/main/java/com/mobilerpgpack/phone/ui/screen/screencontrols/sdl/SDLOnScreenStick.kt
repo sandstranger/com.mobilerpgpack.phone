@@ -139,6 +139,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         inGame: Boolean,
         onUpdateStick: (Float, Float, Boolean) -> Unit
     ) {
+        val inGame = remember { inGame }
         var currentX by remember { mutableFloatStateOf(-1f) }
         var currentY by remember { mutableFloatStateOf(-1f) }
         var down by remember { mutableStateOf(false) }
