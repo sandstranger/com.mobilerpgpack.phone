@@ -27,9 +27,10 @@ import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
 @Composable
-fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
+fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, changeItemColor : Boolean = true,
                                     onTouchDown : () -> Unit = {}, onTouchUp : () -> Unit = {}) : Modifier {
 
+    val changeItemColor = remember (changeItemColor) { changeItemColor }
     var isPressed by rememberSaveable { mutableStateOf(false) }
     val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
     val viewState = remember { viewState }
@@ -122,5 +123,5 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
                 }
             }
         }
-    }.graphicsLayer { colorFilter = colorFilterToUse }
+    }.run { if (changeItemColor) graphicsLayer { colorFilter = colorFilterToUse } else this }
 }
