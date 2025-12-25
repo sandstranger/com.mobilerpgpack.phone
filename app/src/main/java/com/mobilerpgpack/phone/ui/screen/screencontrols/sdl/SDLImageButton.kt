@@ -74,6 +74,8 @@ abstract class SDLImageButton(
     @Composable
     protected fun Modifier.interactiveControlModifier (isEditMode: Boolean, inGame: Boolean) : Modifier{
         val modifierTouse = this.fillMaxSize().minimumInteractiveComponentSize()
+        val inGame = remember { inGame }
+
         if (!inGame){
             return modifierTouse
         }
