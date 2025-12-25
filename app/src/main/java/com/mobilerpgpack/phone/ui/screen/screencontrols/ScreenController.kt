@@ -169,8 +169,10 @@ abstract class ScreenController : IScreenController {
             }
         }
 
-        if (!readyToDrawControls) {
-            activeViewsToDraw.forEach { it.screenController = this }
+        LaunchedEffect(Unit) {
+            if (!readyToDrawControls){
+                activeViewsToDraw.forEach { it.screenController = this@ScreenController }
+            }
         }
 
         if (drawInSafeAreaSaved) {
@@ -200,9 +202,13 @@ abstract class ScreenController : IScreenController {
                 }
             }
         }
-        else if (!readyToDrawControls) {
-            preloadButtons()
-            readyToDrawControls = true
+        else{
+            LaunchedEffect(Unit) {
+                if (!readyToDrawControls) {
+                    preloadButtons()
+                    readyToDrawControls = true
+                }
+            }
         }
 
         DrawTouchScreen(activeEngineSaved,blockTouchCameraEvents,

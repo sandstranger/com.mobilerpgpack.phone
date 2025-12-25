@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -146,12 +147,14 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         var canvasW by remember { mutableIntStateOf(0) }
         var canvasH by remember { mutableIntStateOf(0) }
 
-        if (isEditMode && inGame && (dragId!=null || down)){
-            onUpdateStick(0f, 0f, true)
-            currentX = -1f
-            currentY = -1f
-            dragId = null
-            down = false
+        LaunchedEffect (isEditMode, inGame) {
+            if (isEditMode && inGame && (dragId!=null || down)){
+                onUpdateStick(0f, 0f, true)
+                currentX = -1f
+                currentY = -1f
+                dragId = null
+                down = false
+            }
         }
 
         Canvas(
