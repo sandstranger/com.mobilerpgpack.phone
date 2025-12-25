@@ -145,7 +145,7 @@ This project is ALSO licensed under GPL v3.
 
 For running perfect dark follow these docs - https://github.com/fgsfdsfgs/perfect_dark?tab=readme-ov-file#perfect-dark-port
 
-All Roms binaries neeed to hase .z64 or .Z64 file extensions. Otherwise, the game will not start.
+All Rom binaries neeed to have .z64 or .Z64 file extensions. Otherwise, the game will not start.
 
 For running perfect dark - your device need to support OPEN GL ES 3.0 render. Otherwise, the game will not start again.
 
