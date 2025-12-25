@@ -65,7 +65,6 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
         awaitPointerEventScope {
             while (true) {
                 val event = awaitPointerEvent()
-
                 val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                 for (change in event.changes) {
                     val pid = change.id
