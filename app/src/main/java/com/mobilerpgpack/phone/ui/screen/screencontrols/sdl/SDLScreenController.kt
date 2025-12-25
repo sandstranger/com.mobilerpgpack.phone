@@ -93,8 +93,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var widthSize by remember { mutableIntStateOf(0) }
         var heightSize by remember { mutableIntStateOf(0) }
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
-        val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        val mouseButtonsEventsCanBeInvoked by remember(mouseButtonsEventsCanBeInvokedFlow) { mutableStateOf(mouseButtonsEventsCanBeInvokedFlow)}
+        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
             engineInfo.fullTouchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
             mutableStateOf(preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.fullTouchFullScreenModeCanBeUsed &&
@@ -110,8 +109,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
         val UNKNOWN_POINTER_ID = rememberSaveable { UNKNOWN_POINTER_ID }
 
-        LaunchedEffect(isEditMode, blockTouchScreen) {
-            if ((isEditMode || blockTouchScreen) && trackedPointerId != UNKNOWN_POINTER_ID) {
+        LaunchedEffect(isEditMode, blockTouchScreen, mouseButtonsEventsCanBeInvoked) {
+            if (trackedPointerId != UNKNOWN_POINTER_ID) {
                 handlePointer(trackedPointerId, 0f, 0f, 0f,
                     mWidth, mHeight, MotionEvent.ACTION_UP,
                     touchId ?: defaultTouchDeviceId
@@ -149,8 +148,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                 }
             }
             .background(Color.Transparent)
-            .pointerInput(blockTouchScreen) {
-                if (blockTouchScreen) {
+            .pointerInput(isEditMode,mouseButtonsEventsCanBeInvoked,blockTouchScreen) {
+                if (isEditMode || blockTouchScreen) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {
