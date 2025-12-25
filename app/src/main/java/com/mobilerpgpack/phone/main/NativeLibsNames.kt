@@ -24,7 +24,15 @@ const val FMOD_NATIVE_LIB_NAME = "fmod"
 
 const val SDL3HELPER_NATIVE_LIB_NAME = "SDL3Helper"
 
+const val PERFECT_DARK_JPN_NATIVE_LIB_NAME = "pd-jpn-final"
+
+const val PERFECT_DARK_NTSC_NATIVE_LIB_NAME = "pd-ntsc-final"
+
+const val PERFECT_DARK_PAL_NATIVE_LIB_NAME = "pd-pal-final"
+
 const val SDL2_NATIVE_LIB_NAME = "SDL2"
+
+const val C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME = "c++_shared"
 
 const val ZMUSIC_NATIVE_LIB_NAME = "zmusic"
 

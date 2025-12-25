@@ -23,7 +23,7 @@ fun ShowYesNoDialog (title: String = "", message : String,
     val surfaceContainerHighColor = getSurfaceContainerHighColor()
     val buttonsColors = getTextButtonsColors()
 
-    AlertDialog(title = { Text(title) },
+    AlertDialog(title = { Text(title, color = onSurfaceColor) },
         containerColor = surfaceContainerHighColor,
         textContentColor = onSurfaceVariantColor,
         iconContentColor = onSurfaceVariantColor,

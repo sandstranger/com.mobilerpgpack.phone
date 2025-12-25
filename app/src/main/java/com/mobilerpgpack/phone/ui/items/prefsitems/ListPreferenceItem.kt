@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +26,6 @@ import com.mobilerpgpack.phone.ui.getOnSurfaceColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
 import com.mobilerpgpack.phone.ui.getRadioButtonsColors
 import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun ListPreferenceItem(title: String,
@@ -36,7 +34,7 @@ fun ListPreferenceItem(title: String,
                        onValueChange : ((String) -> Unit)? = null){
     var showValuesDialog by rememberSaveable  { mutableStateOf(false) }
     var activeValue by rememberSaveable (initialValue) { mutableStateOf(initialValue) }
-    val entriesToDraw by rememberSaveable { mutableStateOf(entries.toList()) }
+    val entriesToDraw = rememberSaveable (entries) { entries.toList() }
     val onSurfaceVariantColor = getOnSurfaceVariantColor()
     val onSurfaceColor = getOnSurfaceColor()
     val surfaceContainerHighColor = getSurfaceContainerHighColor()
@@ -94,15 +92,6 @@ fun ListPreferenceItem(title: String,
 }
 
 @Composable
-fun ListPreferenceItem(title: String,
-                       initialValueFlow: Flow<String>,
-                       entries : Collection<String>,
-                       onValueChange : ((String) -> Unit)? = null){
-    val initialValue by initialValueFlow.collectAsState(initial = "")
-    ListPreferenceItem(title, initialValue, entries, onValueChange)
-}
-
-@Composable
 inline fun <reified T : Enum<T>> ListPreferenceItem(
     title: String,
     initialValue: T? = null,
@@ -110,22 +99,6 @@ inline fun <reified T : Enum<T>> ListPreferenceItem(
     var selectedValue by remember (initialValue) { mutableStateOf(initialValue) }
     val enumValues = remember { enumValues<T>().map { it.toString() }.toList() }
     ListPreferenceItem(title, selectedValue.toString(),enumValues){
-        val newValue = enumValueOf<T>(it)
-        selectedValue = newValue
-        onValueChange.invoke(newValue)
-    }
-}
-
-@Composable
-inline fun <reified T : Enum<T>> ListPreferenceItem(
-    title: String,
-    valueFlow: Flow<T>,
-    crossinline onValueChange: (T) -> Unit = {}) {
-    val enumValues = remember { enumValues<T>().toList() }
-    val enumValuesStrings = remember { enumValues.map { it.toString() }.toList() }
-    val initialValue by valueFlow.collectAsState(initial = enumValues.first())
-    var selectedValue by remember (initialValue) { mutableStateOf(initialValue) }
-    ListPreferenceItem(title, selectedValue.toString(),enumValuesStrings){
         val newValue = enumValueOf<T>(it)
         selectedValue = newValue
         onValueChange.invoke(newValue)

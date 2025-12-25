@@ -28,18 +28,17 @@ class ComposeImmutableList <T> () {
 
     val sourceList get() = _sourceList
 
-    val composeList get() = _composeList
+    val composeList get() : List<T> = _composeList
 
     var count
         get() = _count.value
         set(value) {
             _count.value = value
             _composeList = _sourceList.let {
-                if (value ==0){
+                if (value == 0) {
                     it.clear()
-                }
-                else{
-                    it.resizeTo(value!! ){ index ->
+                } else {
+                    it.resizeTo(value!!) { index ->
                         defaultValue(index)
                     }
                 }

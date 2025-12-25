@@ -38,27 +38,23 @@ fun EditTextItem(
     value: String,
     hint: String = "",
     singleLine : Boolean = true,
-    updateTextValueForced : Boolean = false,
     keyboardType : KeyboardType = KeyboardType.Text,
     onValueChange: ((String) -> Unit)? = null
 ) {
+    val hint = rememberSaveable(hint) { hint }
     var showDialog by rememberSaveable { mutableStateOf(false) }
-    var currentTextValue by rememberSaveable { mutableStateOf(value) }
+    var currentTextValue by rememberSaveable (value) { mutableStateOf(value) }
     val onSurfaceVariantColor = getOnSurfaceVariantColor()
     val onSurfaceColor = getOnSurfaceColor()
     val primaryColor = getPrimaryColor()
     val surfaceContainerHighColor = getSurfaceContainerHighColor()
     val textButtonsColor = getTextButtonsColors()
     val onBackgroundColor = getOnBackgroundColor()
-    val hintColor = Color.Gray
+    val hintColor = remember {Color.Gray }
     val textColor = if (currentTextValue.isEmpty() && hint.isNotEmpty()) hintColor else onBackgroundColor
     var textToShowWhenDialogBoxActive by rememberSaveable { mutableStateOf(currentTextValue) }
-    val showText = if (showDialog) textToShowWhenDialogBoxActive.isNotEmpty() else
-        currentTextValue.isNotEmpty() || hint.isNotEmpty()
-
-    if (currentTextValue!=value && !showDialog && updateTextValueForced){
-        currentTextValue = value
-    }
+    val showText = (if (showDialog) textToShowWhenDialogBoxActive.isNotEmpty() else
+        currentTextValue.isNotEmpty()) || hint.isNotEmpty()
 
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -128,10 +124,9 @@ fun <T> EditTextItem(
     value: T,
     hint: String = "",
     singleLine : Boolean = true,
-    updateTextValueForced : Boolean = false,
     keyboardType : KeyboardType = KeyboardType.Text,
     onValueChange: ((String) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine,updateTextValueForced, keyboardType, onValueChange)
+    EditTextItem(title, value.toString(), hint, singleLine, keyboardType, onValueChange)
 }
 
 @Composable
@@ -140,9 +135,8 @@ fun EditTextItem(
     value: Int,
     hint: String = "",
     singleLine : Boolean = true,
-    updateTextValueForced : Boolean = false,
     onValueChange: ((Int) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine, updateTextValueForced, keyboardType = KeyboardType.Number){
+    EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Number){
         val newValue = it.toIntOrNull() ?: 0
         onValueChange?.invoke(newValue)
     }
@@ -154,9 +148,8 @@ fun EditTextItem(
     value: Float,
     hint: String = "",
     singleLine : Boolean = true,
-    updateTextValueForced : Boolean = false,
     onValueChange: ((Float) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine, updateTextValueForced, keyboardType = KeyboardType.Decimal){
+    EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Decimal){
         val newValue = it.toFloatOrNull() ?: 0.0f
         onValueChange?.invoke(newValue)
     }
@@ -171,7 +164,7 @@ fun <T> AutoUpdatedEditTextItem(
     keyboardType : KeyboardType = KeyboardType.Text,
     onValueChange: ((String) -> T)? = null){
     var currentValue by rememberSaveable { mutableStateOf(value.toString())}
-    EditTextItem(title, currentValue, hint, singleLine,true, keyboardType){
+    EditTextItem(title, currentValue, hint, singleLine, keyboardType){
         onValueChange?.invoke(it)?.toString()?.run {
             currentValue = this
         }
@@ -186,7 +179,7 @@ fun AutoUpdatedEditTextItem(
     singleLine : Boolean = true,
     onValueChange: ((Int) -> Int)? = null){
     var currentValue by rememberSaveable { mutableStateOf(value.toString())}
-    EditTextItem(title, currentValue, hint, singleLine, true, keyboardType = KeyboardType.Number){
+    EditTextItem(title, currentValue, hint, singleLine, keyboardType = KeyboardType.Number){
         onValueChange?.invoke(it.toIntOrNull() ?: 0)?.toString()?.run {
             currentValue = this
         }
@@ -201,7 +194,7 @@ fun AutoUpdatedEditTextItem(
     singleLine : Boolean = true,
     onValueChange: ((Float) -> Float)? = null){
     var currentValue by rememberSaveable { mutableStateOf(value.toString()) }
-    EditTextItem(title, currentValue, hint, singleLine, true, keyboardType = KeyboardType.Decimal){
+    EditTextItem(title, currentValue, hint, singleLine, keyboardType = KeyboardType.Decimal){
         onValueChange?.invoke(it.toFloatOrNull() ?: 0.0f)?.toString()?.run {
             currentValue = this
         }
@@ -218,7 +211,7 @@ fun AutoUpdatedEditTextItem(
     onValueChange: ((String) -> String)? = null
 ) {
     var currentValue by rememberSaveable { mutableStateOf(value)}
-    EditTextItem(title,currentValue, hint, singleLine, updateTextValueForced = true, keyboardType){
+    EditTextItem(title,currentValue, hint, singleLine, keyboardType){
         onValueChange?.invoke(it)?.run {
             currentValue = this
         }

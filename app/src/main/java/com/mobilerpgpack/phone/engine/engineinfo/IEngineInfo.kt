@@ -22,7 +22,7 @@ interface IEngineInfo {
     val commandLineArgs : Array<String>
     val mouseButtonsEventsCanBeInvoked : Boolean
     val fullTouchFullScreenModeCanBeUsed : Boolean
-    suspend fun initialize(activity: ComponentActivity)
+    fun initialize(activity: ComponentActivity)
     fun loadLayout()
     fun onPause()
     fun onResume()

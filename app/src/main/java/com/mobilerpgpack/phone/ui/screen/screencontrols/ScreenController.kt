@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -41,6 +41,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,18 +53,15 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.getButtonsColors
@@ -80,17 +78,13 @@ import com.mobilerpgpack.phone.utils.keyCodeMap
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
-abstract class ScreenController : KoinComponent, IScreenController {
+abstract class ScreenController : IScreenController {
 
     private val _activeViewsToDraw: MutableList<IScreenControlsView> = mutableListOf()
-
-    protected val preferencesStorage : PreferencesStorage = get ()
 
     final override val activeViewsToDraw: Collection<IScreenControlsView> get() = _activeViewsToDraw
 
@@ -108,33 +102,47 @@ abstract class ScreenController : KoinComponent, IScreenController {
         drawInSafeArea : Boolean,
         onBack: () -> Unit) {
 
-        val controlsProvider : ControlsProvider = koinInject(named(activeEngine.name))
-
-        _activeViewsToDraw.apply {
-            clear()
-            addAll(controlsProvider.controlsToDraw)
-            addAll(buildCustomViews(activeEngine))
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val onBackSaved = remember { onBack }
+        val allowToEditControlsSaved = rememberSaveable(allowToEditControls) { allowToEditControls }
+        val activeEngineSaved = rememberSaveable(activeEngine) {activeEngine}
+        val drawInSafeAreaSaved = rememberSaveable(drawInSafeArea) { drawInSafeArea }
+        val inGameSaved = rememberSaveable(inGame) { inGame }
+        val controlsProvider : ControlsProvider = koinInject(named(activeEngineSaved.name))
+        val customViews = remember { buildCustomViews(activeEngineSaved) }
+        val commonsViewsToDraw = remember { controlsProvider.controlsToDraw }
+        val activeViewsToDraw = remember {
+            _activeViewsToDraw.apply {
+                clear()
+                addAll(commonsViewsToDraw)
+                addAll(customViews)
+            }
         }
 
         val activity = LocalActivity.current!!
         val configuration = LocalConfiguration.current
-        val density = activity.resources.displayMetrics.density
-        val coroutineScope = rememberCoroutineScope()
-
-        val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngine) }
-        val viewsToDraw by remember { mutableStateOf(mutableMapOf<String, IScreenControlsView>()) }
+        val rootView = remember { activity.window.decorView.rootView }
+        val density = remember (activity.resources.displayMetrics.density) {
+            activity.resources.displayMetrics.density }
+        val clampButtonsPrefsKey = koinInject<Key<Boolean>> { parametersOf(activeEngineSaved) }
+        val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
-        var isEditMode by remember { mutableStateOf((!inGame)) }
-        var backgroundColor by remember { mutableStateOf(Color.Transparent) }
+        var isEditMode by remember { mutableStateOf((!inGameSaved)) }
+        val backgroundColor by remember (inGameSaved, isEditMode) {
+            mutableStateOf(if (!inGameSaved) {
+                Color.DarkGray
+            } else {
+                if (isEditMode) transparentDarkColor else Color.Transparent
+            }) }
         var readyToDrawControls by remember { mutableStateOf(false) }
-        val clampButtonsFlow by preferencesStorage.getBooleanValue( clampButtonsPrefsKey, true).collectAsStateWithLifecycle(true)
-        var allContentLoaded by remember { mutableStateOf(false) }
-
-        var screenWidthPx by remember { mutableFloatStateOf(0f) }
-        var screenHeightPx by remember { mutableFloatStateOf(0f) }
+        var clampButtons by remember {
+            mutableStateOf(preferencesStorage.getClampButtonsValue(clampButtonsPrefsKey))
+        }
+        var screenWidthPx by remember { mutableFloatStateOf(configuration.screenWidthDp * density) }
+        var screenHeightPx by remember { mutableFloatStateOf(configuration.screenHeightDp * density) }
 
         fun clampView(state: ViewState, clampForced : Boolean = false) {
-            if (clampButtonsFlow || clampForced) {
+            if (clampButtons || clampForced) {
                 state.apply {
                     offsetXPercent = offsetXPercent.coerceIn(0f, 1f - state.sizePercent)
                     val buttonHeightPx = sizePercent * screenWidthPx
@@ -144,8 +152,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
             }
         }
 
-        suspend fun preloadButtons() {
-            val loadedMap = _activeViewsToDraw.associateBy { it.viewState.id }
+        fun preloadButtons() {
+            val loadedMap = activeViewsToDraw.associateBy { it.viewState.id }
             loadedMap.values.forEach { view ->
                 view.viewState.apply {
                     load()
@@ -161,10 +169,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
             }
         }
 
-        _activeViewsToDraw.forEach { it.screenController = this }
+        LaunchedEffect(Unit) {
+            if (!readyToDrawControls){
+                activeViewsToDraw.forEach { it.screenController = this@ScreenController }
+            }
+        }
 
-        if (drawInSafeArea) {
-            activity.window.decorView.rootView.apply {
+        if (drawInSafeAreaSaved) {
+            rootView.apply {
                 DisposableEffect(this) {
                     val listener = ViewTreeObserver.OnGlobalLayoutListener {
                         val insets = ViewCompat.getRootWindowInsets(this@apply)!!
@@ -178,12 +190,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         screenHeightPx =
                             (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
 
-                        if (!allContentLoaded) {
-                            allContentLoaded = true
-                            coroutineScope.launch {
-                                preloadButtons()
-                                readyToDrawControls = true
-                            }
+                        if (!readyToDrawControls) {
+                            preloadButtons()
+                            readyToDrawControls = true
                         }
                     }
                     viewTreeObserver.addOnGlobalLayoutListener(listener)
@@ -194,21 +203,16 @@ abstract class ScreenController : KoinComponent, IScreenController {
             }
         }
         else{
-            screenWidthPx = configuration.screenWidthDp * density
-            screenHeightPx = configuration.screenHeightDp * density
             LaunchedEffect(Unit) {
-                preloadButtons()
-                readyToDrawControls = true
+                if (!readyToDrawControls) {
+                    preloadButtons()
+                    readyToDrawControls = true
+                }
             }
         }
 
-        backgroundColor = if (!inGame) {
-            Color.DarkGray
-        } else {
-            if (isEditMode) transparentDarkColor else Color.Transparent
-        }
-
-        DrawTouchCamera(blockTouchCameraEvents,drawInSafeArea,isEditMode, inGame) {
+        DrawTouchScreen(activeEngineSaved,blockTouchCameraEvents,
+            drawInSafeAreaSaved,isEditMode, inGameSaved) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -217,11 +221,11 @@ abstract class ScreenController : KoinComponent, IScreenController {
                 if (isEditMode) {
                     EditControls(
                         selectedButtonId,
-                        inGame,
+                        inGameSaved,
                         onAlphaChange = { delta ->
                             selectedButtonId?.let { id ->
                                 viewsToDraw[id]!!.viewState.apply {
-                                    alpha = (alpha + delta).coerceIn(0.0f, 1f)
+                                    alpha = (alpha + delta).coerceIn(MIN_VIEW_ALPHA, MAX_VIEW_ALPHA)
                                     save()
                                 }
                             }
@@ -254,32 +258,31 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         },
                         onReset = {
                             selectedButtonId = null
-                            coroutineScope.launch {
-                                preferencesStorage.setBooleanValueAsync(clampButtonsPrefsKey, true)
-                                viewsToDraw.values.forEach { view ->
-                                    view.viewState.apply {
-                                        val wasDeletedBeforeReset = isDeleted
-                                        resetToDefaults()
-                                        if (!isDeleted) {
-                                            clampView(this)
-                                        }
-                                        if (!wasDeletedBeforeReset || !isDeleted) {
-                                            save()
-                                        }
+                            preferencesStorage.setBooleanValue(clampButtonsPrefsKey, true)
+                            clampButtons = true
+                            viewsToDraw.values.forEach { view ->
+                                view.viewState.apply {
+                                    val wasDeletedBeforeReset = isDeleted
+                                    resetToDefaults()
+                                    if (!isDeleted) {
+                                        clampView(this, true)
+                                    }
+                                    if (!wasDeletedBeforeReset || !isDeleted) {
+                                        save()
                                     }
                                 }
                             }
                         },
                         onBack = {
                             selectedButtonId = null
-                            onBack()
+                            onBackSaved()
                         },
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
                 if (readyToDrawControls) {
-                    if (inGame && allowToEditControls) {
+                    if (inGameSaved && allowToEditControlsSaved) {
                         Image(
                             painter = painterResource(R.drawable.cog),
                             contentDescription = "settings_button",
@@ -289,23 +292,33 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                 .alpha(0.5f)
                                 .minimumInteractiveComponentSize()
                                 .padding(8.dp)
-                                .clickable(indication = null,
+                                .clickable(
+                                    indication = null,
                                     interactionSource = null
-                                ){
+                                ) {
                                     isEditMode = !isEditMode
                                 }
                         )
                     }
 
                     viewsToDraw.forEach { (id, view) ->
+                        val id = remember (id){ id }
+                        val view = remember (view) { view }
+                        val viewState = remember (view.viewState) { view.viewState }
+                        val sizePx: Float by remember (screenWidthPx,viewState.sizePercent ) {
+                            mutableFloatStateOf(screenWidthPx * view.viewState.sizePercent) }
+                        val sizeDp: Dp by remember (sizePx, density) {
+                            mutableStateOf( (sizePx / density).dp) }
 
-                        val sizePx: Float = screenWidthPx * view.viewState.sizePercent
-                        val sizeDp: Dp = (sizePx / density).dp
+                        val renderOffsetX by remember (viewState.offsetXPercent,screenWidthPx) {
+                            mutableFloatStateOf(viewState.offsetXPercent * screenWidthPx)
+                        }
+                        val renderOffsetY by remember (viewState.offsetYPercent,
+                            screenHeightPx ) { mutableFloatStateOf(viewState.offsetYPercent * screenHeightPx) }
 
-                        val renderOffsetX = view.viewState.offsetXPercent * screenWidthPx
-                        val renderOffsetY = view.viewState.offsetYPercent * screenHeightPx
-
-                        val renderView = !view.viewState.isDeleted && (isEditMode || view.renderView)
+                        val renderView by remember (viewState.isDeleted, viewState.viewRenderRule,
+                            viewState.showInQuickPanel, showScreenControls, showQuickPanelItems, isEditMode, inGameSaved) {
+                            mutableStateOf(!viewState.isDeleted && (isEditMode || view.renderView)) }
 
                         if (renderView) {
                             DrawView(
@@ -321,6 +334,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                             clampButtonsPrefsKey,
                                             false
                                         )
+                                        clampButtons = false
                                     }
                                 },
                                 onDragEnd = { newX, newY ->
@@ -330,7 +344,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                         save()
                                     }
                                 },
-                                inGame = inGame,
+                                inGame = inGameSaved,
                             )
                         }
                     }
@@ -340,7 +354,8 @@ abstract class ScreenController : KoinComponent, IScreenController {
     }
 
     @Composable
-    protected abstract fun DrawTouchCamera(blockTouchCameraEvents: Boolean,
+    protected abstract fun DrawTouchScreen(activeEngine : EngineTypes,
+                                           blockTouchCameraEvents: Boolean,
                                            inSafeArea : Boolean,
                                            isEditMode: Boolean, inGame: Boolean,
                                            content: @Composable () -> Unit)
@@ -357,7 +372,15 @@ abstract class ScreenController : KoinComponent, IScreenController {
         isSelected: Boolean,
         onClick: () -> Unit,
         onDragEnd: (x: Float, y: Float) -> Unit) {
-        var position by remember(viewToDraw.viewState.id) { mutableStateOf(offset) }
+        val viewToDraw = remember (viewToDraw){ viewToDraw }
+        val viewState = remember (viewToDraw.viewState){ viewToDraw.viewState }
+        var position by remember(viewState.id) { mutableStateOf(offset) }
+        val intOffset by remember (viewState.id, position){ mutableStateOf(IntOffset(position.x.roundToInt(),
+            position.y.roundToInt())) }
+        val alpha by remember (viewState.alpha){ mutableFloatStateOf(viewState.alpha) }
+        val color by remember (isSelected, isEditMode){ mutableStateOf(if (isSelected && isEditMode) selectedViewBackgroundColor
+        else Color.Transparent) }
+        val shape = remember { RoundedCornerShape(8.dp) }
 
         LaunchedEffect(offset) {
             position = offset
@@ -365,15 +388,11 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
         Box(
             modifier = Modifier
-                .offset { IntOffset(position.x.roundToInt(), position.y.roundToInt()) }
+                .offset { intOffset }
                 .size(sizeDp)
                 .minimumInteractiveComponentSize()
-                .alpha(viewToDraw.viewState.alpha)
-                .background(
-                    if (isSelected && isEditMode) selectedViewBackgroundColor
-                    else Color.Transparent,
-                    RoundedCornerShape(8.dp)
-                )
+                .alpha(alpha)
+                .background(color, shape)
                 .pointerInput(isEditMode, isSelected) {
                     if (!isEditMode) {
                         return@pointerInput
@@ -398,7 +417,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     )
                 }
                 .pointerInput(isEditMode, isSelected) {
-                    if (!isEditMode){
+                    if (!isEditMode) {
                         return@pointerInput
                     }
                     awaitPointerEventScope {
@@ -430,13 +449,14 @@ abstract class ScreenController : KoinComponent, IScreenController {
     ) {
         val onPrimaryColor = getOnPrimaryColor()
         val buttonColors = getButtonsColors()
+        val shape = remember { RoundedCornerShape(5.dp) }
         CompositionLocalProvider(LocalContentColor provides onPrimaryColor){
             var showCustomViewsEditor by remember { mutableStateOf(false) }
             var showViewEditor by remember { mutableStateOf(false) }
 
             Column(
                 modifier = modifier
-                    .background(Color.Gray.copy(alpha = 0.6f), RoundedCornerShape(5.dp))
+                    .background(Color.Gray.copy(alpha = 0.6f), shape)
                     .padding(2.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -517,7 +537,9 @@ abstract class ScreenController : KoinComponent, IScreenController {
             }
 
             if (showViewEditor){
-                DrawViewEditor(_activeViewsToDraw.first { it.viewState.id == selectedButtonId }) {
+                val viewToDraw by remember (selectedButtonId)
+                { mutableStateOf(_activeViewsToDraw.first { it.viewState.id == selectedButtonId }) }
+                DrawViewEditor(viewToDraw) {
                     showViewEditor = false
                 }
             }
@@ -534,8 +556,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val onPrimaryColor = getOnPrimaryColor()
         var showKeyCodeDialog by remember { mutableStateOf(false) }
         val keyCodeMap = remember { keyCodeMap }
-        val keyCodesToDraw by remember { mutableStateOf(keyCodeMap.toList()) }
+        val keyCodesToDraw = remember (keyCodeMap) { keyCodeMap.toList() }
         val scrollState = rememberScrollState()
+        val viewState = remember (viewToEdit.viewState) { viewToEdit.viewState }
+        val color = remember { Color.Transparent }
 
         AlertDialog(containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
@@ -554,15 +578,16 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Box(modifier = Modifier.size(50.dp)
-                            .background(Color.Transparent,
-                                RoundedCornerShape(8.dp)).graphicsLayer {
+                        Box(modifier = Modifier
+                            .size(50.dp)
+                            .background(color)
+                            .graphicsLayer {
                                 colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                             }, contentAlignment = Alignment.Center){
                             viewToEdit.DrawView(isEditMode = false, false, 50.dp)
                         }
                         Text(modifier = Modifier.wrapContentHeight(),
-                            text = viewToEdit.viewState.id,
+                            text = viewState.id,
                             color = onSurfaceVariantColor,
                             fontSize = 18.sp,
                             textAlign = TextAlign.Right
@@ -570,7 +595,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     }
 
                     Button(onClick = {
-                        viewToEdit.viewState.apply {
+                        viewState.apply {
                             resetToDefaultsFromViewEditor()
                             save()
                         } },contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
@@ -580,7 +605,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     Column( modifier = Modifier.verticalScroll(scrollState),
                         verticalArrangement = Arrangement.spacedBy(2.dp),
                         horizontalAlignment = Alignment.CenterHorizontally){
-                        viewToEdit.viewState.apply {
+                        viewState.apply {
                             EnumDropdown(
                                 stringResource(R.string.screen_controls_view_render_rule),
                                 viewRenderRule
@@ -633,7 +658,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
                                     Text( modifier = Modifier.wrapContentHeight(), text = stringResource(R.string.selected_key_code),
                                         color = onSurfaceVariantColor)
 
-                                    Text(modifier = Modifier.widthIn(min = 100.dp).wrapContentHeight().clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
+                                    Text(modifier = Modifier
+                                        .widthIn(min = 100.dp)
+                                        .wrapContentHeight()
+                                        .clickable { showKeyCodeDialog = true }, color = onSurfaceVariantColor,
                                         text = keyCodeMap[sdlKeyCode]?.keyCodeName ?: stringResource(R.string.uknown), textAlign = TextAlign.Left)
                                 }
                             }
@@ -661,11 +689,12 @@ abstract class ScreenController : KoinComponent, IScreenController {
                         verticalArrangement = Arrangement.spacedBy(8.dp))
                     {
                         itemsIndexed(keyCodesToDraw, key = { _, pair -> pair.second.keyCode }) { _, pair ->
+                            val pair = remember (pair) { pair }
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        viewToEdit.viewState.apply {
+                                        viewState.apply {
                                             sdlKeyCode = pair.first
                                             save()
                                         }
@@ -682,7 +711,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
 
     @Composable
     private fun DrawCustomViewsEditor(onViewSelected: (selectedView: IScreenControlsView?) -> Unit) {
-        val itemsToDraw = _activeViewsToDraw.filter { it.viewState.isDeleted }.toList()
+        val itemsToDraw = remember { _activeViewsToDraw.filter { it.viewState.isDeleted }.toList() }
         if (itemsToDraw.isEmpty()) {
             onViewSelected(null)
             return
@@ -691,6 +720,7 @@ abstract class ScreenController : KoinComponent, IScreenController {
         val onSurfaceColor = getOnSurfaceColor()
         val primaryColor = getPrimaryColor()
         val surfaceContainerHighColor = getSurfaceContainerHighColor()
+        val color = remember { Color.Transparent }
 
         AlertDialog(
             modifier = Modifier.fillMaxSize(),
@@ -712,22 +742,24 @@ abstract class ScreenController : KoinComponent, IScreenController {
                     itemsIndexed(itemsToDraw, key = { _, view ->
                         view.viewState.id
                     }) { _, view ->
+                        val view = remember (view) { view }
+                        val viewState = remember (view.viewState)  { view.viewState }
                         Row(
                             modifier = Modifier.clickable { onViewSelected(view) },
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(modifier = Modifier.size(40.dp)
-                                    .background(
-                                        Color.Transparent,
-                                        RoundedCornerShape(8.dp)).graphicsLayer {
+                            Box(modifier = Modifier
+                                .size(40.dp)
+                                .background(color)
+                                .graphicsLayer {
                                     colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                                 }, contentAlignment = Alignment.Center){
                                         view.DrawView(isEditMode = false, false, 40.dp)
                             }
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
-                                text = view.viewState.id,
+                                text = viewState.id,
                                 color = onSurfaceVariantColor,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Right
@@ -747,6 +779,10 @@ abstract class ScreenController : KoinComponent, IScreenController {
         private const val MIN_VIEW_SIZE : Float = 0.025f
 
         private const val MAX_VIEW_SIZE : Float = 1.0f
+
+        private const val MIN_VIEW_ALPHA : Float = 0f
+
+        private const val MAX_VIEW_ALPHA : Float = 1.0f
 
         private val selectedViewBackgroundColor = Color.Red.copy(0.5f)
 

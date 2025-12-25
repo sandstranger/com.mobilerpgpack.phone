@@ -99,9 +99,9 @@ android {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-${versions.native_android_platform_version}",
                         "-DCMAKE_CXX_FLAGS=${build_flags.CMAKE_CXXFLAGS} -fno-stack-protector -fno-builtin -U_FORTIFY_SOURCE -fno-delete-null-pointer-checks " +
-                                "-fno-strict-aliasing -Wno-c++11-narrowing",
+                                "-fno-strict-aliasing -Wno-c++11-narrowing -Wno-format-security",
                         "-DCMAKE_C_FLAGS=${build_flags.CMAKE_CXXFLAGS} -fno-stack-protector -fno-builtin -U_FORTIFY_SOURCE -fno-delete-null-pointer-checks " +
-                                "-fno-strict-aliasing",
+                                "-fno-strict-aliasing -Wno-format-security",
                         "-DCMAKE_SHARED_LINKER_FLAGS=${build_flags.CMAKE_SHADERLINKER_FLAGS} -Wl,--allow-shlib-undefined",
                         "${build_flags.CMAKE_ANDROID_STL}"
             }

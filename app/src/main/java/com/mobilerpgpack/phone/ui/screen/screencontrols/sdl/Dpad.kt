@@ -1,50 +1,32 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
-import android.annotation.SuppressLint
 import android.view.KeyEvent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
-import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.getBlockingValue
-import com.mobilerpgpack.phone.utils.waitForUpOrCancellation
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
-import org.koin.compose.koinInject
+import com.mobilerpgpack.phone.ui.screen.screencontrols.utils.touchListenerModifier
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.qualifier.named
 
 abstract class Dpad(
     engineType: EngineTypes,
@@ -118,24 +100,31 @@ abstract class Dpad(
         )
     }
 
-    @SuppressLint("UnusedBoxWithConstraintsScope")
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
-        BoxWithConstraints(
-            modifier = Modifier.fillMaxSize(),
+        val inGame = remember { inGame }
+        val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
+        Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            val buttonSize = size * 0.4f
-            val offsetAmount = size * 0.33f
+            if (inGame && !isEditMode) {
+                Box(modifier = Modifier.fillMaxSize().touchListenerModifier(false,viewState))
+            }
 
-            val offsetYStorage = hashMapOf(
+            val buttonSize by remember (size) { mutableStateOf(size * 0.4f)}
+            val offsetAmount by remember (size) { mutableStateOf(size * 0.33f) }
+
+            val offsetYStorage = remember (offsetAmount) { hashMapOf(
                 DPAD_UP to -offsetAmount,
                 DPAD_DOWN to offsetAmount
-            )
-            val offsetXStorage = hashMapOf(
+            ) }
+            val offsetXStorage = remember (offsetAmount) { hashMapOf(
                 DPAD_LEFT to -offsetAmount,
                 DPAD_RIGHT to offsetAmount
-            )
+            ) }
+            val dpadDownCollection = rememberSaveable { dpadDownCollection }
+            val dpadLeftCollection = rememberSaveable {dpadLeftCollection }
+            val dpadButtons = remember { dpadButtons }
 
             @Composable
             fun dpadButton(
@@ -151,7 +140,6 @@ abstract class Dpad(
                         offsetX, offsetY, sdlKeyEvent)
                 )
             }
-
             for (button in dpadButtons) {
                 if (button.id in dpadDownCollection) {
                     dpadButton(
@@ -181,7 +169,8 @@ abstract class Dpad(
                                                     buttonSize : Dp,  offsetX: Dp,
                                                     offsetY: Dp,
                                                     sdlKeyEvent : Int): Modifier {
-        val modifier = this.size(buttonSize)
+        val modifier = this
+            .size(buttonSize)
             .minimumInteractiveComponentSize()
             .offset(x = offsetX, y = offsetY)
 
@@ -189,46 +178,12 @@ abstract class Dpad(
             return modifier
         }
 
-        val preferencesStorage : PreferencesStorage = koinInject()
-        val activeEngineString by preferencesStorage.activeEngineAsFlowString.collectAsState("")
-
-        if (activeEngineString.isEmpty()){
-            return modifier
-        }
-
-        val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        var wasPressed by rememberSaveable { mutableStateOf(false)}
-
-        if (isEditMode && wasPressed){
-            wasPressed = false
-            onTouchUp(sdlKeyEvent)
-        }
-
-        return modifier.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
-            if (isEditMode) {
-                return@pointerInput
-            }
-            awaitEachGesture {
-                viewState.apply {
-                    val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
-                    val pointerPassToUse = if (consumeEvents) PointerEventPass.Initial else PointerEventPass.Main
-                    val down = awaitFirstDown(pass = pointerPassToUse)
-                    if (consumeEvents){
-                        down.consume()
-                    }
-                    wasPressed = true
-                    onTouchUp(sdlKeyEvent)
-                    onTouchDown(sdlKeyEvent)
-                    val up = waitForUpOrCancellation(pointerPassToUse, ignoreOutOfBoundsTouchEvents)
-                    if (consumeEvents){
-                        up?.consume()
-                    }
-                    wasPressed = false
-                    onTouchUp(sdlKeyEvent)
-                }
-            }
-        }
+        val sdlKeyCode by rememberSaveable  (sdlKeyEvent) { mutableIntStateOf(sdlKeyEvent) }
+        return modifier.touchListenerModifier(isEditMode, viewState, onTouchDown = {
+            onTouchDown(sdlKeyCode)
+        }, onTouchUp = {
+            onTouchUp(sdlKeyCode)
+        })
     }
 
     private companion object {

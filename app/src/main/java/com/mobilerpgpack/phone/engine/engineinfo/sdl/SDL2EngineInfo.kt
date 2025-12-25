@@ -8,12 +8,9 @@ import com.mobilerpgpack.phone.engine.engineinfo.EngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
 import com.mobilerpgpack.phone.utils.ScreenResolution
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import org.libsdl.app.SDLActivity
@@ -23,11 +20,8 @@ import org.libsdl.app.onKeyDown
 abstract class SDL2EngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
-    activeEngineType: EngineTypes,
-    pathToResourceFlow: Flow<String> = emptyFlow(),
-    commandLineParamsFlow : Flow<String> = emptyFlow()) :
-    EngineInfo(mainEngineLib, allLibs, activeEngineType,
-        pathToResourceFlow, commandLineParamsFlow) {
+    activeEngineType: EngineTypes) :
+    EngineInfo(mainEngineLib, allLibs, activeEngineType) {
 
     private val mouseIcon: SDL2MouseIcon by inject()
 

@@ -2,18 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.utils
 
 import java.io.File
 
-class ModsFilesUpdater <T> (private val modsModel: T) where T : ModsModel{
-
-    fun updateFiles(): T =
-        modsModel.apply {
-            pathToModsFolder.initialize("") {
-                findFilesInModsFolder()
-                this.save()
-            }
-            removeNotExistingMods()
-            updateFilesInModsFolder()
-        }
-
+class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
     private fun updateFilesInModsFolder(){
         modsModel.apply {
             if (pathToModsFolder.value.isNullOrEmpty() || !enableModsAutoUpdateInFolder){
@@ -86,4 +75,19 @@ class ModsFilesUpdater <T> (private val modsModel: T) where T : ModsModel{
         File(modsModel.pathToModsFolder.value!!).listFiles()?.filter { file -> file.isMod }?.toList()
 
     private val File.isMod get() = this.isFile && modsModel.allowedModsExtensions.contains(this.extension)
+
+    companion object{
+        @Suppress("UNCHECKED_CAST")
+        fun <T> ModsModel.updateFiles(): T where T : ModsModel {
+            return ModsFilesUpdater(this).let { filesUpdater ->
+                pathToModsFolder.initialize("") {
+                    filesUpdater.findFilesInModsFolder()
+                    this.save()
+                }
+                filesUpdater.removeNotExistingMods()
+                filesUpdater.updateFilesInModsFolder()
+                this as T
+            }
+        }
+    }
 }

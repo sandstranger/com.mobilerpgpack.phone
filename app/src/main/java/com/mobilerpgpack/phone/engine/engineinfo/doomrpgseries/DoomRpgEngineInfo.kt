@@ -3,45 +3,38 @@ package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.libsdl.app.SDLSurface
 
 class DoomRpgEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>) :
-    DoomRPGSeriesEngineInfo(mainEngineLib, allLibs,  EngineTypes.DoomRpg,
-    emptyFlow()) {
+    DoomRPGSeriesEngineInfo(mainEngineLib, allLibs,  EngineTypes.DoomRpg) {
 
     private var savedDoomRpgScreenWidth: Int = 0
     private var savedDoomRpgScreenHeight: Int = 0
 
     override val needToShowScreenControls: Boolean = true
 
-    override val pathToResource get() = runBlocking { super.preferencesStorage.pathToDoomRpgZipFile.first() }
+    override val pathToResource get() = super.preferencesStorage.pathToDoomRpgZipFile
 
     override fun isMouseShown() = false
 
     override val requiredResourceExtensions = listOf(".zip", ".ZIP")
 
-    override suspend fun initialize(activity: ComponentActivity) {
+    override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         recalculateGameScreenResolution()
     }
 
-    private suspend fun recalculateGameScreenResolution() {
+    private fun recalculateGameScreenResolution() {
         val (width, height) = getDefaultDoomRpgResolution()
 
-        savedDoomRpgScreenWidth = preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey).first()
-        savedDoomRpgScreenHeight= preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey).first()
+        savedDoomRpgScreenWidth = preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey)
+        savedDoomRpgScreenHeight= preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey)
 
         if (savedDoomRpgScreenWidth != width && savedDoomRpgScreenHeight != height) {
-            scope.launch {
-                preferencesStorage.setIntValueAsync(preferencesStorage.savedDoomRpgScreenWidthPrefsKey, width)
-                preferencesStorage.setIntValueAsync(preferencesStorage.savedDoomRpgScreenHeightPrefsKey, height)
-            }
+            preferencesStorage.setIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey, width)
+            preferencesStorage.setIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey, height)
 
             Os.setenv("RECALCULATE_RESOLUTION_INDEX", "true", true)
         } else {

@@ -77,6 +77,15 @@ class TranslationManager : KoinComponent, ITranslationManager {
     private val translateCb : TranslateTextCallback
     private val getTranslationCb : GetTranslatedTextCallback
 
+    private val isTranslationSupportedFlow : Flow<Boolean> by lazy {
+        flow {
+            while (currentCoroutineContext().isActive) {
+                emit(isTranslationSupported())
+                delay(500)
+            }
+        }.distinctUntilChanged()
+    }
+
     override val translationModel: ITranslationModel get() = _translationModel
 
     override var inGame = false
@@ -124,19 +133,14 @@ class TranslationManager : KoinComponent, ITranslationManager {
         }
     }
 
-    override fun isTranslationSupportedAsFlow(): Flow<Boolean> = flow {
-        while (currentCoroutineContext().isActive) {
-            emit(isTranslationSupported())
-            delay(500)
-        }
-    }.distinctUntilChanged()
+    override fun isTranslationSupportedAsFlow() = isTranslationSupportedFlow
     
     override fun isTargetLocaleSupported () : Boolean = _translationModel.isLocaleSupported(targetLocale)
 
     private suspend fun isModelDownloaded () = !_translationModel.needToDownloadModel()
 
     private suspend fun isTranslationSupported() : Boolean =
-        isModelDownloaded() && isTargetLocaleSupported() && targetLocale != sourceLocale
+        isModelDownloaded() && isTargetLocaleSupported() && targetLocale != SOURCE_LOCALE
 
     private fun getTranslation(input: ByteArray) : String {
         val text = input.sanitizeUtf8BytesToString()
@@ -154,7 +158,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
     private fun translate(input: ByteArray, textCameFromDialog : Boolean ): String {
         val text = input.sanitizeUtf8BytesToString()
 
-        if (sourceLocale == targetLocale) {
+        if (SOURCE_LOCALE == targetLocale) {
             return text
         }
 
@@ -173,7 +177,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
     }
 
     private fun translate(text: String, onTextTranslated: (String) -> Unit, textCameFromDialog : Boolean = false) {
-        if (sourceLocale == targetLocale){
+        if (SOURCE_LOCALE == targetLocale){
             onTextTranslated(text)
             return
         }
@@ -194,7 +198,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
     }
 
     private suspend fun translateAsync(text: String, textCameFromDialog : Boolean = false ): String = coroutineScope  {
-        if (sourceLocale == targetLocale){
+        if (SOURCE_LOCALE == targetLocale){
             return@coroutineScope text
         }
 
@@ -238,7 +242,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
         try {
             val (translatedText, saveTextToSqlForced) = intervalsTranslator.translateWithFixedInterval (text,
                 textCameFromDialog, inGame, _activeEngine) {
-                cleanText -> _translationModel.translate(cleanText, sourceLocale, targetLocale)
+                cleanText -> _translationModel.translate(cleanText, SOURCE_LOCALE, targetLocale)
             }
             if (saveTextToSqlForced && activeTranslationType==this@TranslationManager.activeTranslationType) {
                 saveTranslatedText(translatedText)
@@ -290,7 +294,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
 
         const val ENGLISH_LOCALE = "en"
 
-        const val sourceLocale = ENGLISH_LOCALE
+        const val SOURCE_LOCALE = ENGLISH_LOCALE
 
         fun getSystemLocale(): String {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

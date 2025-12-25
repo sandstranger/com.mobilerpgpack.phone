@@ -8,9 +8,7 @@ import com.mobilerpgpack.phone.R
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun DrawCommandLinePreferences(commandLineArgsFlow : Flow<String>, prefsKey : String){
-    val commandLineArgs by commandLineArgsFlow.collectAsState(initial = "")
-
+fun DrawCommandLinePreferences(commandLineArgs : String, prefsKey : String){
     EditTextPreferenceItem(
         stringResource(R.string.command_line_args),
         value = commandLineArgs, prefsKey

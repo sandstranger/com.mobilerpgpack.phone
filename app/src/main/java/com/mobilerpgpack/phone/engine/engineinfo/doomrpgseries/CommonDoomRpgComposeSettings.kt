@@ -1,17 +1,17 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.retain.retain
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.translator.models.TranslationType
@@ -24,23 +24,12 @@ import com.mobilerpgpack.phone.ui.screen.LoadingModelDialogWithCancel
 import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import org.koin.core.qualifier.named
 
 open class CommonDoomRpgComposeSettings :
     KoinComponent, IEngineUIController {
-
-    private val translationModelsDownloader : ITranslationModelsDownloader by inject ()
-
-    private val translationManager : ITranslationManager by inject()
-
-    protected val scope : CoroutineScope by inject (named(KoinModulesProvider.COROUTINES_SCOPE))
-
-    protected val preferencesStorage : PreferencesStorage by inject()
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
@@ -49,16 +38,16 @@ open class CommonDoomRpgComposeSettings :
 
     @Composable
     private fun DrawTranslationModelSettings() {
-        val scope = rememberCoroutineScope()
-
-        val activeTranslationTypeString by preferencesStorage.translationModelType
-            .collectAsState(initial = TranslationType.DefaultTranslationType.toString())
-
-        val translationModelEntries = buildTranslationsDescription()
-        val initialModelValue = translationModelEntries.first { it.startsWith(activeTranslationTypeString) }
+        val translationModelsDownloader : ITranslationModelsDownloader = koinInject()
+        val translationManager : ITranslationManager = koinInject()
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val activeTranslationTypeString = preferencesStorage.translationModelType
+        val translationModelEntries = retain { buildTranslationsDescription() }
+        var initialModelValue by rememberSaveable { mutableStateOf(translationModelEntries.first {
+            it.startsWith(activeTranslationTypeString) }) }
         val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
-        LaunchedEffect(!isModelDownloaded) {
+        LaunchedEffect(isModelDownloaded) {
             if (!isModelDownloaded) {
                 preferencesStorage.setEnableGameMachineTextTranslationValue(false)
             }
@@ -71,10 +60,10 @@ open class CommonDoomRpgComposeSettings :
             initialModelValue,
             translationModelEntries
         ) { newValue ->
-            scope.launch {
-                val translationModelType = TranslationType.getTranslationType(newValue)
-                translationManager.activeTranslationType = translationModelType
-                preferencesStorage.setTranslationModelTypeValue(translationModelType)
+            with(TranslationType.getTranslationType(newValue)) {
+                translationManager.activeTranslationType = this
+                preferencesStorage.setTranslationModelTypeValue(this)
+                initialModelValue = newValue
             }
         }
 
@@ -111,11 +100,10 @@ open class CommonDoomRpgComposeSettings :
     }
 
     @Composable
-    private fun DrawPreloadModelsSetting(vm: DownloadViewModel = koinViewModel()) {
-        val context = LocalContext.current
-        val activeTranslationTypeString by preferencesStorage.translationModelType
-            .collectAsState(initial = "")
-
+    private fun DrawPreloadModelsSetting() {
+        val vm: DownloadViewModel = koinViewModel()
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val activeTranslationTypeString = preferencesStorage.translationModelType
         LaunchedEffect(activeTranslationTypeString) {
             if (activeTranslationTypeString != "") {
                 vm.onTranslationTypeChanged(activeTranslationTypeString)
