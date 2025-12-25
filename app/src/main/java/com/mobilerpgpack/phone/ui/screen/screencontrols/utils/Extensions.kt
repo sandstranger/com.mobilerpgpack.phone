@@ -51,6 +51,9 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
     val showInQuickPanel by remember (viewState.showInQuickPanel) {
         mutableStateOf(viewState.showInQuickPanel)
     }
+    val viewRenderRule by remember (viewState.viewRenderRule) {
+        mutableStateOf(viewState.viewRenderRule)
+    }
 
     fun clearResources(){
         pointerId = null
@@ -59,7 +62,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
     }
 
     LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
-        ignoreOutOfBoundsTouchEvents, useViewAsToggle,sdlKeyCode,showInQuickPanel) {
+        ignoreOutOfBoundsTouchEvents, useViewAsToggle,sdlKeyCode,showInQuickPanel,viewRenderRule) {
         clearResources()
     }
 
@@ -71,7 +74,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState,
 
     return this.pointerInput(isEditMode,mouseButtonsEventsCanBeInvoked,
         consumeTouchEvents, ignoreOutOfBoundsTouchEvents, useViewAsToggle,
-        sdlKeyCode,showInQuickPanel) {
+        sdlKeyCode,showInQuickPanel,viewRenderRule) {
         if (isEditMode) {
             return@pointerInput
         }
