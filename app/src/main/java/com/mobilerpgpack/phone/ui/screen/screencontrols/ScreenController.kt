@@ -171,9 +171,11 @@ abstract class ScreenController : IScreenController {
             }
         }
 
-        LaunchedEffect(Unit) {
-            if (!readyToDrawControls){
+        fun loadAllViews(){
+            if (!readyToDrawControls) {
                 activeViewsToDraw.forEach { it.screenController = this@ScreenController }
+                preloadButtons()
+                readyToDrawControls = true
             }
         }
 
@@ -192,10 +194,7 @@ abstract class ScreenController : IScreenController {
                         screenHeightPx =
                             (metrics.heightPixels - systemBarsInsets.top - systemBarsInsets.bottom).toFloat()
 
-                        if (!readyToDrawControls) {
-                            preloadButtons()
-                            readyToDrawControls = true
-                        }
+                        loadAllViews()
                     }
                     viewTreeObserver.addOnGlobalLayoutListener(listener)
                     onDispose {
@@ -206,10 +205,7 @@ abstract class ScreenController : IScreenController {
         }
         else{
             LaunchedEffect(Unit) {
-                if (!readyToDrawControls) {
-                    preloadButtons()
-                    readyToDrawControls = true
-                }
+                loadAllViews()
             }
         }
 
