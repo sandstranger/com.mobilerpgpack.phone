@@ -103,6 +103,7 @@ abstract class Dpad(
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         val inGame = remember { inGame }
+        val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
         Box(modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
@@ -113,14 +114,14 @@ abstract class Dpad(
             val buttonSize by remember (size) { mutableStateOf(size * 0.4f)}
             val offsetAmount by remember (size) { mutableStateOf(size * 0.33f) }
 
-            val offsetYStorage by remember (offsetAmount) { mutableStateOf(hashMapOf(
+            val offsetYStorage = remember (offsetAmount) { hashMapOf(
                 DPAD_UP to -offsetAmount,
                 DPAD_DOWN to offsetAmount
-            )) }
-            val offsetXStorage by remember (offsetAmount) { mutableStateOf(hashMapOf(
+            ) }
+            val offsetXStorage = remember (offsetAmount) { hashMapOf(
                 DPAD_LEFT to -offsetAmount,
                 DPAD_RIGHT to offsetAmount
-            )) }
+            ) }
             val dpadDownCollection = rememberSaveable { dpadDownCollection }
             val dpadLeftCollection = rememberSaveable {dpadLeftCollection }
             val dpadButtons = remember { dpadButtons }
