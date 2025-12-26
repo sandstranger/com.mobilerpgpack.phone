@@ -95,8 +95,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
 
                 val result = nativeAddJoystick(
                     DEFAULT_GAMEPAD_DEVICE_ID, "Virtual", "Virtual",
-                    0x045E, 0x028E, false,
-                    0xFFFF, 4, 0b1111, 0, 0)
+                    0x045E, 0x0b12, false,
+                    0x1FFFFFF, 4, 0b1111, 0, 1)
                 Log.d("SDL_INIT", "Joystick registration result: $result")
                 engineInfo.rescanGameControllers()
                 if (result < 0) {
