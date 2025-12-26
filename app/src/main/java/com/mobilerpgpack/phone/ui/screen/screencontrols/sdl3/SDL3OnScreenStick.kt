@@ -32,10 +32,9 @@ class SDL3OnScreenStick(engineType: EngineTypes,
         axis_mask: Int,
         nhats: Int,
         nballs: Int
-    ): Int {
-        SDLControllerManager.nativeAddJoystick(device_id, name,desc, vendor_id, product_id,
+    ): String {
+        return SDLControllerManager.nativeAddJoystick(device_id, name,desc, vendor_id, product_id,
             button_mask, naxes, axis_mask, nhats, false)
-        return 1
     }
 
     override fun onNativeJoy(device_id: Int, axis: Int, value: Float) =

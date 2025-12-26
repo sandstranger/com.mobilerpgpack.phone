@@ -32,7 +32,7 @@ class SDL2OnScreenStick (engineType: EngineTypes,
         axis_mask: Int,
         nhats: Int,
         nballs: Int
-    ): Int {
+    ): String {
         return SDLControllerManager.nativeAddJoystick(device_id, name,desc, vendor_id, product_id,
             is_accelerometer, button_mask, naxes, axis_mask, nhats, nballs)
     }
