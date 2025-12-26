@@ -19,7 +19,7 @@ void createVirtualController (){
     desc.name = "Xbox Series X Controller";
 
     desc.naxes = 6;
-    desc.nbuttons = 15;
+    desc.nbuttons = 16;
     desc.nhats = 0;
 
     desc.button_mask = 0x7FFF;
