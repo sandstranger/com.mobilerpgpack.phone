@@ -40,12 +40,14 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.sun.jna.Native
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 stickType : StickType = StickType.LeftStick,
@@ -58,6 +60,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 isDeleted : Boolean = false,
                                 showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
+    private var virtualControllerWasRegistered = false
+
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
 
@@ -67,6 +71,14 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     }
 
     final override var screenController: IScreenController? = null
+
+    private external fun createVirtualController()
+
+    private external fun destroyVirtualController()
+
+    private external fun setVirtualAxis(axis : Int, axisValue : Float)
+
+    protected abstract val virtualControllerLibraryName : String
 
     final override val viewState: ViewState = ViewState(
         if (stickType == StickType.LeftStick) LEFT_STICK_ID else RIGHT_STICK_ID,
@@ -92,16 +104,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
 
             if (!joystickRegistered) {
                 joystickRegistered = true
-
-                val result = nativeAddJoystick(
-                    DEFAULT_GAMEPAD_DEVICE_ID, "Virtual", "Virtual",
-                    0x045E, 0x0b12, false,
-                    0x1FFFFFF, 4, 0b1111, 0, 1)
-                Log.d("SDL_INIT", "Joystick registration result: $result")
-                engineInfo.rescanGameControllers(result)
-                if (result.isEmpty()) {
-                    Log.e("SDL_INIT", "Failed to register joystick, result: $result")
-                }
+                nativeAddJoystick()
+                engineInfo.rescanGameControllers()
             }
 
             val processedX = when {
@@ -116,8 +120,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             }
 
             try {
-                onNativeJoy(DEFAULT_GAMEPAD_DEVICE_ID, axisX, processedX)
-                onNativeJoy(DEFAULT_GAMEPAD_DEVICE_ID, axisY, processedY)
+                setVirtualAxis( axisX, processedX)
+                setVirtualAxis( axisY, processedY)
             } catch (e: Exception) {
                 Log.e("SDL_INPUT", "Failed to send to axis", e)
             }
@@ -296,13 +300,13 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         }
     }
 
-    protected abstract fun nativeAddJoystick(device_id: Int, name: String?, desc: String?,
-                                             vendor_id: Int, product_id: Int,
-                                             is_accelerometer: Boolean, button_mask: Int,
-                                             naxes: Int, axis_mask: Int, nhats: Int, nballs: Int) : String
-
-    protected abstract fun onNativeJoy(device_id: Int, axis: Int, value: Float)
-
+    private fun nativeAddJoystick() {
+        if (!virtualControllerWasRegistered){
+            virtualControllerWasRegistered = true
+            Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
+            createVirtualController()
+        }
+    }
 
     private fun onDrag(
         canvasW: Int,
@@ -345,7 +349,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     }
 
     private companion object{
-        private const val DEFAULT_GAMEPAD_DEVICE_ID = 1384510555
         private const val STICK_DEAD_ZONE = 0.05f
         private const val STICK_SCALE = 1.0f
         private const val LEFT_STICK_ID = "left_onscreen_stick"

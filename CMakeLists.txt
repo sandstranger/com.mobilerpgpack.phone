@@ -184,3 +184,13 @@ add_library(SDL3Helper SHARED)
 target_sources(SDL3Helper PRIVATE "${APP_ROOT_DIR}/SDL3Helper.c")
 target_include_directories(SDL3Helper PRIVATE ${SDL3_INCLUDE_DIR})
 target_link_libraries(SDL3Helper PRIVATE ${SDL3_LIBRARY})
+
+add_library(SDL2VirtualController SHARED)
+target_sources(SDL2VirtualController PRIVATE "${APP_ROOT_DIR}/SDL2VirtualController.c")
+target_include_directories(SDL2VirtualController PRIVATE ${SDL2_INCLUDE_DIR})
+target_link_libraries(SDL2VirtualController PRIVATE ${SDL2_LIBRARY})
+
+add_library(SDL3VirtualController SHARED)
+target_sources(SDL3VirtualController PRIVATE "${APP_ROOT_DIR}/SDL3VirtualController.c")
+target_include_directories(SDL3VirtualController PRIVATE ${SDL3_INCLUDE_DIR})
+target_link_libraries(SDL3VirtualController PRIVATE ${SDL3_LIBRARY})
