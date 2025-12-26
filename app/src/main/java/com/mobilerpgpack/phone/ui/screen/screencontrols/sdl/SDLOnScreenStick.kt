@@ -60,8 +60,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 isDeleted : Boolean = false,
                                 showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
-    private var virtualControllerWasRegistered = false
-
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
 
@@ -104,7 +102,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
 
             if (!joystickRegistered) {
                 joystickRegistered = true
-                nativeAddJoystick()
+                Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
+                createVirtualController()
                 engineInfo.rescanGameControllers()
             }
 
@@ -297,14 +296,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     style = Stroke(width = paint.strokeWidth)
                 )
             }
-        }
-    }
-
-    private fun nativeAddJoystick() {
-        if (!virtualControllerWasRegistered){
-            virtualControllerWasRegistered = true
-            Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
-            createVirtualController()
         }
     }
 
