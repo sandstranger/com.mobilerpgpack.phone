@@ -21,7 +21,7 @@ void createVirtualController(void) {
     desc.product_id = 0x0B12;
 
     desc.naxes = 6;
-    desc.nbuttons = 15;
+    desc.nbuttons = 16;
     desc.nhats = 0;
 
     desc.button_mask = 0x7FFF;
