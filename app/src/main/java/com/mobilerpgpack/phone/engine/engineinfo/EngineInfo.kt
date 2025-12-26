@@ -154,7 +154,7 @@ abstract class EngineInfo(
 
     override val engineType: EngineTypes = activeEngineType
 
-    private external fun rescanGameControllersForced()
+    private external fun rescanGameControllersForced(joystickGUID: String)
 
     final override val pathToResourceExists : Boolean
         get() {
@@ -198,7 +198,7 @@ abstract class EngineInfo(
 
     override fun onNativeLibrariesLoaded() = Native.register(EngineInfo::class.java, mainLibraryName)
 
-    final override fun rescanGameControllers() = rescanGameControllersForced()
+    final override fun rescanGameControllers(joystickGUID: String) = rescanGameControllersForced(joystickGUID)
 
     override fun initialize(activity: ComponentActivity) {
         if (wasInit){
