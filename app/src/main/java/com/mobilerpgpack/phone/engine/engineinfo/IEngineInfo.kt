@@ -28,8 +28,8 @@ interface IEngineInfo {
     fun onResume()
     fun onDestroy()
     fun onBackPressed() : Boolean
-    fun onNativeLibrariesLoaded() {}
-    fun registerJoysticks() {}
+    fun onNativeLibrariesLoaded()
+    fun rescanGameControllers()
 }
 
 val IEngineInfo.mainSharedObject get() = buildFullLibraryName(this.mainLibraryName)

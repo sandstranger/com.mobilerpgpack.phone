@@ -98,7 +98,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     0x045E, 0x028E, false,
                     0xFFFF, 4, 0b1111, 0, 0)
                 Log.d("SDL_INIT", "Joystick registration result: $result")
-                engineInfo.registerJoysticks()
+                engineInfo.rescanGameControllers()
                 if (result < 0) {
                     Log.e("SDL_INIT", "Failed to register joystick, result: $result")
                 }
