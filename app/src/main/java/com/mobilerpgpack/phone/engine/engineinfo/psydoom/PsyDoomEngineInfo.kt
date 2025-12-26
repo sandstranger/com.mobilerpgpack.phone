@@ -30,10 +30,6 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             "recreateVulkanSwapChain")
     }
 
-    private val registerJoysticksNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib, "RegisterJoysticks")
-    }
-
     override val commandLineParams: String get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString
 
     override val preferencesStorage = psyDoomPreferencesStorage
@@ -157,8 +153,6 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
 
     override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
-
-    override fun registerJoysticks() = registerJoysticksNativeDelegate.invokeVoid(null)
 
     private companion object{
         private const val FILE_COMMAND = "-file"

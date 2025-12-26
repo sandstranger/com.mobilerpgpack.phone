@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [TranslationEntry::class], version = 1)
+@Database(entities = [TranslationEntry::class], version = 1, exportSchema = false)
 @TypeConverters(EngineTypeConverter::class)
 abstract class TranslationDatabase : RoomDatabase() {
     abstract fun translationDao(): TranslationDao

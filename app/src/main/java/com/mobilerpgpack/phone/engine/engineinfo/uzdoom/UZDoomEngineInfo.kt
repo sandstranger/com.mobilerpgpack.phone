@@ -128,6 +128,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
     }
 
     override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
         updateGLLiteShaderStateNativeDelegate.invokeVoid(arrayOf(enableLightShaders))
         val glesVersion = enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion).value
         updateHarmGLESVersionNativeDelegate.invokeVoid(arrayOf(glesVersion))

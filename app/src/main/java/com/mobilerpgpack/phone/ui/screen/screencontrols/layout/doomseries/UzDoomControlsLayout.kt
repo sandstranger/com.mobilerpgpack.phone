@@ -9,6 +9,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibili
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisibilityImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.RescanSDLGamepadsForcedButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
@@ -17,6 +18,14 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButto
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
 
 val uzDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
+    RescanSDLGamepadsForcedButton(
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.075f,
+        buttonResId = R.drawable.gamepad,
+        isDeleted = true
+    ),
     SDL2Dpad(
         EngineTypes.UZDoom,
         offsetXPercent = 0.03f,
@@ -429,6 +438,14 @@ val uzDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
     ))
 
 val uzDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    RescanSDLGamepadsForcedButton(
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.075f,
+        buttonResId = R.drawable.gamepad,
+        isDeleted = true
+    ),
     SDL2Dpad(
         EngineTypes.UZDoom,
         offsetXPercent = 0.03f,

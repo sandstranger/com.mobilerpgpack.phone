@@ -34,11 +34,13 @@ import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
+import com.mobilerpgpack.phone.main.SDL3HELPER_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIconHelper
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -47,6 +49,7 @@ import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.mobilerpgpack.phone.utils.invokeBool
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import com.sun.jna.Function
+import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -151,6 +154,8 @@ abstract class EngineInfo(
 
     override val engineType: EngineTypes = activeEngineType
 
+    private external fun rescanGameControllersForced()
+
     final override val pathToResourceExists : Boolean
         get() {
             val pathToResource = this.pathToResource
@@ -190,6 +195,10 @@ abstract class EngineInfo(
                 return emptyArray()
             }
         }
+
+    override fun onNativeLibrariesLoaded() = Native.register(EngineInfo::class.java, mainLibraryName)
+
+    final override fun rescanGameControllers() = rescanGameControllersForced()
 
     override fun initialize(activity: ComponentActivity) {
         if (wasInit){
