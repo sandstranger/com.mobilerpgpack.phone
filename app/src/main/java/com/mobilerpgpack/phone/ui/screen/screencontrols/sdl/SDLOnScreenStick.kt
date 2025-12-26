@@ -98,8 +98,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     0x045E, 0x0b12, false,
                     0x1FFFFFF, 4, 0b1111, 0, 1)
                 Log.d("SDL_INIT", "Joystick registration result: $result")
-                engineInfo.rescanGameControllers()
-                if (result < 0) {
+                engineInfo.rescanGameControllers(result)
+                if (result.isEmpty()) {
                     Log.e("SDL_INIT", "Failed to register joystick, result: $result")
                 }
             }
@@ -299,7 +299,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     protected abstract fun nativeAddJoystick(device_id: Int, name: String?, desc: String?,
                                              vendor_id: Int, product_id: Int,
                                              is_accelerometer: Boolean, button_mask: Int,
-                                             naxes: Int, axis_mask: Int, nhats: Int, nballs: Int) : Int
+                                             naxes: Int, axis_mask: Int, nhats: Int, nballs: Int) : String
 
     protected abstract fun onNativeJoy(device_id: Int, axis: Int, value: Float)
 
