@@ -3,7 +3,6 @@
 //
 
 #include <SDL3/SDL.h>
-#include <stdio.h>
 
 static SDL_Joystick *virtualController = nullptr;
 static SDL_JoystickID virtualControllerID = -1;
