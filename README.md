@@ -153,6 +153,12 @@ For running perfect dark - your device need to support OPEN GL ES 3.0 render. Ot
 
 This perfect dark port also supported legacy ARMV7 devices without any issues.
 
+## ArxLibertatis
+
+This port is using gamepads code implementation from ArxLibertatis nintendo switch port - https://github.com/fgsfdsfgs/ArxLibertatis
+
+All credits for gamepads implementation in ArxLibertatis android port to fgsfdsfgs - https://github.com/fgsfdsfgs  
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
@@ -371,6 +377,8 @@ com.n0n3m4.diii4a: [Licence](https://github.com/glKarin/com.n0n3m4.diii4a/blob/m
 custom-keyboard-android: [Licence](https://github.com/qinvent/custom-keyboard-android/blob/master/LICENSE)  https://github.com/qinvent/custom-keyboard-android
 
 GLM: [Licence](https://github.com/g-truc/glm/blob/master/copying.txt)	https://github.com/g-truc/glm
+
+code from nintendo switch ArxLibertatis port: [Licence](https://github.com/fgsfdsfgs/ArxLibertatis/blob/switch-new/LICENSE) https://github.com/fgsfdsfgs/ArxLibertatis
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
