@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.utils
 
 import android.app.Activity
+import android.content.Intent
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -46,12 +47,16 @@ fun startGame(activity: Activity, engineToPlay: EngineTypes) {
         activity.showErrorDialogBox(R.string.resources_not_ready)
         return
     }
-
     val activeEngineInfo: IEngineInfo = get (IEngineInfo::class.java,
         named(engineToPlay.toString()))
-
-    if (activeEngineInfo.isResourceCorrect(activity)) {
-        activity.startActivity(activeEngineInfo.gameActivityClazz)
+    activity.also {
+    if (activeEngineInfo.isResourceCorrect(it)) {
+            it.startActivity(Intent(it, activeEngineInfo.gameActivityClazz).apply{
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP })
+            it.finish()
+        }
     }
 }
 
