@@ -38,9 +38,6 @@ fun com.sun.jna.Function.invokeBool(inArgs : Array<Any?>? = null) = this.invokeA
 @Suppress("UNCHECKED_CAST")
 fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>? = null): T = this.invoke(returnType, inArgs) as T
 
-inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
-    this.startActivity(T::class.java, finishParentActivity)
-
 fun Activity.showErrorDialogBox (messageToShowResource: Int,onCloseDialogBox :(()-> Unit)? =null) =
     this.showMessageDialogBox(R.string.error, messageToShowResource, onCloseDialogBox)
 
@@ -81,22 +78,6 @@ fun <T : Serializable> Intent.getValueFromIntent (name : String, clazz : Class<T
         this.getSerializableExtra(name,clazz)
     } else {
         this.getSerializableExtra(name) as? T
-    }
-}
-
-fun <T> Flow<T>.getBlockingValue() = runBlocking { first() }
-
-fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
-    val i = Intent(this, activityClazz)
-
-    if (this is Application) {
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
-
-    startActivity(i)
-
-    if (finishParentActivity && this is Activity) {
-        this.finish()
     }
 }
 
