@@ -1,5 +1,5 @@
 # Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark projects found here:
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, ArxLibertatis projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -16,6 +16,8 @@ https://github.com/BodbDearg/PsyDoom
 https://github.com/UZDoom/UZDoom
 
 https://github.com/fgsfdsfgs/perfect_dark
+
+https://github.com/arx/ArxLibertatis
 
 # System Requirements
 
@@ -206,7 +208,9 @@ PsyDoom engine source code: [Licence](https://github.com/BodbDearg/PsyDoom/blob/
 
 UZDoom engine source code: [Licence](https://github.com/UZDoom/UZDoom/blob/trunk/LICENSE) 	https://github.com/UZDoom/UZDoom
 
-Perfect Dark source code: [Licence](https://github.com/fgsfdsfgs/perfect_dark/blob/port/LICENSE) https://github.com/fgsfdsfgs/perfect_dark
+Perfect Dark engine source code: [Licence](https://github.com/fgsfdsfgs/perfect_dark/blob/port/LICENSE) https://github.com/fgsfdsfgs/perfect_dark
+
+ArxLibertatis engine source code: [Licence](https://github.com/arx/ArxLibertatis/blob/master/LICENSE)	https://github.com/arx/ArxLibertatis
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
@@ -365,6 +369,8 @@ vpx-android: [Licence](https://github.com/cmeng-git/atalk-android/blob/master/LI
 com.n0n3m4.diii4a: [Licence](https://github.com/glKarin/com.n0n3m4.diii4a/blob/master/LICENSE)	https://github.com/glKarin/com.n0n3m4.diii4a
 
 custom-keyboard-android: [Licence](https://github.com/qinvent/custom-keyboard-android/blob/master/LICENSE)  https://github.com/qinvent/custom-keyboard-android
+
+GLM: [Licence](https://github.com/g-truc/glm/blob/master/copying.txt)	https://github.com/g-truc/glm
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
