@@ -57,6 +57,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -68,6 +69,7 @@
         <activity
             android:name=".ui.activity.ScreenControlsEditorActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/AppFullScreenTheme"
             tools:ignore="DiscouragedApi">
@@ -75,6 +77,7 @@
 
         <activity android:name=".engine.activity.SDL2GameActivity"
             android:alwaysRetainTaskState="true"
+            android:launchMode="singleTask"
             android:screenOrientation="sensorLandscape"
             android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:exported="true"
@@ -89,6 +92,7 @@
 
         <activity android:name=".engine.activity.SDL3GameActivity"
             android:alwaysRetainTaskState="true"
+            android:launchMode="singleTask"
             android:screenOrientation="sensorLandscape"
             android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:exported="true"
