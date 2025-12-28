@@ -79,7 +79,7 @@
 
         <activity android:name=".engine.activity.SDL2GameActivity"
             android:alwaysRetainTaskState="true"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="sensorLandscape"
             android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:exported="true"
@@ -94,7 +94,7 @@
 
         <activity android:name=".engine.activity.SDL3GameActivity"
             android:alwaysRetainTaskState="true"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="sensorLandscape"
             android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:exported="true"

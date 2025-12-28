@@ -124,6 +124,15 @@ endif ()
 set(RE2C_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/uzdoom_tools/re2c.exe")
 set(LEMON_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/uzdoom_tools/lemon.exe")
 
+set (USE_OPENGL ON)
+set (WITH_SDL "2")
+set (BUILD_TOOLS OFF)
+set (INSTALL_BLENDER_PLUGIN OFF)
+set (default_DEBUG OFF)
+set (Boost_VERSION "1.90.0")
+set(Boost_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/boost")
+set(GLM_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/glm")
+
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
@@ -133,6 +142,7 @@ add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
 add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
 add_subdirectory("${APP_ROOT_DIR}/UZDoom")
+add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 
@@ -144,13 +154,15 @@ foreach(ROM_ID IN LISTS ROM_CONFIGS)
     add_subdirectory("${APP_ROOT_DIR}/perfect_dark" "${BUILD_DIR}")
 endforeach()
 
+target_include_directories(arx PRIVATE "${OPENAL_INCLUDE_DIR}/AL")
+
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
 
 target_link_libraries(DoomRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
         ${SDL2_TTF_LIBRARY} ZLIB::ZLIB ${TRANSLATOR_LIBRARY} ${FLUIDSYNTH_LIBRARY})
 
-target_include_directories(DoomIIRPG PUBLIC "${OPENAL_INCLUDE_DIR}/AL" ${SDL2_INCLUDE_DIR}
+target_include_directories(DoomIIRPG PRIVATE "${OPENAL_INCLUDE_DIR}/AL" ${SDL2_INCLUDE_DIR}
         ${SDL2_TTF_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
 target_link_libraries(DoomIIRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB

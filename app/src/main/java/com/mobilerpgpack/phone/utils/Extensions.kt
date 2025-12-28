@@ -41,6 +41,23 @@ fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>
 fun Activity.showErrorDialogBox (messageToShowResource: Int,onCloseDialogBox :(()-> Unit)? =null) =
     this.showMessageDialogBox(R.string.error, messageToShowResource, onCloseDialogBox)
 
+inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
+    this.startActivity(T::class.java, finishParentActivity)
+
+fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
+    val i = Intent(this, activityClazz)
+
+    if (this is Application) {
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
+    startActivity(i)
+
+    if (finishParentActivity && this is Activity) {
+        this.finish()
+    }
+}
+
 fun Activity.showMessageDialogBox (titleResource : Int? = null, messageToShowResource: Int,
                                    onCloseDialogBox :(()-> Unit)? =null){
     this.runOnUiThread {
