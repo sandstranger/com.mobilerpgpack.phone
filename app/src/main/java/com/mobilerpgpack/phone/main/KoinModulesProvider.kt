@@ -12,9 +12,10 @@ import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
-import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisPreferenceStorage
+import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisComposeSettingsViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
@@ -594,6 +595,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.ArxLibertatis.name)
             bind<IEngineInfo>()
         }
+
+        viewModel { ArxLibertatisComposeSettingsViewModel().also { it.initialize() } }
 
         singleOf(::ArxLibertatisComposeSettings)
             .withOptions {
