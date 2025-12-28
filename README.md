@@ -380,6 +380,8 @@ GLM: [Licence](https://github.com/g-truc/glm/blob/master/copying.txt)	https://gi
 
 code from nintendo switch ArxLibertatis port: [Licence](https://github.com/fgsfdsfgs/ArxLibertatis/blob/switch-new/LICENSE) https://github.com/fgsfdsfgs/ArxLibertatis
 
+boost: [Licence](https://github.com/boostorg/boost/blob/master/LICENSE_1_0.txt)	https://github.com/boostorg/boost
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
