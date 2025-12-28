@@ -8,6 +8,5 @@ class ArxLibertatisComposeSettings : IEngineUIController {
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        TODO("Not yet implemented")
     }
 }
