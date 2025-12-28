@@ -1,4 +1,4 @@
-package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis
+package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
