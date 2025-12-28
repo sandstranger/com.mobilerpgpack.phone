@@ -31,12 +31,13 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
                 delay(ONE_FRAME_DELAY)
             }
         }
-        engineInfo = get<IEngineInfo>(named(preferencesStorage.activeEngineString)).apply {
-            gameResourcesFound = isResourceCorrect(this@SDL3GameActivity, onCloseDialogBox = { finish() })
-            if (!gameResourcesFound) {
-                super.onCreate(savedInstanceState)
-                return
-            }
+        engineInfo = get (named(preferencesStorage.activeEngineString))
+        gameResourcesFound = engineInfo.isResourceCorrect(this, onCloseDialogBox = { finish() })
+        if (!gameResourcesFound){
+            super.onCreate(savedInstanceState)
+            return
+        }
+        engineInfo.apply {
             initialize(this@SDL3GameActivity)
             super.onCreate(savedInstanceState)
             loadLayout()
