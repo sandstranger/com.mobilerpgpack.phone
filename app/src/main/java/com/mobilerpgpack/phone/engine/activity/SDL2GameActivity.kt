@@ -31,12 +31,12 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
             }
         }
         engineInfo = get (named(preferencesStorage.activeEngineString))
-        gameResourcesFound = engineInfo.isResourceCorrect(this, onCloseDialogBox = { finish() })
-        if (!gameResourcesFound){
-            super.onCreate(savedInstanceState)
-            return
-        }
         engineInfo.apply {
+            gameResourcesFound = isResourceCorrect(this@SDL2GameActivity, onCloseDialogBox = { finish() })
+            if (!gameResourcesFound) {
+                super.onCreate(savedInstanceState)
+                return
+            }
             initialize(this@SDL2GameActivity)
             super.onCreate(savedInstanceState)
             loadLayout()
