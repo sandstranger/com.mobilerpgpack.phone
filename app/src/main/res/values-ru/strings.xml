@@ -250,4 +250,10 @@
     <string name="perfect_dark_rom_version">Версия ROM</string>
     <string name="enable_mods_support">Включить поддержку модов</string>
     <string name="path_to_common_mods_folder">Путь к папке с модами</string>
+    <string name="path_to_arx_fatalis_resources">Путь к ресурсам Arx Fatalis</string>
+    <string name="audio_localization">Локализация аудио</string>
+    <string name="text_localization">Локализация текста</string>
+    <string name="font_size">Размер шрифта</string>
+    <string name="hud_scale">Cкейл HUD</string>
+    <string name="cursor_scale">Скейл курсора</string>
 </resources>
