@@ -14,44 +14,25 @@ android {
             abiFilters = abi_filters
         }
         externalNativeBuild {
-            cmake {
-                arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
-                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
-                        "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
-                        "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                        "-DBUILD_SHARED_LIBS=true",
-                        "$build_flags.CMAKE_ANDROID_STL"
+            ndkBuild {
+                arguments += build_flags.ndk_build_platform
+                arguments += build_flags.compiling_arguments
+                arguments += build_flags.ndk_build_flags
+                arguments += build_flags.ndk_build_android_stl
+                cFlags = build_flags.common_c_flags
+                cppFlags = build_flags.common_cpp_flags
             }
         }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
-
     externalNativeBuild {
-        cmake {
-            path "src/main/jni/gl4es/CMakeLists.txt"
-            version versions.cmake_version
+        ndkBuild {
+            path 'src/main/jni/gl4es/Android.mk'
         }
     }
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version
-
-    buildTypes {
-        release {
-            externalNativeBuild {
-                cmake {
-                    arguments "-DCMAKE_BUILD_TYPE=Release"
-                }
-            }
-        }
-        debug {
-            externalNativeBuild {
-                cmake {
-                    arguments "-DCMAKE_BUILD_TYPE=Debug"
-                }
-            }
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
