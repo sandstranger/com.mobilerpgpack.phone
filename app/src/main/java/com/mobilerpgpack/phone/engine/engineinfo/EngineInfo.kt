@@ -498,6 +498,7 @@ abstract class EngineInfo(
             Os.setenv("LIBGL_NOPSA", "0", true)
             Os.setenv("LIBGL_PSA_FOLDER", pathToPsaFolder, true)
             Os.setenv("SDL_VIDEO_GL_DRIVER", gl4esFullLibraryName, true)
+            Os.setenv("LIBGL_VABGRA", "1",true)
         }
 
         val pathToSDL2ControllerDB = "${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt"
