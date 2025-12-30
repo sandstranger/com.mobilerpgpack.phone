@@ -11,13 +11,15 @@ class ArxLibertatisComposeSettingsViewModel : IniViewModel() {
             "${File.separator}cfg.ini")
 
     var audioLocalization : ArxLibertatisAudioLocalizationType get() =
-        enumValueOf<ArxLibertatisAudioLocalizationType>(cfgIniFile.getStringValue(AUDIO_LOCALIZATION_KEY))
+        enumValueOf<ArxLibertatisAudioLocalizationType>(
+            cfgIniFile.getStringValue(AUDIO_LOCALIZATION_KEY,ArxLibertatisAudioLocalizationType.english.name))
         set(value) {
             cfgIniFile.setValue(AUDIO_LOCALIZATION_KEY, value.name)
         }
 
     var textLocalization : ArxLibertatisLocalizationType get() =
-        enumValueOf<ArxLibertatisLocalizationType>(cfgIniFile.getStringValue(TEXT_LOCALIZATION_KEY))
+        enumValueOf<ArxLibertatisLocalizationType>(
+            cfgIniFile.getStringValue(TEXT_LOCALIZATION_KEY, ArxLibertatisLocalizationType.english.name))
         set(value) {
             cfgIniFile.setValue(TEXT_LOCALIZATION_KEY, value.name)
         }

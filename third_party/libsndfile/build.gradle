@@ -24,7 +24,7 @@ android {
                         "-DINSTALL_PKGCONFIG_MODULE=OFF", "-DBUILD_SHARED_LIBS=ON",
                         "-DBUILD_TESTING=OFF", "-DENABLE_EXTERNAL_LIBS=ON",
                         "-DENABLE_MPEG=ON",
-                        "$build_flags.CMAKE_ANDROID_STL"
+                        "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
             }
         }
     }
