@@ -247,7 +247,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 controlsProvider.activeControlsType = it
             }
             DrawHorizontalDivider()
-
         }
 
         SwitchItem(stringResource(R.string.block_touch_camera_events),
