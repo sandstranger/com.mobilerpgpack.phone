@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -45,6 +46,14 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                 this.toTypedArray()
             }
         }
+
+    private external fun updateScreenControlsHidingState (controlsHided : Boolean)
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
+        updateScreenControlsHidingState(preferencesStorage.hideScreenControls)
+    }
 
     private companion object {
         private const val DATA_DIR_COMMAND = "--data-dir"
