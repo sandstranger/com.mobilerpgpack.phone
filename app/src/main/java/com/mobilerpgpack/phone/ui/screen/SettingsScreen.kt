@@ -12,7 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -277,9 +276,17 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawHorizontalDivider()
 
         SwitchPreferenceItem(
-            stringResource(R.string.use_touchscreen_in_games_menu),
-            preferencesStorage.useTouchScreenInGamesMenu,
-            preferencesStorage.useTouchScreenInGamesMenuPrefsKey.name
+            stringResource(R.string.enable_absolute_touch_mouse_mode),
+            preferencesStorage.enableAbsoluteTouchMouseMode,
+            preferencesStorage.enableAbsoluteTouchMouseModePrefsKey.name
+        )
+
+        DrawHorizontalDivider()
+
+        SwitchPreferenceItem(
+            stringResource(R.string.enable_touchscreen_pressing_events),
+            preferencesStorage.enableTouchScreenPressingEvents,
+            preferencesStorage.enableTouchScreenPressingEventsPrefsKey.name
         )
         DrawHorizontalDivider()
 
