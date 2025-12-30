@@ -77,6 +77,7 @@ import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.arxLibertatisOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom2RPGControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64AbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64OnScreenStickControlsLayout
@@ -572,8 +573,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
     private val arxLibertatisKoinModule = module{
         single<ControlsProvider> { ControlsProvider(EngineTypes.ArxLibertatis, hashMapOf(
-            ControlsType.AbsoluteTouchControls to perfectDarkAbsoluteTouchControlsLayout,
-            ControlsType.OnScreenStick to perfectDarkOnScreenStickControlsLayout)) }.withOptions {
+            ControlsType.OnScreenStick to arxLibertatisOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.ArxLibertatis.name) }
 
         singleOf(::ArxLibertatisPreferenceStorage)
