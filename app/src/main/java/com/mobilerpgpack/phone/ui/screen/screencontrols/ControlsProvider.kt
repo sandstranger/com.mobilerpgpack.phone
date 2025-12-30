@@ -27,7 +27,7 @@ class ControlsProvider (engineType: EngineTypes,
 
     var blockTouchCameraEventsWhenOnScreenStickActive : Boolean
         get() {
-            return preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,true)
+            return preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,false)
         }
         set(value) {
             preferencesStorage.setBooleanValue(blockTouchCameraEventsPrefsKey, value)

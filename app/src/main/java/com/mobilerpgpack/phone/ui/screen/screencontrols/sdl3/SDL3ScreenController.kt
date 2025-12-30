@@ -38,6 +38,10 @@ class SDL3ScreenController : SDLScreenController() {
             invokeMousePressingEvents)
     }
 
+    override fun getMouseX() = SDL3MouseIconHelper.getMouseX()
+
+    override fun getMouseY() = SDL3MouseIconHelper.getMouseY()
+
     override fun onMotionEventFinished(event: MotionEvent) {
         super.onMotionEventFinished(event)
         SDLSurface.getScaleGestureDetector().onTouchEvent(event)

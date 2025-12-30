@@ -30,6 +30,10 @@ class SDL2ScreenController : SDLScreenController() {
             invokeMousePressingEvents)
     }
 
+    override fun getMouseX() = SDLActivity.getMouseX().toFloat()
+
+    override fun getMouseY() = SDLActivity.getMouseY().toFloat()
+
     override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int,
                                  controlsProvider: ControlsProvider) =
         CustomSDL2Button(id, engineTypes,offsetXPercent = 0.55f, offsetYPercent = 0.03f,
