@@ -248,12 +248,14 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             }
             DrawHorizontalDivider()
 
-            SwitchItem(stringResource(R.string.block_touch_camera_events),
-                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive){
-                controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive = it
-            }
-            DrawHorizontalDivider()
         }
+
+        SwitchItem(stringResource(R.string.block_touch_camera_events),
+            controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive){
+            controlsProvider.blockTouchCameraEventsWhenOnScreenStickActive = it
+        }
+
+        DrawHorizontalDivider()
 
         PreferenceItem(stringResource(R.string.configure_screen_controls)) {
             ScreenControlsEditorActivity.editControls( activity,activeEngine,
