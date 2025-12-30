@@ -15,7 +15,8 @@ class ControlsProvider (engineType: EngineTypes,
     var activeControlsType : ControlsType
         get() {
             return preferencesStorage.getEnumValue(activeControlTypePrefsKey,
-                ControlsType::class.java, ControlsType.Default)
+                ControlsType::class.java, if (controls.containsKey(ControlsType.Default))
+                    ControlsType.Default else ControlsType.OnScreenStick)
         }
         set(value) {
             if (controls.containsKey(value)){
