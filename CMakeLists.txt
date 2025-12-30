@@ -139,6 +139,7 @@ set(CXX_STD_VERSION 2020)
 set(SET_WARNING_FLAGS OFF)
 set(Boost_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/boost")
 set(GLM_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/glm")
+set(OPENAL_EFX_INCLUDE_DIR "${OPENAL_INCLUDE_DIR}/AL")
 
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 
