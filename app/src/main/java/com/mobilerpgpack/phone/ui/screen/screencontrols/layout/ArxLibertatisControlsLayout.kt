@@ -13,16 +13,29 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButto
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
 
+private const val LEFT_MOUSE_BUTTON_ID : Int = 1
+
 val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    RescanSDLGamepadsForcedButton(
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.075f,
+        buttonResId = R.drawable.gamepad,
+        isDeleted = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
     SDL2Dpad(
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
     ),
     SDL2OnScreenStick(
         EngineTypes.ArxLibertatis,
@@ -30,7 +43,8 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
         stickType = StickType.RightStick,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
     ),
     SDL2OnScreenStick(
         engineType = EngineTypes.ArxLibertatis,
@@ -45,17 +59,16 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         offsetYPercent = 0.03f,
         sizePercent = 0.05f,
         buttonResId = R.drawable.quick_panel,
-        controlsType = ControlsType.OnScreenStick,
-        isDeleted = true
+        controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
-        "attack",
+    SDL2MouseImageButton(
+        "action",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.72f,
-        offsetYPercent = 0.44f,
+        offsetXPercent = 0.8f,
+        offsetYPercent = 0.5f,
         sizePercent = 0.11f,
-        buttonResId = R.drawable.attack_button,
-        sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
+        buttonResId = R.drawable.broadsword,
+        sdlKeyEvent = LEFT_MOUSE_BUTTON_ID,
         consumeTouchEventsByDefault = false,
         ignoreOutOfBoundsTouchEvents = true,
         controlsType = ControlsType.OnScreenStick
@@ -94,8 +107,8 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         "use",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.97f,
-        offsetYPercent = 0.45f,
-        sizePercent = 0.047f,
+        offsetYPercent = 0.7f,
+        sizePercent = 0.06f,
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_E,
         controlsType = ControlsType.OnScreenStick
@@ -103,8 +116,8 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "aim_mode",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.72f,
-        offsetYPercent = 0.26f,
+        offsetXPercent = 0.89f,
+        offsetYPercent = 0.9f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.zoom,
         sdlKeyEvent = KeyEvent.KEYCODE_Z,
@@ -114,7 +127,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "reload",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.73f,
+        offsetXPercent = 0.79f,
         offsetYPercent = 0.88f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.machine_gun_magazine,
@@ -125,8 +138,8 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         "fire_mode",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.99f,
-        offsetYPercent = 0.2f,
-        sizePercent = 0.047f,
+        offsetYPercent = 0.25f,
+        sizePercent = 0.055f,
         buttonResId = R.drawable.reload_gun,
         sdlKeyEvent = KeyEvent.KEYCODE_F,
         controlsType = ControlsType.OnScreenStick
@@ -135,8 +148,8 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         "radial_menu",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.99f,
-        offsetYPercent = 0.33f,
-        sizePercent = 0.047f,
+        offsetYPercent = 0.43f,
+        sizePercent = 0.055f,
         buttonResId = R.drawable.circles_ext,
         sdlKeyEvent = KeyEvent.KEYCODE_Q,
         useToggle = true,
@@ -145,7 +158,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "full_crouch",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.63f,
+        offsetXPercent = 0.69f,
         offsetYPercent = 0.88f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.smash_arrows,
@@ -155,7 +168,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "half_crouch",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.53f,
+        offsetXPercent = 0.6f,
         offsetYPercent = 0.88f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.crouch,
@@ -178,12 +191,4 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sizePercent = 0.05f,
         buttonResId = R.drawable.toggles,
         controlsType = ControlsType.OnScreenStick
-    ),
-    RescanSDLGamepadsForcedButton(
-        EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.55f,
-        offsetYPercent = 0.28f,
-        sizePercent = 0.075f,
-        buttonResId = R.drawable.gamepad,
-        isDeleted = true
     ))
