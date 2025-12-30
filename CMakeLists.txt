@@ -130,6 +130,13 @@ set (BUILD_TOOLS OFF)
 set (INSTALL_BLENDER_PLUGIN OFF)
 set (default_DEBUG OFF)
 set (Boost_VERSION "1.90.0")
+set(USE_LTO OFF)
+set(USE_LD "lld")
+set(SET_OPTIMIZATION_FLAGS ON)
+set(DEBUG_EXTRA OFF)
+set(USE_CXX17_FROM_CHARS_FLOAT ON)
+set(CXX_STD_VERSION 2020)
+set(SET_WARNING_FLAGS OFF)
 set(Boost_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/boost")
 set(GLM_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/glm")
 
@@ -155,6 +162,9 @@ foreach(ROM_ID IN LISTS ROM_CONFIGS)
 endforeach()
 
 target_include_directories(arx PRIVATE "${OPENAL_INCLUDE_DIR}/AL")
+if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
+    target_compile_options (arx PRIVATE "-fno-inline-functions")
+endif ()
 
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
