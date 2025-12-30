@@ -92,11 +92,9 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                             if (pointerId == null) {
                                 pointerId = pid
                                 if (!useViewAsToggle) {
-                                    onTouchUp()
                                     onTouchDown()
                                 } else {
                                     if (!isPressed){
-                                        onTouchUp()
                                         onTouchDown()
                                     }
                                     else{
