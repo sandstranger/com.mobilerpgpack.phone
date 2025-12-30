@@ -56,7 +56,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         }.booleanValue
     }
 
-    fun getStringValue (key: String) : String {
+    fun getStringValue (key: String, defaultValue : String = "") : String {
         if (!loaded){
             load()
         }
@@ -64,11 +64,11 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         return iniValues.getOrPut(key){
             iniConfig.run {
                 IniValue().apply {
-                    stringValue = if (containsKey(key)) getString(key) else ""
+                    stringValue = if (containsKey(key)) getString(key) else defaultValue
                     iniValueType = IniValueType.String
                 }
             }
-        }.stringValue
+        }.stringValue.ifEmpty { defaultValue }
     }
 
     fun getIntValue (key: String) : Int{
