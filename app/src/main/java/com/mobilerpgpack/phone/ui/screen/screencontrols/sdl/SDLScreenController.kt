@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
-import android.util.Log
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
@@ -100,8 +99,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
-            engineInfo.fullTouchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
-            mutableStateOf(preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.fullTouchFullScreenModeCanBeUsed &&
+            engineInfo.touchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
+            mutableStateOf(preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.touchFullScreenModeCanBeUsed &&
                     !mouseButtonsEventsCanBeInvoked) }
         val blockTouchEventsSaved by rememberSaveable(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }

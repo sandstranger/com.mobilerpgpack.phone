@@ -21,7 +21,7 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override val commandLineParams get() = arxPreferenceStorage.arxLibertatisCommandLineArgs
 
-    override val fullTouchFullScreenModeCanBeUsed = false
+    override val touchFullScreenModeCanBeUsed = false
 
     override val commandLineArgs: Array<String>
         get() {
