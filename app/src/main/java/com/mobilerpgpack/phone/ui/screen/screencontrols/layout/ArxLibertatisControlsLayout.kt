@@ -337,7 +337,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "jump",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.87f,
+        offsetXPercent = 0.84f,
         offsetYPercent = 0.9f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.jump,
@@ -347,7 +347,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "combat_mode",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.95f,
+        offsetXPercent = 0.92f,
         offsetYPercent = 0.9f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.diamond_hilt,
@@ -357,7 +357,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "stealth_mode",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.79f,
+        offsetXPercent = 0.76f,
         offsetYPercent = 0.88f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.visibility_off,
@@ -367,7 +367,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "inventory",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.99f,
+        offsetXPercent = 0.94f,
         offsetYPercent = 0.25f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.locked_chest,
@@ -377,7 +377,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "magic_mode",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.99f,
+        offsetXPercent = 0.94f,
         offsetYPercent = 0.43f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.lunar_wand,
@@ -387,7 +387,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "crouch",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.69f,
+        offsetXPercent = 0.68f,
         offsetYPercent = 0.88f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.crouch,
@@ -397,7 +397,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     SDL2ImageButton(
         "drop_weapon",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.6f,
+        offsetXPercent = 0.59f,
         offsetYPercent = 0.88f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.drop_weapon,

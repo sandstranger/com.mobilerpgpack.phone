@@ -20,7 +20,6 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.isOutOfBounds
 import androidx.compose.ui.input.pointer.pointerInput
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.compose.koinInject
@@ -31,8 +30,8 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                                     onTouchDown : () -> Unit = {}, onTouchUp : () -> Unit = {}) : Modifier {
 
     val changeItemColor = remember (changeItemColor) { changeItemColor }
+    var isToggleMode by rememberSaveable { mutableStateOf(false) }
     var isPressed by rememberSaveable { mutableStateOf(false) }
-    var wasPressed by rememberSaveable { mutableStateOf(false) }
     val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
     val viewState = remember { viewState }
     val preferencesStorage : PreferencesStorage = koinInject()
@@ -47,8 +46,8 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
     val useViewAsToggle by remember (viewState.useViewAsToggle) { mutableStateOf(viewState.useViewAsToggle) }
     var pointerId by remember { mutableStateOf<PointerId?>(null) }
     val sdlKeyCode by remember (viewState.sdlKeyCode) { mutableIntStateOf(viewState.sdlKeyCode) }
-    val colorFilterToUse by remember (isPressed, isEditMode, useViewAsToggle) { mutableStateOf(
-        ColorFilter.tint(if (isPressed && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
+    val colorFilterToUse by remember (isToggleMode, isEditMode, useViewAsToggle) { mutableStateOf(
+        ColorFilter.tint(if (isToggleMode && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
     ) }
     val showInQuickPanel by remember (viewState.showInQuickPanel) {
         mutableStateOf(viewState.showInQuickPanel)
@@ -59,11 +58,11 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
 
     fun clearResources(){
         pointerId = null
-        if (isPressed || wasPressed) {
+        if (isToggleMode || isPressed) {
             onTouchUp()
         }
-        wasPressed = false
         isPressed = false
+        isToggleMode = false
     }
 
     LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
@@ -96,16 +95,16 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                             if (pointerId == null) {
                                 pointerId = pid
                                 if (!useViewAsToggle) {
-                                    wasPressed = true
+                                    isPressed = true
                                     onTouchDown()
                                 } else {
-                                    if (!isPressed){
+                                    if (!isToggleMode){
                                         onTouchDown()
                                     }
                                     else{
                                         onTouchUp()
                                     }
-                                    isPressed = !isPressed
+                                    isToggleMode = !isToggleMode
                                 }
                             }
                         }
@@ -115,7 +114,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                             if (pointerId == pid){
                                 pointerId = null
                                 if (!useViewAsToggle) {
-                                    wasPressed = false
+                                    isPressed = false
                                     onTouchUp()
                                 }
                             }
