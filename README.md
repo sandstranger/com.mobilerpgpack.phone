@@ -163,7 +163,7 @@ It is also has a ton of other improvements.
 
 For running this port follow these ArxLibertatis docs - https://wiki.arx-libertatis.org/Getting_the_game_data
 
-This port uses code from the legacy Android OpenVM repository as a solution to not working changing brightness bug - https://github.com/xyzz/openmw-android
+This port uses code from the legacy Android openmw repository as a solution to not working changing brightness bug - https://github.com/xyzz/openmw-android
 
 All credits for solution for not working changing brightness in Android Arx Libertatis to xyzz - https://github.com/xyzz
 
