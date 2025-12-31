@@ -250,6 +250,17 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
+    SDL2ImageButton(
+        "show_minimap",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.31f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.position_marker,
+        sdlKeyEvent = KeyEvent.KEYCODE_R,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick,
+    ),
     SDL2MouseImageButton(
         "action",
         EngineTypes.ArxLibertatis,
