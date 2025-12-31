@@ -1,5 +1,5 @@
 # Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark projects found here:
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, ArxLibertatis projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -16,6 +16,8 @@ https://github.com/BodbDearg/PsyDoom
 https://github.com/UZDoom/UZDoom
 
 https://github.com/fgsfdsfgs/perfect_dark
+
+https://github.com/arx/ArxLibertatis
 
 # System Requirements
 
@@ -151,6 +153,24 @@ For running perfect dark - your device need to support OPEN GL ES 3.0 render. Ot
 
 This perfect dark port also supported legacy ARMV7 devices without any issues.
 
+## ArxLibertatis
+
+This port is far superior in quality to the old Arx Libertatis port, which was the first I ever developed for Android
+
+In particular, it is fully supports both GLES 3.2 and GLES 2.0 rendering, has more convenient controls, and it has full ArmV7 support.
+
+It is also has a ton of other improvements.
+
+For running this port follow these ArxLibertatis docs - https://wiki.arx-libertatis.org/Getting_the_game_data
+
+This port uses code from the legacy Android OpenVM repository as a solution to not working changing brightness bug - https://github.com/xyzz/openmw-android
+
+All credits for solution for not working changing brightness in Android Arx Libertatis to xyzz - https://github.com/xyzz
+
+This port is using gamepads code implementation from ArxLibertatis nintendo switch port - https://github.com/fgsfdsfgs/ArxLibertatis
+
+All credits for gamepads implementation in ArxLibertatis android port to fgsfdsfgs - https://github.com/fgsfdsfgs  
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
@@ -206,7 +226,9 @@ PsyDoom engine source code: [Licence](https://github.com/BodbDearg/PsyDoom/blob/
 
 UZDoom engine source code: [Licence](https://github.com/UZDoom/UZDoom/blob/trunk/LICENSE) 	https://github.com/UZDoom/UZDoom
 
-Perfect Dark source code: [Licence](https://github.com/fgsfdsfgs/perfect_dark/blob/port/LICENSE) https://github.com/fgsfdsfgs/perfect_dark
+Perfect Dark engine source code: [Licence](https://github.com/fgsfdsfgs/perfect_dark/blob/port/LICENSE) https://github.com/fgsfdsfgs/perfect_dark
+
+ArxLibertatis engine source code: [Licence](https://github.com/arx/ArxLibertatis/blob/master/LICENSE)	https://github.com/arx/ArxLibertatis
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
@@ -365,6 +387,12 @@ vpx-android: [Licence](https://github.com/cmeng-git/atalk-android/blob/master/LI
 com.n0n3m4.diii4a: [Licence](https://github.com/glKarin/com.n0n3m4.diii4a/blob/master/LICENSE)	https://github.com/glKarin/com.n0n3m4.diii4a
 
 custom-keyboard-android: [Licence](https://github.com/qinvent/custom-keyboard-android/blob/master/LICENSE)  https://github.com/qinvent/custom-keyboard-android
+
+GLM: [Licence](https://github.com/g-truc/glm/blob/master/copying.txt)	https://github.com/g-truc/glm
+
+code from nintendo switch ArxLibertatis port: [Licence](https://github.com/fgsfdsfgs/ArxLibertatis/blob/switch-new/LICENSE) https://github.com/fgsfdsfgs/ArxLibertatis
+
+boost: [Licence](https://github.com/boostorg/boost/blob/master/LICENSE_1_0.txt)	https://github.com/boostorg/boost
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 

@@ -12,6 +12,10 @@ import com.mobilerpgpack.ctranslate2proxy.Small100Translator
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisPreferenceStorage
+import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisComposeSettingsViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
@@ -73,6 +77,7 @@ import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.arxLibertatisOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom2RPGControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64AbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64OnScreenStickControlsLayout
@@ -566,10 +571,44 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
     }
 
+    private val arxLibertatisKoinModule = module{
+        single<ControlsProvider> { ControlsProvider(EngineTypes.ArxLibertatis, hashMapOf(
+            ControlsType.OnScreenStick to arxLibertatisOnScreenStickControlsLayout)) }.withOptions {
+            named(EngineTypes.ArxLibertatis.name) }
+
+        singleOf(::ArxLibertatisPreferenceStorage)
+            .withOptions {
+                named(EngineTypes.ArxLibertatis.name)
+            }
+
+        single {
+            val allLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
+                SDL2_NATIVE_LIB_NAME,
+                FREETYPE_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
+                OPENAL_NATIVE_LIB_NAME,
+                ARX_LIBERTATIS_MAIN_ENGINE_LIB,
+            )
+            ArxLibertatisEngineInfo(ARX_LIBERTATIS_MAIN_ENGINE_LIB, allLibs)
+        }.withOptions {
+            named(EngineTypes.ArxLibertatis.name)
+            bind<IEngineInfo>()
+        }
+
+        viewModel { ArxLibertatisComposeSettingsViewModel().also { it.initialize() } }
+
+        singleOf(::ArxLibertatisComposeSettings)
+            .withOptions {
+                named(EngineTypes.ArxLibertatis.name)
+                bind <IEngineUIController>()
+            }
+    }
+
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
-            psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule)
+            psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,arxLibertatisKoinModule)
     }
 
     companion object{

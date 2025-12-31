@@ -39,7 +39,7 @@ open class Doom64EngineInfo(
 
     override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder
 
-    override val fullTouchFullScreenModeCanBeUsed = false
+    override val touchFullScreenModeCanBeUsed = false
 
     override val commandLineArgs: Array<String>
         get() {

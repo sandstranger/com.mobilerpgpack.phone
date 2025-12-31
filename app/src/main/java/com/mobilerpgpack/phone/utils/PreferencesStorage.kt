@@ -44,9 +44,12 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val alwaysUseFullScreenTouchModePrefsKey = booleanPreferencesKey("always_use_fullscreen_touch_mode")
     val useFloatingStartGameButtonPrefsKey = booleanPreferencesKey("use_floating_start_game_button")
     val alwaysShowKeyboardButtonPrefsKey = booleanPreferencesKey("always_show_keyboard_button")
-    val useTouchScreenInGamesMenuPrefsKey = booleanPreferencesKey("use_touchscreen_in_games_menu")
+    val enableTouchScreenPressingEventsPrefsKey = booleanPreferencesKey("use_touchscreen_in_games_menu")
+    val enableAbsoluteTouchMouseModePrefsKey = booleanPreferencesKey("use_absolute_touch_mouse_mode")
 
-    val useTouchScreenInGamesMenu get() = getBooleanValue(useTouchScreenInGamesMenuPrefsKey, true)
+    val enableAbsoluteTouchMouseMode get() = getBooleanValue(enableAbsoluteTouchMouseModePrefsKey, true)
+
+    val enableTouchScreenPressingEvents get() = getBooleanValue(enableTouchScreenPressingEventsPrefsKey, true)
 
     val useFloatingStartGameButton get() = getBooleanValue(useFloatingStartGameButtonPrefsKey, !context.isTelevision)
 

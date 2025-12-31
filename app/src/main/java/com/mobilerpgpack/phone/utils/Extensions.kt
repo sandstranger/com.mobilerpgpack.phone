@@ -41,6 +41,23 @@ fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>
 fun Activity.showErrorDialogBox (messageToShowResource: Int,onCloseDialogBox :(()-> Unit)? =null) =
     this.showMessageDialogBox(R.string.error, messageToShowResource, onCloseDialogBox)
 
+inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
+    this.startActivity(T::class.java, finishParentActivity)
+
+fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
+    val i = Intent(this, activityClazz)
+
+    if (this is Application) {
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
+    startActivity(i)
+
+    if (finishParentActivity && this is Activity) {
+        this.finish()
+    }
+}
+
 fun Activity.showMessageDialogBox (titleResource : Int? = null, messageToShowResource: Int,
                                    onCloseDialogBox :(()-> Unit)? =null){
     this.runOnUiThread {
@@ -125,15 +142,10 @@ fun Activity.hideSystemBarsAndWait(callback: () -> Unit = {}) {
 }
 
 fun Context.isInternetAvailable(): Boolean {
-    val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    @Suppress("DEPRECATION")
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        val network = cm.activeNetwork ?: return false
-        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+    return with(this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager){
+        val network = activeNetwork ?: return false
+        val capabilities = getNetworkCapabilities(network) ?: return false
         capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    } else {
-        val networkInfo = cm.activeNetworkInfo
-        networkInfo != null && networkInfo.isConnected
     }
 }
 

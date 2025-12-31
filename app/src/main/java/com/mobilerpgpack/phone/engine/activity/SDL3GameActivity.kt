@@ -1,7 +1,9 @@
 package com.mobilerpgpack.phone.engine.activity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
+import android.window.OnBackInvokedDispatcher
 import androidx.activity.enableEdgeToEdge
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
@@ -30,16 +32,23 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
             }
         }
         engineInfo = get (named(preferencesStorage.activeEngineString))
-        gameResourcesFound = engineInfo.isResourceCorrect(this, onCloseDialogBox = { finish() })
-        if (!gameResourcesFound){
-            super.onCreate(savedInstanceState)
-            return
-        }
         engineInfo.apply {
+            gameResourcesFound = isResourceCorrect(this@SDL3GameActivity, onCloseDialogBox = { finish() })
+            if (!gameResourcesFound) {
+                super.onCreate(savedInstanceState)
+                return
+            }
             initialize(this@SDL3GameActivity)
             super.onCreate(savedInstanceState)
             loadLayout()
             onNativeLibrariesLoaded()
+            if (Build.VERSION.SDK_INT >= 33) {
+                onBackInvokedDispatcher.registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT
+                ) {
+                    onBackPressed()
+                }
+            }
         }
     }
 
