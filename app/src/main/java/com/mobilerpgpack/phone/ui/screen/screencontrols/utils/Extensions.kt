@@ -110,7 +110,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                         }
 
                         change.changedToUp() || change.isOutOfBounds(size, extendedTouchPadding) &&
-                                !ignoreOutOfBoundsTouchEvents -> {
+                                !ignoreOutOfBoundsTouchEvents || !change.pressed  -> {
                             if (pointerId == pid){
                                 pointerId = null
                                 if (!useViewAsToggle) {
