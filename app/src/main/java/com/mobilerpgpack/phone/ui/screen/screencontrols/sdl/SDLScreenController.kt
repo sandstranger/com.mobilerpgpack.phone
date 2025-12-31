@@ -134,7 +134,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         LaunchedEffect(isEditMode, blockTouchEvents,enableTouchScreenPressingEvents,
-            mouseButtonsEventsCanBeInvoked) {
+            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode) {
             clearResources()
         }
 
