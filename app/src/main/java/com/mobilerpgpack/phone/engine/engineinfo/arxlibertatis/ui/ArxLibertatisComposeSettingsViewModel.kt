@@ -10,9 +10,9 @@ class ArxLibertatisComposeSettingsViewModel : IniViewModel() {
     private val cfgIniFile = Ini("${pathToRootUserFolder}${File.separator}ArxLibertatis" +
             "${File.separator}cfg.ini")
 
-    var audioLocalization : ArxLibertatisAudioLocalizationType get() =
-        enumValueOf<ArxLibertatisAudioLocalizationType>(
-            cfgIniFile.getStringValue(AUDIO_LOCALIZATION_KEY,ArxLibertatisAudioLocalizationType.english.name))
+    var audioLocalization : ArxLibertatisLocalizationType get() =
+        enumValueOf<ArxLibertatisLocalizationType>(
+            cfgIniFile.getStringValue(AUDIO_LOCALIZATION_KEY,ArxLibertatisLocalizationType.english.name))
         set(value) {
             cfgIniFile.setValue(AUDIO_LOCALIZATION_KEY, value.name)
         }
