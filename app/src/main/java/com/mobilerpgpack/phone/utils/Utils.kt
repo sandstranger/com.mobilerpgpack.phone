@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.utils
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -15,6 +16,7 @@ import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.get
 import java.io.File
 import java.io.FileInputStream
+import java.io.IOException
 import java.io.InputStream
 import java.lang.reflect.Field
 import java.security.MessageDigest
@@ -85,6 +87,28 @@ fun computeSHA256(inputStream: InputStream): ByteArray {
         digest.update(buffer, 0, bytesRead)
     }
     return digest.digest()
+}
+
+fun copyFolder(src: String, dst: String) = copyFolder(File(src), File(dst))
+
+fun copyFolder(src: File, dst: File) {
+    if (!src.exists()) return
+    if (src.isDirectory) {
+        if (!dst.exists()) dst.mkdirs()
+        src.listFiles()?.forEach { file ->
+            copyFolder(file, File(dst, file.name))
+        }
+    } else {
+        try {
+            src.inputStream().use { input ->
+                dst.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+        } catch (e: IOException) {
+            Log.e("Exception", e.toString())
+        }
+    }
 }
 
 private fun isValidKeyCode (keyCodeField : Field) : Boolean{

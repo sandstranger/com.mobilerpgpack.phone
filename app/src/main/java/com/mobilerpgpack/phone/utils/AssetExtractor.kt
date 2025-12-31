@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 import java.io.FileOutputStream
@@ -18,7 +19,9 @@ import java.io.IOException
 
 class AssetExtractor : IAssetExtractor, KoinComponent {
 
-    private val context: Context = get()
+    private val preferencesStorage : PreferencesStorage by inject ()
+
+    private val context : Context by inject ()
 
     private val assetToIgnoreChecking : Collection<String> = get (
         named(ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME))
@@ -28,10 +31,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private var _assetsCopied by mutableStateOf(false)
 
-    private val userFolder = context.getExternalFilesDir("")!!
-
-    private val assetsVersionFile = File ("${userFolder.absolutePath}" +
-            "${File.separator}${ASSETS_VERSION_FILE_NAME}")
+    private val userFolder get() = preferencesStorage.pathToRootUserFolder
 
     private var alwaysCopyAllFiles = false
 
@@ -51,7 +51,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         try {
             alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
             copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER,
-                userFolder)
+                File(userFolder))
         }
         finally {
             _assetsCopied = true
@@ -110,6 +110,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
+        val assetsVersionFile = File ( "$userFolder${File.separator}${ASSETS_VERSION_FILE_NAME}")
         fun writeDefaultVersionToVersionsFile () =
             assetsVersionFile.writeText(Json.encodeToString(AssetsVersionProvider(
                 ASSETS_CURRENT_VERSION)))
