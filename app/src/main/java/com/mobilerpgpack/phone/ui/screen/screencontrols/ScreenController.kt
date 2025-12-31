@@ -64,6 +64,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getButtonsColors
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
@@ -73,12 +76,15 @@ import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import com.mobilerpgpack.phone.ui.getTextButtonsColors
 import com.mobilerpgpack.phone.ui.items.CheckBox
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.keyCodeMap
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
+import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -98,12 +104,15 @@ abstract class ScreenController : IScreenController {
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     override fun DrawScreenControls(
-        activeEngine : EngineTypes,
+        activeEngine: EngineTypes,
         inGame: Boolean,
-        blockTouchCameraEvents : Boolean,
+        blockTouchCameraEvents: Boolean,
         allowToEditControls: Boolean,
-        drawInSafeArea : Boolean,
-        onBack: () -> Unit) {
+        drawInSafeArea: Boolean,
+        hideOnScreenControls: Boolean,
+        keyboardInputType: CustomKeyboardView.KeyboardType,
+        onBack: () -> Unit
+    ) {
 
         val preferencesStorage : PreferencesStorage = koinInject()
         val onBackSaved = remember { onBack }
@@ -111,6 +120,7 @@ abstract class ScreenController : IScreenController {
         val activeEngineSaved = rememberSaveable(activeEngine) {activeEngine}
         val drawInSafeAreaSaved = rememberSaveable(drawInSafeArea) { drawInSafeArea }
         val inGameSaved = rememberSaveable(inGame) { inGame }
+        val engineInfo : IEngineInfo = koinInject(named(activeEngineSaved.name))
         val controlsProvider : ControlsProvider = koinInject(named(activeEngineSaved.name))
         val customViews = remember { buildCustomViews(activeEngineSaved) }
         val commonsViewsToDraw = remember { controlsProvider.controlsToDraw }
@@ -144,6 +154,7 @@ abstract class ScreenController : IScreenController {
         }
         var screenWidthPx by remember { mutableFloatStateOf(configuration.screenWidthDp * density) }
         var screenHeightPx by remember { mutableFloatStateOf(configuration.screenHeightDp * density) }
+        val hideOnScreenControls by rememberSaveable(hideOnScreenControls) { mutableStateOf(hideOnScreenControls) }
 
         fun clampView(state: ViewState, clampForced : Boolean = false) {
             if (clampButtons || clampForced) {
@@ -213,138 +224,202 @@ abstract class ScreenController : IScreenController {
 
         DrawTouchScreen(activeEngineSaved,blockTouchCameraEvents,
             drawInSafeAreaSaved,isEditMode, inGameSaved) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(backgroundColor)
-            ) {
-                if (isEditMode) {
-                    EditControls(
-                        selectedButtonId,
-                        inGameSaved,
-                        onAlphaChange = { delta ->
-                            selectedButtonId?.let { id ->
-                                viewsToDraw[id]!!.viewState.apply {
-                                    alpha = (alpha + delta).coerceIn(MIN_VIEW_ALPHA, MAX_VIEW_ALPHA)
-                                    save()
-                                }
-                            }
-                        },
-                        onSizeChange = { deltaPercent ->
-                            selectedButtonId?.let { id ->
-                                viewsToDraw[id]!!.viewState.apply {
-                                    sizePercent = (sizePercent + deltaPercent).coerceIn(
-                                        MIN_VIEW_SIZE,
-                                        MAX_VIEW_SIZE
-                                    )
-                                    save()
-                                }
-                            }
-                        },
-                        onCustomViewSelected = { customView ->
-                            customView.viewState.apply {
-                                isDeleted = false
-                                clampView(this, clampForced = true)
-                                save()
-                            }
-                        },
-                        onViewDeleted = { viewIdToDelete ->
-                            viewsToDraw[viewIdToDelete]!!.viewState.apply {
-                                resetToDefaults()
-                                isDeleted = true
-                                save()
-                            }
-                            selectedButtonId = null
-                        },
-                        onReset = {
-                            selectedButtonId = null
-                            preferencesStorage.setBooleanValue(clampButtonsPrefsKey, true)
-                            clampButtons = true
-                            viewsToDraw.values.forEach { view ->
-                                view.viewState.apply {
-                                    val wasDeletedBeforeReset = isDeleted
-                                    resetToDefaults()
-                                    if (!isDeleted) {
-                                        clampView(this, true)
-                                    }
-                                    if (!wasDeletedBeforeReset || !isDeleted) {
+            if (!hideOnScreenControls) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(backgroundColor)
+                ) {
+                    if (isEditMode) {
+                        EditControls(
+                            selectedButtonId,
+                            inGameSaved,
+                            onAlphaChange = { delta ->
+                                selectedButtonId?.let { id ->
+                                    viewsToDraw[id]!!.viewState.apply {
+                                        alpha =
+                                            (alpha + delta).coerceIn(MIN_VIEW_ALPHA, MAX_VIEW_ALPHA)
                                         save()
                                     }
                                 }
-                            }
-                        },
-                        onBack = {
-                            selectedButtonId = null
-                            onBackSaved()
-                        },
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
+                            },
+                            onSizeChange = { deltaPercent ->
+                                selectedButtonId?.let { id ->
+                                    viewsToDraw[id]!!.viewState.apply {
+                                        sizePercent = (sizePercent + deltaPercent).coerceIn(
+                                            MIN_VIEW_SIZE,
+                                            MAX_VIEW_SIZE
+                                        )
+                                        save()
+                                    }
+                                }
+                            },
+                            onCustomViewSelected = { customView ->
+                                customView.viewState.apply {
+                                    isDeleted = false
+                                    clampView(this, clampForced = true)
+                                    save()
+                                }
+                            },
+                            onViewDeleted = { viewIdToDelete ->
+                                viewsToDraw[viewIdToDelete]!!.viewState.apply {
+                                    resetToDefaults()
+                                    isDeleted = true
+                                    save()
+                                }
+                                selectedButtonId = null
+                            },
+                            onReset = {
+                                selectedButtonId = null
+                                preferencesStorage.setBooleanValue(clampButtonsPrefsKey, true)
+                                clampButtons = true
+                                viewsToDraw.values.forEach { view ->
+                                    view.viewState.apply {
+                                        val wasDeletedBeforeReset = isDeleted
+                                        resetToDefaults()
+                                        if (!isDeleted) {
+                                            clampView(this, true)
+                                        }
+                                        if (!wasDeletedBeforeReset || !isDeleted) {
+                                            save()
+                                        }
+                                    }
+                                }
+                            },
+                            onBack = {
+                                selectedButtonId = null
+                                onBackSaved()
+                            },
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
 
-                if (readyToDrawControls) {
-                    if (inGameSaved && allowToEditControlsSaved) {
+                    if (readyToDrawControls) {
+                        if (inGameSaved && allowToEditControlsSaved) {
+                            Image(
+                                painter = painterResource(R.drawable.cog),
+                                contentDescription = "settings_button",
+                                modifier = Modifier
+                                    .align(Alignment.TopStart)
+                                    .size(60.dp)
+                                    .alpha(0.5f)
+                                    .minimumInteractiveComponentSize()
+                                    .padding(8.dp)
+                                    .clickable(
+                                        indication = null,
+                                        interactionSource = null
+                                    ) {
+                                        isEditMode = !isEditMode
+                                    }
+                            )
+                        }
+
+                        viewsToDraw.forEach { (id, view) ->
+                            val id = remember(id) { id }
+                            val view = remember(view) { view }
+                            val viewState = remember(view.viewState) { view.viewState }
+                            val sizePx: Float by remember(screenWidthPx, viewState.sizePercent) {
+                                mutableFloatStateOf(screenWidthPx * view.viewState.sizePercent)
+                            }
+                            val sizeDp: Dp by remember(sizePx, density) {
+                                mutableStateOf((sizePx / density).dp)
+                            }
+
+                            val renderOffsetX by remember(viewState.offsetXPercent, screenWidthPx) {
+                                mutableFloatStateOf(viewState.offsetXPercent * screenWidthPx)
+                            }
+                            val renderOffsetY by remember(
+                                viewState.offsetYPercent,
+                                screenHeightPx
+                            ) { mutableFloatStateOf(viewState.offsetYPercent * screenHeightPx) }
+
+                            val renderView by remember(
+                                viewState.isDeleted,
+                                viewState.viewRenderRule,
+                                viewState.showInQuickPanel,
+                                showScreenControls,
+                                showQuickPanelItems,
+                                isEditMode,
+                                inGameSaved
+                            ) {
+                                mutableStateOf(!viewState.isDeleted && (isEditMode || view.renderView))
+                            }
+
+                            if (renderView) {
+                                DrawView(
+                                    viewToDraw = view,
+                                    offset = Offset(renderOffsetX, renderOffsetY),
+                                    sizeDp = sizeDp,
+                                    isEditMode = isEditMode,
+                                    isSelected = (selectedButtonId == id),
+                                    onClick = {
+                                        if (isEditMode) {
+                                            selectedButtonId = id
+                                            preferencesStorage.setBooleanValue(
+                                                clampButtonsPrefsKey,
+                                                false
+                                            )
+                                            clampButtons = false
+                                        }
+                                    },
+                                    onDragEnd = { newX, newY ->
+                                        view.viewState.apply {
+                                            offsetXPercent = (newX / screenWidthPx)
+                                            offsetYPercent = (newY / screenHeightPx)
+                                            save()
+                                        }
+                                    },
+                                    inGame = inGameSaved,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            else{
+                isEditMode = false
+                val showOnlyVirtualKeyboardButton = remember { preferencesStorage.hideScreenControls && preferencesStorage.alwaysShowKeyboardButton }
+                val sdlKeyboard = koinInject<SDLKeyboard>(named(if (engineInfo is SDL2EngineInfo) KeyboardType.SDL2Keyboard.name
+                else KeyboardType.SDL3Keyboard.name))
+                val keyboardInputType = remember { keyboardInputType }
+
+                Theme {
+                    Box(modifier = Modifier.fillMaxSize()) {
                         Image(
-                            painter = painterResource(R.drawable.cog),
-                            contentDescription = "settings_button",
+                            painter = painterResource(R.drawable.keyboard),
+                            contentDescription = "keyboard_button",
                             modifier = Modifier
                                 .align(Alignment.TopStart)
-                                .size(60.dp)
+                                .size(70.dp)
                                 .alpha(0.5f)
                                 .minimumInteractiveComponentSize()
                                 .padding(8.dp)
                                 .clickable(
-                                    indication = null,
-                                    interactionSource = null
+                                    indication = null, interactionSource = null
                                 ) {
-                                    isEditMode = !isEditMode
+                                    sdlKeyboard.showKeyboard(
+                                        useReturnButton = true,
+                                        keyboardInputType
+                                    )
                                 }
                         )
-                    }
 
-                    viewsToDraw.forEach { (id, view) ->
-                        val id = remember (id){ id }
-                        val view = remember (view) { view }
-                        val viewState = remember (view.viewState) { view.viewState }
-                        val sizePx: Float by remember (screenWidthPx,viewState.sizePercent ) {
-                            mutableFloatStateOf(screenWidthPx * view.viewState.sizePercent) }
-                        val sizeDp: Dp by remember (sizePx, density) {
-                            mutableStateOf( (sizePx / density).dp) }
-
-                        val renderOffsetX by remember (viewState.offsetXPercent,screenWidthPx) {
-                            mutableFloatStateOf(viewState.offsetXPercent * screenWidthPx)
-                        }
-                        val renderOffsetY by remember (viewState.offsetYPercent,
-                            screenHeightPx ) { mutableFloatStateOf(viewState.offsetYPercent * screenHeightPx) }
-
-                        val renderView by remember (viewState.isDeleted, viewState.viewRenderRule,
-                            viewState.showInQuickPanel, showScreenControls, showQuickPanelItems, isEditMode, inGameSaved) {
-                            mutableStateOf(!viewState.isDeleted && (isEditMode || view.renderView)) }
-
-                        if (renderView) {
-                            DrawView(
-                                viewToDraw = view,
-                                offset = Offset(renderOffsetX, renderOffsetY),
-                                sizeDp = sizeDp,
-                                isEditMode = isEditMode,
-                                isSelected = (selectedButtonId == id),
-                                onClick = {
-                                    if (isEditMode) {
-                                        selectedButtonId = id
-                                        preferencesStorage.setBooleanValue(
-                                            clampButtonsPrefsKey,
-                                            false
-                                        )
-                                        clampButtons = false
+                        if (!showOnlyVirtualKeyboardButton) {
+                            Image(
+                                painter = painterResource(R.drawable.pause),
+                                contentDescription = "escape_button",
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .size(60.dp)
+                                    .alpha(0.5f)
+                                    .minimumInteractiveComponentSize()
+                                    .padding(8.dp)
+                                    .clickable(
+                                        indication = null,
+                                        interactionSource = null
+                                    ) {
+                                        engineInfo.onBackPressed()
                                     }
-                                },
-                                onDragEnd = { newX, newY ->
-                                    view.viewState.apply {
-                                        offsetXPercent = (newX / screenWidthPx)
-                                        offsetYPercent = (newY / screenHeightPx)
-                                        save()
-                                    }
-                                },
-                                inGame = inGameSaved,
                             )
                         }
                     }

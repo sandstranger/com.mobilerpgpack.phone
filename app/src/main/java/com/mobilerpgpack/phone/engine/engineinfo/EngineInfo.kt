@@ -34,13 +34,11 @@ import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
-import com.mobilerpgpack.phone.main.SDL3HELPER_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIconHelper
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -70,10 +68,6 @@ abstract class EngineInfo(
     mainEngineLib: String,
     private val allLibs: Array<String>,
     activeEngineType: EngineTypes) : KoinComponent, IEngineInfo {
-
-    private var alwaysShowKeyboardButton = false
-
-    private var controlsOverlayUI: View? = null
 
     private var layoutBinding : GameLayoutBinding? = null
 
@@ -110,16 +104,13 @@ abstract class EngineInfo(
 
     protected open val loadGL4ES : Boolean = true
 
-    protected open val enableControlsAutoHidingFeature get() = preferencesStorage.autoHideScreenControls &&
-            !hideScreenControls
-
     private var wasInit = false
-    private var needToShowControlsLastState: Boolean = false
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
     private var allowToEditScreenControlsInGame = false
     private var isCursorVisible by mutableStateOf(false)
     private var displayInSafeArea: Boolean = false
+    private var hideOnScreenControlsMutableState by mutableStateOf(false)
 
     private val needToShowScreenControlsNativeDelegate by lazy {
         Function.getFunction(mainLibraryName,
@@ -218,7 +209,6 @@ abstract class EngineInfo(
         allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea
-        alwaysShowKeyboardButton = preferencesStorage.alwaysShowKeyboardButton
 
         val customAspectRatio = preferencesStorage.customAspectRatio
         val customScreenResolution = preferencesStorage.customScreenResolution
@@ -288,20 +278,8 @@ abstract class EngineInfo(
                 mouseOverlayUI.visibility = View.GONE
             }
 
-            if (hideScreenControls) {
-                controlsOverlayUI.visibility = View.GONE
-            } else {
-                this@EngineInfo.controlsOverlayUI = controlsOverlayUI
-            }
-
-            if (hideScreenControls){
-                if (alwaysShowKeyboardButton){
-                    showKeyboardUiOverlay.visibility = View.VISIBLE
-                }
-                else{
-                    updateUseStandardSDLInputState(useStandardSDLInput = true)
-                }
-            }
+            updateUseStandardSDLInputState(useStandardSDLInput = hideScreenControls &&
+                    !preferencesStorage.alwaysShowKeyboardButton)
 
             customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency
 
@@ -321,60 +299,39 @@ abstract class EngineInfo(
                             }
                         }
 
-                        if (!hideScreenControls) {
-                            controlsOverlayUI.setContent {
-                                Theme {
+                        controlsOverlayUI.setContent {
+                            Theme {
+                                val hideScreenControls = rememberSaveable { hideScreenControls }
+                                val alwaysShowKeyboard =
+                                    rememberSaveable { preferencesStorage.alwaysShowKeyboardButton }
+                                if (!hideScreenControls) {
                                     screenController.DrawScreenControls(
                                         inGame = true,
                                         blockTouchCameraEvents = blockTouchCameraEvents,
                                         activeEngine = engineType,
                                         allowToEditControls = allowToEditScreenControlsInGame,
-                                        drawInSafeArea = displayInSafeArea
+                                        drawInSafeArea = displayInSafeArea,
+                                        hideOnScreenControls = hideOnScreenControlsMutableState,
+                                        keyboardInputType = keyboardInputType
                                     )
-                                }
-                            }
-                        }
-                        showKeyboardUiOverlay.setContent {
-                            val showOnlyVirtualKeyboardButton = rememberSaveable {
-                                hideScreenControls && alwaysShowKeyboardButton }
-                            val sdlKeyboard = remember { sdlKeyboard }
-
-                            Theme {
-                                Box(modifier = Modifier.fillMaxSize()) {
-                                    Image(
-                                        painter = painterResource(R.drawable.keyboard),
-                                        contentDescription = "keyboard_button",
-                                        modifier = Modifier
-                                            .align(Alignment.TopStart)
-                                            .size(70.dp)
-                                            .alpha(0.5f)
-                                            .minimumInteractiveComponentSize()
-                                            .padding(8.dp)
-                                            .clickable(
-                                                indication = null, interactionSource = null
-                                            ) {
-                                                sdlKeyboard.showKeyboard(
-                                                    useReturnButton = true,
-                                                    keyboardInputType
-                                                )
-                                            }
-                                    )
-
-                                    if (!showOnlyVirtualKeyboardButton) {
+                                } else if (alwaysShowKeyboard) {
+                                    Box(modifier = Modifier.fillMaxSize()) {
                                         Image(
-                                            painter = painterResource(R.drawable.pause),
-                                            contentDescription = "escape_button",
+                                            painter = painterResource(R.drawable.keyboard),
+                                            contentDescription = "keyboard_button",
                                             modifier = Modifier
-                                                .align(Alignment.TopEnd)
-                                                .size(60.dp)
+                                                .align(Alignment.TopStart)
+                                                .size(70.dp)
                                                 .alpha(0.5f)
                                                 .minimumInteractiveComponentSize()
                                                 .padding(8.dp)
                                                 .clickable(
-                                                    indication = null,
-                                                    interactionSource = null
+                                                    indication = null, interactionSource = null
                                                 ) {
-                                                    onBackPressed()
+                                                    sdlKeyboard.showKeyboard(
+                                                        useReturnButton = true,
+                                                        keyboardInputType
+                                                    )
                                                 }
                                         )
                                     }
@@ -385,36 +342,22 @@ abstract class EngineInfo(
                     }
                 })
 
+                val enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls && !hideScreenControls
+
                 if (enableControlsAutoHidingFeature) {
-                    needToShowControlsLastState = true
-                    scope.launch {
-                        changeScreenControlsVisibility()
-                    }
+                    hideOnScreenControlsMutableState = false
+                    scope.launch { changeScreenControlsVisibility() }
                 }
             }
         }
     }
 
     private suspend fun changeScreenControlsVisibility() {
-        if (this@EngineInfo.controlsOverlayUI == null) {
-            return
-        }
-
         while (currentCoroutineContext().isActive) {
-            val needToShowControls: Boolean = this.needToShowScreenControls
-
-            if (needToShowControls != needToShowControlsLastState) {
-                this@EngineInfo.activity.runOnUiThread {
-                    if (needToShowControls) {
-                        this@EngineInfo.layoutBinding!!.showKeyboardUiOverlay.visibility = View.GONE
-                        this@EngineInfo.controlsOverlayUI!!.visibility = View.VISIBLE
-                    } else {
-                        this@EngineInfo.layoutBinding!!.showKeyboardUiOverlay.visibility = View.VISIBLE
-                        this@EngineInfo.controlsOverlayUI!!.visibility = View.GONE
-                    }
-                }
+            val needToHideOnScreenControls: Boolean = !this.needToShowScreenControls
+            if (needToHideOnScreenControls != hideOnScreenControlsMutableState) {
+                hideOnScreenControlsMutableState = needToHideOnScreenControls
             }
-            needToShowControlsLastState = needToShowControls
             delay(ONE_FRAME_DELAY)
         }
     }
