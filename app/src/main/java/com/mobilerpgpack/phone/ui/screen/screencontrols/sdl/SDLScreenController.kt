@@ -181,7 +181,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                 }
                 awaitPointerEventScope {
                     while (true) {
-                        val useAbsoluteTouchMode = enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
+                        val useAbsoluteTouchMode =
+                            enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
                         val event = awaitPointerEvent()
                         for (change in event.changes) {
                             val pid = change.id.value.toInt()
@@ -205,73 +206,66 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                             }
 
                             when {
-                                change.changedToDown() -> {
-                                    if (trackedPointerId == UNKNOWN_POINTER_ID) {
-                                        trackedPointerId = pid
-
-                                        if (useAbsoluteTouchMode) {
-                                            lastTouchX = x
-                                            lastTouchY = y
-                                            lastMouseX = x
-                                            lastMouseY = y
-                                            handlePointerLocal(MotionEvent.ACTION_DOWN, x, y)
-                                        } else {
-                                            lastTouchX = x
-                                            lastTouchY = y
-                                            lastMouseX = getMouseX()
-                                            lastMouseY = getMouseY()
-                                            handlePointerLocal(
-                                                MotionEvent.ACTION_DOWN, lastMouseX,
-                                                lastMouseY
-                                            )
-                                        }
+                                change.changedToDown() && trackedPointerId == UNKNOWN_POINTER_ID -> {
+                                    trackedPointerId = pid
+                                    if (useAbsoluteTouchMode) {
+                                        lastTouchX = x
+                                        lastTouchY = y
+                                        lastMouseX = x
+                                        lastMouseY = y
+                                        handlePointerLocal(MotionEvent.ACTION_DOWN, x, y)
+                                    } else {
+                                        lastTouchX = x
+                                        lastTouchY = y
+                                        lastMouseX = getMouseX()
+                                        lastMouseY = getMouseY()
+                                        handlePointerLocal(
+                                            MotionEvent.ACTION_DOWN, lastMouseX,
+                                            lastMouseY
+                                        )
                                     }
                                 }
 
-                                change.changedToUp() -> {
-                                    if (trackedPointerId == pid) {
-                                        if (useAbsoluteTouchMode) {
-                                            handlePointerLocal(MotionEvent.ACTION_UP, x, y)
-                                        } else {
-                                            val dx = x - lastTouchX
-                                            val dy = y - lastTouchY
-                                            var newMouseX = lastMouseX + dx
-                                            var newMouseY = lastMouseY + dy
-                                            newMouseX = newMouseX.coerceIn(0f, mWidth)
-                                            newMouseY = newMouseY.coerceIn(0f, mHeight)
-                                            handlePointerLocal(
-                                                MotionEvent.ACTION_UP, newMouseX,
-                                                newMouseY
-                                            )
-                                        }
-
-                                        trackedPointerId = UNKNOWN_POINTER_ID
+                                change.changedToUp() && trackedPointerId == pid -> {
+                                    if (useAbsoluteTouchMode) {
+                                        handlePointerLocal(MotionEvent.ACTION_UP, x, y)
+                                    } else {
+                                        val dx = x - lastTouchX
+                                        val dy = y - lastTouchY
+                                        var newMouseX = lastMouseX + dx
+                                        var newMouseY = lastMouseY + dy
+                                        newMouseX = newMouseX.coerceIn(0f, mWidth)
+                                        newMouseY = newMouseY.coerceIn(0f, mHeight)
+                                        handlePointerLocal(
+                                            MotionEvent.ACTION_UP, newMouseX,
+                                            newMouseY
+                                        )
                                     }
+
+                                    trackedPointerId = UNKNOWN_POINTER_ID
                                 }
 
-                                change.positionChanged() -> {
-                                    if (trackedPointerId == pid) {
-                                        if (useAbsoluteTouchMode) {
-                                            handlePointerLocal(MotionEvent.ACTION_MOVE, x, y)
-                                        } else {
-                                            val dx = x - lastTouchX
-                                            val dy = y - lastTouchY
-                                            var newMouseX = lastMouseX + dx
-                                            var newMouseY = lastMouseY + dy
+                                change.positionChanged() && trackedPointerId == pid -> {
+                                    if (useAbsoluteTouchMode) {
+                                        handlePointerLocal(MotionEvent.ACTION_MOVE, x, y)
+                                    } else {
+                                        val dx = x - lastTouchX
+                                        val dy = y - lastTouchY
+                                        var newMouseX = lastMouseX + dx
+                                        var newMouseY = lastMouseY + dy
 
-                                            newMouseX = newMouseX.coerceIn(0f, mWidth)
-                                            newMouseY = newMouseY.coerceIn(0f, mHeight)
+                                        newMouseX = newMouseX.coerceIn(0f, mWidth)
+                                        newMouseY = newMouseY.coerceIn(0f, mHeight)
 
-                                            handlePointerLocal(
-                                                MotionEvent.ACTION_MOVE, newMouseX,
-                                                newMouseY
-                                            )
+                                        handlePointerLocal(
+                                            MotionEvent.ACTION_MOVE, newMouseX,
+                                            newMouseY
+                                        )
 
-                                            lastTouchX = x
-                                            lastTouchY = y
-                                            lastMouseX = newMouseX
-                                            lastMouseY = newMouseY
-                                        }
+                                        lastTouchX = x
+                                        lastTouchY = y
+                                        lastMouseX = newMouseX
+                                        lastMouseY = newMouseY
                                     }
                                 }
 
