@@ -66,7 +66,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.5f,
-        sizePercent = 0.11f,
+        sizePercent = 0.095f,
         buttonResId = R.drawable.broadsword,
         sdlKeyEvent = LEFT_MOUSE_BUTTON_ID,
         consumeTouchEventsByDefault = false,
@@ -110,17 +110,37 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         offsetYPercent = 0.7f,
         sizePercent = 0.06f,
         buttonResId = R.drawable.use,
-        sdlKeyEvent = KeyEvent.KEYCODE_E,
+        sdlKeyEvent = KeyEvent.KEYCODE_F,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
-        "aim_mode",
+        "quick_save",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.save,
+        sdlKeyEvent = KeyEvent.KEYCODE_F5,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "quick_load",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.83f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.load,
+        sdlKeyEvent = KeyEvent.KEYCODE_F9,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "jump",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.89f,
         offsetYPercent = 0.9f,
         sizePercent = 0.055f,
-        buttonResId = R.drawable.zoom,
-        sdlKeyEvent = KeyEvent.KEYCODE_Z,
+        buttonResId = R.drawable.jump,
+        sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
         useToggle = true,
         controlsType = ControlsType.OnScreenStick
     ),
@@ -178,8 +198,8 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
     ShowSDLKeyboardButton(
         KeyboardType.SDL2Keyboard,
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.76f,
-        offsetYPercent = 0.005f,
+        offsetXPercent = 0.75f,
+        offsetYPercent = 0.15f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard,
         controlsType = ControlsType.OnScreenStick
