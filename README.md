@@ -155,6 +155,18 @@ This perfect dark port also supported legacy ARMV7 devices without any issues.
 
 ## ArxLibertatis
 
+This port is far superior in quality to the old Arx Libertatis port, which was the first I ever developed for Android
+
+In particular, it is fully supports both GLES 3.2 and GLES 2.0 rendering, has more convenient controls, and it has full ArmV7 support.
+
+It is also has a ton of other improvements.
+
+For running this port follow these ArxLibertatis docs - https://wiki.arx-libertatis.org/Getting_the_game_data
+
+This port uses code from the legacy Android OpenVM repository as a solution to not working changing brightness bug - https://github.com/xyzz/openmw-android
+
+All credits for solution for not working changing brightness in Android Arx Libertatis to xyzz - https://github.com/xyzz
+
 This port is using gamepads code implementation from ArxLibertatis nintendo switch port - https://github.com/fgsfdsfgs/ArxLibertatis
 
 All credits for gamepads implementation in ArxLibertatis android port to fgsfdsfgs - https://github.com/fgsfdsfgs  
