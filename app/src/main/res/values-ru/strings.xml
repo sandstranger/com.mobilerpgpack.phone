@@ -257,4 +257,9 @@
     <string name="hud_scale">Cкейл HUD</string>
     <string name="cursor_scale">Скейл курсора</string>
     <string name="enable_absolute_touch_mouse_mode">Включить абсолютный режим касания</string>
+    <string name="path_to_user_folder">Путь к папке пользователя (Эта опция позволяет переопределить путь ко всем корневым папкам движков. После изменения пути рекомендуется перезапустить приложение)</string>
+    <string name="custom_path_settings">Пути к папке пользователя</string>
+    <string name="reset_user_path">Сбросить путь к папке пользователя</string>
+    <string name="copy_engines_content_info">Скопировать файлы данных движков из /Android/data в целевую папку пользователя</string>
+    <string name="copy_engines_content">Копировать</string>
 </resources>

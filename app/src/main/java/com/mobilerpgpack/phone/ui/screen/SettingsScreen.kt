@@ -2,8 +2,10 @@ package com.mobilerpgpack.phone.ui.screen
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,12 +17,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -30,6 +36,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.getButtonsColors
+import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
@@ -38,14 +45,21 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
+import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
+import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.copyFolder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
+import java.io.File
 
 class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
@@ -134,6 +148,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             DrawCommonSettings(activeEngine, viewModel, navController)
             DrawGraphicsSettings()
             DrawUserInterfaceSettings()
+            DrawCustomUserPathSettings()
         }
     }
 
@@ -229,6 +244,53 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawHorizontalDivider()
 
         DrawMouseCustomCursorSettings()
+        DrawHorizontalDivider()
+    }
+
+    @Composable
+    private fun DrawCustomUserPathSettings(){
+        val context = LocalContext.current
+        val preferencesStorage : PreferencesStorage = koinInject()
+        val settingsViewModel : SettingsScreenViewModel = koinViewModel ()
+        val sourceFolder = remember { context.getExternalFilesDir("")!!.absolutePath }
+        DrawTitleText(stringResource(R.string.custom_path_settings))
+
+        Row (modifier = Modifier.padding(start = 4.dp, end = 4.dp).fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(text = stringResource(R.string.copy_engines_content_info),
+                modifier = Modifier.weight(1f, fill = false),
+                color = getOnBackgroundColor())
+
+            Button(
+                onClick = { settingsViewModel.copyContentFromInternalStorage() },
+                colors = getButtonsColors()
+            ) {
+                Text(stringResource(R.string.copy_engines_content),
+                    textAlign = TextAlign.Center, color = getOnPrimaryColor()
+                )
+            }
+        }
+
+        DrawHorizontalDivider()
+
+        Button(
+            onClick = { preferencesStorage.setStringValue(preferencesStorage.pathToRootUserFolderPrefsKey, sourceFolder) },
+            colors = getButtonsColors()
+        ) {
+            Text(stringResource(R.string.reset_user_path),
+                textAlign = TextAlign.Center, color = getOnPrimaryColor()
+            )
+        }
+
+        DrawHorizontalDivider()
+
+        RequestPath(
+            stringResource(R.string.path_to_user_folder),
+            preferencesStorage.pathToRootUserFolder,
+            preferencesStorage.pathToRootUserFolderPrefsKey,
+            RequestPathMode.Directory,
+        )
+
         DrawHorizontalDivider()
     }
 

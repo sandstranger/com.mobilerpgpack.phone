@@ -130,9 +130,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
-
-    private val pathToUserFolder = context.getExternalFilesDir("")!!.absolutePath
-
     val allModules : List<Module>
 
     private val mainModule = module {
@@ -143,10 +140,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
         single<PreferencesStorage> { PreferencesStorage() }.withOptions { createdAtStart() }
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
-        single<String> { pathToUserFolder }.withOptions {
-            named(USER_ROOT_FOLDER_NAMED_KEY)
-            createdAtStart()
-        }
         single { assetsToIgnoreChecking }.withOptions {
             named(AssetExtractor.ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME)
             bind<Collection<String>>()
@@ -201,41 +194,62 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single <MLKitTranslationModel> {  MLKitTranslationModel(get(),
             TranslationManager.SOURCE_LOCALE, targetLocale, allowDownloadingModelsOverMobile) }
 
-        val pathToOptModel = "${pathToUserFolder}${File.separator}opus-ct2-en-ru"
-        val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
-        val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
 
-        single<OpusMtTranslator> { OpusMtTranslator(pathToOptModel,
+        single<OpusMtTranslator> {
+            val preferencesStorage : PreferencesStorage = get()
+            val pathToOptModel = "${preferencesStorage.pathToRootUserFolder}${File.separator}opus-ct2-en-ru"
+            val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
+            val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
+
+            OpusMtTranslator(pathToOptModel,
             optModelSourceProcessor, optModelTargetProcessor) }
 
         singleOf(::OpusMtTranslationModel).bind()
 
-        val pathToM2M100Model = "${pathToUserFolder}${File.separator}m2m100_ct2"
-        val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
 
-        single <M2M100Translator> { M2M100Translator(pathToM2M100Model,m2m100smpFile) }
+        single <M2M100Translator> {
+            val preferencesStorage : PreferencesStorage = get()
+            val pathToM2M100Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}m2m100_ct2"
+            val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
 
-        single<M2M100TranslationModel> { M2M100TranslationModel (get(), pathToM2M100Model, m2m100smpFile,
+            M2M100Translator(pathToM2M100Model,m2m100smpFile) }
+
+        single<M2M100TranslationModel> {
+            val preferencesStorage : PreferencesStorage = get()
+            val pathToM2M100Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}m2m100_ct2"
+            val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
+            M2M100TranslationModel (get(), pathToM2M100Model, m2m100smpFile,
             allowDownloadingModelsOverMobile) }
 
-        val pathToSmall100Model = "${pathToUserFolder}${File.separator}small100_ct2"
-        val small100SmpFile = "${pathToSmall100Model}${File.separator}sentencepiece.model"
 
-        single<Small100Translator> { Small100Translator(pathToSmall100Model,small100SmpFile) }
+        single<Small100Translator> {
+            val preferencesStorage : PreferencesStorage = get()
+            val pathToSmall100Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}small100_ct2"
+            val small100SmpFile = "${pathToSmall100Model}${File.separator}sentencepiece.model"
+            Small100Translator(pathToSmall100Model,small100SmpFile) }
 
-        single <Small100TranslationModel> { Small100TranslationModel (get(), pathToSmall100Model, small100SmpFile,
+        single <Small100TranslationModel> {
+            val preferencesStorage : PreferencesStorage = get()
+            val pathToSmall100Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}small100_ct2"
+            val small100SmpFile = "${pathToSmall100Model}${File.separator}sentencepiece.model"
+            Small100TranslationModel (get(), pathToSmall100Model, small100SmpFile,
             allowDownloadingModelsOverMobile) }
 
         single <BingTranslator> { BingTranslator(get ()) }
         singleOf(::BingTranslatorEndPoint).bind()
         singleOf(::BingTranslatorModel).bind()
 
-        val pathToNLLB200Model = "${pathToUserFolder}${File.separator}nllb-200-distilled-600M"
-        val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
+        single<NLLB200Translator> {
+            val preferencesStorage : PreferencesStorage = get()
+            val pathToNLLB200Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}nllb-200-distilled-600M"
+            val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
+            NLLB200Translator(pathToNLLB200Model,nLLB200SmpFile) }
 
-        single<NLLB200Translator> { NLLB200Translator(pathToNLLB200Model,nLLB200SmpFile) }
-
-        single<NLLB200TranslationModel> { NLLB200TranslationModel (get(), pathToNLLB200Model, nLLB200SmpFile,
+        single<NLLB200TranslationModel> {
+            val preferencesStorage : PreferencesStorage = get()
+            val pathToNLLB200Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}nllb-200-distilled-600M"
+            val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
+            NLLB200TranslationModel (get(), pathToNLLB200Model, nLLB200SmpFile,
             allowDownloadingModelsOverMobile) }
 
         singleOf(::GoogleTranslateV2).bind()
@@ -612,7 +626,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     companion object{
-        const val USER_ROOT_FOLDER_NAMED_KEY = "user_root_folder"
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"
         const val COROUTINES_SCOPE = "courotines_scope"
         const val ACTIVE_TRANSLATION_MODEL_KEY = "active_translation_model"

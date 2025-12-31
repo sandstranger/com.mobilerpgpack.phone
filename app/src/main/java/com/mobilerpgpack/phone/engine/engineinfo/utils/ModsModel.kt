@@ -6,6 +6,7 @@ import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.ComposeImmutableList
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.MutableValue
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -27,9 +28,6 @@ abstract sealed class ModsModel : KoinComponent {
     private val modsCollection = ComposeImmutableList<Mod>()
 
     private val _enableModsAutoUpdateInFolder = MutableValue<Boolean>()
-
-    @Transient
-    private val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
 
     @Transient
     open val allowedModsExtensions: Collection<String> =
@@ -80,17 +78,16 @@ abstract sealed class ModsModel : KoinComponent {
 
     fun updateComposeModsList() = modsCollection.updateComposeList()
 
-    fun save() = jsoFile.writeText(Json.encodeToString(this))
+    fun save() {
+        File(preferencesStorage.pathToRootUserFolder + File.separator + jsonFileName)
+            .writeText(Json.encodeToString(this))
+    }
 
     protected companion object {
-
-        val pathToRootUserFolder: String = get(
-            String()::class.java,
-            named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY)
-        )
+        val preferencesStorage : PreferencesStorage = get(PreferencesStorage::class.java)
 
         inline fun <reified T> load(jsonFileName: String): T where T : ModsModel {
-            val jsoFile = File(pathToRootUserFolder + File.separator + jsonFileName)
+            val jsoFile = File(preferencesStorage.pathToRootUserFolder + File.separator + jsonFileName)
             val model = if (jsoFile.exists())
                 Json.decodeFromString<T>(jsoFile.readText()) else
                 T::class.java.getDeclaredConstructor().newInstance()
