@@ -73,6 +73,8 @@ import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import com.mobilerpgpack.phone.ui.getTextButtonsColors
 import com.mobilerpgpack.phone.ui.items.CheckBox
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.keyCodeMap
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
@@ -650,7 +652,7 @@ abstract class ScreenController : IScreenController {
                                 }
                             }
 
-                            if (sdlKeyCode!= Int.MIN_VALUE){
+                            if (sdlKeyCode!= Int.MIN_VALUE && !viewToEdit.isMouseButton){
                                 Row(horizontalArrangement = Arrangement.spacedBy(3.dp),
                                     verticalAlignment = Alignment.CenterVertically){
                                     Text( modifier = Modifier.wrapContentHeight(), text = stringResource(R.string.selected_key_code),

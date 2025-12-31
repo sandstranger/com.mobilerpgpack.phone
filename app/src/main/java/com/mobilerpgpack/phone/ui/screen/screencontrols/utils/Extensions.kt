@@ -32,6 +32,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
 
     val changeItemColor = remember (changeItemColor) { changeItemColor }
     var isPressed by rememberSaveable { mutableStateOf(false) }
+    var wasPressed by rememberSaveable { mutableStateOf(false) }
     val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
     val viewState = remember { viewState }
     val preferencesStorage : PreferencesStorage = koinInject()
@@ -58,8 +59,11 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
 
     fun clearResources(){
         pointerId = null
+        if (isPressed || wasPressed) {
+            onTouchUp()
+        }
+        wasPressed = false
         isPressed = false
-        onTouchUp()
     }
 
     LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
@@ -92,11 +96,10 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                             if (pointerId == null) {
                                 pointerId = pid
                                 if (!useViewAsToggle) {
-                                    onTouchUp()
+                                    wasPressed = true
                                     onTouchDown()
                                 } else {
                                     if (!isPressed){
-                                        onTouchUp()
                                         onTouchDown()
                                     }
                                     else{
@@ -112,6 +115,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                             if (pointerId == pid){
                                 pointerId = null
                                 if (!useViewAsToggle) {
+                                    wasPressed = false
                                     onTouchUp()
                                 }
                             }

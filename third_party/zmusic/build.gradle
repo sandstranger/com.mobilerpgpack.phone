@@ -19,7 +19,7 @@ android {
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                        "$build_flags.CMAKE_ANDROID_STL"
+                        "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
             }
         }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -35,8 +35,18 @@ android {
     ndkVersion versions.ndk_version
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            externalNativeBuild {
+                cmake {
+                    arguments "-DCMAKE_BUILD_TYPE=Release"
+                }
+            }
+        }
+        debug {
+            externalNativeBuild {
+                cmake {
+                    arguments "-DCMAKE_BUILD_TYPE=Debug"
+                }
+            }
         }
     }
     compileOptions {

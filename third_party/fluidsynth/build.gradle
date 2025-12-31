@@ -23,7 +23,7 @@ android {
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
                         "-DBUILD_SHARED_LIBS=true", "-Denable-oboe=on",
                         "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
-                        "-DCMAKE_VERBOSE_MAKEFILE=OFF", "$build_flags.CMAKE_ANDROID_STL"
+                        "-DCMAKE_VERBOSE_MAKEFILE=OFF", "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
             }
         }
     }
@@ -39,8 +39,18 @@ android {
     ndkVersion versions.ndk_version
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            externalNativeBuild {
+                cmake {
+                    arguments "-DCMAKE_BUILD_TYPE=Release"
+                }
+            }
+        }
+        debug {
+            externalNativeBuild {
+                cmake {
+                    arguments "-DCMAKE_BUILD_TYPE=Debug"
+                }
+            }
         }
     }
     compileOptions {

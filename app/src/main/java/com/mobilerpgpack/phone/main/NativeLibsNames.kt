@@ -18,6 +18,8 @@ const val DOOM2RPG_MAIN_ENGINE_LIB = "DoomIIRPG"
 
 const val WOLFENSTEINRPG_MAIN_ENGINE_LIB = "WolfensteinRPG"
 
+const val ARX_LIBERTATIS_MAIN_ENGINE_LIB  = "arx"
+
 const val SDL3_NATIVE_LIB_NAME = "SDL3"
 
 const val FMOD_NATIVE_LIB_NAME = "fmod"

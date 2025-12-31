@@ -6,7 +6,7 @@
     <string name="bytes_text">bytes</string>
     <string name="unknown_size">Unknown size</string>
     <string name="use_floating_start_game_button">Use floating start game button</string>
-    <string name="use_touchscreen_in_games_menu">Enable touchscreen in games menu</string>
+    <string name="enable_touchscreen_pressing_events">Enable touchscreen pressing events</string>
     <string name="translation_model_title">Translation model</string>
     <string name="fullscreen_touch_mode">Use fullscreen touchscreen in custom screen aspect ratios</string>
     <string name="bing_translate_description">Based on the online Bing translation service. Unstable. Can be banned at any moment</string>
@@ -253,4 +253,11 @@
     <string name="path_to_common_mods_folder">Path to mods folder</string>
     <string name="skip_perfect_dark_intro_cutscenes">Skip intro cutscenes</string>
     <string name="perfect_dark_rom_version">Rom version</string>
+    <string name="path_to_arx_fatalis_resources">Path to Arx Fatalis resources</string>
+    <string name="audio_localization">Audio localization</string>
+    <string name="text_localization">Text localization</string>
+    <string name="font_size">Font size</string>
+    <string name="hud_scale">Hud scale</string>
+    <string name="cursor_scale">Cursor scale</string>
+    <string name="enable_absolute_touch_mouse_mode">Enable absolute touch mouse mode</string>
 </resources>
