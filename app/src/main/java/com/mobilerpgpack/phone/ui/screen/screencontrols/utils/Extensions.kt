@@ -30,7 +30,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                                     onTouchDown : () -> Unit = {}, onTouchUp : () -> Unit = {}) : Modifier {
 
     val changeItemColor = remember (changeItemColor) { changeItemColor }
-    var isToggleMode by rememberSaveable { mutableStateOf(false) }
+    var inToggleMode by rememberSaveable { mutableStateOf(false) }
     var isPressed by rememberSaveable { mutableStateOf(false) }
     val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
     val viewState = remember { viewState }
@@ -46,8 +46,8 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
     val useViewAsToggle by remember (viewState.useViewAsToggle) { mutableStateOf(viewState.useViewAsToggle) }
     var pointerId by remember { mutableStateOf<PointerId?>(null) }
     val sdlKeyCode by remember (viewState.sdlKeyCode) { mutableIntStateOf(viewState.sdlKeyCode) }
-    val colorFilterToUse by remember (isToggleMode, isEditMode, useViewAsToggle) { mutableStateOf(
-        ColorFilter.tint(if (isToggleMode && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
+    val colorFilterToUse by remember (inToggleMode, isEditMode, useViewAsToggle) { mutableStateOf(
+        ColorFilter.tint(if (inToggleMode && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
     ) }
     val showInQuickPanel by remember (viewState.showInQuickPanel) {
         mutableStateOf(viewState.showInQuickPanel)
@@ -58,11 +58,11 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
 
     fun clearResources(){
         pointerId = null
-        if (isToggleMode || isPressed) {
+        if (inToggleMode || isPressed) {
             onTouchUp()
         }
         isPressed = false
-        isToggleMode = false
+        inToggleMode = false
     }
 
     LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
@@ -98,13 +98,13 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                                     isPressed = true
                                     onTouchDown()
                                 } else {
-                                    if (!isToggleMode){
+                                    if (!inToggleMode){
                                         onTouchDown()
                                     }
                                     else{
                                         onTouchUp()
                                     }
-                                    isToggleMode = !isToggleMode
+                                    inToggleMode = !inToggleMode
                                 }
                             }
                         }
