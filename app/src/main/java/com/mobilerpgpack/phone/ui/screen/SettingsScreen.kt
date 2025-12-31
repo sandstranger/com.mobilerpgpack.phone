@@ -291,7 +291,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         )
         DrawHorizontalDivider()
 
-        if (engineInfo.fullTouchFullScreenModeCanBeUsed) {
+        if (engineInfo.touchFullScreenModeCanBeUsed) {
             SwitchPreferenceItem(
                 stringResource(R.string.fullscreen_touch_mode),
                 preferencesStorage.alwaysUseFullScreenTouchMode,

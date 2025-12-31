@@ -20,7 +20,7 @@ abstract class DoomRPGSeriesEngineInfo(
 
     override val requiredResourceExtensions = listOf(".ipa", ".IPA")
 
-    final override val fullTouchFullScreenModeCanBeUsed: Boolean = false
+    final override val touchFullScreenModeCanBeUsed: Boolean = false
 
     final override val keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
 
