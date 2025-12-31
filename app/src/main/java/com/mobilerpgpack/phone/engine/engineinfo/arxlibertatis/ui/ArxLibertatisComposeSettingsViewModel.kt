@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui
 
-import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisAudioLocalizationType
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisLocalizationType
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
 import com.mobilerpgpack.phone.utils.Ini
