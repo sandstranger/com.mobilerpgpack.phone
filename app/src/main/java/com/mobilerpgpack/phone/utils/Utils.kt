@@ -50,12 +50,8 @@ fun startGame(activity: Activity, engineToPlay: EngineTypes) {
     val activeEngineInfo: IEngineInfo = get (IEngineInfo::class.java,
         named(engineToPlay.toString()))
     activity.also {
-    if (activeEngineInfo.isResourceCorrect(it)) {
-            it.startActivity(Intent(it, activeEngineInfo.gameActivityClazz).apply{
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP })
-            it.finish()
+        if (activeEngineInfo.isResourceCorrect(it)) {
+            it.startActivity(activeEngineInfo.gameActivityClazz)
         }
     }
 }

@@ -15,7 +15,8 @@ class ControlsProvider (engineType: EngineTypes,
     var activeControlsType : ControlsType
         get() {
             return preferencesStorage.getEnumValue(activeControlTypePrefsKey,
-                ControlsType::class.java, ControlsType.Default)
+                ControlsType::class.java, if (controls.containsKey(ControlsType.Default))
+                    ControlsType.Default else ControlsType.OnScreenStick)
         }
         set(value) {
             if (controls.containsKey(value)){
@@ -27,7 +28,7 @@ class ControlsProvider (engineType: EngineTypes,
 
     var blockTouchCameraEventsWhenOnScreenStickActive : Boolean
         get() {
-            return preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,true)
+            return preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,false)
         }
         set(value) {
             preferencesStorage.setBooleanValue(blockTouchCameraEventsPrefsKey, value)
