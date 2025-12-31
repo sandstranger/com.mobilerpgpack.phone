@@ -362,7 +362,8 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sizePercent = 0.055f,
         buttonResId = R.drawable.visibility_off,
         sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        useToggle = true
     ),
     SDL2ImageButton(
         "inventory",
