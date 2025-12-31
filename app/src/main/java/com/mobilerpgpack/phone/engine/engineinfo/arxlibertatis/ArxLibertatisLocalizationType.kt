@@ -2,6 +2,11 @@ package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis
 
 enum class ArxLibertatisLocalizationType {
     english,
+    francais,
+    deutsch,
+    italiano,
     russian,
-    francais
+    spanish,
+    japanese,
+    chinese
 }
