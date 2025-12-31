@@ -37,11 +37,15 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this += pathResource
                 }
 
-                this += USER_DIR_COMMAND
-                this += pathToUserFolder
+                if (!baseCommandLineArgs.contains(USER_DIR_COMMAND)) {
+                    this += USER_DIR_COMMAND
+                    this += pathToUserFolder
+                }
 
-                this += CONFIGS_DIR_COMMAND
-                this += pathToUserFolder
+                if (!baseCommandLineArgs.contains(CONFIGS_DIR_COMMAND)) {
+                    this += CONFIGS_DIR_COMMAND
+                    this += pathToUserFolder
+                }
 
                 this.toTypedArray()
             }
