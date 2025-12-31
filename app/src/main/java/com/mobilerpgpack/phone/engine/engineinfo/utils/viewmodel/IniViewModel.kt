@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.IAssetExtractor
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -14,9 +15,9 @@ abstract class IniViewModel : ViewModel(), KoinComponent {
 
     private val assetsExtractor : IAssetExtractor = get()
 
-    protected val pathToRootUserFolder: String = get(
-        named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY)
-    )
+    private val preferencesStorage : PreferencesStorage = get ()
+
+    protected val pathToRootUserFolder get() = preferencesStorage.pathToRootUserFolder
 
     private var iniFilesLoaded by mutableStateOf(false)
 

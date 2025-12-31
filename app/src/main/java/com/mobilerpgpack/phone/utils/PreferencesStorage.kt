@@ -46,6 +46,10 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val alwaysShowKeyboardButtonPrefsKey = booleanPreferencesKey("always_show_keyboard_button")
     val enableTouchScreenPressingEventsPrefsKey = booleanPreferencesKey("use_touchscreen_in_games_menu")
     val enableAbsoluteTouchMouseModePrefsKey = booleanPreferencesKey("use_absolute_touch_mouse_mode")
+    val pathToRootUserFolderPrefsKey = stringPreferencesKey("path_to_user_root_folder")
+
+    val pathToRootUserFolder get() = getStringValue(pathToRootUserFolderPrefsKey,
+        context.getExternalFilesDir("")!!.absolutePath)
 
     val enableAbsoluteTouchMouseMode get() = getBooleanValue(enableAbsoluteTouchMouseModePrefsKey, true)
 

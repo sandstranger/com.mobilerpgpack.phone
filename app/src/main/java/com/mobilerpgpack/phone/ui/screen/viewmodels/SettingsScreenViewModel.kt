@@ -1,10 +1,17 @@
 package com.mobilerpgpack.phone.ui.screen.viewmodels
 
 import android.app.Activity
+import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.IAssetExtractor
+import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.copyFolder
 import com.mobilerpgpack.phone.utils.startGame
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -16,19 +23,21 @@ import java.io.File
 
 internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
-    private val scope : CoroutineScope by inject ()
+    private val context : Context by inject ()
 
-    private val pathToRootUserFolder: String = get(
-        named(KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY))
+    private val preferencesStorage : PreferencesStorage by inject ()
+
+    private val scope : CoroutineScope by inject ()
 
     private val assetsExtractor : IAssetExtractor by inject ()
 
-    private val rootUserFolder = File(pathToRootUserFolder)
+    private var contentCopied by mutableStateOf(true)
 
     fun onResetResourcesClicked(){
         if (!assetsExtractor.assetsCopied){
             return
         }
+        val rootUserFolder = File(preferencesStorage.pathToRootUserFolder)
         rootUserFolder.deleteRecursively()
         rootUserFolder.mkdirs()
         scope.launch { assetsExtractor.copyAssetsContentToInternalStorage() }
@@ -36,4 +45,21 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     fun onStartGameClicked(activeEngine : EngineTypes,activity: Activity) =
         startGame(activity, activeEngine)
+
+    fun copyContentFromInternalStorage () {
+        if (!contentCopied) {
+            return
+        }
+        contentCopied = false
+        val sourceFolder = context.getExternalFilesDir("")!!.absolutePath
+        scope.launch {
+            val targetFolder = preferencesStorage.pathToRootUserFolder
+            if (sourceFolder != targetFolder) {
+                copyFolder(sourceFolder, targetFolder)
+                contentCopied = true
+            } else {
+                contentCopied = true
+            }
+        }
+    }
 }

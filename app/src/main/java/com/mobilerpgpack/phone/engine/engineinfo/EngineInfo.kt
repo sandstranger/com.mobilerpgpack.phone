@@ -90,11 +90,7 @@ abstract class EngineInfo(
     protected lateinit var activity: ComponentActivity
         private set
 
-    protected val pathToRootUserFolder: String = get(
-        named(
-            KoinModulesProvider.USER_ROOT_FOLDER_NAMED_KEY
-        )
-    )
+    protected val pathToRootUserFolder: String get() = preferencesStorage.pathToRootUserFolder
 
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
 
