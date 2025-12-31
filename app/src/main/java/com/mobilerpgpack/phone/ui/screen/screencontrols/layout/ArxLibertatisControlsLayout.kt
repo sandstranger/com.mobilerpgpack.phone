@@ -14,7 +14,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
 
 private const val LEFT_MOUSE_BUTTON_ID : Int = 1
@@ -61,11 +60,189 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         buttonResId = R.drawable.quick_panel,
         controlsType = ControlsType.OnScreenStick
     ),
+    SDL2ImageButton(
+        "open_book",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.17f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.open_book,
+        sdlKeyEvent = KeyEvent.KEYCODE_DEL,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "character_sheet",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.24f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.info,
+        sdlKeyEvent = KeyEvent.KEYCODE_F1,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "map",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.30f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.automap,
+        sdlKeyEvent = KeyEvent.KEYCODE_F3,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "spell_book",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.36f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.spell_book,
+        sdlKeyEvent = KeyEvent.KEYCODE_F2,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "quest_book",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.42f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.secret_book,
+        sdlKeyEvent = KeyEvent.KEYCODE_F4,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "life_potion",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.round_potion,
+        sdlKeyEvent = KeyEvent.KEYCODE_H,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "mana_potion",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.17f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.magic_potion,
+        sdlKeyEvent = KeyEvent.KEYCODE_G,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "antidote_potion",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.24f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.bottle,
+        sdlKeyEvent = KeyEvent.KEYCODE_N,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "torch",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.31f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.torch,
+        sdlKeyEvent = KeyEvent.KEYCODE_T,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "open_console",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.38f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.terminal,
+        sdlKeyEvent = KeyEvent.KEYCODE_GRAVE,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "precast_spell_1",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.first_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_1,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "precast_spell_2",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.17f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.second_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_2,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "precast_spell_3",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.24f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.third_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_3,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "interrupt_current_spell",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.31f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.fourth_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_4,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "previous",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.1f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.previous,
+        sdlKeyEvent = KeyEvent.KEYCODE_MINUS,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
+    SDL2ImageButton(
+        "next",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.17f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.next,
+        sdlKeyEvent = KeyEvent.KEYCODE_EQUALS,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
     SDL2MouseImageButton(
         "action",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.8f,
-        offsetYPercent = 0.5f,
+        offsetYPercent = 0.53f,
         sizePercent = 0.095f,
         buttonResId = R.drawable.broadsword,
         sdlKeyEvent = LEFT_MOUSE_BUTTON_ID,
@@ -73,24 +250,24 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         ignoreOutOfBoundsTouchEvents = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseWheelButton(
-        "next_weapon",
+    SDL2ImageButton(
+        "lean_left",
         EngineTypes.ArxLibertatis,
-        wheelUp = false,
-        offsetXPercent = 0.85f,
-        offsetYPercent = 0.18f,
-        sizePercent = 0.06f,
-        buttonResId = R.drawable.next_weapon,
+        offsetXPercent = 0.78f,
+        offsetYPercent = 0.33f,
+        sizePercent = 0.055f,
+        sdlKeyEvent = KeyEvent.KEYCODE_Q,
+        buttonResId = R.drawable.previous,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseWheelButton(
-        "prev_weapon",
+    SDL2ImageButton(
+        "lean_right",
         EngineTypes.ArxLibertatis,
-        wheelUp = true,
-        offsetXPercent = 0.85f,
-        offsetYPercent = 0.32f,
-        sizePercent = 0.06f,
-        buttonResId = R.drawable.prev_weapon,
+        offsetXPercent = 0.87f,
+        offsetYPercent = 0.33f,
+        sizePercent = 0.055f,
+        sdlKeyEvent = KeyEvent.KEYCODE_E,
+        buttonResId = R.drawable.next,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
@@ -107,7 +284,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         "use",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.97f,
-        offsetYPercent = 0.7f,
+        offsetYPercent = 0.66f,
         sizePercent = 0.06f,
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_F,
@@ -132,81 +309,91 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         buttonResId = R.drawable.load,
         sdlKeyEvent = KeyEvent.KEYCODE_F9,
         controlsType = ControlsType.OnScreenStick
-    ),
+    )
+    ,
     SDL2ImageButton(
         "jump",
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.89f,
+        offsetXPercent = 0.87f,
         offsetYPercent = 0.9f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.jump,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
-        useToggle = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
-        "reload",
+        "combat_mode",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.95f,
+        offsetYPercent = 0.9f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.diamond_hilt,
+        sdlKeyEvent = KeyEvent.KEYCODE_TAB,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "stealth_mode",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.79f,
         offsetYPercent = 0.88f,
         sizePercent = 0.055f,
-        buttonResId = R.drawable.machine_gun_magazine,
-        sdlKeyEvent = KeyEvent.KEYCODE_R,
+        buttonResId = R.drawable.visibility_off,
+        sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
-        "fire_mode",
+        "inventory",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.99f,
         offsetYPercent = 0.25f,
         sizePercent = 0.055f,
-        buttonResId = R.drawable.reload_gun,
-        sdlKeyEvent = KeyEvent.KEYCODE_F,
+        buttonResId = R.drawable.locked_chest,
+        sdlKeyEvent = KeyEvent.KEYCODE_I,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
-        "radial_menu",
+        "magic_mode",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.99f,
         offsetYPercent = 0.43f,
         sizePercent = 0.055f,
-        buttonResId = R.drawable.circles_ext,
-        sdlKeyEvent = KeyEvent.KEYCODE_Q,
-        useToggle = true,
-        controlsType = ControlsType.OnScreenStick
-    ),
-    SDL2ImageButton(
-        "full_crouch",
-        EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.69f,
-        offsetYPercent = 0.88f,
-        sizePercent = 0.055f,
-        buttonResId = R.drawable.smash_arrows,
+        buttonResId = R.drawable.lunar_wand,
         sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
-        "half_crouch",
+        "crouch",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.69f,
+        offsetYPercent = 0.88f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.crouch,
+        sdlKeyEvent = KeyEvent.KEYCODE_C,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "drop_weapon",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.6f,
         offsetYPercent = 0.88f,
         sizePercent = 0.055f,
-        buttonResId = R.drawable.crouch,
-        sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
+        buttonResId = R.drawable.drop_weapon,
+        sdlKeyEvent = KeyEvent.KEYCODE_B,
         controlsType = ControlsType.OnScreenStick
     ),
     ShowSDLKeyboardButton(
         KeyboardType.SDL2Keyboard,
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.75f,
-        offsetYPercent = 0.15f,
+        offsetXPercent = 0.83f,
+        offsetYPercent = 0.13f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        useReturnButton = true
     ),
     UpdateScreenControlsVisibilityImageButton(
         EngineTypes.ArxLibertatis,
-        offsetXPercent = 0.62f,
+        offsetXPercent = 0.6f,
         offsetYPercent = 0.03f,
         sizePercent = 0.05f,
         buttonResId = R.drawable.toggles,
