@@ -117,7 +117,6 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var lastTouchY by rememberSaveable { mutableFloatStateOf(0f) }
         var lastMouseX by rememberSaveable { mutableFloatStateOf(0f) }
         var lastMouseY by rememberSaveable { mutableFloatStateOf(0f) }
-        var tracking by rememberSaveable { mutableStateOf(false) }
 
         fun clearResources(){
             if (trackedPointerId != UNKNOWN_POINTER_ID) {
@@ -128,7 +127,6 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                 lastTouchY = 0f
                 lastMouseX = 0f
                 lastMouseY = 0f
-                tracking = false
                 trackedPointerId = UNKNOWN_POINTER_ID
             }
         }
@@ -216,14 +214,12 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                             lastTouchY = y
                                             lastMouseX = x
                                             lastMouseY = y
-                                            tracking = true
                                             handlePointerLocal(MotionEvent.ACTION_DOWN, x, y)
                                         } else {
                                             lastTouchX = x
                                             lastTouchY = y
                                             lastMouseX = getMouseX()
                                             lastMouseY = getMouseY()
-                                            tracking = true
                                             handlePointerLocal(
                                                 MotionEvent.ACTION_DOWN, lastMouseX,
                                                 lastMouseY
@@ -233,7 +229,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                 }
 
                                 change.changedToUp() -> {
-                                    if (trackedPointerId == pid && tracking) {
+                                    if (trackedPointerId == pid) {
                                         if (useAbsoluteTouchMode) {
                                             handlePointerLocal(MotionEvent.ACTION_UP, x, y)
                                         } else {
@@ -250,12 +246,11 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                         }
 
                                         trackedPointerId = UNKNOWN_POINTER_ID
-                                        tracking = false
                                     }
                                 }
 
                                 change.positionChanged() -> {
-                                    if (trackedPointerId == pid && tracking) {
+                                    if (trackedPointerId == pid) {
                                         if (useAbsoluteTouchMode) {
                                             handlePointerLocal(MotionEvent.ACTION_MOVE, x, y)
                                         } else {
@@ -291,7 +286,6 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                         )
                                     }
                                     trackedPointerId = UNKNOWN_POINTER_ID
-                                    tracking = false
                                 }
                             }
                         }
