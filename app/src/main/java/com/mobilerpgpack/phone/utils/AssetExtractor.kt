@@ -5,7 +5,9 @@ import android.content.res.AssetManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -47,6 +49,9 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         }
         assetsCopying = true
         _assetsCopied = false
+        while (!preferencesStorage.prefsWasLoaded){
+            delay(ONE_FRAME_DELAY)
+        }
         assetsStartedCopyListeners.invoke()
         try {
             alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
