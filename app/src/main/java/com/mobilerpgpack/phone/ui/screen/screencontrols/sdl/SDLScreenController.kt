@@ -271,10 +271,10 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
 
                                 !change.pressed && trackedPointerId == pid -> {
                                     if (useAbsoluteTouchMode) {
-                                        handlePointerLocal(MotionEvent.ACTION_CANCEL, x, y)
+                                        handlePointerLocal(MotionEvent.ACTION_UP, x, y)
                                     } else {
                                         handlePointerLocal(
-                                            MotionEvent.ACTION_CANCEL,
+                                            MotionEvent.ACTION_UP,
                                             lastMouseX,
                                             lastMouseY
                                         )
