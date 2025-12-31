@@ -102,13 +102,10 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             engineInfo.touchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
             mutableStateOf(preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.touchFullScreenModeCanBeUsed &&
                     !mouseButtonsEventsCanBeInvoked) }
-        val blockTouchEventsSaved by rememberSaveable(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
+        val blockTouchEvents by rememberSaveable(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
         val enableTouchScreenPressingEvents by rememberSaveable(preferencesStorage.enableTouchScreenPressingEvents) {
             mutableStateOf(preferencesStorage.enableTouchScreenPressingEvents)
-        }
-        val blockTouchScreen by rememberSaveable(isEditMode, mouseButtonsEventsCanBeInvoked, blockTouchEventsSaved) {
-            mutableStateOf(isEditMode || blockTouchEventsSaved)
         }
         val enableAbsoluteTouchMouseMode by rememberSaveable(preferencesStorage.enableAbsoluteTouchMouseMode) {
             mutableStateOf(preferencesStorage.enableAbsoluteTouchMouseMode)
@@ -136,7 +133,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             }
         }
 
-        LaunchedEffect(isEditMode, blockTouchScreen, mouseButtonsEventsCanBeInvoked) {
+        LaunchedEffect(isEditMode, blockTouchEvents,enableTouchScreenPressingEvents,
+            mouseButtonsEventsCanBeInvoked) {
             clearResources()
         }
 
@@ -177,10 +175,10 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             }
             .background(Color.Transparent)
             .pointerInput(
-                isEditMode, mouseButtonsEventsCanBeInvoked, blockTouchScreen,
+                isEditMode, mouseButtonsEventsCanBeInvoked, blockTouchEvents,
                 enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode
             ) {
-                if (isEditMode || blockTouchScreen) {
+                if (isEditMode || blockTouchEvents) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {
