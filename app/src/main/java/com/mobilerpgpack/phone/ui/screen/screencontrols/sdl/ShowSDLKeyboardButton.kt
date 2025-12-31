@@ -26,7 +26,8 @@ class ShowSDLKeyboardButton(
     isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
     ignoreOutOfBoundsTouchEvents : Boolean = false,
-    showInQuickPanel : Boolean = false) : KoinComponent,
+    showInQuickPanel : Boolean = false,
+    private val useReturnButton : Boolean = false) : KoinComponent,
     ImageButton(SHOW_KEYBOARD_BUTTON_ID, engineType, offsetXPercent, offsetYPercent, sizePercent, alpha,
         buttonResId, defaultViewRenderRule, controlsType, isDeleted,
         consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents,showInQuickPanel)
@@ -35,7 +36,7 @@ class ShowSDLKeyboardButton(
 
     @SuppressLint("CheckResult")
     override fun onClick(context: Context) =
-        keyboard.showKeyboard(useReturnButton = false, keyboardInputType)
+        keyboard.showKeyboard(useReturnButton = useReturnButton, keyboardInputType)
 
     private companion object {
         private const val SHOW_KEYBOARD_BUTTON_ID = "keyboard"
