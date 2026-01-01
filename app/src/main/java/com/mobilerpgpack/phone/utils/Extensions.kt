@@ -41,17 +41,12 @@ fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>
 fun Activity.showErrorDialogBox (messageToShowResource: Int,onCloseDialogBox :(()-> Unit)? =null) =
     this.showMessageDialogBox(R.string.error, messageToShowResource, onCloseDialogBox)
 
-inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true, destroyAllActivitiesInStack : Boolean = false) where T : Activity  =
-    this.startActivity(T::class.java, finishParentActivity, destroyAllActivitiesInStack)
+inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
+    this.startActivity(T::class.java, finishParentActivity)
 
-fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true,
-                          destroyAllActivitiesInStack : Boolean = false) {
+fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
     with(Intent(this, activityClazz)){
-        if (destroyAllActivitiesInStack) {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        if (this@startActivity is Application && !destroyAllActivitiesInStack) {
+        if (this@startActivity is Application) {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 

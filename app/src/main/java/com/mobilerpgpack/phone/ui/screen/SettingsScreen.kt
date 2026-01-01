@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,29 +68,28 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     override val drawFloatingActionButton: Boolean get() = useFloatingStartGameButton
 
-    init {
-        with(get<PreferencesStorage>()){
-            this@SettingsScreen.useFloatingStartGameButton = useFloatingStartGameButton
-        }
-    }
-
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
         val activity = LocalActivity.current!!
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
-
         val activeEngine = rememberSaveable(activeEngineString) {
             enumValueOf<EngineTypes>(activeEngineString)
         }
-
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
+        val useFloatingStartGameButton by rememberSaveable(useFloatingStartGameButton) {
+            mutableStateOf(useFloatingStartGameButton)
+        }
 
         super.onFloatingActionButtonClickedDelegate = {
             settingsScreenViewModel.onStartGameClicked(activeEngine, activity)
         }
 
-        if (!drawFloatingActionButton) {
+        LaunchedEffect(Unit) {
+            this@SettingsScreen.useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton
+        }
+
+        if (!useFloatingStartGameButton) {
             DrawTelevisionSettings(innerPadding,
                 activeEngine,
                 navController, settingsScreenViewModel

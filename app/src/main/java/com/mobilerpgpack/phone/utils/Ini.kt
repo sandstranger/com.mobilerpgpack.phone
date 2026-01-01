@@ -9,10 +9,11 @@ import org.apache.commons.configuration2.INIConfiguration
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
+import java.util.concurrent.ConcurrentHashMap
 
 class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false ){
 
-    private val iniValues = mutableMapOf<String, IniValue>()
+    private val iniValues = ConcurrentHashMap<String, IniValue>()
 
     private val iniFile = File(pathToFile)
 
