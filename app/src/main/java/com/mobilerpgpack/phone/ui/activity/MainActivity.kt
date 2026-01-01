@@ -39,6 +39,10 @@ class MainActivity : ComponentActivity(), KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        if (gameActivityStarted){
+            finish()
+            return
+        }
         scope.launch { buildScreensAsync() }
     }
 
@@ -104,5 +108,9 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 }
             }
         }
+    }
+
+    companion object{
+        var gameActivityStarted = false
     }
 }

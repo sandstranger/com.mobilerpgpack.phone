@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
