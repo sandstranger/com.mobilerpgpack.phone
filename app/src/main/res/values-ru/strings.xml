@@ -261,5 +261,7 @@
     <string name="custom_path_settings">Пути к папке пользователя</string>
     <string name="reset_user_path">Сбросить путь к папке пользователя</string>
     <string name="copy_engines_content_info">Скопировать файлы данных движков из /Android/data в целевую папку пользователя</string>
+    <string name="copy_engines_content_info_dialog">Скопировать файлы данных движков из /Android/data в целевую папку пользователя %1$s.
+        Это перезапишет все данные, включая сохранения, в целевой папке</string>
     <string name="copy_engines_content">Копировать</string>
 </resources>
