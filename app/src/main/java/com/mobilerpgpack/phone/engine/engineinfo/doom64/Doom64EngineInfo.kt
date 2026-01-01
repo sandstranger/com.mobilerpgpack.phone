@@ -30,13 +30,18 @@ open class Doom64EngineInfo(
             "MouseCursorCanBeDrawn")
     }
 
+    private val recalculateScreenResolution by lazy {
+        Function.getFunction(mainEngineLib,
+            "RecalculateScreenResolution")
+    }
+
     override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString
 
     override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder
 
     override val touchFullScreenModeCanBeUsed = false
 
-    override val commandLineArgs: Array<String>
+    final override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
 
@@ -63,9 +68,25 @@ open class Doom64EngineInfo(
             }
         }
 
-    override fun initialize(activity: ComponentActivity) {
+    final override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
+    }
+
+    final override fun setScreenResolution(screenResolution: ScreenResolution) {
+        super.setScreenResolution(screenResolution)
+        setupScreenResolutionToEnv(screenResolution)
+        customScreenResolutionWasApplied = true
+    }
+
+    final override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
+        super.onSafeAreaApplied(screenResolution)
+        if (!customScreenResolutionWasApplied) {
+            setupScreenResolutionToEnv(screenResolution)
+            screenResolutionArray[0] = screenResolution.screenWidth
+            screenResolutionArray[1] = screenResolution.screenHeight
+            recalculateScreenResolution.invokeVoid(screenResolutionArray)
+        }
     }
 
     final override fun isMouseShown() = mouseCursorCanBeDrawnNativeDelegate.invokeBool()
@@ -95,6 +116,11 @@ open class Doom64EngineInfo(
         return pathToDoom64ModsFolder
     }
 
+    private fun setupScreenResolutionToEnv (screenResolution: ScreenResolution){
+        Os.setenv("SCREEN_WIDTH", screenResolution.screenWidth.toString(), true)
+        Os.setenv("SCREEN_HEIGHT", screenResolution.screenHeight.toString(), true)
+    }
+    
     private companion object{
         private const val FILE_COMMAND = "-file"
         private const val MODS_COMMAND = "-mod"
