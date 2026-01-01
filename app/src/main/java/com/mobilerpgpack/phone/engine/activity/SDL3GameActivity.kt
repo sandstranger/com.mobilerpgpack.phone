@@ -25,7 +25,6 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     private var wasPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        forceDestroyCurrentEgl()
         enableEdgeToEdge()
         val preferencesStorage : PreferencesStorage = get()
         runBlocking {
