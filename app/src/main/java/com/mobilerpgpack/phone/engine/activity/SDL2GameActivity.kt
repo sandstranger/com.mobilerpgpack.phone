@@ -10,6 +10,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.waitUntil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
@@ -26,9 +27,7 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
         enableEdgeToEdge()
         val preferencesStorage : PreferencesStorage = get()
         runBlocking {
-            while (!preferencesStorage.prefsWasLoaded){
-                delay(ONE_FRAME_DELAY)
-            }
+            waitUntil { !preferencesStorage.prefsWasLoaded }
         }
         engineInfo = get (named(preferencesStorage.activeEngineString))
         engineInfo.apply {
