@@ -264,5 +264,6 @@
     <string name="path_to_user_folder">Path to user folder (This option allow to override path to all engines root user folder. After changing the path, it is advisable to restart the application.)</string>
     <string name="reset_user_path">Reset path to user folder</string>
     <string name="copy_engines_content_info">Copy all engines files from /Android/data to target user folder</string>
+    <string name="copy_engines_content_info_dialog">Copy all engines files from /Android/data to target user folder %1$s. This will overwrite all data like saves in target folder</string>
     <string name="copy_engines_content">Copy data</string>
 </resources>

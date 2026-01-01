@@ -253,6 +253,11 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         val preferencesStorage : PreferencesStorage = koinInject()
         val settingsViewModel : SettingsScreenViewModel = koinViewModel ()
         val sourceFolder = remember { context.getExternalFilesDir("")!!.absolutePath }
+        val pathToUserFolder by rememberSaveable(preferencesStorage.pathToRootUserFolder) {
+            mutableStateOf(preferencesStorage.pathToRootUserFolder)
+        }
+        var showCopyContentDialog by rememberSaveable { mutableStateOf(false) }
+
         DrawTitleText(stringResource(R.string.custom_path_settings))
 
         Row (modifier = Modifier.padding(start = 4.dp, end = 4.dp).fillMaxWidth(),
@@ -262,7 +267,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 color = getOnBackgroundColor())
 
             Button(
-                onClick = { settingsViewModel.copyContentFromInternalStorage() },
+                onClick = { showCopyContentDialog = true },
                 colors = getButtonsColors()
             ) {
                 Text(stringResource(R.string.copy_engines_content),
@@ -273,7 +278,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
-        Button(
+        Button( modifier = Modifier.padding(start = 4.dp),
             onClick = { preferencesStorage.setStringValue(preferencesStorage.pathToRootUserFolderPrefsKey, sourceFolder) },
             colors = getButtonsColors()
         ) {
@@ -281,8 +286,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 textAlign = TextAlign.Center, color = getOnPrimaryColor()
             )
         }
-
-        DrawHorizontalDivider()
 
         RequestPath(
             stringResource(R.string.path_to_user_folder),
@@ -292,6 +295,18 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         )
 
         DrawHorizontalDivider()
+
+        if (showCopyContentDialog){
+            ShowYesNoDialog(title = stringResource(R.string.copy_engines_content),
+                stringResource(R.string.copy_engines_content_info_dialog)
+                    .format(pathToUserFolder),
+                negativeAction = {
+                    showCopyContentDialog = false
+                }, positiveAction = {
+                    showCopyContentDialog = false
+                    settingsViewModel.copyContentFromInternalStorage()
+                } )
+        }
     }
 
     @Composable
