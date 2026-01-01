@@ -58,8 +58,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -69,7 +68,7 @@
 
         <activity
             android:name=".ui.activity.ScreenControlsEditorActivity"
-            android:exported="true"
+            android:exported="false"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/AppFullScreenTheme"
             tools:ignore="DiscouragedApi">

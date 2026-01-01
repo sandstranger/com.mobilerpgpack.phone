@@ -9,6 +9,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
+import com.mobilerpgpack.phone.ui.activity.MainActivity
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.waitUntil
 import kotlinx.coroutines.delay
@@ -24,6 +25,7 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
     private var wasPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MainActivity.gameActivityStarted = true
         enableEdgeToEdge()
         val preferencesStorage : PreferencesStorage = get()
         runBlocking {
