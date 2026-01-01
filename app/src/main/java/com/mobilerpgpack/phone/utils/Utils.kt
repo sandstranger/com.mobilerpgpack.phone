@@ -56,7 +56,7 @@ fun startGame(activity: Activity, engineToPlay: EngineTypes) {
         named(engineToPlay.toString()))
     with(activity){
         if (activeEngineInfo.isResourceCorrect(this)) {
-            startActivity(activeEngineInfo.gameActivityClazz, destroyAllActivitiesInStack = true)
+            startActivity(activeEngineInfo.gameActivityClazz)
         }
     }
 }

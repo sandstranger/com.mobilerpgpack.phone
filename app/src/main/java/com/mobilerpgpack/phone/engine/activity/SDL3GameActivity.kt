@@ -8,10 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
-import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
+import com.mobilerpgpack.phone.ui.activity.MainActivity
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.waitUntil
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -25,6 +24,7 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     private var wasPaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MainActivity.gameActivityStarted = true
         enableEdgeToEdge()
         val preferencesStorage : PreferencesStorage = get()
         runBlocking {
