@@ -30,12 +30,13 @@ abstract class IniViewModel : ViewModel(), KoinComponent {
             return
         }
         wasInitialized = true
-        assetsExtractor.assetsStartedCopyListeners += { unloadIniFiles() }
-        assetsExtractor.assetsFinishCopyListeners += { reloadIniFiles() }
 
         if (assetsExtractor.assetsCopied){
             reloadIniFiles()
         }
+
+        assetsExtractor.assetsStartedCopyListeners += { unloadIniFiles() }
+        assetsExtractor.assetsFinishCopyListeners += { reloadIniFiles() }
     }
 
     protected open fun unloadIniFiles(){
