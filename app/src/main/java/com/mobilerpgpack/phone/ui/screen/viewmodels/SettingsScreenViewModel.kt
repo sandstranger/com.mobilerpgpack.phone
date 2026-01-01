@@ -31,7 +31,8 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     private val assetsExtractor : IAssetExtractor by inject ()
 
-    private var contentCopied by mutableStateOf(true)
+    @Volatile
+    private var contentCopied = false
 
     fun onResetResourcesClicked(){
         if (!assetsExtractor.assetsCopied){
