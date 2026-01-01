@@ -33,7 +33,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private var _assetsCopied by mutableStateOf(false)
 
-    private val userFolder get() = preferencesStorage.pathToRootUserFolder
+    private val pathToUserFolder get() = preferencesStorage.pathToRootUserFolder
 
     private var alwaysCopyAllFiles = false
 
@@ -52,11 +52,17 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         while (!preferencesStorage.prefsWasLoaded){
             delay(ONE_FRAME_DELAY)
         }
+
+        val userFolder = File(pathToUserFolder)
+
+        if (!userFolder.exists()){
+            userFolder.mkdirs()
+        }
+
         assetsStartedCopyListeners.invoke()
         try {
             alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
-            copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER,
-                File(userFolder))
+            copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, userFolder)
         }
         finally {
             _assetsCopied = true
@@ -115,7 +121,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
-        val assetsVersionFile = File ( "$userFolder${File.separator}${ASSETS_VERSION_FILE_NAME}")
+        val assetsVersionFile = File ( "$pathToUserFolder${File.separator}${ASSETS_VERSION_FILE_NAME}")
         fun writeDefaultVersionToVersionsFile () =
             assetsVersionFile.writeText(Json.encodeToString(AssetsVersionProvider(
                 ASSETS_CURRENT_VERSION)))
