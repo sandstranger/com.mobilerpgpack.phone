@@ -11,8 +11,6 @@ import java.io.File
 class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.ArxLibertatis) {
 
-    private var customResolutionWasSet = false
-
     private val arxPreferenceStorage by inject<ArxLibertatisPreferenceStorage>(
         named(EngineTypes.ArxLibertatis.name))
 
@@ -56,24 +54,10 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     private external fun updateScreenControlsHidingState (controlsHided : Boolean)
 
-    private external fun onSafeAreaApplied(screenWidth: Int, screenHeight : Int)
-
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
         updateScreenControlsHidingState(preferencesStorage.hideScreenControls)
-    }
-
-    override fun setScreenResolution(screenResolution: ScreenResolution) {
-        super.setScreenResolution(screenResolution)
-        customResolutionWasSet = true
-    }
-
-    override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
-        super.onSafeAreaApplied(screenResolution)
-        if (!customResolutionWasSet) {
-            onSafeAreaApplied(screenResolution.screenWidth, screenResolution.screenHeight)
-        }
     }
 
     private companion object {

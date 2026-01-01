@@ -30,11 +30,6 @@ open class Doom64EngineInfo(
             "MouseCursorCanBeDrawn")
     }
 
-    private val recalculateScreenResolution by lazy {
-        Function.getFunction(mainEngineLib,
-            "RecalculateScreenResolution")
-    }
-
     override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString
 
     override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder
@@ -73,31 +68,10 @@ open class Doom64EngineInfo(
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
     }
 
-    override fun setScreenResolution(screenResolution: ScreenResolution) {
-        super.setScreenResolution(screenResolution)
-        setupScreenResolutionToEnv(screenResolution)
-        customScreenResolutionWasApplied = true
-    }
-
-    override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
-        super.onSafeAreaApplied(screenResolution)
-        if (!customScreenResolutionWasApplied) {
-            setupScreenResolutionToEnv(screenResolution)
-            screenResolutionArray[0] = screenResolution.screenWidth
-            screenResolutionArray[1] = screenResolution.screenHeight
-            recalculateScreenResolution.invokeVoid(screenResolutionArray)
-        }
-    }
-
     final override fun isMouseShown() = mouseCursorCanBeDrawnNativeDelegate.invokeBool()
 
     protected open fun getPathToDoom64UserFolder() =
         pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
-
-    private fun setupScreenResolutionToEnv (screenResolution: ScreenResolution){
-        Os.setenv("SCREEN_WIDTH", screenResolution.screenWidth.toString(), true)
-        Os.setenv("SCREEN_HEIGHT", screenResolution.screenHeight.toString(), true)
-    }
 
     private fun getPathToDoom64ModsFolder(): String {
         val enableDoom64Mods = preferencesStorage.enableDoom64Mods
