@@ -73,22 +73,23 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         val activity = LocalActivity.current!!
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngineString = preferencesStorage.activeEngineString
-
         val activeEngine = rememberSaveable(activeEngineString) {
             enumValueOf<EngineTypes>(activeEngineString)
+        }
+        val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
+        val useFloatingStartGameButton by rememberSaveable(useFloatingStartGameButton) {
+            mutableStateOf(useFloatingStartGameButton)
+        }
+
+        super.onFloatingActionButtonClickedDelegate = {
+            settingsScreenViewModel.onStartGameClicked(activeEngine, activity)
         }
 
         LaunchedEffect(Unit) {
             this@SettingsScreen.useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton
         }
 
-        val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
-
-        super.onFloatingActionButtonClickedDelegate = {
-            settingsScreenViewModel.onStartGameClicked(activeEngine, activity)
-        }
-
-        if (!drawFloatingActionButton) {
+        if (!useFloatingStartGameButton) {
             DrawTelevisionSettings(innerPadding,
                 activeEngine,
                 navController, settingsScreenViewModel
