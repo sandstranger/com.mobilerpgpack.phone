@@ -8,8 +8,10 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
+import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
 import com.sun.jna.Function
+import kotlinx.coroutines.delay
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
 import org.koin.core.qualifier.named
@@ -36,9 +38,10 @@ val keyCodeMap : Map<Int, KeyCodeInfo> by lazy {
         .filter { it.name.startsWith(KEYCODE_PREFIX) && isValidKeyCode(it)  }
         .sortedBy { it.name }
         .associate { field ->
-            val keyCode = field.getInt(null)
-            return@associate keyCode to KeyCodeInfo(field.name.replace(KEYCODE_PREFIX, ""),
-            keyCode)
+             return@associate field.getInt(null).run {
+                return@associate this to KeyCodeInfo(field.name.replace(KEYCODE_PREFIX, ""),
+                    this)
+            }
         }
 }
 
@@ -51,20 +54,25 @@ fun startGame(activity: Activity, engineToPlay: EngineTypes) {
     }
     val activeEngineInfo: IEngineInfo = get (IEngineInfo::class.java,
         named(engineToPlay.toString()))
-    activity.also {
-        if (activeEngineInfo.isResourceCorrect(it)) {
-            it.startActivity(activeEngineInfo.gameActivityClazz)
+    with(activity){
+        if (activeEngineInfo.isResourceCorrect(this)) {
+            startActivity(activeEngineInfo.gameActivityClazz, destroyAllActivitiesInStack = true)
         }
+    }
+}
+
+suspend fun waitUntil (delegateToAwait : () -> Boolean ){
+    while (delegateToAwait()){
+        delay(ONE_FRAME_DELAY)
     }
 }
 
 fun unzipArchive(zipPath: String, destDir: String) : Boolean {
     try {
-        val zipFile = ZipFile(zipPath)
-        zipFile.extractAll(destDir)
+        ZipFile(zipPath).extractAll(destDir)
         return true
     } catch (e: ZipException) {
-        e.printStackTrace()
+        Log.e("ZipException", e.toString())
         return false
     }
 }

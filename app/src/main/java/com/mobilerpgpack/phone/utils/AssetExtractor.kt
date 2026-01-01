@@ -49,25 +49,22 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         }
         assetsCopying = true
         _assetsCopied = false
-        while (!preferencesStorage.prefsWasLoaded){
-            delay(ONE_FRAME_DELAY)
-        }
+        waitUntil { !preferencesStorage.prefsWasLoaded }
+        with(File(pathToUserFolder)){
+            if (!exists()){
+                mkdirs()
+            }
 
-        val userFolder = File(pathToUserFolder)
-
-        if (!userFolder.exists()){
-            userFolder.mkdirs()
-        }
-
-        assetsStartedCopyListeners.invoke()
-        try {
-            alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
-            copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, userFolder)
-        }
-        finally {
-            _assetsCopied = true
-            assetsCopying = false
-            assetsFinishCopyListeners.invoke()
+            assetsStartedCopyListeners.invoke()
+            try {
+                alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
+                copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, this)
+            }
+            finally {
+                _assetsCopied = true
+                assetsCopying = false
+                assetsFinishCopyListeners.invoke()
+            }
         }
     }
 
