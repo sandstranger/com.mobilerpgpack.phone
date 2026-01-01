@@ -23,6 +23,7 @@ import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
+import com.mobilerpgpack.phone.utils.waitUntil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
@@ -48,9 +49,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
     private suspend fun buildScreensAsync(){
         val preferencesStorage : PreferencesStorage = get()
-        while (!preferencesStorage.prefsWasLoaded){
-            delay(ONE_FRAME_DELAY)
-        }
+        waitUntil { !preferencesStorage.prefsWasLoaded }
         buildScreens()
     }
 

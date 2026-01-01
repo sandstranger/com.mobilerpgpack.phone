@@ -41,20 +41,25 @@ fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>
 fun Activity.showErrorDialogBox (messageToShowResource: Int,onCloseDialogBox :(()-> Unit)? =null) =
     this.showMessageDialogBox(R.string.error, messageToShowResource, onCloseDialogBox)
 
-inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
-    this.startActivity(T::class.java, finishParentActivity)
+inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true, destroyAllActivitiesInStack : Boolean = false) where T : Activity  =
+    this.startActivity(T::class.java, finishParentActivity, destroyAllActivitiesInStack)
 
-fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
-    val i = Intent(this, activityClazz)
+fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true,
+                          destroyAllActivitiesInStack : Boolean = false) {
+    with(Intent(this, activityClazz)){
+        if (destroyAllActivitiesInStack) {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        if (this@startActivity is Application && !destroyAllActivitiesInStack) {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
 
-    if (this is Application) {
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
+        this@startActivity.startActivity(this)
 
-    startActivity(i)
-
-    if (finishParentActivity && this is Activity) {
-        this.finish()
+        if (finishParentActivity && this@startActivity is Activity) {
+            this@startActivity.finish()
+        }
     }
 }
 
