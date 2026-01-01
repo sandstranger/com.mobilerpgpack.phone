@@ -564,7 +564,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(PerfectDarkRomVersions.JPN.name)
         }
 
-        single { PerfectDarkPreferencesStorage() }.withOptions {
+        singleOf(::PerfectDarkPreferencesStorage).withOptions {
+            createdAtStart()
             named(EngineTypes.PerfectDark.name)
             bind<PerfectDarkPreferencesStorage>()
         }

@@ -13,9 +13,13 @@ import java.io.File
 class PerfectDarkEngineInfo : SDL2EngineInfo
     ("", emptyArray(), EngineTypes.PerfectDark) {
 
-    private val pathToHomeDirectory = pathToRootUserFolder + File.separator +"perfect_dark"
+    private val pathToHomeDirectory by lazy {
+        pathToRootUserFolder + File.separator +"perfect_dark"
+    }
 
-    private val pathToSavesDirectory = pathToHomeDirectory + File.separator + "saves"
+    private val pathToSavesDirectory by lazy {
+        pathToHomeDirectory + File.separator + "saves"
+    }
 
     private val perfectDarkPreferencesStorage : PerfectDarkPreferencesStorage by inject (
         named(EngineTypes.PerfectDark.name))
