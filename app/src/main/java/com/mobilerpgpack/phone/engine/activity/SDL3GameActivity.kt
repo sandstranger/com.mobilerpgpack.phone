@@ -81,7 +81,7 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
         engineInfo.onDestroy()
     }
 
-    @SuppressLint("MissingSuperCall")
+    @SuppressLint("MissingSuperCall", "GestureBackNavigation")
     override fun onBackPressed() {
         engineInfo.onBackPressed()
     }
