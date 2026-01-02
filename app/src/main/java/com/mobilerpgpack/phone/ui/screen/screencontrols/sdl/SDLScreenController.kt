@@ -94,11 +94,11 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngine = rememberSaveable (activeEngine) { activeEngine.name }
         val engineInfo : IEngineInfo = koinInject(named(activeEngine))
-        var mWidth by remember { mutableFloatStateOf(0.0f) }
-        var mHeight by remember { mutableFloatStateOf(0.0f) }
-        var widthSize by remember { mutableIntStateOf(0) }
-        var heightSize by remember { mutableIntStateOf(0) }
-        var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
+        var mWidth by rememberSaveable { mutableFloatStateOf(0.0f) }
+        var mHeight by rememberSaveable { mutableFloatStateOf(0.0f) }
+        var widthSize by rememberSaveable { mutableIntStateOf(0) }
+        var heightSize by rememberSaveable { mutableIntStateOf(0) }
+        var trackedPointerId by rememberSaveable { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
             engineInfo.touchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
