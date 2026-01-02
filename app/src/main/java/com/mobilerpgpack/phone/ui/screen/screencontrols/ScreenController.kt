@@ -376,52 +376,54 @@ abstract class ScreenController : IScreenController {
                     }
                 }
             }
-            else{
-                isEditMode = false
-                val showOnlyVirtualKeyboardButton = remember { preferencesStorage.hideScreenControls && preferencesStorage.alwaysShowKeyboardButton }
-                val sdlKeyboard = koinInject<SDLKeyboard>(named(if (engineInfo is SDL2EngineInfo) KeyboardType.SDL2Keyboard.name
-                else KeyboardType.SDL3Keyboard.name))
-                val keyboardInputType = remember { keyboardInputType }
+        }
 
-                Theme {
-                    Box(modifier = Modifier.fillMaxSize()) {
+        if (hideOnScreenControls){
+            isEditMode = false
+            val showOnlyVirtualKeyboardButton = rememberSaveable {
+                preferencesStorage.hideScreenControls && preferencesStorage.alwaysShowKeyboardButton }
+            val sdlKeyboard = koinInject<SDLKeyboard>(named(if (engineInfo is SDL2EngineInfo) KeyboardType.SDL2Keyboard.name
+            else KeyboardType.SDL3Keyboard.name))
+            val keyboardInputType = rememberSaveable { keyboardInputType }
+
+            Theme {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Image(
+                        painter = painterResource(R.drawable.keyboard),
+                        contentDescription = "keyboard_button",
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .size(70.dp)
+                            .alpha(0.5f)
+                            .minimumInteractiveComponentSize()
+                            .padding(8.dp)
+                            .clickable(
+                                indication = null, interactionSource = null
+                            ) {
+                                sdlKeyboard.showKeyboard(
+                                    useReturnButton = true,
+                                    keyboardInputType
+                                )
+                            }
+                    )
+
+                    if (!showOnlyVirtualKeyboardButton) {
                         Image(
-                            painter = painterResource(R.drawable.keyboard),
-                            contentDescription = "keyboard_button",
+                            painter = painterResource(R.drawable.pause),
+                            contentDescription = "escape_button",
                             modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .size(70.dp)
+                                .align(Alignment.TopEnd)
+                                .size(60.dp)
                                 .alpha(0.5f)
                                 .minimumInteractiveComponentSize()
                                 .padding(8.dp)
                                 .clickable(
-                                    indication = null, interactionSource = null
+                                    indication = null,
+                                    interactionSource = null
                                 ) {
-                                    sdlKeyboard.showKeyboard(
-                                        useReturnButton = true,
-                                        keyboardInputType
-                                    )
+                                    engineInfo.onBackPressed()
                                 }
                         )
-
-                        if (!showOnlyVirtualKeyboardButton) {
-                            Image(
-                                painter = painterResource(R.drawable.pause),
-                                contentDescription = "escape_button",
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .size(60.dp)
-                                    .alpha(0.5f)
-                                    .minimumInteractiveComponentSize()
-                                    .padding(8.dp)
-                                    .clickable(
-                                        indication = null,
-                                        interactionSource = null
-                                    ) {
-                                        engineInfo.onBackPressed()
-                                    }
-                            )
-                        }
                     }
                 }
             }
