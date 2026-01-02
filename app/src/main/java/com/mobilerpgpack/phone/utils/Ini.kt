@@ -127,11 +127,12 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         }
     }
 
+    @Synchronized
     fun clear(){
         loaded = false
         iniConfig.clear()
-        iniValues.values.forEach {
-            it.apply {
+        iniValues.forEach {
+            it.value.apply {
                 floatValue = 0f
                 intValue = 0
                 stringValue = ""
@@ -140,6 +141,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         }
     }
 
+    @Synchronized
     fun load (){
         clear()
         iniFile.apply {
