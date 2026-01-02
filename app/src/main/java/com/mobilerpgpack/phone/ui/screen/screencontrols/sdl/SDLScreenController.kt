@@ -6,7 +6,6 @@ import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -58,15 +57,19 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
     final override fun DrawTouchScreen(activeEngine : EngineTypes, blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
                                        isEditMode: Boolean, inGame: Boolean, content: @Composable () -> Unit) {
 
-        var rootSize by remember { mutableStateOf(IntSize.Zero) }
         val activity = LocalActivity.current!!
         val rootView = activity.window.decorView.rootView
-        val inGame = remember { inGame }
+        val inGame = rememberSaveable { inGame }
+        val viewWidth = rememberSaveable { viewWidth }
+        val viewHeight = rememberSaveable { viewHeight }
+        var rootWidth by rememberSaveable { mutableIntStateOf(0) }
+        var rootHeight by rememberSaveable { mutableIntStateOf(0) }
 
         rootView.apply {
             DisposableEffect(this) {
                 val listener = ViewTreeObserver.OnGlobalLayoutListener {
-                    rootSize = IntSize(width, height)
+                    rootWidth = width
+                    rootHeight = height
                 }
                 viewTreeObserver.addOnGlobalLayoutListener(listener)
                 onDispose {
@@ -77,8 +80,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
 
         val contentModifier = (if (inSafeArea) Modifier.safeDrawingPadding() else Modifier).run {
              return@run this.layout { measurable, constraints ->
-                val width = rootSize.width.takeIf { it > 0 } ?: constraints.maxWidth
-                val height = rootSize.height.takeIf { it > 0 } ?: constraints.maxHeight
+                val width = rootWidth.takeIf { it > 0 } ?: constraints.maxWidth
+                val height = rootHeight.takeIf { it > 0 } ?: constraints.maxHeight
                 val placeable = measurable.measure(Constraints.fixed(width, height))
                 layout(width, height) { placeable.place(0, 0) }
             }
@@ -92,11 +95,11 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val preferencesStorage : PreferencesStorage = koinInject()
         val activeEngine = rememberSaveable (activeEngine) { activeEngine.name }
         val engineInfo : IEngineInfo = koinInject(named(activeEngine))
-        var mWidth by remember { mutableFloatStateOf(0.0f) }
-        var mHeight by remember { mutableFloatStateOf(0.0f) }
-        var widthSize by remember { mutableIntStateOf(0) }
-        var heightSize by remember { mutableIntStateOf(0) }
-        var trackedPointerId by remember { mutableIntStateOf(UNKNOWN_POINTER_ID) }
+        var mWidth by rememberSaveable { mutableFloatStateOf(0.0f) }
+        var mHeight by rememberSaveable { mutableFloatStateOf(0.0f) }
+        var widthSize by rememberSaveable { mutableIntStateOf(0) }
+        var heightSize by rememberSaveable { mutableIntStateOf(0) }
+        var trackedPointerId by rememberSaveable { mutableIntStateOf(UNKNOWN_POINTER_ID) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
             engineInfo.touchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
@@ -143,7 +146,6 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         Box(modifier = Modifier
-            .fillMaxSize()
             .layout { measurable, constraints ->
                 widthSize = constraints.maxWidth
                 heightSize = constraints.maxHeight
