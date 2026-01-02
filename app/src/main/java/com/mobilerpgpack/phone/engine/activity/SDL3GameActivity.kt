@@ -30,8 +30,7 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
         runBlocking {
             waitUntil { !preferencesStorage.prefsWasLoaded }
         }
-        engineInfo = get (named(preferencesStorage.activeEngineString))
-        engineInfo.apply {
+        engineInfo = get <IEngineInfo> (named(preferencesStorage.activeEngineString)).apply {
             gameResourcesFound = isResourceCorrect(this@SDL3GameActivity, onCloseDialogBox = { finish() })
             if (!gameResourcesFound) {
                 super.onCreate(savedInstanceState)
