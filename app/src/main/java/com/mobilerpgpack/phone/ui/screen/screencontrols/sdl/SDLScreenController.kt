@@ -62,6 +62,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val activity = LocalActivity.current!!
         val rootView = activity.window.decorView.rootView
         val inGame = remember { inGame }
+        val viewWidth = rememberSaveable { viewWidth }
+        val viewHeight = rememberSaveable { viewHeight }
 
         rootView.apply {
             DisposableEffect(this) {
@@ -143,7 +145,6 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         Box(modifier = Modifier
-            .fillMaxSize()
             .layout { measurable, constraints ->
                 widthSize = constraints.maxWidth
                 heightSize = constraints.maxHeight
