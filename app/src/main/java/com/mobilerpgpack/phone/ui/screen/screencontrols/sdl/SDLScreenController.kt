@@ -61,7 +61,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var rootSize by remember { mutableStateOf(IntSize.Zero) }
         val activity = LocalActivity.current!!
         val rootView = activity.window.decorView.rootView
-        val inGame = remember { inGame }
+        val inGame = rememberSaveable { inGame }
         val viewWidth = rememberSaveable { viewWidth }
         val viewHeight = rememberSaveable { viewHeight }
 
