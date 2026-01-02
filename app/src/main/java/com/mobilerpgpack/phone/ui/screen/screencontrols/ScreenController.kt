@@ -136,11 +136,11 @@ abstract class ScreenController : IScreenController {
         val configuration = LocalConfiguration.current
         val rootView = activity.window.decorView.rootView
         val controlsType = rememberSaveable { controlsProvider.activeControlsType }
-        val density = remember (activity.resources.displayMetrics.density) {
+        val density = rememberSaveable (activity.resources.displayMetrics.density) {
             activity.resources.displayMetrics.density }
         val clampButtonsPrefsKey = remember { booleanPreferencesKey("${activeEngineSaved.name.lowercase()}_${controlsType.name.lowercase()}") }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
-        var selectedButtonId by remember { mutableStateOf<String?>(null) }
+        var selectedButtonId by rememberSaveable { mutableStateOf<String?>(null) }
         var isEditMode by rememberSaveable { mutableStateOf((!inGameSaved)) }
         val backgroundColor by remember (inGameSaved, isEditMode) {
             mutableStateOf(if (!inGameSaved) {
@@ -148,12 +148,12 @@ abstract class ScreenController : IScreenController {
             } else {
                 if (isEditMode) transparentDarkColor else Color.Transparent
             }) }
-        var readyToDrawControls by remember { mutableStateOf(false) }
-        var clampButtons by remember {
+        var readyToDrawControls by rememberSaveable { mutableStateOf(false) }
+        var clampButtons by rememberSaveable {
             mutableStateOf(preferencesStorage.getClampButtonsValue(clampButtonsPrefsKey))
         }
-        var screenWidthPx by remember { mutableFloatStateOf(configuration.screenWidthDp * density) }
-        var screenHeightPx by remember { mutableFloatStateOf(configuration.screenHeightDp * density) }
+        var screenWidthPx by rememberSaveable { mutableFloatStateOf(configuration.screenWidthDp * density) }
+        var screenHeightPx by rememberSaveable { mutableFloatStateOf(configuration.screenHeightDp * density) }
         val hideOnScreenControls by rememberSaveable(hideOnScreenControls) { mutableStateOf(hideOnScreenControls) }
 
         fun clampView(state: ViewState, clampForced : Boolean = false) {
@@ -315,25 +315,25 @@ abstract class ScreenController : IScreenController {
                         }
 
                         viewsToDraw.forEach { (id, view) ->
-                            val id = remember(id) { id }
+                            val id = rememberSaveable (id) { id }
                             val view = remember(view) { view }
                             val viewState = remember(view.viewState) { view.viewState }
-                            val sizePx: Float by remember(screenWidthPx, viewState.sizePercent) {
+                            val sizePx: Float by rememberSaveable (screenWidthPx, viewState.sizePercent) {
                                 mutableFloatStateOf(screenWidthPx * view.viewState.sizePercent)
                             }
                             val sizeDp: Dp by remember(sizePx, density) {
                                 mutableStateOf((sizePx / density).dp)
                             }
 
-                            val renderOffsetX by remember(viewState.offsetXPercent, screenWidthPx) {
+                            val renderOffsetX by rememberSaveable (viewState.offsetXPercent, screenWidthPx) {
                                 mutableFloatStateOf(viewState.offsetXPercent * screenWidthPx)
                             }
-                            val renderOffsetY by remember(
+                            val renderOffsetY by rememberSaveable (
                                 viewState.offsetYPercent,
                                 screenHeightPx
                             ) { mutableFloatStateOf(viewState.offsetYPercent * screenHeightPx) }
 
-                            val renderView by remember(
+                            val renderView by rememberSaveable(
                                 viewState.isDeleted,
                                 viewState.viewRenderRule,
                                 viewState.showInQuickPanel,
@@ -452,7 +452,7 @@ abstract class ScreenController : IScreenController {
         var position by remember(viewState.id) { mutableStateOf(offset) }
         val intOffset by remember (viewState.id, position){ mutableStateOf(IntOffset(position.x.roundToInt(),
             position.y.roundToInt())) }
-        val alpha by remember (viewState.alpha){ mutableFloatStateOf(viewState.alpha) }
+        val alpha by rememberSaveable  (viewState.alpha){ mutableFloatStateOf(viewState.alpha) }
         val color by remember (isSelected, isEditMode){ mutableStateOf(if (isSelected && isEditMode) selectedViewBackgroundColor
         else Color.Transparent) }
         val shape = remember { RoundedCornerShape(8.dp) }
