@@ -1,9 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.annotation.SuppressLint
-import android.os.Process
 import android.system.Os
-import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +30,6 @@ import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
@@ -50,7 +47,7 @@ import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -63,6 +60,7 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
+import kotlin.system.exitProcess
 
 abstract class EngineInfo(
     mainEngineLib: String,
@@ -224,8 +222,8 @@ abstract class EngineInfo(
     }
 
     override fun onDestroy() {
-        scope.cancel()
-        killEngine()
+        scope.coroutineContext.cancelChildren()
+        exitProcess(0)
     }
 
     override fun onBackPressed(): Boolean {
@@ -446,8 +444,6 @@ abstract class EngineInfo(
 
     private fun getPathToPsaFolder() =
         pathToRootUserFolder + File.separator + if (BuildConfig.LEGACY_GLES2) "gles2" else "gles3"
-
-    private fun killEngine() = Process.killProcess(Process.myPid())
 
     private companion object {
         private const val RESOLUTION_DELIMITER = "x"
