@@ -127,10 +127,11 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         }
     }
 
+    @Synchronized
     fun clear(){
         loaded = false
         iniConfig.clear()
-        iniValues.values.forEach {
+        iniValues.values.toList().forEach {
             it.apply {
                 floatValue = 0f
                 intValue = 0
@@ -140,6 +141,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         }
     }
 
+    @Synchronized
     fun load (){
         clear()
         iniFile.apply {
@@ -148,14 +150,14 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                     iniConfig.read(it)
                 }
                 with(iniConfig) {
-                    iniValues.forEach {
-                        if (containsKey(it.key)) {
-                            it.value.apply {
+                    iniValues.toList().forEach {
+                        if (containsKey(it.first)) {
+                            it.second.apply {
                                 when (iniValueType) {
-                                    IniValueType.Float -> floatValue = getFloat(it.key)
-                                    IniValueType.String -> stringValue = getString(it.key)
-                                    IniValueType.Int -> intValue = getInt(it.key)
-                                    IniValueType.Boolean -> booleanValue = getBoolean(it.key)
+                                    IniValueType.Float -> floatValue = getFloat(it.first)
+                                    IniValueType.String -> stringValue = getString(it.first)
+                                    IniValueType.Int -> intValue = getInt(it.first)
+                                    IniValueType.Boolean -> booleanValue = getBoolean(it.first)
                                 }
                             }
                         }

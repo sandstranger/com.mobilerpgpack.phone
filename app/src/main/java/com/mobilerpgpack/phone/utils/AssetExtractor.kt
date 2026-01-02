@@ -5,10 +5,6 @@ import android.content.res.AssetManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
@@ -43,9 +39,9 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     override val assetsFinishCopyListeners = MulticastAction()
 
-    override suspend fun copyAssetsContentToInternalStorage () = withContext(Dispatchers.IO){
+    override suspend fun copyAssetsContentToInternalStorage (){
         if (assetsCopying){
-            return@withContext
+            return
         }
         assetsCopying = true
         _assetsCopied = false
@@ -61,9 +57,9 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
                 copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, this)
             }
             finally {
+                assetsFinishCopyListeners.invoke()
                 _assetsCopied = true
                 assetsCopying = false
-                assetsFinishCopyListeners.invoke()
             }
         }
     }
