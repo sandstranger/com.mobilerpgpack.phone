@@ -213,6 +213,16 @@ target_sources(SDL2VirtualController PRIVATE "${APP_ROOT_DIR}/SDL2VirtualControl
 target_include_directories(SDL2VirtualController PRIVATE ${SDL2_INCLUDE_DIR})
 target_link_libraries(SDL2VirtualController PRIVATE ${SDL2_LIBRARY})
 
+add_library(SDL2GyroInput SHARED)
+target_sources(SDL2GyroInput PRIVATE "${APP_ROOT_DIR}/SDL2GyroInput.c")
+target_include_directories(SDL2GyroInput PRIVATE ${SDL2_INCLUDE_DIR})
+target_link_libraries(SDL2GyroInput PRIVATE ${SDL2_LIBRARY})
+
+add_library(SDL3GyroInput SHARED)
+target_sources(SDL3GyroInput PRIVATE "${APP_ROOT_DIR}/SDL3GyroInput.c")
+target_include_directories(SDL3GyroInput PRIVATE ${SDL3_INCLUDE_DIR})
+target_link_libraries(SDL3GyroInput PRIVATE ${SDL3_LIBRARY})
+
 add_library(SDL3VirtualController SHARED)
 target_sources(SDL3VirtualController PRIVATE "${APP_ROOT_DIR}/SDL3VirtualController.c")
 target_include_directories(SDL3VirtualController PRIVATE ${SDL3_INCLUDE_DIR})

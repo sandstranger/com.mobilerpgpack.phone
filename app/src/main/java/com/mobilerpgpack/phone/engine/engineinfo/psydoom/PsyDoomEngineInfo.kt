@@ -151,15 +151,13 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     }
 
     override fun onResume() {
-        scope.launch {
-            recreateVulkanSwapChain()
-        }
+        super.onResume()
+        scope.launch { recreateVulkanSwapChain() }
     }
 
     override fun onPause() {
-        scope.launch {
-            destroyVulkanSwapChain()
-        }
+        super.onPause()
+        scope.launch { destroyVulkanSwapChain() }
     }
 
     private companion object{
