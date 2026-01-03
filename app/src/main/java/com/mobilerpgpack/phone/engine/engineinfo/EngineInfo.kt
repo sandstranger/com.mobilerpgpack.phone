@@ -172,9 +172,7 @@ abstract class EngineInfo(
 
     override fun onNativeLibrariesLoaded() = Native.register(EngineInfo::class.java, mainLibraryName)
 
-    final override fun rescanGameControllers() {
-        scope.launch { rescanGameControllersForced() }
-    }
+    final override fun rescanGameControllers() = rescanGameControllersForced()
 
     override fun initialize(activity: ComponentActivity) {
         if (wasInit){
