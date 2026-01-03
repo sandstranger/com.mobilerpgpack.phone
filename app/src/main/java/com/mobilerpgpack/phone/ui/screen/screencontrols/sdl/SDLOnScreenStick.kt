@@ -117,18 +117,17 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 }
             }
 
-            val processedX = when {
-                abs(x) < STICK_DEAD_ZONE -> 0f
-                x > 0 -> (x * STICK_SCALE).coerceAtMost(1f)
-                else -> (x * STICK_SCALE).coerceAtLeast(-1f)
-            }
-            val processedY = when {
-                abs(y) < STICK_DEAD_ZONE -> 0f
-                y > 0 -> (y * STICK_SCALE).coerceAtMost(1f)
-                else -> (y * STICK_SCALE).coerceAtLeast(-1f)
-            }
-
             if (joystickRegisteredInSDL) {
+                val processedX = when {
+                    abs(x) < STICK_DEAD_ZONE -> 0f
+                    x > 0 -> (x * STICK_SCALE).coerceAtMost(1f)
+                    else -> (x * STICK_SCALE).coerceAtLeast(-1f)
+                }
+                val processedY = when {
+                    abs(y) < STICK_DEAD_ZONE -> 0f
+                    y > 0 -> (y * STICK_SCALE).coerceAtMost(1f)
+                    else -> (y * STICK_SCALE).coerceAtLeast(-1f)
+                }
                 scope.launch { setVirtualAxisNative(axisX, processedX, axisY, processedY) }
             }
         }
