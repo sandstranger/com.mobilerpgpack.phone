@@ -36,6 +36,7 @@ import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
+import com.mobilerpgpack.phone.utils.GyroInput
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -98,6 +99,8 @@ abstract class EngineInfo(
     protected abstract val pathToResource : String
 
     protected open val loadGL4ES : Boolean = true
+
+    protected abstract val gyroInput : GyroInput
 
     private var wasInit = false
     private var hideScreenControls: Boolean = false
@@ -203,15 +206,13 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        scope.launch {
-            pauseSound()
-        }
+        scope.launch { pauseSound() }
+        gyroInput.stop()
     }
 
     override fun onResume() {
-        scope.launch {
-            resumeSound()
-        }
+        scope.launch { resumeSound() }
+        gyroInput.start()
     }
 
     override fun onDestroy() {
