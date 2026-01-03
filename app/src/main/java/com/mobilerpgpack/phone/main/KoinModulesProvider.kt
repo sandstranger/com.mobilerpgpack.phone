@@ -104,10 +104,8 @@ import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
-import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -502,7 +500,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
 
             PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
-                nativeLibs, preferencesStorage.psyDoomCommandLineArgsString)
+                nativeLibs
+            )
         }.withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<IEngineInfo>()
