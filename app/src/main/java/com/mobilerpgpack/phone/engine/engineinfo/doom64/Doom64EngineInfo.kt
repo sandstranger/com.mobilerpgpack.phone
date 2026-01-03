@@ -13,6 +13,7 @@ import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -94,7 +95,7 @@ open class Doom64EngineInfo(
         pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
 
     private suspend fun updateScreenResolution (screenResolution : ScreenResolution){
-        mutex.lock {
+        mutex.withLock {
             setupScreenResolutionToEnv(screenResolution)
             RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
         }
