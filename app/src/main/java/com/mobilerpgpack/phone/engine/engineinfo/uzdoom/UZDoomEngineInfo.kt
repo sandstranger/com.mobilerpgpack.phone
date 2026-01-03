@@ -12,6 +12,8 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.playingRecordsFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.xlatFileCanBeUsed
 import com.sun.jna.Function
+import com.sun.jna.Native
+import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -28,26 +30,6 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     private val pathToUZDoomConfigsFile by lazy {
         pathToUZDoomUserFolder + File.separator + "uzdoom.ini"
-    }
-
-    private val destroyVulkanSwapChainNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "DestroyVulkanSwapChain")
-    }
-
-    private val recreateVulkanSwapChainNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "RecreateVulkanSwapChain")
-    }
-
-    private val updateGLLiteShaderStateNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "UpdateGLLiteShaderState")
-    }
-
-    private val updateHarmGLESVersionNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "UpdateHarmGLESVersion")
     }
 
     private val enableLightShaders get() = preferencesStorage.enableLightShaders
@@ -122,6 +104,14 @@ class UZDoomEngineInfo (mainEngineLib: String,
             }
         }
 
+    private external fun DestroyVulkanSwapChain()
+
+    private external fun RecreateVulkanSwapChain()
+
+    private external fun UpdateGLLiteShaderState(enableLightShaders : Boolean)
+
+    private external fun UpdateHarmGLESVersion(glesVersion : Int)
+
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToUZDoomUserFolder, true)
@@ -129,19 +119,20 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
-        updateGLLiteShaderStateNativeDelegate.invokeVoid(arrayOf(enableLightShaders))
         val glesVersion = enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion).value
-        updateHarmGLESVersionNativeDelegate.invokeVoid(arrayOf(glesVersion))
+        Native.register(UZDoomEngineInfo::class.java, mainLibraryName)
+        UpdateHarmGLESVersion(glesVersion)
+        UpdateGLLiteShaderState(enableLightShaders)
     }
 
     override fun onResume() {
         super.onResume()
-        recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
+        scope.launch { RecreateVulkanSwapChain() }
     }
 
     override fun onPause() {
         super.onPause()
-        destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
+        scope.launch { DestroyVulkanSwapChain() }
     }
 
     private companion object {
