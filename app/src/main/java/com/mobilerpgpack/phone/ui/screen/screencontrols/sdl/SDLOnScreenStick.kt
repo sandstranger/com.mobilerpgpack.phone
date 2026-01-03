@@ -41,8 +41,13 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import kotlin.math.abs
 import kotlin.math.hypot
@@ -60,6 +65,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 isDeleted : Boolean = false,
                                 showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
+    private val mutex = Mutex()
+    private val scope : CoroutineScope by inject ()
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
 
@@ -103,8 +110,10 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             if (!joystickRegistered) {
                 joystickRegistered = true
                 Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
-                createVirtualController()
-                engineInfo.rescanGameControllers()
+                scope.launch {
+                    createVirtualController()
+                    engineInfo.rescanGameControllers()
+                }
             }
 
             val processedX = when {
@@ -119,8 +128,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             }
 
             try {
-                setVirtualAxis( axisX, processedX)
-                setVirtualAxis( axisY, processedY)
+                scope.launch { setVirtualAxisNative(axisX, processedX, axisY, processedY) }
             } catch (e: Exception) {
                 Log.e("SDL_INPUT", "Failed to send to axis", e)
             }
@@ -296,6 +304,13 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     style = Stroke(width = paint.strokeWidth)
                 )
             }
+        }
+    }
+
+    private suspend fun setVirtualAxisNative(axisX : Int, axisXValue : Float, axisY : Int, axisYValue : Float){
+        mutex.withLock {
+            setVirtualAxis(axisX, axisXValue)
+            setVirtualAxis(axisY, axisYValue)
         }
     }
 

@@ -78,9 +78,10 @@ abstract class EngineInfo(
 
     protected abstract val sdlKeyboard : SDLKeyboard
 
-    protected open val keyboardInputType : CustomKeyboardView.KeyboardType = SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
+    protected open val keyboardInputType : CustomKeyboardView.KeyboardType =
+        SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
 
-    protected val scope = CoroutineScope(Dispatchers.Default)
+    protected val scope = CoroutineScope(Dispatchers.IO)
 
     protected lateinit var resolution: ScreenResolution
         private set
@@ -90,7 +91,7 @@ abstract class EngineInfo(
 
     protected val pathToRootUserFolder: String get() = preferencesStorage.pathToRootUserFolder
 
-    protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
+    protected open val needToShowScreenControls : Boolean get() = needToShowScreenControls()
 
     protected open val commandLineParams : String = ""
 
@@ -106,25 +107,15 @@ abstract class EngineInfo(
     private var displayInSafeArea: Boolean = false
     private var hideOnScreenControlsMutableState by mutableStateOf(false)
 
-    private val needToShowScreenControlsNativeDelegate by lazy {
-        Function.getFunction(mainLibraryName,
-            "needToShowScreenControls")
-    }
+    private external fun needToShowScreenControls() : Boolean
 
-    private val needToInvokeMouseButtonsEventsDelegate by lazy {
-        Function.getFunction(mainLibraryName,
-            "needToInvokeMouseButtonsEvents")
-    }
+    private external fun needToInvokeMouseButtonsEvents() : Boolean
 
-    private val pauseSoundNativeDelegate by lazy {
-        Function.getFunction(mainLibraryName,
-            "pauseSound")
-    }
+    private external fun pauseSound()
 
-    private val resumeSoundNativeDelegate by lazy {
-        Function.getFunction(mainLibraryName,
-            "resumeSound")
-    }
+    private external fun resumeSound()
+
+    private external fun rescanGameControllersForced()
 
     final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
         flow {
@@ -138,8 +129,6 @@ abstract class EngineInfo(
     override val mainLibraryName: String = mainEngineLib
 
     override val engineType: EngineTypes = activeEngineType
-
-    private external fun rescanGameControllersForced()
 
     final override val pathToResourceExists : Boolean
         get() {
@@ -155,7 +144,7 @@ abstract class EngineInfo(
 
     override val nativeLibraries: Array<String> get() = allLibs
 
-    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 
     override val touchFullScreenModeCanBeUsed: Boolean = true
 
@@ -183,7 +172,9 @@ abstract class EngineInfo(
 
     override fun onNativeLibrariesLoaded() = Native.register(EngineInfo::class.java, mainLibraryName)
 
-    final override fun rescanGameControllers() = rescanGameControllersForced()
+    final override fun rescanGameControllers() {
+        scope.launch { rescanGameControllersForced() }
+    }
 
     override fun initialize(activity: ComponentActivity) {
         if (wasInit){
@@ -214,11 +205,15 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        pauseSoundNativeDelegate.invokeVoid(null)
+        scope.launch {
+            pauseSound()
+        }
     }
 
     override fun onResume() {
-        resumeSoundNativeDelegate.invokeVoid(null)
+        scope.launch {
+            resumeSound()
+        }
     }
 
     override fun onDestroy() {
