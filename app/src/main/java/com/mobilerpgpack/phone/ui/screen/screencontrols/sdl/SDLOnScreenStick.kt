@@ -109,10 +109,11 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
 
             if (!joystickRegistered) {
                 joystickRegistered = true
-                Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
                 scope.launch {
+                    Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
                     createVirtualController()
                     engineInfo.rescanGameControllers()
+                    joystickRegisteredInSDL = true
                 }
             }
 
@@ -127,10 +128,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 else -> (y * STICK_SCALE).coerceAtLeast(-1f)
             }
 
-            try {
+            if (joystickRegisteredInSDL) {
                 scope.launch { setVirtualAxisNative(axisX, processedX, axisY, processedY) }
-            } catch (e: Exception) {
-                Log.e("SDL_INPUT", "Failed to send to axis", e)
             }
         }
 
@@ -360,6 +359,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         private const val LEFT_STICK_ID = "left_onscreen_stick"
         private const val RIGHT_STICK_ID = "right_onscreen_stick"
         private var joystickRegistered by mutableStateOf(false)
+        @Volatile
+        private var joystickRegisteredInSDL = false
     }
 }
 
