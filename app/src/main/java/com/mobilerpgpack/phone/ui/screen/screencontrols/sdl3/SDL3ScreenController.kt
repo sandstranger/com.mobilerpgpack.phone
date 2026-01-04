@@ -2,17 +2,13 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
-import com.mobilerpgpack.phone.utils.PreferencesStorage
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
-import org.koin.core.qualifier.named
 import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 import org.libsdl3.app.SDLSurface.getNormalizedX
 import org.libsdl3.app.SDLSurface.getNormalizedY
+import org.libsdl3.app.onKeyDown
 
 class SDL3ScreenController : SDLScreenController() {
 
@@ -50,6 +46,8 @@ class SDL3ScreenController : SDLScreenController() {
     override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int,controlsProvider: ControlsProvider) =
         CustomSDL3Button(id, engineTypes,offsetXPercent = 0.55f, offsetYPercent = 0.03f,
             sizePercent = 0.05f, sdlKeyEvent = keyCode, controlsType = controlsProvider.activeControlsType)
+
+    override fun onRadialWheelItemSelected(keycode: Int) = onKeyDown(keycode, delayBeforeKeyRelease = 50L)
 
     companion object {
         const val SDL3_SCREEN_CONTROLLER_NAME = "SDL3_SCREEN_CONTROLLER"
