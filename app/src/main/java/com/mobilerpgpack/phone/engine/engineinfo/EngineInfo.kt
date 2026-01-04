@@ -98,9 +98,9 @@ abstract class EngineInfo(
 
     protected abstract val pathToResource : String
 
-    protected open val loadGL4ES : Boolean get() = preferencesStorage.enableGyroscope
+    protected open val loadGL4ES : Boolean = true
 
-    protected open val enableGyroscope : Boolean = true
+    protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope
 
     protected abstract val gyroInput : GyroInput
 
