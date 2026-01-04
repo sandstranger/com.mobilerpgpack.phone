@@ -140,7 +140,7 @@ fun RadialWheel(modifier: Modifier = Modifier,
         } else {
             Box(modifier = Modifier
                     .align(Alignment.Center)
-                    .size(getViewSize(0.09f))
+                    .size(getViewSize(0.1f))
                     .minimumInteractiveComponentSize()
                     .onTouchDown(false, ignoreConsuming = true) {
                         showRadialMenu = true
