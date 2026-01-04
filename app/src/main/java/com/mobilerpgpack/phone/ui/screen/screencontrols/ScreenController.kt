@@ -79,7 +79,6 @@ import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.utils.onTouchDown
-import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.keyCodeMap
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
@@ -161,7 +160,6 @@ abstract class ScreenController : IScreenController {
         var screenWidthPx by rememberSaveable { mutableFloatStateOf(configuration.screenWidthDp * density) }
         var screenHeightPx by rememberSaveable { mutableFloatStateOf(configuration.screenHeightDp * density) }
         val hideOnScreenControls by rememberSaveable(hideOnScreenControls) { mutableStateOf(hideOnScreenControls) }
-        val keycodesProvider : IKeyCodesProvider = koinInject()
 
         @Composable
         fun getmouseButtonsEventsCanBeInvokedState() : Boolean{
@@ -340,9 +338,10 @@ abstract class ScreenController : IScreenController {
                         if (inGame && !isEditMode && showRadialMenu && !mouseButtonsEventsCanBeInvoked){
                             RadialWheel(modifier = Modifier
                                 .align(Alignment.Center)
-                                .size(getViewSize(0.35f))
+                                .size(getViewSize(0.35f)),
+                                getViewSize = ::getViewSize
                             ) {
-                                onRadialWheelItemSelected(keycodesProvider.getKeyCode(it.toString().first()))
+                                onRadialWheelItemSelected(it)
                             }
                         }
 
