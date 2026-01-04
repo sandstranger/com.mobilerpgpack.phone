@@ -47,9 +47,30 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val enableTouchScreenPressingEventsPrefsKey = booleanPreferencesKey("use_touchscreen_in_games_menu")
     val enableAbsoluteTouchMouseModePrefsKey = booleanPreferencesKey("use_absolute_touch_mouse_mode")
     val pathToRootUserFolderPrefsKey = stringPreferencesKey("path_to_user_root_folder")
+    val enableGyroscopePrefsKey = booleanPreferencesKey("enable_gyroscope")
+    val gyroscopeXSensitivityPrefsKey = floatPreferencesKey("gyroscope_x_sensitivity")
+    val gyroscopeYSensitivityPrefsKey = floatPreferencesKey("gyroscope_y_sensitivity")
+    val gyroscopeDeadZonePrefsKey = floatPreferencesKey("gyroscope_dead_zone")
+    val gyroscopeMaxValuePrefsKey = floatPreferencesKey("gyroscope_max_value")
+    val invertGyroscopeXAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_x_axis")
+    val invertGyroscopeYAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_y_axis")
 
     val pathToRootUserFolder get() = getStringValue(pathToRootUserFolderPrefsKey,
         context.getExternalFilesDir("")!!.absolutePath)
+
+    val enableGyroscope get() = getBooleanValue(enableGyroscopePrefsKey, false)
+
+    val invertGyroscopeXAxis get() = getBooleanValue(invertGyroscopeXAxisPrefsKey, false)
+
+    val invertGyroscopeYAxis get() = getBooleanValue(invertGyroscopeYAxisPrefsKey, false)
+
+    val gyroscopeDeadZone get() = getFloatValue(gyroscopeDeadZonePrefsKey, GyroInput.DEFAULT_DEAD_ZONE)
+
+    val gyroscopeMaxValue get() = getFloatValue(gyroscopeMaxValuePrefsKey, GyroInput.DEFAULT_MAX_VALUE)
+
+    val gyroscopeXSensitivity get() = getFloatValue(gyroscopeXSensitivityPrefsKey, GyroInput.DEFAULT_SENS_X)
+
+    val gyroscopeYSensitivity get() = getFloatValue(gyroscopeYSensitivityPrefsKey, GyroInput.DEFAULT_SENS_Y)
 
     val enableAbsoluteTouchMouseMode get() = getBooleanValue(enableAbsoluteTouchMouseModePrefsKey, true)
 

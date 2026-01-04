@@ -12,9 +12,11 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIconHelper
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
 import com.mobilerpgpack.phone.utils.GyroInput
+import com.mobilerpgpack.phone.utils.SDL2GyroInput
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
@@ -36,7 +38,7 @@ abstract class SDL3EngineInfo(
         named(SDL3ScreenController.SDL3_SCREEN_CONTROLLER_NAME)
     )
 
-    final override val gyroInput: GyroInput by lazy { SDL3GyroInput(super.activity, this) }
+    final override val gyroInput: GyroInput by inject <SDL3GyroInput> { parametersOf(super.activity, this) }
 
     override fun isMouseShown() = SDL3MouseIconHelper.isMouseShown()
 

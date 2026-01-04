@@ -266,4 +266,11 @@
     <string name="copy_engines_content_info">Copy all engines files from /Android/data to target user folder</string>
     <string name="copy_engines_content_info_dialog">Copy all engines files from /Android/data to target user folder %1$s. This will overwrite all data like saves in target folder</string>
     <string name="copy_engines_content">Copy data</string>
+    <string name="enable_gyroscope">Enable gyroscope</string>
+    <string name="gyroscope_x_sensitivity">Gyroscope X axis sensitivity</string>
+    <string name="gyroscope_y_sensitivity">Gyroscope Y axis sensitivity</string>
+    <string name="gyroscope_dead_zone">Gyroscope dead zone</string>
+    <string name="gyroscope_max_value">Gyroscope max value</string>
+    <string name="gyroscope_invert_x_axis">Invert gyroscope X axis</string>
+    <string name="gyroscope_invert_y_axis">Invert gyroscope Y axis</string>
 </resources>
