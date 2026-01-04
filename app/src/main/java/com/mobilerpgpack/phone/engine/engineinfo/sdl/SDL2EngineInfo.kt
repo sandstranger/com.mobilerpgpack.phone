@@ -14,6 +14,7 @@ import com.mobilerpgpack.phone.utils.GyroInput
 import com.mobilerpgpack.phone.utils.SDL2GyroInput
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
@@ -35,7 +36,7 @@ abstract class SDL2EngineInfo(
         named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
     )
 
-    final override val gyroInput: GyroInput by lazy { SDL2GyroInput(super.activity, this) }
+    final override val gyroInput: GyroInput by inject <SDL2GyroInput> { parametersOf(super.activity, this) }
 
     override fun isMouseShown() = SDLActivity.isMouseShown()
 
