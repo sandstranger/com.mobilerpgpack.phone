@@ -23,9 +23,12 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobilerpgpack.phone.ui.screen.screencontrols.utils.onTouchDown
+import com.mobilerpgpack.phone.utils.IKeyCodesProvider
+import org.koin.compose.koinInject
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -33,15 +36,18 @@ import kotlin.math.sin
 private const val ITEMS_COUNT = 10
 
 @Composable
-fun RadialWheel(modifier: Modifier = Modifier, onItemSelected: (Int) -> Unit) {
+fun RadialWheel(modifier: Modifier = Modifier,
+                getViewSize : @Composable (Float) -> Dp,
+                onItemSelected: (Int) -> Unit) {
     val count = rememberSaveable { ITEMS_COUNT }
     val items = rememberSaveable { (0..count).map { it.toString() }.toList() }
     val anglePerItem = rememberSaveable { 360f / count }
-    val textSizePx = with(LocalDensity.current) { 22.sp.toPx() }
+    val textSizePx = with(LocalDensity.current) { 30.sp.toPx() }
     val backgroundColor = remember { Color.Gray.copy(alpha = 0.4f) }
     val selectedColor = remember { Color.LightGray.copy(0.8f) }
     var selectedIndex by remember { mutableIntStateOf(-1) }
     var showRadialMenu by remember { mutableStateOf(false) }
+    val keyCodesProvider = koinInject<IKeyCodesProvider>()
 
     Box(modifier = modifier
             .aspectRatio(1f)
@@ -74,7 +80,8 @@ fun RadialWheel(modifier: Modifier = Modifier, onItemSelected: (Int) -> Unit) {
 
                                 if (!change.pressed) {
                                     if (selectedIndex >= 0) {
-                                        onItemSelected(selectedIndex)
+                                        onItemSelected(keyCodesProvider.getKeyCode(
+                                            items[selectedIndex].first()))
                                         showRadialMenu = false
                                     }
                                     break
@@ -133,7 +140,7 @@ fun RadialWheel(modifier: Modifier = Modifier, onItemSelected: (Int) -> Unit) {
         } else {
             Box(modifier = Modifier
                     .align(Alignment.Center)
-                    .size(40.dp)
+                    .size(getViewSize(0.09f))
                     .minimumInteractiveComponentSize()
                     .onTouchDown(false, ignoreConsuming = true) {
                         showRadialMenu = true
