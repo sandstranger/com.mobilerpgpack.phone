@@ -10,8 +10,11 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
+import com.mobilerpgpack.phone.utils.GyroInput
+import com.mobilerpgpack.phone.utils.SDL2GyroInput
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
@@ -32,6 +35,8 @@ abstract class SDL2EngineInfo(
     final override val screenController: IScreenController by inject(
         named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
     )
+
+    final override val gyroInput: GyroInput by inject <SDL2GyroInput> { parametersOf(super.activity, this) }
 
     override fun isMouseShown() = SDLActivity.isMouseShown()
 

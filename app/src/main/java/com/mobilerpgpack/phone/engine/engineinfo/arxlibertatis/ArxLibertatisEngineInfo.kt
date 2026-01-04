@@ -4,6 +4,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.sun.jna.Native
+import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -56,8 +57,10 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
-        Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
-        updateScreenControlsHidingState(preferencesStorage.hideScreenControls)
+        scope.launch {
+            Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
+            updateScreenControlsHidingState(preferencesStorage.hideScreenControls)
+        }
     }
 
     private companion object {

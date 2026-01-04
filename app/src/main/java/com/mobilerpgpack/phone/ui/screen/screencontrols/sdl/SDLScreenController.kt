@@ -100,6 +100,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var widthSize by rememberSaveable { mutableIntStateOf(0) }
         var heightSize by rememberSaveable { mutableIntStateOf(0) }
         var trackedPointerId by rememberSaveable { mutableIntStateOf(UNKNOWN_POINTER_ID) }
+        var useTouchPressEventsForTrackedPointer by rememberSaveable { mutableStateOf(false) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
             engineInfo.touchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
@@ -125,12 +126,13 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             if (trackedPointerId != UNKNOWN_POINTER_ID) {
                 handlePointer(trackedPointerId, 0f, 0f, 0f,
                     mWidth, mHeight, MotionEvent.ACTION_UP,
-                    touchId ?: defaultTouchDeviceId, false)
+                    touchId ?: defaultTouchDeviceId, useTouchPressEventsForTrackedPointer)
                 lastTouchX = 0f
                 lastTouchY = 0f
                 lastMouseX = 0f
                 lastMouseY = 0f
                 trackedPointerId = UNKNOWN_POINTER_ID
+                useTouchPressEventsForTrackedPointer = false
             }
         }
 
@@ -192,6 +194,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                             val x = pos.x
                             val y = pos.y
                             val pressure = (change.pressure).coerceAtMost(1.0f)
+                            fun useTouchPressEvents () = mouseButtonsEventsCanBeInvoked &&
+                                    enableTouchScreenPressingEvents
 
                             fun handlePointerLocal(
                                 touchAction: Int,
@@ -202,14 +206,14 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                 handlePointer(
                                     trackedPointerId, pressure, xPosition, yPosition,
                                     mWidth, mHeight, touchAction,
-                                    touchId!!,
-                                    mouseButtonsEventsCanBeInvoked && enableTouchScreenPressingEvents
+                                    touchId!!, useTouchPressEvents()
                                 )
                             }
 
                             when {
                                 change.changedToDown() && trackedPointerId == UNKNOWN_POINTER_ID -> {
                                     trackedPointerId = pid
+                                    useTouchPressEventsForTrackedPointer = useTouchPressEvents()
                                     if (useAbsoluteTouchMode) {
                                         lastTouchX = x
                                         lastTouchY = y
@@ -244,6 +248,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                         )
                                     }
 
+                                    useTouchPressEventsForTrackedPointer = false
                                     trackedPointerId = UNKNOWN_POINTER_ID
                                 }
 
@@ -281,6 +286,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                             lastMouseY
                                         )
                                     }
+                                    useTouchPressEventsForTrackedPointer = false
                                     trackedPointerId = UNKNOWN_POINTER_ID
                                 }
                             }

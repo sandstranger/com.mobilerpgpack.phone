@@ -22,8 +22,6 @@ import org.libsdl.app.SDLActivity
 class SDL2GameActivity : SDLActivity(), KoinComponent {
     private lateinit var engineInfo : IEngineInfo
 
-    private var wasPaused = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         MainActivity.gameActivityStarted = true
         enableEdgeToEdge()
@@ -65,16 +63,14 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
         super.onPause()
         if (gameResourcesFound){
             engineInfo.onPause()
-            wasPaused = true
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (gameResourcesFound && wasPaused){
+        if (gameResourcesFound){
             engineInfo.onResume()
         }
-        wasPaused = false
     }
 
     override fun onDestroy() {
@@ -82,7 +78,7 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
         engineInfo.onDestroy()
     }
 
-    @SuppressLint("MissingSuperCall")
+    @SuppressLint("MissingSuperCall", "GestureBackNavigation")
     override fun onBackPressed() {
         engineInfo.onBackPressed()
     }

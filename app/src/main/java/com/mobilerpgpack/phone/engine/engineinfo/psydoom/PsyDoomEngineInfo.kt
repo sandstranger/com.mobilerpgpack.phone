@@ -5,14 +5,15 @@ import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
-import com.sun.jna.Function
+import com.sun.jna.Native
+import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
 class PsyDoomEngineInfo(mainEngineLib: String,
-                        allLibs: Array<String>,
-                        commandLineParams: String ) :
+                        allLibs: Array<String>
+) :
     SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.PsyDoom) {
 
     private val modsModel : ModsModel by inject (named(EngineTypes.PsyDoom.toString()))
@@ -20,15 +21,9 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     private val psyDoomPreferencesStorage by inject <PsyDoomPreferencesStorage>(named(
         EngineTypes.PsyDoom.toString()))
 
-    private val destroyVulkanSwapChainNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "destroyVulkanSwapChain")
-    }
+    private external fun destroyVulkanSwapChain()
 
-    private val recreateVulkanSwapChainNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "recreateVulkanSwapChain")
-    }
+    private external fun recreateVulkanSwapChain()
 
     override val commandLineParams: String get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString
 
@@ -150,9 +145,20 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             }
         }
 
-    override fun onResume() = recreateVulkanSwapChainNativeDelegate.invokeVoid(null)
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(PsyDoomEngineInfo::class.java, mainLibraryName)
+    }
 
-    override fun onPause() = destroyVulkanSwapChainNativeDelegate.invokeVoid(null)
+    override fun onResume() {
+        super.onResume()
+        scope.launch { recreateVulkanSwapChain() }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        scope.launch { destroyVulkanSwapChain() }
+    }
 
     private companion object{
         private const val FILE_COMMAND = "-file"
