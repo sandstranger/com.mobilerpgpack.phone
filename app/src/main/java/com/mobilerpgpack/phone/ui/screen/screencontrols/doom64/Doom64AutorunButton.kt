@@ -8,6 +8,12 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ToggleImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Function
+import com.sun.jna.Native
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -29,23 +35,27 @@ class Doom64AutorunButton (engineType: EngineTypes,
         sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted,
         consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents, showInQuickPanel), KoinComponent {
 
+    private val mutex = Mutex()
+    private val scope = CoroutineScope(Dispatchers.IO)
     private val preferencesStorage : PreferencesStorage by inject ()
+    @Volatile
+    private var autoRunNativeMethodFound = false
 
-    private val objectsArray : Array <Any?> = arrayOfNulls <Any>(1)
-
-    private val onAutoRunStateChangedNativeDelegate by lazy {
-        val mainEngineLibName = preferencesStorage.let {
-            get <IEngineInfo> (named(it.activeEngineString)).mainLibraryName
-        }
-        Function.getFunction(mainEngineLibName,
-            "OnAutoRunStateChanged")
-    }
+    private external fun OnAutoRunStateChanged(enableAutorun : Boolean)
 
     override fun onToggleStateChanged(isActive: Boolean) {
-        onAutoRunStateChangedNativeDelegate.invokeVoid(isActive.let {
-            objectsArray[0] = it
-            objectsArray
-        })
+        scope.launch {
+            mutex.withLock {
+                if (!autoRunNativeMethodFound){
+                    autoRunNativeMethodFound = true
+                    val mainEngineLibName = preferencesStorage.let {
+                        get <IEngineInfo> (named(it.activeEngineString)).mainLibraryName
+                    }
+                    Native.register(Doom64AutorunButton::class.java, mainEngineLibName)
+                }
+                OnAutoRunStateChanged (isActive)
+            }
+        }
     }
 
     private companion object{

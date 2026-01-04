@@ -11,6 +11,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
 import com.sun.jna.Function
+import com.sun.jna.Native
 import kotlinx.coroutines.delay
 import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.exception.ZipException
@@ -25,25 +26,7 @@ import java.security.MessageDigest
 
 data class KeyCodeInfo (val keyCodeName : String, val keyCode : Int)
 
-private const val KEYCODE_PREFIX = "KEYCODE_"
-private const val UNKNOWN_KEYCODE = 0
-
-private val keyCodesArray = arrayOfNulls<Any?>(1)
-private val translateKeycodeNativeDelegate by lazy {
-    Function.getFunction(SDL2_NATIVE_LIB_NAME, "TranslateKeycode")
-}
-
-val keyCodeMap : Map<Int, KeyCodeInfo> by lazy {
-    KeyEvent::class.java.fields
-        .filter { it.name.startsWith(KEYCODE_PREFIX) && isValidKeyCode(it)  }
-        .sortedBy { it.name }
-        .associate { field ->
-             return@associate field.getInt(null).run {
-                return@associate this to KeyCodeInfo(field.name.replace(KEYCODE_PREFIX, ""),
-                    this)
-            }
-        }
-}
+val keyCodeMap : Map<Int, KeyCodeInfo> by lazy { KeyStoreProvider.keyCodeMap }
 
 fun startGame(activity: Activity, engineToPlay: EngineTypes) {
     val assetsExtractor: IAssetExtractor = get(IAssetExtractor::class.java)
@@ -119,7 +102,30 @@ fun copyFolder(src: File, dst: File) {
     }
 }
 
-private fun isValidKeyCode (keyCodeField : Field) : Boolean{
-    keyCodesArray[0] = keyCodeField.getInt(null)
-    return translateKeycodeNativeDelegate.invokeInt(keyCodesArray) != UNKNOWN_KEYCODE
+private object KeyStoreProvider {
+    private const val KEYCODE_PREFIX = "KEYCODE_"
+    private const val UNKNOWN_KEYCODE = 0
+
+    val keyCodeMap : Map<Int, KeyCodeInfo> by lazy {
+        KeyEvent::class.java.fields
+            .filter { it.name.startsWith(KEYCODE_PREFIX) && isValidKeyCode(it)  }
+            .sortedBy { it.name }
+            .associate { field ->
+                return@associate field.getInt(null).run {
+                    return@associate this to KeyCodeInfo(field.name.replace(KEYCODE_PREFIX, ""),
+                        this)
+                }
+            }
+    }
+
+    private external fun TranslateKeycode(keyCode : Int) : Int
+
+    init {
+        Native.register(KeyStoreProvider::class.java, SDL2_NATIVE_LIB_NAME)
+    }
+
+    private fun isValidKeyCode (keyCodeField : Field) : Boolean{
+        return TranslateKeycode(keyCodeField.getInt(null)) != UNKNOWN_KEYCODE
+    }
 }
+

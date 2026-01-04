@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import kotlinx.coroutines.delay
@@ -60,7 +61,7 @@ abstract class MouseIcon {
                     }
                 }
 
-                delay(16L)
+                delay(ONE_FRAME_DELAY)
             }
         }
 
