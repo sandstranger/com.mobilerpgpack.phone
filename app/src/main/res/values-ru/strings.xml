@@ -264,4 +264,11 @@
     <string name="copy_engines_content_info_dialog">Скопировать файлы данных движков из /Android/data в целевую папку пользователя %1$s.
         Это перезапишет все данные, включая сохранения, в целевой папке</string>
     <string name="copy_engines_content">Копировать</string>
+    <string name="enable_gyroscope">Включить гироскоп</string>
+    <string name="gyroscope_x_sensitivity">Чувствительность гироскопа по оси X</string>
+    <string name="gyroscope_y_sensitivity">Чувствительность гироскопа по оси Y</string>
+    <string name="gyroscope_dead_zone">Мертвая зона гироскопа</string>
+    <string name="gyroscope_max_value">Максимальное значение гироскопа</string>
+    <string name="gyroscope_invert_x_axis">Инвертировать ось X гироскопа</string>
+    <string name="gyroscope_invert_y_axis">Инвертировать ось Y гироскопа</string>
 </resources>

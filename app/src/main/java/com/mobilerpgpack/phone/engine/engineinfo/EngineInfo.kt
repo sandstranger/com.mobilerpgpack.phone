@@ -1,9 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.annotation.SuppressLint
-import android.os.Process
 import android.system.Os
-import android.util.Log
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -32,13 +30,13 @@ import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
+import com.mobilerpgpack.phone.utils.GyroInput
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
@@ -50,7 +48,7 @@ import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -63,6 +61,7 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
+import kotlin.system.exitProcess
 
 abstract class EngineInfo(
     mainEngineLib: String,
@@ -80,9 +79,10 @@ abstract class EngineInfo(
 
     protected abstract val sdlKeyboard : SDLKeyboard
 
-    protected open val keyboardInputType : CustomKeyboardView.KeyboardType = SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
+    protected open val keyboardInputType : CustomKeyboardView.KeyboardType =
+        SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
 
-    protected val scope = CoroutineScope(Dispatchers.Default)
+    protected val scope = CoroutineScope(Dispatchers.IO)
 
     protected lateinit var resolution: ScreenResolution
         private set
@@ -92,13 +92,17 @@ abstract class EngineInfo(
 
     protected val pathToRootUserFolder: String get() = preferencesStorage.pathToRootUserFolder
 
-    protected open val needToShowScreenControls : Boolean get() = needToShowScreenControlsNativeDelegate.invokeBool()
+    protected open val needToShowScreenControls : Boolean get() = needToShowScreenControls()
 
     protected open val commandLineParams : String = ""
 
     protected abstract val pathToResource : String
 
     protected open val loadGL4ES : Boolean = true
+
+    protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope
+
+    protected abstract val gyroInput : GyroInput
 
     private var wasInit = false
     private var hideScreenControls: Boolean = false
@@ -108,25 +112,15 @@ abstract class EngineInfo(
     private var displayInSafeArea: Boolean = false
     private var hideOnScreenControlsMutableState by mutableStateOf(false)
 
-    private val needToShowScreenControlsNativeDelegate by lazy {
-        Function.getFunction(mainLibraryName,
-            "needToShowScreenControls")
-    }
+    private external fun needToShowScreenControls() : Boolean
 
-    private val needToInvokeMouseButtonsEventsDelegate by lazy {
-        Function.getFunction(mainLibraryName,
-            "needToInvokeMouseButtonsEvents")
-    }
+    private external fun needToInvokeMouseButtonsEvents() : Boolean
 
-    private val pauseSoundNativeDelegate by lazy {
-        Function.getFunction(mainLibraryName,
-            "pauseSound")
-    }
+    private external fun pauseSound()
 
-    private val resumeSoundNativeDelegate by lazy {
-        Function.getFunction(mainLibraryName,
-            "resumeSound")
-    }
+    private external fun resumeSound()
+
+    private external fun rescanGameControllersForced()
 
     final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
         flow {
@@ -140,8 +134,6 @@ abstract class EngineInfo(
     override val mainLibraryName: String = mainEngineLib
 
     override val engineType: EngineTypes = activeEngineType
-
-    private external fun rescanGameControllersForced()
 
     final override val pathToResourceExists : Boolean
         get() {
@@ -157,7 +149,7 @@ abstract class EngineInfo(
 
     override val nativeLibraries: Array<String> get() = allLibs
 
-    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEventsDelegate.invokeBool()
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 
     override val touchFullScreenModeCanBeUsed: Boolean = true
 
@@ -216,16 +208,22 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        pauseSoundNativeDelegate.invokeVoid(null)
+        scope.launch { pauseSound() }
+        if (enableGyroscope) {
+            gyroInput.stop()
+        }
     }
 
     override fun onResume() {
-        resumeSoundNativeDelegate.invokeVoid(null)
+        scope.launch { resumeSound() }
+        if (enableGyroscope) {
+            gyroInput.start()
+        }
     }
 
     override fun onDestroy() {
-        scope.cancel()
-        killEngine()
+        scope.coroutineContext.cancelChildren()
+        exitProcess(0)
     }
 
     override fun onBackPressed(): Boolean {
@@ -446,8 +444,6 @@ abstract class EngineInfo(
 
     private fun getPathToPsaFolder() =
         pathToRootUserFolder + File.separator + if (BuildConfig.LEGACY_GLES2) "gles2" else "gles3"
-
-    private fun killEngine() = Process.killProcess(Process.myPid())
 
     private companion object {
         private const val RESOLUTION_DELIMITER = "x"

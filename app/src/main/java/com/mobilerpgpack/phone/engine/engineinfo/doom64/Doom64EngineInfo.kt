@@ -10,6 +10,10 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.invokeBool
 import com.sun.jna.Function
+import com.sun.jna.Native
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -19,21 +23,11 @@ open class Doom64EngineInfo(
     allLibs: Array<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Doom64ExPlus) {
 
-    private val screenResolutionArray = arrayOfNulls<Any?>(2)
+    private val mutex = Mutex()
 
     private var customScreenResolutionWasApplied = false
 
     private val modsModel : ModsModel by inject (named(EngineTypes.Doom64ExPlus.toString()))
-
-    private val mouseCursorCanBeDrawnNativeDelegate by lazy {
-        Function.getFunction(mainEngineLib,
-            "MouseCursorCanBeDrawn")
-    }
-
-    private val recalculateScreenResolution by lazy {
-        Function.getFunction(mainEngineLib,
-            "RecalculateScreenResolution")
-    }
 
     override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString
 
@@ -68,9 +62,18 @@ open class Doom64EngineInfo(
             }
         }
 
+    private external fun MouseCursorCanBeDrawn() : Boolean
+
+    private external fun RecalculateScreenResolution(screenWidth : Int, screenHeight : Int)
+
     final override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
+    }
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(Doom64EngineInfo::class.java, mainLibraryName)
     }
 
     final override fun setScreenResolution(screenResolution: ScreenResolution) {
@@ -82,17 +85,21 @@ open class Doom64EngineInfo(
     final override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
         super.onSafeAreaApplied(screenResolution)
         if (!customScreenResolutionWasApplied) {
-            setupScreenResolutionToEnv(screenResolution)
-            screenResolutionArray[0] = screenResolution.screenWidth
-            screenResolutionArray[1] = screenResolution.screenHeight
-            recalculateScreenResolution.invokeVoid(screenResolutionArray)
+            scope.launch { updateScreenResolution(screenResolution) }
         }
     }
 
-    final override fun isMouseShown() = mouseCursorCanBeDrawnNativeDelegate.invokeBool()
+    final override fun isMouseShown() = MouseCursorCanBeDrawn()
 
     protected open fun getPathToDoom64UserFolder() =
         pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator
+
+    private suspend fun updateScreenResolution (screenResolution : ScreenResolution){
+        mutex.withLock {
+            setupScreenResolutionToEnv(screenResolution)
+            RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
+        }
+    }
 
     private fun getPathToDoom64ModsFolder(): String {
         val enableDoom64Mods = preferencesStorage.enableDoom64Mods

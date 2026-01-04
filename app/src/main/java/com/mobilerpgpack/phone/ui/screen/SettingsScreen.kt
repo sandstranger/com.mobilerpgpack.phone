@@ -397,6 +397,63 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.setFloatValue(preferencesStorage.customOnScreenKeyboardTransparencyPrefsKey,
                 it.coerceIn(0f, 1.0f))
         }
+
+        DrawHorizontalDivider()
+
+        SwitchPreferenceItem(
+            stringResource(R.string.enable_gyroscope),
+            preferencesStorage.enableGyroscope,
+            preferencesStorage.enableGyroscopePrefsKey.name)
+
+        DrawHorizontalDivider()
+
+        SwitchPreferenceItem(
+            stringResource(R.string.gyroscope_invert_x_axis),
+            preferencesStorage.invertGyroscopeXAxis,
+            preferencesStorage.invertGyroscopeXAxisPrefsKey.name)
+
+        DrawHorizontalDivider()
+
+        SwitchPreferenceItem(
+            stringResource(R.string.gyroscope_invert_y_axis),
+            preferencesStorage.invertGyroscopeYAxis,
+            preferencesStorage.invertGyroscopeYAxisPrefsKey.name)
+
+        DrawHorizontalDivider()
+
+        EditTextPreferenceItem(
+            stringResource(R.string.gyroscope_x_sensitivity),
+            preferencesStorage.gyroscopeXSensitivity){
+            preferencesStorage.setFloatValue(preferencesStorage.gyroscopeXSensitivityPrefsKey,
+                it.coerceAtLeast(0f))
+        }
+
+        DrawHorizontalDivider()
+
+        EditTextPreferenceItem(
+            stringResource(R.string.gyroscope_y_sensitivity),
+            preferencesStorage.gyroscopeYSensitivity){
+            preferencesStorage.setFloatValue(preferencesStorage.gyroscopeYSensitivityPrefsKey,
+                it.coerceAtLeast(0f))
+        }
+
+        DrawHorizontalDivider()
+
+        EditTextPreferenceItem(
+            stringResource(R.string.gyroscope_dead_zone),
+            preferencesStorage.gyroscopeDeadZone){
+            preferencesStorage.setFloatValue(preferencesStorage.gyroscopeDeadZonePrefsKey,
+                it.coerceAtLeast(0f))
+        }
+
+        DrawHorizontalDivider()
+
+        EditTextPreferenceItem(
+            stringResource(R.string.gyroscope_max_value),
+            preferencesStorage.gyroscopeMaxValue){
+            preferencesStorage.setFloatValue(preferencesStorage.gyroscopeMaxValuePrefsKey,
+                it.coerceAtLeast(0f))
+        }
     }
 
     @Composable
