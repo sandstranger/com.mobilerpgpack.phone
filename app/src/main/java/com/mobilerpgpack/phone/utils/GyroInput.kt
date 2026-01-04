@@ -64,7 +64,7 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
 
     fun stop() = sm?.unregisterListener(this)
 
-    override fun onSensorChanged(e: SensorEvent) {
+    final override fun onSensorChanged(e: SensorEvent) {
         if (e.sensor.type != Sensor.TYPE_GYROSCOPE || engineInfo.mouseButtonsEventsCanBeInvoked) {
             return
         }
@@ -91,7 +91,7 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
         onNativeGyroMouse(x, y)
     }
 
-    override fun onAccuracyChanged(s: Sensor?, a: Int) {}
+    final override fun onAccuracyChanged(s: Sensor?, a: Int) {}
 
     companion object{
         const val DEFAULT_SENS_X : Float = 15.0f
