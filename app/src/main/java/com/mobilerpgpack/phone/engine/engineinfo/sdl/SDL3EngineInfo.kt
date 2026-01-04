@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL3GameActivity
 import com.mobilerpgpack.phone.engine.engineinfo.EngineInfo
+import com.mobilerpgpack.phone.main.SDL3_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
@@ -12,9 +13,9 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIconHelper
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
 import com.mobilerpgpack.phone.utils.GyroInput
-import com.mobilerpgpack.phone.utils.SDL2GyroInput
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
 import com.mobilerpgpack.phone.utils.ScreenResolution
+import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -39,6 +40,15 @@ abstract class SDL3EngineInfo(
     )
 
     final override val gyroInput: GyroInput by inject <SDL3GyroInput> { parametersOf(super.activity, this) }
+
+    private external fun SDL_GetRelativeMouseMode() : Boolean
+
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = !SDL_GetRelativeMouseMode()
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(SDL3EngineInfo::class.java, SDL3_NATIVE_LIB_NAME)
+    }
 
     override fun isMouseShown() = SDL3MouseIconHelper.isMouseShown()
 
