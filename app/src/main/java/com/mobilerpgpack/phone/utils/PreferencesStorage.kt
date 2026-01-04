@@ -51,7 +51,6 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val gyroscopeXSensitivityPrefsKey = floatPreferencesKey("gyroscope_x_sensitivity")
     val gyroscopeYSensitivityPrefsKey = floatPreferencesKey("gyroscope_y_sensitivity")
     val gyroscopeDeadZonePrefsKey = floatPreferencesKey("gyroscope_dead_zone")
-    val gyroscopeMaxValuePrefsKey = floatPreferencesKey("gyroscope_max_value")
     val invertGyroscopeXAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_x_axis")
     val invertGyroscopeYAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_y_axis")
 
@@ -65,8 +64,6 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val invertGyroscopeYAxis get() = getBooleanValue(invertGyroscopeYAxisPrefsKey, false)
 
     val gyroscopeDeadZone get() = getFloatValue(gyroscopeDeadZonePrefsKey, GyroInput.DEFAULT_DEAD_ZONE)
-
-    val gyroscopeMaxValue get() = getFloatValue(gyroscopeMaxValuePrefsKey, GyroInput.DEFAULT_MAX_VALUE)
 
     val gyroscopeXSensitivity get() = getFloatValue(gyroscopeXSensitivityPrefsKey, GyroInput.DEFAULT_SENS_X)
 
