@@ -26,7 +26,6 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
     private var sensX : Float = DEFAULT_SENS_X
     private var sensY : Float = DEFAULT_SENS_Y
     private var dead : Float = DEFAULT_DEAD_ZONE
-    private var max : Float = DEFAULT_MAX_VALUE
     private var invertXAxis = false
     private var invertYAxis = false
 
@@ -42,7 +41,6 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
             sensX = gyroscopeXSensitivity
             sensY = gyroscopeYSensitivity
             dead = gyroscopeDeadZone
-            max = gyroscopeMaxValue
             invertXAxis = invertGyroscopeXAxis
             invertYAxis = invertGyroscopeYAxis
         }
@@ -86,8 +84,6 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
         x *= sensX
         y *= sensY
 
-        if (x > max) x = max else if (x < -max) x = -max
-        if (y > max) y = max else if (y < -max) y = -max
         onNativeGyroMouse(x, y)
     }
 
@@ -97,6 +93,5 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
         const val DEFAULT_SENS_X : Float = 15.0f
         const val DEFAULT_SENS_Y : Float = 15.0f
         const val DEFAULT_DEAD_ZONE : Float = 0.02f
-        const val DEFAULT_MAX_VALUE = 20.0f
     }
 }
