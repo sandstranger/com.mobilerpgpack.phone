@@ -116,6 +116,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
         val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
         val UNKNOWN_POINTER_ID = rememberSaveable { UNKNOWN_POINTER_ID }
+        val enableGyroscope = rememberSaveable(preferencesStorage.enableGyroscope) {
+            preferencesStorage.enableGyroscope }
 
         var lastTouchX by rememberSaveable { mutableFloatStateOf(0f) }
         var lastTouchY by rememberSaveable { mutableFloatStateOf(0f) }
@@ -137,7 +139,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         LaunchedEffect(isEditMode, blockTouchEvents,enableTouchScreenPressingEvents,
-            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode) {
+            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode, enableGyroscope) {
             clearResources()
         }
 
@@ -178,15 +180,14 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             .background(Color.Transparent)
             .pointerInput(
                 isEditMode, mouseButtonsEventsCanBeInvoked, blockTouchEvents,
-                enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode
+                enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode, enableGyroscope
             ) {
-                if (isEditMode || blockTouchEvents) {
+                if (isEditMode || blockTouchEvents || (enableGyroscope && !mouseButtonsEventsCanBeInvoked)) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {
                     while (true) {
-                        val useAbsoluteTouchMode =
-                            enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
+                        val useAbsoluteTouchMode = enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
                         val event = awaitPointerEvent()
                         for (change in event.changes) {
                             val pid = change.id.value.toInt()
