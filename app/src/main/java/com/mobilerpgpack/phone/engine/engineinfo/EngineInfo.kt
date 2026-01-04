@@ -98,7 +98,9 @@ abstract class EngineInfo(
 
     protected abstract val pathToResource : String
 
-    protected open val loadGL4ES : Boolean = true
+    protected open val loadGL4ES : Boolean get() = preferencesStorage.enableGyroscope
+
+    protected open val enableGyroscope : Boolean = true
 
     protected abstract val gyroInput : GyroInput
 
@@ -207,12 +209,16 @@ abstract class EngineInfo(
 
     override fun onPause() {
         scope.launch { pauseSound() }
-        gyroInput.stop()
+        if (enableGyroscope) {
+            gyroInput.stop()
+        }
     }
 
     override fun onResume() {
         scope.launch { resumeSound() }
-        gyroInput.start()
+        if (enableGyroscope) {
+            gyroInput.start()
+        }
     }
 
     override fun onDestroy() {

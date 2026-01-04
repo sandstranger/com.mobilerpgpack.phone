@@ -24,6 +24,8 @@ abstract class DoomRPGSeriesEngineInfo(
 
     final override val keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
 
+    final override val enableGyroscope = false
+
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
 
