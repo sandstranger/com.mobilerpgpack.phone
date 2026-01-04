@@ -5,6 +5,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import org.libsdl.app.SDLActivity
 import org.libsdl.app.SDLSurface
+import org.libsdl.app.onKeyDown
 
 class SDL2ScreenController : SDLScreenController() {
 
@@ -38,6 +39,8 @@ class SDL2ScreenController : SDLScreenController() {
                                  controlsProvider: ControlsProvider) =
         CustomSDL2Button(id, engineTypes,offsetXPercent = 0.55f, offsetYPercent = 0.03f,
             sizePercent = 0.05f, sdlKeyEvent = keyCode, controlsType = controlsProvider.activeControlsType)
+
+    override fun onRadialWheelItemSelected(keycode: Int) = onKeyDown(keycode, delayBeforeKeyRelease = 50L)
 
     companion object{
         const val SDL2_SCREEN_CONTROLLER_NAME = "SDL2_SCREEN_CONTROLLER"

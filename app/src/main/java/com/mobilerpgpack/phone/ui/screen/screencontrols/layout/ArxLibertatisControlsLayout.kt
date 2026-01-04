@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.layout
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.EnableEditModeButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibilityImageButton
@@ -19,6 +20,13 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
 private const val LEFT_MOUSE_BUTTON_ID : Int = 1
 
 val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    EnableEditModeButton(
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.015f,
+        offsetYPercent = 0.02f,
+        sizePercent = 0.055f,
+        controlsType = ControlsType.OnScreenStick
+    ),
     RescanSDLGamepadsForcedButton(
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.55f,

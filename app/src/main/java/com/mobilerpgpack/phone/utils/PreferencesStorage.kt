@@ -53,9 +53,12 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val gyroscopeDeadZonePrefsKey = floatPreferencesKey("gyroscope_dead_zone")
     val invertGyroscopeXAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_x_axis")
     val invertGyroscopeYAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_y_axis")
+    val showRadialWheelPrefsKey = booleanPreferencesKey("show_radial_wheel")
 
     val pathToRootUserFolder get() = getStringValue(pathToRootUserFolderPrefsKey,
         context.getExternalFilesDir("")!!.absolutePath)
+
+    val showRadialWheel get() = getBooleanValue(showRadialWheelPrefsKey, false)
 
     val enableGyroscope get() = getBooleanValue(enableGyroscopePrefsKey, false)
 
@@ -99,8 +102,6 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val hideScreenControls get() = getBooleanValue(hideScreenControlsPrefsKey, defaultValue = false)
 
     val enableGameMachineTextTranslation get() = getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
-
-    val editCustomScreenControlsInGame get() = getBooleanValue(editCustomScreenControlsInGamePrefsKey, defaultValue = true)
 
     val customScreenResolution get() = getStringValue(customScreenResolutionPrefsKey)
 
