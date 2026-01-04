@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.EnableEditModeButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibilityImageButton
@@ -18,8 +19,14 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButto
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
 
 val doom64AbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
+    EnableEditModeButton(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.015f,
+        offsetYPercent = 0.02f,
+        sizePercent = 0.055f,
+    ),
     RescanSDLGamepadsForcedButton(
-        EngineTypes.PerfectDark,
+        EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
         sizePercent = 0.075f,
@@ -304,13 +311,21 @@ val doom64AbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
 )
 
 val doom64OnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    EnableEditModeButton(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.015f,
+        offsetYPercent = 0.02f,
+        sizePercent = 0.055f,
+        controlsType = ControlsType.OnScreenStick
+    ),
     RescanSDLGamepadsForcedButton(
-        EngineTypes.PerfectDark,
+        EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
         sizePercent = 0.075f,
         buttonResId = R.drawable.gamepad,
-        isDeleted = true
+        isDeleted = true,
+        controlsType = ControlsType.OnScreenStick
     ),
     SDL3Dpad(
         EngineTypes.Doom64ExPlus,

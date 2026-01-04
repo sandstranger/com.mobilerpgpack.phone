@@ -26,6 +26,58 @@ import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
 @Composable
+fun Modifier.onTouchDown (isEditMode: Boolean, ignoreConsuming : Boolean = false,
+                          onTouchDown : () -> Unit) : Modifier {
+    val preferencesStorage : PreferencesStorage = koinInject()
+    val activeEngineString = remember (preferencesStorage.activeEngineString) {
+        preferencesStorage.activeEngineString }
+    val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
+    val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+    var pointerId by remember { mutableStateOf<PointerId?>(null) }
+    val ignoreConsuming = rememberSaveable(ignoreConsuming) { ignoreConsuming }
+
+    LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked) {
+        pointerId = null
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            pointerId = null
+        }
+    }
+
+    return this.pointerInput(isEditMode,mouseButtonsEventsCanBeInvoked) {
+        awaitPointerEventScope {
+            while (true) {
+                val event = awaitPointerEvent()
+                for (change in event.changes) {
+                    val pid = change.id
+
+                    when {
+                        change.changedToDown() -> {
+                            if (pointerId == null) {
+                                pointerId = pid
+                                onTouchDown()
+                            }
+                        }
+
+                        change.changedToUp() || change.isOutOfBounds(size, extendedTouchPadding) ||
+                                !change.pressed  -> {
+                            if (pointerId == pid){
+                                pointerId = null
+                            }
+                        }
+                    }
+                    if (!ignoreConsuming) {
+                        change.consume()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, changeItemColor : Boolean = true,
                                     onTouchDown : () -> Unit = {}, onTouchUp : () -> Unit = {}) : Modifier {
 

@@ -10,13 +10,13 @@ interface IScreenController{
     var showScreenControls : Boolean
     var showQuickPanelItems : Boolean
     val activeViewsToDraw: Collection<IScreenControlsView>
+    var isEditMode : Boolean
 
     @Composable
     fun DrawScreenControls(
         activeEngine : EngineTypes,
         inGame: Boolean,
         blockTouchCameraEvents : Boolean = false,
-        allowToEditControls: Boolean = true,
         drawInSafeArea : Boolean = false,
         hideOnScreenControls : Boolean = false,
         keyboardInputType : CustomKeyboardView.KeyboardType = SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE,

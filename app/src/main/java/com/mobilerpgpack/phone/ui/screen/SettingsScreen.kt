@@ -347,13 +347,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawHorizontalDivider()
 
         SwitchPreferenceItem(
-            stringResource(R.string.allow_to_edit_controls_in_game),
-            preferencesStorage.editCustomScreenControlsInGame,
-            preferencesStorage.editCustomScreenControlsInGamePrefsKey.name)
-
-        DrawHorizontalDivider()
-
-        SwitchPreferenceItem(
             stringResource(R.string.enable_absolute_touch_mouse_mode),
             preferencesStorage.enableAbsoluteTouchMouseMode,
             preferencesStorage.enableAbsoluteTouchMouseModePrefsKey.name
@@ -376,6 +369,13 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             )
             DrawHorizontalDivider()
         }
+
+        SwitchPreferenceItem(
+            stringResource(R.string.show_radial_wheel_number_panel),
+            preferencesStorage.showRadialWheel,
+            preferencesStorage.showRadialWheelPrefsKey.name)
+
+        DrawHorizontalDivider()
 
         SwitchPreferenceItem(
             stringResource(R.string.hide_custom_screen_controls),
