@@ -335,15 +335,6 @@ abstract class ScreenController : IScreenController {
                     }
 
                     if (readyToDrawControls) {
-                        if (inGame && !isEditMode && showRadialMenu && !mouseButtonsEventsCanBeInvoked){
-                            RadialWheel(modifier = Modifier
-                                .align(Alignment.Center)
-                                .size(getViewSize(0.35f)),
-                                getViewSize = ::getViewSize
-                            ) {
-                                onRadialWheelItemSelected(it)
-                            }
-                        }
 
                         viewsToDraw.forEach { (id, view) ->
                             val id = rememberSaveable (id) { id }
@@ -397,6 +388,16 @@ abstract class ScreenController : IScreenController {
                                     },
                                     inGame = inGame,
                                 )
+                            }
+                        }
+
+                        if (inGame && !isEditMode && showRadialMenu && !mouseButtonsEventsCanBeInvoked){
+                            RadialWheel(modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(getViewSize(0.35f)),
+                                getViewSize = ::getViewSize
+                            ) {
+                                onRadialWheelItemSelected(it)
                             }
                         }
                     }
