@@ -445,15 +445,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.setFloatValue(preferencesStorage.gyroscopeDeadZonePrefsKey,
                 it.coerceAtLeast(0f))
         }
-
-        DrawHorizontalDivider()
-
-        EditTextPreferenceItem(
-            stringResource(R.string.gyroscope_max_value),
-            preferencesStorage.gyroscopeMaxValue){
-            preferencesStorage.setFloatValue(preferencesStorage.gyroscopeMaxValuePrefsKey,
-                it.coerceAtLeast(0f))
-        }
     }
 
     @Composable

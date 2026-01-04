@@ -270,7 +270,6 @@
     <string name="gyroscope_x_sensitivity">Gyroscope X axis sensitivity</string>
     <string name="gyroscope_y_sensitivity">Gyroscope Y axis sensitivity</string>
     <string name="gyroscope_dead_zone">Gyroscope dead zone</string>
-    <string name="gyroscope_max_value">Gyroscope max value</string>
     <string name="gyroscope_invert_x_axis">Invert gyroscope X axis</string>
     <string name="gyroscope_invert_y_axis">Invert gyroscope Y axis</string>
 </resources>
