@@ -118,17 +118,13 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             }
 
             if (joystickRegisteredInSDL) {
-                val processedX = when {
-                    abs(x) < STICK_DEAD_ZONE -> 0f
-                    x > 0 -> (x * STICK_SCALE).coerceAtMost(1f)
-                    else -> (x * STICK_SCALE).coerceAtLeast(-1f)
+                fun getAxisValue (sourceValue: Float) = when {
+                    abs(sourceValue) < STICK_DEAD_ZONE -> 0f
+                    sourceValue > 0 -> (sourceValue * STICK_SCALE).coerceAtMost(1f)
+                    else -> (sourceValue * STICK_SCALE).coerceAtLeast(-1f)
                 }
-                val processedY = when {
-                    abs(y) < STICK_DEAD_ZONE -> 0f
-                    y > 0 -> (y * STICK_SCALE).coerceAtMost(1f)
-                    else -> (y * STICK_SCALE).coerceAtLeast(-1f)
-                }
-                setVirtualAxis(axisX, processedX, axisY, processedY)
+                setVirtualAxis(axisX, getAxisValue(x),
+                    axisY, getAxisValue(y))
             }
         }
 
