@@ -133,6 +133,7 @@ abstract class SDLRadialWheel(
         LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
             ignoreOutOfBoundsTouchEvents, showInQuickPanel, viewRenderRule) {
             clearResources()
+            showRadialMenu = isEditMode
         }
 
         DisposableEffect(Unit) {
@@ -189,12 +190,10 @@ abstract class SDLRadialWheel(
                                         pointerId = null
                                         showRadialMenu = false
                                         if (selectedIndex >= 0) {
-                                            onItemSelected(
-                                                keyCodesProvider.getKeyCode(
-                                                    items[selectedIndex].first()
-                                                )
-                                            )
+                                            onItemSelected(keyCodesProvider.getKeyCode(
+                                                items[selectedIndex].first()))
                                         }
+                                        selectedIndex = -1
                                     }
                                     if (consumeEvents) {
                                         consume()
