@@ -161,20 +161,6 @@ abstract class ScreenController : IScreenController {
         var screenHeightPx by rememberSaveable { mutableFloatStateOf(configuration.screenHeightDp * density) }
         val hideOnScreenControls by rememberSaveable(hideOnScreenControls) { mutableStateOf(hideOnScreenControls) }
 
-        @Composable
-        fun getmouseButtonsEventsCanBeInvokedState() : Boolean{
-            if (inGame) {
-                val mouseButtonsEventsCanBeInvokedFlow by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
-                    initial = true)
-                return mouseButtonsEventsCanBeInvokedFlow
-            }
-            return false
-        }
-
-        val mouseButtonsEventsCanBeInvoked = getmouseButtonsEventsCanBeInvokedState()
-        val showRadialMenu by rememberSaveable (preferencesStorage.showRadialWheel) {
-            mutableStateOf(preferencesStorage.showRadialWheel) }
-
         fun clampView(state: ViewState, clampForced : Boolean = false) {
             if (clampButtons || clampForced) {
                 state.apply {
@@ -390,16 +376,6 @@ abstract class ScreenController : IScreenController {
                                 )
                             }
                         }
-
-                        if (inGame && !isEditMode && showRadialMenu && !mouseButtonsEventsCanBeInvoked){
-                            RadialWheel(modifier = Modifier
-                                .align(Alignment.Center)
-                                .size(getViewSize(0.35f)),
-                                getViewSize = ::getViewSize
-                            ) {
-                                onRadialWheelItemSelected(it)
-                            }
-                        }
                     }
                 }
             }
@@ -457,8 +433,6 @@ abstract class ScreenController : IScreenController {
                                            inSafeArea : Boolean,
                                            isEditMode: Boolean, inGame: Boolean,
                                            content: @Composable () -> Unit)
-
-    protected abstract fun onRadialWheelItemSelected (keycode : Int)
 
     protected abstract fun buildCustomViews (engineTypes: EngineTypes) : Collection<IScreenControlsView>
 

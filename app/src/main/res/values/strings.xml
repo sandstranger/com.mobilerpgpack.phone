@@ -272,5 +272,4 @@
     <string name="gyroscope_dead_zone">Gyroscope dead zone</string>
     <string name="gyroscope_invert_x_axis">Invert gyroscope X axis</string>
     <string name="gyroscope_invert_y_axis">Invert gyroscope Y axis</string>
-    <string name="show_radial_wheel_number_panel">Show radial number panel at pressing screen center</string>
 </resources>

@@ -13,9 +13,17 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.RescanSDLGamepadsFor
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
 val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
+    SDL2RadialWheel(
+        EngineTypes.Doom2Rpg,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        isDeleted = true
+    ),
     EnableEditModeButton(
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.015f,

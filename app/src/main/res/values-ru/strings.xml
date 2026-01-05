@@ -270,5 +270,4 @@
     <string name="gyroscope_dead_zone">Мертвая зона гироскопа</string>
     <string name="gyroscope_invert_x_axis">Инвертировать ось X гироскопа</string>
     <string name="gyroscope_invert_y_axis">Инвертировать ось Y гироскопа</string>
-    <string name="show_radial_wheel_number_panel">Показывать цифровое радиальное меню при нажатии на центр экрана</string>
 </resources>

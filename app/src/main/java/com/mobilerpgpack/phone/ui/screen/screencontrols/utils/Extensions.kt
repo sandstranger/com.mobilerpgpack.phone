@@ -26,13 +26,18 @@ import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
 @Composable
-fun Modifier.onTouchDown (isEditMode: Boolean, ignoreConsuming : Boolean = false,
-                          onTouchDown : () -> Unit) : Modifier {
-    val preferencesStorage : PreferencesStorage = koinInject()
-    val activeEngineString = remember (preferencesStorage.activeEngineString) {
-        preferencesStorage.activeEngineString }
-    val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-    val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
+fun Modifier.onTouchDown(
+    isEditMode: Boolean, ignoreConsuming: Boolean = false,
+    onTouchDown: () -> Unit
+): Modifier {
+    val preferencesStorage: PreferencesStorage = koinInject()
+    val activeEngineString = remember(preferencesStorage.activeEngineString) {
+        preferencesStorage.activeEngineString
+    }
+    val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
+    val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
+        initial = false
+    )
     var pointerId by remember { mutableStateOf<PointerId?>(null) }
     val ignoreConsuming = rememberSaveable(ignoreConsuming) { ignoreConsuming }
 
@@ -46,30 +51,24 @@ fun Modifier.onTouchDown (isEditMode: Boolean, ignoreConsuming : Boolean = false
         }
     }
 
-    return this.pointerInput(isEditMode,mouseButtonsEventsCanBeInvoked) {
+    return this.pointerInput(isEditMode, mouseButtonsEventsCanBeInvoked) {
         awaitPointerEventScope {
             while (true) {
                 val event = awaitPointerEvent()
                 for (change in event.changes) {
-                    val pid = change.id
-
-                    when {
-                        change.changedToDown() -> {
-                            if (pointerId == null) {
-                                pointerId = pid
-                                onTouchDown()
-                            }
+                    change.apply {
+                        if (changedToDown() && pointerId == null) {
+                            pointerId = id
+                            onTouchDown()
                         }
 
-                        change.changedToUp() || change.isOutOfBounds(size, extendedTouchPadding) ||
-                                !change.pressed  -> {
-                            if (pointerId == pid){
-                                pointerId = null
-                            }
+                        if((changedToUp() || isOutOfBounds(size, extendedTouchPadding) || !pressed) && pointerId == id) {
+                            pointerId = null
                         }
-                    }
-                    if (!ignoreConsuming) {
-                        change.consume()
+
+                        if (!ignoreConsuming) {
+                            consume()
+                        }
                     }
                 }
             }
@@ -78,37 +77,44 @@ fun Modifier.onTouchDown (isEditMode: Boolean, ignoreConsuming : Boolean = false
 }
 
 @Composable
-fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, changeItemColor : Boolean = true,
-                                    onTouchDown : () -> Unit = {}, onTouchUp : () -> Unit = {}) : Modifier {
+fun Modifier.touchListenerModifier(
+    isEditMode: Boolean, viewState: ViewState, changeItemColor: Boolean = true,
+    onTouchDown: () -> Unit = {}, onTouchUp: () -> Unit = {}
+): Modifier {
 
-    val changeItemColor = remember (changeItemColor) { changeItemColor }
+    val changeItemColor = remember(changeItemColor) { changeItemColor }
     var inToggleMode by rememberSaveable { mutableStateOf(false) }
     var isPressed by rememberSaveable { mutableStateOf(false) }
-    val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
+    val isEditMode by remember(isEditMode) { mutableStateOf(isEditMode) }
     val viewState = remember { viewState }
-    val preferencesStorage : PreferencesStorage = koinInject()
-    val activeEngineString = remember (preferencesStorage.activeEngineString) {
-        preferencesStorage.activeEngineString }
-    val engineInfo : IEngineInfo = koinInject(named(activeEngineString))
-    val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-    val ignoreOutOfBoundsTouchEvents by remember (viewState.ignoreOutOfBoundsTouchEvents)
+    val preferencesStorage: PreferencesStorage = koinInject()
+    val activeEngineString = remember(preferencesStorage.activeEngineString) {
+        preferencesStorage.activeEngineString
+    }
+    val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
+    val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
+        initial = false
+    )
+    val ignoreOutOfBoundsTouchEvents by remember(viewState.ignoreOutOfBoundsTouchEvents)
     { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
-    val consumeTouchEvents by remember (viewState.consumeTouchEvents)
+    val consumeTouchEvents by remember(viewState.consumeTouchEvents)
     { mutableStateOf(viewState.consumeTouchEvents) }
-    val useViewAsToggle by remember (viewState.useViewAsToggle) { mutableStateOf(viewState.useViewAsToggle) }
+    val useViewAsToggle by remember(viewState.useViewAsToggle) { mutableStateOf(viewState.useViewAsToggle) }
     var pointerId by remember { mutableStateOf<PointerId?>(null) }
-    val sdlKeyCode by remember (viewState.sdlKeyCode) { mutableIntStateOf(viewState.sdlKeyCode) }
-    val colorFilterToUse by remember (inToggleMode, isEditMode, useViewAsToggle) { mutableStateOf(
-        ColorFilter.tint(if (inToggleMode && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
-    ) }
-    val showInQuickPanel by remember (viewState.showInQuickPanel) {
+    val sdlKeyCode by remember(viewState.sdlKeyCode) { mutableIntStateOf(viewState.sdlKeyCode) }
+    val colorFilterToUse by remember(inToggleMode, isEditMode, useViewAsToggle) {
+        mutableStateOf(
+            ColorFilter.tint(if (inToggleMode && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
+        )
+    }
+    val showInQuickPanel by remember(viewState.showInQuickPanel) {
         mutableStateOf(viewState.showInQuickPanel)
     }
-    val viewRenderRule by remember (viewState.viewRenderRule) {
+    val viewRenderRule by remember(viewState.viewRenderRule) {
         mutableStateOf(viewState.viewRenderRule)
     }
 
-    fun clearResources(){
+    fun clearResources() {
         pointerId = null
         if (inToggleMode || isPressed) {
             onTouchUp()
@@ -118,7 +124,7 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
     }
 
     LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
-        ignoreOutOfBoundsTouchEvents, useViewAsToggle,sdlKeyCode,showInQuickPanel,viewRenderRule) {
+        ignoreOutOfBoundsTouchEvents, useViewAsToggle, sdlKeyCode, showInQuickPanel, viewRenderRule) {
         clearResources()
     }
 
@@ -128,9 +134,11 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
         }
     }
 
-    return this.pointerInput(isEditMode,mouseButtonsEventsCanBeInvoked,
+    return this.pointerInput(
+        isEditMode, mouseButtonsEventsCanBeInvoked,
         consumeTouchEvents, ignoreOutOfBoundsTouchEvents, useViewAsToggle,
-        sdlKeyCode,showInQuickPanel,viewRenderRule) {
+        sdlKeyCode, showInQuickPanel, viewRenderRule
+    ) {
         if (isEditMode) {
             return@pointerInput
         }
@@ -140,40 +148,34 @@ fun Modifier.touchListenerModifier (isEditMode: Boolean, viewState: ViewState, c
                 val event = awaitPointerEvent()
                 val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                 for (change in event.changes) {
-                    val pid = change.id
-
-                    when {
-                        change.changedToDown() -> {
-                            if (pointerId == null) {
-                                pointerId = pid
-                                if (!useViewAsToggle) {
-                                    isPressed = true
+                    change.apply {
+                        if (changedToDown() && pointerId == null) {
+                            pointerId = id
+                            if (!useViewAsToggle) {
+                                isPressed = true
+                                onTouchDown()
+                            } else {
+                                if (!inToggleMode) {
                                     onTouchDown()
                                 } else {
-                                    if (!inToggleMode){
-                                        onTouchDown()
-                                    }
-                                    else{
-                                        onTouchUp()
-                                    }
-                                    inToggleMode = !inToggleMode
+                                    onTouchUp()
                                 }
+                                inToggleMode = !inToggleMode
                             }
                         }
 
-                        change.changedToUp() || change.isOutOfBounds(size, extendedTouchPadding) &&
-                                !ignoreOutOfBoundsTouchEvents || !change.pressed  -> {
-                            if (pointerId == pid){
-                                pointerId = null
-                                if (!useViewAsToggle) {
-                                    isPressed = false
-                                    onTouchUp()
-                                }
+                        if ((changedToUp() || (isOutOfBounds(size, extendedTouchPadding) && !ignoreOutOfBoundsTouchEvents) ||
+                                    !pressed) && pointerId == id) {
+                            pointerId = null
+                            if (!useViewAsToggle) {
+                                isPressed = false
+                                onTouchUp()
                             }
                         }
-                    }
-                    if (consumeEvents) {
-                        change.consume()
+
+                        if (consumeEvents) {
+                            consume()
+                        }
                     }
                 }
             }

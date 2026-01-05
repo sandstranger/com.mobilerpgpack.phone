@@ -206,48 +206,42 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                         while (true) {
                             val event = awaitPointerEvent()
                             for (change in event.changes) {
-                                val pid = change.id
-                                val pos = change.position
-                                val x = pos.x
-                                val y = pos.y
+                                change.apply {
+                                    val pos = position
+                                    val x = pos.x
+                                    val y = pos.y
 
-                                when {
-                                    change.changedToDown() -> {
-                                        if (dragId == null) {
-                                            dragId = pid
-                                            down = true
-                                            currentX = x
-                                            currentY = y
-                                        }
+                                    if(changedToDown() && dragId == null) {
+                                        dragId = id
+                                        down = true
+                                        currentX = x
+                                        currentY = y
                                     }
 
-                                    change.changedToUp() || !change.pressed -> {
-                                        if (dragId !=null && dragId == pid){
-                                            down = false
-                                            currentX = -1f
-                                            currentY = -1f
-                                            onUpdateStick(0f, 0f, false)
-                                            dragId = null
-                                        }
+                                    if(positionChanged() && dragId == id) {
+                                        currentX = x
+                                        currentY = y
+                                        val strokeWidthPx = 2.dp.toPx()
+                                        onDrag(
+                                            canvasW,
+                                            canvasH,
+                                            strokeWidthPx,
+                                            currentX,
+                                            currentY,
+                                            onUpdateStick
+                                        )
                                     }
 
-                                    change.positionChanged() -> {
-                                        if (dragId !=null && dragId == pid) {
-                                            currentX = x
-                                            currentY = y
-                                            val strokeWidthPx = 2.dp.toPx()
-                                            onDrag(
-                                                canvasW,
-                                                canvasH,
-                                                strokeWidthPx,
-                                                currentX,
-                                                currentY,
-                                                onUpdateStick
-                                            )
-                                        }
+                                    if((changedToUp() || !pressed) && dragId == id ) {
+                                        down = false
+                                        currentX = -1f
+                                        currentY = -1f
+                                        onUpdateStick(0f, 0f, false)
+                                        dragId = null
                                     }
+
+                                    consume()
                                 }
-                                change.consume()
                             }
                         }
                     }
