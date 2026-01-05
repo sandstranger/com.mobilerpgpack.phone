@@ -187,32 +187,32 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                 }
                 awaitPointerEventScope {
                     while (true) {
-                        val useAbsoluteTouchMode = enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
+                        val useAbsoluteTouchMode =
+                            enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
                         val event = awaitPointerEvent()
                         for (change in event.changes) {
-                            val pid = change.id.value.toInt()
-                            val pos = change.position
-                            val x = pos.x
-                            val y = pos.y
-                            val pressure = (change.pressure).coerceAtMost(1.0f)
-                            fun useTouchPressEvents () = mouseButtonsEventsCanBeInvoked &&
-                                    enableTouchScreenPressingEvents
+                            change.apply {
+                                val pid = id.value.toInt()
+                                val x = position.x
+                                val y = position.y
+                                val pressure = (pressure).coerceAtMost(1.0f)
+                                fun useTouchPressEvents() = mouseButtonsEventsCanBeInvoked &&
+                                        enableTouchScreenPressingEvents
 
-                            fun handlePointerLocal(
-                                touchAction: Int,
-                                xPosition: Float,
-                                yPosition: Float
-                            ) {
-                                touchId = event.motionEvent?.deviceId ?: defaultTouchDeviceId
-                                handlePointer(
-                                    trackedPointerId, pressure, xPosition, yPosition,
-                                    mWidth, mHeight, touchAction,
-                                    touchId!!, useTouchPressEvents()
-                                )
-                            }
+                                fun handlePointerLocal(
+                                    touchAction: Int,
+                                    xPosition: Float,
+                                    yPosition: Float
+                                ) {
+                                    touchId = event.motionEvent?.deviceId ?: defaultTouchDeviceId
+                                    handlePointer(
+                                        trackedPointerId, pressure, xPosition, yPosition,
+                                        mWidth, mHeight, touchAction,
+                                        touchId!!, useTouchPressEvents()
+                                    )
+                                }
 
-                            when {
-                                change.changedToDown() && trackedPointerId == UNKNOWN_POINTER_ID -> {
+                                if (changedToDown() && trackedPointerId == UNKNOWN_POINTER_ID) {
                                     trackedPointerId = pid
                                     useTouchPressEventsForTrackedPointer = useTouchPressEvents()
                                     if (useAbsoluteTouchMode) {
@@ -233,27 +233,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                     }
                                 }
 
-                                change.changedToUp() && trackedPointerId == pid -> {
-                                    if (useAbsoluteTouchMode) {
-                                        handlePointerLocal(MotionEvent.ACTION_UP, x, y)
-                                    } else {
-                                        val dx = x - lastTouchX
-                                        val dy = y - lastTouchY
-                                        var newMouseX = lastMouseX + dx
-                                        var newMouseY = lastMouseY + dy
-                                        newMouseX = newMouseX.coerceIn(0f, mWidth)
-                                        newMouseY = newMouseY.coerceIn(0f, mHeight)
-                                        handlePointerLocal(
-                                            MotionEvent.ACTION_UP, newMouseX,
-                                            newMouseY
-                                        )
-                                    }
-
-                                    useTouchPressEventsForTrackedPointer = false
-                                    trackedPointerId = UNKNOWN_POINTER_ID
-                                }
-
-                                change.positionChanged() && trackedPointerId == pid -> {
+                                if (positionChanged() && trackedPointerId == pid) {
                                     if (useAbsoluteTouchMode) {
                                         handlePointerLocal(MotionEvent.ACTION_MOVE, x, y)
                                     } else {
@@ -277,7 +257,27 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                     }
                                 }
 
-                                !change.pressed && trackedPointerId == pid -> {
+                                if (changedToUp() && trackedPointerId == pid) {
+                                    if (useAbsoluteTouchMode) {
+                                        handlePointerLocal(MotionEvent.ACTION_UP, x, y)
+                                    } else {
+                                        val dx = x - lastTouchX
+                                        val dy = y - lastTouchY
+                                        var newMouseX = lastMouseX + dx
+                                        var newMouseY = lastMouseY + dy
+                                        newMouseX = newMouseX.coerceIn(0f, mWidth)
+                                        newMouseY = newMouseY.coerceIn(0f, mHeight)
+                                        handlePointerLocal(
+                                            MotionEvent.ACTION_UP, newMouseX,
+                                            newMouseY
+                                        )
+                                    }
+
+                                    useTouchPressEventsForTrackedPointer = false
+                                    trackedPointerId = UNKNOWN_POINTER_ID
+                                }
+
+                                if (!pressed && trackedPointerId == pid) {
                                     if (useAbsoluteTouchMode) {
                                         handlePointerLocal(MotionEvent.ACTION_UP, x, y)
                                     } else {

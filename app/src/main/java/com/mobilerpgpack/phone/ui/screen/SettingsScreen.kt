@@ -371,13 +371,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         }
 
         SwitchPreferenceItem(
-            stringResource(R.string.show_radial_wheel_number_panel),
-            preferencesStorage.showRadialWheel,
-            preferencesStorage.showRadialWheelPrefsKey.name)
-
-        DrawHorizontalDivider()
-
-        SwitchPreferenceItem(
             stringResource(R.string.hide_custom_screen_controls),
             preferencesStorage.hideScreenControls,
             preferencesStorage.hideScreenControlsPrefsKey.name)
