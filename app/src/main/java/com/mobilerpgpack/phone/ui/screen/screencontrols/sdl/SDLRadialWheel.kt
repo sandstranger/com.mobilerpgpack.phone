@@ -99,8 +99,8 @@ abstract class SDLRadialWheel(
         val anglePerItem = rememberSaveable { 360f / count }
         val backgroundColor = remember { Color.Gray }
         val selectedColor = remember { Color.White }
-        var selectedIndex by rememberSaveable { mutableIntStateOf(-1) }
-        var showRadialMenu by rememberSaveable { mutableStateOf(false) }
+        var selectedIndex by remember { mutableIntStateOf(-1) }
+        var showRadialMenu by remember { mutableStateOf(false) }
         val keyCodesProvider = koinInject<IKeyCodesProvider>()
         var pointerId by remember { mutableStateOf<PointerId?>(null) }
         var hitRect by remember { mutableStateOf(Rect.Zero) }
