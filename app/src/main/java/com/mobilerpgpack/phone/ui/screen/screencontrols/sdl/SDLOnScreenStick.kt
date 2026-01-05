@@ -227,18 +227,42 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                             dragId = null
                                         }
 
-                                        positionChanged() && dragId == id -> {
+                                        positionChanged() && dragId == id -> run {
                                             currentX = x
                                             currentY = y
                                             val strokeWidthPx = 2.dp.toPx()
-                                            onDrag(
-                                                canvasW,
-                                                canvasH,
-                                                strokeWidthPx,
-                                                currentX,
-                                                currentY,
-                                                onUpdateStick
-                                            )
+                                            val w = canvasW.toFloat().takeIf { it > 0f } ?: return@run
+                                            val h = canvasH.toFloat().takeIf { it > 0f } ?: return@run
+                                            val minDim = min(w, h)
+
+                                            val outerRadius = minDim / 2f - strokeWidthPx
+                                            val knobRadius = minDim / 5f
+                                            val allowedRadius = outerRadius - knobRadius
+                                            val overshoot = knobRadius * 0.3f
+                                            val maxAllowed = allowedRadius + overshoot
+
+                                            val centerX = w / 2f
+                                            val centerY = h / 2f
+
+                                            var vx = currentX - centerX
+                                            var vy = currentY - centerY
+                                            val dist = hypot(vx, vy)
+
+                                            if (dist > maxAllowed && dist > 0f) {
+                                                val s = maxAllowed / dist
+                                                vx *= s
+                                                vy *= s
+                                            }
+
+                                            val drawX = (centerX + vx).coerceIn(knobRadius, w - knobRadius)
+                                            val drawY = (centerY + vy).coerceIn(knobRadius, h - knobRadius)
+
+                                            val normX = ((drawX - centerX) /
+                                                    (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
+                                            val normY = ((drawY - centerY) /
+                                                    (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
+
+                                            onUpdateStick(normX, normY,false)
                                         }
                                     }
 
@@ -294,46 +318,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 )
             }
         }
-    }
-
-    private fun onDrag(
-        canvasW: Int,
-        canvasH: Int,
-        strokeWidthPx: Float,
-        currentX: Float,
-        currentY: Float,
-        onUpdateStick: (Float, Float, Boolean) -> Unit
-    ) {
-        val w = canvasW.toFloat().takeIf { it > 0f } ?: return
-        val h = canvasH.toFloat().takeIf { it > 0f } ?: return
-        val minDim = min(w, h)
-
-        val outerRadius = minDim / 2f - strokeWidthPx
-        val knobRadius = minDim / 5f
-        val allowedRadius = outerRadius - knobRadius
-        val overshoot = knobRadius * 0.3f
-        val maxAllowed = allowedRadius + overshoot
-
-        val centerX = w / 2f
-        val centerY = h / 2f
-
-        var vx = currentX - centerX
-        var vy = currentY - centerY
-        val dist = hypot(vx, vy)
-
-        if (dist > maxAllowed && dist > 0f) {
-            val s = maxAllowed / dist
-            vx *= s
-            vy *= s
-        }
-
-        val drawX = (centerX + vx).coerceIn(knobRadius, w - knobRadius)
-        val drawY = (centerY + vy).coerceIn(knobRadius, h - knobRadius)
-
-        val normX = ((drawX - centerX) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
-        val normY = ((drawY - centerY) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
-
-        onUpdateStick(normX, normY,false)
     }
 
     private companion object{
