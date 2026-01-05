@@ -221,7 +221,10 @@ abstract class SDLRadialWheel(
                     val minDim = min(size.width, size.height)
                     val textSizeInPx = minDim / 6f
 
-                    drawCircle(backgroundColor, radius, style = Stroke(width = 2.dp.toPx()))
+                    drawCircle(backgroundColor,
+                        radius,
+                        center = center,
+                        style = Stroke(width = 2.dp.toPx()))
 
                     for (i in 0 until count) {
                         val start = -90f + i * anglePerItem
@@ -265,13 +268,14 @@ abstract class SDLRadialWheel(
                     }
                 }
             } else {
-                val w = remember(maxWidth) { maxWidth }
-                val h = remember(maxHeight) { maxHeight }
+                val sizeDivider = rememberSaveable { 0.3f }
+                val w by remember (maxWidth) { mutableStateOf(maxWidth * sizeDivider) }
+                val h by remember(maxHeight) { mutableStateOf(maxHeight * sizeDivider) }
 
                 Box(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(w * 0.4f, h * 0.4f)
+                        .size(w, h)
                         .onGloballyPositioned { coords ->
                             val pos = coords.positionInParent()
                             val size = coords.size
@@ -284,8 +288,12 @@ abstract class SDLRadialWheel(
                         }) {
                     Canvas(Modifier.fillMaxSize()) {
                         val strokeWidthPx = 2.dp.toPx()
-                        val radius = size.minDimension * 0.4f
-                        drawCircle(backgroundColor, radius, style = Stroke(width = strokeWidthPx))
+                        val radius = size.minDimension / 2f - strokeWidthPx
+                        val center = Offset(size.width / 2f, size.height / 2f)
+                        drawCircle(backgroundColor,
+                            radius,
+                            center = center,
+                            style = Stroke(width = strokeWidthPx))
                     }
                 }
             }
