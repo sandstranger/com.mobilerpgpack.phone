@@ -655,7 +655,7 @@ abstract class ScreenController : IScreenController {
                             .graphicsLayer {
                                 colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                             }, contentAlignment = Alignment.Center){
-                            viewToEdit.DrawView(isEditMode = false, false, 50.dp)
+                            viewToEdit.DrawView(isEditMode = true, false, 50.dp)
                         }
                         Text(modifier = Modifier.wrapContentHeight(),
                             text = viewState.id,
@@ -826,7 +826,7 @@ abstract class ScreenController : IScreenController {
                                 .graphicsLayer {
                                     colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                                 }, contentAlignment = Alignment.Center){
-                                        view.DrawView(isEditMode = false, false, 40.dp)
+                                        view.DrawView(isEditMode = true, false, 40.dp)
                             }
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
