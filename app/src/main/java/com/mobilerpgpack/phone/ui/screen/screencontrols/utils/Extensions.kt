@@ -57,13 +57,16 @@ fun Modifier.onTouchDown(
                 val event = awaitPointerEvent()
                 for (change in event.changes) {
                     change.apply {
-                        if (changedToDown() && pointerId == null) {
-                            pointerId = id
-                            onTouchDown()
-                        }
+                        when{
+                            changedToDown() && pointerId == null -> {
+                                pointerId = id
+                                onTouchDown()
+                            }
 
-                        if((changedToUp() || isOutOfBounds(size, extendedTouchPadding) || !pressed) && pointerId == id) {
-                            pointerId = null
+                            (changedToUp() || isOutOfBounds(size, extendedTouchPadding) ||
+                                    !pressed) && pointerId == id -> {
+                                pointerId = null
+                            }
                         }
 
                         if (!ignoreConsuming) {
@@ -149,27 +152,29 @@ fun Modifier.touchListenerModifier(
                 val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                 for (change in event.changes) {
                     change.apply {
-                        if (changedToDown() && pointerId == null) {
-                            pointerId = id
-                            if (!useViewAsToggle) {
-                                isPressed = true
-                                onTouchDown()
-                            } else {
-                                if (!inToggleMode) {
+                        when{
+                            changedToDown() && pointerId == null -> {
+                                pointerId = id
+                                if (!useViewAsToggle) {
+                                    isPressed = true
                                     onTouchDown()
                                 } else {
+                                    if (!inToggleMode) {
+                                        onTouchDown()
+                                    } else {
+                                        onTouchUp()
+                                    }
+                                    inToggleMode = !inToggleMode
+                                }
+                            }
+
+                            (changedToUp() || (isOutOfBounds(size, extendedTouchPadding) && !ignoreOutOfBoundsTouchEvents) ||
+                                        !pressed) && pointerId == id -> {
+                                pointerId = null
+                                if (!useViewAsToggle) {
+                                    isPressed = false
                                     onTouchUp()
                                 }
-                                inToggleMode = !inToggleMode
-                            }
-                        }
-
-                        if ((changedToUp() || (isOutOfBounds(size, extendedTouchPadding) && !ignoreOutOfBoundsTouchEvents) ||
-                                    !pressed) && pointerId == id) {
-                            pointerId = null
-                            if (!useViewAsToggle) {
-                                isPressed = false
-                                onTouchUp()
                             }
                         }
 
