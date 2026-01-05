@@ -37,9 +37,10 @@ void createVirtualController(void) {
     }
 }
 
-void setVirtualAxis(int axis, float axisValue) {
+void setVirtualAxis(int axisX, float axisXValue,int axisY, float axisYValue) {
     if (virtualController != nullptr) {
-        SDL_SetJoystickVirtualAxis(virtualController, axis, (Sint16) (axisValue * 32767.0f));
+        SDL_SetJoystickVirtualAxis(virtualController, axisX, (Sint16) (axisXValue * 32767.0f));
+        SDL_SetJoystickVirtualAxis(virtualController, axisY, (Sint16) (axisYValue * 32767.0f));
     }
 }
 

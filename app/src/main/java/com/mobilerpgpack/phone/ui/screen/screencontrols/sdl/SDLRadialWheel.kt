@@ -181,29 +181,32 @@ abstract class SDLRadialWheel(
 
                             for (change in event.changes) {
                                 change.apply {
-                                    if (changedToDown() && pointerId == null && hitRect.contains(position)) {
-                                        showRadialMenu = true
-                                        pointerId = id
-                                        selectedIndex = indexFromAngle(angle(position))
-                                    }
+                                    when{
+                                        changedToDown() && pointerId == null && hitRect.contains(position) -> {
+                                            showRadialMenu = true
+                                            pointerId = id
+                                            selectedIndex = indexFromAngle(angle(position))
+                                        }
 
-                                    if (positionChanged() && pointerId == id) {
-                                        val idx = indexFromAngle(angle(change.position))
-                                        if (idx != selectedIndex) {
-                                            selectedIndex = idx
+                                        (changedToUp() || !pressed || ( isOutOfBounds(size, extendedTouchPadding)
+                                                    && !ignoreOutOfBoundsTouchEvents) ) && pointerId == id -> {
+                                            pointerId = null
+                                            showRadialMenu = false
+                                            if (selectedIndex >= 0) {
+                                                onItemSelected(keyCodesProvider.getKeyCode(
+                                                    items[selectedIndex].first()))
+                                            }
+                                            selectedIndex = -1
+                                        }
+
+                                        positionChanged() && pointerId == id -> {
+                                            val idx = indexFromAngle(angle(change.position))
+                                            if (idx != selectedIndex) {
+                                                selectedIndex = idx
+                                            }
                                         }
                                     }
 
-                                    if (( changedToUp() || !pressed || ( isOutOfBounds(size, extendedTouchPadding)
-                                                && !ignoreOutOfBoundsTouchEvents) ) && pointerId == id) {
-                                        pointerId = null
-                                        showRadialMenu = false
-                                        if (selectedIndex >= 0) {
-                                            onItemSelected(keyCodesProvider.getKeyCode(
-                                                items[selectedIndex].first()))
-                                        }
-                                        selectedIndex = -1
-                                    }
                                     val consumeEvents = (consumeTouchEvents || mouseButtonsEventsCanBeInvoked) && pointerId!=null
                                     if (consumeEvents) {
                                         consume()
@@ -268,7 +271,7 @@ abstract class SDLRadialWheel(
                     }
                 }
             } else {
-                val sizeDivider = rememberSaveable { 0.325f }
+                val sizeDivider = rememberSaveable { 0.3f }
                 val w by remember (maxWidth) { mutableStateOf(maxWidth * sizeDivider) }
                 val h by remember(maxHeight) { mutableStateOf(maxHeight * sizeDivider) }
 
