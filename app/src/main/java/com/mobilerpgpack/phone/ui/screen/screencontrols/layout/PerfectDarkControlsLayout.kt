@@ -16,9 +16,17 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 
 
 val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL2RadialWheel(
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        isDeleted = true
+    ),
     EnableEditModeButton(
         EngineTypes.PerfectDark,
         offsetXPercent = 0.015f,
@@ -180,6 +188,14 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
     ))
 
 val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL2RadialWheel(
+        EngineTypes.PerfectDark,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
     SDL2Dpad(
         EngineTypes.PerfectDark,
         offsetXPercent = 0.03f,

@@ -8,7 +8,6 @@ import org.libsdl3.app.SDLActivity
 import org.libsdl3.app.SDLSurface
 import org.libsdl3.app.SDLSurface.getNormalizedX
 import org.libsdl3.app.SDLSurface.getNormalizedY
-import org.libsdl3.app.onKeyDown
 
 class SDL3ScreenController : SDLScreenController() {
 
@@ -46,8 +45,6 @@ class SDL3ScreenController : SDLScreenController() {
     override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int,controlsProvider: ControlsProvider) =
         CustomSDL3Button(id, engineTypes,offsetXPercent = 0.55f, offsetYPercent = 0.03f,
             sizePercent = 0.05f, sdlKeyEvent = keyCode, controlsType = controlsProvider.activeControlsType)
-
-    override fun onRadialWheelItemSelected(keycode: Int) = onKeyDown(keycode, delayBeforeKeyRelease = 50L)
 
     companion object {
         const val SDL3_SCREEN_CONTROLLER_NAME = "SDL3_SCREEN_CONTROLLER"

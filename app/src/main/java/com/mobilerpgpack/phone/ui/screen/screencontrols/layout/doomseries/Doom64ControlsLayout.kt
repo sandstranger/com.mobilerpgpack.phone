@@ -13,12 +13,21 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.RescanSDLGamepadsForcedButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val doom64AbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL3RadialWheel(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        isDeleted = true
+    ),
     EnableEditModeButton(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.015f,
@@ -311,6 +320,14 @@ val doom64AbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
 )
 
 val doom64OnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL3RadialWheel(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
     EnableEditModeButton(
         EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.015f,
