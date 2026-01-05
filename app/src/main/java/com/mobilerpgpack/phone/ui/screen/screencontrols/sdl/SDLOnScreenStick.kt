@@ -65,7 +65,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 isDeleted : Boolean = false,
                                 showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
-    private val mutex = Mutex()
     private val scope : CoroutineScope by inject ()
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
@@ -81,7 +80,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
 
     private external fun destroyVirtualController()
 
-    private external fun setVirtualAxis(axis : Int, axisValue : Float)
+    private external fun setVirtualAxis(axisX : Int, axisXValue : Float,
+                                        axisY : Int, axisYValue : Float)
 
     protected abstract val virtualControllerLibraryName : String
 
@@ -118,17 +118,13 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             }
 
             if (joystickRegisteredInSDL) {
-                val processedX = when {
-                    abs(x) < STICK_DEAD_ZONE -> 0f
-                    x > 0 -> (x * STICK_SCALE).coerceAtMost(1f)
-                    else -> (x * STICK_SCALE).coerceAtLeast(-1f)
+                fun getAxisValue (sourceValue: Float) = when {
+                    abs(sourceValue) < STICK_DEAD_ZONE -> 0f
+                    sourceValue > 0 -> (sourceValue * STICK_SCALE).coerceAtMost(1f)
+                    else -> (sourceValue * STICK_SCALE).coerceAtLeast(-1f)
                 }
-                val processedY = when {
-                    abs(y) < STICK_DEAD_ZONE -> 0f
-                    y > 0 -> (y * STICK_SCALE).coerceAtMost(1f)
-                    else -> (y * STICK_SCALE).coerceAtLeast(-1f)
-                }
-                scope.launch { setVirtualAxisNative(axisX, processedX, axisY, processedY) }
+                setVirtualAxis(axisX, getAxisValue(x),
+                    axisY, getAxisValue(y))
             }
         }
 
@@ -207,37 +203,62 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                             val event = awaitPointerEvent()
                             for (change in event.changes) {
                                 change.apply {
-                                    val pos = position
-                                    val x = pos.x
-                                    val y = pos.y
+                                    val x = position.x
+                                    val y = position.y
 
-                                    if(changedToDown() && dragId == null) {
-                                        dragId = id
-                                        down = true
-                                        currentX = x
-                                        currentY = y
-                                    }
+                                    when{
+                                        changedToDown() && dragId == null -> {
+                                            dragId = id
+                                            down = true
+                                            currentX = x
+                                            currentY = y
+                                        }
 
-                                    if(positionChanged() && dragId == id) {
-                                        currentX = x
-                                        currentY = y
-                                        val strokeWidthPx = 2.dp.toPx()
-                                        onDrag(
-                                            canvasW,
-                                            canvasH,
-                                            strokeWidthPx,
-                                            currentX,
-                                            currentY,
-                                            onUpdateStick
-                                        )
-                                    }
+                                        (changedToUp() || !pressed) && dragId == id -> {
+                                            down = false
+                                            currentX = -1f
+                                            currentY = -1f
+                                            onUpdateStick(0f, 0f, false)
+                                            dragId = null
+                                        }
 
-                                    if((changedToUp() || !pressed) && dragId == id ) {
-                                        down = false
-                                        currentX = -1f
-                                        currentY = -1f
-                                        onUpdateStick(0f, 0f, false)
-                                        dragId = null
+                                        positionChanged() && dragId == id -> run {
+                                            currentX = x
+                                            currentY = y
+                                            val strokeWidthPx = 2.dp.toPx()
+                                            val w = canvasW.toFloat().takeIf { it > 0f } ?: return@run
+                                            val h = canvasH.toFloat().takeIf { it > 0f } ?: return@run
+                                            val minDim = min(w, h)
+
+                                            val outerRadius = minDim / 2f - strokeWidthPx
+                                            val knobRadius = minDim / 5f
+                                            val allowedRadius = outerRadius - knobRadius
+                                            val overshoot = knobRadius * 0.3f
+                                            val maxAllowed = allowedRadius + overshoot
+
+                                            val centerX = w / 2f
+                                            val centerY = h / 2f
+
+                                            var vx = currentX - centerX
+                                            var vy = currentY - centerY
+                                            val dist = hypot(vx, vy)
+
+                                            if (dist > maxAllowed && dist > 0f) {
+                                                val s = maxAllowed / dist
+                                                vx *= s
+                                                vy *= s
+                                            }
+
+                                            val drawX = (centerX + vx).coerceIn(knobRadius, w - knobRadius)
+                                            val drawY = (centerY + vy).coerceIn(knobRadius, h - knobRadius)
+
+                                            val normX = ((drawX - centerX) /
+                                                    (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
+                                            val normY = ((drawY - centerY) /
+                                                    (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
+
+                                            onUpdateStick(normX, normY,false)
+                                        }
                                     }
 
                                     consume()
@@ -292,53 +313,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 )
             }
         }
-    }
-
-    private suspend fun setVirtualAxisNative(axisX : Int, axisXValue : Float, axisY : Int, axisYValue : Float){
-        mutex.withLock {
-            setVirtualAxis(axisX, axisXValue)
-            setVirtualAxis(axisY, axisYValue)
-        }
-    }
-
-    private fun onDrag(
-        canvasW: Int,
-        canvasH: Int,
-        strokeWidthPx: Float,
-        currentX: Float,
-        currentY: Float,
-        onUpdateStick: (Float, Float, Boolean) -> Unit
-    ) {
-        val w = canvasW.toFloat().takeIf { it > 0f } ?: return
-        val h = canvasH.toFloat().takeIf { it > 0f } ?: return
-        val minDim = min(w, h)
-
-        val outerRadius = minDim / 2f - strokeWidthPx
-        val knobRadius = minDim / 5f
-        val allowedRadius = outerRadius - knobRadius
-        val overshoot = knobRadius * 0.3f
-        val maxAllowed = allowedRadius + overshoot
-
-        val centerX = w / 2f
-        val centerY = h / 2f
-
-        var vx = currentX - centerX
-        var vy = currentY - centerY
-        val dist = hypot(vx, vy)
-
-        if (dist > maxAllowed && dist > 0f) {
-            val s = maxAllowed / dist
-            vx *= s
-            vy *= s
-        }
-
-        val drawX = (centerX + vx).coerceIn(knobRadius, w - knobRadius)
-        val drawY = (centerY + vy).coerceIn(knobRadius, h - knobRadius)
-
-        val normX = ((drawX - centerX) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
-        val normY = ((drawY - centerY) / (allowedRadius.coerceAtLeast(1f))).coerceIn(-1f, 1f)
-
-        onUpdateStick(normX, normY,false)
     }
 
     private companion object{
