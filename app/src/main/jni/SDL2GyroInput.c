@@ -5,15 +5,28 @@
 #include "SDL_mouse_c.h"
 #include "SDL_vulkan.h"
 
-void nativeGyroMouse(int dx, int dy){
-    SDL_Window* win = SDL_GetMouseFocus();
-    if (!win) {
+static SDL_Window *window = nullptr;
+static Uint32 windowId;
+static SDL_Mouse *mouse;
+
+void nativeGyroMouse(int dx, int dy) {
+    if (!mouse){
+        mouse = SDL_GetMouse();
+        if (mouse) {
+            window = mouse->focus;
+            if (window) {
+                windowId = SDL_GetWindowID(window);
+            }
+        }
+    }
+
+    if (!window || !mouse) {
         return;
     }
 
     SDL_Event ev;
     ev.type = SDL_MOUSEMOTION;
-    ev.motion.windowID = SDL_GetWindowID(win);
+    ev.motion.windowID = windowId;
     ev.motion.which = 0;
     ev.motion.state = 0;
     ev.motion.x = 0;
@@ -22,10 +35,6 @@ void nativeGyroMouse(int dx, int dy){
     ev.motion.yrel = dy;
     SDL_PushEvent(&ev);
 
-    SDL_Mouse *mouse = SDL_GetMouse();
-    if (!mouse) {
-        return;
-    }
     mouse->xdelta += dx;
     mouse->ydelta += dy;
 
@@ -33,17 +42,14 @@ void nativeGyroMouse(int dx, int dy){
     mouse->y += dy;
 
     int w=0,h=0;
-    if(win){
-        Uint32 flags = SDL_GetWindowFlags(win);
-        if(flags & SDL_WINDOW_VULKAN) {
-            SDL_Vulkan_GetDrawableSize(win,&w,&h);
-        }
-        else{
-            SDL_GL_GetDrawableSize(win,&w,&h);
-        }
-        if(mouse->x < 0) mouse->x = 0;
-        if(mouse->y < 0) mouse->y = 0;
-        if(mouse->x > w) mouse->x = w;
-        if(mouse->y > h) mouse->y = h;
+    Uint32 flags = SDL_GetWindowFlags(window);
+    if (flags & SDL_WINDOW_VULKAN) {
+        SDL_Vulkan_GetDrawableSize(window, &w, &h);
+    } else {
+        SDL_GL_GetDrawableSize(window, &w, &h);
     }
+    if (mouse->x < 0) mouse->x = 0;
+    if (mouse->y < 0) mouse->y = 0;
+    if (mouse->x > w) mouse->x = w;
+    if (mouse->y > h) mouse->y = h;
 }
