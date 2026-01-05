@@ -181,7 +181,6 @@ abstract class SDLRadialWheel(
 
                             for (change in event.changes) {
                                 change.apply {
-
                                     when{
                                         changedToDown() && pointerId == null && hitRect.contains(position) -> {
                                             showRadialMenu = true
@@ -272,7 +271,7 @@ abstract class SDLRadialWheel(
                     }
                 }
             } else {
-                val sizeDivider = rememberSaveable { 0.325f }
+                val sizeDivider = rememberSaveable { 0.3f }
                 val w by remember (maxWidth) { mutableStateOf(maxWidth * sizeDivider) }
                 val h by remember(maxHeight) { mutableStateOf(maxHeight * sizeDivider) }
 

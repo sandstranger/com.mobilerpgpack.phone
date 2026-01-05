@@ -152,7 +152,6 @@ fun Modifier.touchListenerModifier(
                 val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                 for (change in event.changes) {
                     change.apply {
-
                         when{
                             changedToDown() && pointerId == null -> {
                                 pointerId = id
