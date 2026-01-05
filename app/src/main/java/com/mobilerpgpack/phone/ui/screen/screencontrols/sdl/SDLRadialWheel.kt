@@ -97,7 +97,7 @@ abstract class SDLRadialWheel(
         val count = rememberSaveable { ITEMS_COUNT }
         val items = rememberSaveable { (0..count).map { it.toString() }.toList() }
         val anglePerItem = rememberSaveable { 360f / count }
-        val backgroundColor = remember { Color.Gray }
+        val backgroundColor = remember { Color.LightGray }
         val selectedColor = remember { Color.White }
         var selectedIndex by remember { mutableIntStateOf(-1) }
         var showRadialMenu by remember { mutableStateOf(false) }
@@ -219,7 +219,6 @@ abstract class SDLRadialWheel(
                     val radius = size.minDimension / 2f
                     val center = Offset(size.width / 2f, size.height / 2f)
                     val minDim = min(size.width, size.height)
-                    val textSizeInPx = minDim / 6f
 
                     drawCircle(backgroundColor,
                         radius,
@@ -229,9 +228,10 @@ abstract class SDLRadialWheel(
                     for (i in 0 until count) {
                         val start = -90f + i * anglePerItem
                         val isSelected = i == selectedIndex
-                        val strokeWidthPx = if (isSelected) 3.dp.toPx() else 2.dp.toPx()
+                        val strokeWidthPx = if (isSelected) 4.dp.toPx() else 2.dp.toPx()
                         val ignoreDrawingArx = (i + 1 == selectedIndex || i - 1 == selectedIndex || (i == 0 && count -1 == selectedIndex)
                                 || (i + 1 >= count && selectedIndex == 0)) && selectedIndex >=0
+                        val textSizeInPx = if(isSelected) minDim / 5f else minDim / 6f
 
                         if (!ignoreDrawingArx) {
                             drawArc(
@@ -253,7 +253,7 @@ abstract class SDLRadialWheel(
                         drawIntoCanvas {
                             val paint = android.graphics.Paint().apply {
                                 color =
-                                    if (isSelected) android.graphics.Color.WHITE else android.graphics.Color.GRAY
+                                    if (isSelected) android.graphics.Color.WHITE else android.graphics.Color.LTGRAY
                                 textSize = textSizeInPx
                                 isAntiAlias = true
                                 textAlign = android.graphics.Paint.Align.CENTER
@@ -268,7 +268,7 @@ abstract class SDLRadialWheel(
                     }
                 }
             } else {
-                val sizeDivider = rememberSaveable { 0.3f }
+                val sizeDivider = rememberSaveable { 0.325f }
                 val w by remember (maxWidth) { mutableStateOf(maxWidth * sizeDivider) }
                 val h by remember(maxHeight) { mutableStateOf(maxHeight * sizeDivider) }
 
