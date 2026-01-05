@@ -112,8 +112,6 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             mutableStateOf(preferencesStorage.enableAbsoluteTouchMouseMode)
         }
         val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
-        val enableGyroscope = rememberSaveable(preferencesStorage.enableGyroscope) {
-            preferencesStorage.enableGyroscope }
 
         var lastTouchX by rememberSaveable { mutableFloatStateOf(0f) }
         var lastTouchY by rememberSaveable { mutableFloatStateOf(0f) }
@@ -135,7 +133,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         LaunchedEffect(isEditMode, blockTouchEvents,enableTouchScreenPressingEvents,
-            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode, enableGyroscope) {
+            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode) {
             clearResources()
         }
 
@@ -175,9 +173,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             }
             .pointerInput(
                 isEditMode, mouseButtonsEventsCanBeInvoked, blockTouchEvents,
-                enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode, enableGyroscope
-            ) {
-                if (isEditMode || blockTouchEvents || (enableGyroscope && !mouseButtonsEventsCanBeInvoked)) {
+                enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode) {
+                if (isEditMode || blockTouchEvents) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {
