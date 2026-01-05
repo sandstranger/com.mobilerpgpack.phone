@@ -347,13 +347,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawHorizontalDivider()
 
         SwitchPreferenceItem(
-            stringResource(R.string.allow_to_edit_controls_in_game),
-            preferencesStorage.editCustomScreenControlsInGame,
-            preferencesStorage.editCustomScreenControlsInGamePrefsKey.name)
-
-        DrawHorizontalDivider()
-
-        SwitchPreferenceItem(
             stringResource(R.string.enable_absolute_touch_mouse_mode),
             preferencesStorage.enableAbsoluteTouchMouseMode,
             preferencesStorage.enableAbsoluteTouchMouseModePrefsKey.name
@@ -443,15 +436,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             stringResource(R.string.gyroscope_dead_zone),
             preferencesStorage.gyroscopeDeadZone){
             preferencesStorage.setFloatValue(preferencesStorage.gyroscopeDeadZonePrefsKey,
-                it.coerceAtLeast(0f))
-        }
-
-        DrawHorizontalDivider()
-
-        EditTextPreferenceItem(
-            stringResource(R.string.gyroscope_max_value),
-            preferencesStorage.gyroscopeMaxValue){
-            preferencesStorage.setFloatValue(preferencesStorage.gyroscopeMaxValuePrefsKey,
                 it.coerceAtLeast(0f))
         }
     }

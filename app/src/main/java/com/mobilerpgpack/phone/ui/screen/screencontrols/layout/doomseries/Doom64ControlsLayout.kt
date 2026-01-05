@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.EnableEditModeButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibilityImageButton
@@ -12,14 +13,29 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.RescanSDLGamepadsForcedButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val doom64AbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL3RadialWheel(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        isDeleted = true
+    ),
+    EnableEditModeButton(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.015f,
+        offsetYPercent = 0.02f,
+        sizePercent = 0.055f,
+    ),
     RescanSDLGamepadsForcedButton(
-        EngineTypes.PerfectDark,
+        EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
         sizePercent = 0.075f,
@@ -304,13 +320,29 @@ val doom64AbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
 )
 
 val doom64OnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL3RadialWheel(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
+    EnableEditModeButton(
+        EngineTypes.Doom64ExPlus,
+        offsetXPercent = 0.015f,
+        offsetYPercent = 0.02f,
+        sizePercent = 0.055f,
+        controlsType = ControlsType.OnScreenStick
+    ),
     RescanSDLGamepadsForcedButton(
-        EngineTypes.PerfectDark,
+        EngineTypes.Doom64ExPlus,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
         sizePercent = 0.075f,
         buttonResId = R.drawable.gamepad,
-        isDeleted = true
+        isDeleted = true,
+        controlsType = ControlsType.OnScreenStick
     ),
     SDL3Dpad(
         EngineTypes.Doom64ExPlus,

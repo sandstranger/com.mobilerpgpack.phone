@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.layout
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.ui.screen.EnableEditModeButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibilityImageButton
@@ -15,10 +16,26 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 
 private const val LEFT_MOUSE_BUTTON_ID : Int = 1
 
 val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL2RadialWheel(
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
+    EnableEditModeButton(
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.015f,
+        offsetYPercent = 0.02f,
+        sizePercent = 0.055f,
+        controlsType = ControlsType.OnScreenStick
+    ),
     RescanSDLGamepadsForcedButton(
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.55f,

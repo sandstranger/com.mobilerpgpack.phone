@@ -107,7 +107,6 @@ abstract class EngineInfo(
     private var wasInit = false
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
-    private var allowToEditScreenControlsInGame = false
     private var isCursorVisible by mutableStateOf(false)
     private var displayInSafeArea: Boolean = false
     private var hideOnScreenControlsMutableState by mutableStateOf(false)
@@ -194,7 +193,6 @@ abstract class EngineInfo(
             File(pathToResource).absolutePath, true)
 
         hideScreenControls = preferencesStorage.hideScreenControls
-        allowToEditScreenControlsInGame = preferencesStorage.editCustomScreenControlsInGame
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea
 
@@ -303,7 +301,6 @@ abstract class EngineInfo(
                                         inGame = true,
                                         blockTouchCameraEvents = blockTouchCameraEvents,
                                         activeEngine = engineType,
-                                        allowToEditControls = allowToEditScreenControlsInGame,
                                         drawInSafeArea = displayInSafeArea,
                                         hideOnScreenControls = hideOnScreenControlsMutableState,
                                         keyboardInputType = keyboardInputType

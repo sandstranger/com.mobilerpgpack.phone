@@ -4,7 +4,6 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
@@ -15,18 +14,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerId
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.IntSize
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
@@ -99,7 +96,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var mHeight by rememberSaveable { mutableFloatStateOf(0.0f) }
         var widthSize by rememberSaveable { mutableIntStateOf(0) }
         var heightSize by rememberSaveable { mutableIntStateOf(0) }
-        var trackedPointerId by rememberSaveable { mutableIntStateOf(UNKNOWN_POINTER_ID) }
+        var trackedPointerId by rememberSaveable { mutableStateOf<PointerId?>(null) }
         var useTouchPressEventsForTrackedPointer by rememberSaveable { mutableStateOf(false) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
@@ -115,7 +112,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
             mutableStateOf(preferencesStorage.enableAbsoluteTouchMouseMode)
         }
         val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
-        val UNKNOWN_POINTER_ID = rememberSaveable { UNKNOWN_POINTER_ID }
+        val enableGyroscope = rememberSaveable(preferencesStorage.enableGyroscope) {
+            preferencesStorage.enableGyroscope }
 
         var lastTouchX by rememberSaveable { mutableFloatStateOf(0f) }
         var lastTouchY by rememberSaveable { mutableFloatStateOf(0f) }
@@ -123,21 +121,21 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var lastMouseY by rememberSaveable { mutableFloatStateOf(0f) }
 
         fun clearResources(){
-            if (trackedPointerId != UNKNOWN_POINTER_ID) {
-                handlePointer(trackedPointerId, 0f, 0f, 0f,
+            if (trackedPointerId != null) {
+                handlePointer(DEFAULT_POINTER_ID, 0f, 0f, 0f,
                     mWidth, mHeight, MotionEvent.ACTION_UP,
                     touchId ?: defaultTouchDeviceId, useTouchPressEventsForTrackedPointer)
                 lastTouchX = 0f
                 lastTouchY = 0f
                 lastMouseX = 0f
                 lastMouseY = 0f
-                trackedPointerId = UNKNOWN_POINTER_ID
+                trackedPointerId = null
                 useTouchPressEventsForTrackedPointer = false
             }
         }
 
         LaunchedEffect(isEditMode, blockTouchEvents,enableTouchScreenPressingEvents,
-            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode) {
+            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode, enableGyroscope) {
             clearResources()
         }
 
@@ -175,44 +173,40 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                     placeable.place(0, 0)
                 }
             }
-            .background(Color.Transparent)
             .pointerInput(
                 isEditMode, mouseButtonsEventsCanBeInvoked, blockTouchEvents,
-                enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode
+                enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode, enableGyroscope
             ) {
-                if (isEditMode || blockTouchEvents) {
+                if (isEditMode || blockTouchEvents || (enableGyroscope && !mouseButtonsEventsCanBeInvoked)) {
                     return@pointerInput
                 }
                 awaitPointerEventScope {
                     while (true) {
-                        val useAbsoluteTouchMode =
-                            enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
                         val event = awaitPointerEvent()
+                        val useAbsoluteTouchMode = enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
                         for (change in event.changes) {
-                            val pid = change.id.value.toInt()
-                            val pos = change.position
-                            val x = pos.x
-                            val y = pos.y
-                            val pressure = (change.pressure).coerceAtMost(1.0f)
-                            fun useTouchPressEvents () = mouseButtonsEventsCanBeInvoked &&
-                                    enableTouchScreenPressingEvents
+                            change.apply {
+                                val x = position.x
+                                val y = position.y
+                                val pressure = (pressure).coerceAtMost(MAX_PRESSURE)
+                                fun useTouchPressEvents() = mouseButtonsEventsCanBeInvoked &&
+                                        enableTouchScreenPressingEvents
 
-                            fun handlePointerLocal(
-                                touchAction: Int,
-                                xPosition: Float,
-                                yPosition: Float
-                            ) {
-                                touchId = event.motionEvent?.deviceId ?: defaultTouchDeviceId
-                                handlePointer(
-                                    trackedPointerId, pressure, xPosition, yPosition,
-                                    mWidth, mHeight, touchAction,
-                                    touchId!!, useTouchPressEvents()
-                                )
-                            }
+                                fun handlePointerLocal(
+                                    touchAction: Int,
+                                    xPosition: Float,
+                                    yPosition: Float
+                                ) {
+                                    touchId = event.motionEvent?.deviceId ?: defaultTouchDeviceId
+                                    handlePointer(
+                                        DEFAULT_POINTER_ID, pressure, xPosition, yPosition,
+                                        mWidth, mHeight, touchAction,
+                                        touchId!!, useTouchPressEvents()
+                                    )
+                                }
 
-                            when {
-                                change.changedToDown() && trackedPointerId == UNKNOWN_POINTER_ID -> {
-                                    trackedPointerId = pid
+                                if (changedToDown() && trackedPointerId == null) {
+                                    trackedPointerId = id
                                     useTouchPressEventsForTrackedPointer = useTouchPressEvents()
                                     if (useAbsoluteTouchMode) {
                                         lastTouchX = x
@@ -232,27 +226,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                     }
                                 }
 
-                                change.changedToUp() && trackedPointerId == pid -> {
-                                    if (useAbsoluteTouchMode) {
-                                        handlePointerLocal(MotionEvent.ACTION_UP, x, y)
-                                    } else {
-                                        val dx = x - lastTouchX
-                                        val dy = y - lastTouchY
-                                        var newMouseX = lastMouseX + dx
-                                        var newMouseY = lastMouseY + dy
-                                        newMouseX = newMouseX.coerceIn(0f, mWidth)
-                                        newMouseY = newMouseY.coerceIn(0f, mHeight)
-                                        handlePointerLocal(
-                                            MotionEvent.ACTION_UP, newMouseX,
-                                            newMouseY
-                                        )
-                                    }
-
-                                    useTouchPressEventsForTrackedPointer = false
-                                    trackedPointerId = UNKNOWN_POINTER_ID
-                                }
-
-                                change.positionChanged() && trackedPointerId == pid -> {
+                                if (positionChanged() && trackedPointerId == id) {
                                     if (useAbsoluteTouchMode) {
                                         handlePointerLocal(MotionEvent.ACTION_MOVE, x, y)
                                     } else {
@@ -276,7 +250,27 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                     }
                                 }
 
-                                !change.pressed && trackedPointerId == pid -> {
+                                if (changedToUp() && trackedPointerId == id) {
+                                    if (useAbsoluteTouchMode) {
+                                        handlePointerLocal(MotionEvent.ACTION_UP, x, y)
+                                    } else {
+                                        val dx = x - lastTouchX
+                                        val dy = y - lastTouchY
+                                        var newMouseX = lastMouseX + dx
+                                        var newMouseY = lastMouseY + dy
+                                        newMouseX = newMouseX.coerceIn(0f, mWidth)
+                                        newMouseY = newMouseY.coerceIn(0f, mHeight)
+                                        handlePointerLocal(
+                                            MotionEvent.ACTION_UP, newMouseX,
+                                            newMouseY
+                                        )
+                                    }
+
+                                    useTouchPressEventsForTrackedPointer = false
+                                    trackedPointerId = null
+                                }
+
+                                if (!pressed && trackedPointerId == id) {
                                     if (useAbsoluteTouchMode) {
                                         handlePointerLocal(MotionEvent.ACTION_UP, x, y)
                                     } else {
@@ -287,7 +281,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                         )
                                     }
                                     useTouchPressEventsForTrackedPointer = false
-                                    trackedPointerId = UNKNOWN_POINTER_ID
+                                    trackedPointerId = null
                                 }
                             }
                         }
@@ -330,7 +324,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
     }
 
     private companion object{
-        private const val UNKNOWN_POINTER_ID = Int.MIN_VALUE
+        private const val DEFAULT_POINTER_ID = 0
+        private const val MAX_PRESSURE : Float = 1.0f
 
         private val defaultTouchDeviceId : Int by lazy {
             InputDevice.getDeviceIds()
