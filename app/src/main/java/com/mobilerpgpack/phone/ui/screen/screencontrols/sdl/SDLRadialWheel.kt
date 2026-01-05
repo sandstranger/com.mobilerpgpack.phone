@@ -154,7 +154,6 @@ abstract class SDLRadialWheel(
                     awaitPointerEventScope {
                         while (true) {
                             val event = awaitPointerEvent()
-                            val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                             val center = Offset(size.width / 2f, size.height / 2f)
 
                             fun angle(pos: Offset): Float {
@@ -195,6 +194,7 @@ abstract class SDLRadialWheel(
                                         }
                                         selectedIndex = -1
                                     }
+                                    val consumeEvents = (consumeTouchEvents || mouseButtonsEventsCanBeInvoked) && pointerId!=null
                                     if (consumeEvents) {
                                         consume()
                                     }
