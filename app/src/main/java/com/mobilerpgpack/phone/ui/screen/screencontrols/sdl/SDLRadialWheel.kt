@@ -131,7 +131,7 @@ abstract class SDLRadialWheel(
             }
             return false
         }
-        
+
         val mouseButtonsEventsCanBeInvoked = getMouseEventsCanBeInvokedFlow()
 
         fun clearResources(){
