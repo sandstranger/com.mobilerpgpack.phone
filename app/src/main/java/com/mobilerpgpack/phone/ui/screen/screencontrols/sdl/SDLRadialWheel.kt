@@ -110,9 +110,6 @@ abstract class SDLRadialWheel(
             preferencesStorage.activeEngineString
         }
         val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
-        val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
-            initial = false
-        )
         val ignoreOutOfBoundsTouchEvents by remember(viewState.ignoreOutOfBoundsTouchEvents)
         { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
         val consumeTouchEvents by remember(viewState.consumeTouchEvents)
@@ -123,6 +120,19 @@ abstract class SDLRadialWheel(
         val viewRenderRule by remember(viewState.viewRenderRule) {
             mutableStateOf(viewState.viewRenderRule)
         }
+
+        @Composable
+        fun getMouseEventsCanBeInvokedFlow () : Boolean {
+            if (inGame){
+                val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
+                    initial = false
+                )
+                return mouseButtonsEventsCanBeInvoked
+            }
+            return false
+        }
+        
+        val mouseButtonsEventsCanBeInvoked = getMouseEventsCanBeInvokedFlow()
 
         fun clearResources(){
             pointerId = null
