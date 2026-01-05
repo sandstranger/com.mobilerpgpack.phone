@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,11 +36,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -78,16 +78,12 @@ import com.mobilerpgpack.phone.ui.items.CheckBox
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.utils.onTouchDown
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.keyCodeMap
-import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
-import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
@@ -101,25 +97,34 @@ abstract class ScreenController : IScreenController {
 
     final override var showQuickPanelItems by mutableStateOf(false)
 
+    final override var isEditMode by mutableStateOf(false)
+
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
     override fun DrawScreenControls(
         activeEngine: EngineTypes,
         inGame: Boolean,
         blockTouchCameraEvents: Boolean,
-        allowToEditControls: Boolean,
         drawInSafeArea: Boolean,
         hideOnScreenControls: Boolean,
         keyboardInputType: CustomKeyboardView.KeyboardType,
         onBack: () -> Unit
     ) {
+        LaunchedEffect(Unit) {
+            isEditMode = !inGame
+        }
+
+        DisposableEffect(Unit){
+            onDispose {
+                isEditMode = false
+            }
+        }
 
         val preferencesStorage : PreferencesStorage = koinInject()
         val onBackSaved = remember { onBack }
-        val allowToEditControlsSaved = rememberSaveable(allowToEditControls) { allowToEditControls }
         val activeEngineSaved = rememberSaveable(activeEngine) {activeEngine}
         val drawInSafeAreaSaved = rememberSaveable(drawInSafeArea) { drawInSafeArea }
-        val inGameSaved = rememberSaveable(inGame) { inGame }
+        val inGame = rememberSaveable(inGame) { inGame }
         val engineInfo : IEngineInfo = koinInject(named(activeEngineSaved.name))
         val controlsProvider : ControlsProvider = koinInject(named(activeEngineSaved.name))
         val customViews = remember { buildCustomViews(activeEngineSaved) }
@@ -141,9 +146,9 @@ abstract class ScreenController : IScreenController {
         val clampButtonsPrefsKey = remember { booleanPreferencesKey("${activeEngineSaved.name.lowercase()}_${controlsType.name.lowercase()}") }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by rememberSaveable { mutableStateOf<String?>(null) }
-        var isEditMode by rememberSaveable { mutableStateOf((!inGameSaved)) }
-        val backgroundColor by remember (inGameSaved, isEditMode) {
-            mutableStateOf(if (!inGameSaved) {
+        val isEditMode by rememberSaveable (isEditMode) { mutableStateOf(isEditMode) }
+        val backgroundColor by remember (inGame, isEditMode) {
+            mutableStateOf(if (!inGame) {
                 Color.DarkGray
             } else {
                 if (isEditMode) transparentDarkColor else Color.Transparent
@@ -192,6 +197,17 @@ abstract class ScreenController : IScreenController {
             }
         }
 
+        @Composable
+        fun getViewSize (sizePercent : Float) : Dp{
+            val sizePx: Float by rememberSaveable (screenWidthPx, sizePercent) {
+                mutableFloatStateOf(screenWidthPx * sizePercent)
+            }
+            val sizeDp : Dp by remember(sizePx, density) {
+                mutableStateOf((sizePx / density).dp)
+            }
+            return sizeDp
+        }
+
         if (drawInSafeAreaSaved) {
             rootView.apply {
                 DisposableEffect(this) {
@@ -223,7 +239,7 @@ abstract class ScreenController : IScreenController {
         }
 
         DrawTouchScreen(activeEngineSaved,blockTouchCameraEvents,
-            drawInSafeAreaSaved,isEditMode, inGameSaved) {
+            drawInSafeAreaSaved,isEditMode, inGame) {
             if (!hideOnScreenControls) {
                 Box(
                     modifier = Modifier
@@ -231,9 +247,9 @@ abstract class ScreenController : IScreenController {
                         .background(backgroundColor)
                 ) {
                     if (isEditMode) {
+                        val editControlsViewSize = getViewSize(0.3f)
                         EditControls(
                             selectedButtonId,
-                            inGameSaved,
                             onAlphaChange = { delta ->
                                 selectedButtonId?.let { id ->
                                     viewsToDraw[id]!!.viewState.apply {
@@ -288,43 +304,30 @@ abstract class ScreenController : IScreenController {
                             },
                             onBack = {
                                 selectedButtonId = null
-                                onBackSaved()
+                                if (!inGame) {
+                                    onBackSaved()
+                                }
+                                else{
+                                    this@ScreenController.isEditMode = false
+                                }
                             },
-                            modifier = Modifier.align(Alignment.Center)
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .sizeIn(
+                                    minWidth = editControlsViewSize,
+                                    minHeight = editControlsViewSize
+                                )
                         )
                     }
 
                     if (readyToDrawControls) {
-                        if (inGameSaved && allowToEditControlsSaved) {
-                            Image(
-                                painter = painterResource(R.drawable.cog),
-                                contentDescription = "settings_button",
-                                modifier = Modifier
-                                    .align(Alignment.TopStart)
-                                    .size(60.dp)
-                                    .alpha(0.5f)
-                                    .minimumInteractiveComponentSize()
-                                    .padding(8.dp)
-                                    .clickable(
-                                        indication = null,
-                                        interactionSource = null
-                                    ) {
-                                        isEditMode = !isEditMode
-                                    }
-                            )
-                        }
 
                         viewsToDraw.forEach { (id, view) ->
                             val id = rememberSaveable (id) { id }
                             val view = remember(view) { view }
                             val viewState = remember(view.viewState) { view.viewState }
-                            val sizePx: Float by rememberSaveable (screenWidthPx, viewState.sizePercent) {
-                                mutableFloatStateOf(screenWidthPx * view.viewState.sizePercent)
-                            }
-                            val sizeDp: Dp by remember(sizePx, density) {
-                                mutableStateOf((sizePx / density).dp)
-                            }
-
+                            val sizePercent by rememberSaveable(viewState.sizePercent) {
+                                mutableFloatStateOf(viewState.sizePercent) }
                             val renderOffsetX by rememberSaveable (viewState.offsetXPercent, screenWidthPx) {
                                 mutableFloatStateOf(viewState.offsetXPercent * screenWidthPx)
                             }
@@ -340,7 +343,7 @@ abstract class ScreenController : IScreenController {
                                 showScreenControls,
                                 showQuickPanelItems,
                                 isEditMode,
-                                inGameSaved
+                                inGame
                             ) {
                                 mutableStateOf(!viewState.isDeleted && (isEditMode || view.renderView))
                             }
@@ -349,7 +352,7 @@ abstract class ScreenController : IScreenController {
                                 DrawView(
                                     viewToDraw = view,
                                     offset = Offset(renderOffsetX, renderOffsetY),
-                                    sizeDp = sizeDp,
+                                    sizeDp = getViewSize(sizePercent),
                                     isEditMode = isEditMode,
                                     isSelected = (selectedButtonId == id),
                                     onClick = {
@@ -369,7 +372,7 @@ abstract class ScreenController : IScreenController {
                                             save()
                                         }
                                     },
-                                    inGame = inGameSaved,
+                                    inGame = inGame,
                                 )
                             }
                         }
@@ -378,53 +381,45 @@ abstract class ScreenController : IScreenController {
             }
         }
 
-        if (hideOnScreenControls){
-            isEditMode = false
+        if (inGame && hideOnScreenControls){
+            this.isEditMode = false
             val showOnlyVirtualKeyboardButton = rememberSaveable {
                 preferencesStorage.hideScreenControls && preferencesStorage.alwaysShowKeyboardButton }
             val sdlKeyboard = koinInject<SDLKeyboard>(named(if (engineInfo is SDL2EngineInfo) KeyboardType.SDL2Keyboard.name
             else KeyboardType.SDL3Keyboard.name))
             val keyboardInputType = rememberSaveable { keyboardInputType }
 
-            Theme {
-                Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(R.drawable.keyboard),
+                    contentDescription = "keyboard_button",
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .size(getViewSize(0.075f))
+                        .alpha(0.5f)
+                        .minimumInteractiveComponentSize()
+                        .padding(start = 8.dp, top = 8.dp)
+                        .onTouchDown(isEditMode) {
+                            sdlKeyboard.showKeyboard(
+                                useReturnButton = true,
+                                keyboardInputType
+                            )
+                        })
+
+                if (!showOnlyVirtualKeyboardButton) {
                     Image(
-                        painter = painterResource(R.drawable.keyboard),
-                        contentDescription = "keyboard_button",
+                        painter = painterResource(R.drawable.pause),
+                        contentDescription = "escape_button",
                         modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .size(70.dp)
+                            .align(Alignment.TopEnd)
+                            .size(getViewSize(0.065f))
                             .alpha(0.5f)
                             .minimumInteractiveComponentSize()
-                            .padding(8.dp)
-                            .clickable(
-                                indication = null, interactionSource = null
-                            ) {
-                                sdlKeyboard.showKeyboard(
-                                    useReturnButton = true,
-                                    keyboardInputType
-                                )
+                            .padding(end = 8.dp, top = 8.dp)
+                            .onTouchDown(isEditMode) {
+                                engineInfo.onBackPressed()
                             }
                     )
-
-                    if (!showOnlyVirtualKeyboardButton) {
-                        Image(
-                            painter = painterResource(R.drawable.pause),
-                            contentDescription = "escape_button",
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .size(60.dp)
-                                .alpha(0.5f)
-                                .minimumInteractiveComponentSize()
-                                .padding(8.dp)
-                                .clickable(
-                                    indication = null,
-                                    interactionSource = null
-                                ) {
-                                    engineInfo.onBackPressed()
-                                }
-                        )
-                    }
                 }
             }
         }
@@ -515,7 +510,6 @@ abstract class ScreenController : IScreenController {
     @Composable
     private fun EditControls(
         selectedButtonId: String?,
-        inGame: Boolean,
         onAlphaChange: (Float) -> Unit,
         onSizeChange: (Float) -> Unit,
         onCustomViewSelected : (selectedView : IScreenControlsView) -> Unit,
@@ -536,7 +530,7 @@ abstract class ScreenController : IScreenController {
                     .background(Color.Gray.copy(alpha = 0.6f), shape)
                     .padding(2.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically)
             ) {
                 if (!selectedButtonId.isNullOrBlank()) {
                     Text(
@@ -596,10 +590,8 @@ abstract class ScreenController : IScreenController {
                     Button(onClick = onReset,contentPadding = ButtonDefaults.TextButtonContentPadding, colors = buttonColors) {
                         Text(stringResource(R.string.reset_controls_to_default), color = onPrimaryColor, fontSize = 13.sp)
                     }
-                    if (!inGame) {
-                        Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
-                            Text(stringResource(R.string.close_controls_configuration), color = onPrimaryColor,fontSize = 13.sp)
-                        }
+                    Button(onClick = onBack,contentPadding = ButtonDefaults.TextButtonContentPadding,colors = buttonColors) {
+                        Text(stringResource(R.string.close_controls_configuration), color = onPrimaryColor,fontSize = 13.sp)
                     }
                 }
             }
@@ -661,7 +653,7 @@ abstract class ScreenController : IScreenController {
                             .graphicsLayer {
                                 colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                             }, contentAlignment = Alignment.Center){
-                            viewToEdit.DrawView(isEditMode = false, false, 50.dp)
+                            viewToEdit.DrawView(isEditMode = true, false, 50.dp)
                         }
                         Text(modifier = Modifier.wrapContentHeight(),
                             text = viewState.id,
@@ -686,7 +678,7 @@ abstract class ScreenController : IScreenController {
                             EnumDropdown(
                                 stringResource(R.string.screen_controls_view_render_rule),
                                 viewRenderRule
-                            ){
+                            ) {
                                 viewRenderRule = it
                                 save()
                             }
@@ -832,7 +824,7 @@ abstract class ScreenController : IScreenController {
                                 .graphicsLayer {
                                     colorFilter = ColorFilter.tint(onSurfaceVariantColor)
                                 }, contentAlignment = Alignment.Center){
-                                        view.DrawView(isEditMode = false, false, 40.dp)
+                                        view.DrawView(isEditMode = true, false, 40.dp)
                             }
                             Text(
                                 modifier = Modifier.wrapContentHeight(),
