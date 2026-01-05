@@ -14,7 +14,7 @@ class SDL2RadialWheel(engineType: EngineTypes,
     controlsType: ControlsType = ControlsType.Default,
     isDeleted: Boolean = false,
     consumeTouchEventsByDefault: Boolean = true,
-    ignoreOutOfBoundsTouchEvents: Boolean = false,
+    ignoreOutOfBoundsTouchEvents: Boolean = true,
     showInQuickPanel: Boolean = false) :
     SDLRadialWheel(engineType, offsetXPercent, offsetYPercent, sizePercent, defaultViewRenderRule, controlsType,
         isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents, showInQuickPanel) {

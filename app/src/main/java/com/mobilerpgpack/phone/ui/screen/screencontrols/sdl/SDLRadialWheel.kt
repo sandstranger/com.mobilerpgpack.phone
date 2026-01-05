@@ -65,7 +65,7 @@ abstract class SDLRadialWheel(
     controlsType: ControlsType = ControlsType.Default,
     isDeleted: Boolean = false,
     consumeTouchEventsByDefault: Boolean = true,
-    ignoreOutOfBoundsTouchEvents: Boolean = false,
+    ignoreOutOfBoundsTouchEvents: Boolean = true,
     showInQuickPanel: Boolean = false) : IScreenControlsView {
 
     override var screenController: IScreenController? = null
