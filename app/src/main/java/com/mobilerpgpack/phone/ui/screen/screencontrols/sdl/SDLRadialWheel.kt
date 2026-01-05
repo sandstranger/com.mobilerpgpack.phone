@@ -102,7 +102,7 @@ abstract class SDLRadialWheel(
         var selectedIndex by rememberSaveable { mutableIntStateOf(-1) }
         var showRadialMenu by rememberSaveable { mutableStateOf(false) }
         val keyCodesProvider = koinInject<IKeyCodesProvider>()
-        var pointerId by rememberSaveable { mutableStateOf<PointerId?>(null) }
+        var pointerId by remember { mutableStateOf<PointerId?>(null) }
         var hitRect by remember { mutableStateOf(Rect.Zero) }
         val viewState = remember { viewState }
         val preferencesStorage: PreferencesStorage = koinInject()
