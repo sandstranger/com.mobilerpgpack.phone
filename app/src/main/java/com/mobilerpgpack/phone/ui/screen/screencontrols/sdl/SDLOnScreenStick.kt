@@ -80,7 +80,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
 
     private external fun destroyVirtualController()
 
-    private external fun setVirtualAxis(axis : Int, axisValue : Float)
+    private external fun setVirtualAxis(axisX : Int, axisXValue : Float,
+                                        axisY : Int, axisYValue : Float)
 
     protected abstract val virtualControllerLibraryName : String
 
@@ -127,8 +128,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     y > 0 -> (y * STICK_SCALE).coerceAtMost(1f)
                     else -> (y * STICK_SCALE).coerceAtLeast(-1f)
                 }
-                setVirtualAxis(axisX, processedX)
-                setVirtualAxis(axisY, processedY)
+                setVirtualAxis(axisX, processedX, axisY, processedY)
             }
         }
 
