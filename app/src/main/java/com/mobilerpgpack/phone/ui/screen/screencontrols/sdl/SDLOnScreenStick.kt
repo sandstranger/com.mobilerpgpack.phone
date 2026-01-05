@@ -207,9 +207,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                             val event = awaitPointerEvent()
                             for (change in event.changes) {
                                 change.apply {
-                                    val pos = position
-                                    val x = pos.x
-                                    val y = pos.y
+                                    val x = position.x
+                                    val y = position.y
 
                                     when{
                                         changedToDown() && dragId == null -> {
