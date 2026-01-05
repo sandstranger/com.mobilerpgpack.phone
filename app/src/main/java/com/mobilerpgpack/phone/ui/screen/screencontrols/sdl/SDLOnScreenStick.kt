@@ -211,33 +211,35 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                     val x = pos.x
                                     val y = pos.y
 
-                                    if(changedToDown() && dragId == null) {
-                                        dragId = id
-                                        down = true
-                                        currentX = x
-                                        currentY = y
-                                    }
+                                    when{
+                                        changedToDown() && dragId == null -> {
+                                            dragId = id
+                                            down = true
+                                            currentX = x
+                                            currentY = y
+                                        }
 
-                                    if(positionChanged() && dragId == id) {
-                                        currentX = x
-                                        currentY = y
-                                        val strokeWidthPx = 2.dp.toPx()
-                                        onDrag(
-                                            canvasW,
-                                            canvasH,
-                                            strokeWidthPx,
-                                            currentX,
-                                            currentY,
-                                            onUpdateStick
-                                        )
-                                    }
+                                        (changedToUp() || !pressed) && dragId == id -> {
+                                            down = false
+                                            currentX = -1f
+                                            currentY = -1f
+                                            onUpdateStick(0f, 0f, false)
+                                            dragId = null
+                                        }
 
-                                    if((changedToUp() || !pressed) && dragId == id ) {
-                                        down = false
-                                        currentX = -1f
-                                        currentY = -1f
-                                        onUpdateStick(0f, 0f, false)
-                                        dragId = null
+                                        positionChanged() && dragId == id -> {
+                                            currentX = x
+                                            currentY = y
+                                            val strokeWidthPx = 2.dp.toPx()
+                                            onDrag(
+                                                canvasW,
+                                                canvasH,
+                                                strokeWidthPx,
+                                                currentX,
+                                                currentY,
+                                                onUpdateStick
+                                            )
+                                        }
                                     }
 
                                     consume()
