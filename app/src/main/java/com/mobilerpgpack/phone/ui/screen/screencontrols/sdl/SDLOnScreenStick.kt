@@ -65,7 +65,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 isDeleted : Boolean = false,
                                 showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
-    private val mutex = Mutex()
     private val scope : CoroutineScope by inject ()
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
@@ -128,7 +127,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     y > 0 -> (y * STICK_SCALE).coerceAtMost(1f)
                     else -> (y * STICK_SCALE).coerceAtLeast(-1f)
                 }
-                scope.launch { setVirtualAxisNative(axisX, processedX, axisY, processedY) }
+                setVirtualAxis(axisX, processedX)
+                setVirtualAxis(axisY, processedY)
             }
         }
 
@@ -293,13 +293,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     style = Stroke(width = strokeWidthPx)
                 )
             }
-        }
-    }
-
-    private suspend fun setVirtualAxisNative(axisX : Int, axisXValue : Float, axisY : Int, axisYValue : Float){
-        mutex.withLock {
-            setVirtualAxis(axisX, axisXValue)
-            setVirtualAxis(axisY, axisYValue)
         }
     }
 
