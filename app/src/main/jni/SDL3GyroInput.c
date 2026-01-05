@@ -5,15 +5,28 @@
 #include "SDL3/SDL_mouse_c.h"
 #include "SDL3/SDL_mouse.h"
 
-void nativeGyroMouse(float dx, float dy){
-    SDL_Window* win = SDL_GetMouseFocus();
-    if (!win) {
+static SDL_Window *window = nullptr;
+static Uint32 windowId;
+static SDL_Mouse *mouse;
+
+void nativeGyroMouse(float dx, float dy) {
+    if (!mouse) {
+        mouse = (SDL_Mouse *) SDL_GetMouseVoid();
+        if (mouse) {
+            window = mouse->focus;
+            if (window) {
+                windowId = SDL_GetWindowID(window);
+            }
+        }
+    }
+
+    if (!window || !mouse) {
         return;
     }
 
     SDL_Event ev;
     ev.type = SDL_EVENT_MOUSE_MOTION;
-    ev.motion.windowID = SDL_GetWindowID(win);
+    ev.motion.windowID = windowId;
     ev.motion.which = 0;
     ev.motion.state = 0;
     ev.motion.x = 0;
@@ -22,21 +35,15 @@ void nativeGyroMouse(float dx, float dy){
     ev.motion.yrel = dy;
     SDL_PushEvent(&ev);
 
-    SDL_Mouse *mouse = (SDL_Mouse *)SDL_GetMouseVoid();
-    if (!mouse) {
-        return;
-    }
     mouse->x_accu += dx;
     mouse->y_accu += dy;
     mouse->x += dx;
     mouse->y += dy;
 
-    int w=0,h=0;
-    if(win){
-        SDL_GetWindowSize(win,&w,&h);
-        if(mouse->x < 0) mouse->x = 0;
-        if(mouse->y < 0) mouse->y = 0;
-        if(mouse->x > w) mouse->x = w;
-        if(mouse->y > h) mouse->y = h;
-    }
+    int w = 0, h = 0;
+    SDL_GetWindowSize(window, &w, &h);
+    if (mouse->x < 0) mouse->x = 0;
+    if (mouse->y < 0) mouse->y = 0;
+    if (mouse->x > w) mouse->x = w;
+    if (mouse->y > h) mouse->y = h;
 }
