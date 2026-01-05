@@ -389,39 +389,37 @@ abstract class ScreenController : IScreenController {
             else KeyboardType.SDL3Keyboard.name))
             val keyboardInputType = rememberSaveable { keyboardInputType }
 
-            Theme {
-                Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(R.drawable.keyboard),
+                    contentDescription = "keyboard_button",
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .size(getViewSize(0.075f))
+                        .alpha(0.5f)
+                        .minimumInteractiveComponentSize()
+                        .padding(start = 8.dp, top = 8.dp)
+                        .onTouchDown(isEditMode) {
+                            sdlKeyboard.showKeyboard(
+                                useReturnButton = true,
+                                keyboardInputType
+                            )
+                        })
+
+                if (!showOnlyVirtualKeyboardButton) {
                     Image(
-                        painter = painterResource(R.drawable.keyboard),
-                        contentDescription = "keyboard_button",
+                        painter = painterResource(R.drawable.pause),
+                        contentDescription = "escape_button",
                         modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .size(getViewSize(0.075f))
+                            .align(Alignment.TopEnd)
+                            .size(getViewSize(0.065f))
                             .alpha(0.5f)
                             .minimumInteractiveComponentSize()
-                            .padding(start = 8.dp, top = 8.dp)
+                            .padding(end = 8.dp, top = 8.dp)
                             .onTouchDown(isEditMode) {
-                                sdlKeyboard.showKeyboard(
-                                    useReturnButton = true,
-                                    keyboardInputType
-                                )
-                            })
-
-                    if (!showOnlyVirtualKeyboardButton) {
-                        Image(
-                            painter = painterResource(R.drawable.pause),
-                            contentDescription = "escape_button",
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .size(getViewSize(0.065f))
-                                .alpha(0.5f)
-                                .minimumInteractiveComponentSize()
-                                .padding(end = 8.dp, top = 8.dp)
-                                .onTouchDown(isEditMode) {
-                                    engineInfo.onBackPressed()
-                                }
-                        )
-                    }
+                                engineInfo.onBackPressed()
+                            }
+                    )
                 }
             }
         }
