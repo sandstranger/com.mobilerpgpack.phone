@@ -251,11 +251,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             val h = canvasH.toFloat().takeIf { it > 0f } ?: size.height
             val minDim = min(w, h)
             val strokeWidthPx = 2.dp.toPx()
-            val paint = Paint().apply {
-                style = PaintingStyle.Stroke
-                strokeWidth = strokeWidthPx
-            }
-
             val outerRadius = minDim / 2f - strokeWidthPx
             val knobRadius = minDim / 5f
             val allowedRadius = outerRadius - knobRadius
@@ -269,7 +264,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 color = Color.Gray,
                 radius = outerRadius,
                 center = Offset(centerX, centerY),
-                style = Stroke(width = paint.strokeWidth)
+                style = Stroke(width = strokeWidthPx)
             )
 
             if (down) {
@@ -293,7 +288,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                     color = Color.Gray,
                     radius = knobRadius,
                     center = Offset(drawX, drawY),
-                    style = Stroke(width = paint.strokeWidth)
+                    style = Stroke(width = strokeWidthPx)
                 )
             }
         }
