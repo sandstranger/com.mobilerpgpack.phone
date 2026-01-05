@@ -205,83 +205,85 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                     )
                                 }
 
-                                if (changedToDown() && trackedPointerId == null) {
-                                    trackedPointerId = id
-                                    useTouchPressEventsForTrackedPointer = useTouchPressEvents()
-                                    if (useAbsoluteTouchMode) {
-                                        lastTouchX = x
-                                        lastTouchY = y
-                                        lastMouseX = x
-                                        lastMouseY = y
-                                        handlePointerLocal(MotionEvent.ACTION_DOWN, x, y)
-                                    } else {
-                                        lastTouchX = x
-                                        lastTouchY = y
-                                        lastMouseX = getMouseX()
-                                        lastMouseY = getMouseY()
-                                        handlePointerLocal(
-                                            MotionEvent.ACTION_DOWN, lastMouseX,
-                                            lastMouseY
-                                        )
-                                    }
-                                }
-
-                                if (positionChanged() && trackedPointerId == id) {
-                                    if (useAbsoluteTouchMode) {
-                                        handlePointerLocal(MotionEvent.ACTION_MOVE, x, y)
-                                    } else {
-                                        val dx = x - lastTouchX
-                                        val dy = y - lastTouchY
-                                        var newMouseX = lastMouseX + dx
-                                        var newMouseY = lastMouseY + dy
-
-                                        newMouseX = newMouseX.coerceIn(0f, mWidth)
-                                        newMouseY = newMouseY.coerceIn(0f, mHeight)
-
-                                        handlePointerLocal(
-                                            MotionEvent.ACTION_MOVE, newMouseX,
-                                            newMouseY
-                                        )
-
-                                        lastTouchX = x
-                                        lastTouchY = y
-                                        lastMouseX = newMouseX
-                                        lastMouseY = newMouseY
-                                    }
-                                }
-
-                                if (changedToUp() && trackedPointerId == id) {
-                                    if (useAbsoluteTouchMode) {
-                                        handlePointerLocal(MotionEvent.ACTION_UP, x, y)
-                                    } else {
-                                        val dx = x - lastTouchX
-                                        val dy = y - lastTouchY
-                                        var newMouseX = lastMouseX + dx
-                                        var newMouseY = lastMouseY + dy
-                                        newMouseX = newMouseX.coerceIn(0f, mWidth)
-                                        newMouseY = newMouseY.coerceIn(0f, mHeight)
-                                        handlePointerLocal(
-                                            MotionEvent.ACTION_UP, newMouseX,
-                                            newMouseY
-                                        )
+                                when{
+                                    changedToDown() && trackedPointerId == null -> {
+                                        trackedPointerId = id
+                                        useTouchPressEventsForTrackedPointer = useTouchPressEvents()
+                                        if (useAbsoluteTouchMode) {
+                                            lastTouchX = x
+                                            lastTouchY = y
+                                            lastMouseX = x
+                                            lastMouseY = y
+                                            handlePointerLocal(MotionEvent.ACTION_DOWN, x, y)
+                                        } else {
+                                            lastTouchX = x
+                                            lastTouchY = y
+                                            lastMouseX = getMouseX()
+                                            lastMouseY = getMouseY()
+                                            handlePointerLocal(
+                                                MotionEvent.ACTION_DOWN, lastMouseX,
+                                                lastMouseY
+                                            )
+                                        }
                                     }
 
-                                    useTouchPressEventsForTrackedPointer = false
-                                    trackedPointerId = null
-                                }
+                                    changedToUp() && trackedPointerId == id -> {
+                                        if (useAbsoluteTouchMode) {
+                                            handlePointerLocal(MotionEvent.ACTION_UP, x, y)
+                                        } else {
+                                            val dx = x - lastTouchX
+                                            val dy = y - lastTouchY
+                                            var newMouseX = lastMouseX + dx
+                                            var newMouseY = lastMouseY + dy
+                                            newMouseX = newMouseX.coerceIn(0f, mWidth)
+                                            newMouseY = newMouseY.coerceIn(0f, mHeight)
+                                            handlePointerLocal(
+                                                MotionEvent.ACTION_UP, newMouseX,
+                                                newMouseY
+                                            )
+                                        }
 
-                                if (!pressed && trackedPointerId == id) {
-                                    if (useAbsoluteTouchMode) {
-                                        handlePointerLocal(MotionEvent.ACTION_UP, x, y)
-                                    } else {
-                                        handlePointerLocal(
-                                            MotionEvent.ACTION_UP,
-                                            lastMouseX,
-                                            lastMouseY
-                                        )
+                                        useTouchPressEventsForTrackedPointer = false
+                                        trackedPointerId = null
                                     }
-                                    useTouchPressEventsForTrackedPointer = false
-                                    trackedPointerId = null
+
+                                    !pressed && trackedPointerId == id -> {
+                                        if (useAbsoluteTouchMode) {
+                                            handlePointerLocal(MotionEvent.ACTION_UP, x, y)
+                                        } else {
+                                            handlePointerLocal(
+                                                MotionEvent.ACTION_UP,
+                                                lastMouseX,
+                                                lastMouseY
+                                            )
+                                        }
+                                        useTouchPressEventsForTrackedPointer = false
+                                        trackedPointerId = null
+                                    }
+
+                                    positionChanged() && trackedPointerId == id -> {
+                                        if (useAbsoluteTouchMode) {
+                                            handlePointerLocal(MotionEvent.ACTION_MOVE, x, y)
+                                        } else {
+                                            val dx = x - lastTouchX
+                                            val dy = y - lastTouchY
+                                            var newMouseX = lastMouseX + dx
+                                            var newMouseY = lastMouseY + dy
+
+                                            newMouseX = newMouseX.coerceIn(0f, mWidth)
+                                            newMouseY = newMouseY.coerceIn(0f, mHeight)
+
+                                            handlePointerLocal(
+                                                MotionEvent.ACTION_MOVE, newMouseX,
+                                                newMouseY
+                                            )
+
+                                            lastTouchX = x
+                                            lastTouchY = y
+                                            lastMouseX = newMouseX
+                                            lastMouseY = newMouseY
+                                        }
+                                    }
                                 }
                             }
                         }
