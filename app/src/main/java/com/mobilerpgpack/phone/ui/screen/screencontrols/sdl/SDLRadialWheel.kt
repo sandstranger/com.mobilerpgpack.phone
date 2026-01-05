@@ -271,7 +271,7 @@ abstract class SDLRadialWheel(
                     }
                 }
             } else {
-                val sizeDivider = rememberSaveable { 0.3f }
+                val sizeDivider = rememberSaveable { 0.315f }
                 val w by remember (maxWidth) { mutableStateOf(maxWidth * sizeDivider) }
                 val h by remember(maxHeight) { mutableStateOf(maxHeight * sizeDivider) }
 
