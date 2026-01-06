@@ -32,7 +32,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
     private val assetsExtractor : IAssetExtractor by inject ()
 
     @Volatile
-    private var contentCopied = false
+    private var contentCopied = true
 
     fun onResetResourcesClicked(){
         if (!assetsExtractor.assetsCopied){
@@ -48,19 +48,15 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
         startGame(activity, activeEngine)
 
     fun copyContentFromInternalStorage () {
-        if (!contentCopied) {
+        val sourceFolder = context.getExternalFilesDir("")!!.absolutePath
+        val targetFolder = preferencesStorage.pathToRootUserFolder
+        if (!contentCopied || sourceFolder == targetFolder) {
             return
         }
-        contentCopied = false
-        val sourceFolder = context.getExternalFilesDir("")!!.absolutePath
+
         scope.launch {
-            val targetFolder = preferencesStorage.pathToRootUserFolder
-            if (sourceFolder != targetFolder) {
-                copyFolder(sourceFolder, targetFolder)
-                contentCopied = true
-            } else {
-                contentCopied = true
-            }
+            copyFolder(sourceFolder, targetFolder)
+            contentCopied = true
         }
     }
 }
