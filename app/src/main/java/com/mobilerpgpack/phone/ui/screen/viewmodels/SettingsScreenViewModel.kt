@@ -53,7 +53,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
         if (!contentCopied || sourceFolder == targetFolder) {
             return
         }
-
+        contentCopied = false
         scope.launch {
             copyFolder(sourceFolder, targetFolder)
             contentCopied = true
