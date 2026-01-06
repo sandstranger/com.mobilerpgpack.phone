@@ -1,3 +1,4 @@
+//file:noinspection ConfigurationAvoidance
 import com.google.gms.googleservices.GoogleServicesPlugin
 
 plugins {
@@ -269,4 +270,16 @@ dependencies {
     implementation libs.androidx.activity.compose
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.navigation.compose
+}
+
+android.applicationVariants.all { variant ->
+    if (variant.buildType.name == "release" && variant.name.contains("google")) {
+        def variantName = variant.name.capitalize()
+        def assembleTask = tasks.findByName("assemble${variantName}")
+        def uploadSymbolsTask = tasks.findByName("uploadCrashlyticsSymbolFile${variantName}")
+        if (assembleTask && uploadSymbolsTask) {
+            assembleTask.finalizedBy(uploadSymbolsTask)
+            println "SUCCESS: Task '${uploadSymbolsTask.name}' will run after '${assembleTask.name}'"
+        }
+    }
 }
