@@ -124,6 +124,16 @@ endif ()
 set(RE2C_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/uzdoom_tools/re2c.exe")
 set(LEMON_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/uzdoom_tools/lemon.exe")
 
+if (IS_DEBUG_BUILD)
+    set(BZIP2_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/bzip2/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libbz2.so"
+    CACHE FILEPATH "bzip2 library"
+    FORCE)
+else ()
+    set(BZIP2_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/bzip2/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libbz2.so"
+    CACHE FILEPATH "bzip2 library"
+    FORCE)
+endif ()
+
 set (USE_OPENGL ON)
 set (WITH_SDL "2")
 set (BUILD_TOOLS OFF)
@@ -143,6 +153,23 @@ set(OPENAL_EFX_INCLUDE_DIR "${OPENAL_INCLUDE_DIR}/AL")
 
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 
+set(FTE_DEP_ZLIB true CACHE BOOL "" FORCE)
+set(FTE_DEP_BZIP2 true CACHE BOOL "" FORCE)
+set(FTE_TOOL_IMAGE false CACHE BOOL "" FORCE)
+set(FTE_TOOL_IQM false CACHE BOOL "" FORCE)
+set(FTE_TOOL_QTV false CACHE BOOL "" FORCE)
+set(FTE_TOOL_HTTPSV false CACHE BOOL "" FORCE)
+set(FTE_TOOL_QCVM false CACHE BOOL "" FORCE)
+set(FTE_TOOL_QCC false CACHE BOOL "" FORCE)
+set(FTE_TOOL_QCCGUI false CACHE BOOL "" FORCE)
+set(FTE_PLUG_IRC false CACHE BOOL "" FORCE)
+set(FTE_PLUG_HL2 true CACHE BOOL "" FORCE)
+set(FTE_PLUG_MODELS true CACHE BOOL "" FORCE)
+set(FTE_PLUG_OPENXR false CACHE BOOL "" FORCE)
+set(FTE_PLUG_CEF false CACHE BOOL "" FORCE)
+set(FTE_PLUG_XMPP false CACHE BOOL "" FORCE)
+set(FTE_PLUG_ODE false CACHE BOOL "" FORCE)
+
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
@@ -151,7 +178,7 @@ add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
 add_subdirectory("${APP_ROOT_DIR}/UZDoom")
 add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
-#add_subdirectory("${APP_ROOT_DIR}/fteqw")
+add_subdirectory("${APP_ROOT_DIR}/fteqw")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 
