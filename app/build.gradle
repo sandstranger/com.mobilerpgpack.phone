@@ -216,6 +216,7 @@ dependencies {
     implementation (project(":third_party:legacy_gl4es"))
     implementation (project(":third_party:zmusic"))
     implementation (project(":third_party:bullet"))
+    implementation (project(":third_party:ffmpeg"))
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
     implementation(libs.koin.core)
