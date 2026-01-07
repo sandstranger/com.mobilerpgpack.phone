@@ -394,6 +394,8 @@ code from nintendo switch ArxLibertatis port: [Licence](https://github.com/fgsfd
 
 boost: [Licence](https://github.com/boostorg/boost/blob/master/LICENSE_1_0.txt)	https://github.com/boostorg/boost
 
+bullet3: [Licence](https://github.com/bulletphysics/bullet3/blob/master/LICENSE.txt)	https://github.com/bulletphysics/bullet3
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
