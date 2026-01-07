@@ -106,3 +106,6 @@ url=https://github.com/sandstranger/libmp3lame-android.git
 [submodule "third_party/libjpegturbo/src/main/jni/libjpeg-turbo"]
 	path = third_party/libjpegturbo/src/main/jni/libjpeg-turbo
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
+[submodule "third_party/bzip2/src/main/jni/bzip2"]
+	path = third_party/bzip2/src/main/jni/bzip2
+	url = https://gitlab.com/bzip2/bzip2.git

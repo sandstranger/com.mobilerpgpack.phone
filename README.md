@@ -406,6 +406,8 @@ ffmpeg prebult binaries: [Licence](https://github.com/sk3llo/ffmpeg_kit_flutter/
 
 libjpeg-turbo: [Licence](https://github.com/libjpeg-turbo/libjpeg-turbo/blob/main/LICENSE.md)	https://github.com/libjpeg-turbo/libjpeg-turbo
 
+bzip2:  https://gitlab.com/bzip2/bzip2
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)

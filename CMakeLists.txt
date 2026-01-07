@@ -151,6 +151,7 @@ add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
 add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
 add_subdirectory("${APP_ROOT_DIR}/UZDoom")
 add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
+#add_subdirectory("${APP_ROOT_DIR}/fteqw")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 
