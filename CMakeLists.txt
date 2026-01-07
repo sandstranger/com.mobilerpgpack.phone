@@ -116,6 +116,52 @@ endif ()
 
 set(FREETYPE_LIBRARIES ${FREETYPE_LIBRARY} CACHE STRING "" FORCE)
 
+set(JPEG_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/src/main/jni/libjpeg-turbo/src" CACHE STRING "" FORCE)
+if (IS_DEBUG_BUILD)
+    set(JPEG_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libjpeg.so" CACHE STRING "" FORCE)
+else ()
+    set(JPEG_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libjpeg.so" CACHE STRING "" FORCE)
+endif ()
+
+set(VORBISFILE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libvorbis/src/main/jni/libvorbis-android/jni/include/vorbis" CACHE STRING "" FORCE)
+if (IS_DEBUG_BUILD)
+    set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so" CACHE STRING "" FORCE)
+else ()
+    set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so" CACHE STRING "" FORCE)
+endif ()
+
+set(BULLET_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/bullet/src/main/jni/bullet3/src" CACHE STRING "" FORCE)
+if (IS_DEBUG_BUILD)
+    set(BULLET_LIBRARIES
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libBulletCollision.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libBulletDynamics.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libBulletInverseDynamics.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libBulletSoftBody.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libLinearMath.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libBullet3Common.so"
+            CACHE STRING "" FORCE)
+else ()
+    set(BULLET_LIBRARIES
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libBulletCollision.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libBulletDynamics.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libBulletInverseDynamics.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libBulletSoftBody.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libLinearMath.so"
+            "${CMAKE_SOURCE_DIR}/third_party/bullet/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libBullet3Common.so"
+            CACHE STRING "" FORCE)
+endif ()
+
+set(AVCODEC_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/FFmpeg/libavcodec")
+set(AVFORMAT_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/FFmpeg/libavcodec")
+set(AVUTIL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/FFmpeg/libavutil")
+set(AVSWSCALE_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/FFmpeg/libswscale")
+
+set(GNUTLS_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavformat.so" CACHE STRING "" FORCE)
+set(AVFORMAT_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavformat.so" CACHE STRING "" FORCE)
+set(AVCODEC_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavcodec.so" CACHE STRING "" FORCE)
+set(AVUTIL_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavcodec.so" CACHE STRING "" FORCE)
+set(AVSWSCALE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libswscale.so" CACHE STRING "" FORCE)
+
 set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/include")
 set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
 
