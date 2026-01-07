@@ -20,7 +20,7 @@ android {
                         "-DINSTALL_LIBS=OFF", "-DBUILD_PYBULLET=OFF","-DBUILD_CPU_DEMOS=OFF",
                         "-DBUILD_EXTRAS=OFF", "-DBUILD_UNIT_TESTS=OFF",
                         "-DBUILD_BULLET2_DEMOS=OFF",
-                        "-DUSE_DOUBLE_PRECISION=ON", "-DUSE_GRAPHICAL_BENCHMARK=OFF",
+                        "-DUSE_DOUBLE_PRECISION=OFF", "-DUSE_GRAPHICAL_BENCHMARK=OFF",
                         "-DBULLET2_MULTITHREADING=ON", "-DBUILD_OPENGL3_DEMOS=OFF",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
