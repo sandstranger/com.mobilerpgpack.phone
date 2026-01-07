@@ -100,3 +100,6 @@ url=https://github.com/sandstranger/libmp3lame-android.git
 [submodule "third_party/ffmpeg/src/main/FFmpeg"]
 	path = third_party/ffmpeg/src/main/FFmpeg
 	url = https://github.com/FFmpeg/FFmpeg.git
+[submodule "app/src/main/jni/fteqw"]
+	path = app/src/main/jni/fteqw
+	url = https://github.com/sandstranger/fteqw.git

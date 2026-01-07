@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -18,6 +18,8 @@ https://github.com/UZDoom/UZDoom
 https://github.com/fgsfdsfgs/perfect_dark
 
 https://github.com/arx/ArxLibertatis
+
+https://github.com/fte-team/fteqw
 
 # System Requirements
 
@@ -229,6 +231,8 @@ UZDoom engine source code: [Licence](https://github.com/UZDoom/UZDoom/blob/trunk
 Perfect Dark engine source code: [Licence](https://github.com/fgsfdsfgs/perfect_dark/blob/port/LICENSE) https://github.com/fgsfdsfgs/perfect_dark
 
 ArxLibertatis engine source code: [Licence](https://github.com/arx/ArxLibertatis/blob/master/LICENSE)	https://github.com/arx/ArxLibertatis
+
+FTEQW engine source code: [Licence](https://github.com/fte-team/fteqw/blob/master/LICENSE)	https://github.com/fte-team/fteqw
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
