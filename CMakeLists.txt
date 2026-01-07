@@ -90,11 +90,15 @@ set(FMOD_LIB "${CMAKE_SOURCE_DIR}/third_party/fmod/src/main/jniLibs/${ANDROID_AB
 set(libpng_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/libpng"
         "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/include")
 
+set(PNG_INCLUDE_DIRS ${libpng_INCLUDE_DIRS} CACHE STRING "" FORCE)
+
 if (IS_DEBUG_BUILD)
     set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/libpng/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libpng16d.so)
 else ()
     set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/libpng/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libpng16.so)
 endif ()
+
+set(${PNG_LIBRARIES} ${libpng_LIBRARY} CACHE STRING "" FORCE)
 
 set(SDL3_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/sdl3/include")
 if (IS_DEBUG_BUILD)
@@ -103,12 +107,14 @@ else()
     set(SDL3_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl3/android-project/app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL3.so)
 endif ()
 
-set(FREETYPE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/freetype/src/main/jni/freetype/include")
+set(FREETYPE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/freetype/src/main/jni/freetype/include" CACHE STRING "" FORCE)
 if (IS_DEBUG_BUILD)
     set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/freetype/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libfreetyped.so")
 else ()
     set(FREETYPE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/freetype/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libfreetype.so")
 endif ()
+
+set(FREETYPE_LIBRARIES ${FREETYPE_LIBRARY} CACHE STRING "" FORCE)
 
 set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/include")
 set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
@@ -126,13 +132,24 @@ set(LEMON_EXECUTABLE "${CMAKE_SOURCE_DIR}/third_party/uzdoom_tools/lemon.exe")
 
 if (IS_DEBUG_BUILD)
     set(BZIP2_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/bzip2/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libbz2.so"
-    CACHE FILEPATH "bzip2 library"
+    CACHE STRING "bzip2 library"
     FORCE)
 else ()
     set(BZIP2_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/bzip2/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libbz2.so"
-    CACHE FILEPATH "bzip2 library"
+    CACHE STRING "bzip2 library"
     FORCE)
 endif ()
+
+if (IS_DEBUG_BUILD)
+    set(BZIP2_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/bzip2/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libbz2.so"
+    CACHE STRING "bzip2 library"
+    FORCE)
+else ()
+    set(BZIP2_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/bzip2/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libbz2.so"
+    CACHE STRING "bzip2 library"
+    FORCE)
+endif ()
+
 
 set (USE_OPENGL ON)
 set (WITH_SDL "2")
@@ -169,6 +186,7 @@ set(FTE_PLUG_OPENXR false CACHE BOOL "" FORCE)
 set(FTE_PLUG_CEF false CACHE BOOL "" FORCE)
 set(FTE_PLUG_XMPP false CACHE BOOL "" FORCE)
 set(FTE_PLUG_ODE false CACHE BOOL "" FORCE)
+set(FTE_DEP_SDL3 false CACHE BOOL "" FORCE)
 
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
