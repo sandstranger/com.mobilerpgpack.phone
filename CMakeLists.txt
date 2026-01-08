@@ -120,14 +120,16 @@ endif ()
 
 set(FREETYPE_LIBRARIES ${FREETYPE_LIBRARY} CACHE STRING "" FORCE)
 
-set(JPEG_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/src/main/jni/libjpeg-turbo/src" CACHE STRING "" FORCE)
+set(JPEG_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/src/main/jni/libjpeg-turbo/src"
+        "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/src/main/jni/include"
+        CACHE STRING "" FORCE)
 if (IS_DEBUG_BUILD)
     set(JPEG_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libjpeg.so" CACHE STRING "" FORCE)
 else ()
     set(JPEG_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libjpeg.so" CACHE STRING "" FORCE)
 endif ()
 
-set(VORBISFILE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libvorbis/src/main/jni/libvorbis-android/jni/include/vorbis" CACHE STRING "" FORCE)
+set(VORBISFILE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libvorbis/src/main/jni/libvorbis-android/jni/include" CACHE STRING "" FORCE)
 if (IS_DEBUG_BUILD)
     set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so" CACHE STRING "" FORCE)
 else ()
