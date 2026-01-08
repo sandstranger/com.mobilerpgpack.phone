@@ -112,3 +112,6 @@ url=https://github.com/FFmpeg/FFmpeg
 [submodule "third_party/ode/src/main/jni/ODE"]
 	path = third_party/ode/src/main/jni/ODE
 url=https://github.com/sandstranger/ODE
+[submodule "third_party/yquake2/src/main/jni/yquake2"]
+	path = third_party/yquake2/src/main/jni/yquake2
+	url = https://github.com/sandstranger/yquake2.git

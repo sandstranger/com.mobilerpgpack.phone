@@ -424,6 +424,8 @@ bzip2:  https://gitlab.com/bzip2/bzip2
 
 ODE:  [Licence](https://github.com/thomasmarsh/ODE/blob/master/LICENSE-BSD.TXT) https://github.com/thomasmarsh/ODE
 
+yquake2: [Licence](https://github.com/yquake2/yquake2/blob/master/LICENSE)  https://github.com/yquake2/yquake2
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
