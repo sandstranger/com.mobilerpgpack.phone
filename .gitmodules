@@ -109,3 +109,6 @@ url=https://github.com/FFmpeg/FFmpeg
 [submodule "third_party/bzip2/src/main/jni/bzip2"]
 	path = third_party/bzip2/src/main/jni/bzip2
 	url = https://gitlab.com/bzip2/bzip2.git
+[submodule "third_party/ode/src/main/jni/ODE"]
+	path = third_party/ode/src/main/jni/ODE
+url=https://github.com/sandstranger/ODE
