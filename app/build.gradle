@@ -197,7 +197,7 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':third_party:libpng:build',':third_party:sdl3:android-project:app:build',
         ':third_party:fmod:build',':third_party:legacy_gl4es:build',':third_party:oboe:build',
         ':third_party:freetype:build',':third_party:zmusic:build',':third_party:bullet:build',
-        ':third_party:libjpegturbo:build',':third_party:bzip2:build'
+        ':third_party:libjpegturbo:build',':third_party:bzip2:build',':third_party:ode:build'
 
 dependencies {
     implementation project(':third_party:sdl2:android-project:app')
@@ -220,6 +220,7 @@ dependencies {
     implementation (project(":third_party:ffmpeg"))
     implementation (project(":third_party:libjpegturbo"))
     implementation (project(":third_party:bzip2"))
+    implementation (project(":third_party:ode"))
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
     implementation(libs.koin.core)
