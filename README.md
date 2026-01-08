@@ -408,6 +408,8 @@ libjpeg-turbo: [Licence](https://github.com/libjpeg-turbo/libjpeg-turbo/blob/mai
 
 bzip2:  https://gitlab.com/bzip2/bzip2
 
+ODE:  [Licence](https://github.com/thomasmarsh/ODE/blob/master/LICENSE-BSD.TXT) https://github.com/thomasmarsh/ODE
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
