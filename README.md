@@ -173,6 +173,20 @@ This port is using gamepads code implementation from ArxLibertatis nintendo swit
 
 All credits for gamepads implementation in ArxLibertatis android port to fgsfdsfgs - https://github.com/fgsfdsfgs  
 
+## FTEQW
+
+This port of FTEQW contains code from glKarin's FTEQW Android port: https://github.com/glKarin/com.n0n3m4.diii4a
+
+All credits for FTEQW Android bugfixes go to glKarin: https://github.com/glKarin
+
+I used his bugfixes for this legacy engine because fixing bugs in this awful legacy engine from scratch provides no practical benefit.
+
+I do not have time to fix legacy engine bugs from zero if fixes already exist.
+
+All credits and licenses are properly acknowledged in this port. Any other ideas or issues are not my responsibility.
+
+If you want to fix bugs in this engine from scratch yourself, feel free to fork the FTEQW source code and adapt it for Android.
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
