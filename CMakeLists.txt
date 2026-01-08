@@ -195,6 +195,18 @@ else ()
     FORCE)
 endif ()
 
+set(ODE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/ode/src/main/jni/ODE/include" CACHE STRING "" FORCE)
+
+if (IS_DEBUG_BUILD)
+    set(LIBODE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ode/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libode.so"
+    CACHE STRING ""
+    FORCE)
+else ()
+    set(LIBODE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ode/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libode.so"
+    CACHE STRING ""
+    FORCE)
+endif ()
+
 set (USE_OPENGL ON)
 set (WITH_SDL "2")
 set (BUILD_TOOLS OFF)
@@ -212,8 +224,6 @@ set(Boost_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/boost")
 set(GLM_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/glm")
 set(OPENAL_EFX_INCLUDE_DIR "${OPENAL_INCLUDE_DIR}/AL")
 
-set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
-
 set(FTE_DEP_ZLIB true CACHE BOOL "" FORCE)
 set(FTE_DEP_BZIP2 true CACHE BOOL "" FORCE)
 set(FTE_TOOL_IMAGE false CACHE BOOL "" FORCE)
@@ -224,12 +234,13 @@ set(FTE_TOOL_QCVM false CACHE BOOL "" FORCE)
 set(FTE_TOOL_QCC false CACHE BOOL "" FORCE)
 set(FTE_TOOL_QCCGUI false CACHE BOOL "" FORCE)
 set(FTE_PLUG_IRC true CACHE BOOL "" FORCE)
+set(FTE_DEP_GNUTLS false CACHE BOOL "" FORCE)
 set(FTE_PLUG_HL2 true CACHE BOOL "" FORCE)
 set(FTE_PLUG_MODELS true CACHE BOOL "" FORCE)
 set(FTE_PLUG_OPENXR false CACHE BOOL "" FORCE)
 set(FTE_PLUG_CEF false CACHE BOOL "" FORCE)
 set(FTE_PLUG_XMPP true CACHE BOOL "" FORCE)
-set(FTE_PLUG_ODE false CACHE BOOL "" FORCE)
+set(FTE_PLUG_ODE true CACHE BOOL "" FORCE)
 set(FTE_DEP_SDL3 false CACHE BOOL "" FORCE)
 set(FTE_USE_SDL true CACHE BOOL "" FORCE)
 if(CMAKE_CXX_BYTE_ORDER EQUAL BIG_ENDIAN)
@@ -240,6 +251,7 @@ else()
     set(FTE_BIG_ENDIAN false CACHE BOOL "" FORCE)
 endif()
 
+set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
