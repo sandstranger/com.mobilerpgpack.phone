@@ -30,6 +30,7 @@ fun RequestPath(explorerItemTitle: String,
                 key : Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
                 requiredFileExtensions : Collection<String> = emptyList(),
+                predefinedPath : String = "",
                 onPathSelected: ((String) -> Unit)? = null) {
     val activity = LocalActivity.current!!
     var showErrorDialogBox by rememberSaveable { mutableStateOf(false) }
@@ -64,7 +65,7 @@ fun RequestPath(explorerItemTitle: String,
         onClick = {
              with(get<StorageChooser>(
                 StorageChooser::class.java, parameters =
-                    { parametersOf(requestMode, activity) })){
+                    { parametersOf(requestMode, predefinedPath, activity) })){
                  fileExplorerViewModel.storageChooser = this
 
                  setOnSelectListener { path ->

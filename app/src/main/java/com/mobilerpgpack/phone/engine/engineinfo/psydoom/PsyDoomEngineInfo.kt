@@ -39,6 +39,8 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     override fun isMouseShown() = false
 
+    override val loadGL4ES: Boolean = false
+
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
