@@ -272,4 +272,26 @@
     <string name="gyroscope_dead_zone">陀螺仪死区</string>
     <string name="gyroscope_invert_x_axis">反转陀螺仪X轴</string>
     <string name="gyroscope_invert_y_axis">反转陀螺仪Y轴</string>
+    <string name="path_to_quake1_root_dir">Quake 根目录路径</string>
+    <string name="path_to_quake1_base_dir">Quake 基础目录路径</string>
+    <string name="path_to_quake1_mods_dir">Quake 模组目录路径</string>
+    <string name="path_to_quake1_manifest">Quake 清单文件路径 (.fmf)</string>
+    <string name="path_to_quake2_root_dir">Quake II 根目录路径</string>
+    <string name="path_to_quake2_base_dir">Quake II 基础目录路径</string>
+    <string name="path_to_quake2_mods_dir">Quake II 模组目录路径</string>
+    <string name="path_to_quake2_manifest">Quake II 清单文件路径 (.fmf)</string>
+    <string name="path_to_quake3_root_dir">Quake III 根目录路径</string>
+    <string name="path_to_quake3_base_dir">Quake III 基础目录路径</string>
+    <string name="path_to_quake3_mods_dir">Quake III 模组目录路径</string>
+    <string name="path_to_quake3_manifest">Quake III 清单文件路径 (.fmf)</string>
+    <string name="path_to_hexen2_root_dir">Hexen II 根目录路径</string>
+    <string name="path_to_hexen2_base_dir">Hexen II 基础目录路径</string>
+    <string name="path_to_hexen2_mods_dir">Hexen II 模组目录路径</string>
+    <string name="path_to_hexen2_manifest">Hexen II 清单文件路径 (.fmf)</string>
+    <string name="path_to_halflife_root_dir">半条命1 根目录路径</string>
+    <string name="path_to_halflife_base_dir">半条命1 基础目录路径</string>
+    <string name="path_to_halflife_mods_dir">半条命1 模组目录路径</string>
+    <string name="path_to_halflife_manifest">半条命1 清单文件路径 (.fmf)</string>
+    <string name="enable_fteqw_manifest_support">启用自定义清单文件支持 (.fmf)</string>
+    <string name="fteqw_game">当前 FTEQW 游戏</string>
 </resources>
