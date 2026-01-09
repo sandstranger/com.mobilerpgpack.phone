@@ -86,28 +86,31 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                 }
 
                 if (pathToBaseGameDirectory.isNotEmpty()) {
-                    val pathToBaseGameDirectory = File(pathToBaseGameDirectory)
-                    if (!baseCommandLineArgs.contains(BASE_GAME_COMMAND) && pathToBaseGameDirectory.exists()){
-                        this += BASE_GAME_COMMAND
-                        this += pathToBaseGameDirectory.name
+                    File(pathToBaseGameDirectory).apply {
+                        if (!baseCommandLineArgs.contains(BASE_GAME_COMMAND) && exists()){
+                            this@with += BASE_GAME_COMMAND
+                            this@with += name
+                        }
                     }
                 }
 
                 if (pathToModsDirectory.isNotEmpty()) {
-                    val pathToModsDirectory = File(pathToModsDirectory)
-                    if (preferencesStorage.enableFTEQWModsSupport && !
-                        baseCommandLineArgs.contains(GAME_COMMAND) && pathToModsDirectory.exists()
-                    ) {
-                        this += GAME_COMMAND
-                        this += pathToModsDirectory.name
+                    File(pathToModsDirectory).apply {
+                        if (preferencesStorage.enableFTEQWModsSupport &&
+                            !baseCommandLineArgs.contains(GAME_COMMAND) && exists()
+                        ) {
+                            this@with += GAME_COMMAND
+                            this@with += name
+                        }
                     }
                 }
 
                 if (pathToManifest.isNotEmpty()) {
-                    val pathToManifest = File(pathToManifest)
-                    if (!baseCommandLineArgs.contains(MANIFEST_COMMAND) && pathToManifest.exists()){
-                        this += MANIFEST_COMMAND
-                        this += pathToManifest.name
+                    File(pathToManifest).apply {
+                        if (!baseCommandLineArgs.contains(MANIFEST_COMMAND) && exists()){
+                            this@with += MANIFEST_COMMAND
+                            this@with += name
+                        }
                     }
                 }
 
