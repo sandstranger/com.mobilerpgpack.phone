@@ -270,4 +270,26 @@
     <string name="gyroscope_dead_zone">Мертвая зона гироскопа</string>
     <string name="gyroscope_invert_x_axis">Инвертировать ось X гироскопа</string>
     <string name="gyroscope_invert_y_axis">Инвертировать ось Y гироскопа</string>
+    <string name="path_to_quake1_root_dir">Путь к корневому каталогу Quake</string>
+    <string name="path_to_quake1_base_dir">Путь к базовому каталогу Quake</string>
+    <string name="path_to_quake1_mods_dir">Путь к каталогу модификаций Quake</string>
+    <string name="path_to_quake1_manifest">Путь к манифесту Quake (.fmf)</string>
+    <string name="path_to_quake2_root_dir">Путь к корневому каталогу Quake II</string>
+    <string name="path_to_quake2_base_dir">Путь к базовому каталогу Quake II</string>
+    <string name="path_to_quake2_mods_dir">Путь к каталогу модификаций Quake II</string>
+    <string name="path_to_quake2_manifest">Путь к манифесту Quake II (.fmf)</string>
+    <string name="path_to_quake3_root_dir">Путь к корневому каталогу Quake III Arena</string>
+    <string name="path_to_quake3_base_dir">Путь к базовому каталогу Quake III Arena</string>
+    <string name="path_to_quake3_mods_dir">Путь к каталогу модификаций Quake III Arena</string>
+    <string name="path_to_quake3_manifest">Путь к манифесту Quake III Arena (.fmf)</string>
+    <string name="path_to_hexen2_root_dir">Путь к корневому каталогу Hexen II</string>
+    <string name="path_to_hexen2_base_dir">Путь к базовому каталогу Hexen II</string>
+    <string name="path_to_hexen2_mods_dir">Путь к каталогу модификаций Hexen II</string>
+    <string name="path_to_hexen2_manifest">Путь к манифесту Hexen II (.fmf)</string>
+    <string name="path_to_halflife_root_dir">Путь к корневому каталогу Half-Life 1</string>
+    <string name="path_to_halflife_base_dir">Путь к базовому каталогу Half-Life 1</string>
+    <string name="path_to_halflife_mods_dir">Путь к каталогу модификаций Half-Life 1</string>
+    <string name="path_to_halflife_manifest">Путь к манифесту Half-Life 1 (.fmf)</string>
+    <string name="enable_fteqw_manifest_support">Включить поддержку пользовательских манифестов (.fmf)</string>
+    <string name="fteqw_game">Активная игра FTEQW</string>
 </resources>

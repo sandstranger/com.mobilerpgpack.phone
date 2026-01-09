@@ -40,6 +40,10 @@ fun RequestPath(explorerItemTitle: String,
     {
         mutableStateOf(previousSavedPath)
     }
+    val predefinedPath by rememberSaveable(predefinedPath) {
+        mutableStateOf(predefinedPath)
+    }
+
     val prefsStorage: PreferencesStorage = koinInject()
     val fileExplorerViewModel : FileExplorerViewModel = koinViewModel ()
     val lifecycleOwner = LocalLifecycleOwner.current
