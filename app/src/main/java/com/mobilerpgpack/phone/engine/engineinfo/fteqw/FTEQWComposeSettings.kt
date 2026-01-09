@@ -7,5 +7,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 class FTEQWComposeSettings : IEngineUIController {
     @Composable
     override fun DrawSettings(navController: NavHostController) {
+
     }
 }
