@@ -288,10 +288,10 @@
     <string name="path_to_hexen2_base_dir">Hexen II 基础目录路径</string>
     <string name="path_to_hexen2_mods_dir">Hexen II 模组目录路径</string>
     <string name="path_to_hexen2_manifest">Hexen II 清单文件路径 (.fmf)</string>
-    <string name="path_to_halflife_root_dir">半条命1 根目录路径</string>
-    <string name="path_to_halflife_base_dir">半条命1 基础目录路径</string>
-    <string name="path_to_halflife_mods_dir">半条命1 模组目录路径</string>
-    <string name="path_to_halflife_manifest">半条命1 清单文件路径 (.fmf)</string>
+    <string name="path_to_halflife_root_dir">Half-Life 1 根目录路径</string>
+    <string name="path_to_halflife_base_dir">Half-Life 1 基础目录路径</string>
+    <string name="path_to_halflife_mods_dir">Half-Life 1 模组目录路径</string>
+    <string name="path_to_halflife_manifest">Half-Life 1 清单文件路径 (.fmf)</string>
     <string name="enable_fteqw_manifest_support">启用自定义清单文件支持 (.fmf)</string>
     <string name="fteqw_game">当前 FTEQW 游戏</string>
 </resources>
