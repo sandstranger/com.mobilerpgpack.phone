@@ -126,6 +126,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         Os.setenv("PATH_TO_HOME_DIRECTORY", homeDirFile.absolutePath, true)
         Os.setenv("FREETYPE_LIBRARY_NAME", FREETYPE_NATIVE_LIB_NAME, true)
         Os.setenv("DLL_DEFAULT_PATH", activity.applicationInfo.nativeLibraryDir, true)
+        Os.setenv("PATH_TO_BASE_DIRECTORY", pathToBaseGameDirectory, true)
     }
 
     private companion object {
