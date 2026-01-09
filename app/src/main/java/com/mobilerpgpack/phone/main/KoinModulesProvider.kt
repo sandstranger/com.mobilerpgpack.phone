@@ -25,6 +25,9 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSet
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRPGEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkPreferencesStorage
@@ -284,7 +287,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     private val composeModule = module {
         viewModelOf(::FileExplorerViewModel)
 
-        factory <StorageChooser> { (requestMode: RequestPathMode, activity: Activity) ->
+        factory <StorageChooser> { (requestMode: RequestPathMode, predefinedPath : String, activity: Activity) ->
             StorageChooser.Builder()
                 .withActivity(activity)
                 .withFragmentManager(activity.fragmentManager)
@@ -292,6 +295,11 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 .allowCustomPath(true)
                 .setType( if (requestMode == RequestPathMode.Directory)
                 StorageChooser.DIRECTORY_CHOOSER else StorageChooser.FILE_PICKER)
+                .apply {
+                    if (predefinedPath.isNotEmpty()) {
+                        withPredefinedPath(predefinedPath)
+                    }
+                }
                 .build()
         }
 
@@ -623,10 +631,52 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             }
     }
 
+    private val fteQWKoinModule = module {
+        single<ControlsProvider> { ControlsProvider(EngineTypes.FTEQW, hashMapOf(
+            ControlsType.OnScreenStick to arxLibertatisOnScreenStickControlsLayout)) }.withOptions {
+            named(EngineTypes.FTEQW.name) }
+
+        singleOf(::FTEQWPreferencesStorage)
+            .withOptions {
+                named(EngineTypes.FTEQW.name)
+            }
+        single {
+            val allLibs = with(mutableListOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                FREETYPE_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
+                OPENAL_NATIVE_LIB_NAME,
+                YQUAKE2_CORE_NATIVE_LIB_NAME,
+                BZ2_NATIVE_LIB_NAME,
+                ODE_NATIVE_LIB_NAME,
+                PNG_NATIVE_LIB_NAME,
+                JPEG_NATIVE_LIB_NAME,
+                OGG_NATIVE_LIB_NAME,
+                VORBIS_NATIVE_LIB_NAME,
+            )){
+                addAll(ffmpegLibs)
+                addAll(bulletLibs)
+                addAll(fteQWNativePlugins)
+                add(FTEQW_MAIN_ENGINE_LIB)
+                toTypedArray()
+            }
+            FTEQWEngineInfo(FTEQW_MAIN_ENGINE_LIB, allLibs)
+        }.withOptions {
+            named(EngineTypes.FTEQW.name)
+            bind<IEngineInfo>()
+        }
+        singleOf(::FTEQWComposeSettings)
+            .withOptions {
+                named(EngineTypes.FTEQW.name)
+                bind <IEngineUIController>()
+            }
+    }
+
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
-            psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,arxLibertatisKoinModule)
+            psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,
+            arxLibertatisKoinModule, fteQWKoinModule)
     }
 
     companion object{
