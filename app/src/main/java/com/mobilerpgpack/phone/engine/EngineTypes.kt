@@ -9,7 +9,8 @@ enum class EngineTypes {
     PsyDoom,
     UZDoom,
     PerfectDark,
-    ArxLibertatis;
+    ArxLibertatis,
+    FTEQW;
 
     companion object{
         val DefaultActiveEngine = WolfensteinRpg
