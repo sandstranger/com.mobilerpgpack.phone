@@ -107,6 +107,11 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 return
             }
 
+            if (joystickRegistered && engineInfo.needToReInitGameControllers){
+                joystickRegistered = false
+                destroyVirtualController()
+            }
+
             if (!joystickRegistered) {
                 joystickRegistered = true
                 scope.launch {

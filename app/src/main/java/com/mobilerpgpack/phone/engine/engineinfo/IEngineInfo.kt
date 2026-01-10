@@ -14,6 +14,7 @@ interface IEngineInfo {
     val engineType : EngineTypes
     val pathToResourceIsCorrect : Boolean
     val pathToResourceExists : Boolean
+    val needToReInitGameControllers : Boolean
     val requiredResourceExtensions : Collection<String>
     val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean>
     val mainLibraryName : String
