@@ -114,6 +114,8 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     }
                 }
 
+                this += gameType.name
+
                 toTypedArray()
             }
         }
