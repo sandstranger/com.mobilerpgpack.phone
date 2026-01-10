@@ -137,7 +137,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         Os.setenv("DLL_DEFAULT_PATH", activity.applicationInfo.nativeLibraryDir, true)
         Os.setenv("PATH_TO_BASE_DIRECTORY", pathToBaseGameDirectory, true)
         Os.setenv("RENDER_TYPE", preferencesStorage.fteQWRenderType.jniRenderName, true)
-        Os.setenv("ACTIVE_GAME", preferencesStorage.activeFTEQWGame.toString(), true)
+        Os.setenv("ACTIVE_GAME", gameType.toString(), true)
     }
 
     override fun onNativeLibrariesLoaded() {
