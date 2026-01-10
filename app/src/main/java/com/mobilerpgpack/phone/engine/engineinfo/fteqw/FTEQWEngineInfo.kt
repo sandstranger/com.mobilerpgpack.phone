@@ -50,6 +50,8 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
     }
 
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
+
     override val callExitProcessOnDestroy: Boolean = false
 
     override val loadGL4ES = false

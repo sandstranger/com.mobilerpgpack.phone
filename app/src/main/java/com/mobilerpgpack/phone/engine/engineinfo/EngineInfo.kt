@@ -115,7 +115,7 @@ abstract class EngineInfo(
 
     private external fun needToShowScreenControls() : Boolean
 
-    private external fun needToInvokeMouseButtonsEvents() : Boolean
+    protected external fun needToInvokeMouseButtonsEvents() : Boolean
 
     private external fun pauseSound()
 
