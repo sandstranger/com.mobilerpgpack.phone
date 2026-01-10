@@ -195,7 +195,7 @@ You can play quake1 , quake 2 and hexen 2 single player I think without major bu
 
 Rendering support: This engine supports opengl and vulkan on desktop. 
 
-On mobiles - it is suppported gles 2.0, gles 3.0 and vulkan renders, because I fixed almost all vulkan renders bugs in this engine for mobiles,
+On mobiles - it is suppports gles 2.0, gles 3.0 and vulkan renders, because I fixed almost all vulkan renders bugs in this engine for mobiles,
 
 so, it is working now even on mtk
 
@@ -207,13 +207,11 @@ For audio - openal with oboe is using, instead of SDL2 with openSLES support.
 
 This port of FTEQW contains code from glKarin's FTEQW Android port: https://github.com/glKarin/com.n0n3m4.diii4a
 
-All credits for FTEQW Android bugfixes go to glKarin: https://github.com/glKarin
-
 And also used some bugfixes from beloko FTEQW  Android port: https://github.com/emileb/fteqw
 
-All credits for FTEQW Android bugfixes go to glKarin: https://github.com/glKarin and to to emileb - https://github.com/emileb
+All credits for FTEQW Android bugfixes go to glKarin: https://github.com/glKarin and to emileb - https://github.com/emileb
 
-I used his bugfixes for this legacy engine because fixing bugs in this awful legacy engine from scratch provides no practical benefit.
+I used these bugfixes for this legacy engine because fixing bugs in this awful legacy engine from scratch provides no practical benefit.
 
 I do not have time to fix legacy engine bugs from zero if fixes already exist.
 
