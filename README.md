@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -18,6 +18,8 @@ https://github.com/UZDoom/UZDoom
 https://github.com/fgsfdsfgs/perfect_dark
 
 https://github.com/arx/ArxLibertatis
+
+https://github.com/fte-team/fteqw
 
 # System Requirements
 
@@ -171,6 +173,52 @@ This port is using gamepads code implementation from ArxLibertatis nintendo swit
 
 All credits for gamepads implementation in ArxLibertatis android port to fgsfdsfgs - https://github.com/fgsfdsfgs  
 
+## FTEQW
+
+For running FTEQW follow these docs - https://quakewiki.org/wiki/FTEQW_Wiki
+
+FTEQW supports quake 1, quake 2, quake 3, hexen 2 and half life 1. However quake 2 and quake 3 support is nominal
+
+This engine does not have quake 2 native support. Instead it - it is using this engine https://github.com/yquake2/yquake2
+
+This engine loaded core yquake2 in runtime. You can play quake 2 single player campaign with this support. But Multiplayer will not work.
+
+The same applies to Quake 3. Support for Quake 3 is purely nominal - therefore multiplayer does not work in it at all. You can only play with bots in the 
+
+single player, and even then it is unstable.
+
+There is no support for Half Life 1 at all. It just doesn't work at all. That's why I didn't even include it in the launcher
+
+quake 1 net code also unstable with a lot of bugs. Due to this I disabled multithread support in this engine.
+
+You can play quake1 , quake 2 and hexen 2 single player I think without major bugs.
+
+Rendering support: This engine supports opengl and vulkan on desktop. 
+
+On mobiles - it is suppports gles 2.0, gles 3.0 and vulkan renders, because I fixed almost all vulkan renders bugs in this engine for mobiles,
+
+so, it is working now even on mtk
+
+However vulkan support in this engine architecturally inefficient. Rendering performance will be very low even on Adreno
+
+Due to this - do not use it, use gles 2.0 or gles 3.0 render instead it even on adreno.
+
+For audio - openal with oboe is using, instead of SDL2 with openSLES support.
+
+This port of FTEQW contains code from glKarin's FTEQW Android port: https://github.com/glKarin/com.n0n3m4.diii4a
+
+And also used some bugfixes from beloko FTEQW  Android port: https://github.com/emileb/fteqw
+
+All credits for FTEQW Android bugfixes go to glKarin: https://github.com/glKarin and to emileb - https://github.com/emileb
+
+I used these bugfixes for this legacy engine because fixing bugs in this awful legacy engine from scratch provides no practical benefit.
+
+I do not have time to fix legacy engine bugs from zero if fixes already exist.
+
+All credits and licenses are properly acknowledged in this port. Any other ideas or issues are not my responsibility.
+
+If you want to fix bugs in this engine from scratch yourself, feel free to fork the FTEQW source code and adapt it for Android.
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
@@ -229,6 +277,8 @@ UZDoom engine source code: [Licence](https://github.com/UZDoom/UZDoom/blob/trunk
 Perfect Dark engine source code: [Licence](https://github.com/fgsfdsfgs/perfect_dark/blob/port/LICENSE) https://github.com/fgsfdsfgs/perfect_dark
 
 ArxLibertatis engine source code: [Licence](https://github.com/arx/ArxLibertatis/blob/master/LICENSE)	https://github.com/arx/ArxLibertatis
+
+FTEQW engine source code: [Licence](https://github.com/fte-team/fteqw/blob/master/LICENSE)	https://github.com/fte-team/fteqw
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
@@ -393,6 +443,22 @@ GLM: [Licence](https://github.com/g-truc/glm/blob/master/copying.txt)	https://gi
 code from nintendo switch ArxLibertatis port: [Licence](https://github.com/fgsfdsfgs/ArxLibertatis/blob/switch-new/LICENSE) https://github.com/fgsfdsfgs/ArxLibertatis
 
 boost: [Licence](https://github.com/boostorg/boost/blob/master/LICENSE_1_0.txt)	https://github.com/boostorg/boost
+
+bullet3: [Licence](https://github.com/bulletphysics/bullet3/blob/master/LICENSE.txt)	https://github.com/bulletphysics/bullet3
+
+ffmpeg:	[Licence](https://github.com/FFmpeg/FFmpeg/blob/master/LICENSE.md)	 https://github.com/FFmpeg/FFmpeg
+
+ffmpeg prebult binaries: [Licence](https://github.com/sk3llo/ffmpeg_kit_flutter/blob/master/LICENSE)	 https://github.com/sk3llo/ffmpeg_kit_flutter
+
+libjpeg-turbo: [Licence](https://github.com/libjpeg-turbo/libjpeg-turbo/blob/main/LICENSE.md)	https://github.com/libjpeg-turbo/libjpeg-turbo
+
+bzip2:  https://gitlab.com/bzip2/bzip2
+
+ODE:  [Licence](https://github.com/thomasmarsh/ODE/blob/master/LICENSE-BSD.TXT) https://github.com/thomasmarsh/ODE
+
+yquake2: [Licence](https://github.com/yquake2/yquake2/blob/master/LICENSE)  https://github.com/yquake2/yquake2
+
+code from FTEQW beloko android port: https://github.com/emileb/fteqw
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
