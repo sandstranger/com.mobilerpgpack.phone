@@ -20,6 +20,13 @@ void nativeGyroMouse(float dx, float dy) {
         }
     }
 
+    if (!window) {
+        window = SDL_GetGrabbedWindow();
+        if (window) {
+            windowId = SDL_GetWindowID(window);
+        }
+    }
+
     if (!window || !mouse) {
         return;
     }
