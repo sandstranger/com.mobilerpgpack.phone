@@ -183,33 +183,6 @@ class FTEQWComposeSettings : IEngineUIController {
                     }
                 }
             }
-            FTEQWGames.Halflife -> {
-                RequestPath(stringResource(R.string.path_to_halflife_root_dir),
-                    prefsStorage.pathToHalfLife,
-                    prefsStorage.pathToHalflifePrefsKey, requestMode = RequestPathMode.Directory)
-
-                DrawHorizontalDivider()
-
-                Row(verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)) {
-
-                    Box(modifier = Modifier.weight(1.0f)){
-                        RequestPath(stringResource(R.string.path_to_halflife_base_dir),
-                            prefsStorage.pathToHalfLifeBaseDir,
-                            prefsStorage.pathToHalflifeBaseDirPrefsKey, requestMode = RequestPathMode.Directory)
-                    }
-
-                    Button(modifier = Modifier.padding(end = 4.dp), onClick = {
-                        prefsStorage.setStringValue(prefsStorage.pathToHalflifeBaseDirPrefsKey, "")
-                    }, colors = buttonsColors) {
-                        Text(
-                            text = stringResource(R.string.clear),
-                            textAlign = TextAlign.Center,
-                            color = onPrimaryColor
-                        )
-                    }
-                }
-            }
         }
 
         DrawHorizontalDivider()
@@ -242,11 +215,6 @@ class FTEQWComposeSettings : IEngineUIController {
                     RequestPath(stringResource(R.string.path_to_hexen2_mods_dir),
                         prefsStorage.pathToHexen2ModsDir,
                         prefsStorage.pathToHexen2ModsDirPrefsKey, requestMode = RequestPathMode.Directory)
-                }
-                FTEQWGames.Halflife -> {
-                    RequestPath(stringResource(R.string.path_to_halflife_mods_dir),
-                        prefsStorage.pathToHalfLifeModsDir,
-                        prefsStorage.pathToHalflifeModsDirPrefsKey, requestMode = RequestPathMode.Directory)
                 }
             }
 
@@ -283,12 +251,6 @@ class FTEQWComposeSettings : IEngineUIController {
                     RequestPath(stringResource(R.string.path_to_hexen2_manifest),
                         prefsStorage.pathToHexen2Manifest,
                         prefsStorage.pathToHexen2ManifestPrefsKey, requestMode = RequestPathMode.File,
-                        requiredFileExtensions = allowedManifestExtensions)
-                }
-                FTEQWGames.Halflife -> {
-                    RequestPath(stringResource(R.string.path_to_halflife_manifest),
-                        prefsStorage.pathToHalfLifeManifest,
-                        prefsStorage.pathToHalflifeManifestPrefsKey, requestMode = RequestPathMode.File,
                         requiredFileExtensions = allowedManifestExtensions)
                 }
             }
