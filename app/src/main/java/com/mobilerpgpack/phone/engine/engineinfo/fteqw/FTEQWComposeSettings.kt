@@ -46,12 +46,23 @@ class FTEQWComposeSettings : IEngineUIController {
         var enableCustomManifestSupport by rememberSaveable(prefsStorage.enableManifestSupport) {
             mutableStateOf(prefsStorage.enableManifestSupport)
         }
+        var renderType by rememberSaveable(prefsStorage.fteQWRenderType) {
+            mutableStateOf(prefsStorage.fteQWRenderType)
+        }
         val buttonsColors = getButtonsColors()
         val onPrimaryColor = getOnPrimaryColor()
         val allowedManifestExtensions = retain { listOf(".fmf", ".FMF") }
 
         DrawCommandLinePreferences(prefsStorage.commandLineArgs,
             prefsStorage.commandLineArgsPrefsKey.name)
+
+        DrawHorizontalDivider()
+
+        ListPreferenceItem(stringResource(R.string.uzdoom_rendering_api),
+            renderType){
+            prefsStorage.setEnumValue(prefsStorage.fteQWRenderTypePrefsKey,it)
+            renderType = it
+        }
 
         DrawHorizontalDivider()
 
