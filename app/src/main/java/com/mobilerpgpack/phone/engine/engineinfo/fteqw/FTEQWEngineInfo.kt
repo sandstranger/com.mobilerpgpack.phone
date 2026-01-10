@@ -6,7 +6,6 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.main.FREETYPE_NATIVE_LIB_NAME
 import com.sun.jna.Native
-import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -49,7 +48,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
     }
 
-    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
+    override val mouseButtonsEventsCanBeInvoked = false
 
     override val callExitProcessOnDestroy: Boolean = false
 
@@ -58,6 +57,8 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override val preferencesStorage get() = fteQWPrefsStorage
 
     override val commandLineParams: String get() = fteQWPrefsStorage.commandLineArgs
+
+    override val useGyroscope: Boolean get() = !needToInvokeMouseButtonsEvents()
 
     override val pathToResource : String get() {
         return when (gameType) {
@@ -116,7 +117,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     }
                 }
 
-                this += gameType.name
+                this += gameType.commandLineArg
 
                 toTypedArray()
             }

@@ -63,7 +63,7 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
     fun stop() = sm?.unregisterListener(this)
 
     final override fun onSensorChanged(e: SensorEvent) {
-        if (e.sensor.type != Sensor.TYPE_GYROSCOPE || engineInfo.mouseButtonsEventsCanBeInvoked) {
+        if (e.sensor.type != Sensor.TYPE_GYROSCOPE || !engineInfo.useGyroscope) {
             return
         }
 

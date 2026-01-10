@@ -140,6 +140,8 @@ abstract class EngineInfo(
 
     override val engineType: EngineTypes = activeEngineType
 
+    override val useGyroscope: Boolean get() = !mouseButtonsEventsCanBeInvoked
+
     final override val pathToResourceExists : Boolean
         get() {
             val pathToResource = this.pathToResource
