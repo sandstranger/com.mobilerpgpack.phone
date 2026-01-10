@@ -131,7 +131,7 @@ class FTEQWComposeSettings : IEngineUIController {
                     Box(modifier = Modifier.weight(1.0f)){
                         RequestPath(stringResource(R.string.path_to_quake3_base_dir),
                             prefsStorage.pathToQuake3BaseDir,
-                            prefsStorage.pathToQuake1BaseDirPrefsKey, requestMode = RequestPathMode.Directory)
+                            prefsStorage.pathToQuake3BaseDirPrefsKey, requestMode = RequestPathMode.Directory)
                     }
 
                     Button(modifier = Modifier.padding(end = 4.dp), onClick = {
