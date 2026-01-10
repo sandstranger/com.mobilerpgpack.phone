@@ -107,15 +107,16 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 return
             }
 
-            if (joystickRegistered && engineInfo.needToReInitGameControllers){
+            if (joystickRegisteredInSDL && engineInfo.needToReInitGameControllers){
                 joystickRegistered = false
+                joystickRegisteredInSDL = false
                 destroyVirtualController()
             }
 
             if (!joystickRegistered) {
-                Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
                 joystickRegistered = true
                 scope.launch {
+                    Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
                     createVirtualController()
                     engineInfo.rescanGameControllers()
                     joystickRegisteredInSDL = true
