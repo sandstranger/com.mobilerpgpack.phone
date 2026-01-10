@@ -272,4 +272,26 @@
     <string name="gyroscope_dead_zone">Gyroscope dead zone</string>
     <string name="gyroscope_invert_x_axis">Invert gyroscope X axis</string>
     <string name="gyroscope_invert_y_axis">Invert gyroscope Y axis</string>
+    <string name="path_to_quake1_root_dir">Path to Quake root directory</string>
+    <string name="path_to_quake1_base_dir">Path to Quake base directory</string>
+    <string name="path_to_quake1_mods_dir">Path to Quake mods directory</string>
+    <string name="path_to_quake1_manifest">Path to Quake manifest (.fmf)</string>
+    <string name="path_to_quake2_root_dir">Path to Quake2 root directory</string>
+    <string name="path_to_quake2_base_dir">Path to Quake2 base directory</string>
+    <string name="path_to_quake2_mods_dir">Path to Quake2 mods directory</string>
+    <string name="path_to_quake2_manifest">Path to Quake2 manifest (.fmf)</string>
+    <string name="path_to_quake3_root_dir">Path to Quake3 root directory</string>
+    <string name="path_to_quake3_base_dir">Path to Quake3 base directory</string>
+    <string name="path_to_quake3_mods_dir">Path to Quake3 mods directory</string>
+    <string name="path_to_quake3_manifest">Path to Quake3 manifest (.fmf)</string>
+    <string name="path_to_hexen2_root_dir">Path to Hexen2 root directory</string>
+    <string name="path_to_hexen2_base_dir">Path to Hexen2 base directory</string>
+    <string name="path_to_hexen2_mods_dir">Path to Hexen2 mods directory</string>
+    <string name="path_to_hexen2_manifest">Path to Hexen2 manifest (.fmf)</string>
+    <string name="path_to_halflife_root_dir">Path to Half Life 1 root directory</string>
+    <string name="path_to_halflife_base_dir">Path to Half Life 1 base directory</string>
+    <string name="path_to_halflife_mods_dir">Path to Half Life 1 mods directory</string>
+    <string name="path_to_halflife_manifest">Path to Half Life 1 manifest (.fmf)</string>
+    <string name="enable_fteqw_manifest_support">Enable custom manifest (.fmf) support</string>
+    <string name="fteqw_game">Active FTEQW Game</string>
 </resources>
