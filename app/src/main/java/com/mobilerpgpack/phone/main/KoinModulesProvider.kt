@@ -653,6 +653,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 JPEG_NATIVE_LIB_NAME,
                 OGG_NATIVE_LIB_NAME,
                 VORBIS_NATIVE_LIB_NAME,
+                OPUS_NATIVE_LIB_NAME,
             )){
                 addAll(ffmpegLibs)
                 addAll(bulletLibs)
