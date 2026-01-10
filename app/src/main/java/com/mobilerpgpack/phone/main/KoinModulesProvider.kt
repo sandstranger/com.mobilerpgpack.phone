@@ -90,6 +90,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.uzDoomAbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.uzDoomOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.wolfensteinRpgLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.fteQWOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkAbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
@@ -633,7 +634,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
     private val fteQWKoinModule = module {
         single<ControlsProvider> { ControlsProvider(EngineTypes.FTEQW, hashMapOf(
-            ControlsType.OnScreenStick to arxLibertatisOnScreenStickControlsLayout)) }.withOptions {
+            ControlsType.OnScreenStick to fteQWOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.FTEQW.name) }
 
         singleOf(::FTEQWPreferencesStorage)
