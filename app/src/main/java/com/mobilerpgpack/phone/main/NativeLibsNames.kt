@@ -20,6 +20,16 @@ const val WOLFENSTEINRPG_MAIN_ENGINE_LIB = "WolfensteinRPG"
 
 const val ARX_LIBERTATIS_MAIN_ENGINE_LIB  = "arx"
 
+const val FTEQW_MAIN_ENGINE_LIB = "ftedroid"
+
+const val YQUAKE2_CORE_NATIVE_LIB_NAME = "game"
+
+const val BZ2_NATIVE_LIB_NAME = "bz2"
+
+const val ODE_NATIVE_LIB_NAME = "ode"
+
+const val JPEG_NATIVE_LIB_NAME = "jpeg"
+
 const val SDL3_NATIVE_LIB_NAME = "SDL3"
 
 const val FMOD_NATIVE_LIB_NAME = "fmod"
@@ -73,3 +83,13 @@ val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else "ng_gl4es"
 val gl4esFullLibraryName = buildFullLibraryName(gl4esLibraryName)
 
 fun buildFullLibraryName (libraryName : String ) = "lib${libraryName}.so"
+
+val fteQWNativePlugins = listOf("fteplug_bullet", "fteplug_cod", "fteplug_ezhud",
+    "fteplug_ffmpeg", "fteplug_hl2", "fteplug_models", "fteplug_ode",
+    "fteplug_qi", "fteplug_quake3")
+
+val bulletLibs = listOf("Bullet3Common", "LinearMath", "BulletCollision", "BulletDynamics",
+    "BulletInverseDynamics", "BulletSoftBody")
+
+val ffmpegLibs = listOf("avcodec", "avdevice", "avfilter", "avformat",
+    "avutil", "swresample", "swscale")

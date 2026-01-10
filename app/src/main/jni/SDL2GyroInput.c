@@ -12,11 +12,18 @@ static SDL_Mouse *mouse;
 void nativeGyroMouse(int dx, int dy) {
     if (!mouse){
         mouse = SDL_GetMouse();
-        if (mouse) {
-            window = mouse->focus;
+        if (mouse){
+            window = mouse ->focus;
             if (window) {
                 windowId = SDL_GetWindowID(window);
             }
+        }
+    }
+
+    if (!window) {
+        window = SDL_GetGrabbedWindow();
+        if (window) {
+            windowId = SDL_GetWindowID(window);
         }
     }
 

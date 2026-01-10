@@ -102,6 +102,8 @@ abstract class EngineInfo(
 
     protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope
 
+    protected open val callExitProcessOnDestroy : Boolean = true
+
     protected abstract val gyroInput : GyroInput
 
     private var wasInit = false
@@ -113,13 +115,17 @@ abstract class EngineInfo(
 
     private external fun needToShowScreenControls() : Boolean
 
-    private external fun needToInvokeMouseButtonsEvents() : Boolean
+    protected external fun needToInvokeMouseButtonsEvents() : Boolean
 
     private external fun pauseSound()
 
     private external fun resumeSound()
 
     private external fun rescanGameControllersForced()
+
+    private external fun needToReInitGameControllers() : Boolean
+
+    final override val needToReInitGameControllers: Boolean get() = needToReInitGameControllers()
 
     final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
         flow {
@@ -133,6 +139,8 @@ abstract class EngineInfo(
     override val mainLibraryName: String = mainEngineLib
 
     override val engineType: EngineTypes = activeEngineType
+
+    override val useGyroscope: Boolean get() = !mouseButtonsEventsCanBeInvoked
 
     final override val pathToResourceExists : Boolean
         get() {
@@ -221,7 +229,9 @@ abstract class EngineInfo(
 
     override fun onDestroy() {
         scope.coroutineContext.cancelChildren()
-        exitProcess(0)
+        if (callExitProcessOnDestroy) {
+            exitProcess(0)
+        }
     }
 
     override fun onBackPressed(): Boolean {
@@ -425,7 +435,6 @@ abstract class EngineInfo(
 
             Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
             Os.setenv("LIBGL_DXTMIPMAP", "1", true)
-            Os.setenv("LIBGL_ES", if (!BuildConfig.LEGACY_GLES2) "3" else "2", true)
             Os.setenv("LIBGL_GL", "21", true)
             Os.setenv("LIBGL_DXT", "1", true)
             Os.setenv("LIBGL_NOTEXARRAY", "0", true)
@@ -434,6 +443,8 @@ abstract class EngineInfo(
             Os.setenv("SDL_VIDEO_GL_DRIVER", gl4esFullLibraryName, true)
             Os.setenv("LIBGL_VABGRA", "1",true)
         }
+
+        Os.setenv("LIBGL_ES", if (!BuildConfig.LEGACY_GLES2) "3" else "2", true)
 
         val pathToSDL2ControllerDB = "${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt"
         Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", pathToSDL2ControllerDB, true)

@@ -34,18 +34,19 @@ void createVirtualController (){
 
 void setVirtualAxis(int axisX, float axisXValue,int axisY, float axisYValue){
     if (virtualController != nullptr){
-        SDL_JoystickSetVirtualAxis(virtualController, axisX, (Sint16)(32767.0f * axisXValue));
-        SDL_JoystickSetVirtualAxis(virtualController, axisY, (Sint16)(32767.0f * axisYValue));
+        const float axisMultiplier = 32767.0f;
+        SDL_JoystickSetVirtualAxis(virtualController, axisX, (Sint16)(axisMultiplier * axisXValue));
+        SDL_JoystickSetVirtualAxis(virtualController, axisY, (Sint16)(axisMultiplier * axisYValue));
     }
 }
 
 void destroyVirtualController() {
     if (virtualController != nullptr) {
-        SDL_JoystickClose(virtualController);
         if (virtualControllerIndex >= 0) {
             SDL_JoystickDetachVirtual(virtualControllerIndex);
             virtualControllerIndex = -1;
         }
+        SDL_JoystickClose(virtualController);
         virtualController = nullptr;
     }
 }
