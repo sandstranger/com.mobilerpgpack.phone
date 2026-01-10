@@ -102,6 +102,8 @@ abstract class EngineInfo(
 
     protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope
 
+    protected open val callExitProcessOnDestroy : Boolean = true
+
     protected abstract val gyroInput : GyroInput
 
     private var wasInit = false
@@ -225,7 +227,9 @@ abstract class EngineInfo(
 
     override fun onDestroy() {
         scope.coroutineContext.cancelChildren()
-        exitProcess(0)
+        if (callExitProcessOnDestroy) {
+            exitProcess(0)
+        }
     }
 
     override fun onBackPressed(): Boolean {

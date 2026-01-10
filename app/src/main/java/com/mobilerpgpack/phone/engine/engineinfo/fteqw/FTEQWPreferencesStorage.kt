@@ -30,6 +30,7 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val enableFTEQWModsPrefsKey = booleanPreferencesKey("enable_fteqw_mods")
     val enableManifestSupportPrefsKey = booleanPreferencesKey("enable_fteqw_manifest")
     val activeFTEQWGamePrefsKey = enumPreferencesKey<FTEQWGames>("active_fteqw_game")
+    val fteQWRenderTypePrefsKey = enumPreferencesKey<FTEQWRenderTypes>("fteqw_render_type")
 
     val pathToQuake1 get() = getStringValue(pathToQuake1PrefsKey)
     val pathToQuake1BaseDir get() = getStringValue(pathToQuake1BaseDirPrefsKey)
@@ -61,4 +62,6 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val activeFTEQWGame get() = getEnumValue(activeFTEQWGamePrefsKey, FTEQWGames::class.java,
         FTEQWGames.Quake)
     val commandLineArgs get() = getStringValue(commandLineArgsPrefsKey)
+    val fteQWRenderType get() = getEnumValue(fteQWRenderTypePrefsKey,
+        FTEQWRenderTypes::class.java, FTEQWRenderTypes.OpenGL_ES)
 }
