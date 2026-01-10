@@ -121,6 +121,10 @@ abstract class EngineInfo(
 
     private external fun rescanGameControllersForced()
 
+    private external fun needToReInitGameControllers() : Boolean
+
+    final override val needToReInitGameControllers: Boolean get() = needToReInitGameControllers()
+
     final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
         flow {
             while (currentCoroutineContext().isActive) {
