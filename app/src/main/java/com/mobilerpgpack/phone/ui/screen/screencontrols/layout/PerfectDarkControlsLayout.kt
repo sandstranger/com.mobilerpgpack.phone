@@ -18,7 +18,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButto
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 
-
 val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
     SDL2RadialWheel(
         EngineTypes.PerfectDark,
