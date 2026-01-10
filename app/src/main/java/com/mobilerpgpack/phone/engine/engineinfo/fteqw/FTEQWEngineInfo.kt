@@ -26,7 +26,6 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2ModsDir
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3ModsDir
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2ModsDir
-            FTEQWGames.Halflife -> fteQWPrefsStorage.pathToHalfLifeModsDir
         }
     }
 
@@ -36,7 +35,6 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2BaseDir
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3BaseDir
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2BaseDir
-            FTEQWGames.Halflife -> fteQWPrefsStorage.pathToHalfLifeBaseDir
         }
     }
 
@@ -46,7 +44,6 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2Manifest
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3Manifest
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2Manifest
-            FTEQWGames.Halflife -> fteQWPrefsStorage.pathToHalfLifeManifest
         }
     }
 
@@ -65,8 +62,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3
-            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToQuake3
-            FTEQWGames.Halflife -> fteQWPrefsStorage.pathToHalfLife
+            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2
         }
     }
 
