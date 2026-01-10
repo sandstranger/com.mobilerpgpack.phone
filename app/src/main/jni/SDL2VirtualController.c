@@ -42,11 +42,11 @@ void setVirtualAxis(int axisX, float axisXValue,int axisY, float axisYValue){
 
 void destroyVirtualController() {
     if (virtualController != nullptr) {
-        SDL_JoystickClose(virtualController);
         if (virtualControllerIndex >= 0) {
             SDL_JoystickDetachVirtual(virtualControllerIndex);
             virtualControllerIndex = -1;
         }
+        SDL_JoystickClose(virtualController);
         virtualController = nullptr;
     }
 }

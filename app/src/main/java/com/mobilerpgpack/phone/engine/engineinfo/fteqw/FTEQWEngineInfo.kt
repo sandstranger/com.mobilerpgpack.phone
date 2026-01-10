@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.main.FREETYPE_NATIVE_LIB_NAME
+import com.sun.jna.Native
+import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -120,6 +122,10 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             }
         }
 
+    private external fun destroyVulkanSwapChain()
+
+    private external fun recreateVulkanSwapChain()
+
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         if (!homeDirFile.exists()){
@@ -130,6 +136,21 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         Os.setenv("DLL_DEFAULT_PATH", activity.applicationInfo.nativeLibraryDir, true)
         Os.setenv("PATH_TO_BASE_DIRECTORY", pathToBaseGameDirectory, true)
         Os.setenv("RENDER_TYPE", preferencesStorage.fteQWRenderType.jniRenderName, true)
+    }
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(FTEQWEngineInfo::class.java, mainLibraryName)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        recreateVulkanSwapChain()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        destroyVulkanSwapChain()
     }
 
     private companion object {
