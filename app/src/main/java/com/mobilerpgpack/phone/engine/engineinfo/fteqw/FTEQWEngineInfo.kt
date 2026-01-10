@@ -14,7 +14,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.FTEQW){
 
     private val homeDirFile : File by lazy {
-        File(activity.getExternalFilesDir("")!!.absolutePath + File.separator + "FTEQW")
+        File(fteQWPrefsStorage.pathToRootUserFolder + File.separator + "FTEQW")
     }
 
     private val gameType get() = fteQWPrefsStorage.activeFTEQWGame
