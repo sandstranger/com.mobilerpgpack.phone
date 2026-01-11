@@ -117,9 +117,9 @@ abstract class EngineInfo(
 
     protected external fun needToInvokeMouseButtonsEvents() : Boolean
 
-    private external fun pauseSound()
+    private external fun onNativePause()
 
-    private external fun resumeSound()
+    private external fun onNativeResume()
 
     private external fun rescanGameControllersForced()
 
@@ -214,14 +214,14 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        scope.launch { pauseSound() }
+        scope.launch { onNativePause() }
         if (enableGyroscope) {
             gyroInput.stop()
         }
     }
 
     override fun onResume() {
-        scope.launch { resumeSound() }
+        scope.launch { onNativeResume() }
         if (enableGyroscope) {
             gyroInput.start()
         }
