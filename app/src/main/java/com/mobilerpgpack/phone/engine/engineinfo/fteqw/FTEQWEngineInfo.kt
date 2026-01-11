@@ -121,6 +121,10 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
                 this += gameType.commandLineArg
 
+                this += "+set"
+                this += "vid_renderer"
+                this += preferencesStorage.fteQWRenderType.jniRenderName
+
                 toTypedArray()
             }
         }
@@ -138,7 +142,6 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         Os.setenv("FREETYPE_LIBRARY_NAME", FREETYPE_NATIVE_LIB_NAME, true)
         Os.setenv("DLL_DEFAULT_PATH", activity.applicationInfo.nativeLibraryDir, true)
         Os.setenv("PATH_TO_BASE_DIRECTORY", pathToBaseGameDirectory, true)
-        Os.setenv("RENDER_TYPE", preferencesStorage.fteQWRenderType.jniRenderName, true)
         Os.setenv("ACTIVE_GAME", gameType.toString(), true)
     }
 
