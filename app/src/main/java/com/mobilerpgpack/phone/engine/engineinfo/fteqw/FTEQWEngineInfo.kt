@@ -69,6 +69,8 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
     }
 
+    override val touchFullScreenModeCanBeUsed: Boolean get() = gameType != FTEQWGames.Quake3
+
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
