@@ -7,7 +7,6 @@ import com.sun.jna.Library
 import com.sun.jna.Native
 
 class ScreenOrientationChanger (private val activity : Activity, nativeLibNameToLoad : String) {
-
     private fun interface ForceLandscapeActivityOrientationCallback : Callback {
         fun forceLandscape()
     }
@@ -20,7 +19,8 @@ class ScreenOrientationChanger (private val activity : Activity, nativeLibNameTo
 
     init {
         forceActivityOrientationCallback = { forceLandscapeOrientation() }
-        Native.load(nativeLibNameToLoad, ForceActivityLandscapeOrientationNativeBridge::class.java).apply {
+        Native.load(nativeLibNameToLoad,
+            ForceActivityLandscapeOrientationNativeBridge::class.java).apply {
             registerForceLandscapeActivityOrientationCallback (forceActivityOrientationCallback)
         }
     }
