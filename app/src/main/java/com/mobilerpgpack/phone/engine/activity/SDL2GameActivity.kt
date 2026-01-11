@@ -46,7 +46,7 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
                 engineInfo.mainLibraryName) }
             loadLayout()
             onNativeLibrariesLoaded()
-            if (Build.VERSION.SDK_INT >= 33) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 onBackInvokedDispatcher.registerOnBackInvokedCallback(
                     OnBackInvokedDispatcher.PRIORITY_DEFAULT
                 ) {
