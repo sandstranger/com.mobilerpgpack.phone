@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -41,6 +42,19 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
                         this@ScreenControlsEditorActivity.finish()
                     })
             }
+        }
+
+        forceLandscapeOrientation()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        forceLandscapeOrientation()
+    }
+
+    private fun forceLandscapeOrientation() {
+        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
         }
     }
 
