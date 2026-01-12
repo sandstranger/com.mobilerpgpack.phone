@@ -53,7 +53,6 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         forceLandscapeOrientation()
     }
 
-
     companion object{
         private const val EXTRA_ENGINE_TYPE = "extra_engine_type"
         private const val DISPLAY_IN_SAFE_AREA_KEY = "display_in_safe_area"
