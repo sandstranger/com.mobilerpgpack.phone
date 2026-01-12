@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -23,7 +24,7 @@ open class SharedPrefsRepository {
     fun loadAllEntries () = SharedPrefsRepository.loadAllEntries()
 
     fun <T : Enum<T>> getEnumValue(key: String,enumClass: Class<T>, defaultValue: T) : T =
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, defaultValue) }.stringValue
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringValue
             .let { stringValue ->
                 if (stringValue.isNotEmpty()) {
                     try {
@@ -40,34 +41,34 @@ open class SharedPrefsRepository {
         getEnumValue(key.name, enumClass, defaultValue)
 
     fun getStringValue(key: String, defaultValue: String = "") =
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, defaultValue) }.stringValue
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringValue
 
     fun getStringValue(key: Key<String>, defaultValue: String = "") = getStringValue(key.name, defaultValue)
 
     fun getIntValue(key: String, defaultValue: Int = 0) =
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, defaultValue) }.intValue
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.intValue
 
     fun getIntValue(key: Key<Int>, defaultValue: Int = 0) = getIntValue(key.name, defaultValue)
 
     fun getLongValue(key: String, defaultValue: Long = 0L) =
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, defaultValue) }.longValue
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.longValue
 
     fun getLongValue(key: Key<Long>, defaultValue: Long = 0L) = getLongValue(key.name, defaultValue)
 
     fun getBooleanValue(key: String, defaultValue: Boolean = false) =
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, defaultValue) }.booleanValue
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.booleanValue
 
     fun getBooleanValue(key: Key<Boolean>, defaultValue: Boolean = false) = getBooleanValue(key.name, defaultValue)
 
     fun getFloatValue(key: Key<Float>, defaultValue: Float = 0.0f) = getFloatValue(key.name, defaultValue)
 
     fun getFloatValue(key: String, defaultValue: Float = 0.0f) =
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, defaultValue) }.floatValue
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.floatValue
 
     fun getDoubleValue(key: Key<Double>, defaultValue: Double = 0.0) = getDoubleValue(key.name, defaultValue)
 
     fun getDoubleValue(key: String, defaultValue: Double = 0.0) =
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, defaultValue) }.doubleValue
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.doubleValue
 
     fun setStringValue(key: Key<String>, value: String) = setStringValue(key.name, value)
 
@@ -76,12 +77,12 @@ open class SharedPrefsRepository {
     suspend fun setStringValueAsync(key: Key<String>, value: String) = setStringValueAsync(key.name, value)
 
     suspend fun setStringValueAsync(key: String, value: String) {
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, value) }.apply {
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.stringValue = value
-            withContext(Dispatchers.Main) {
-                stringValue = value
+            stringValue = value
+            withContext(Dispatchers.IO) {
+                dao.upsert(prefsEntry)
             }
-            dao.upsert(prefsEntry)
         }
     }
 
@@ -92,12 +93,12 @@ open class SharedPrefsRepository {
     suspend fun setIntValueAsync(key: Key<Int>, value: Int) = setIntValueAsync(key.name, value)
 
     suspend fun setIntValueAsync(key: String, value: Int) {
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, value) }.apply {
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.intValue = value
-            withContext(Dispatchers.Main) {
-                intValue = value
+            intValue = value
+            withContext(Dispatchers.IO) {
+                dao.upsert(prefsEntry)
             }
-            dao.upsert(prefsEntry)
         }
     }
 
@@ -108,12 +109,12 @@ open class SharedPrefsRepository {
     suspend fun setLongValueAsync(key: Key<Long>, value: Long) = setLongValueAsync(key.name, value)
 
     suspend fun setLongValueAsync(key: String, value: Long) {
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, value) }.apply {
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.longValue = value
-            withContext(Dispatchers.Main) {
-                longValue = value
+            longValue = value
+            withContext(Dispatchers.IO) {
+                dao.upsert(prefsEntry)
             }
-            dao.upsert(prefsEntry)
         }
     }
 
@@ -124,12 +125,12 @@ open class SharedPrefsRepository {
     suspend fun setBooleanValueAsync(key: Key<Boolean>, value: Boolean) = setBooleanValueAsync(key.name, value)
 
     suspend fun setBooleanValueAsync(key: String, value: Boolean) {
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, value) }.apply {
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.booleanValue = value
-            withContext(Dispatchers.Main) {
-                booleanValue = value
+            booleanValue = value
+            withContext(Dispatchers.IO) {
+                dao.upsert(prefsEntry)
             }
-            dao.upsert(prefsEntry)
         }
     }
 
@@ -140,12 +141,12 @@ open class SharedPrefsRepository {
     suspend fun setFloatValueAsync(key: Key<Float>, value: Float) = setFloatValueAsync(key.name, value)
 
     suspend fun setFloatValueAsync(key: String, value: Float) {
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, value) }.apply {
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.floatValue = value
-            withContext(Dispatchers.Main) {
-                floatValue = value
+            floatValue = value
+            withContext(Dispatchers.IO) {
+                dao.upsert(prefsEntry)
             }
-            dao.upsert(prefsEntry)
         }
     }
 
@@ -156,12 +157,12 @@ open class SharedPrefsRepository {
     suspend fun setDoubleValueAsync(key: Key<Double>, value: Double) = setDoubleValueAsync(key.name, value)
 
     suspend fun setDoubleValueAsync(key: String, value: Double) {
-        loadedEntries.computeIfAbsent(key) { buildSharedPrefsValue(key, value) }.apply {
+        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.doubleValue = value
-            withContext(Dispatchers.Main) {
-                doubleValue = value
+            doubleValue = value
+            withContext(Dispatchers.IO) {
+                dao.upsert(prefsEntry)
             }
-            dao.upsert(prefsEntry)
         }
     }
 
@@ -200,9 +201,9 @@ open class SharedPrefsRepository {
         private var loadAllEntriesWasCalled = false
         @Volatile
         private var _prefsWasLoaded = false
-        private val scope: CoroutineScope = get(CoroutineScope::class.java)
+        private val scope: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
         private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
-        private val loadedEntries = ConcurrentHashMap<String, SharedPrefsValue>()
+        private val loadedEntries = mutableMapOf<String, SharedPrefsValue>()
 
         private fun loadAllEntries() {
             if (!loadAllEntriesWasCalled) {
@@ -212,20 +213,19 @@ open class SharedPrefsRepository {
         }
 
         private suspend fun loadAllEntriesAsync() {
-            val entries = dao.getAllEntries()
-            withContext(Dispatchers.Main) {
-                entries.forEach { entry ->
-                    if (!loadedEntries.containsKey(entry.key)) {
-                        loadedEntries[entry.key] = buildSharedPrefsValue(entry)!!
-                    } else {
-                        loadedEntries[entry.key]!!.updateEntry(entry)
-                    }
+            val entries = withContext(Dispatchers.IO) { dao.getAllEntries() }
+            entries.forEach { entry ->
+                val existing = loadedEntries[entry.key]
+                if (existing == null) {
+                    loadedEntries[entry.key] = buildSharedPrefsValue(entry)
+                } else {
+                    existing.updateEntry(entry)
                 }
-                _prefsWasLoaded = true
             }
+            _prefsWasLoaded = true
         }
 
-        private fun buildSharedPrefsValue(entry: SharedPrefsEntry): SharedPrefsValue? {
+        private fun buildSharedPrefsValue(entry: SharedPrefsEntry): SharedPrefsValue {
             entry.let {
                 return SharedPrefsValue(entry).apply {
                     stringValue = it.stringValue
