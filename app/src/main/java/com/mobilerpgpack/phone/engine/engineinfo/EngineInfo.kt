@@ -42,12 +42,11 @@ import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
-import com.mobilerpgpack.phone.utils.invokeBool
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
-import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -70,6 +69,8 @@ abstract class EngineInfo(
 
     private var layoutBinding : GameLayoutBinding? = null
 
+    private var mainThreadScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
 
     protected open val preferencesStorage: PreferencesStorage by inject()
@@ -82,7 +83,7 @@ abstract class EngineInfo(
     protected open val keyboardInputType : CustomKeyboardView.KeyboardType =
         SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
 
-    protected val scope = CoroutineScope(Dispatchers.IO)
+    protected val backgroundScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     protected lateinit var resolution: ScreenResolution
         private set
@@ -214,21 +215,22 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        scope.launch { onNativePause() }
+        backgroundScope.launch { onNativePause() }
         if (enableGyroscope) {
             gyroInput.stop()
         }
     }
 
     override fun onResume() {
-        scope.launch { onNativeResume() }
+        backgroundScope.launch { onNativeResume() }
         if (enableGyroscope) {
             gyroInput.start()
         }
     }
 
     override fun onDestroy() {
-        scope.coroutineContext.cancelChildren()
+        backgroundScope.coroutineContext.cancelChildren()
+        mainThreadScope.coroutineContext.cancelChildren()
         if (callExitProcessOnDestroy) {
             exitProcess(0)
         }
@@ -347,7 +349,7 @@ abstract class EngineInfo(
 
                 if (enableControlsAutoHidingFeature) {
                     hideOnScreenControlsMutableState = false
-                    scope.launch { changeScreenControlsVisibility() }
+                    mainThreadScope.launch { changeScreenControlsVisibility() }
                 }
             }
         }

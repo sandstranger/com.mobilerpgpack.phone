@@ -8,8 +8,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.utils.ScreenResolution
-import com.mobilerpgpack.phone.utils.invokeBool
-import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -85,7 +83,7 @@ open class Doom64EngineInfo(
     final override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
         super.onSafeAreaApplied(screenResolution)
         if (!customScreenResolutionWasApplied) {
-            scope.launch { updateScreenResolution(screenResolution) }
+            backgroundScope.launch { updateScreenResolution(screenResolution) }
         }
     }
 
