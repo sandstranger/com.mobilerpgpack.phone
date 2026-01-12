@@ -34,7 +34,7 @@ abstract class SDLMouseWheelButton(
         defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault,
         ignoreOutOfBoundsTouchEvents, showInQuickPanel) {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     private val mouseViewState = MouseViewState(
         id,
