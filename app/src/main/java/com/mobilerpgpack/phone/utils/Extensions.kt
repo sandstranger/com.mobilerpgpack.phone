@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
@@ -43,6 +44,12 @@ fun Activity.showErrorDialogBox (messageToShowResource: Int,onCloseDialogBox :((
 
 inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = true) where T : Activity  =
     this.startActivity(T::class.java, finishParentActivity)
+
+fun Activity.forceLandscapeOrientation() {
+    if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+    }
+}
 
 fun Context.startActivity(activityClazz : Class<*>, finishParentActivity : Boolean = true) {
     with(Intent(this, activityClazz)){

@@ -13,6 +13,7 @@ import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.ui.activity.MainActivity
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenOrientationChanger
+import com.mobilerpgpack.phone.utils.forceLandscapeOrientation
 import com.mobilerpgpack.phone.utils.waitUntil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -54,7 +55,7 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
                 }
             }
         }
-        screenOrientationChanger?.forceLandscapeOrientation()
+        forceLandscapeOrientation()
     }
 
     override fun getMainSharedObject() = engineInfo.mainSharedObject
@@ -78,7 +79,7 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
         if (gameResourcesFound){
             engineInfo.onResume()
         }
-        screenOrientationChanger?.forceLandscapeOrientation()
+        forceLandscapeOrientation()
     }
 
     override fun onDestroy() {
