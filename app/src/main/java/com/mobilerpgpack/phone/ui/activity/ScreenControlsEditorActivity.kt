@@ -52,11 +52,6 @@ class ScreenControlsEditorActivity : ComponentActivity(), KoinComponent {
         forceLandscapeOrientation()
     }
 
-    private fun forceLandscapeOrientation() {
-        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
-        }
-    }
 
     companion object{
         private const val EXTRA_ENGINE_TYPE = "extra_engine_type"
