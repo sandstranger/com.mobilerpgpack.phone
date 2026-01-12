@@ -11,7 +11,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.dehFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.playingRecordsFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.xlatFileCanBeUsed
-import com.sun.jna.Function
 import com.sun.jna.Native
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -127,12 +126,12 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     override fun onResume() {
         super.onResume()
-        scope.launch { RecreateVulkanSwapChain() }
+        backgroundScope.launch { RecreateVulkanSwapChain() }
     }
 
     override fun onPause() {
         super.onPause()
-        scope.launch { DestroyVulkanSwapChain() }
+        backgroundScope.launch { DestroyVulkanSwapChain() }
     }
 
     private companion object {
