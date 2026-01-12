@@ -11,6 +11,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import com.mobilerpgpack.phone.utils.forceLandscapeOrientation
 import com.mobilerpgpack.phone.utils.getValueFromIntent
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import org.koin.core.component.KoinComponent
