@@ -45,6 +45,10 @@ with OpenGL ES 2.0 render
 ## Controllers Support
 This Android ports support controllers
 
+On-Screen Controls and physical controllers cannot be used together. Most legacy engines support only one gamepad.
+
+On-screen controls already emulate an Xbox controller for player movement. Disable on-screen controls if you want real controller support
+
 ## Doom RPG Default Controllers controls
 
 | Action           | Button      	|
