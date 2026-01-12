@@ -200,6 +200,7 @@ abstract class EngineInfo(
 
         Os.setenv("PATH_TO_RESOURCES",
             File(pathToResource).absolutePath, true)
+        Os.setenv("PATH_TO_USER_FOLDER", preferencesStorage.pathToRootUserFolder, true)
 
         hideScreenControls = preferencesStorage.hideScreenControls
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor
