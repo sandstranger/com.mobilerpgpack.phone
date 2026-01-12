@@ -5,6 +5,8 @@ import android.content.res.AssetManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
@@ -43,23 +45,28 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         if (assetsCopying){
             return
         }
-        assetsCopying = true
-        _assetsCopied = false
+        withContext(Dispatchers.Main) {
+            assetsCopying = true
+            _assetsCopied = false
+        }
         waitUntil { !preferencesStorage.prefsWasLoaded }
         with(File(pathToUserFolder)){
             if (!exists()){
                 mkdirs()
             }
-
-            assetsStartedCopyListeners.invoke()
+            withContext(Dispatchers.Main) {
+                assetsStartedCopyListeners.invoke()
+            }
             try {
                 alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
                 copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, this)
             }
             finally {
-                assetsFinishCopyListeners.invoke()
-                _assetsCopied = true
-                assetsCopying = false
+                withContext(Dispatchers.Main) {
+                    assetsFinishCopyListeners.invoke()
+                    _assetsCopied = true
+                    assetsCopying = false
+                }
             }
         }
     }

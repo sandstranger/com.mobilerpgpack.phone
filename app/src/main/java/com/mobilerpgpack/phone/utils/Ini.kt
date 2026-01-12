@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false ){
 
-    private val iniValues = ConcurrentHashMap<String, IniValue>()
+    private val iniValues = HashMap<String, IniValue>()
 
     private val iniFile = File(pathToFile)
 
@@ -127,12 +127,11 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         }
     }
 
-    @Synchronized
     fun clear(){
         loaded = false
         iniConfig.clear()
-        iniValues.forEach {
-            it.value.apply {
+        iniValues.values.forEach {
+            it.apply {
                 floatValue = 0f
                 intValue = 0
                 stringValue = ""
@@ -141,7 +140,6 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         }
     }
 
-    @Synchronized
     fun load (){
         clear()
         iniFile.apply {
