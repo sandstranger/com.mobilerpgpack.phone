@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false ){
 
-    private val iniValues = HashMap<String, IniValue>()
+    private val iniValues = mutableMapOf<String, IniValue>()
 
     private val iniFile = File(pathToFile)
 
