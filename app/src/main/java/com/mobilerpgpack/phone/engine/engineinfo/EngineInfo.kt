@@ -69,7 +69,7 @@ abstract class EngineInfo(
 
     private var layoutBinding : GameLayoutBinding? = null
 
-    private var mainThreadScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val mainThreadScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
 
