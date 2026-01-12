@@ -326,7 +326,8 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         private const val STICK_SCALE = 1.0f
         private const val LEFT_STICK_ID = "left_onscreen_stick"
         private const val RIGHT_STICK_ID = "right_onscreen_stick"
-        private var joystickRegistered by mutableStateOf(false)
+        @Volatile
+        private var joystickRegistered = false
         @Volatile
         private var joystickRegisteredInSDL = false
     }
