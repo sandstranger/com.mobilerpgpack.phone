@@ -22,10 +22,6 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val pathToHexen2BaseDirPrefsKey = stringPreferencesKey("path_to_hexen2_base_dir")
     val pathToHexen2ModsDirPrefsKey = stringPreferencesKey("path_to_hexen2_mods_dir")
     val pathToHexen2ManifestPrefsKey = stringPreferencesKey("path_to_hexen2_manifest")
-    val pathToHalflifePrefsKey = stringPreferencesKey("path_to_half_life1")
-    val pathToHalflifeBaseDirPrefsKey = stringPreferencesKey("path_to_half_life1_base_dir")
-    val pathToHalflifeModsDirPrefsKey = stringPreferencesKey("path_to_half_life1_mods_dir")
-    val pathToHalflifeManifestPrefsKey = stringPreferencesKey("path_to_half_life1_manifest")
     val commandLineArgsPrefsKey = stringPreferencesKey("fteqw_command_line_args")
     val enableFTEQWModsPrefsKey = booleanPreferencesKey("enable_fteqw_mods")
     val enableManifestSupportPrefsKey = booleanPreferencesKey("enable_fteqw_manifest")
@@ -51,11 +47,6 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val pathToHexen2BaseDir get() = getStringValue(pathToHexen2BaseDirPrefsKey)
     val pathToHexen2ModsDir get() = getStringValue(pathToHexen2ModsDirPrefsKey)
     val pathToHexen2Manifest get() = getStringValue(pathToHexen2ManifestPrefsKey)
-
-    val pathToHalfLife get() = getStringValue(pathToHalflifePrefsKey)
-    val pathToHalfLifeBaseDir get() = getStringValue(pathToHalflifeBaseDirPrefsKey)
-    val pathToHalfLifeModsDir get() = getStringValue(pathToHalflifeModsDirPrefsKey)
-    val pathToHalfLifeManifest get() = getStringValue(pathToHalflifeManifestPrefsKey)
 
     val enableFTEQWModsSupport get() = getBooleanValue(enableFTEQWModsPrefsKey)
     val enableManifestSupport get() = getBooleanValue(enableManifestSupportPrefsKey)
