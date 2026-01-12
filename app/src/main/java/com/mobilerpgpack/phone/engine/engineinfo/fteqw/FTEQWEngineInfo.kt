@@ -50,8 +50,6 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override val mouseButtonsEventsCanBeInvoked = false
 
-    override val callExitProcessOnDestroy: Boolean = false
-
     override val loadGL4ES = false
 
     override val preferencesStorage get() = fteQWPrefsStorage
