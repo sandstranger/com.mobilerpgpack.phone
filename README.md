@@ -47,7 +47,7 @@ This Android ports support controllers
 
 On-Screen Controls and physical controllers cannot be used together. Most legacy engines support only one gamepad.
 
-On-screen controls already emulate an Xbox controller for player movement. Disable on-screen controls if you want real controller support
+On-screen controls already emulate an Xbox controller for player movement. Disable on-screen controls if you want real controller support.
 
 ## Doom RPG Default Controllers controls
 
@@ -193,7 +193,7 @@ single player, and even then it is unstable.
 
 There is no support for Half Life 1 at all. It just doesn't work at all. That's why I didn't even include it in the launcher
 
-quake 1 net code also unstable with a lot of bugs. Due to this I disabled multithread support in this engine.
+quake 1 net code also unstable with a lot of bugs.
 
 You can play quake1 , quake 2 and hexen 2 single player I think without major bugs.
 
