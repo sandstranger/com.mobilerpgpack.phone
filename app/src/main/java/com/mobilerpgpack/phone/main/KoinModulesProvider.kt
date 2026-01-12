@@ -510,14 +510,11 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.PsyDoom.name) }
 
         single {
-            val preferencesStorage : PsyDoomPreferencesStorage = get (named(EngineTypes.PsyDoom.toString()))
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
                 FREETYPE_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
 
-            PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB,
-                nativeLibs
-            )
+            PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB, nativeLibs)
         }.withOptions {
             named(EngineTypes.PsyDoom.toString())
             bind<IEngineInfo>()
