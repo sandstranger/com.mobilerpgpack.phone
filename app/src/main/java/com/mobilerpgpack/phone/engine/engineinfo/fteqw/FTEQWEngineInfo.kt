@@ -14,7 +14,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.FTEQW){
 
     private val homeDirFile : File by lazy {
-        File(fteQWPrefsStorage.pathToRootUserFolder + File.separator + "FTEQW")
+        File(fteQWPrefsStorage.pathToRootUserFolder + File.separator + FTEQW_CONFIGS_DIR)
     }
 
     private val gameType get() = fteQWPrefsStorage.activeFTEQWGame
@@ -158,11 +158,12 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         destroyVulkanSwapChain()
     }
 
-    private companion object {
+    companion object {
         private const val HOME_DIR_COMMAND = "-homedir"
         private const val BASE_DIR_COMMAND = "-basedir"
         private const val BASE_GAME_COMMAND = "-basegame"
         private const val GAME_COMMAND = "-game"
         private const val MANIFEST_COMMAND = "-manifest"
+        const val FTEQW_CONFIGS_DIR = "FTEQW"
     }
 }
