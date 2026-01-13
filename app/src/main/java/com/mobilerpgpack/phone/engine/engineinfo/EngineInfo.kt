@@ -163,23 +163,26 @@ abstract class EngineInfo(
 
     override val commandLineArgs: Array<String>
         get() {
-            if (commandLineParams.isEmpty() || !commandLineParams.contains("-")) {
-                return emptyArray()
-            }
-
-            try {
-                val args = arrayListOf<String>()
-
-                commandLineParams.split(" ".toRegex()).forEach {
-                    val trimmedString = it.trim()
-                    if (trimmedString.isNotBlank() && trimmedString.isNotEmpty()) {
-                        args += trimmedString
-                    }
+            commandLineParams.apply {
+                if (isEmpty() || contains("-")) {
+                    return emptyArray()
                 }
 
-                return args.toTypedArray()
-            } catch (_: Exception) {
-                return emptyArray()
+                return try {
+                    mutableListOf<String>().run {
+                        this@apply.split(" ".toRegex()).forEach {
+                            it.trim().also { trimmedString ->
+                                if (trimmedString.isNotBlank() && trimmedString.isNotEmpty()) {
+                                    this += trimmedString
+                                }
+                            }
+                        }
+
+                        toTypedArray()
+                    }
+                } catch (_: Exception) {
+                    emptyArray()
+                }
             }
         }
 
