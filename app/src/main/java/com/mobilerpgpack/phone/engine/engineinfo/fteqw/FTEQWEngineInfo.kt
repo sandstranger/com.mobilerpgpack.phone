@@ -97,7 +97,9 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     }
                 }
 
-                if (pathToModsDirectory.isNotEmpty()) {
+                val pathToModsDirectory = pathToModsDirectory
+
+                if (pathToModsDirectory.isNotEmpty() && pathToModsDirectory.startsWith(pathToResource)) {
                     File(pathToModsDirectory).apply {
                         if (preferencesStorage.enableFTEQWModsSupport &&
                             !baseCommandLineArgs.contains(GAME_COMMAND) && exists()
@@ -108,7 +110,10 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     }
                 }
 
-                if (pathToManifest.isNotEmpty()) {
+
+                val pathToManifest = pathToManifest
+
+                if (pathToManifest.isNotEmpty() && pathToManifest.startsWith(pathToResource)) {
                     File(pathToManifest).apply {
                         if (!baseCommandLineArgs.contains(MANIFEST_COMMAND) && exists()){
                             this@with += MANIFEST_COMMAND
