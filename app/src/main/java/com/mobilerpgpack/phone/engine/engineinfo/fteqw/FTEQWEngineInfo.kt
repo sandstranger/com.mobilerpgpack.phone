@@ -158,12 +158,12 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         destroyVulkanSwapChain()
     }
 
-    companion object {
+    private companion object {
         private const val HOME_DIR_COMMAND = "-homedir"
         private const val BASE_DIR_COMMAND = "-basedir"
         private const val BASE_GAME_COMMAND = "-basegame"
         private const val GAME_COMMAND = "-game"
         private const val MANIFEST_COMMAND = "-manifest"
-        const val FTEQW_CONFIGS_DIR = "FTEQW"
+        private const val FTEQW_CONFIGS_DIR = "FTEQW"
     }
 }
