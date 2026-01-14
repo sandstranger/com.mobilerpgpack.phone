@@ -42,6 +42,7 @@ fun EditTextItem(
     onValueChange: ((String) -> Unit)? = null
 ) {
     val hint = rememberSaveable(hint) { hint }
+    val keyboardType = remember { keyboardType }
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var currentTextValue by rememberSaveable (value) { mutableStateOf(value) }
     val onSurfaceVariantColor = getOnSurfaceVariantColor()
@@ -119,17 +120,6 @@ fun EditTextItem(
 }
 
 @Composable
-fun <T> EditTextItem(
-    title: String,
-    value: T,
-    hint: String = "",
-    singleLine : Boolean = true,
-    keyboardType : KeyboardType = KeyboardType.Text,
-    onValueChange: ((String) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine, keyboardType, onValueChange)
-}
-
-@Composable
 fun EditTextItem(
     title: String,
     value: Int,
@@ -152,68 +142,5 @@ fun EditTextItem(
     EditTextItem(title, value.toString(), hint, singleLine, keyboardType = KeyboardType.Decimal){
         val newValue = it.toFloatOrNull() ?: 0.0f
         onValueChange?.invoke(newValue)
-    }
-}
-
-@Composable
-fun <T> AutoUpdatedEditTextItem(
-    title: String,
-    value: T,
-    hint: String = "",
-    singleLine : Boolean = true,
-    keyboardType : KeyboardType = KeyboardType.Text,
-    onValueChange: ((String) -> T)? = null){
-    var currentValue by rememberSaveable { mutableStateOf(value.toString())}
-    EditTextItem(title, currentValue, hint, singleLine, keyboardType){
-        onValueChange?.invoke(it)?.toString()?.run {
-            currentValue = this
-        }
-    }
-}
-
-@Composable
-fun AutoUpdatedEditTextItem(
-    title: String,
-    value: Int,
-    hint: String = "",
-    singleLine : Boolean = true,
-    onValueChange: ((Int) -> Int)? = null){
-    var currentValue by rememberSaveable { mutableStateOf(value.toString())}
-    EditTextItem(title, currentValue, hint, singleLine, keyboardType = KeyboardType.Number){
-        onValueChange?.invoke(it.toIntOrNull() ?: 0)?.toString()?.run {
-            currentValue = this
-        }
-    }
-}
-
-@Composable
-fun AutoUpdatedEditTextItem(
-    title: String,
-    value: Float,
-    hint: String = "",
-    singleLine : Boolean = true,
-    onValueChange: ((Float) -> Float)? = null){
-    var currentValue by rememberSaveable { mutableStateOf(value.toString()) }
-    EditTextItem(title, currentValue, hint, singleLine, keyboardType = KeyboardType.Decimal){
-        onValueChange?.invoke(it.toFloatOrNull() ?: 0.0f)?.toString()?.run {
-            currentValue = this
-        }
-    }
-}
-
-@Composable
-fun AutoUpdatedEditTextItem(
-    title: String,
-    value: String,
-    hint: String = "",
-    singleLine : Boolean = true,
-    keyboardType : KeyboardType = KeyboardType.Text,
-    onValueChange: ((String) -> String)? = null
-) {
-    var currentValue by rememberSaveable { mutableStateOf(value)}
-    EditTextItem(title,currentValue, hint, singleLine, keyboardType){
-        onValueChange?.invoke(it)?.run {
-            currentValue = this
-        }
     }
 }

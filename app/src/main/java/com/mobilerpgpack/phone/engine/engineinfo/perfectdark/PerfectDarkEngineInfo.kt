@@ -25,15 +25,15 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
         named(EngineTypes.PerfectDark.name))
 
     private val pathToModsDirectory by lazy {
-        if (perfectDarkPreferencesStorage.enablePerfectDarkModsSupport) perfectDarkPreferencesStorage
-            .pathToPerfectDarkModsFolder else ""
+        if (perfectDarkPreferencesStorage.enablePerfectDarkModsSupport.value!!) perfectDarkPreferencesStorage
+            .pathToPerfectDarkModsFolder.value!! else ""
     }
 
-    private val romVersion get() = perfectDarkPreferencesStorage.romVersion
+    private val romVersion get() = perfectDarkPreferencesStorage.romVersion.value!!
 
     override val preferencesStorage: PreferencesStorage get() = perfectDarkPreferencesStorage
 
-    override val commandLineParams by lazy { perfectDarkPreferencesStorage.commandLineArgs }
+    override val commandLineParams by lazy { perfectDarkPreferencesStorage.commandLineArgs.value!! }
 
     override val requiredResourceExtensions = listOf(".z64", ".Z64")
 
@@ -43,9 +43,9 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
 
     override val pathToResource get() =
         when (romVersion) {
-            PerfectDarkRomVersions.NTSC -> perfectDarkPreferencesStorage.pathToNTSCRom
-            PerfectDarkRomVersions.PAL -> perfectDarkPreferencesStorage.pathToPalRom
-            PerfectDarkRomVersions.JPN -> perfectDarkPreferencesStorage.pathToJpnRom
+            PerfectDarkRomVersions.NTSC -> perfectDarkPreferencesStorage.pathToNTSCRom.value!!
+            PerfectDarkRomVersions.PAL -> perfectDarkPreferencesStorage.pathToPalRom.value!!
+            PerfectDarkRomVersions.JPN -> perfectDarkPreferencesStorage.pathToJpnRom.value!!
         }
 
     override val loadGL4ES = false
@@ -67,7 +67,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
                     this +=PORTABLE_COMMAND
                 }
 
-                val enableMods = perfectDarkPreferencesStorage.enablePerfectDarkModsSupport
+                val enableMods = perfectDarkPreferencesStorage.enablePerfectDarkModsSupport.value!!
                         && pathToModsDirectory.isNotEmpty() && File(pathToModsDirectory).exists()
 
                 if (!baseCommandLineArgs.contains(MODS_DIR_COMMAND) && enableMods){
@@ -86,7 +86,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
                 }
 
                 if (!baseCommandLineArgs.contains(SKIP_INTROS_COMMAND) &&
-                    perfectDarkPreferencesStorage.skipIntroCutScenes){
+                    perfectDarkPreferencesStorage.skipIntroCutScenes.value!!){
                     this += SKIP_INTROS_COMMAND
                 }
 

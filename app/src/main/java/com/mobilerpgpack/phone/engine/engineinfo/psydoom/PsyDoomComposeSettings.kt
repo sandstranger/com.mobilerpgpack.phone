@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,6 +27,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -68,16 +70,12 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawModsSupport(viewModel.modsModel)
 
-        var enablePsyDoomMods by rememberSaveable(preferencesStorage.enablePsyDoomMods) {
-            mutableStateOf(preferencesStorage.enablePsyDoomMods)
-        }
+        val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods.getComposableValue()
 
         SwitchPreferenceItem(
             stringResource(R.string.enable_psydoom_mods),
             enablePsyDoomMods,
-            preferencesStorage.enablePsyDoomModsPrefsKey.name){
-            enablePsyDoomMods = it
-        }
+            preferencesStorage.enablePsyDoomModsPrefsKey.name)
 
         DrawHorizontalDivider()
 
@@ -184,15 +182,16 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
 
         EditTextPreferenceItem(
             stringResource(R.string.psydoom_port),
-            preferencesStorage.port
-        ) {
-            preferencesStorage.setIntValue(preferencesStorage.portPrefsKey, it)
-        }
+            preferencesStorage.port,
+            preferencesStorage.portPrefsKey.name
+        )
 
         DrawHorizontalDivider()
 
-        val peerType = remember (preferencesStorage.peerType) {
-            enumValueOf<PeerType>(preferencesStorage.peerType) }
+        val peerTypeString = preferencesStorage.peerType.getComposableValue(PeerType.Client.name)
+
+        val peerType by rememberSaveable (peerTypeString) {
+            mutableStateOf(enumValueOf<PeerType>(peerTypeString)) }
 
         ListPreferenceItem(
             stringResource(R.string.psydoom_peer_type), peerType) {

@@ -50,7 +50,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
             _assetsCopied = false
         }
         waitUntil { !preferencesStorage.prefsWasLoaded }
-        with(File(pathToUserFolder)){
+        with(File(pathToUserFolder.getNotNullValue())){
             if (!exists()){
                 mkdirs()
             }
@@ -121,7 +121,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
-        val assetsVersionFile = File ( "$pathToUserFolder${File.separator}${ASSETS_VERSION_FILE_NAME}")
+        val assetsVersionFile = File ( "${pathToUserFolder.value!!}${File.separator}${ASSETS_VERSION_FILE_NAME}")
         fun writeDefaultVersionToVersionsFile () =
             assetsVersionFile.writeText(Json.encodeToString(AssetsVersionProvider(
                 ASSETS_CURRENT_VERSION)))

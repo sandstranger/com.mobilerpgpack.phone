@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
@@ -40,6 +41,7 @@ import com.mobilerpgpack.phone.utils.GyroInput
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
 import com.mobilerpgpack.phone.utils.displayInSafeArea
+import com.mobilerpgpack.phone.utils.getComposableValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
@@ -76,7 +78,7 @@ abstract class EngineInfo(
     protected open val preferencesStorage: PreferencesStorage by inject()
 
     protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.run {
-        blockTouchCameraEventsWhenOnScreenStickActive && activeControlsType == ControlsType.OnScreenStick }
+        blockTouchCameraEventsWhenOnScreenStickActive.value!! && activeControlsType.value!! == ControlsType.OnScreenStick }
 
     protected abstract val sdlKeyboard : SDLKeyboard
 
@@ -91,7 +93,7 @@ abstract class EngineInfo(
     protected lateinit var activity: ComponentActivity
         private set
 
-    protected val pathToRootUserFolder: String get() = preferencesStorage.pathToRootUserFolder
+    protected val pathToRootUserFolder: String get() = preferencesStorage.pathToRootUserFolder.value!!
 
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControls()
 
@@ -101,7 +103,7 @@ abstract class EngineInfo(
 
     protected open val loadGL4ES : Boolean = true
 
-    protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope
+    protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope.value!!
 
     protected open val callExitProcessOnDestroy : Boolean = true
 
@@ -110,9 +112,9 @@ abstract class EngineInfo(
     private var wasInit = false
     private var hideScreenControls: Boolean = false
     private var showCustomMouseCursor: Boolean = false
-    private var isCursorVisible by mutableStateOf(false)
+    private val isCursorVisible = MutableLiveData(false)
     private var displayInSafeArea: Boolean = false
-    private var hideOnScreenControlsMutableState by mutableStateOf(false)
+    private val hideOnScreenControlsMutableState = MutableLiveData(false)
 
     private external fun needToShowScreenControls() : Boolean
 
@@ -203,14 +205,14 @@ abstract class EngineInfo(
 
         Os.setenv("PATH_TO_RESOURCES",
             File(pathToResource).absolutePath, true)
-        Os.setenv("PATH_TO_USER_FOLDER", preferencesStorage.pathToRootUserFolder, true)
+        Os.setenv("PATH_TO_USER_FOLDER", preferencesStorage.pathToRootUserFolder.value!!, true)
 
-        hideScreenControls = preferencesStorage.hideScreenControls
-        showCustomMouseCursor = preferencesStorage.showCustomMouseCursor
-        displayInSafeArea = preferencesStorage.enableDisplayInSafeArea
+        hideScreenControls = preferencesStorage.hideScreenControls.value!!
+        showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.value!!
+        displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.value!!
 
-        val customAspectRatio = preferencesStorage.customAspectRatio
-        val customScreenResolution = preferencesStorage.customScreenResolution
+        val customAspectRatio = preferencesStorage.customAspectRatio.value!!
+        val customScreenResolution = preferencesStorage.customScreenResolution.value!!
         val customScreenResolutionWasSet = setScreenResolution(customScreenResolution)
 
         if (!customAspectRatio.isEmpty() && !customScreenResolutionWasSet) {
@@ -287,9 +289,9 @@ abstract class EngineInfo(
             }
 
             updateUseStandardSDLInputState(useStandardSDLInput = hideScreenControls &&
-                    !preferencesStorage.alwaysShowKeyboardButton)
+                    !preferencesStorage.alwaysShowKeyboardButton.value!!)
 
-            customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency
+            customKeyboard.alpha = preferencesStorage.customOnScreenKeyboardTransparency.value!!
 
             sdlContainer.post {
                 sdlContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -298,8 +300,7 @@ abstract class EngineInfo(
                         if (showCustomMouseCursor) {
                             mouseOverlayUI.setContent {
                                 val binding = remember { layoutBinding!! }
-                                val isCursorVisible by rememberSaveable(isCursorVisible) {
-                                    mutableStateOf(isCursorVisible)}
+                                val isCursorVisible = isCursorVisible.getComposableValue()
                                 AutoMouseModeComposable(binding)
                                 if (isCursorVisible) {
                                     DrawMouseIcon()
@@ -311,7 +312,7 @@ abstract class EngineInfo(
                             Theme {
                                 val hideScreenControls = rememberSaveable { hideScreenControls }
                                 val alwaysShowKeyboard =
-                                    rememberSaveable { preferencesStorage.alwaysShowKeyboardButton }
+                                    rememberSaveable { preferencesStorage.alwaysShowKeyboardButton.value!! }
                                 if (!hideScreenControls) {
                                     screenController.DrawScreenControls(
                                         inGame = true,
@@ -349,10 +350,10 @@ abstract class EngineInfo(
                     }
                 })
 
-                val enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls && !hideScreenControls
+                val enableControlsAutoHidingFeature = preferencesStorage.autoHideScreenControls.value!! && !hideScreenControls
 
                 if (enableControlsAutoHidingFeature) {
-                    hideOnScreenControlsMutableState = false
+                    hideOnScreenControlsMutableState.value = false
                     mainThreadScope.launch { changeScreenControlsVisibility() }
                 }
             }
@@ -362,8 +363,8 @@ abstract class EngineInfo(
     private suspend fun changeScreenControlsVisibility() {
         while (currentCoroutineContext().isActive) {
             val needToHideOnScreenControls: Boolean = !this.needToShowScreenControls
-            if (needToHideOnScreenControls != hideOnScreenControlsMutableState) {
-                hideOnScreenControlsMutableState = needToHideOnScreenControls
+            if (needToHideOnScreenControls != hideOnScreenControlsMutableState.value!!) {
+                hideOnScreenControlsMutableState.value = needToHideOnScreenControls
             }
             delay(ONE_FRAME_DELAY)
         }
@@ -417,8 +418,8 @@ abstract class EngineInfo(
             val frameCallback = object : Choreographer.FrameCallback {
                 override fun doFrame(frameTimeNanos: Long) {
                     isMouseShown = isMouseShown()
-                    isCursorVisible = isMouseShown
-                    binding.mouseOverlayUI.visibility = if(isCursorVisible) View.VISIBLE else View.GONE
+                    isCursorVisible.value = isMouseShown
+                    binding.mouseOverlayUI.visibility = if(isCursorVisible.value!!) View.VISIBLE else View.GONE
                     choreographer.postFrameCallback(this)
                 }
             }

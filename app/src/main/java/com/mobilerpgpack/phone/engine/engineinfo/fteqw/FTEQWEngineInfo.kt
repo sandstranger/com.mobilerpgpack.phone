@@ -14,37 +14,37 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.FTEQW){
 
     private val homeDirFile : File by lazy {
-        File(fteQWPrefsStorage.pathToRootUserFolder + File.separator + FTEQW_CONFIGS_DIR)
+        File(fteQWPrefsStorage.pathToRootUserFolder.value!! + File.separator + FTEQW_CONFIGS_DIR)
     }
 
-    private val gameType get() = fteQWPrefsStorage.activeFTEQWGame
+    private val gameType get() = fteQWPrefsStorage.activeFTEQWGame.value!!
 
     private val fteQWPrefsStorage : FTEQWPreferencesStorage by inject (named(EngineTypes.FTEQW.name))
 
     private val pathToModsDirectory : String get() {
         return when (gameType) {
-            FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1ModsDir
-            FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2ModsDir
-            FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3ModsDir
-            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2ModsDir
+            FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1ModsDir.value!!
+            FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2ModsDir.value!!
+            FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3ModsDir.value!!
+            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2ModsDir.value!!
         }
     }
 
     private val pathToBaseGameDirectory : String get() {
         return when (gameType) {
-            FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1BaseDir
-            FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2BaseDir
-            FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3BaseDir
-            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2BaseDir
+            FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1BaseDir.value!!
+            FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2BaseDir.value!!
+            FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3BaseDir.value!!
+            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2BaseDir.value!!
         }
     }
 
     private val pathToManifest : String get() {
         return when (gameType) {
-            FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1Manifest
-            FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2Manifest
-            FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3Manifest
-            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2Manifest
+            FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1Manifest.value!!
+            FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2Manifest.value!!
+            FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3Manifest.value!!
+            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2Manifest.value!!
         }
     }
 
@@ -54,16 +54,16 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override val preferencesStorage get() = fteQWPrefsStorage
 
-    override val commandLineParams: String get() = fteQWPrefsStorage.commandLineArgs
+    override val commandLineParams: String get() = fteQWPrefsStorage.commandLineArgs.value!!
 
     override val useGyroscope: Boolean get() = !needToInvokeMouseButtonsEvents()
 
     override val pathToResource : String get() {
         return when (gameType) {
-            FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1
-            FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2
-            FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3
-            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2
+            FTEQWGames.Quake -> fteQWPrefsStorage.pathToQuake1.value!!
+            FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2.value!!
+            FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3.value!!
+            FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2.value!!
         }
     }
 
@@ -101,7 +101,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
                 if (pathToModsDirectory.isNotEmpty() && pathToModsDirectory.startsWith(pathToResource)) {
                     File(pathToModsDirectory).apply {
-                        if (preferencesStorage.enableFTEQWModsSupport &&
+                        if (preferencesStorage.enableFTEQWModsSupport.value!! &&
                             !baseCommandLineArgs.contains(GAME_COMMAND) && exists()
                         ) {
                             this@with += GAME_COMMAND
@@ -126,7 +126,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
                 this += "+set"
                 this += "vid_renderer"
-                this += preferencesStorage.fteQWRenderType.jniRenderName
+                this += preferencesStorage.fteQWRenderType.value!!.jniRenderName
 
                 toTypedArray()
             }

@@ -15,10 +15,10 @@ class Mod {
 
     init {
         _key ?: run { _key = UUID.randomUUID().toString() }
-        pathToMod.value ?: run { pathToMod.value = "" }
+        pathToMod.liveData.value ?: run { pathToMod.value = "" }
     }
 
-    override fun toString() = "Mod(key='$key', pathToMod=${pathToMod.value})"
+    override fun toString() = "Mod(key='$key', pathToMod=${pathToMod.liveData.value})"
 
     override fun hashCode() = key.hashCode()
 

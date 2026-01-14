@@ -4,7 +4,10 @@ import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -12,12 +15,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.codekidlabs.storagechooser.StorageChooser
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.items.ShowErrorDialog
 import com.mobilerpgpack.phone.ui.items.viewmodel.FileExplorerViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getComposableValue
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -25,7 +30,36 @@ import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.get
 
 @Composable
+@JvmName("RequestPathLiveData")
 fun RequestPath(explorerItemTitle: String,
+                previousSavedPath: LiveData<String?>? = null,
+                key : Key<String>? = null,
+                requestMode: RequestPathMode = RequestPathMode.Directory,
+                requiredFileExtensions : Collection<String> = emptyList(),
+                predefinedPath : String = "",
+                onPathSelected: ((String) -> Unit)? = null){
+    val liveDataState = previousSavedPath?.observeAsState("")
+    var savedValue by rememberSaveable (liveDataState?.value){ mutableStateOf(liveDataState?.value ?: "") }
+    RequestPath(explorerItemTitle, savedValue, key, requestMode, requiredFileExtensions, predefinedPath, onPathSelected)
+}
+
+@Composable
+@JvmName("RequestPathLiveDataNullable")
+fun RequestPath(explorerItemTitle: String,
+                previousSavedPath: LiveData<String>? = null,
+                key : Key<String>? = null,
+                requestMode: RequestPathMode = RequestPathMode.Directory,
+                requiredFileExtensions : Collection<String> = emptyList(),
+                predefinedPath : String = "",
+                onPathSelected: ((String) -> Unit)? = null){
+    val liveDataState = previousSavedPath?.observeAsState("")
+    var savedValue by rememberSaveable (liveDataState?.value){ mutableStateOf(liveDataState?.value ?: "") }
+    RequestPath(explorerItemTitle, savedValue, key, requestMode,
+        requiredFileExtensions,predefinedPath, onPathSelected)
+}
+
+@Composable
+private fun RequestPath(explorerItemTitle: String,
                 previousSavedPath: String = "",
                 key : Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
@@ -36,14 +70,9 @@ fun RequestPath(explorerItemTitle: String,
     var showErrorDialogBox by rememberSaveable { mutableStateOf(false) }
     var errorMessageToShow by rememberSaveable { mutableStateOf("")}
     val key = remember (key) { key }
-    var currentPath by rememberSaveable(previousSavedPath)
-    {
-        mutableStateOf(previousSavedPath)
-    }
     val predefinedPath by rememberSaveable(predefinedPath) {
         mutableStateOf(predefinedPath)
     }
-
     val prefsStorage: PreferencesStorage = koinInject()
     val fileExplorerViewModel : FileExplorerViewModel = koinViewModel ()
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -65,7 +94,7 @@ fun RequestPath(explorerItemTitle: String,
     }
 
     PreferenceItem(
-        explorerItemTitle, currentPath,
+        explorerItemTitle, previousSavedPath,
         onClick = {
              with(get<StorageChooser>(
                 StorageChooser::class.java, parameters =
