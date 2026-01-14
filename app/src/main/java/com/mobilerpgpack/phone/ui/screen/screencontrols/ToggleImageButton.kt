@@ -13,8 +13,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.MutableLiveData
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
+import com.mobilerpgpack.phone.utils.getComposableValue
 
 abstract class ToggleImageButton(id: String,
                                  engineType: EngineTypes,
@@ -33,12 +35,12 @@ abstract class ToggleImageButton(id: String,
         buttonResId,defaultViewRenderRule, controlsType, isDeleted,
         consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents, showInQuickPanel) {
 
-    private var isActive by mutableStateOf(false)
+    private val isActive = MutableLiveData(false)
 
     @Composable
     final override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         val viewState = remember { viewState }
-        val isActive by remember (isActive) { mutableStateOf(isActive) }
+        val isActive = isActive.getComposableValue(false)
         val colorFilterToUse by remember (isActive, isEditMode, inGame) { mutableStateOf(
             ColorFilter.tint(if (isActive && !isEditMode && inGame) Color.Yellow else Color.White)
         ) }
@@ -50,8 +52,8 @@ abstract class ToggleImageButton(id: String,
     }
 
     final override fun onClick(context: Context) {
-        isActive=!isActive
-        onToggleStateChanged(isActive)
+        isActive.value=!isActive.value!!
+        onToggleStateChanged(isActive.value!!)
     }
 
     protected abstract fun onToggleStateChanged (isActive : Boolean)

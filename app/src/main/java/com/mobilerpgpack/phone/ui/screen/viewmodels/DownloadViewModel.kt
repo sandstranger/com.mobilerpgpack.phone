@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.viewmodels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.utils.IAssetExtractor
@@ -21,10 +22,9 @@ class DownloadViewModel : ViewModel(), KoinComponent {
 
     private val translationModelsDownloader : ITranslationModelsDownloader = get()
 
-    var isLoading by mutableStateOf(false)
+    val isLoading = MutableLiveData(false)
 
-    var downloadProgress by mutableStateOf("")
-        private set
+    val downloadProgress = MutableLiveData("")
 
     private var currentTranslationModelType : String? = null
 
@@ -42,20 +42,20 @@ class DownloadViewModel : ViewModel(), KoinComponent {
     }
 
     fun startDownload() {
-        if (isLoading) return
+        if (isLoading.value!!) return
 
-        isLoading = true
+        isLoading.value = true
 
         if (downloadJob == null || downloadJob!!.isCompleted || downloadJob!!.isCancelled) {
             downloadJob = scope.launch {
                 try {
-                    downloadProgress = ""
+                    downloadProgress.value = ""
                     translationModelsDownloader.downloadModelIfNeeded { newValue ->
-                        downloadProgress = newValue
+                        downloadProgress.value = newValue
                     }
                 }
                 finally {
-                    isLoading = false
+                    isLoading.value = false
                     downloadJob = null
                 }
             }
@@ -63,7 +63,7 @@ class DownloadViewModel : ViewModel(), KoinComponent {
     }
 
     fun cancelDownload() {
-        isLoading = false
+        isLoading.value = false
         downloadJob?.cancel()
         downloadJob = null
         translationModelsDownloader.cancelDownloadModel()
