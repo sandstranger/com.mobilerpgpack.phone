@@ -1,15 +1,11 @@
 package com.mobilerpgpack.phone.utils
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.apache.commons.configuration2.INIConfiguration
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
-import java.util.concurrent.ConcurrentHashMap
 
 class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false ){
 
@@ -27,37 +23,49 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         }
     }
 
-    fun getBooleanValueFromInt (key: String) = getIntValue(key) > 0
-
-    fun getFloatValue (key: String) : Float {
+    fun getBooleanValueFromInt (key: String) : LiveData<Boolean> {
         if (!loaded){
             load()
         }
         return iniValues.getOrPut(key){
             iniConfig.run {
                 IniValue().apply {
-                    floatValue = if (containsKey(key)) getFloat(key) else 0f
-                    iniValueType = IniValueType.Float
-                }
-            }
-        }.floatValue
-    }
-
-    fun getBooleanValue (key: String) : Boolean {
-        if (!loaded){
-            load()
-        }
-        return iniValues.getOrPut(key){
-            iniConfig.run {
-                IniValue().apply {
-                    booleanValue = if (containsKey(key)) getBoolean(key) else false
+                    booleanValue.value = if (containsKey(key)) getInt(key) > 0 else false
                     iniValueType = IniValueType.Boolean
                 }
             }
         }.booleanValue
     }
 
-    fun getStringValue (key: String, defaultValue : String = "") : String {
+    fun getFloatValue (key: String) : LiveData<Float> {
+        if (!loaded){
+            load()
+        }
+        return iniValues.getOrPut(key){
+            iniConfig.run {
+                IniValue().apply {
+                    floatValue.value = if (containsKey(key)) getFloat(key) else 0f
+                    iniValueType = IniValueType.Float
+                }
+            }
+        }.floatValue
+    }
+
+    fun getBooleanValue (key: String) : LiveData<Boolean> {
+        if (!loaded){
+            load()
+        }
+        return iniValues.getOrPut(key){
+            iniConfig.run {
+                IniValue().apply {
+                    booleanValue.value = if (containsKey(key)) getBoolean(key) else false
+                    iniValueType = IniValueType.Boolean
+                }
+            }
+        }.booleanValue
+    }
+
+    fun getStringValue (key: String, defaultValue : String = "") : LiveData<String> {
         if (!loaded){
             load()
         }
@@ -65,14 +73,19 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         return iniValues.getOrPut(key){
             iniConfig.run {
                 IniValue().apply {
-                    stringValue = if (containsKey(key)) getString(key) else defaultValue
+                    stringValue.value = if (containsKey(key)) getString(key) else defaultValue
                     iniValueType = IniValueType.String
                 }
             }
-        }.stringValue.ifEmpty { defaultValue }
+        }.stringValue.run {
+            if (this.value.isNullOrEmpty()){
+                this.value = defaultValue
+            }
+            this
+        }
     }
 
-    fun getIntValue (key: String) : Int{
+    fun getIntValue (key: String) : LiveData<Int>{
         if (!loaded){
             load()
         }
@@ -80,14 +93,31 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         return iniValues.getOrPut(key){
             iniConfig.run {
                 IniValue().apply {
-                    intValue = if (containsKey(key)) getInt(key) else 0
+                    intValue.value = if (containsKey(key)) getInt(key) else 0
                     iniValueType = IniValueType.Int
                 }
             }
         }.intValue
     }
 
-    fun setValueAsInt (key: String, value: Boolean) = setValue(key, if (value) 1 else 0)
+    fun setValueAsInt (key: String, value: Boolean) {
+        if (!loaded){
+            load()
+        }
+
+        if (loaded) {
+            iniValues.getOrPut(key){ IniValue() }.apply {
+                booleanValue.value = value
+                iniValueType = IniValueType.Boolean
+            }
+            FileWriter(iniFile).use {
+                iniConfig.apply {
+                    setProperty(key, if(value) 1 else 0)
+                    write(it)
+                }
+            }
+        }
+    }
 
     fun <T> setValue (key: String, value: T){
         if (!loaded){
@@ -98,22 +128,22 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
             iniValues.getOrPut(key){ IniValue() }.apply {
                 when (value) {
                     is String -> {
-                        stringValue = value
+                        stringValue.value= value
                         iniValueType = IniValueType.String
                     }
 
                     is Float -> {
-                        floatValue = value
+                        floatValue.value = value
                         iniValueType = IniValueType.Float
                     }
 
                     is Int -> {
-                        intValue = value
+                        intValue.value = value
                         iniValueType = IniValueType.Int
                     }
 
                     is Boolean -> {
-                        booleanValue = value
+                        booleanValue.value = value
                         iniValueType = IniValueType.Boolean
                     }
                 }
@@ -132,10 +162,10 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
         iniConfig.clear()
         iniValues.values.forEach {
             it.apply {
-                floatValue = 0f
-                intValue = 0
-                stringValue = ""
-                booleanValue = false
+                floatValue.value = 0f
+                intValue.value = 0
+                stringValue.value = ""
+                booleanValue.value = false
             }
         }
     }
@@ -152,10 +182,10 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                         if (containsKey(it.key)) {
                             it.value.apply {
                                 when (iniValueType) {
-                                    IniValueType.Float -> floatValue = getFloat(it.key)
-                                    IniValueType.String -> stringValue = getString(it.key)
-                                    IniValueType.Int -> intValue = getInt(it.key)
-                                    IniValueType.Boolean -> booleanValue = getBoolean(it.key)
+                                    IniValueType.Float -> floatValue.value = getFloat(it.key)
+                                    IniValueType.String -> stringValue.value = getString(it.key)
+                                    IniValueType.Int -> intValue.value = getInt(it.key)
+                                    IniValueType.Boolean -> booleanValue.value = getBoolean(it.key)
                                 }
                             }
                         }
@@ -167,10 +197,10 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
     }
 
     private class IniValue {
-        var floatValue by mutableFloatStateOf(0f)
-        var stringValue by mutableStateOf("")
-        var intValue by mutableIntStateOf(0)
-        var booleanValue by mutableStateOf(false)
+        val floatValue = MutableLiveData(0f)
+        val stringValue = MutableLiveData("")
+        val intValue = MutableLiveData(0)
+        val booleanValue = MutableLiveData(false)
         lateinit var iniValueType : IniValueType
     }
 
