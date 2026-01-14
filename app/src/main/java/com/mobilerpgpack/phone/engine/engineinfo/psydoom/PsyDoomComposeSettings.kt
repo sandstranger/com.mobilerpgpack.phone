@@ -39,8 +39,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         val viewModel: PsyDoomComposeSettingsViewModel = koinViewModel()
-        val showView by rememberSaveable (viewModel.showView) {
-            mutableStateOf(viewModel.showView) }
+        val showView = viewModel.showView.getComposableValue()
 
         if (showView) {
             DrawPsyDoomCommonSettings(viewModel,navController)

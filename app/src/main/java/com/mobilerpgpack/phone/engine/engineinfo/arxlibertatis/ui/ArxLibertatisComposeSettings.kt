@@ -16,6 +16,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -26,8 +27,7 @@ class ArxLibertatisComposeSettings : IEngineUIController {
         val viewModel : ArxLibertatisComposeSettingsViewModel = koinViewModel ()
         val preferencesStorage : ArxLibertatisPreferenceStorage = koinInject()
 
-        val showContent by rememberSaveable(viewModel.showView) {
-            mutableStateOf(viewModel.showView) }
+        val showContent = viewModel.showView.getComposableValue()
 
         if (showContent){
             DrawCommandLinePreferences(preferencesStorage.arxLibertatisCommandLineArgs,
