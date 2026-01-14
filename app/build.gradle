@@ -264,6 +264,7 @@ dependencies {
     implementation (libs.core)
     implementation(libs.zip4j)
     implementation (libs.input)
+    implementation (libs.androidx.compose.runtime.livedata)
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.material3)
