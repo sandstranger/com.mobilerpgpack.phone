@@ -23,6 +23,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.utils.getComposableNullableValue
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -36,8 +37,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
         val zDoomEngineInfo : IEngineInfo = koinInject(named(EngineTypes.UZDoom.name))
         val preferencesStorage : UZDoomPreferenceStorage = koinInject(named(EngineTypes.UZDoom.name))
         val viewModel: UZDoomComposeSettingsViewModel = koinViewModel()
-        val showView by rememberSaveable (viewModel.showView) {
-            mutableStateOf(viewModel.showView) }
+        val showView = viewModel.showView.getComposableValue()
 
         if (!showView) {
             return

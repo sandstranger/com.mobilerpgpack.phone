@@ -2,9 +2,7 @@ package com.mobilerpgpack.phone.utils
 
 import android.content.Context
 import android.content.res.AssetManager
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -29,7 +27,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     @Volatile
     private var assetsCopying = false
 
-    private var _assetsCopied by mutableStateOf(false)
+    private var _assetsCopied = false
 
     private val pathToUserFolder get() = preferencesStorage.pathToRootUserFolder
 
