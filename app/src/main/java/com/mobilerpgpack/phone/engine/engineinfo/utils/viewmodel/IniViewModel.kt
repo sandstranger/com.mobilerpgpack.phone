@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue

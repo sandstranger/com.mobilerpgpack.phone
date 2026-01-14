@@ -2,6 +2,7 @@
 
 package com.mobilerpgpack.phone.engine.engineinfo.utils
 
+import android.util.Log
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.ComposeImmutableList
 import com.mobilerpgpack.phone.utils.IAssetExtractor
@@ -14,6 +15,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.get
 import java.io.File
@@ -27,7 +29,9 @@ abstract sealed class ModsModel : KoinComponent {
 
     private val modsCollection = ComposeImmutableList<Mod>()
 
-    private val _enableModsAutoUpdateInFolder = MutableValue<Boolean>()
+    private val preferencesStorage : PreferencesStorage by inject ()
+
+    val enableModsAutoUpdateInFolder = MutableValue<Boolean>()
 
     @Transient
     open val allowedModsExtensions: Collection<String> =
@@ -44,14 +48,10 @@ abstract sealed class ModsModel : KoinComponent {
 
     val pathToModsFolder = MutableValue<String>()
 
-    var enableModsAutoUpdateInFolder
-        get() = _enableModsAutoUpdateInFolder.value!!
-        set(value) {
-            _enableModsAutoUpdateInFolder.value = value
-        }
+    val modsCountAsLiveData get() = modsCollection.countAsLiveData
 
     var modsCount: Int
-        get() = modsCollection.count!!
+        get() = modsCollection.count
         set(value) {
             modsCollection.count = value
             save()
@@ -66,7 +66,7 @@ abstract sealed class ModsModel : KoinComponent {
         enableModsSupport.initialize(false) {
             save()
         }
-        _enableModsAutoUpdateInFolder.initialize(true) {
+        enableModsAutoUpdateInFolder.initialize(true) {
             save()
         }
 
@@ -79,15 +79,15 @@ abstract sealed class ModsModel : KoinComponent {
     fun updateComposeModsList() = modsCollection.updateComposeList()
 
     fun save() {
-        File(preferencesStorage.pathToRootUserFolder + File.separator + jsonFileName)
+        File(preferencesStorage.pathToRootUserFolder.value!! + File.separator + jsonFileName)
             .writeText(Json.encodeToString(this))
     }
 
     protected companion object {
-        val preferencesStorage : PreferencesStorage = get(PreferencesStorage::class.java)
 
         inline fun <reified T> load(jsonFileName: String): T where T : ModsModel {
-            val jsoFile = File(preferencesStorage.pathToRootUserFolder + File.separator + jsonFileName)
+            val preferencesStorage : PreferencesStorage = get(PreferencesStorage::class.java)
+            val jsoFile = File(preferencesStorage.pathToRootUserFolder.value!! + File.separator + jsonFileName)
             val model = if (jsoFile.exists())
                 Json.decodeFromString<T>(jsoFile.readText()) else
                 T::class.java.getDeclaredConstructor().newInstance()
@@ -99,5 +99,5 @@ abstract sealed class ModsModel : KoinComponent {
 }
 
 val ModsModel.modsCanBeUsed
-    get() = enableModsSupport.value!! && modsCount > 0 &&
-            this.mods.any { mod -> !mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists() }
+    get() = enableModsSupport.liveData.value!! && modsCount > 0 &&
+            this.mods.any { mod -> !mod.pathToMod.liveData.value.isNullOrEmpty() && File(mod.pathToMod.liveData.value!!).exists() }

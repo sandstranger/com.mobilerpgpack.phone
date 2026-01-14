@@ -37,7 +37,7 @@ class SDL2ScreenController : SDLScreenController() {
     override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int,
                                  controlsProvider: ControlsProvider) =
         CustomSDL2Button(id, engineTypes,offsetXPercent = 0.55f, offsetYPercent = 0.03f,
-            sizePercent = 0.05f, sdlKeyEvent = keyCode, controlsType = controlsProvider.activeControlsType)
+            sizePercent = 0.05f, sdlKeyEvent = keyCode, controlsType = controlsProvider.activeControlsType.value!!)
 
     companion object{
         const val SDL2_SCREEN_CONTROLLER_NAME = "SDL2_SCREEN_CONTROLLER"

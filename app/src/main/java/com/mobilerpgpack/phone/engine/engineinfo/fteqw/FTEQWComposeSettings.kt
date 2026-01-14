@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,6 +31,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
@@ -37,18 +39,9 @@ class FTEQWComposeSettings : IEngineUIController {
     @Composable
     override fun DrawSettings(navController: NavHostController) {
         val prefsStorage : FTEQWPreferencesStorage = koinInject(named((EngineTypes.FTEQW.name)))
-        var activeFTEQWGame by rememberSaveable(prefsStorage.activeFTEQWGame) {
-            mutableStateOf(prefsStorage.activeFTEQWGame)
-        }
-        var enableModsSupport by rememberSaveable(prefsStorage.enableFTEQWModsSupport) {
-            mutableStateOf(prefsStorage.enableFTEQWModsSupport)
-        }
-        var enableCustomManifestSupport by rememberSaveable(prefsStorage.enableManifestSupport) {
-            mutableStateOf(prefsStorage.enableManifestSupport)
-        }
-        var renderType by rememberSaveable(prefsStorage.fteQWRenderType) {
-            mutableStateOf(prefsStorage.fteQWRenderType)
-        }
+        val activeFTEQWGame = prefsStorage.activeFTEQWGame.getComposableValue(FTEQWGames.Quake)
+        val enableModsSupport = prefsStorage.enableFTEQWModsSupport.getComposableValue()
+        val enableCustomManifestSupport = prefsStorage.enableManifestSupport.getComposableValue()
         val buttonsColors = getButtonsColors()
         val onPrimaryColor = getOnPrimaryColor()
         val allowedManifestExtensions = retain { listOf(".fmf", ".FMF") }
@@ -59,9 +52,8 @@ class FTEQWComposeSettings : IEngineUIController {
         DrawHorizontalDivider()
 
         ListPreferenceItem(stringResource(R.string.uzdoom_rendering_api),
-            renderType){
+            prefsStorage.fteQWRenderType){
             prefsStorage.setEnumValue(prefsStorage.fteQWRenderTypePrefsKey,it)
-            renderType = it
         }
 
         DrawHorizontalDivider()
@@ -69,7 +61,6 @@ class FTEQWComposeSettings : IEngineUIController {
         ListPreferenceItem(stringResource(R.string.fteqw_game),
             activeFTEQWGame){
             prefsStorage.setEnumValue(prefsStorage.activeFTEQWGamePrefsKey,it)
-            activeFTEQWGame = it
         }
 
         DrawHorizontalDivider()
@@ -188,9 +179,7 @@ class FTEQWComposeSettings : IEngineUIController {
         DrawHorizontalDivider()
 
         SwitchPreferenceItem(stringResource(R.string.enable_mods_support),
-            enableModsSupport, prefsStorage.enableFTEQWModsPrefsKey .name){
-            enableModsSupport = it
-        }
+            enableModsSupport, prefsStorage.enableFTEQWModsPrefsKey .name)
 
         DrawHorizontalDivider()
 
@@ -222,9 +211,7 @@ class FTEQWComposeSettings : IEngineUIController {
         }
 
         SwitchPreferenceItem(stringResource(R.string.enable_fteqw_manifest_support),
-            enableCustomManifestSupport, prefsStorage.enableManifestSupportPrefsKey.name){
-            enableCustomManifestSupport = it
-        }
+            enableCustomManifestSupport, prefsStorage.enableManifestSupportPrefsKey.name)
 
         if (enableCustomManifestSupport){
             DrawHorizontalDivider()

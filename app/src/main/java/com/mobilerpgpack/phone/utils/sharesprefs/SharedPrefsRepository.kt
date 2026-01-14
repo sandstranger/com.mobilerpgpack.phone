@@ -1,21 +1,14 @@
 package com.mobilerpgpack.phone.utils.sharesprefs
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent.get
-import java.util.concurrent.ConcurrentHashMap
 
 open class SharedPrefsRepository {
 
@@ -23,9 +16,10 @@ open class SharedPrefsRepository {
 
     fun loadAllEntries () = SharedPrefsRepository.loadAllEntries()
 
-    fun <T : Enum<T>> getEnumValue(key: String,enumClass: Class<T>, defaultValue: T) : T =
-        loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringValue
-            .let { stringValue ->
+    fun <T : Enum<T>> getEnumValue(key: String, enumClass: Class<T>, defaultValue: T): LiveData<T> {
+        return loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }
+            .stringValue
+            .map { stringValue ->
                 if (stringValue.isNotEmpty()) {
                     try {
                         java.lang.Enum.valueOf(enumClass, stringValue)
@@ -36,38 +30,43 @@ open class SharedPrefsRepository {
                     defaultValue
                 }
             }
+    }
 
     fun <T : Enum<T>> getEnumValue(key: Key<T>,enumClass: Class<T>, defaultValue: T) =
         getEnumValue(key.name, enumClass, defaultValue)
 
-    fun getStringValue(key: String, defaultValue: String = "") =
+    fun getStringValue(key: String, defaultValue: String = "") : LiveData<String> =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.stringValue
 
-    fun getStringValue(key: Key<String>, defaultValue: String = "") = getStringValue(key.name, defaultValue)
+    fun getStringValue(key: Key<String>, defaultValue: String = "") : LiveData<String> =
+        getStringValue(key.name, defaultValue)
 
-    fun getIntValue(key: String, defaultValue: Int = 0) =
+    fun getIntValue(key: String, defaultValue: Int = 0) : LiveData<Int> =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.intValue
 
-    fun getIntValue(key: Key<Int>, defaultValue: Int = 0) = getIntValue(key.name, defaultValue)
+    fun getIntValue(key: Key<Int>, defaultValue: Int = 0) : LiveData<Int> = getIntValue(key.name, defaultValue)
 
-    fun getLongValue(key: String, defaultValue: Long = 0L) =
+    fun getLongValue(key: String, defaultValue: Long = 0L) : LiveData<Long> =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.longValue
 
-    fun getLongValue(key: Key<Long>, defaultValue: Long = 0L) = getLongValue(key.name, defaultValue)
+    fun getLongValue(key: Key<Long>, defaultValue: Long = 0L) : LiveData<Long> = getLongValue(key.name, defaultValue)
 
-    fun getBooleanValue(key: String, defaultValue: Boolean = false) =
+    fun getBooleanValue(key: String, defaultValue: Boolean = false) : LiveData<Boolean> =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.booleanValue
 
-    fun getBooleanValue(key: Key<Boolean>, defaultValue: Boolean = false) = getBooleanValue(key.name, defaultValue)
+    fun getBooleanValue(key: Key<Boolean>, defaultValue: Boolean = false) : LiveData<Boolean> =
+        getBooleanValue(key.name, defaultValue)
 
-    fun getFloatValue(key: Key<Float>, defaultValue: Float = 0.0f) = getFloatValue(key.name, defaultValue)
+    fun getFloatValue(key: Key<Float>, defaultValue: Float = 0.0f) : LiveData<Float> =
+        getFloatValue(key.name, defaultValue)
 
-    fun getFloatValue(key: String, defaultValue: Float = 0.0f) =
+    fun getFloatValue(key: String, defaultValue: Float = 0.0f) : LiveData<Float> =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.floatValue
 
-    fun getDoubleValue(key: Key<Double>, defaultValue: Double = 0.0) = getDoubleValue(key.name, defaultValue)
+    fun getDoubleValue(key: Key<Double>, defaultValue: Double = 0.0) : LiveData<Double> =
+        getDoubleValue(key.name, defaultValue)
 
-    fun getDoubleValue(key: String, defaultValue: Double = 0.0) =
+    fun getDoubleValue(key: String, defaultValue: Double = 0.0) : LiveData<Double> =
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }.doubleValue
 
     fun setStringValue(key: Key<String>, value: String) = setStringValue(key.name, value)
@@ -79,7 +78,7 @@ open class SharedPrefsRepository {
     suspend fun setStringValueAsync(key: String, value: String) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.stringValue = value
-            stringValue = value
+            stringValue.value = value
             withContext(Dispatchers.IO) {
                 dao.upsert(prefsEntry)
             }
@@ -95,7 +94,7 @@ open class SharedPrefsRepository {
     suspend fun setIntValueAsync(key: String, value: Int) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.intValue = value
-            intValue = value
+            intValue.value = value
             withContext(Dispatchers.IO) {
                 dao.upsert(prefsEntry)
             }
@@ -111,7 +110,7 @@ open class SharedPrefsRepository {
     suspend fun setLongValueAsync(key: String, value: Long) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.longValue = value
-            longValue = value
+            longValue.value = value
             withContext(Dispatchers.IO) {
                 dao.upsert(prefsEntry)
             }
@@ -127,7 +126,7 @@ open class SharedPrefsRepository {
     suspend fun setBooleanValueAsync(key: String, value: Boolean) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.booleanValue = value
-            booleanValue = value
+            booleanValue.value = value
             withContext(Dispatchers.IO) {
                 dao.upsert(prefsEntry)
             }
@@ -143,7 +142,7 @@ open class SharedPrefsRepository {
     suspend fun setFloatValueAsync(key: String, value: Float) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.floatValue = value
-            floatValue = value
+            floatValue.value = value
             withContext(Dispatchers.IO) {
                 dao.upsert(prefsEntry)
             }
@@ -159,7 +158,7 @@ open class SharedPrefsRepository {
     suspend fun setDoubleValueAsync(key: String, value: Double) {
         loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, value) }.apply {
             prefsEntry.doubleValue = value
-            doubleValue = value
+            doubleValue.value = value
             withContext(Dispatchers.IO) {
                 dao.upsert(prefsEntry)
             }
@@ -176,22 +175,22 @@ open class SharedPrefsRepository {
         setStringValueAsync(key, value.name)
 
     private class SharedPrefsValue(var prefsEntry: SharedPrefsEntry) {
-        var floatValue by mutableFloatStateOf(0f)
-        var stringValue by mutableStateOf("")
-        var intValue by mutableIntStateOf(0)
-        var booleanValue by mutableStateOf(false)
-        var longValue by mutableLongStateOf(0L)
-        var doubleValue by mutableDoubleStateOf(0.0)
+        val floatValue = MutableLiveData(0f)
+        val stringValue = MutableLiveData("")
+        val intValue = MutableLiveData(0)
+        val booleanValue = MutableLiveData(false)
+        val longValue = MutableLiveData(0L)
+        val doubleValue = MutableLiveData(0.0)
 
         fun updateEntry(newPrefsEntry: SharedPrefsEntry) {
             prefsEntry = newPrefsEntry
             newPrefsEntry.also {
-                floatValue = it.floatValue
-                stringValue = it.stringValue
-                doubleValue = it.doubleValue
-                booleanValue = it.booleanValue
-                intValue = it.intValue
-                longValue = it.longValue
+                floatValue.value = it.floatValue
+                stringValue.value = it.stringValue
+                doubleValue.value = it.doubleValue
+                booleanValue.value = it.booleanValue
+                intValue.value = it.intValue
+                longValue.value = it.longValue
             }
         }
     }
@@ -213,8 +212,7 @@ open class SharedPrefsRepository {
         }
 
         private suspend fun loadAllEntriesAsync() {
-            val entries = withContext(Dispatchers.IO) { dao.getAllEntries() }
-            entries.forEach { entry ->
+            withContext(Dispatchers.IO) { dao.getAllEntries() }.forEach { entry ->
                 val existing = loadedEntries[entry.key]
                 if (existing == null) {
                     loadedEntries[entry.key] = buildSharedPrefsValue(entry)
@@ -228,49 +226,49 @@ open class SharedPrefsRepository {
         private fun buildSharedPrefsValue(entry: SharedPrefsEntry): SharedPrefsValue {
             entry.let {
                 return SharedPrefsValue(entry).apply {
-                    stringValue = it.stringValue
-                    floatValue = it.floatValue
-                    booleanValue = it.booleanValue
-                    doubleValue = it.doubleValue
-                    intValue = it.intValue
-                    longValue = it.longValue
+                    stringValue.value = it.stringValue
+                    floatValue.value = it.floatValue
+                    booleanValue.value = it.booleanValue
+                    doubleValue.value = it.doubleValue
+                    intValue.value = it.intValue
+                    longValue.value = it.longValue
                 }
             }
         }
 
         private fun buildSharedPrefsValue(key: String, value: String) =
             SharedPrefsValue(SharedPrefsEntry(key, stringValue = value)).apply {
-                stringValue = value
+                stringValue.value = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Int) =
             SharedPrefsValue(SharedPrefsEntry(key, intValue = value)).apply {
-                intValue = value
+                intValue.value = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Float) =
             SharedPrefsValue(SharedPrefsEntry(key, floatValue = value)).apply {
-                floatValue = value
+                floatValue.value = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Double) =
             SharedPrefsValue(SharedPrefsEntry(key, doubleValue = value)).apply {
-                doubleValue = value
+                doubleValue.value = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Long) =
             SharedPrefsValue(SharedPrefsEntry(key, longValue = value)).apply {
-                longValue = value
+                longValue.value = value
             }
 
         private fun buildSharedPrefsValue(key: String, value: Boolean) =
             SharedPrefsValue(SharedPrefsEntry(key, booleanValue = value)).apply {
-                booleanValue = value
+                booleanValue.value = value
             }
 
         private fun <T : Enum<T>> buildSharedPrefsValue(key: String, value: T) =
             SharedPrefsValue(SharedPrefsEntry(key, stringValue = value.name)).apply {
-                stringValue = value.name
+                stringValue.value = value.name
             }
     }
 }

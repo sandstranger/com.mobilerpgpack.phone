@@ -18,9 +18,9 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         super.pathToRootUserFolder + File.separator + "ArxLibertatis"
     }
 
-    override val pathToResource: String get() = arxPreferenceStorage.pathToArxFatalisFolder
+    override val pathToResource: String get() = arxPreferenceStorage.pathToArxFatalisFolder.value!!
 
-    override val commandLineParams get() = arxPreferenceStorage.arxLibertatisCommandLineArgs
+    override val commandLineParams get() = arxPreferenceStorage.arxLibertatisCommandLineArgs.value!!
 
     override val touchFullScreenModeCanBeUsed = false
 
@@ -58,7 +58,7 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         super.onNativeLibrariesLoaded()
         backgroundScope.launch {
             Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
-            updateScreenControlsHidingState(preferencesStorage.hideScreenControls)
+            updateScreenControlsHidingState(preferencesStorage.hideScreenControls.value!!)
         }
     }
 

@@ -1,10 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import com.mobilerpgpack.phone.engine.EngineTypes
-import kotlinx.coroutines.flow.first
 
 class MouseViewState(id: String,
                      engineType: EngineTypes,
@@ -18,7 +15,7 @@ class MouseViewState(id: String,
                      isDeletedInitialState : Boolean = false,
                      controlsType: ControlsType = ControlsType.Default,
                      private val invokeWheelEventsWhilePressingDefaultState : Boolean = false,
-                     private val showInQuickPanelInitialState : Boolean = false) :
+                     showInQuickPanelInitialState : Boolean = false) :
     ViewState (id, engineType, offsetXPercent, offsetYPercent, sizePercent,
     alpha, sdlKeyEvent, buttonResId,defaultViewRenderRule,isDeletedInitialState,controlsType,
         false,false,true,true,
@@ -26,26 +23,26 @@ class MouseViewState(id: String,
 
     private val invokeWheelEventsWhilePressingPrefsKey = "invoke_wheel_events_while_pressing"
 
-    var invokeWheelEventsWhilePressing by mutableStateOf(invokeWheelEventsWhilePressingDefaultState)
+    val invokeWheelEventsWhilePressing = MutableLiveData(invokeWheelEventsWhilePressingDefaultState)
 
     override fun load() {
         super.load()
-        invokeWheelEventsWhilePressing = preferencesStorage.getBooleanValue(invokeWheelEventsWhilePressingPrefsKey,
-            invokeWheelEventsWhilePressingDefaultState)
+        invokeWheelEventsWhilePressing.value = preferencesStorage.getBooleanValue(invokeWheelEventsWhilePressingPrefsKey,
+            invokeWheelEventsWhilePressingDefaultState).value!!
     }
 
     override fun save() {
         super.save()
-        preferencesStorage.setBooleanValue(invokeWheelEventsWhilePressingPrefsKey, invokeWheelEventsWhilePressing)
+        preferencesStorage.setBooleanValue(invokeWheelEventsWhilePressingPrefsKey, invokeWheelEventsWhilePressing.value!!)
     }
 
     override fun resetToDefaults() {
         super.resetToDefaults()
-        invokeWheelEventsWhilePressing = invokeWheelEventsWhilePressingDefaultState
+        invokeWheelEventsWhilePressing.value = invokeWheelEventsWhilePressingDefaultState
     }
 
     override fun resetToDefaultsFromViewEditor(){
         super.resetToDefaultsFromViewEditor()
-        invokeWheelEventsWhilePressing = invokeWheelEventsWhilePressingDefaultState
+        invokeWheelEventsWhilePressing.value = invokeWheelEventsWhilePressingDefaultState
     }
 }

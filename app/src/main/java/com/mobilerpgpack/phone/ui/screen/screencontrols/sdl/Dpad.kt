@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
@@ -26,6 +27,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.utils.touchListenerModifier
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.core.component.KoinComponent
 
 abstract class Dpad(
@@ -130,10 +132,11 @@ abstract class Dpad(
             fun dpadButton(
                 painterId: Int,
                 desc: String,
-                sdlKeyEvent: Int = 0,
+                sdlKeyEvent: LiveData<Int>,
                 offsetX: Dp = 0.dp,
                 offsetY: Dp = 0.dp
             ) {
+                val sdlKeyEvent = sdlKeyEvent.getComposableValue(0)
                 Image(painter = painterResource(painterId),
                     contentDescription = desc,
                     modifier = Modifier.interactiveControlModifier(isEditMode, inGame,buttonSize,

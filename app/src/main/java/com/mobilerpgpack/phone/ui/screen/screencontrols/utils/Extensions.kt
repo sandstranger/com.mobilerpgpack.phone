@@ -22,6 +22,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
@@ -31,9 +32,7 @@ fun Modifier.onTouchDown(
     onTouchDown: () -> Unit
 ): Modifier {
     val preferencesStorage: PreferencesStorage = koinInject()
-    val activeEngineString = remember(preferencesStorage.activeEngineString) {
-        preferencesStorage.activeEngineString
-    }
+    val activeEngineString = rememberSaveable { preferencesStorage.activeEngineString.value!! }
     val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
     val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
         initial = false
@@ -91,20 +90,16 @@ fun Modifier.touchListenerModifier(
     val isEditMode by remember(isEditMode) { mutableStateOf(isEditMode) }
     val viewState = remember { viewState }
     val preferencesStorage: PreferencesStorage = koinInject()
-    val activeEngineString = remember(preferencesStorage.activeEngineString) {
-        preferencesStorage.activeEngineString
-    }
+    val activeEngineString = remember { preferencesStorage.activeEngineString.value!! }
     val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
     val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
         initial = false
     )
-    val ignoreOutOfBoundsTouchEvents by remember(viewState.ignoreOutOfBoundsTouchEvents)
-    { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
-    val consumeTouchEvents by remember(viewState.consumeTouchEvents)
-    { mutableStateOf(viewState.consumeTouchEvents) }
-    val useViewAsToggle by remember(viewState.useViewAsToggle) { mutableStateOf(viewState.useViewAsToggle) }
+    val ignoreOutOfBoundsTouchEvents =viewState.ignoreOutOfBoundsTouchEvents.getComposableValue()
+    val consumeTouchEvents =viewState.consumeTouchEvents.getComposableValue()
+    val useViewAsToggle = viewState.useViewAsToggle.getComposableValue()
     var pointerId by remember { mutableStateOf<PointerId?>(null) }
-    val sdlKeyCode by remember(viewState.sdlKeyCode) { mutableIntStateOf(viewState.sdlKeyCode) }
+    val sdlKeyCode = viewState.sdlKeyCode.getComposableValue()
     val colorFilterToUse by remember(inToggleMode, isEditMode, useViewAsToggle) {
         mutableStateOf(
             ColorFilter.tint(if (inToggleMode && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)

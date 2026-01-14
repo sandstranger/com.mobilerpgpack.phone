@@ -65,13 +65,17 @@ class UZDoomModsModel : ModsModel() {
 }
 
 val UZDoomModsModel.playingRecordsFileCanBeUsed get() =
-    enableDemoPlayingSupport.value!! && !this.pathToDemoFile.value.isNullOrEmpty() && File(pathToDemoFile.value!!).exists()
+    enableDemoPlayingSupport.liveData.value!! && !this.pathToDemoFile
+        .liveData.value.isNullOrEmpty() && File(pathToDemoFile.liveData.value!!).exists()
 
 val UZDoomModsModel.xlatFileCanBeUsed get() =
-    this.enableXLatSupport.value!! && !this.pathToXLatFile.value.isNullOrEmpty() && File(pathToXLatFile.value!!).exists()
+    this.enableXLatSupport.liveData.value!! && !this.pathToXLatFile.liveData.value.isNullOrEmpty() &&
+            File(pathToXLatFile.liveData.value!!).exists()
 
 val UZDoomModsModel.behFileCanBeUsed get() =
-    this.enableBehSupport.value!! && !this.pathToBehFile.value.isNullOrEmpty() && File(pathToBehFile.value!!).exists()
+    this.enableBehSupport.liveData.value!! && !
+    this.pathToBehFile.liveData.value.isNullOrEmpty() && File(pathToBehFile.liveData.value!!).exists()
 
 val UZDoomModsModel.dehFileCanBeUsed get() =
-    this.enableDehSupport.value!! && !this.pathToDehFile.value.isNullOrEmpty() && File(pathToDehFile.value!!).exists()
+    this.enableDehSupport.liveData.value!! && !this.pathToDehFile.liveData.value.isNullOrEmpty() &&
+            File(pathToDehFile.liveData.value!!).exists()
