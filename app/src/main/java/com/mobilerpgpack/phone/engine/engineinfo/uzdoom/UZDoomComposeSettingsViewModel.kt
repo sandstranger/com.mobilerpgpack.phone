@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
 import com.mobilerpgpack.phone.utils.Ini
@@ -15,21 +14,25 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
                 "uzdoom${File.separator}uzdoom.ini", removeSpacesBetweenSeparator = true)
 
     val uzDoomMods : UZDoomModsModel = get (named(EngineTypes.UZDoom.toString()))
+    val renderAPIAsLiveData = uzDoomIni.getIntValue(PREFERRED_RENDER_API)
+    val autoLoadBrightMapsAsLiveData = uzDoomIni.getBooleanValue(AUTOLOAD_BRIGHTMAPS)
+    val autoLoadWideScreenAsLiveData = uzDoomIni.getBooleanValue(AUTOLOAD_WIDESCREEN)
+    val autoLoadLightsAsLiveData = uzDoomIni.getBooleanValue(AUTOLOAD_LIGHTS)
 
     var renderAPI : UZDoomRenderAPI
-        get() = UZDoomRenderAPI.fromValue(uzDoomIni.getIntValue(PREFERRED_RENDER_API))
+        get() = UZDoomRenderAPI.fromValue(renderAPIAsLiveData.value!!)
         set(value) = uzDoomIni.setValue(PREFERRED_RENDER_API,value.value)
 
     var autoLoadBrightMaps : Boolean
-        get() = uzDoomIni.getBooleanValue(AUTOLOAD_BRIGHTMAPS)
+        get() = autoLoadBrightMapsAsLiveData.value!!
         set(value) = uzDoomIni.setValue(AUTOLOAD_BRIGHTMAPS, value)
 
     var autoLoadWideScreen: Boolean
-        get() = uzDoomIni.getBooleanValue(AUTOLOAD_WIDESCREEN)
+        get() = autoLoadWideScreenAsLiveData.value!!
         set(value) = uzDoomIni.setValue(AUTOLOAD_WIDESCREEN, value)
 
     var autoLoadLights : Boolean
-        get() = uzDoomIni.getBooleanValue(AUTOLOAD_LIGHTS)
+        get() = autoLoadLightsAsLiveData.value!!
         set(value) = uzDoomIni.setValue(AUTOLOAD_LIGHTS, value)
 
     override fun reloadIniFiles() {

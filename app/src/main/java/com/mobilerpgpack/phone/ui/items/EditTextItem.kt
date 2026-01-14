@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.getEditTextFieldColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
@@ -31,6 +32,7 @@ import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
 import com.mobilerpgpack.phone.ui.getPrimaryColor
 import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import com.mobilerpgpack.phone.ui.getTextButtonsColors
+import com.mobilerpgpack.phone.utils.getComposableValue
 
 @Composable
 fun EditTextItem(
@@ -122,6 +124,18 @@ fun EditTextItem(
 @Composable
 fun EditTextItem(
     title: String,
+    value: LiveData<String>,
+    hint: String = "",
+    singleLine : Boolean = true,
+    keyboardType : KeyboardType = KeyboardType.Text,
+    onValueChange: ((String) -> Unit)? = null
+){
+    EditTextItem(title, value.getComposableValue(), hint, singleLine, keyboardType, onValueChange)
+}
+
+@Composable
+fun EditTextItem(
+    title: String,
     value: Int,
     hint: String = "",
     singleLine : Boolean = true,
@@ -130,6 +144,18 @@ fun EditTextItem(
         val newValue = it.toIntOrNull() ?: 0
         onValueChange?.invoke(newValue)
     }
+}
+
+
+@Composable
+@JvmName("EditTextItemAsLiveDataInt")
+fun EditTextItem(
+    title: String,
+    value: LiveData<Int>,
+    hint: String = "",
+    singleLine : Boolean = true,
+    onValueChange: ((Int) -> Unit)? = null){
+    EditTextItem(title, value.getComposableValue(), hint, singleLine, onValueChange)
 }
 
 @Composable
@@ -143,4 +169,15 @@ fun EditTextItem(
         val newValue = it.toFloatOrNull() ?: 0.0f
         onValueChange?.invoke(newValue)
     }
+}
+
+@Composable
+@JvmName("EditTextItemAsLiveDataFloat")
+fun EditTextItem(
+    title: String,
+    value: LiveData<Float>,
+    hint: String = "",
+    singleLine : Boolean = true,
+    onValueChange: ((Float) -> Unit)? = null){
+    EditTextItem(title, value.getComposableValue(), hint, singleLine, onValueChange)
 }
