@@ -115,10 +115,10 @@ open class CommonDoomRpgComposeSettings :
         }
 
         LoadingModelDialogWithCancel(
-            show = vm.isLoading,
-            progress = vm.downloadProgress,
+            show = vm.isLoading.getComposableValue(),
+            progress = vm.downloadProgress.getComposableValue(),
             onClose = {
-                vm.isLoading = false
+                vm.isLoading.value = false
             },
             onCancel = {
                 vm.cancelDownload()
