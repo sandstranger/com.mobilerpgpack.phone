@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,8 +19,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getSwitchItemColors
+import com.mobilerpgpack.phone.utils.getComposableValue
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -58,11 +61,25 @@ fun SwitchItem(
 }
 
 @Composable
+@JvmName(name = "SwitchItemLiveDataBoolean")
 fun SwitchItem(
     title: String,
-    valueFlow : Flow<Boolean>,
+    value : LiveData<Boolean>,
     enabled: Boolean = true,
     onCheckedChange : ((Boolean) -> Unit)? = null) {
-    val initialValue by valueFlow.collectAsState(initial = false)
-    SwitchItem(title, initialValue, enabled, onCheckedChange)
+    val liveDataState = value.getComposableValue()
+    var savedValue by rememberSaveable (liveDataState){ mutableStateOf(liveDataState) }
+    SwitchItem(title, savedValue, enabled, onCheckedChange)
+}
+
+@Composable
+@JvmName(name = "SwitchItemLiveDataBooleanNullable")
+fun SwitchItem(
+    title: String,
+    value : LiveData<Boolean?>,
+    enabled: Boolean = true,
+    onCheckedChange : ((Boolean) -> Unit)? = null) {
+    val liveDataState = value.observeAsState(false)
+    var savedValue by rememberSaveable (liveDataState.value){ mutableStateOf(liveDataState.value) }
+    SwitchItem(title, savedValue ?: false, enabled, onCheckedChange)
 }

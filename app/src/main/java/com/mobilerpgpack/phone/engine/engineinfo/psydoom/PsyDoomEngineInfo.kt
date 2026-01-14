@@ -25,11 +25,11 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     private external fun recreateVulkanSwapChain()
 
-    override val commandLineParams: String get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString
+    override val commandLineParams: String get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString.value!!
 
     override val preferencesStorage = psyDoomPreferencesStorage
 
-    override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueFile
+    override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueFile.value!!
 
     override val requiredResourceExtensions = listOf(".cue", ".CUE")
 
@@ -48,7 +48,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             return mutableListOf<String>().let {
                 it += baseCommandLineArgs
 
-                val pathToCue = psyDoomPreferencesStorage.pathToPsyDoomCueFile
+                val pathToCue = psyDoomPreferencesStorage.pathToPsyDoomCueFile.value!!
 
                 if (pathToCue.isNotEmpty() && File(pathToCue).exists() &&
                     !baseCommandLineArgs.contains(CUE_COMMAND)
@@ -61,16 +61,17 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                     it += FILE_COMMAND
 
                     modsModel.mods.forEach { mod: Mod ->
-                        if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()) {
-                            it += mod.pathToMod.value!!
+                        val pathToMod = mod.pathToMod.liveData.value
+                        if (!pathToMod.isNullOrEmpty() && File(pathToMod).exists()) {
+                            it += pathToMod
                         }
                     }
                 }
 
-                val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods
+                val enablePsyDoomMods = preferencesStorage.enablePsyDoomMods.value!!
 
                 if (enablePsyDoomMods) {
-                    val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder
+                    val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder.value!!
 
                     if (modsFolder.isNotEmpty() && File(modsFolder).exists() &&
                         !baseCommandLineArgs.contains(DATA_DIR_COMMAND)
@@ -80,43 +81,43 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                     }
                 }
 
-                val usePistolStart = psyDoomPreferencesStorage.forcePistolStart
+                val usePistolStart = psyDoomPreferencesStorage.forcePistolStart.value!!
 
                 if (usePistolStart && !baseCommandLineArgs.contains(PISTOL_START_COMMAND)) {
                     it += PISTOL_START_COMMAND
                 }
 
-                val recordDemos = psyDoomPreferencesStorage.recordDemos
+                val recordDemos = psyDoomPreferencesStorage.recordDemos.value!!
 
                 if (recordDemos && !baseCommandLineArgs.contains(RECORD_DEMOS_COMMAND)) {
                     it += RECORD_DEMOS_COMMAND
                 }
 
-                val turboMode = psyDoomPreferencesStorage.turboMode
+                val turboMode = psyDoomPreferencesStorage.turboMode.value!!
 
                 if (turboMode && !baseCommandLineArgs.contains(TURBO_COMMAND)) {
                     it += TURBO_COMMAND
                 }
 
-                val noMonsters = psyDoomPreferencesStorage.noMonsters
+                val noMonsters = psyDoomPreferencesStorage.noMonsters.value!!
 
                 if (noMonsters && !baseCommandLineArgs.contains(NO_MONSTERS_COMMAND)) {
                     it += NO_MONSTERS_COMMAND
                 }
 
-                val nmBossFixup = psyDoomPreferencesStorage.nmBossFixUp
+                val nmBossFixup = psyDoomPreferencesStorage.nmBossFixUp.value!!
 
                 if (nmBossFixup && !baseCommandLineArgs.contains(BOSS_FIX_COMMAND)) {
                     it += BOSS_FIX_COMMAND
                 }
 
-                val host = psyDoomPreferencesStorage.host
+                val host = psyDoomPreferencesStorage.host.value!!
                 val addHost = host.isNotEmpty() && host.isNotBlank()
 
-                val port = psyDoomPreferencesStorage.port
+                val port = psyDoomPreferencesStorage.port.value!!
                 val addPort = port > 0
 
-                val peerType = enumValueOf<PeerType>(psyDoomPreferencesStorage.peerType)
+                val peerType = enumValueOf<PeerType>(psyDoomPreferencesStorage.peerType.value!!)
 
                 when (peerType) {
                     PeerType.Server -> {

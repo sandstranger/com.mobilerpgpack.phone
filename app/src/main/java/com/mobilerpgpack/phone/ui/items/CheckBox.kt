@@ -14,8 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.mobilerpgpack.phone.ui.getCheckBoxColors
 import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
+import com.mobilerpgpack.phone.utils.getComposableValue
 
 @Composable
 fun CheckBox (title : String,
@@ -35,4 +37,10 @@ fun CheckBox (title : String,
                 onValueChanged?.invoke(it)}
         )
     }
+}
+
+@Composable
+fun CheckBox (title : String, initialValue : LiveData<Boolean>,
+              onValueChanged : ((newValue : Boolean) -> Unit)? = null) {
+    CheckBox(title, initialValue.getComposableValue(), onValueChanged)
 }

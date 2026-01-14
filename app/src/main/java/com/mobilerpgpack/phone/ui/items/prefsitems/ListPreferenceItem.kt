@@ -13,6 +13,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,11 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
 import com.mobilerpgpack.phone.ui.getRadioButtonsColors
 import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
+import com.mobilerpgpack.phone.utils.getComposableValue
 
 @Composable
 fun ListPreferenceItem(title: String,
@@ -88,6 +91,31 @@ fun ListPreferenceItem(title: String,
             },
             confirmButton = {}
         )
+    }
+}
+
+@Composable
+fun ListPreferenceItem(title: String,
+                       initialValue: LiveData<String>,
+                       entries : Collection<String>,
+                       onValueChange : ((String) -> Unit)? = null){
+    val liveDataState = initialValue.getComposableValue()
+    ListPreferenceItem(title, liveDataState, entries, onValueChange)
+}
+
+@Composable
+inline fun <reified T : Enum<T>> ListPreferenceItem(
+    title: String,
+    initialValue: LiveData<T>? = null,
+    crossinline onValueChange: (T) -> Unit = {}) {
+    val liveDataState = initialValue?.observeAsState()
+    var savedValue by rememberSaveable (liveDataState?.value) {
+        mutableStateOf(initialValue?.value?.toString() ?: "") }
+    val enumValues = rememberSaveable { enumValues<T>().map { it.toString() }.toList() }
+    ListPreferenceItem(title, savedValue, enumValues){
+        val newValue = enumValueOf<T>(it)
+        savedValue = newValue.toString()
+        onValueChange.invoke(newValue)
     }
 }
 

@@ -18,6 +18,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.utils.touchListenerModifier
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.core.component.KoinComponent
 
 abstract class SDLImageButton(
@@ -81,7 +82,7 @@ abstract class SDLImageButton(
         }
 
         val viewState = remember { viewState }
-        val sdlKeyCode by remember (viewState.sdlKeyCode) { mutableIntStateOf(viewState.sdlKeyCode) }
+        val sdlKeyCode = viewState.sdlKeyCode.getComposableValue()
 
         return modifierTouse.touchListenerModifier(isEditMode,viewState,
             onTouchDown = {

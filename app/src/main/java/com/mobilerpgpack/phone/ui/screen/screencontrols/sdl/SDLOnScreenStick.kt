@@ -71,7 +71,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
 
     protected val engineInfo by lazy {
         val preferencesStorage : PreferencesStorage = get()
-        get <IEngineInfo> (named(preferencesStorage.activeEngineString))
+        get <IEngineInfo> (named(preferencesStorage.activeEngineString.value!!))
     }
 
     final override var screenController: IScreenController? = null

@@ -15,7 +15,7 @@ class DoomRpgEngineInfo(
 
     override val needToShowScreenControls: Boolean = true
 
-    override val pathToResource get() = super.preferencesStorage.pathToDoomRpgZipFile
+    override val pathToResource get() = super.preferencesStorage.pathToDoomRpgZipFile.value!!
 
     override fun isMouseShown() = false
 
@@ -29,8 +29,8 @@ class DoomRpgEngineInfo(
     private fun recalculateGameScreenResolution() {
         val (width, height) = getDefaultDoomRpgResolution()
 
-        savedDoomRpgScreenWidth = preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey)
-        savedDoomRpgScreenHeight= preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey)
+        savedDoomRpgScreenWidth = preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey).value!!
+        savedDoomRpgScreenHeight= preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey).value!!
 
         if (savedDoomRpgScreenWidth != width && savedDoomRpgScreenHeight != height) {
             preferencesStorage.setIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey, width)

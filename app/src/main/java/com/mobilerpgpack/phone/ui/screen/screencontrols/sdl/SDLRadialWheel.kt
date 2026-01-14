@@ -13,6 +13,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 import kotlin.math.atan2
@@ -106,20 +108,12 @@ abstract class SDLRadialWheel(
         var hitRect by remember { mutableStateOf(Rect.Zero) }
         val viewState = remember { viewState }
         val preferencesStorage: PreferencesStorage = koinInject()
-        val activeEngineString = remember(preferencesStorage.activeEngineString) {
-            preferencesStorage.activeEngineString
-        }
+        val activeEngineString = preferencesStorage.activeEngineString.getComposableValue()
         val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
-        val ignoreOutOfBoundsTouchEvents by remember(viewState.ignoreOutOfBoundsTouchEvents)
-        { mutableStateOf(viewState.ignoreOutOfBoundsTouchEvents) }
-        val consumeTouchEvents by remember(viewState.consumeTouchEvents)
-        { mutableStateOf(viewState.consumeTouchEvents) }
-        val showInQuickPanel by remember(viewState.showInQuickPanel) {
-            mutableStateOf(viewState.showInQuickPanel)
-        }
-        val viewRenderRule by remember(viewState.viewRenderRule) {
-            mutableStateOf(viewState.viewRenderRule)
-        }
+        val ignoreOutOfBoundsTouchEvents = viewState.ignoreOutOfBoundsTouchEvents.getComposableValue()
+        val consumeTouchEvents = viewState.consumeTouchEvents.getComposableValue()
+        val showInQuickPanel = viewState.showInQuickPanel.getComposableValue()
+        val viewRenderRule = viewState.viewRenderRule.observeAsState().value
 
         @Composable
         fun getMouseEventsCanBeInvokedFlow () : Boolean {

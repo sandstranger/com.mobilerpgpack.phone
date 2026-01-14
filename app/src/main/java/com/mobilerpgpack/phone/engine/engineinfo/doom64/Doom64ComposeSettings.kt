@@ -17,6 +17,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.qualifier.named
@@ -42,26 +43,20 @@ class Doom64ComposeSettings () :
 
         DrawModsSupport(modsModel)
 
-        var enableDoom64Mods by rememberSaveable(preferencesStorage.enableDoom64Mods) {
-            mutableStateOf(preferencesStorage.enableDoom64Mods)
-        }
+        val enableDoom64Mods = preferencesStorage.enableDoom64Mods.getComposableValue()
 
         SwitchPreferenceItem(
             stringResource(R.string.enable_doom64_mods),
-            initialValue = enableDoom64Mods,
+            initialValue = preferencesStorage.enableDoom64Mods,
             preferencesStorage.enableDoom64ModsPrefsKey.name
-        ){
-            enableDoom64Mods = it
-        }
-
-        val previousPathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder
+        )
 
         if (enableDoom64Mods) {
             DrawHorizontalDivider()
 
             RequestPath(
                 stringResource(R.string.path_to_doom64_mods_folder),
-                previousPathToDoom64ModsFolder,
+                preferencesStorage.pathToDoom64ModsFolder,
             ){ selectedPath ->
                  preferencesStorage.setPathToDoom64ModsFolder(selectedPath)
             }
