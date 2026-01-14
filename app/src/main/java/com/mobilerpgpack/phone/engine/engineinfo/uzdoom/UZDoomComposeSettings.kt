@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -60,9 +61,13 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
+        val renderApiStream = viewModel.renderAPIAsLiveData.getComposableValue(UZDoomRenderAPI.OpenGLES.value)
+        val renderApi by rememberSaveable(renderApiStream) {
+            mutableStateOf(UZDoomRenderAPI.fromValue(renderApiStream)) }
+
         ListPreferenceItem(
             stringResource(R.string.uzdoom_rendering_api),
-            viewModel.renderAPI) {
+            renderApi) {
             viewModel.renderAPI = it
         }
 
@@ -89,7 +94,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_lights),
-            viewModel.autoLoadLights
+            viewModel.autoLoadLightsAsLiveData
         ) {
             viewModel.autoLoadLights = it
         }
@@ -98,7 +103,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_brightmaps),
-            viewModel.autoLoadBrightMaps
+            viewModel.autoLoadBrightMapsAsLiveData
         ) {
             viewModel.autoLoadBrightMaps = it
         }
@@ -107,7 +112,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_widescreen),
-            viewModel.autoLoadWideScreen
+            viewModel.autoLoadWideScreenAsLiveData
         ) {
             viewModel.autoLoadWideScreen = it
         }
