@@ -127,12 +127,12 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     override fun onResume() {
         super.onResume()
-        backgroundScope.launch { RecreateVulkanSwapChain() }
+        RecreateVulkanSwapChain()
     }
 
     override fun onPause() {
         super.onPause()
-        backgroundScope.launch { DestroyVulkanSwapChain() }
+        DestroyVulkanSwapChain()
     }
 
     private companion object {
