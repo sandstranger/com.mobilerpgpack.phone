@@ -38,11 +38,11 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
         initialized = true
 
         with(preferencesStorage){
-            sensX = gyroscopeXSensitivity
-            sensY = gyroscopeYSensitivity
-            dead = gyroscopeDeadZone
-            invertXAxis = invertGyroscopeXAxis
-            invertYAxis = invertGyroscopeYAxis
+            sensX = gyroscopeXSensitivity.getNotNullValue()
+            sensY = gyroscopeYSensitivity.getNotNullValue()
+            dead = gyroscopeDeadZone.getNotNullValue()
+            invertXAxis = invertGyroscopeXAxis.getNotNullValue()
+            invertYAxis = invertGyroscopeYAxis.getNotNullValue()
         }
 
         sm = ctx.getSystemService(Context.SENSOR_SERVICE) as SensorManager

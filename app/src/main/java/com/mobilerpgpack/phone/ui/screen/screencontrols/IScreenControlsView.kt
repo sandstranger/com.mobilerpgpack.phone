@@ -23,16 +23,16 @@ val IScreenControlsView.isMouseButton get() = this is SDL3MouseImageButton || th
 val IScreenControlsView.renderView : Boolean
     get() {
         this.viewState.apply {
-            if (this.isDeleted || screenController == null){
+            if (this.isDeleted.value!! || screenController == null){
                 return false
             }
 
-            val showAsCommonScreenControlsView = !showInQuickPanel && (screenController!!.showScreenControls ||
+            val showAsCommonScreenControlsView = !showInQuickPanel.value!! && (screenController!!.showScreenControls ||
                     this@renderView.isHideControlsButton)
-            val showAsQuickPanelItem = showInQuickPanel && screenController!!.showQuickPanelItems &&
+            val showAsQuickPanelItem = showInQuickPanel.value!! && screenController!!.showQuickPanelItems &&
                     screenController!!.showScreenControls
 
-            return when (viewRenderRule) {
+            return when (viewRenderRule.value!!) {
                 ViewRenderRule.Default -> showAsCommonScreenControlsView || showAsQuickPanelItem
                 ViewRenderRule.AlwaysShow -> screenController!!.showScreenControls || this@renderView.isHideControlsButton
                 ViewRenderRule.Disable -> false

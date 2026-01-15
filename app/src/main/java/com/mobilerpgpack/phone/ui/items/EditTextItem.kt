@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.getEditTextFieldColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
@@ -31,6 +32,7 @@ import com.mobilerpgpack.phone.ui.getOnSurfaceVariantColor
 import com.mobilerpgpack.phone.ui.getPrimaryColor
 import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import com.mobilerpgpack.phone.ui.getTextButtonsColors
+import com.mobilerpgpack.phone.utils.getComposableValue
 
 @Composable
 fun EditTextItem(
@@ -42,6 +44,7 @@ fun EditTextItem(
     onValueChange: ((String) -> Unit)? = null
 ) {
     val hint = rememberSaveable(hint) { hint }
+    val keyboardType = remember { keyboardType }
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var currentTextValue by rememberSaveable (value) { mutableStateOf(value) }
     val onSurfaceVariantColor = getOnSurfaceVariantColor()
@@ -119,14 +122,15 @@ fun EditTextItem(
 }
 
 @Composable
-fun <T> EditTextItem(
+fun EditTextItem(
     title: String,
-    value: T,
+    value: LiveData<String>,
     hint: String = "",
     singleLine : Boolean = true,
     keyboardType : KeyboardType = KeyboardType.Text,
-    onValueChange: ((String) -> Unit)? = null){
-    EditTextItem(title, value.toString(), hint, singleLine, keyboardType, onValueChange)
+    onValueChange: ((String) -> Unit)? = null
+){
+    EditTextItem(title, value.getComposableValue(), hint, singleLine, keyboardType, onValueChange)
 }
 
 @Composable
@@ -140,6 +144,18 @@ fun EditTextItem(
         val newValue = it.toIntOrNull() ?: 0
         onValueChange?.invoke(newValue)
     }
+}
+
+
+@Composable
+@JvmName("EditTextItemAsLiveDataInt")
+fun EditTextItem(
+    title: String,
+    value: LiveData<Int>,
+    hint: String = "",
+    singleLine : Boolean = true,
+    onValueChange: ((Int) -> Unit)? = null){
+    EditTextItem(title, value.getComposableValue(), hint, singleLine, onValueChange)
 }
 
 @Composable
@@ -156,64 +172,12 @@ fun EditTextItem(
 }
 
 @Composable
-fun <T> AutoUpdatedEditTextItem(
+@JvmName("EditTextItemAsLiveDataFloat")
+fun EditTextItem(
     title: String,
-    value: T,
+    value: LiveData<Float>,
     hint: String = "",
     singleLine : Boolean = true,
-    keyboardType : KeyboardType = KeyboardType.Text,
-    onValueChange: ((String) -> T)? = null){
-    var currentValue by rememberSaveable { mutableStateOf(value.toString())}
-    EditTextItem(title, currentValue, hint, singleLine, keyboardType){
-        onValueChange?.invoke(it)?.toString()?.run {
-            currentValue = this
-        }
-    }
-}
-
-@Composable
-fun AutoUpdatedEditTextItem(
-    title: String,
-    value: Int,
-    hint: String = "",
-    singleLine : Boolean = true,
-    onValueChange: ((Int) -> Int)? = null){
-    var currentValue by rememberSaveable { mutableStateOf(value.toString())}
-    EditTextItem(title, currentValue, hint, singleLine, keyboardType = KeyboardType.Number){
-        onValueChange?.invoke(it.toIntOrNull() ?: 0)?.toString()?.run {
-            currentValue = this
-        }
-    }
-}
-
-@Composable
-fun AutoUpdatedEditTextItem(
-    title: String,
-    value: Float,
-    hint: String = "",
-    singleLine : Boolean = true,
-    onValueChange: ((Float) -> Float)? = null){
-    var currentValue by rememberSaveable { mutableStateOf(value.toString()) }
-    EditTextItem(title, currentValue, hint, singleLine, keyboardType = KeyboardType.Decimal){
-        onValueChange?.invoke(it.toFloatOrNull() ?: 0.0f)?.toString()?.run {
-            currentValue = this
-        }
-    }
-}
-
-@Composable
-fun AutoUpdatedEditTextItem(
-    title: String,
-    value: String,
-    hint: String = "",
-    singleLine : Boolean = true,
-    keyboardType : KeyboardType = KeyboardType.Text,
-    onValueChange: ((String) -> String)? = null
-) {
-    var currentValue by rememberSaveable { mutableStateOf(value)}
-    EditTextItem(title,currentValue, hint, singleLine, keyboardType){
-        onValueChange?.invoke(it)?.run {
-            currentValue = this
-        }
-    }
+    onValueChange: ((Float) -> Unit)? = null){
+    EditTextItem(title, value.getComposableValue(), hint, singleLine, onValueChange)
 }

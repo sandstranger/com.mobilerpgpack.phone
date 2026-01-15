@@ -33,7 +33,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
         if (!assetsExtractor.assetsCopied){
             return
         }
-        val rootUserFolder = File(preferencesStorage.pathToRootUserFolder)
+        val rootUserFolder = File(preferencesStorage.pathToRootUserFolder.value!!)
         rootUserFolder.deleteRecursively()
         rootUserFolder.mkdirs()
         scope.launch { assetsExtractor.copyAssetsContentToInternalStorage() }
@@ -43,7 +43,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
         startGame(activity, activeEngine)
 
     fun copyContentFromInternalStorage () {
-        val targetFolder = preferencesStorage.pathToRootUserFolder
+        val targetFolder = preferencesStorage.pathToRootUserFolder.value!!
         if (!contentCopied || sourceFolder == targetFolder) {
             return
         }

@@ -12,9 +12,9 @@ import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
+open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
 
-    private val context : Context = get()
+    private val context: Context = get()
 
     val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
     val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
@@ -25,14 +25,16 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val hideScreenControlsPrefsKey = booleanPreferencesKey("hide_screen_controls")
     val customScreenResolutionPrefsKey = stringPreferencesKey("custom_screen_resolution")
     val customAspectRatioPrefsKey = stringPreferencesKey("custom_aspect_ratio")
-    val editCustomScreenControlsInGamePrefsKey = booleanPreferencesKey("edit_screen_controls_in_game")
+    val editCustomScreenControlsInGamePrefsKey =
+        booleanPreferencesKey("edit_screen_controls_in_game")
     val useDarkThemePrefsKey = booleanPreferencesKey("use_dark_theme")
     val OFFSET_X_MOUSE = floatPreferencesKey("offset_x_mouse")
     val OFFSET_Y_MOUSE = floatPreferencesKey("offset_y_mouse")
     val enableControlsAutoHiding = booleanPreferencesKey("constols_autohiding")
     val useSDLTTFForFontsRenderingPrefsKey = booleanPreferencesKey("sdl_ttf_render")
     val gamesMachineTranslationsPrefsKey = booleanPreferencesKey("enable_games_translation")
-    val allowDownloadingModelsOverMobilePrefsKey = booleanPreferencesKey("allow_downloading_over_mobile")
+    val allowDownloadingModelsOverMobilePrefsKey =
+        booleanPreferencesKey("allow_downloading_over_mobile")
     val translationModelTypePrefsKey = stringPreferencesKey("translation_model_type")
     val pathToDoom64FolderWithMainWads = stringPreferencesKey("path_to_doom64_folder_wads")
     val pathToDoom64FolderWithMods = stringPreferencesKey("path_to_doom64_folder_mods")
@@ -40,12 +42,16 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
     val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
-    val customOnScreenKeyboardTransparencyPrefsKey = floatPreferencesKey("custom_keyboard_transparency")
-    val alwaysUseFullScreenTouchModePrefsKey = booleanPreferencesKey("always_use_fullscreen_touch_mode")
+    val customOnScreenKeyboardTransparencyPrefsKey =
+        floatPreferencesKey("custom_keyboard_transparency")
+    val alwaysUseFullScreenTouchModePrefsKey =
+        booleanPreferencesKey("always_use_fullscreen_touch_mode")
     val useFloatingStartGameButtonPrefsKey = booleanPreferencesKey("use_floating_start_game_button")
     val alwaysShowKeyboardButtonPrefsKey = booleanPreferencesKey("always_show_keyboard_button")
-    val enableTouchScreenPressingEventsPrefsKey = booleanPreferencesKey("use_touchscreen_in_games_menu")
-    val enableAbsoluteTouchMouseModePrefsKey = booleanPreferencesKey("use_absolute_touch_mouse_mode")
+    val enableTouchScreenPressingEventsPrefsKey =
+        booleanPreferencesKey("use_touchscreen_in_games_menu")
+    val enableAbsoluteTouchMouseModePrefsKey =
+        booleanPreferencesKey("use_absolute_touch_mouse_mode")
     val pathToRootUserFolderPrefsKey = stringPreferencesKey("path_to_user_root_folder")
     val enableGyroscopePrefsKey = booleanPreferencesKey("enable_gyroscope")
     val gyroscopeXSensitivityPrefsKey = floatPreferencesKey("gyroscope_x_sensitivity")
@@ -54,78 +60,87 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     val invertGyroscopeXAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_x_axis")
     val invertGyroscopeYAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_y_axis")
 
-    val pathToRootUserFolder get() = getStringValue(pathToRootUserFolderPrefsKey,
-        context.getExternalFilesDir("")!!.absolutePath)
+    val pathToRootUserFolder = getStringValue(
+        pathToRootUserFolderPrefsKey,
+        context.getExternalFilesDir("")!!.absolutePath
+    )
 
-    val enableGyroscope get() = getBooleanValue(enableGyroscopePrefsKey, false)
+    val enableGyroscope = getBooleanValue(enableGyroscopePrefsKey, false)
 
-    val invertGyroscopeXAxis get() = getBooleanValue(invertGyroscopeXAxisPrefsKey, false)
+    val invertGyroscopeXAxis = getBooleanValue(invertGyroscopeXAxisPrefsKey, false)
 
-    val invertGyroscopeYAxis get() = getBooleanValue(invertGyroscopeYAxisPrefsKey, false)
+    val invertGyroscopeYAxis = getBooleanValue(invertGyroscopeYAxisPrefsKey, false)
 
-    val gyroscopeDeadZone get() = getFloatValue(gyroscopeDeadZonePrefsKey, GyroInput.DEFAULT_DEAD_ZONE)
+    val gyroscopeDeadZone = getFloatValue(gyroscopeDeadZonePrefsKey, GyroInput.DEFAULT_DEAD_ZONE)
 
-    val gyroscopeXSensitivity get() = getFloatValue(gyroscopeXSensitivityPrefsKey, GyroInput.DEFAULT_SENS_X)
+    val gyroscopeXSensitivity =
+        getFloatValue(gyroscopeXSensitivityPrefsKey, GyroInput.DEFAULT_SENS_X)
 
-    val gyroscopeYSensitivity get() = getFloatValue(gyroscopeYSensitivityPrefsKey, GyroInput.DEFAULT_SENS_Y)
+    val gyroscopeYSensitivity =
+        getFloatValue(gyroscopeYSensitivityPrefsKey, GyroInput.DEFAULT_SENS_Y)
 
-    val enableAbsoluteTouchMouseMode get() = getBooleanValue(enableAbsoluteTouchMouseModePrefsKey, true)
+    val enableAbsoluteTouchMouseMode = getBooleanValue(enableAbsoluteTouchMouseModePrefsKey, true)
 
-    val enableTouchScreenPressingEvents get() = getBooleanValue(enableTouchScreenPressingEventsPrefsKey, true)
+    val enableTouchScreenPressingEvents =
+        getBooleanValue(enableTouchScreenPressingEventsPrefsKey, true)
 
-    val useFloatingStartGameButton get() = getBooleanValue(useFloatingStartGameButtonPrefsKey, !context.isTelevision)
+    val useFloatingStartGameButton =
+        getBooleanValue(useFloatingStartGameButtonPrefsKey, !context.isTelevision)
 
-    val alwaysShowKeyboardButton get() = getBooleanValue(alwaysShowKeyboardButtonPrefsKey, true)
+    val alwaysShowKeyboardButton = getBooleanValue(alwaysShowKeyboardButtonPrefsKey, true)
 
-    val alwaysUseFullScreenTouchMode get() = getBooleanValue(alwaysUseFullScreenTouchModePrefsKey, true)
+    val alwaysUseFullScreenTouchMode = getBooleanValue(alwaysUseFullScreenTouchModePrefsKey, true)
 
-    val customOnScreenKeyboardTransparency get() = getFloatValue(customOnScreenKeyboardTransparencyPrefsKey, 1.0f)
+    val customOnScreenKeyboardTransparency =
+        getFloatValue(customOnScreenKeyboardTransparencyPrefsKey, 1.0f)
 
-    val translationModelType get() = getStringValue(
+    val translationModelType = getStringValue(
         translationModelTypePrefsKey,
         TranslationType.DefaultTranslationType.toString()
     )
 
-    val doom64CommandLineArgsString get() = getStringValue(doom64CommandLineArgsStringPrefsKey)
+    val doom64CommandLineArgsString = getStringValue(doom64CommandLineArgsStringPrefsKey)
 
-    val allowDownloadingModelsOverMobile get() = getBooleanValue(allowDownloadingModelsOverMobilePrefsKey)
+    val allowDownloadingModelsOverMobile = getBooleanValue(allowDownloadingModelsOverMobilePrefsKey)
 
-    val enableDoom64Mods get() = getBooleanValue(enableDoom64ModsPrefsKey)
+    val enableDoom64Mods = getBooleanValue(enableDoom64ModsPrefsKey)
 
-    val enableDisplayInSafeArea get() = getBooleanValue(displayInSafeAreaPrefsKey)
+    val enableDisplayInSafeArea = getBooleanValue(displayInSafeAreaPrefsKey)
 
-    val useSDLTTFForFontsRendering get() = getBooleanValue(useSDLTTFForFontsRenderingPrefsKey, defaultValue = false)
+    val useSDLTTFForFontsRendering =
+        getBooleanValue(useSDLTTFForFontsRenderingPrefsKey, defaultValue = false)
 
-    val hideScreenControls get() = getBooleanValue(hideScreenControlsPrefsKey, defaultValue = false)
+    val hideScreenControls = getBooleanValue(hideScreenControlsPrefsKey, defaultValue = false)
 
-    val enableGameMachineTextTranslation get() = getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
+    val enableGameMachineTextTranslation =
+        getBooleanValue(gamesMachineTranslationsPrefsKey, defaultValue = false)
 
-    val customScreenResolution get() = getStringValue(customScreenResolutionPrefsKey)
+    val customScreenResolution = getStringValue(customScreenResolutionPrefsKey)
 
-    val customAspectRatio get() = getStringValue(customAspectRatioPrefsKey)
+    val customAspectRatio = getStringValue(customAspectRatioPrefsKey)
 
-    val pathToWolfensteinRpgIpaFile get() = getStringValue(pathToWolfensteinRpgIpaPrefsKey)
+    val pathToWolfensteinRpgIpaFile = getStringValue(pathToWolfensteinRpgIpaPrefsKey)
 
-    val pathToDoom64ModsFolder get() = getStringValue(pathToDoom64FolderWithMods)
+    val pathToDoom64ModsFolder = getStringValue(pathToDoom64FolderWithMods)
 
-    val pathToDoom64MainWadsFolder get() = getStringValue(pathToDoom64FolderWithMainWads)
+    val pathToDoom64MainWadsFolder = getStringValue(pathToDoom64FolderWithMainWads)
 
-    val pathToDoom2RpgIpaFile get() = getStringValue(pathToDoom2RpgIpaPrefsKey)
+    val pathToDoom2RpgIpaFile = getStringValue(pathToDoom2RpgIpaPrefsKey)
 
-    val pathToDoomRpgZipFile get() = getStringValue(pathToDoomRpgZipFilePrefsKey)
+    val pathToDoomRpgZipFile = getStringValue(pathToDoomRpgZipFilePrefsKey)
 
-    val autoHideScreenControls get() = getBooleanValue(enableControlsAutoHiding, defaultValue = false)
+    val autoHideScreenControls = getBooleanValue(enableControlsAutoHiding, defaultValue = false)
 
-    val showCustomMouseCursor get() = getBooleanValue(showCustomMouseCursorPrefsKey)
+    val showCustomMouseCursor = getBooleanValue(showCustomMouseCursorPrefsKey)
 
-    val activeEngineString get() = getStringValue(
+    val activeEngineString = getStringValue(
         activeEnginePrefsKey,
         EngineTypes.DefaultActiveEngine.toString()
     )
 
-    val offsetXMouse get() = getFloatValue(OFFSET_X_MOUSE, 0f)
+    val offsetXMouse = getFloatValue(OFFSET_X_MOUSE, 0f)
 
-    val offsetYMouse get() = getFloatValue(OFFSET_Y_MOUSE, 0f)
+    val offsetYMouse = getFloatValue(OFFSET_Y_MOUSE, 0f)
 
     fun setTranslationModelTypeValue(valueToSave: TranslationType) =
         setStringValue(translationModelTypePrefsKey, valueToSave.toString())
@@ -148,7 +163,8 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent  {
     fun setPathToDoomRpgZipFile(valueToSave: String) =
         setStringValue(pathToDoomRpgZipFilePrefsKey, valueToSave)
 
-    fun getClampButtonsValue (key : Key<Boolean>, defaultValue : Boolean = true) = getBooleanValue( key, defaultValue)
+    fun getClampButtonsValue(key: Key<Boolean>, defaultValue: Boolean = true) =
+        getBooleanValue(key, defaultValue)
 
     fun getUseDarkThemeValue() = getBooleanValue(useDarkThemePrefsKey)
 

@@ -31,14 +31,14 @@ class UZDoomEngineInfo (mainEngineLib: String,
         pathToUZDoomUserFolder + File.separator + "uzdoom.ini"
     }
 
-    private val enableLightShaders get() = preferencesStorage.enableLightShaders
+    private val enableLightShaders get() = preferencesStorage.enableLightShaders.value!!
 
     override val preferencesStorage by inject <UZDoomPreferenceStorage>(named(
         EngineTypes.UZDoom.toString()))
 
-    override val commandLineParams: String get() = preferencesStorage.uZDoomCommandLineArgsString
+    override val commandLineParams: String get() = preferencesStorage.uZDoomCommandLineArgsString.value!!
 
-    override val pathToResource get() = preferencesStorage.pathToUZDoomIWadFile
+    override val pathToResource get() = preferencesStorage.pathToUZDoomIWadFile.value!!
 
     override val requiredResourceExtensions = listOf(".wad", ".WAD")
 
@@ -51,7 +51,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
             return mutableListOf<String>().let {
                 it += baseCommandLineArgs
 
-                val pathToWadFile = preferencesStorage.pathToUZDoomIWadFile
+                val pathToWadFile = preferencesStorage.pathToUZDoomIWadFile.value!!
                 if (pathToWadFile.isNotEmpty() && File(pathToWadFile).exists() &&
                     !baseCommandLineArgs.contains(IWAD_COMMAND)
                 ) {
@@ -73,30 +73,31 @@ class UZDoomEngineInfo (mainEngineLib: String,
                     it += FILE_COMMAND
 
                     modsModel.mods.forEach { mod: Mod ->
-                        if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()) {
-                            it += mod.pathToMod.value!!
+                        val pathToMod = mod.pathToMod.liveData.value
+                        if (!pathToMod.isNullOrEmpty() && File(pathToMod).exists()) {
+                            it += pathToMod
                         }
                     }
                 }
 
                 if (!baseCommandLineArgs.contains(PLAY_DEMO_COMMAND) && modsModel.playingRecordsFileCanBeUsed) {
                     it += PLAY_DEMO_COMMAND
-                    it += modsModel.pathToDemoFile.value!!
+                    it += modsModel.pathToDemoFile.liveData.value!!
                 }
 
                 if (!baseCommandLineArgs.contains(XLAT_FILE_COMMAND) && modsModel.xlatFileCanBeUsed) {
                     it += XLAT_FILE_COMMAND
-                    it += modsModel.pathToXLatFile.value!!
+                    it += modsModel.pathToXLatFile.liveData.value!!
                 }
 
                 if (!baseCommandLineArgs.contains(DEH_COMMAND) && modsModel.dehFileCanBeUsed) {
                     it += DEH_COMMAND
-                    it += modsModel.pathToDehFile.value!!
+                    it += modsModel.pathToDehFile.liveData.value!!
                 }
 
                 if (!baseCommandLineArgs.contains(BEH_COMMAND) && modsModel.behFileCanBeUsed) {
                     it += BEH_COMMAND
-                    it += modsModel.pathToBehFile.value!!
+                    it += modsModel.pathToBehFile.liveData.value!!
                 }
 
                 it.toTypedArray()
@@ -118,7 +119,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
-        val glesVersion = enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion).value
+        val glesVersion = enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion.value!!).value
         Native.register(UZDoomEngineInfo::class.java, mainLibraryName)
         UpdateHarmGLESVersion(glesVersion)
         UpdateGLLiteShaderState(enableLightShaders)

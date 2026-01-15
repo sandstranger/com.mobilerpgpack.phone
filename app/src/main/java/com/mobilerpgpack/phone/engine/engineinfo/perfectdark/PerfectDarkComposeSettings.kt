@@ -17,6 +17,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
@@ -27,12 +28,8 @@ class PerfectDarkComposeSettings : IEngineUIController {
             koinInject(named(EngineTypes.PerfectDark.name))
         val engineInfo : IEngineInfo = koinInject(named(EngineTypes.PerfectDark.name))
         val requiredFileExtensions = rememberSaveable {engineInfo.requiredResourceExtensions}
-        var romVersion by rememberSaveable(preferencesStorage.romVersion) {
-            mutableStateOf(preferencesStorage.romVersion)
-        }
-        var enableModsSupport by rememberSaveable(preferencesStorage.enablePerfectDarkModsSupport) {
-            mutableStateOf(preferencesStorage.enablePerfectDarkModsSupport)
-        }
+        val romVersion = preferencesStorage.romVersion.getComposableValue(PerfectDarkRomVersions.NTSC)
+        val enableModsSupport = preferencesStorage.enablePerfectDarkModsSupport.getComposableValue()
 
         DrawCommandLinePreferences(preferencesStorage.commandLineArgs,
             preferencesStorage.commandLineArgsPrefsKey.name)
@@ -40,9 +37,8 @@ class PerfectDarkComposeSettings : IEngineUIController {
         DrawHorizontalDivider()
 
         ListPreferenceItem(stringResource(R.string.perfect_dark_rom_version),
-            romVersion){
+            preferencesStorage.romVersion){
             preferencesStorage.setEnumValue(preferencesStorage.romVersionPrefsKey,it)
-            romVersion = it
         }
 
         DrawHorizontalDivider()
@@ -72,7 +68,6 @@ class PerfectDarkComposeSettings : IEngineUIController {
 
         SwitchPreferenceItem(stringResource(R.string.enable_mods_support),
             enableModsSupport, preferencesStorage.enablePerfectDarkModsSupportPrefsKey.name){
-            enableModsSupport = it
         }
 
         DrawHorizontalDivider()
