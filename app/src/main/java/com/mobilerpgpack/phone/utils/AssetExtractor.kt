@@ -26,7 +26,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     @Volatile
     private var assetsCopying = false
-
+    @Volatile
     private var _assetsCopied = false
 
     private val pathToUserFolder get() = preferencesStorage.pathToRootUserFolder
