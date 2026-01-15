@@ -124,8 +124,6 @@ abstract class EngineInfo(
 
     private external fun onNativeResume()
 
-    private external fun rescanGameControllersForced()
-
     private external fun needToReInitGameControllers() : Boolean
 
     final override val needToReInitGameControllers: Boolean get() = needToReInitGameControllers()
@@ -190,8 +188,6 @@ abstract class EngineInfo(
 
     override fun onNativeLibrariesLoaded() = Native.register(EngineInfo::class.java, mainLibraryName)
 
-    final override fun rescanGameControllers() = rescanGameControllersForced()
-
     override fun initialize(activity: ComponentActivity) {
         if (wasInit){
             return
@@ -221,14 +217,14 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        backgroundScope.launch { onNativePause() }
+        onNativePause()
         if (enableGyroscope) {
             gyroInput.stop()
         }
     }
 
     override fun onResume() {
-        backgroundScope.launch { onNativeResume() }
+        onNativeResume()
         if (enableGyroscope) {
             gyroInput.start()
         }
