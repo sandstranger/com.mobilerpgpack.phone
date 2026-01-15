@@ -110,7 +110,6 @@ import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.SDL2GyroInput
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
-import com.mobilerpgpack.phone.utils.ScreenOrientationChanger
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
 import com.zxw.bingtranslateapi.BingTranslator
@@ -162,8 +161,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
         factory <SDL2GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL2GyroInput(ctx, engineInfo) }
         factory <SDL3GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL3GyroInput(ctx, engineInfo) }
-        factory<ScreenOrientationChanger> { (activity: Activity,nativeLibNameToLoad : String) ->
-            ScreenOrientationChanger(activity, nativeLibNameToLoad) }
     }
 
     private val httpModule = module {

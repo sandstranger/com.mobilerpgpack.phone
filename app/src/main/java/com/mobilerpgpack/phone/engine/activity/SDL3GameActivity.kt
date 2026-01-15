@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.engine.activity
 
 import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.window.OnBackInvokedDispatcher
@@ -11,19 +10,16 @@ import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
 import com.mobilerpgpack.phone.ui.activity.MainActivity
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.ScreenOrientationChanger
 import com.mobilerpgpack.phone.utils.forceLandscapeOrientation
 import com.mobilerpgpack.phone.utils.waitUntil
 import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.libsdl3.app.SDLActivity
 
 internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     private lateinit var engineInfo : IEngineInfo
-    private var screenOrientationChanger: ScreenOrientationChanger? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainActivity.gameActivityStarted = true
@@ -41,8 +37,6 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
             }
             initialize(this@SDL3GameActivity)
             super.onCreate(savedInstanceState)
-            screenOrientationChanger = get { parametersOf(this@SDL3GameActivity,
-                engineInfo.mainLibraryName) }
             loadLayout()
             onNativeLibrariesLoaded()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
