@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -49,13 +51,13 @@ class DownloadViewModel : ViewModel(), KoinComponent {
         if (downloadJob == null || downloadJob!!.isCompleted || downloadJob!!.isCancelled) {
             downloadJob = scope.launch {
                 try {
-                    downloadProgress.value = ""
+                    downloadProgress.postValue("")
                     translationModelsDownloader.downloadModelIfNeeded { newValue ->
-                        downloadProgress.value = newValue
+                        downloadProgress.postValue(newValue)
                     }
                 }
                 finally {
-                    isLoading.value = false
+                    isLoading.postValue(false)
                     downloadJob = null
                 }
             }
