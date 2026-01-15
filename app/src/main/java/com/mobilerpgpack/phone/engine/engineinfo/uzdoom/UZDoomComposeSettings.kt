@@ -2,8 +2,10 @@ package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -21,6 +23,8 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
+import com.mobilerpgpack.phone.utils.getComposableNullableValue
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -34,8 +38,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
         val zDoomEngineInfo : IEngineInfo = koinInject(named(EngineTypes.UZDoom.name))
         val preferencesStorage : UZDoomPreferenceStorage = koinInject(named(EngineTypes.UZDoom.name))
         val viewModel: UZDoomComposeSettingsViewModel = koinViewModel()
-        val showView by rememberSaveable (viewModel.showView) {
-            mutableStateOf(viewModel.showView) }
+        val showView = viewModel.showView.getComposableValue()
 
         if (!showView) {
             return
@@ -58,9 +61,13 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
+        val renderApiStream = viewModel.renderAPIAsLiveData.getComposableValue(UZDoomRenderAPI.OpenGLES.value)
+        val renderApi by rememberSaveable(renderApiStream) {
+            mutableStateOf(UZDoomRenderAPI.fromValue(renderApiStream)) }
+
         ListPreferenceItem(
             stringResource(R.string.uzdoom_rendering_api),
-            viewModel.renderAPI) {
+            renderApi) {
             viewModel.renderAPI = it
         }
 
@@ -87,7 +94,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_lights),
-            viewModel.autoLoadLights
+            viewModel.autoLoadLightsAsLiveData
         ) {
             viewModel.autoLoadLights = it
         }
@@ -96,7 +103,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_brightmaps),
-            viewModel.autoLoadBrightMaps
+            viewModel.autoLoadBrightMapsAsLiveData
         ) {
             viewModel.autoLoadBrightMaps = it
         }
@@ -105,7 +112,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.uzdoom_autoload_widescreen),
-            viewModel.autoLoadWideScreen
+            viewModel.autoLoadWideScreenAsLiveData
         ) {
             viewModel.autoLoadWideScreen = it
         }
@@ -124,7 +131,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.enable_uzdoom_playing_records),
-            viewModel.uzDoomMods.enableDemoPlayingSupport.value!!
+            viewModel.uzDoomMods.enableDemoPlayingSupport.liveData
         ) {
             viewModel.uzDoomMods.enableDemoPlayingSupport.value = it
             viewModel.uzDoomMods.save()
@@ -132,9 +139,11 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
-        if (viewModel.uzDoomMods.enableDemoPlayingSupport.value!!){
+        val enableDemoPlayingSupport = viewModel.uzDoomMods.enableDemoPlayingSupport.liveData.getComposableNullableValue()
+
+        if (enableDemoPlayingSupport!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_demo_file),
-                viewModel.uzDoomMods.pathToDemoFile.value!!,
+                viewModel.uzDoomMods.pathToDemoFile.liveData,
                 requestMode = RequestPathMode.File,
                 requiredFileExtensions = listOf(".lmp")
             ) {
@@ -147,7 +156,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.enable_uzdoom_beh_support),
-            viewModel.uzDoomMods.enableBehSupport.value!!
+            viewModel.uzDoomMods.enableBehSupport.liveData
         ) {
             viewModel.uzDoomMods.enableBehSupport.value = it
             viewModel.uzDoomMods.save()
@@ -155,9 +164,11 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
-        if (viewModel.uzDoomMods.enableBehSupport.value!!){
+        val enableBehSupport = viewModel.uzDoomMods.enableBehSupport.liveData.getComposableNullableValue()
+
+        if (enableBehSupport!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_beh_file),
-                viewModel.uzDoomMods.pathToBehFile.value!!,
+                viewModel.uzDoomMods.pathToBehFile.liveData,
                 requestMode = RequestPathMode.File,
                 requiredFileExtensions = listOf(".beh")
             ) {
@@ -170,7 +181,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.enable_uzdoom_deh_support),
-            viewModel.uzDoomMods.enableDehSupport.value!!
+            viewModel.uzDoomMods.enableDehSupport.liveData
         ) {
             viewModel.uzDoomMods.enableDehSupport.value = it
             viewModel.uzDoomMods.save()
@@ -178,9 +189,11 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
-        if (viewModel.uzDoomMods.enableDehSupport.value!!){
+        val enableDehSupport = viewModel.uzDoomMods.enableDehSupport.liveData.getComposableNullableValue()
+
+        if (enableDehSupport!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_deh_file),
-                viewModel.uzDoomMods.pathToDehFile.value!!,
+                viewModel.uzDoomMods.pathToDehFile.liveData,
                 requestMode = RequestPathMode.File,
                 requiredFileExtensions = listOf(".deh")
             ) {
@@ -193,7 +206,7 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         SwitchItem(
             stringResource(R.string.enable_uzdoom_xlat_support),
-            viewModel.uzDoomMods.enableXLatSupport.value!!
+            viewModel.uzDoomMods.enableXLatSupport.liveData
         ) {
             viewModel.uzDoomMods.enableXLatSupport.value = it
             viewModel.uzDoomMods.save()
@@ -201,9 +214,11 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
-        if (viewModel.uzDoomMods.enableXLatSupport.value!!){
+        val enableXLatSupport = viewModel.uzDoomMods.enableXLatSupport.liveData.getComposableNullableValue()
+
+        if (enableXLatSupport!!){
             RequestPath(stringResource(R.string.uzdoom_path_to_xlat_file),
-                viewModel.uzDoomMods.pathToXLatFile.value!!,
+                viewModel.uzDoomMods.pathToXLatFile.liveData,
                 requestMode = RequestPathMode.File
             ) {
                 viewModel.uzDoomMods.pathToXLatFile.value = it

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getComposableValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import kotlinx.coroutines.delay
 import org.koin.compose.koinInject
@@ -38,12 +39,11 @@ abstract class MouseIcon {
         val preferencesStorage = koinInject<PreferencesStorage>()
         val activity = LocalActivity.current!!
         var iconOffset by remember { mutableStateOf(IntOffset.Zero) }
-        val offsetXMouse = preferencesStorage.offsetXMouse
-        val offsetYMouse = preferencesStorage.offsetYMouse
+        val offsetXMouse = preferencesStorage.offsetXMouse.getComposableValue()
+        val offsetYMouse = preferencesStorage.offsetYMouse.getComposableValue()
         val sdlWidth = remember { fixedWidth }
         val sdlHeight = remember { fixedHeight }
-        val screenResolution by remember (activity.window.decorView)
-        { mutableStateOf(activity.getScreenResolution(drawInSafeArea = false)) }
+        val screenResolution = remember (activity.window.decorView) { activity.getScreenResolution(drawInSafeArea = false)}
 
         LaunchedEffect(Unit) {
             while (true) {

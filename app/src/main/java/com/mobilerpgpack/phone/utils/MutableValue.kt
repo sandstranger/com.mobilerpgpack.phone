@@ -1,8 +1,7 @@
 package com.mobilerpgpack.phone.utils
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -18,25 +17,28 @@ class MutableValue <T> (){
     @Transient
     private var onValueChanged : ( (newValue : T?) -> Unit)? = null
 
-    private var _mutableValue : T? by mutableStateOf(null)
+    @Transient
+    private val _liveData = MutableLiveData <T?>(null)
+
+    val liveData get() : LiveData<T?> = _liveData
 
     var value
-        get() = _mutableValue
+        get() = _value
         set(newValue) {
-            _mutableValue = newValue
+            _liveData.value = newValue
             _value = newValue
             onValueChanged?.invoke(newValue)
         }
 
     init {
-        _mutableValue = _value
+        _liveData.value = _value
     }
 
     fun initialize(initialValue : T, onValueChanged : ( (newValue : T?) -> Unit)? = null){
         if (!wasInit){
             if (_value==null){
                 _value = initialValue
-                _mutableValue = initialValue
+                _liveData.value = initialValue
             }
             this.onValueChanged = onValueChanged
             wasInit = true

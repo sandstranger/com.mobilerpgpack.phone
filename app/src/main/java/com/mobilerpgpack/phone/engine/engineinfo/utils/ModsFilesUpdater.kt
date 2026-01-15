@@ -5,7 +5,7 @@ import java.io.File
 class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
     private fun updateFilesInModsFolder(){
         modsModel.apply {
-            if (pathToModsFolder.value.isNullOrEmpty() || !enableModsAutoUpdateInFolder){
+            if (pathToModsFolder.liveData.value.isNullOrEmpty() || !enableModsAutoUpdateInFolder.liveData.value!!){
                 return
             }
 
@@ -13,7 +13,7 @@ class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
 
             getModsFromModsFolder()?.let {
                 it.forEach { file ->
-                    if (!mods.any{mod -> mod.pathToMod.value == file.absolutePath}){
+                    if (!mods.any{mod -> mod.pathToMod.liveData.value == file.absolutePath}){
                         val mod = Mod()
                         mod.pathToMod.value = file.absolutePath
                         mods +=mod
@@ -32,7 +32,7 @@ class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
 
     private fun findFilesInModsFolder(){
         modsModel.apply {
-            if (pathToModsFolder.value.isNullOrEmpty()){
+            if (pathToModsFolder.liveData.value.isNullOrEmpty()){
                 return
             }
 
@@ -56,7 +56,7 @@ class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
             val modsToRemove = mutableSetOf<Mod>()
 
             mods.forEach {
-                if (!it.pathToMod.value.isNullOrEmpty() && !File(it.pathToMod.value!!).exists()){
+                if (!it.pathToMod.liveData.value.isNullOrEmpty() && !File(it.pathToMod.liveData.value!!).exists()){
                     modsToRemove += it
                 }
             }
@@ -71,8 +71,8 @@ class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
         }
     }
 
-    private fun getModsFromModsFolder () = if (modsModel.pathToModsFolder.value.isNullOrEmpty()) null else
-        File(modsModel.pathToModsFolder.value!!).listFiles()?.filter { file -> file.isMod }?.toList()
+    private fun getModsFromModsFolder () = if (modsModel.pathToModsFolder.liveData.value.isNullOrEmpty()) null else
+        File(modsModel.pathToModsFolder.liveData.value!!).listFiles()?.filter { file -> file.isMod }?.toList()
 
     private val File.isMod get() = this.isFile && modsModel.allowedModsExtensions.contains(this.extension)
 

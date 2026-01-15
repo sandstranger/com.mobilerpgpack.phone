@@ -49,7 +49,7 @@ class Doom64AutorunButton (engineType: EngineTypes,
                 if (!autoRunNativeMethodFound){
                     autoRunNativeMethodFound = true
                     val mainEngineLibName = preferencesStorage.let {
-                        get <IEngineInfo> (named(it.activeEngineString)).mainLibraryName
+                        get <IEngineInfo> (named(it.activeEngineString.value!!)).mainLibraryName
                     }
                     Native.register(Doom64AutorunButton::class.java, mainEngineLibName)
                 }

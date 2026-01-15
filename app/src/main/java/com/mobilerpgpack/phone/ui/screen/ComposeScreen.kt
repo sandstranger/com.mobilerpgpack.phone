@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.ui.getBackgroundColor
@@ -25,11 +26,12 @@ import com.mobilerpgpack.phone.ui.getFabIconContainerColor
 import com.mobilerpgpack.phone.ui.getIconButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.core.component.KoinComponent
 
 abstract class ComposeScreen(val route: String) : KoinComponent {
 
-    protected open val drawFloatingActionButton = false
+    protected open val drawFloatingActionButton = MutableLiveData(false)
 
     protected open val drawBackButton = false
 
@@ -45,6 +47,7 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
         val backgroundColor = getBackgroundColor()
         val fabIconContainerColor = getFabIconContainerColor()
         val iconButtonsColor = getIconButtonsColors()
+        val drawFloatingActionButton = drawFloatingActionButton.getComposableValue()
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),

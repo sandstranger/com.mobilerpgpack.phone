@@ -8,5 +8,9 @@ enum class ArxLibertatisLocalizationType {
     russian,
     spanish,
     japanese,
-    chinese
+    chinese;
+
+    companion object{
+        val stringEntries = entries.map { it.toString() }.toList()
+    }
 }

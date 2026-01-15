@@ -7,7 +7,7 @@ core = "3.3.0"
 googleServices = "4.4.4"
 firebaseBom = "34.7.0"
 gson = "2.13.2"
-icu4j = "78.1"
+icu4j = "78.2"
 koinAnnotations = "2.3.1"
 kotlin = "2.3.0"
 jna = "5.18.1"
@@ -30,21 +30,23 @@ okhttp = "5.3.2"
 preferenceKtx = "1.2.1"
 fragmentKtx = "1.8.9"
 activityCompose = "1.12.2"
-composeBom = "2025.12.01"
+composeBom = "2026.01.00"
 reorderable = "3.0.0"
 retrofit = "3.0.0"
 roomRuntime = "2.8.4"
+runtimeLivedata = "1.10.1"
 slf4jApi = "2.0.17"
 translate = "17.0.3"
-ui = "1.10.0"
+ui = "1.10.1"
 navigationCompose = "2.9.6"
 zip4j = "2.11.5"
-runtime = "1.10.0"
+runtime = "1.10.1"
 window = "1.5.1"
 
 [libraries]
 androidx-compose-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
 androidx-compose-material-icons-core-android = { module = "androidx.compose.material:material-icons-core-android", version.ref = "materialIconsCoreAndroid" }
+androidx-compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }

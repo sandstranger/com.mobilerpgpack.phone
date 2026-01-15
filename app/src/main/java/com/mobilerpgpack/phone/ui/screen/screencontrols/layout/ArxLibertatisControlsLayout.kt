@@ -21,6 +21,18 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 private const val LEFT_MOUSE_BUTTON_ID : Int = 1
 
 val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL2MouseImageButton(
+        "alternate_left_mouse_button",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.52f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.mouse,
+        sdlKeyEvent = LEFT_MOUSE_BUTTON_ID,
+        controlsType = ControlsType.OnScreenStick,
+        useToggle = true,
+        isDeleted = true
+    ),
     SDL2RadialWheel(
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.55f,

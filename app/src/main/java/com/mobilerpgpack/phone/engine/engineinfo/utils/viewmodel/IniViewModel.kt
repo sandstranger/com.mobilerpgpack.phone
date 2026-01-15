@@ -1,15 +1,12 @@
 package com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.qualifier.named
 
 abstract class IniViewModel : ViewModel(), KoinComponent {
 
@@ -17,13 +14,13 @@ abstract class IniViewModel : ViewModel(), KoinComponent {
 
     private val preferencesStorage : PreferencesStorage = get ()
 
-    protected val pathToRootUserFolder get() = preferencesStorage.pathToRootUserFolder
+    protected val pathToRootUserFolder get() = preferencesStorage.pathToRootUserFolder.value!!
 
-    private var iniFilesLoaded by mutableStateOf(false)
+    private val iniFilesLoaded = MutableLiveData(false)
 
     private var wasInitialized = false
 
-    val showView get() = iniFilesLoaded && assetsExtractor.assetsCopied
+    val showView get() : LiveData<Boolean> = iniFilesLoaded
 
     fun initialize() {
         if (wasInitialized){
@@ -40,10 +37,10 @@ abstract class IniViewModel : ViewModel(), KoinComponent {
     }
 
     protected open fun unloadIniFiles(){
-        iniFilesLoaded = false
+        iniFilesLoaded.value = false
     }
 
     protected open fun reloadIniFiles (){
-        iniFilesLoaded = true
+        iniFilesLoaded.value = true
     }
 }
