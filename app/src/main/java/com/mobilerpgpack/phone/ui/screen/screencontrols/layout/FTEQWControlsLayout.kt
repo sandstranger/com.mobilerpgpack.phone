@@ -456,9 +456,9 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
     SDL2ImageButton(
         "jump",
         EngineTypes.FTEQW,
-        offsetXPercent = 0.85f,
+        offsetXPercent = 0.87f,
         offsetYPercent = 0.9f,
-        sizePercent = 0.06f,
+        sizePercent = 0.055f,
         buttonResId = R.drawable.jump,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
         controlsType = ControlsType.OnScreenStick
@@ -466,7 +466,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
     SDL2ImageButton(
         "crouch",
         EngineTypes.FTEQW,
-        offsetXPercent = 0.72f,
+        offsetXPercent = 0.78f,
         offsetYPercent = 0.9f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.crouch,
@@ -475,9 +475,19 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
+        "toggle_zoom",
+        EngineTypes.FTEQW,
+        offsetXPercent = 0.69f,
+        offsetYPercent = 0.9f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.zoom,
+        sdlKeyEvent = KeyEvent.KEYCODE_F11,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
         "autorun",
         EngineTypes.FTEQW,
-        offsetXPercent = 0.6f,
+        offsetXPercent = 0.60f,
         offsetYPercent = 0.89f,
         sizePercent = 0.055f,
         sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
