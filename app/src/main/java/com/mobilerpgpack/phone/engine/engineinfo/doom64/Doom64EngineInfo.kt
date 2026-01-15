@@ -78,8 +78,10 @@ open class Doom64EngineInfo(
 
     final override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
         super.onSafeAreaApplied(screenResolution)
-        setupScreenResolutionToEnv(screenResolution)
-        RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
+        if (!customScreenResolutionWasApplied) {
+            setupScreenResolutionToEnv(screenResolution)
+            RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
+        }
     }
 
     final override fun isMouseShown() = MouseCursorCanBeDrawn()
