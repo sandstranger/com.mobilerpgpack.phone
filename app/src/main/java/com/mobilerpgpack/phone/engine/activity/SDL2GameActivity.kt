@@ -34,7 +34,7 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
         runBlocking {
             waitUntil { !preferencesStorage.prefsWasLoaded }
         }
-        engineInfo = get (named(preferencesStorage.activeEngineString))
+        engineInfo = get (named(preferencesStorage.activeEngineString.value!!))
         engineInfo.apply {
             gameResourcesFound = isResourceCorrect(this@SDL2GameActivity, onCloseDialogBox = { finish() })
             if (!gameResourcesFound) {

@@ -2,9 +2,7 @@ package com.mobilerpgpack.phone.utils
 
 import android.content.Context
 import android.content.res.AssetManager
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -28,8 +26,8 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     @Volatile
     private var assetsCopying = false
-
-    private var _assetsCopied by mutableStateOf(false)
+    @Volatile
+    private var _assetsCopied = false
 
     private val pathToUserFolder get() = preferencesStorage.pathToRootUserFolder
 
@@ -50,7 +48,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
             _assetsCopied = false
         }
         waitUntil { !preferencesStorage.prefsWasLoaded }
-        with(File(pathToUserFolder)){
+        with(File(pathToUserFolder.getNotNullValue())){
             if (!exists()){
                 mkdirs()
             }
@@ -121,7 +119,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
-        val assetsVersionFile = File ( "$pathToUserFolder${File.separator}${ASSETS_VERSION_FILE_NAME}")
+        val assetsVersionFile = File ( "${pathToUserFolder.value!!}${File.separator}${ASSETS_VERSION_FILE_NAME}")
         fun writeDefaultVersionToVersionsFile () =
             assetsVersionFile.writeText(Json.encodeToString(AssetsVersionProvider(
                 ASSETS_CURRENT_VERSION)))
@@ -152,7 +150,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
-        private const val ASSETS_CURRENT_VERSION = 5
+        private const val ASSETS_CURRENT_VERSION = 7
 
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
 

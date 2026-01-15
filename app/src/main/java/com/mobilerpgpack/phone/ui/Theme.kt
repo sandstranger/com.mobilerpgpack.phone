@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.compose.koinInject
 
 private val md_light_primary = Color(0xFF6750A4)
@@ -266,7 +267,7 @@ fun Theme(content: @Composable () -> Unit) {
 @Composable
 fun useDarkTheme () : Boolean {
     val preferencesStorage : PreferencesStorage = koinInject()
-    return preferencesStorage.getUseDarkThemeValue()
+    return preferencesStorage.getUseDarkThemeValue().getComposableValue()
  }
 
 @Composable

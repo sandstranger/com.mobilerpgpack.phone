@@ -12,27 +12,22 @@ class ControlsProvider (engineType: EngineTypes,
     private val activeControlTypePrefsKey = "${engineType.name.lowercase()}_active_controls_type"
     private val blockTouchCameraEventsPrefsKey = "${engineType.name.lowercase()}_block_touch_camera_events"
 
-    var activeControlsType : ControlsType
-        get() {
-            return preferencesStorage.getEnumValue(activeControlTypePrefsKey,
-                ControlsType::class.java, if (controls.containsKey(ControlsType.Default))
-                    ControlsType.Default else ControlsType.OnScreenStick)
-        }
-        set(value) {
-            if (controls.containsKey(value)){
-                preferencesStorage.setEnumValue(activeControlTypePrefsKey, value)
-            }
-        }
+    val activeControlsType = preferencesStorage.getEnumValue(activeControlTypePrefsKey,
+        ControlsType::class.java, if (controls.containsKey(ControlsType.Default))
+            ControlsType.Default else ControlsType.OnScreenStick)
 
-    val controlsToDraw get() = controls[activeControlsType]!!
+    val controlsToDraw get() = controls[activeControlsType.value!!]!!
 
-    var blockTouchCameraEventsWhenOnScreenStickActive : Boolean
-        get() {
-            return preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,false)
-        }
-        set(value) {
-            preferencesStorage.setBooleanValue(blockTouchCameraEventsPrefsKey, value)
-        }
+    val blockTouchCameraEventsWhenOnScreenStickActive =
+        preferencesStorage.getBooleanValue(blockTouchCameraEventsPrefsKey,false)
 
     val drawControlsTypesInMenu get() = controls.size > 1
+
+    fun setControlsTypeValue (controlsType: ControlsType){
+        preferencesStorage.setEnumValue(activeControlTypePrefsKey, controlsType)
+    }
+
+    fun setBlockTouchCameraEventsValue (blockTouchEvents : Boolean){
+        preferencesStorage.setBooleanValue(blockTouchCameraEventsPrefsKey, blockTouchEvents)
+    }
 }

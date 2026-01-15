@@ -1,17 +1,13 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getNotNullValue
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.floatPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.intPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
-import kotlinx.coroutines.flow.first
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -56,76 +52,76 @@ open class ViewState(
     private val ignoreOutOfBoundsTouchEventsPrefsKey = booleanPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_ignore_out_of_bounds_touch_events")
     private val showInQuickPanelPrefsKey = "${engineTypeString}_${controlsTypeString}_${id}_show_in_quick_panel"
 
-    private var wasLoaded by mutableStateOf(false)
+    private var wasLoaded = false
 
-    val allowToEditKeyEvent get() = buttonResId != NOT_EXISTING_RES && sdlKeyCode!= Int.MIN_VALUE
+    val allowToEditKeyEvent get() = buttonResId != NOT_EXISTING_RES && sdlKeyCode.value!= Int.MIN_VALUE
 
-    var offsetXPercent by mutableFloatStateOf(defaultOffsetXPercent)
-    var offsetYPercent by mutableFloatStateOf(defaultOffsetYPercent)
-    var sizePercent by mutableFloatStateOf(defaultSizePercent)
-    var alpha by mutableFloatStateOf(defaultAlpha)
-    var sdlKeyCode by mutableIntStateOf(defaultSdlKeyEvent)
-    var viewRenderRule by mutableStateOf(defaultViewRenderRule)
-    var isDeleted by mutableStateOf(isDeletedInitialState)
-    var useViewAsToggle by mutableStateOf(useViewAsToggleInitialState)
-    var consumeTouchEvents by mutableStateOf(consumeTouchEventsInitialState)
-    var ignoreOutOfBoundsTouchEvents by mutableStateOf(ignoreOutOfBoundsTouchEventsInitialState)
-    var showInQuickPanel by mutableStateOf(showInQuickPanelInitialState)
+    val offsetXPercent = MutableLiveData(defaultOffsetXPercent)
+    val offsetYPercent = MutableLiveData(defaultOffsetYPercent)
+    val sizePercent = MutableLiveData(defaultSizePercent)
+    val alpha = MutableLiveData(defaultAlpha)
+    val sdlKeyCode = MutableLiveData(defaultSdlKeyEvent)
+    val viewRenderRule = MutableLiveData(defaultViewRenderRule)
+    val isDeleted = MutableLiveData(isDeletedInitialState)
+    val useViewAsToggle = MutableLiveData(useViewAsToggleInitialState)
+    val consumeTouchEvents = MutableLiveData(consumeTouchEventsInitialState)
+    val ignoreOutOfBoundsTouchEvents = MutableLiveData(ignoreOutOfBoundsTouchEventsInitialState)
+    val showInQuickPanel = MutableLiveData(showInQuickPanelInitialState)
 
     open fun load() {
         if (wasLoaded){
             return
         }
         wasLoaded = true
-        offsetXPercent = preferencesStorage.getFloatValue( keyX, defaultOffsetXPercent)
-        offsetYPercent = preferencesStorage.getFloatValue( keyY, defaultOffsetYPercent)
-        sizePercent = preferencesStorage.getFloatValue( keySize, defaultSizePercent)
-        alpha = preferencesStorage.getFloatValue(keyAlpha, defaultAlpha)
-        sdlKeyCode = preferencesStorage.getIntValue( sdlKeyEventPrefsKey, defaultSdlKeyEvent)
-        viewRenderRule = enumValueOf<ViewRenderRule>(preferencesStorage.getStringValue(viewRenderRulePrefsKey,
-            defaultViewRenderRule.toString()))
-        isDeleted = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isDeletedInitialState)
-        useViewAsToggle = preferencesStorage.getBooleanValue(useViewAsTogglePrefsKey, useViewAsToggleInitialState)
-        consumeTouchEvents = preferencesStorage.getBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEventsInitialState)
-        ignoreOutOfBoundsTouchEvents = preferencesStorage.getBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEventsInitialState)
-        showInQuickPanel = preferencesStorage.getBooleanValue(showInQuickPanelPrefsKey, showInQuickPanel)
+        offsetXPercent.value = preferencesStorage.getFloatValue( keyX, defaultOffsetXPercent).getNotNullValue()
+        offsetYPercent.value = preferencesStorage.getFloatValue( keyY, defaultOffsetYPercent).getNotNullValue()
+        sizePercent.value = preferencesStorage.getFloatValue( keySize, defaultSizePercent).getNotNullValue()
+        alpha.value = preferencesStorage.getFloatValue(keyAlpha, defaultAlpha).getNotNullValue()
+        sdlKeyCode.value = preferencesStorage.getIntValue( sdlKeyEventPrefsKey, defaultSdlKeyEvent).getNotNullValue()
+        viewRenderRule.value = enumValueOf<ViewRenderRule>(preferencesStorage.getStringValue(viewRenderRulePrefsKey,
+            defaultViewRenderRule.toString()).getNotNullValue())
+        isDeleted.value = preferencesStorage.getBooleanValue(isDeletedPrefsKey, isDeletedInitialState).getNotNullValue()
+        useViewAsToggle.value = preferencesStorage.getBooleanValue(useViewAsTogglePrefsKey, useViewAsToggleInitialState).getNotNullValue()
+        consumeTouchEvents.value = preferencesStorage.getBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEventsInitialState).getNotNullValue()
+        ignoreOutOfBoundsTouchEvents.value = preferencesStorage.getBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEventsInitialState).getNotNullValue()
+        showInQuickPanel.value = preferencesStorage.getBooleanValue(showInQuickPanelPrefsKey, showInQuickPanel.getNotNullValue()).getNotNullValue()
     }
 
     open fun save() {
-        preferencesStorage.setFloatValue( keyX, offsetXPercent)
-        preferencesStorage.setFloatValue( keyY, offsetYPercent)
-        preferencesStorage.setFloatValue( keySize, sizePercent)
-        preferencesStorage.setFloatValue( keyAlpha, alpha)
-        preferencesStorage.setIntValue( sdlKeyEventPrefsKey, sdlKeyCode)
-        preferencesStorage.setStringValue(viewRenderRulePrefsKey, viewRenderRule.toString())
-        preferencesStorage.setBooleanValue(isDeletedPrefsKey,isDeleted)
-        preferencesStorage.setBooleanValue(useViewAsTogglePrefsKey, useViewAsToggle)
-        preferencesStorage.setBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEvents)
-        preferencesStorage.setBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEvents)
-        preferencesStorage.setBooleanValue(showInQuickPanelPrefsKey, showInQuickPanel)
+        preferencesStorage.setFloatValue( keyX, offsetXPercent.getNotNullValue())
+        preferencesStorage.setFloatValue( keyY, offsetYPercent.getNotNullValue())
+        preferencesStorage.setFloatValue( keySize, sizePercent.getNotNullValue())
+        preferencesStorage.setFloatValue( keyAlpha, alpha.getNotNullValue())
+        preferencesStorage.setIntValue( sdlKeyEventPrefsKey, sdlKeyCode.getNotNullValue())
+        preferencesStorage.setStringValue(viewRenderRulePrefsKey, viewRenderRule.getNotNullValue().toString())
+        preferencesStorage.setBooleanValue(isDeletedPrefsKey,isDeleted.getNotNullValue())
+        preferencesStorage.setBooleanValue(useViewAsTogglePrefsKey, useViewAsToggle.getNotNullValue())
+        preferencesStorage.setBooleanValue(consumeTouchEventsPrefsKey, consumeTouchEvents.getNotNullValue())
+        preferencesStorage.setBooleanValue(ignoreOutOfBoundsTouchEventsPrefsKey, ignoreOutOfBoundsTouchEvents.getNotNullValue())
+        preferencesStorage.setBooleanValue(showInQuickPanelPrefsKey, showInQuickPanel.getNotNullValue())
     }
 
     open fun resetToDefaults() {
-        offsetXPercent = defaultOffsetXPercent
-        offsetYPercent = defaultOffsetYPercent
-        sizePercent = defaultSizePercent
-        alpha = defaultAlpha
-        sdlKeyCode = defaultSdlKeyEvent
-        viewRenderRule = defaultViewRenderRule
-        isDeleted = isDeletedInitialState
-        useViewAsToggle = useViewAsToggleInitialState
-        consumeTouchEvents = consumeTouchEventsInitialState
-        ignoreOutOfBoundsTouchEvents = ignoreOutOfBoundsTouchEventsInitialState
-        showInQuickPanel = showInQuickPanelInitialState
+        offsetXPercent.value = defaultOffsetXPercent
+        offsetYPercent.value = defaultOffsetYPercent
+        sizePercent.value = defaultSizePercent
+        alpha.value = defaultAlpha
+        sdlKeyCode.value = defaultSdlKeyEvent
+        viewRenderRule.value = defaultViewRenderRule
+        isDeleted.value= isDeletedInitialState
+        useViewAsToggle.value = useViewAsToggleInitialState
+        consumeTouchEvents.value = consumeTouchEventsInitialState
+        ignoreOutOfBoundsTouchEvents.value = ignoreOutOfBoundsTouchEventsInitialState
+        showInQuickPanel.value = showInQuickPanelInitialState
     }
 
     open fun resetToDefaultsFromViewEditor(){
-        sdlKeyCode = defaultSdlKeyEvent
-        viewRenderRule = defaultViewRenderRule
-        useViewAsToggle = useViewAsToggleInitialState
-        consumeTouchEvents = consumeTouchEventsInitialState
-        ignoreOutOfBoundsTouchEvents = ignoreOutOfBoundsTouchEventsInitialState
-        showInQuickPanel = showInQuickPanelInitialState
+        sdlKeyCode.value = defaultSdlKeyEvent
+        viewRenderRule.value = defaultViewRenderRule
+        useViewAsToggle.value = useViewAsToggleInitialState
+        consumeTouchEvents.value = consumeTouchEventsInitialState
+        ignoreOutOfBoundsTouchEvents.value = ignoreOutOfBoundsTouchEventsInitialState
+        showInQuickPanel.value = showInQuickPanelInitialState
     }
 
     internal companion object{

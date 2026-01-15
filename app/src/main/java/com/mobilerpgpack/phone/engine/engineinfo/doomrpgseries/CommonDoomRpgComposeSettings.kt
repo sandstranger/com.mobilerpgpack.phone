@@ -24,6 +24,7 @@ import com.mobilerpgpack.phone.ui.screen.LoadingModelDialogWithCancel
 import com.mobilerpgpack.phone.ui.screen.utils.buildTranslationsDescription
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -41,10 +42,9 @@ open class CommonDoomRpgComposeSettings :
         val translationModelsDownloader : ITranslationModelsDownloader = koinInject()
         val translationManager : ITranslationManager = koinInject()
         val preferencesStorage : PreferencesStorage = koinInject()
-        val activeTranslationTypeString = preferencesStorage.translationModelType
         val translationModelEntries = retain { buildTranslationsDescription() }
         var initialModelValue by rememberSaveable { mutableStateOf(translationModelEntries.first {
-            it.startsWith(activeTranslationTypeString) }) }
+            it.startsWith(preferencesStorage.translationModelType.value!!) }) }
         val isModelDownloaded by translationManager.isTranslationSupportedAsFlow().collectAsState(initial = true)
 
         LaunchedEffect(isModelDownloaded) {
@@ -103,7 +103,7 @@ open class CommonDoomRpgComposeSettings :
     private fun DrawPreloadModelsSetting() {
         val vm: DownloadViewModel = koinViewModel()
         val preferencesStorage : PreferencesStorage = koinInject()
-        val activeTranslationTypeString = preferencesStorage.translationModelType
+        val activeTranslationTypeString = preferencesStorage.translationModelType.getComposableValue()
         LaunchedEffect(activeTranslationTypeString) {
             if (activeTranslationTypeString != "") {
                 vm.onTranslationTypeChanged(activeTranslationTypeString)
@@ -115,10 +115,10 @@ open class CommonDoomRpgComposeSettings :
         }
 
         LoadingModelDialogWithCancel(
-            show = vm.isLoading,
-            progress = vm.downloadProgress,
+            show = vm.isLoading.getComposableValue(),
+            progress = vm.downloadProgress.getComposableValue(),
             onClose = {
-                vm.isLoading = false
+                vm.isLoading.value = false
             },
             onCancel = {
                 vm.cancelDownload()

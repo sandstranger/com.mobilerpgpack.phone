@@ -27,9 +27,9 @@ open class Doom64EngineInfo(
 
     private val modsModel : ModsModel by inject (named(EngineTypes.Doom64ExPlus.toString()))
 
-    override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString
+    override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString.value!!
 
-    override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder
+    override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder.value!!
 
     override val touchFullScreenModeCanBeUsed = false
 
@@ -43,8 +43,9 @@ open class Doom64EngineInfo(
                 if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
                     it += FILE_COMMAND
                     modsModel.mods.forEach { mod : Mod ->
-                        if (!mod.pathToMod.value.isNullOrEmpty() && File(mod.pathToMod.value!!).exists()){
-                            it+=mod.pathToMod.value!!
+                        val pathToMode = mod.pathToMod.liveData.value
+                        if (!pathToMode.isNullOrEmpty() && File(pathToMode).exists()){
+                            it+=pathToMode
                         }
                     }
                 }
@@ -100,13 +101,13 @@ open class Doom64EngineInfo(
     }
 
     private fun getPathToDoom64ModsFolder(): String {
-        val enableDoom64Mods = preferencesStorage.enableDoom64Mods
+        val enableDoom64Mods = preferencesStorage.enableDoom64Mods.value!!
 
         if (!enableDoom64Mods) {
             return ""
         }
 
-        var pathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder
+        var pathToDoom64ModsFolder = preferencesStorage.pathToDoom64ModsFolder.value!!
 
         if (pathToDoom64ModsFolder.isEmpty()){
             return ""

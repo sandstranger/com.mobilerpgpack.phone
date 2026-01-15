@@ -7,6 +7,6 @@ class ArxLibertatisPreferenceStorage : PreferencesStorage() {
     val pathToArxFatalisFolderPrefsKey = stringPreferencesKey("path_to_arx_fatalis_folder")
     val arxLibertatisCommandLineArgsPrefsKey = stringPreferencesKey("arx_fatalis_command_line_args")
 
-    val pathToArxFatalisFolder get() = getStringValue(pathToArxFatalisFolderPrefsKey)
-    val arxLibertatisCommandLineArgs get() = getStringValue(arxLibertatisCommandLineArgsPrefsKey)
+    val pathToArxFatalisFolder = getStringValue(pathToArxFatalisFolderPrefsKey)
+    val arxLibertatisCommandLineArgs = getStringValue(arxLibertatisCommandLineArgsPrefsKey)
 }

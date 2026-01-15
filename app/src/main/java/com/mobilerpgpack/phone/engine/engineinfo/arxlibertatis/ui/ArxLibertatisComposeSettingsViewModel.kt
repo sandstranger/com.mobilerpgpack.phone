@@ -9,31 +9,35 @@ class ArxLibertatisComposeSettingsViewModel : IniViewModel() {
     private val cfgIniFile = Ini("${pathToRootUserFolder}${File.separator}ArxLibertatis" +
             "${File.separator}cfg.ini")
 
+    val audioLocalizationAsLiveData = cfgIniFile.getStringValue(AUDIO_LOCALIZATION_KEY,ArxLibertatisLocalizationType.english.name)
+    val textLocalizationAsLiveData = cfgIniFile.getStringValue(TEXT_LOCALIZATION_KEY, ArxLibertatisLocalizationType.english.name)
+    val fontSizeAsLiveData = cfgIniFile.getFloatValue(FONT_SIZE_KEY)
+    val hudScaleAsLiveData = cfgIniFile.getFloatValue(HUD_SCALE_KEY)
+    val cursorScaleAsLiveData = cfgIniFile.getFloatValue(CURSOR_SCALE_KEY)
+
     var audioLocalization : ArxLibertatisLocalizationType get() =
-        enumValueOf<ArxLibertatisLocalizationType>(
-            cfgIniFile.getStringValue(AUDIO_LOCALIZATION_KEY,ArxLibertatisLocalizationType.english.name))
+        enumValueOf<ArxLibertatisLocalizationType>(audioLocalizationAsLiveData.value!!)
         set(value) {
             cfgIniFile.setValue(AUDIO_LOCALIZATION_KEY, value.name)
         }
 
     var textLocalization : ArxLibertatisLocalizationType get() =
-        enumValueOf<ArxLibertatisLocalizationType>(
-            cfgIniFile.getStringValue(TEXT_LOCALIZATION_KEY, ArxLibertatisLocalizationType.english.name))
+        enumValueOf<ArxLibertatisLocalizationType>(textLocalizationAsLiveData.value!!)
         set(value) {
             cfgIniFile.setValue(TEXT_LOCALIZATION_KEY, value.name)
         }
 
-    var fontSize : Float get() = cfgIniFile.getFloatValue(FONT_SIZE_KEY)
+    var fontSize : Float get() = fontSizeAsLiveData.value!!
         set(value) {
             cfgIniFile.setValue(FONT_SIZE_KEY, value)
         }
 
-    var hudScale : Float get() = cfgIniFile.getFloatValue(HUD_SCALE_KEY)
+    var hudScale : Float get() = hudScaleAsLiveData.value!!
         set(value) {
             cfgIniFile.setValue(HUD_SCALE_KEY, value)
         }
 
-    var cursorScale : Float get() = cfgIniFile.getFloatValue(CURSOR_SCALE_KEY)
+    var cursorScale : Float get() = cursorScaleAsLiveData.value!!
         set(value) {
             cfgIniFile.setValue(CURSOR_SCALE_KEY, value)
         }

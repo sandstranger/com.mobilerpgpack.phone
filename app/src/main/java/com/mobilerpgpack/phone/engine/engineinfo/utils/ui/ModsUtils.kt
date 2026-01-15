@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.utils.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,6 +36,8 @@ import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
+import com.mobilerpgpack.phone.utils.getComposableNullableValue
+import com.mobilerpgpack.phone.utils.getComposableValue
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -43,32 +47,29 @@ fun DrawModsSupport(mods: ModsModel) {
     val onPrimaryColor = getOnPrimaryColor()
     mods.apply {
         DrawHorizontalDivider()
-
-        val enableModsSupport by rememberSaveable(this.enableModsSupport.value) {
-            mutableStateOf(enableModsSupport.value!!) }
+        val enableModsSupport = this.enableModsSupport.liveData.getComposableNullableValue()
 
         SwitchItem(
             stringResource(R.string.enable_separate_mods_support),
-            enableModsSupport
+            this@apply.enableModsSupport.liveData
         ) {
             this@apply.enableModsSupport.value = it
             save()
         }
         DrawHorizontalDivider()
 
-        if (enableModsSupport) {
+        if (enableModsSupport!!) {
             Row(verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                 Row (modifier = Modifier.weight(0.8f)) {
                     RequestPath(
                         stringResource(R.string.path_to_mods_folder),
-                        pathToModsFolder.value!!
+                        pathToModsFolder.liveData
                     ) {
                         pathToModsFolder.value = it
                     }
                 }
 
-                val pathToModsFolderSaved by remember (pathToModsFolder.value) {
-                    mutableStateOf(pathToModsFolder.value) }
+                val pathToModsFolderSaved = pathToModsFolder.liveData.getComposableNullableValue()
 
                 if (!pathToModsFolderSaved.isNullOrEmpty()) {
                     Button( modifier = Modifier.padding(end = 4.dp), onClick = {
@@ -89,23 +90,23 @@ fun DrawModsSupport(mods: ModsModel) {
 
             SwitchItem(
                 stringResource(R.string.enable_mods_autoupdate),
-                enableModsAutoUpdateInFolder
+                enableModsAutoUpdateInFolder.liveData
             ) {
-                enableModsAutoUpdateInFolder = it
+                enableModsAutoUpdateInFolder.value = it
             }
 
             DrawHorizontalDivider()
+
+            val modsCount = this.modsCountAsLiveData.getComposableNullableValue()!!
 
             EditTextItem(
                 stringResource(R.string.uzdoom_mods_count),
                 modsCount
             ) {
-                modsCount = it.coerceAtLeast(0)
+                this@apply.modsCount = it.coerceAtLeast(0)
             }
 
             DrawHorizontalDivider()
-
-            val modsCount by remember (modsCount) { mutableStateOf(modsCount) }
 
             if (modsCount > 0) {
                 DrawModsLazyColumn(mods)
@@ -132,9 +133,7 @@ private fun DrawModsLazyColumn(mods: ModsModel){
     }
 
     mods.apply {
-        val modsCollection by remember(modsComposeCollection) {
-            mutableStateOf(modsComposeCollection)
-        }
+        val modsCollection = modsComposeCollection.observeAsState(emptyList()).value
 
         LazyColumn(
             modifier = Modifier
@@ -152,7 +151,7 @@ private fun DrawModsLazyColumn(mods: ModsModel){
                             Box(modifier = Modifier.weight(0.88f)) {
                                 RequestPath(
                                     stringResource(R.string.path_to_mod),
-                                    mod.pathToMod.value ?: "",
+                                    mod.pathToMod.liveData,
                                     requestMode = RequestPathMode.File,
                                     requiredFileExtensions = allowedModsExtensions
                                 ) {
@@ -160,8 +159,7 @@ private fun DrawModsLazyColumn(mods: ModsModel){
                                     save()
                                 }
                             }
-                            val pathToMod by remember (mod.pathToMod.value) {
-                                mutableStateOf(mod.pathToMod.value) }
+                            val pathToMod = mod.pathToMod.liveData.getComposableNullableValue("")
 
                             Column {
                                 if (!pathToMod.isNullOrEmpty()) {

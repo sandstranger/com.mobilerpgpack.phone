@@ -31,6 +31,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ScreenController
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.getComposableValue
 import com.mobilerpgpack.phone.utils.keyCodeMap
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -99,18 +100,15 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         var trackedPointerId by rememberSaveable { mutableStateOf<PointerId?>(null) }
         var useTouchPressEventsForTrackedPointer by rememberSaveable { mutableStateOf(false) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
-        val useTouchFullScreenMode by rememberSaveable(preferencesStorage.alwaysUseFullScreenTouchMode,
+        val alwaysUseFullScreenTouchMode = preferencesStorage.alwaysUseFullScreenTouchMode.getComposableValue()
+        val useTouchFullScreenMode by rememberSaveable(alwaysUseFullScreenTouchMode,
             engineInfo.touchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
-            mutableStateOf(preferencesStorage.alwaysUseFullScreenTouchMode && engineInfo.touchFullScreenModeCanBeUsed &&
+            mutableStateOf(alwaysUseFullScreenTouchMode && engineInfo.touchFullScreenModeCanBeUsed &&
                     !mouseButtonsEventsCanBeInvoked) }
         val blockTouchEvents by rememberSaveable(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
         var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
-        val enableTouchScreenPressingEvents by rememberSaveable(preferencesStorage.enableTouchScreenPressingEvents) {
-            mutableStateOf(preferencesStorage.enableTouchScreenPressingEvents)
-        }
-        val enableAbsoluteTouchMouseMode by rememberSaveable(preferencesStorage.enableAbsoluteTouchMouseMode) {
-            mutableStateOf(preferencesStorage.enableAbsoluteTouchMouseMode)
-        }
+        val enableTouchScreenPressingEvents = preferencesStorage.enableTouchScreenPressingEvents.getComposableValue()
+        val enableAbsoluteTouchMouseMode = preferencesStorage.enableAbsoluteTouchMouseMode.getComposableValue()
         val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
 
         var lastTouchX by rememberSaveable { mutableFloatStateOf(0f) }
@@ -308,9 +306,9 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
 
     final override fun buildCustomViews(engineTypes: EngineTypes): Collection<IScreenControlsView> {
         val preferencesStorage : PreferencesStorage = get ()
-        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineString))
+        val controlsProvider= get<ControlsProvider>(named(preferencesStorage.activeEngineString.value!!))
         return customViews.getOrPut(engineTypes) { mutableMapOf() }.run {
-            getOrPut(controlsProvider.activeControlsType) { buildCustomViewsCollection(engineTypes, controlsProvider)}
+            getOrPut(controlsProvider.activeControlsType.value!!) { buildCustomViewsCollection(engineTypes, controlsProvider)}
         }
     }
 

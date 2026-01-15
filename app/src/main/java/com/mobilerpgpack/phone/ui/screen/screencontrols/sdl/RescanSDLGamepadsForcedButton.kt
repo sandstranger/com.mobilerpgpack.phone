@@ -30,7 +30,7 @@ class RescanSDLGamepadsForcedButton (
 
     private val engineInfo : IEngineInfo by lazy {
         with(get<PreferencesStorage> ()){
-            get<IEngineInfo> (named(this.activeEngineString))
+            get<IEngineInfo> (named(this.activeEngineString.value!!))
         }
     }
 

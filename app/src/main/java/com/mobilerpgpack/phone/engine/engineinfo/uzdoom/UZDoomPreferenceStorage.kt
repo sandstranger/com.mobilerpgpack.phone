@@ -4,7 +4,7 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 
-class UZDoomPreferenceStorage :PreferencesStorage() {
+class UZDoomPreferenceStorage : PreferencesStorage() {
 
     val enableLightShadersPrefsKey = booleanPreferencesKey("enable_uzdoom_light_shaders")
 
@@ -14,12 +14,14 @@ class UZDoomPreferenceStorage :PreferencesStorage() {
 
     val uzDoomGLESVersionPrefsKey = stringPreferencesKey("uzdoom_gles_version")
 
-    val pathToUZDoomIWadFile get() = getStringValue(pathToUZDoomIWadFilePrefsKey)
+    val pathToUZDoomIWadFile = getStringValue(pathToUZDoomIWadFilePrefsKey)
 
-    val enableLightShaders get() = getBooleanValue(enableLightShadersPrefsKey)
+    val enableLightShaders = getBooleanValue(enableLightShadersPrefsKey)
 
-    val uzDoomGLESVersion get() = getStringValue(uzDoomGLESVersionPrefsKey,
-        UZDoomGLESVersion.OpenGLES_2_0.toString())
+    val uzDoomGLESVersion = getStringValue(
+        uzDoomGLESVersionPrefsKey,
+        UZDoomGLESVersion.OpenGLES_2_0.toString()
+    )
 
-    val uZDoomCommandLineArgsString get() = getStringValue(uZDoomCommandLineArgsPrefsKey)
+    val uZDoomCommandLineArgsString = getStringValue(uZDoomCommandLineArgsPrefsKey)
 }
