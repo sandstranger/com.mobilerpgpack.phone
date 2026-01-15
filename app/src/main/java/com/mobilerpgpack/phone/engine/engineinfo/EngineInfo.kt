@@ -87,8 +87,6 @@ abstract class EngineInfo(
     protected open val keyboardInputType : CustomKeyboardView.KeyboardType =
         SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
 
-    protected val backgroundScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
     protected lateinit var resolution: ScreenResolution
         private set
 
@@ -233,7 +231,6 @@ abstract class EngineInfo(
     }
 
     override fun onDestroy() {
-        backgroundScope.coroutineContext.cancelChildren()
         mainThreadScope.coroutineContext.cancelChildren()
         if (callExitProcessOnDestroy) {
             exitProcess(0)
