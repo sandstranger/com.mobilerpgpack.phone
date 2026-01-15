@@ -75,6 +75,7 @@ import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.translator.sql.TranslationDatabase
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.viewmodel.FileExplorerViewModel
+import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
@@ -306,7 +307,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         viewModelOf(::DownloadViewModel)
         viewModelOf(::SettingsScreenViewModel)
-        singleOf(::SettingsScreen)
+        singleOf(::SettingsScreen).bind<ComposeScreen>()
         singleOf <IScreenController>(::SDL2ScreenController).withOptions {
             named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
         }
@@ -317,7 +318,10 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         singleOf<SDL2MouseIcon>(::SDL2MouseIcon)
         singleOf<SDL3MouseIcon>(::SDL3MouseIcon)
         singleOf<IKeyCodesProvider>(::KeyCodesProvider)
-        singleOf(::PermissionScreen).bind()
+        singleOf(::PermissionScreen).bind<ComposeScreen>()
+        single<Collection<ComposeScreen>> { getAll<ComposeScreen>() }.withOptions {
+            named(ALL_COMPOSE_SCREENS)
+        }
     }
 
     private val doomRpgSeriesModule = module {
@@ -679,6 +683,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     companion object{
+        const val ALL_COMPOSE_SCREENS = "all_compose_screens"
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"
         const val COROUTINES_SCOPE = "courotines_scope"
         const val ACTIVE_TRANSLATION_MODEL_KEY = "active_translation_model"
