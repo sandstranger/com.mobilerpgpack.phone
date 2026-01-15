@@ -95,6 +95,10 @@ abstract class ComposeScreen(val route: String) : KoinComponent {
         }
     }
 
+    open fun onMainActivityFinish (){
+
+    }
+
     @Composable
     protected abstract fun DrawScreenContent(
         innerPadding: PaddingValues,
