@@ -73,9 +73,6 @@ abstract class EngineInfo(
 
     private var layoutBinding : GameLayoutBinding? = null
 
-    private val onPauseMutex = Mutex()
-    private val onResumeMutex = Mutex()
-
     private val mainThreadScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
@@ -222,22 +219,14 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        backgroundScope.launch {
-            onPauseMutex.withLock {
-                onNativePause()
-            }
-        }
+        onNativePause()
         if (enableGyroscope) {
             gyroInput.stop()
         }
     }
 
     override fun onResume() {
-        backgroundScope.launch {
-            onResumeMutex.withLock {
-                onNativeResume()
-            }
-        }
+        onNativeResume()
         if (enableGyroscope) {
             gyroInput.start()
         }
