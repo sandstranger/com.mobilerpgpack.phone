@@ -56,10 +56,8 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
-        backgroundScope.launch {
-            Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
-            updateScreenControlsHidingState(preferencesStorage.hideScreenControls.value!!)
-        }
+        Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
+        updateScreenControlsHidingState(preferencesStorage.hideScreenControls.value!!)
     }
 
     private companion object {

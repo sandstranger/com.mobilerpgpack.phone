@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -20,8 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerId
@@ -40,19 +37,15 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.sun.jna.Native
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer.destroyVirtualControllerAsync
+import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer.initializeVirtualControllerAsync
+import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer.setControllerAxis
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 stickType : StickType = StickType.LeftStick,
@@ -65,7 +58,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 isDeleted : Boolean = false,
                                 showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
-    private val scope : CoroutineScope by inject ()
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
 
@@ -75,13 +67,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
     }
 
     final override var screenController: IScreenController? = null
-
-    private external fun createVirtualController()
-
-    private external fun destroyVirtualController()
-
-    private external fun setVirtualAxis(axisX : Int, axisXValue : Float,
-                                        axisY : Int, axisYValue : Float)
 
     protected abstract val virtualControllerLibraryName : String
 
@@ -107,31 +92,16 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 return
             }
 
-            if (joystickRegisteredInSDL && engineInfo.needToReInitGameControllers){
-                joystickRegistered = false
-                joystickRegisteredInSDL = false
-                destroyVirtualController()
-            }
+            destroyVirtualControllerAsync(engineInfo)
+            initializeVirtualControllerAsync(virtualControllerLibraryName)
 
-            if (!joystickRegistered) {
-                joystickRegistered = true
-                scope.launch {
-                    Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
-                    createVirtualController()
-                    engineInfo.rescanGameControllers()
-                    joystickRegisteredInSDL = true
-                }
+            fun getAxisValue (sourceValue: Float) = when {
+                abs(sourceValue) < STICK_DEAD_ZONE -> 0f
+                sourceValue > 0 -> (sourceValue * STICK_SCALE).coerceAtMost(1f)
+                else -> (sourceValue * STICK_SCALE).coerceAtLeast(-1f)
             }
-
-            if (joystickRegisteredInSDL) {
-                fun getAxisValue (sourceValue: Float) = when {
-                    abs(sourceValue) < STICK_DEAD_ZONE -> 0f
-                    sourceValue > 0 -> (sourceValue * STICK_SCALE).coerceAtMost(1f)
-                    else -> (sourceValue * STICK_SCALE).coerceAtLeast(-1f)
-                }
-                setVirtualAxis(axisX, getAxisValue(x),
-                    axisY, getAxisValue(y))
-            }
+            setControllerAxis(axisX, getAxisValue(x),
+                axisY, getAxisValue(y))
         }
 
         Row(
@@ -326,10 +296,6 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
         private const val STICK_SCALE = 1.0f
         private const val LEFT_STICK_ID = "left_onscreen_stick"
         private const val RIGHT_STICK_ID = "right_onscreen_stick"
-        @Volatile
-        private var joystickRegistered = false
-        @Volatile
-        private var joystickRegisteredInSDL = false
     }
 }
 

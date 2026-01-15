@@ -14,11 +14,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -27,10 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -51,18 +47,14 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
+import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
-import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.copyFolder
 import com.mobilerpgpack.phone.utils.getComposableValue
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
-import java.io.File
 
 class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
@@ -81,10 +73,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             settingsScreenViewModel.onStartGameClicked(activeEngine, activity)
         }
 
-        LaunchedEffect(Unit) {
-            drawFloatingActionButton.value = preferencesStorage.useFloatingStartGameButton.value
-        }
-
         if (!useFloatingStartGameButton) {
             DrawTelevisionSettings(innerPadding,
                 activeEngine,
@@ -93,6 +81,12 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         } else {
             DrawAllSettings( innerPadding, activeEngine,navController, settingsScreenViewModel)
         }
+    }
+
+    override fun onMainActivityFinish() {
+        super.onMainActivityFinish()
+        val downloadViewModel : DownloadViewModel = get ()
+        downloadViewModel.cancelDownload()
     }
 
     @Composable

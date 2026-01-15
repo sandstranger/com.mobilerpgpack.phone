@@ -57,6 +57,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -124,8 +126,6 @@ abstract class EngineInfo(
 
     private external fun onNativeResume()
 
-    private external fun rescanGameControllersForced()
-
     private external fun needToReInitGameControllers() : Boolean
 
     final override val needToReInitGameControllers: Boolean get() = needToReInitGameControllers()
@@ -190,8 +190,6 @@ abstract class EngineInfo(
 
     override fun onNativeLibrariesLoaded() = Native.register(EngineInfo::class.java, mainLibraryName)
 
-    final override fun rescanGameControllers() = rescanGameControllersForced()
-
     override fun initialize(activity: ComponentActivity) {
         if (wasInit){
             return
@@ -221,14 +219,14 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        backgroundScope.launch { onNativePause() }
+        onNativePause()
         if (enableGyroscope) {
             gyroInput.stop()
         }
     }
 
     override fun onResume() {
-        backgroundScope.launch { onNativeResume() }
+        onNativeResume()
         if (enableGyroscope) {
             gyroInput.start()
         }

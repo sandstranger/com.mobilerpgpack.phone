@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getBackgroundColor
@@ -32,8 +34,10 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.qualifier.named
 
 class MainActivity : ComponentActivity(), KoinComponent {
+    private var wasInitialized = false
     private val scope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +59,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
         val preferencesStorage : PreferencesStorage = get()
         waitUntil { !preferencesStorage.prefsWasLoaded }
         buildScreens()
+        wasInitialized = true
     }
 
     private fun buildScreens() {
@@ -108,6 +113,15 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 }
             }
         }
+    }
+
+    override fun finish() {
+        if (wasInitialized){
+            val composeScreens = get <Collection<ComposeScreen>> (
+                named(KoinModulesProvider.ALL_COMPOSE_SCREENS))
+            composeScreens.forEach { it.onMainActivityFinish() }
+        }
+        super.finish()
     }
 
     companion object{
