@@ -65,6 +65,7 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                                 isDeleted : Boolean = false,
                                 showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
 
+    private val mutex = Mutex()
     private val scope : CoroutineScope by inject ()
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
@@ -108,18 +109,23 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
             }
 
             if (joystickRegisteredInSDL && engineInfo.needToReInitGameControllers){
-                joystickRegistered = false
-                joystickRegisteredInSDL = false
-                destroyVirtualController()
+                scope.launch {
+                    mutex.withLock {
+                        destroyVirtualController()
+                        joystickRegistered = false
+                        joystickRegisteredInSDL = false
+                    }
+                }
             }
 
             if (!joystickRegistered) {
                 joystickRegistered = true
                 scope.launch {
-                    Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
-                    createVirtualController()
-                    engineInfo.rescanGameControllers()
-                    joystickRegisteredInSDL = true
+                    mutex.withLock {
+                        Native.register(SDLOnScreenStick::class.java, virtualControllerLibraryName)
+                        createVirtualController()
+                        joystickRegisteredInSDL = true
+                    }
                 }
             }
 
