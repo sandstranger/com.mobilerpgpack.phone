@@ -35,8 +35,6 @@ class Doom64AutorunButton (engineType: EngineTypes,
         sizePercent, alpha, buttonResId, defaultViewRenderRule, controlsType, isDeleted,
         consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents, showInQuickPanel), KoinComponent {
 
-    private val mutex = Mutex()
-    private val scope = CoroutineScope(Dispatchers.IO)
     private val preferencesStorage : PreferencesStorage by inject ()
     @Volatile
     private var autoRunNativeMethodFound = false
@@ -44,18 +42,14 @@ class Doom64AutorunButton (engineType: EngineTypes,
     private external fun OnAutoRunStateChanged(enableAutorun : Boolean)
 
     override fun onToggleStateChanged(isActive: Boolean) {
-        scope.launch {
-            mutex.withLock {
-                if (!autoRunNativeMethodFound){
-                    autoRunNativeMethodFound = true
-                    val mainEngineLibName = preferencesStorage.let {
-                        get <IEngineInfo> (named(it.activeEngineString.value!!)).mainLibraryName
-                    }
-                    Native.register(Doom64AutorunButton::class.java, mainEngineLibName)
-                }
-                OnAutoRunStateChanged (isActive)
+        if (!autoRunNativeMethodFound){
+            autoRunNativeMethodFound = true
+            val mainEngineLibName = preferencesStorage.let {
+                get <IEngineInfo> (named(it.activeEngineString.value!!)).mainLibraryName
             }
+            Native.register(Doom64AutorunButton::class.java, mainEngineLibName)
         }
+        OnAutoRunStateChanged (isActive)
     }
 
     private companion object{

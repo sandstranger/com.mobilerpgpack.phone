@@ -9,7 +9,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibilityImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisibilityImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.RescanSDLGamepadsForcedButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
@@ -33,15 +32,6 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.015f,
         offsetYPercent = 0.02f,
         sizePercent = 0.055f,
-        controlsType = ControlsType.OnScreenStick
-    ),
-    RescanSDLGamepadsForcedButton(
-        EngineTypes.FTEQW,
-        offsetXPercent = 0.55f,
-        offsetYPercent = 0.28f,
-        sizePercent = 0.075f,
-        buttonResId = R.drawable.gamepad,
-        isDeleted = true,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2Dpad(
@@ -456,9 +446,9 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
     SDL2ImageButton(
         "jump",
         EngineTypes.FTEQW,
-        offsetXPercent = 0.85f,
+        offsetXPercent = 0.87f,
         offsetYPercent = 0.9f,
-        sizePercent = 0.06f,
+        sizePercent = 0.055f,
         buttonResId = R.drawable.jump,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
         controlsType = ControlsType.OnScreenStick
@@ -466,7 +456,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
     SDL2ImageButton(
         "crouch",
         EngineTypes.FTEQW,
-        offsetXPercent = 0.72f,
+        offsetXPercent = 0.78f,
         offsetYPercent = 0.9f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.crouch,
@@ -475,9 +465,19 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
+        "toggle_zoom",
+        EngineTypes.FTEQW,
+        offsetXPercent = 0.69f,
+        offsetYPercent = 0.9f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.zoom,
+        sdlKeyEvent = KeyEvent.KEYCODE_F11,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
         "autorun",
         EngineTypes.FTEQW,
-        offsetXPercent = 0.6f,
+        offsetXPercent = 0.60f,
         offsetYPercent = 0.89f,
         sizePercent = 0.055f,
         sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
