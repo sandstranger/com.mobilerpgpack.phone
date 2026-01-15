@@ -57,6 +57,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -70,6 +72,9 @@ abstract class EngineInfo(
     activeEngineType: EngineTypes) : KoinComponent, IEngineInfo {
 
     private var layoutBinding : GameLayoutBinding? = null
+
+    private val onPauseMutex = Mutex()
+    private val onResumeMutex = Mutex()
 
     private val mainThreadScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -217,14 +222,22 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        onNativePause()
+        backgroundScope.launch {
+            onPauseMutex.withLock {
+                onNativePause()
+            }
+        }
         if (enableGyroscope) {
             gyroInput.stop()
         }
     }
 
     override fun onResume() {
-        onNativeResume()
+        backgroundScope.launch {
+            onResumeMutex.withLock {
+                onNativeResume()
+            }
+        }
         if (enableGyroscope) {
             gyroInput.start()
         }
