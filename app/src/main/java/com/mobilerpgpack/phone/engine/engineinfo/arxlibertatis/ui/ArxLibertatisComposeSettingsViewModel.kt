@@ -6,8 +6,7 @@ import com.mobilerpgpack.phone.utils.Ini
 import java.io.File
 
 class ArxLibertatisComposeSettingsViewModel : IniViewModel() {
-    private val cfgIniFile = Ini("${pathToRootUserFolder}${File.separator}ArxLibertatis" +
-            "${File.separator}cfg.ini")
+    private val cfgIniFile = Ini("ArxLibertatis" + "${File.separator}cfg.ini")
 
     val audioLocalizationAsLiveData = cfgIniFile.getStringValue(AUDIO_LOCALIZATION_KEY,ArxLibertatisLocalizationType.english.name)
     val textLocalizationAsLiveData = cfgIniFile.getStringValue(TEXT_LOCALIZATION_KEY, ArxLibertatisLocalizationType.english.name)

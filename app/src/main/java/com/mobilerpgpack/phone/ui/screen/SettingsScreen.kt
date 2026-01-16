@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,6 +70,10 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
         val useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton.getComposableValue()
 
+        LaunchedEffect(Unit) {
+            drawFloatingActionButton.value = preferencesStorage.useFloatingStartGameButton.value
+        }
+        
         super.onFloatingActionButtonClickedDelegate = {
             settingsScreenViewModel.onStartGameClicked(activeEngine, activity)
         }
@@ -267,7 +272,9 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawHorizontalDivider()
 
         Button( modifier = Modifier.padding(start = 4.dp),
-            onClick = { preferencesStorage.setStringValue(preferencesStorage.pathToRootUserFolderPrefsKey, sourceFolder) },
+            onClick = {
+                preferencesStorage.setStringValue(preferencesStorage.pathToRootUserFolderPrefsKey, sourceFolder)
+                settingsViewModel.restartApplication() },
             colors = getButtonsColors()
         ) {
             Text(stringResource(R.string.reset_user_path),
@@ -280,7 +287,9 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.pathToRootUserFolder,
             preferencesStorage.pathToRootUserFolderPrefsKey,
             RequestPathMode.Directory,
-        )
+        ){
+            settingsViewModel.restartApplication()
+        }
 
         DrawHorizontalDivider()
 

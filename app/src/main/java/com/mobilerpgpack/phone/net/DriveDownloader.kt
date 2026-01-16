@@ -13,7 +13,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.coroutines.resumeWithException
@@ -24,8 +26,7 @@ class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloa
 
     private val client : OkHttpClient by inject<OkHttpClient> ()
 
-    override suspend fun download(fileId: String, destPath: String, onProgress: (String) -> Unit) {
-        withContext(Dispatchers.IO) {
+    override suspend fun download(fileId: String, destFile: File, onProgress: (String) -> Unit) {
             val bytesText = context.getString(R.string.bytes_text)
             val downloadedText = context.getString(R.string.downloaded_text)
             val unknownSizeText = context.getString(R.string.unknown_size)
@@ -77,12 +78,12 @@ class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloa
 
             var downloadedBytes = 0L
             var lastLoggedProgress = 0
-
-            FileOutputStream(File(destPath)).use { out ->
+            destFile.parentFile?.mkdirs()
+            FileOutputStream(destFile).use { out ->
                 resp.body.byteStream().use { input ->
                     val buf = ByteArray(8 * 1024)
                     var read: Int = 0
-                    while (isActive && input.read(buf).also { read = it } != -1) {
+                    while (currentCoroutineContext().isActive && input.read(buf).also { read = it } != -1) {
                         out.write(buf, 0, read)
                         downloadedBytes += read
 
@@ -106,12 +107,11 @@ class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloa
             }
 
             if (!currentCoroutineContext().isActive) {
-                File(destPath).delete()
+                destFile.delete()
                 Log.w(TAG, "⛔ Downloading cancelled")
             } else {
-                Log.i(TAG, "✅ Downloaded to: $destPath")
+                Log.i(TAG, "✅ Downloaded to: ${destFile.absolutePath}")
             }
-        }
     }
 
     private companion object{

@@ -112,10 +112,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     private external fun UpdateHarmGLESVersion(glesVersion : Int)
 
-    override fun initialize(activity: ComponentActivity) {
-        super.initialize(activity)
-        Os.setenv("PATH_TO_UZDOOM_USER_FOLDER", pathToUZDoomUserFolder, true)
-    }
+    private external fun setPathToUserFolder (pathToUserFolder : String)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
@@ -123,6 +120,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
         Native.register(UZDoomEngineInfo::class.java, mainLibraryName)
         UpdateHarmGLESVersion(glesVersion)
         UpdateGLLiteShaderState(enableLightShaders)
+        setPathToUserFolder(pathToUZDoomUserFolder)
     }
 
     override fun onResume() {
