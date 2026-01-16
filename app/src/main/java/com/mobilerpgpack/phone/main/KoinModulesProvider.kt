@@ -107,6 +107,7 @@ import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
+import com.mobilerpgpack.phone.utils.Ini
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.SDL2GyroInput
@@ -135,9 +136,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
+    private val externalFilesDir = context.getExternalFilesDir(null)
+
     val allModules : List<Module>
 
     private val mainModule = module {
+        fun getRootDirToUse () : File{
+            val prefsStorage : PreferencesStorage = get()
+            val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
+            return if (pathToUserFolder.startsWith(externalFilesDir!!.absolutePath)) externalFilesDir
+            else File(pathToUserFolder)
+        }
+
         single<Context> { context }.withOptions { createdAtStart() }
         single<CoroutineScope> { scope }.withOptions {
             createdAtStart()
@@ -160,8 +170,12 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(KeyboardType.SDL3Keyboard.name)
             bind<SDLKeyboard>()
         }
+        single <File> { getRootDirToUse() }.withOptions {
+            named(ROOT_USER_DIRECTORY_KEY)
+        }
         factory <SDL2GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL2GyroInput(ctx, engineInfo) }
         factory <SDL3GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL3GyroInput(ctx, engineInfo) }
+        factory <File>{ (pathToFile : String) -> File(getRootDirToUse(), pathToFile) }
     }
 
     private val httpModule = module {
@@ -203,8 +217,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
 
         single<OpusMtTranslator> {
-            val preferencesStorage : PreferencesStorage = get()
-            val pathToOptModel = "${preferencesStorage.pathToRootUserFolder}${File.separator}opus-ct2-en-ru"
+            val pathToOptModel = "opus-ct2-en-ru"
             val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
             val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
 
@@ -215,29 +228,25 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
 
         single <M2M100Translator> {
-            val preferencesStorage : PreferencesStorage = get()
-            val pathToM2M100Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}m2m100_ct2"
+            val pathToM2M100Model = "m2m100_ct2"
             val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
 
             M2M100Translator(pathToM2M100Model,m2m100smpFile) }
 
         single<M2M100TranslationModel> {
-            val preferencesStorage : PreferencesStorage = get()
-            val pathToM2M100Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}m2m100_ct2"
+            val pathToM2M100Model = "m2m100_ct2"
             val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
             M2M100TranslationModel (get(), pathToM2M100Model, m2m100smpFile,
             allowDownloadingModelsOverMobile) }
 
 
         single<Small100Translator> {
-            val preferencesStorage : PreferencesStorage = get()
-            val pathToSmall100Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}small100_ct2"
+            val pathToSmall100Model = "small100_ct2"
             val small100SmpFile = "${pathToSmall100Model}${File.separator}sentencepiece.model"
             Small100Translator(pathToSmall100Model,small100SmpFile) }
 
         single <Small100TranslationModel> {
-            val preferencesStorage : PreferencesStorage = get()
-            val pathToSmall100Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}small100_ct2"
+            val pathToSmall100Model = "small100_ct2"
             val small100SmpFile = "${pathToSmall100Model}${File.separator}sentencepiece.model"
             Small100TranslationModel (get(), pathToSmall100Model, small100SmpFile,
             allowDownloadingModelsOverMobile) }
@@ -247,14 +256,12 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         singleOf(::BingTranslatorModel).bind()
 
         single<NLLB200Translator> {
-            val preferencesStorage : PreferencesStorage = get()
-            val pathToNLLB200Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}nllb-200-distilled-600M"
+            val pathToNLLB200Model = "nllb-200-distilled-600M"
             val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
             NLLB200Translator(pathToNLLB200Model,nLLB200SmpFile) }
 
         single<NLLB200TranslationModel> {
-            val preferencesStorage : PreferencesStorage = get()
-            val pathToNLLB200Model = "${preferencesStorage.pathToRootUserFolder}${File.separator}nllb-200-distilled-600M"
+            val pathToNLLB200Model = "nllb-200-distilled-600M"
             val nLLB200SmpFile = "${pathToNLLB200Model}${File.separator}sentencepiece.model"
             NLLB200TranslationModel (get(), pathToNLLB200Model, nLLB200SmpFile,
             allowDownloadingModelsOverMobile) }
@@ -683,6 +690,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     companion object{
+        const val ROOT_USER_DIRECTORY_KEY = "root_user_directory"
         const val ALL_COMPOSE_SCREENS = "all_compose_screens"
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"
         const val COROUTINES_SCOPE = "courotines_scope"

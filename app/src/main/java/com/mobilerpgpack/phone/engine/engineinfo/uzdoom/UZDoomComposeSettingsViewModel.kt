@@ -10,8 +10,7 @@ import java.io.File
 
 class UZDoomComposeSettingsViewModel : IniViewModel(){
 
-    private val uzDoomIni = Ini ("${pathToRootUserFolder}${File.separator}" +
-                "uzdoom${File.separator}uzdoom.ini", removeSpacesBetweenSeparator = true)
+    private val uzDoomIni = Ini ("uzdoom${File.separator}uzdoom.ini", removeSpacesBetweenSeparator = true)
 
     val uzDoomMods : UZDoomModsModel = get (named(EngineTypes.UZDoom.toString()))
     val renderAPIAsLiveData = uzDoomIni.getIntValue(PREFERRED_RENDER_API)

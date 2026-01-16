@@ -6,6 +6,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.activity.SDL3GameActivity
 import com.mobilerpgpack.phone.engine.engineinfo.EngineInfo
 import com.mobilerpgpack.phone.main.SDL3_NATIVE_LIB_NAME
+import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
@@ -43,11 +44,16 @@ abstract class SDL3EngineInfo(
 
     private external fun SDL_GetRelativeMouseMode() : Boolean
 
+    private external fun SetSDLVideoGLDriver (pathToGLDriverToSet : String)
+
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = !SDL_GetRelativeMouseMode()
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(SDL3EngineInfo::class.java, SDL3_NATIVE_LIB_NAME)
+        if (loadGL4ES){
+            SetSDLVideoGLDriver(gl4esFullLibraryName)
+        }
     }
 
     override fun isMouseShown() = SDL3MouseIconHelper.isMouseShown()

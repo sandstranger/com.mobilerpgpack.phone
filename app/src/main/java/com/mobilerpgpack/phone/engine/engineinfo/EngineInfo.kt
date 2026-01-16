@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.annotation.SuppressLint
-import android.system.Os
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +31,6 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
-import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
@@ -57,8 +55,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -86,8 +82,6 @@ abstract class EngineInfo(
 
     protected open val keyboardInputType : CustomKeyboardView.KeyboardType =
         SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
-
-    protected val backgroundScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     protected lateinit var resolution: ScreenResolution
         private set
@@ -127,6 +121,10 @@ abstract class EngineInfo(
     private external fun onNativeResume()
 
     private external fun needToReInitGameControllers() : Boolean
+
+    private external fun setPathToSDLControllerDB (pathToSDLControllerDB : String)
+
+    private external fun setUseGLES2_0State (useGLES2_0 : Boolean)
 
     final override val needToReInitGameControllers: Boolean get() = needToReInitGameControllers()
 
@@ -188,7 +186,11 @@ abstract class EngineInfo(
             }
         }
 
-    override fun onNativeLibrariesLoaded() = Native.register(EngineInfo::class.java, mainLibraryName)
+    override fun onNativeLibrariesLoaded() {
+        Native.register(EngineInfo::class.java, mainLibraryName)
+        setUseGLES2_0State(BuildConfig.LEGACY_GLES2)
+        setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
+    }
 
     override fun initialize(activity: ComponentActivity) {
         if (wasInit){
@@ -198,12 +200,7 @@ abstract class EngineInfo(
         wasInit = true
 
         this.activity = activity
-        initializeCommonEngineData()
         resolution = activity.getScreenResolution()
-
-        Os.setenv("PATH_TO_RESOURCES",
-            File(pathToResource).absolutePath, true)
-        Os.setenv("PATH_TO_USER_FOLDER", preferencesStorage.pathToRootUserFolder.value!!, true)
 
         hideScreenControls = preferencesStorage.hideScreenControls.value!!
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.value!!
@@ -233,7 +230,6 @@ abstract class EngineInfo(
     }
 
     override fun onDestroy() {
-        backgroundScope.coroutineContext.cancelChildren()
         mainThreadScope.coroutineContext.cancelChildren()
         if (callExitProcessOnDestroy) {
             exitProcess(0)
@@ -428,35 +424,6 @@ abstract class EngineInfo(
             }
         }
     }
-
-    private fun initializeCommonEngineData() {
-        if (loadGL4ES) {
-            val pathToPsaFolder = getPathToPsaFolder()
-            val psaFolder = File(pathToPsaFolder)
-
-            if (!psaFolder.exists()) {
-                psaFolder.mkdirs()
-            }
-
-            Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
-            Os.setenv("LIBGL_DXTMIPMAP", "1", true)
-            Os.setenv("LIBGL_GL", "21", true)
-            Os.setenv("LIBGL_DXT", "1", true)
-            Os.setenv("LIBGL_NOTEXARRAY", "0", true)
-            Os.setenv("LIBGL_NOPSA", "0", true)
-            Os.setenv("LIBGL_PSA_FOLDER", pathToPsaFolder, true)
-            Os.setenv("SDL_VIDEO_GL_DRIVER", gl4esFullLibraryName, true)
-            Os.setenv("LIBGL_VABGRA", "1",true)
-        }
-
-        Os.setenv("LIBGL_ES", if (!BuildConfig.LEGACY_GLES2) "3" else "2", true)
-
-        val pathToSDL2ControllerDB = "${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt"
-        Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", pathToSDL2ControllerDB, true)
-    }
-
-    private fun getPathToPsaFolder() =
-        pathToRootUserFolder + File.separator + if (BuildConfig.LEGACY_GLES2) "gles2" else "gles3"
 
     private companion object {
         private const val RESOLUTION_DELIMITER = "x"
