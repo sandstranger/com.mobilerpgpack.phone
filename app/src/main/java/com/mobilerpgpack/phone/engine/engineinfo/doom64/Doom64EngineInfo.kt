@@ -58,28 +58,28 @@ open class Doom64EngineInfo(
 
     private external fun MouseCursorCanBeDrawn() : Boolean
 
+    private external fun setScreenResolution (screenWidth : Int, screenHeight : Int)
+
     private external fun RecalculateScreenResolution(screenWidth : Int, screenHeight : Int)
 
-    final override fun initialize(activity: ComponentActivity) {
-        super.initialize(activity)
-        Os.setenv("PATH_TO_DOOM_64_USER_FOLDER", getPathToDoom64UserFolder(), true)
-    }
+    private external fun setPathsToResources (pathToWadsFolder : String, pathToUserFolder : String)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(Doom64EngineInfo::class.java, mainLibraryName)
+        setPathsToResources(pathToResource, getPathToDoom64UserFolder())
     }
 
     final override fun setScreenResolution(screenResolution: ScreenResolution) {
         super.setScreenResolution(screenResolution)
-        setupScreenResolutionToEnv(screenResolution)
+        setScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
         customScreenResolutionWasApplied = true
     }
 
     final override fun onSafeAreaApplied(screenResolution: ScreenResolution) {
         super.onSafeAreaApplied(screenResolution)
         if (!customScreenResolutionWasApplied) {
-            setupScreenResolutionToEnv(screenResolution)
+            setScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
             RecalculateScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
         }
     }
@@ -111,11 +111,6 @@ open class Doom64EngineInfo(
         return pathToDoom64ModsFolder
     }
 
-    private fun setupScreenResolutionToEnv (screenResolution: ScreenResolution){
-        Os.setenv("SCREEN_WIDTH", screenResolution.screenWidth.toString(), true)
-        Os.setenv("SCREEN_HEIGHT", screenResolution.screenHeight.toString(), true)
-    }
-    
     private companion object{
         private const val FILE_COMMAND = "-file"
         private const val MODS_COMMAND = "-mod"
