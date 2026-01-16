@@ -427,27 +427,7 @@ abstract class EngineInfo(
     }
 
     private fun initializeCommonEngineData() {
-        if (loadGL4ES) {
-            val pathToPsaFolder = getPathToPsaFolder()
-            val psaFolder = File(pathToPsaFolder)
-
-            if (!psaFolder.exists()) {
-                psaFolder.mkdirs()
-            }
-
-            Os.setenv("LIBGL_SIMPLE_SHADERCONV", "1", true)
-            Os.setenv("LIBGL_DXTMIPMAP", "1", true)
-            Os.setenv("LIBGL_GL", "21", true)
-            Os.setenv("LIBGL_DXT", "1", true)
-            Os.setenv("LIBGL_NOTEXARRAY", "0", true)
-            Os.setenv("LIBGL_NOPSA", "0", true)
-            Os.setenv("LIBGL_PSA_FOLDER", pathToPsaFolder, true)
-            Os.setenv("SDL_VIDEO_GL_DRIVER", gl4esFullLibraryName, true)
-            Os.setenv("LIBGL_VABGRA", "1",true)
-        }
-
         Os.setenv("LIBGL_ES", if (!BuildConfig.LEGACY_GLES2) "3" else "2", true)
-
         val pathToSDL2ControllerDB = "${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt"
         Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", pathToSDL2ControllerDB, true)
     }
