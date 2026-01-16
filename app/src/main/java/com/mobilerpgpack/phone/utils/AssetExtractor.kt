@@ -122,16 +122,16 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         assetsVersionFile.apply {
             mkdirs()
             fun writeDefaultVersionToVersionsFile () =
-                assetsVersionFile.writeTextSafely(Json.encodeToString(AssetsVersionProvider(
+                writeTextSafely(Json.encodeToString(AssetsVersionProvider(
                     ASSETS_CURRENT_VERSION)))
 
-            if (!assetsVersionFile.exists()){
+            if (!exists()){
                 writeDefaultVersionToVersionsFile()
                 return true
             }
 
             try {
-                val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(assetsVersionFile.readText())
+                val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(readText())
 
                 val copyAssetsForced = assetsVersionProvider.assetsVersion != ASSETS_CURRENT_VERSION
                 if (copyAssetsForced) {
