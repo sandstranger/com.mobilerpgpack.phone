@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.utils
 import android.content.Context
 import android.content.res.AssetManager
 import androidx.lifecycle.MutableLiveData
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -10,6 +11,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 import java.io.FileOutputStream
@@ -29,8 +31,6 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     @Volatile
     private var _assetsCopied = false
 
-    private val pathToUserFolder get() = preferencesStorage.pathToRootUserFolder
-
     private var alwaysCopyAllFiles = false
 
     override val assetsCopied get() = _assetsCopied
@@ -48,10 +48,9 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
             _assetsCopied = false
         }
         waitUntil { !preferencesStorage.prefsWasLoaded }
-        with(File(pathToUserFolder.getNotNullValue())){
-            if (!exists()){
-                mkdirs()
-            }
+        val userFolder : File = get (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
+        userFolder.apply {
+            mkdirs()
             withContext(Dispatchers.Main) {
                 assetsStartedCopyListeners.invoke()
             }
@@ -119,29 +118,32 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
-        val assetsVersionFile = File ( "${pathToUserFolder.value!!}${File.separator}${ASSETS_VERSION_FILE_NAME}")
-        fun writeDefaultVersionToVersionsFile () =
-            assetsVersionFile.writeText(Json.encodeToString(AssetsVersionProvider(
-                ASSETS_CURRENT_VERSION)))
+        val assetsVersionFile : File = get{ parametersOf(ASSETS_VERSION_FILE_NAME) }
+        assetsVersionFile.apply {
+            mkdirs()
+            fun writeDefaultVersionToVersionsFile () =
+                assetsVersionFile.writeTextSafely(Json.encodeToString(AssetsVersionProvider(
+                    ASSETS_CURRENT_VERSION)))
 
-        if (!assetsVersionFile.exists()){
-            writeDefaultVersionToVersionsFile()
-            return true
-        }
-
-        try {
-            val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(assetsVersionFile.readText())
-
-            val copyAssetsForced = assetsVersionProvider.assetsVersion != ASSETS_CURRENT_VERSION
-            if (copyAssetsForced) {
+            if (!assetsVersionFile.exists()){
                 writeDefaultVersionToVersionsFile()
+                return true
             }
 
-            return copyAssetsForced
-        }
-        catch (_ : Exception){
-            writeDefaultVersionToVersionsFile()
-            return true
+            try {
+                val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(assetsVersionFile.readText())
+
+                val copyAssetsForced = assetsVersionProvider.assetsVersion != ASSETS_CURRENT_VERSION
+                if (copyAssetsForced) {
+                    writeDefaultVersionToVersionsFile()
+                }
+
+                return copyAssetsForced
+            }
+            catch (_ : Exception){
+                writeDefaultVersionToVersionsFile()
+                return true
+            }
         }
     }
 

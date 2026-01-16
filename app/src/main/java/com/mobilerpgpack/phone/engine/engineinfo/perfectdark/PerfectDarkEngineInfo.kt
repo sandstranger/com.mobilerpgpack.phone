@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.engine.engineinfo.perfectdark
 
-import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
@@ -8,19 +7,17 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
 class PerfectDarkEngineInfo : SDL2EngineInfo
     ("", emptyArray(), EngineTypes.PerfectDark) {
 
-    private val pathToHomeDirectory by lazy {
-        pathToRootUserFolder + File.separator +"perfect_dark"
-    }
+    private val homeDirectory : File by inject { parametersOf(PERFECT_DARK_FOLDER_NAME) }
 
-    private val pathToSavesDirectory by lazy {
-        pathToHomeDirectory + File.separator + "saves"
-    }
+    private val savesDirectory : File by inject { parametersOf(PERFECT_DARK_FOLDER_NAME +
+            File.separator + SAVE_FOLDER_NAME) }
 
     private val perfectDarkPreferencesStorage : PerfectDarkPreferencesStorage by inject (
         named(EngineTypes.PerfectDark.name))
@@ -78,12 +75,12 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
 
                 if (!baseCommandLineArgs.contains(BASE_DIR_COMMAND)){
                     this += BASE_DIR_COMMAND
-                    this += pathToHomeDirectory
+                    this += homeDirectory.absolutePath
                 }
 
                 if (!baseCommandLineArgs.contains(SAVE_DIR_COMMAND)){
                     this += SAVE_DIR_COMMAND
-                    this += pathToSavesDirectory
+                    this += savesDirectory.absolutePath
                 }
 
                 if (!baseCommandLineArgs.contains(SKIP_INTROS_COMMAND) &&
@@ -102,20 +99,14 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
-        val homeDirectory = File(pathToHomeDirectory)
-        val savesDirectory = File (pathToSavesDirectory)
-        if (!homeDirectory.exists()){
-            homeDirectory.mkdirs()
-        }
-        if (!savesDirectory.exists()){
-            savesDirectory.mkdirs()
-        }
+        homeDirectory.mkdirs()
+        savesDirectory.mkdirs()
     }
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(PerfectDarkEngineInfo::class.java, mainLibraryName)
-        setPathToHomeDirectory(pathToHomeDirectory)
+        setPathToHomeDirectory(homeDirectory.absolutePath)
     }
 
     private companion object{
@@ -127,5 +118,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
         private const val BASE_DIR_COMMAND = "--basedir"
         private const val SAVE_DIR_COMMAND = "--savedir"
         private const val MODS_DIR_COMMAND = "--moddir"
+        private const val PERFECT_DARK_FOLDER_NAME = "perfect_dark"
+        private const val SAVE_FOLDER_NAME = "saves"
     }
 }

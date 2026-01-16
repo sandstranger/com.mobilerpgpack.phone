@@ -272,7 +272,9 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawHorizontalDivider()
 
         Button( modifier = Modifier.padding(start = 4.dp),
-            onClick = { preferencesStorage.setStringValue(preferencesStorage.pathToRootUserFolderPrefsKey, sourceFolder) },
+            onClick = {
+                preferencesStorage.setStringValue(preferencesStorage.pathToRootUserFolderPrefsKey, sourceFolder)
+                settingsViewModel.restartApplication() },
             colors = getButtonsColors()
         ) {
             Text(stringResource(R.string.reset_user_path),
