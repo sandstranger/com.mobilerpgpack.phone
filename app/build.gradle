@@ -279,6 +279,7 @@ dependencies {
     implementation libs.androidx.activity.compose
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.navigation.compose
+    implementation libs.process.phoenix
 }
 
 android.applicationVariants.all { variant ->
