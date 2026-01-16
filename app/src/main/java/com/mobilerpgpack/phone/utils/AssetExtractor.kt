@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.utils
 
 import android.content.Context
 import android.content.res.AssetManager
-import androidx.lifecycle.MutableLiveData
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,6 +24,8 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private val assetToIgnoreChecking : Collection<String> = get (
         named(ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME))
+
+    private val assetsVersionFile : File by inject { parametersOf(ASSETS_VERSION_FILE_NAME) }
 
     @Volatile
     private var assetsCopying = false
@@ -118,7 +119,6 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
-        val assetsVersionFile : File = get{ parametersOf(ASSETS_VERSION_FILE_NAME) }
         assetsVersionFile.apply {
             mkdirs()
             fun writeDefaultVersionToVersionsFile () =
