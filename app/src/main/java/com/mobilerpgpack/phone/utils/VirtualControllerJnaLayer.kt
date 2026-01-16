@@ -6,8 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 internal object VirtualControllerJnaLayer {
@@ -18,7 +16,6 @@ internal object VirtualControllerJnaLayer {
     @Volatile
     private var joystickRegisteredInSDL = false
 
-    private val mutex = Mutex()
     private val scope : CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private external fun createVirtualController()
