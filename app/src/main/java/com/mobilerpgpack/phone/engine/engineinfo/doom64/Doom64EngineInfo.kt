@@ -18,6 +18,8 @@ open class Doom64EngineInfo(
     allLibs: Array<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Doom64ExPlus) {
 
+    private var savedScreenResolution : ScreenResolution? = null
+
     private var customScreenResolutionWasApplied = false
 
     private val modsModel : ModsModel by inject (named(EngineTypes.Doom64ExPlus.toString()))
@@ -68,11 +70,14 @@ open class Doom64EngineInfo(
         super.onNativeLibrariesLoaded()
         Native.register(Doom64EngineInfo::class.java, mainLibraryName)
         setPathsToResources(pathToResource, getPathToDoom64UserFolder())
+        savedScreenResolution?.run {
+            setScreenResolution(screenWidth, screenHeight)
+        }
     }
 
     final override fun setScreenResolution(screenResolution: ScreenResolution) {
         super.setScreenResolution(screenResolution)
-        setScreenResolution(screenResolution.screenWidth, screenResolution.screenHeight)
+        savedScreenResolution = screenResolution
         customScreenResolutionWasApplied = true
     }
 
