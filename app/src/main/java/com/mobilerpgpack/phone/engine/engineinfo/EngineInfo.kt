@@ -124,7 +124,7 @@ abstract class EngineInfo(
 
     private external fun setPathToSDLControllerDB (pathToSDLControllerDB : String)
 
-    private external fun setGLESVersionToUse (targetGlESVersion : Int)
+    private external fun setUseGLES2_0State (useGLES2_0 : Boolean)
 
     final override val needToReInitGameControllers: Boolean get() = needToReInitGameControllers()
 
@@ -188,7 +188,7 @@ abstract class EngineInfo(
 
     override fun onNativeLibrariesLoaded() {
         Native.register(EngineInfo::class.java, mainLibraryName)
-        setGLESVersionToUse(if(!BuildConfig.LEGACY_GLES2) 3 else 2)
+        setUseGLES2_0State(BuildConfig.LEGACY_GLES2)
         setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
     }
 
