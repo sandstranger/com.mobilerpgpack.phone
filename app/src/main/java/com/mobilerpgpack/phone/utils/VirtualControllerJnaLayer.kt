@@ -32,7 +32,7 @@ internal class VirtualControllerJnaLayer {
         }
     }
 
-    fun initializeVirtualControllerAsync (virtualControllerLibraryName : String){
+    fun initializeVirtualControllerAsync (){
         if (!joystickRegistered) {
             joystickRegistered = true
             scope.launch {
