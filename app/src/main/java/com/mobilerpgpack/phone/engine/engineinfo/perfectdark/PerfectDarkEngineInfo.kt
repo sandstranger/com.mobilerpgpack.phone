@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.sun.jna.Native
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -97,6 +98,8 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
             }
         }
 
+    private external fun setPathToHomeDirectory (pathToHomeDirectory : String)
+
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         val homeDirectory = File(pathToHomeDirectory)
@@ -107,7 +110,12 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
         if (!savesDirectory.exists()){
             savesDirectory.mkdirs()
         }
-        Os.setenv("HOME_DIRECTORY", pathToHomeDirectory, true)
+    }
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(PerfectDarkEngineInfo::class.java, mainLibraryName)
+        setPathToHomeDirectory(pathToHomeDirectory)
     }
 
     private companion object{
