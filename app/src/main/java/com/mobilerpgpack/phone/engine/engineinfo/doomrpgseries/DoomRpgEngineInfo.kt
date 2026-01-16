@@ -1,17 +1,13 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
-import android.system.Os
-import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.sun.jna.Native
 import org.libsdl.app.SDLSurface
 
 class DoomRpgEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>) :
     DoomRPGSeriesEngineInfo(mainEngineLib, allLibs,  EngineTypes.DoomRpg) {
-
-    private var savedDoomRpgScreenWidth: Int = 0
-    private var savedDoomRpgScreenHeight: Int = 0
 
     override val needToShowScreenControls: Boolean = true
 
@@ -21,28 +17,30 @@ class DoomRpgEngineInfo(
 
     override val requiredResourceExtensions = listOf(".zip", ".ZIP")
 
-    override fun initialize(activity: ComponentActivity) {
-        super.initialize(activity)
+    private external fun setScreenResolution (screenWidth : Int, screenHeight : Int)
+
+    private external fun setRecalculateScreenResolutionsState (recalculateScreenResolutions : Boolean)
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(DoomRpgEngineInfo::class.java, mainLibraryName)
         recalculateGameScreenResolution()
     }
 
     private fun recalculateGameScreenResolution() {
         val (width, height) = getDefaultDoomRpgResolution()
 
-        savedDoomRpgScreenWidth = preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey).value!!
-        savedDoomRpgScreenHeight= preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey).value!!
+        val savedDoomRpgScreenWidth = preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey).value!!
+        val savedDoomRpgScreenHeight= preferencesStorage.getIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey).value!!
 
         if (savedDoomRpgScreenWidth != width && savedDoomRpgScreenHeight != height) {
             preferencesStorage.setIntValue(preferencesStorage.savedDoomRpgScreenWidthPrefsKey, width)
             preferencesStorage.setIntValue(preferencesStorage.savedDoomRpgScreenHeightPrefsKey, height)
-
-            Os.setenv("RECALCULATE_RESOLUTION_INDEX", "true", true)
+            setRecalculateScreenResolutionsState(true)
         } else {
-            Os.setenv("RECALCULATE_RESOLUTION_INDEX", "false", true)
+            setRecalculateScreenResolutionsState(false)
         }
-        Os.setenv("SCREEN_WIDTH", width.toString(), true)
-        Os.setenv("SCREEN_HEIGHT", height.toString(), true)
-        Os.setenv("FORCE_FILE_PATH", "true", true)
+        setScreenResolution(width, height)
     }
 
     private fun getDefaultDoomRpgResolution(): Pair<Int, Int> {

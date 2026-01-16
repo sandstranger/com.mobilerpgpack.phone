@@ -111,10 +111,10 @@ private fun RequestPath(explorerItemTitle: String,
                              showErrorDialogBox = true
                              return@setOnSelectListener
                          }
-                         onPathSelected?.invoke(path)
                          if ( key != null) {
                              prefsStorage.setStringValue(key, path)
                          }
+                         onPathSelected?.invoke(path)
                      }
                  }
                  show()

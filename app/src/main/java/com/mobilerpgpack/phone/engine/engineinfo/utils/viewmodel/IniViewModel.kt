@@ -14,8 +14,6 @@ abstract class IniViewModel : ViewModel(), KoinComponent {
 
     private val preferencesStorage : PreferencesStorage = get ()
 
-    protected val pathToRootUserFolder get() = preferencesStorage.pathToRootUserFolder.value!!
-
     private val iniFilesLoaded = MutableLiveData(false)
 
     private var wasInitialized = false
