@@ -25,6 +25,8 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     private external fun recreateVulkanSwapChain()
 
+    private external fun setPathToUserFolder (pathToUserFolder : String)
+
     override val commandLineParams: String get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString.value!!
 
     override val preferencesStorage = psyDoomPreferencesStorage
@@ -151,6 +153,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(PsyDoomEngineInfo::class.java, mainLibraryName)
+        setPathToUserFolder(pathToRootUserFolder)
     }
 
     override fun onResume() {
