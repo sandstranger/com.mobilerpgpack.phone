@@ -16,6 +16,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import java.io.File
 
 class MainApplication : Application() {
@@ -24,7 +25,7 @@ class MainApplication : Application() {
         super.onCreate()
         setupJna()
         initializeKoin()
-        val rootUserDirectory : File = getKoin().get { parametersOf(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY) }
+        val rootUserDirectory : File = getKoin().get ( named (KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
         rootUserDirectory.mkdirs()
         copyAllAssetsFromApk()
         val preferencesStorage : PreferencesStorage = getKoin().get ()
