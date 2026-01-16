@@ -1,11 +1,11 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
-import android.system.Os
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
+import com.sun.jna.Native
 import org.koin.core.component.inject
 
 abstract class DoomRPGSeriesEngineInfo(
@@ -26,20 +26,26 @@ abstract class DoomRPGSeriesEngineInfo(
 
     final override val enableGyroscope = false
 
+    private external fun setEnableSDLTTFState (enableSDLTTF : Boolean)
+
+    private external fun setEnableMachineTranslationState (enableMachineTranslation : Boolean)
+
+    private external fun setPathsToResources (pathToArchive : String, pathToUserFolder : String)
+
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
-
-        val useSdlTTFForTextRendering = preferencesStorage.useSDLTTFForFontsRendering
-        val enableMachineTranslation = preferencesStorage.enableGameMachineTextTranslation
-
-        Os.setenv("ENABLE_SDL_TTF", useSdlTTFForTextRendering.toString().lowercase(), true)
-        Os.setenv(
-            "ENABLE_TEXTS_MACHINE_TRANSLATION",
-            enableMachineTranslation.toString().lowercase(), true
-        )
-
         translationManager.inGame = true
         translationManager.activeEngine = engineType
+    }
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(DoomRPGSeriesEngineInfo::class.java, mainLibraryName)
+        val useSdlTTFForTextRendering = preferencesStorage.useSDLTTFForFontsRendering.value!!
+        val enableMachineTranslation = preferencesStorage.enableGameMachineTextTranslation.value!!
+        setEnableSDLTTFState(useSdlTTFForTextRendering)
+        setEnableMachineTranslationState(enableMachineTranslation)
+        setPathsToResources(pathToResource, preferencesStorage.pathToRootUserFolder.value!!)
     }
 
     override fun isMouseShown() = true

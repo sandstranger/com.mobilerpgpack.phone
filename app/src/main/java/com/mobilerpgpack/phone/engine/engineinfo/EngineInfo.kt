@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo
 
 import android.annotation.SuppressLint
-import android.system.Os
 import android.view.Choreographer
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +31,6 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
-import com.mobilerpgpack.phone.main.gl4esFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
@@ -57,8 +55,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -126,6 +122,10 @@ abstract class EngineInfo(
 
     private external fun needToReInitGameControllers() : Boolean
 
+    private external fun setPathToSDLControllerDB (pathToSDLControllerDB : String)
+
+    private external fun setGLESVersionToUse (targetGlESVersion : Int)
+
     final override val needToReInitGameControllers: Boolean get() = needToReInitGameControllers()
 
     final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{
@@ -186,7 +186,11 @@ abstract class EngineInfo(
             }
         }
 
-    override fun onNativeLibrariesLoaded() = Native.register(EngineInfo::class.java, mainLibraryName)
+    override fun onNativeLibrariesLoaded() {
+        Native.register(EngineInfo::class.java, mainLibraryName)
+        setGLESVersionToUse(if(!BuildConfig.LEGACY_GLES2) 3 else 2)
+        setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
+    }
 
     override fun initialize(activity: ComponentActivity) {
         if (wasInit){
@@ -196,12 +200,7 @@ abstract class EngineInfo(
         wasInit = true
 
         this.activity = activity
-        initializeCommonEngineData()
         resolution = activity.getScreenResolution()
-
-        Os.setenv("PATH_TO_RESOURCES",
-            File(pathToResource).absolutePath, true)
-        Os.setenv("PATH_TO_USER_FOLDER", preferencesStorage.pathToRootUserFolder.value!!, true)
 
         hideScreenControls = preferencesStorage.hideScreenControls.value!!
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.value!!
@@ -425,15 +424,6 @@ abstract class EngineInfo(
             }
         }
     }
-
-    private fun initializeCommonEngineData() {
-        Os.setenv("LIBGL_ES", if (!BuildConfig.LEGACY_GLES2) "3" else "2", true)
-        val pathToSDL2ControllerDB = "${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt"
-        Os.setenv("PATH_TO_SDL2_CONTROLLER_DB", pathToSDL2ControllerDB, true)
-    }
-
-    private fun getPathToPsaFolder() =
-        pathToRootUserFolder + File.separator + if (BuildConfig.LEGACY_GLES2) "gles2" else "gles3"
 
     private companion object {
         private const val RESOLUTION_DELIMITER = "x"
