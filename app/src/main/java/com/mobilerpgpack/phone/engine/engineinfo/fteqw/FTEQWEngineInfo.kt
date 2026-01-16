@@ -136,21 +136,21 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     private external fun recreateVulkanSwapChain()
 
+    private external fun setPathsToResources (pathToHomeDirectory : String, pathToBaseDirectory : String,
+                                              dllDefaultPath : String)
+
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         if (!homeDirFile.exists()){
             homeDirFile.mkdirs()
         }
-        Os.setenv("PATH_TO_HOME_DIRECTORY", homeDirFile.absolutePath, true)
-        Os.setenv("FREETYPE_LIBRARY_NAME", FREETYPE_NATIVE_LIB_NAME, true)
-        Os.setenv("DLL_DEFAULT_PATH", activity.applicationInfo.nativeLibraryDir, true)
-        Os.setenv("PATH_TO_BASE_DIRECTORY", pathToBaseGameDirectory, true)
-        Os.setenv("ACTIVE_GAME", gameType.toString(), true)
     }
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(FTEQWEngineInfo::class.java, mainLibraryName)
+        setPathsToResources(homeDirFile.absolutePath,pathToBaseGameDirectory,
+            activity.applicationInfo.nativeLibraryDir)
     }
 
     override fun onResume() {
