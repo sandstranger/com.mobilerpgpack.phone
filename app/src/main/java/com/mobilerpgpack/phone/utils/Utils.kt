@@ -50,9 +50,9 @@ suspend fun waitUntil (delegateToAwait : () -> Boolean ){
     }
 }
 
-fun unzipArchive(zipPath: String, destDir: String) : Boolean {
+fun unzipArchive(zipFile: File, destDir: String) : Boolean {
     try {
-        ZipFile(zipPath).extractAll(destDir)
+        ZipFile(zipFile).extractAll(destDir)
         return true
     } catch (e: ZipException) {
         Log.e("ZipException", e.toString())
@@ -79,8 +79,6 @@ fun computeSHA256(inputStream: InputStream): ByteArray {
     }
     return digest.digest()
 }
-
-fun copyFolder(src: String, dst: String) = copyFolder(File(src), File(dst))
 
 fun copyFolder(src: File, dst: File) {
     if (!src.exists()) return

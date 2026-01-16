@@ -7,15 +7,14 @@ import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.main.FREETYPE_NATIVE_LIB_NAME
 import com.sun.jna.Native
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
 class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.FTEQW){
 
-    private val homeDirFile : File by lazy {
-        File(fteQWPrefsStorage.pathToRootUserFolder.value!! + File.separator + FTEQW_CONFIGS_DIR)
-    }
+    private val homeDirFile : File by inject { parametersOf(FTEQW_CONFIGS_DIR) }
 
     private val gameType get() = fteQWPrefsStorage.activeFTEQWGame.value!!
 
