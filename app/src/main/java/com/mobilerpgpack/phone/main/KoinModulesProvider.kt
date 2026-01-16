@@ -112,6 +112,7 @@ import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.SDL2GyroInput
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
+import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
 import com.zxw.bingtranslateapi.BingTranslator
@@ -175,6 +176,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         factory <SDL3GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL3GyroInput(ctx, engineInfo) }
         factory <File>{ (pathToFile : String) -> File(get<File>(named(ROOT_USER_DIRECTORY_KEY)),
             pathToFile) }
+        singleOf(::VirtualControllerJnaLayer)
     }
 
     private val httpModule = module {
