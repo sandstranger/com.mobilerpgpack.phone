@@ -3,15 +3,18 @@ package com.mobilerpgpack.phone.utils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.apache.commons.configuration2.INIConfiguration
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
-class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false ){
+class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false ) : KoinComponent{
 
     private val iniValues = mutableMapOf<String, IniValue>()
 
-    private val iniFile = File(pathToFile)
+    private val iniFile : File by inject { parametersOf(pathToFile) }
 
     private val iniConfig = INIConfiguration()
 
@@ -110,12 +113,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                 booleanValue.value = value
                 iniValueType = IniValueType.Boolean
             }
-            FileWriter(iniFile).use {
-                iniConfig.apply {
-                    setProperty(key, if(value) 1 else 0)
-                    write(it)
-                }
-            }
+            writeChanges(key,if(value) 1 else 0)
         }
     }
 
@@ -148,12 +146,7 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                     }
                 }
             }
-            FileWriter(iniFile).use {
-                iniConfig.apply {
-                    setProperty(key, value)
-                    write(it)
-                }
-            }
+            writeChanges(key, value)
         }
     }
 
@@ -192,6 +185,16 @@ class Ini (pathToFile : String, removeSpacesBetweenSeparator : Boolean = false )
                     }
                 }
                 loaded = true
+            }
+        }
+    }
+
+    private fun <T> writeChanges(key: String, value: T){
+        iniFile.parentFile?.mkdirs()
+        FileWriter(iniFile).use {
+            iniConfig.apply {
+                setProperty(key, value)
+                write(it)
             }
         }
     }

@@ -11,8 +11,7 @@ import java.io.File
 
 class PsyDoomComposeSettingsViewModel : IniViewModel() {
 
-    private val pathToPsyDoomConfigsFolder = "${pathToRootUserFolder}${File.separator}" +
-            "com.codelobster${File.separator}PsyDoom"
+    private val pathToPsyDoomConfigsFolder = "com.codelobster${File.separator}PsyDoom"
 
     private val graphicsIniFile =
         Ini("${pathToPsyDoomConfigsFolder}${File.separator}graphics_cfg.ini")
