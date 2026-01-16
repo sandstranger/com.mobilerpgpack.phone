@@ -93,16 +93,18 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 return
             }
 
-            controllerJnaLayer.destroyVirtualControllerAsync(engineInfo)
-            controllerJnaLayer.initializeVirtualControllerAsync()
+            controllerJnaLayer.apply {
+                destroyVirtualControllerAsync(engineInfo)
+                initializeVirtualControllerAsync()
 
-            fun getAxisValue (sourceValue: Float) = when {
-                abs(sourceValue) < STICK_DEAD_ZONE -> 0f
-                sourceValue > 0 -> (sourceValue * STICK_SCALE).coerceAtMost(1f)
-                else -> (sourceValue * STICK_SCALE).coerceAtLeast(-1f)
+                fun getAxisValue (sourceValue: Float) = when {
+                    abs(sourceValue) < STICK_DEAD_ZONE -> 0f
+                    sourceValue > 0 -> (sourceValue * STICK_SCALE).coerceAtMost(1f)
+                    else -> (sourceValue * STICK_SCALE).coerceAtLeast(-1f)
+                }
+                setControllerAxis(axisX, getAxisValue(x),
+                    axisY, getAxisValue(y))
             }
-            controllerJnaLayer.setControllerAxis(axisX, getAxisValue(x),
-                axisY, getAxisValue(y))
         }
 
         Row(
