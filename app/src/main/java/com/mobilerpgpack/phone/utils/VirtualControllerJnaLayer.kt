@@ -12,6 +12,8 @@ import kotlinx.coroutines.withContext
 
 internal object VirtualControllerJnaLayer {
     @Volatile
+    private var jnaWasInit = false
+    @Volatile
     private var joystickRegistered = false
     @Volatile
     private var joystickRegisteredInSDL = false
@@ -30,8 +32,7 @@ internal object VirtualControllerJnaLayer {
         if (!joystickRegistered) {
             joystickRegistered = true
             scope.launch {
-                Native.register(VirtualControllerJnaLayer::class.java,
-                    virtualControllerLibraryName)
+                initializeJna(virtualControllerLibraryName)
                 createVirtualController()
                 withContext(Dispatchers.Main) {
                     joystickRegisteredInSDL = true
@@ -55,6 +56,13 @@ internal object VirtualControllerJnaLayer {
     fun setControllerAxis(axisX : Int, axisXValue : Float, axisY : Int, axisYValue : Float){
         if (joystickRegisteredInSDL){
             setVirtualAxis(axisX, axisXValue, axisY, axisYValue)
+        }
+    }
+
+    private fun initializeJna (virtualControllerLibraryName : String){
+        if (!jnaWasInit) {
+            Native.register(VirtualControllerJnaLayer::class.java, virtualControllerLibraryName)
+            jnaWasInit = true
         }
     }
 }
