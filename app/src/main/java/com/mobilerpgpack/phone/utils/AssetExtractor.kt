@@ -8,7 +8,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -22,7 +21,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private val context : Context by inject ()
 
-    private val assetToIgnoreChecking : Collection<String> = get (
+    private val assetToIgnoreChecking : Collection<String> by inject (
         named(ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME))
 
     private val assetsVersionFile : File by inject { parametersOf(ASSETS_VERSION_FILE_NAME) }
