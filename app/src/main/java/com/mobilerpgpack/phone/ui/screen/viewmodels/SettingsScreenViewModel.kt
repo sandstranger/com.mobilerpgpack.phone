@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.viewmodels
 import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -53,4 +54,6 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
             contentCopied = true
         }
     }
+
+    fun restartApplication () = ProcessPhoenix.triggerRebirth(context)
 }

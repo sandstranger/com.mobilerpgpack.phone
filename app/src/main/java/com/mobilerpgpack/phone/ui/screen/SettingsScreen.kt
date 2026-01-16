@@ -285,7 +285,9 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.pathToRootUserFolder,
             preferencesStorage.pathToRootUserFolderPrefsKey,
             RequestPathMode.Directory,
-        )
+        ){
+            settingsViewModel.restartApplication()
+        }
 
         DrawHorizontalDivider()
 
