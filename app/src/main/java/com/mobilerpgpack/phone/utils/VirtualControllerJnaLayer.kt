@@ -8,7 +8,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal object VirtualControllerJnaLayer {
+internal class VirtualControllerJnaLayer {
     @Volatile
     private var jnaWasInit = false
     @Volatile
@@ -25,11 +25,17 @@ internal object VirtualControllerJnaLayer {
     private external fun setVirtualAxis(axisX : Int, axisXValue : Float,
                                         axisY : Int, axisYValue : Float)
 
+    fun initializeJna (virtualControllerLibraryName : String) {
+        if (!jnaWasInit) {
+            jnaWasInit = true
+            Native.register(VirtualControllerJnaLayer::class.java, virtualControllerLibraryName)
+        }
+    }
+
     fun initializeVirtualControllerAsync (virtualControllerLibraryName : String){
         if (!joystickRegistered) {
             joystickRegistered = true
             scope.launch {
-                initializeJna(virtualControllerLibraryName)
                 createVirtualController()
                 withContext(Dispatchers.Main) {
                     joystickRegisteredInSDL = true
@@ -53,13 +59,6 @@ internal object VirtualControllerJnaLayer {
     fun setControllerAxis(axisX : Int, axisXValue : Float, axisY : Int, axisYValue : Float){
         if (joystickRegisteredInSDL){
             setVirtualAxis(axisX, axisXValue, axisY, axisYValue)
-        }
-    }
-
-    private fun initializeJna (virtualControllerLibraryName : String){
-        if (!jnaWasInit) {
-            Native.register(VirtualControllerJnaLayer::class.java, virtualControllerLibraryName)
-            jnaWasInit = true
         }
     }
 }
