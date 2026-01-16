@@ -26,8 +26,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private val assetsVersionFile : File by inject { parametersOf(ASSETS_VERSION_FILE_NAME) }
 
-    private val userFolder : File by inject { parametersOf(
-        named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY)) }
+    private val userFolder : File by inject (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
 
     @Volatile
     private var assetsCopying = false
