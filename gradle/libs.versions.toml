@@ -1,5 +1,5 @@
 [versions]
-agp = "9.0.0"
+agp = "8.13.2"
 commonsBeanutils = "1.11.0"
 commonsConfiguration2 = "2.13.0"
 converterGson = "3.0.0"
@@ -104,6 +104,7 @@ androidx-window = { group = "androidx.window", name = "window", version.ref = "w
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
