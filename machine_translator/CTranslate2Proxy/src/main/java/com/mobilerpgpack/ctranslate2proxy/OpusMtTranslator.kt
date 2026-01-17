@@ -30,9 +30,9 @@ class OpusMtTranslator(
     ): String  {
         synchronized(lockObject) {
             if (text.isEmpty()){
-                return@synchronized text
+                return text
             }
-            return@synchronized translateFromJni(text, splitTextIntoSentences(text))
+            return translateFromJni(text, splitTextIntoSentences(text))
         }
     }
 

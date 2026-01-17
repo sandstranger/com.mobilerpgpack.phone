@@ -28,9 +28,9 @@ class M2M100Translator(private val modelFile: String, private val spmFile: Strin
     ): String {
         synchronized(lockObject) {
             if (text.isEmpty()){
-                return@synchronized text
+                return text
             }
-            return@synchronized translateFromJni(text,splitTextIntoSentences(text), sourceLocale, targetLocale)
+            return translateFromJni(text,splitTextIntoSentences(text), sourceLocale, targetLocale)
         }
     }
 

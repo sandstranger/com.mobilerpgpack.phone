@@ -26,9 +26,9 @@ class Small100Translator(private val modelFile: String, private val spmFile: Str
     ): String {
         synchronized(lockObject) {
             if (text.isEmpty()){
-                return@synchronized text
+                return text
             }
-            return@synchronized translateFromJni(text,splitTextIntoSentences(text), targetLocale)
+            return translateFromJni(text,splitTextIntoSentences(text), targetLocale)
         }
     }
 
