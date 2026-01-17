@@ -1,13 +1,6 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.library)
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-    }
+    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
@@ -15,6 +8,7 @@ android {
     compileSdk versions.target_sdk
 
     defaultConfig {
+        targetSdk versions.target_sdk
         minSdk versions.min_sdk
 
         ndk {
@@ -48,6 +42,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
     }
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version

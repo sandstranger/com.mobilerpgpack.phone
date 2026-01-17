@@ -8,6 +8,7 @@ android {
 
     defaultConfig {
         minSdk versions.min_sdk
+        targetSdk versions.target_sdk
 
         ndk {
             abiFilters = abi_filters
@@ -42,12 +43,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-    lint {
-        targetSdk 36
-    }
-    testOptions {
-        targetSdk 36
     }
 }
 
