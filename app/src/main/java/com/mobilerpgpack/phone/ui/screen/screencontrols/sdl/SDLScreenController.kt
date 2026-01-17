@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -57,11 +58,11 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
 
         val activity = LocalActivity.current!!
         val rootView = activity.window.decorView.rootView
-        val inGame = rememberSaveable { inGame }
-        val viewWidth = rememberSaveable { viewWidth }
-        val viewHeight = rememberSaveable { viewHeight }
-        var rootWidth by rememberSaveable { mutableIntStateOf(0) }
-        var rootHeight by rememberSaveable { mutableIntStateOf(0) }
+        val inGame = remember { inGame }
+        val viewWidth = remember { viewWidth }
+        val viewHeight = remember { viewHeight }
+        var rootWidth by remember { mutableIntStateOf(0) }
+        var rootHeight by remember { mutableIntStateOf(0) }
 
         rootView.apply {
             DisposableEffect(this) {
@@ -91,30 +92,30 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         val preferencesStorage : PreferencesStorage = koinInject()
-        val activeEngine = rememberSaveable (activeEngine) { activeEngine.name }
+        val activeEngine = remember (activeEngine) { activeEngine.name }
         val engineInfo : IEngineInfo = koinInject(named(activeEngine))
-        var mWidth by rememberSaveable { mutableFloatStateOf(0.0f) }
-        var mHeight by rememberSaveable { mutableFloatStateOf(0.0f) }
-        var widthSize by rememberSaveable { mutableIntStateOf(0) }
-        var heightSize by rememberSaveable { mutableIntStateOf(0) }
-        var trackedPointerId by rememberSaveable { mutableStateOf<PointerId?>(null) }
-        var useTouchPressEventsForTrackedPointer by rememberSaveable { mutableStateOf(false) }
+        var mWidth by remember { mutableFloatStateOf(0.0f) }
+        var mHeight by remember { mutableFloatStateOf(0.0f) }
+        var widthSize by remember { mutableIntStateOf(0) }
+        var heightSize by remember { mutableIntStateOf(0) }
+        var trackedPointerId by remember { mutableStateOf<PointerId?>(null) }
+        var useTouchPressEventsForTrackedPointer by remember { mutableStateOf(false) }
         val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(initial = false)
         val alwaysUseFullScreenTouchMode = preferencesStorage.alwaysUseFullScreenTouchMode.getComposableValue()
-        val useTouchFullScreenMode by rememberSaveable(alwaysUseFullScreenTouchMode,
+        val useTouchFullScreenMode by remember(alwaysUseFullScreenTouchMode,
             engineInfo.touchFullScreenModeCanBeUsed, mouseButtonsEventsCanBeInvoked) {
             mutableStateOf(alwaysUseFullScreenTouchMode && engineInfo.touchFullScreenModeCanBeUsed &&
                     !mouseButtonsEventsCanBeInvoked) }
-        val blockTouchEvents by rememberSaveable(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
-        var touchId by rememberSaveable { mutableStateOf<Int?>(null) }
+        val blockTouchEvents by remember(blockTouchCameraEvents) { mutableStateOf(blockTouchCameraEvents) }
+        var touchId by remember { mutableStateOf<Int?>(null) }
         val enableTouchScreenPressingEvents = preferencesStorage.enableTouchScreenPressingEvents.getComposableValue()
         val enableAbsoluteTouchMouseMode = preferencesStorage.enableAbsoluteTouchMouseMode.getComposableValue()
-        val defaultTouchDeviceId = rememberSaveable { defaultTouchDeviceId }
+        val defaultTouchDeviceId = remember { defaultTouchDeviceId }
 
-        var lastTouchX by rememberSaveable { mutableFloatStateOf(0f) }
-        var lastTouchY by rememberSaveable { mutableFloatStateOf(0f) }
-        var lastMouseX by rememberSaveable { mutableFloatStateOf(0f) }
-        var lastMouseY by rememberSaveable { mutableFloatStateOf(0f) }
+        var lastTouchX by remember { mutableFloatStateOf(0f) }
+        var lastTouchY by remember { mutableFloatStateOf(0f) }
+        var lastMouseX by remember { mutableFloatStateOf(0f) }
+        var lastMouseY by remember { mutableFloatStateOf(0f) }
 
         fun clearResources(){
             if (trackedPointerId != null) {
