@@ -6,17 +6,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-internal object VirtualControllerJnaLayer {
+internal class VirtualControllerJnaLayer {
+    @Volatile
+    private var jnaWasInit = false
     @Volatile
     private var joystickRegistered = false
     @Volatile
     private var joystickRegisteredInSDL = false
 
-    private val mutex = Mutex()
     private val scope : CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private external fun createVirtualController()
@@ -26,12 +25,17 @@ internal object VirtualControllerJnaLayer {
     private external fun setVirtualAxis(axisX : Int, axisXValue : Float,
                                         axisY : Int, axisYValue : Float)
 
-    fun initializeVirtualControllerAsync (virtualControllerLibraryName : String){
+    fun initializeJna (virtualControllerLibraryName : String) {
+        if (!jnaWasInit) {
+            jnaWasInit = true
+            Native.register(VirtualControllerJnaLayer::class.java, virtualControllerLibraryName)
+        }
+    }
+
+    fun initializeVirtualControllerAsync (){
         if (!joystickRegistered) {
             joystickRegistered = true
             scope.launch {
-                Native.register(VirtualControllerJnaLayer::class.java,
-                    virtualControllerLibraryName)
                 createVirtualController()
                 withContext(Dispatchers.Main) {
                     joystickRegisteredInSDL = true

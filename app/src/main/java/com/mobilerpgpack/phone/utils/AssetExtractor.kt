@@ -2,14 +2,12 @@ package com.mobilerpgpack.phone.utils
 
 import android.content.Context
 import android.content.res.AssetManager
-import androidx.lifecycle.MutableLiveData
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -23,8 +21,12 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private val context : Context by inject ()
 
-    private val assetToIgnoreChecking : Collection<String> = get (
+    private val assetToIgnoreChecking : Collection<String> by inject (
         named(ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME))
+
+    private val assetsVersionFile : File by inject { parametersOf(ASSETS_VERSION_FILE_NAME) }
+
+    private val userFolder : File by inject (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
 
     @Volatile
     private var assetsCopying = false
@@ -48,7 +50,6 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
             _assetsCopied = false
         }
         waitUntil { !preferencesStorage.prefsWasLoaded }
-        val userFolder : File = get (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
         userFolder.apply {
             mkdirs()
             withContext(Dispatchers.Main) {
@@ -118,20 +119,19 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     private fun getAlwaysCopyFilesCurrentState () : Boolean{
-        val assetsVersionFile : File = get{ parametersOf(ASSETS_VERSION_FILE_NAME) }
         assetsVersionFile.apply {
             mkdirs()
             fun writeDefaultVersionToVersionsFile () =
-                assetsVersionFile.writeTextSafely(Json.encodeToString(AssetsVersionProvider(
+                writeTextSafely(Json.encodeToString(AssetsVersionProvider(
                     ASSETS_CURRENT_VERSION)))
 
-            if (!assetsVersionFile.exists()){
+            if (!exists()){
                 writeDefaultVersionToVersionsFile()
                 return true
             }
 
             try {
-                val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(assetsVersionFile.readText())
+                val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(readText())
 
                 val copyAssetsForced = assetsVersionProvider.assetsVersion != ASSETS_CURRENT_VERSION
                 if (copyAssetsForced) {

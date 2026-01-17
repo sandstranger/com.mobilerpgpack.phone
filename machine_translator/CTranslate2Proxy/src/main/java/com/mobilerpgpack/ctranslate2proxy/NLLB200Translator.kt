@@ -24,12 +24,12 @@ class NLLB200Translator (private val modelFile: String, private val spmFile: Str
     override suspend fun translate(
         text: String, sourceLocale: String,
         targetLocale: String
-    ): String = withContext(Dispatchers.IO) {
+    ): String {
         synchronized(lockObject) {
             if (text.isEmpty()){
-                return@withContext text
+                return text
             }
-            return@withContext translateFromJni(text,splitTextIntoSentences(text), sourceLocale, targetLocale)
+            return translateFromJni(text,splitTextIntoSentences(text), sourceLocale, targetLocale)
         }
     }
 

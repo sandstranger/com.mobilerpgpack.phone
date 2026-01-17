@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -124,8 +125,8 @@ abstract class Dpad(
                 DPAD_LEFT to -offsetAmount,
                 DPAD_RIGHT to offsetAmount
             ) }
-            val dpadDownCollection = rememberSaveable { dpadDownCollection }
-            val dpadLeftCollection = rememberSaveable {dpadLeftCollection }
+            val dpadDownCollection = retain { dpadDownCollection }
+            val dpadLeftCollection = retain {dpadLeftCollection }
             val dpadButtons = remember { dpadButtons }
 
             @Composable
@@ -181,7 +182,7 @@ abstract class Dpad(
             return modifier
         }
 
-        val sdlKeyCode by rememberSaveable  (sdlKeyEvent) { mutableIntStateOf(sdlKeyEvent) }
+        val sdlKeyCode by remember (sdlKeyEvent) { mutableIntStateOf(sdlKeyEvent) }
         return modifier.touchListenerModifier(isEditMode, viewState, changeItemColor = false, onTouchDown = {
             onTouchDown(sdlKeyCode)
         }, onTouchUp = {
