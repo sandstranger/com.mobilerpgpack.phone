@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import java.io.File
 
 internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
@@ -26,7 +27,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     private val sourceFolder = context.getExternalFilesDir("")!!
 
-    private val rootUserDirectory : File by inject { parametersOf(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY) }
+    private val rootUserDirectory : File by inject ( named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
 
     @Volatile
     private var contentCopied = true

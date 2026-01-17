@@ -37,9 +37,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer.destroyVirtualControllerAsync
-import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer.initializeVirtualControllerAsync
-import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer.setControllerAxis
+import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -60,6 +58,9 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
 
     private val axisX = stickType.value * 2
     private val axisY = stickType.value * 2 + 1
+    private val controllerJnaLayer : VirtualControllerJnaLayer by lazy {
+        get <VirtualControllerJnaLayer>().apply { initializeJna(virtualControllerLibraryName) }
+    }
 
     protected val engineInfo by lazy {
         val preferencesStorage : PreferencesStorage = get()
@@ -92,16 +93,12 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 return
             }
 
-            destroyVirtualControllerAsync(engineInfo)
-            initializeVirtualControllerAsync(virtualControllerLibraryName)
-
-            fun getAxisValue (sourceValue: Float) = when {
-                abs(sourceValue) < STICK_DEAD_ZONE -> 0f
-                sourceValue > 0 -> (sourceValue * STICK_SCALE).coerceAtMost(1f)
-                else -> (sourceValue * STICK_SCALE).coerceAtLeast(-1f)
+            controllerJnaLayer.apply {
+                destroyVirtualControllerAsync(engineInfo)
+                initializeVirtualControllerAsync()
+                setControllerAxis(axisX, getAxisValue(x),
+                    axisY, getAxisValue(y))
             }
-            setControllerAxis(axisX, getAxisValue(x),
-                axisY, getAxisValue(y))
         }
 
         Row(
@@ -289,6 +286,12 @@ abstract class SDLOnScreenStick(engineType: EngineTypes,
                 )
             }
         }
+    }
+
+    private fun getAxisValue (sourceValue: Float) = when {
+        abs(sourceValue) < STICK_DEAD_ZONE -> 0f
+        sourceValue > 0 -> (sourceValue * STICK_SCALE).coerceAtMost(1f)
+        else -> (sourceValue * STICK_SCALE).coerceAtLeast(-1f)
     }
 
     private companion object{

@@ -27,12 +27,12 @@ class OpusMtTranslator(
     override suspend fun translate(
         text: String, sourceLocale: String,
         targetLocale: String
-    ): String = withContext(Dispatchers.IO) {
+    ): String  {
         synchronized(lockObject) {
             if (text.isEmpty()){
-                return@withContext text
+                return text
             }
-            return@withContext translateFromJni(text, splitTextIntoSentences(text))
+            return translateFromJni(text, splitTextIntoSentences(text))
         }
     }
 
