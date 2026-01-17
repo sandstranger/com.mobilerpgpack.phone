@@ -1,35 +1,32 @@
 package com.mobilerpgpack.phone.main
 
 import android.app.Application
-import com.google.gson.Gson
 import com.mobilerpgpack.phone.translator.TranslationManager
-import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
 class MainApplication : Application() {
+    private lateinit var preferencesStorage : PreferencesStorage
 
     override fun onCreate() {
         super.onCreate()
         setupJna()
         initializeKoin()
-        val rootUserDirectory : File = getKoin().get ( named (KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
-        rootUserDirectory.mkdirs()
-        copyAllAssetsFromApk()
-        val preferencesStorage : PreferencesStorage = getKoin().get ()
+        preferencesStorage = getKoin().get ()
         preferencesStorage.loadAllEntries()
+        globalScope.launch { copyAllAssetsFromApk() }
     }
 
     override fun onTerminate() {
@@ -48,9 +45,15 @@ class MainApplication : Application() {
         }
     }
 
-    private fun copyAllAssetsFromApk(){
+    private suspend fun copyAllAssetsFromApk(){
+        while (!preferencesStorage.prefsWasLoaded){
+            delay(ONE_FRAME_DELAY)
+        }
+        val rootUserDirectory : File = getKoin().get ( named (
+            KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
+        rootUserDirectory.mkdirs()
         val assetExtractor : IAssetExtractor = getKoin().get ()
-        globalScope.launch { assetExtractor.copyAssetsContentToInternalStorage() }
+        assetExtractor.copyAssetsContentToInternalStorage()
     }
 
     private companion object{
