@@ -27,6 +27,7 @@ import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
@@ -57,15 +58,15 @@ class TranslationManager : KoinComponent, ITranslationManager {
     @Volatile
     private var _translationModel : ITranslationModel = get (named(ACTIVE_TRANSLATION_MODEL_KEY))
 
-    private val targetLocale : String = get(named(TARGET_LOCALE_NAMES_KEY))
+    private val targetLocale : String by inject (named(TARGET_LOCALE_NAMES_KEY))
 
-    private val db: TranslationDatabase = get()
+    private val db: TranslationDatabase by inject ()
 
-    private val scope : CoroutineScope = get ()
+    private val scope : CoroutineScope by inject()
 
-    private val intervalsTranslator : IntervalMarkerTranslator = get()
+    private val intervalsTranslator : IntervalMarkerTranslator by inject()
 
-    private val translationModels : Map<TranslationType, ITranslationModel> = get()
+    private val translationModels : Map<TranslationType, ITranslationModel> by inject()
 
     private val loadedTranslations = ConcurrentHashMap<String, TranslationEntry>()
 
