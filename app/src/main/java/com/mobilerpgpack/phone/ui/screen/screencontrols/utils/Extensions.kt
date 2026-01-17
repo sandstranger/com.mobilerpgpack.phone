@@ -8,7 +8,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,13 +31,13 @@ fun Modifier.onTouchDown(
     onTouchDown: () -> Unit
 ): Modifier {
     val preferencesStorage: PreferencesStorage = koinInject()
-    val activeEngineString = rememberSaveable { preferencesStorage.activeEngineString.value!! }
+    val activeEngineString = remember { preferencesStorage.activeEngineString.value!! }
     val engineInfo: IEngineInfo = koinInject(named(activeEngineString))
     val mouseButtonsEventsCanBeInvoked by engineInfo.mouseButtonsEventsCanBeInvokedAsFlow.collectAsState(
         initial = false
     )
     var pointerId by remember { mutableStateOf<PointerId?>(null) }
-    val ignoreConsuming = rememberSaveable(ignoreConsuming) { ignoreConsuming }
+    val ignoreConsuming = remember(ignoreConsuming) { ignoreConsuming }
 
     LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked) {
         pointerId = null
@@ -85,8 +84,8 @@ fun Modifier.touchListenerModifier(
 ): Modifier {
 
     val changeItemColor = remember(changeItemColor) { changeItemColor }
-    var inToggleMode by rememberSaveable { mutableStateOf(false) }
-    var isPressed by rememberSaveable { mutableStateOf(false) }
+    var inToggleMode by remember { mutableStateOf(false) }
+    var isPressed by remember { mutableStateOf(false) }
     val isEditMode by remember(isEditMode) { mutableStateOf(isEditMode) }
     val viewState = remember { viewState }
     val preferencesStorage: PreferencesStorage = koinInject()
