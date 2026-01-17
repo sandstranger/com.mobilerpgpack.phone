@@ -347,4 +347,5 @@ dependencies {
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.navigation.compose
     implementation libs.process.phoenix
+    implementation("org.jetbrains.kotlin:compose-group-mapping:2.2.10")
 }
