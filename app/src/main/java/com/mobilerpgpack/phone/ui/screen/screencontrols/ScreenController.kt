@@ -42,7 +42,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -140,9 +140,9 @@ abstract class ScreenController : IScreenController {
         val hideOnScreenControls = hideOnScreenControls?.getComposableValue() ?: false
         val preferencesStorage : PreferencesStorage = koinInject()
         val onBackSaved = remember { onBack }
-        val activeEngineSaved = rememberSaveable(activeEngine) {activeEngine}
-        val drawInSafeAreaSaved = rememberSaveable(drawInSafeArea) { drawInSafeArea }
-        val inGame = rememberSaveable(inGame) { inGame }
+        val activeEngineSaved = remember(activeEngine) {activeEngine}
+        val drawInSafeAreaSaved = remember(drawInSafeArea) { drawInSafeArea }
+        val inGame = remember(inGame) { inGame }
         val engineInfo : IEngineInfo = koinInject(named(activeEngineSaved.name))
         val controlsProvider : ControlsProvider = koinInject(named(activeEngineSaved.name))
         val customViews = remember { buildCustomViews(activeEngineSaved) }
@@ -158,25 +158,25 @@ abstract class ScreenController : IScreenController {
         val activity = LocalActivity.current!!
         val configuration = LocalConfiguration.current
         val rootView = activity.window.decorView.rootView
-        val controlsType = rememberSaveable { controlsProvider.activeControlsType.value!! }
-        val density = rememberSaveable (activity.resources.displayMetrics.density) {
+        val controlsType = remember { controlsProvider.activeControlsType.value!! }
+        val density = remember (activity.resources.displayMetrics.density) {
             activity.resources.displayMetrics.density }
         val clampButtonsPrefsKey = remember { booleanPreferencesKey("${activeEngineSaved.name.lowercase()}_${controlsType.name.lowercase()}") }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
-        var selectedButtonId by rememberSaveable { mutableStateOf<String?>(null) }
-        val isEditMode by rememberSaveable (isEditMode) { mutableStateOf(isEditMode) }
+        var selectedButtonId by remember { mutableStateOf<String?>(null) }
+        val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
         val backgroundColor by remember (inGame, isEditMode) {
             mutableStateOf(if (!inGame) {
                 Color.DarkGray
             } else {
                 if (isEditMode) transparentDarkColor else Color.Transparent
             }) }
-        var readyToDrawControls by rememberSaveable { mutableStateOf(false) }
-        var clampButtons by rememberSaveable {
+        var readyToDrawControls by remember { mutableStateOf(false) }
+        var clampButtons by remember {
             mutableStateOf(preferencesStorage.getClampButtonsValue(clampButtonsPrefsKey).getNotNullValue())
         }
-        var screenWidthPx by rememberSaveable { mutableFloatStateOf(configuration.screenWidthDp * density) }
-        var screenHeightPx by rememberSaveable { mutableFloatStateOf(configuration.screenHeightDp * density) }
+        var screenWidthPx by remember { mutableFloatStateOf(configuration.screenWidthDp * density) }
+        var screenHeightPx by remember { mutableFloatStateOf(configuration.screenHeightDp * density) }
         val showQuickPanelItems = _showQuickPanelItems.getComposableValue()
         val showScreenControls = _showScreenControls.getComposableValue()
 
@@ -218,7 +218,7 @@ abstract class ScreenController : IScreenController {
 
         @Composable
         fun getViewSize (sizePercent : Float) : Dp{
-            val sizePx: Float by rememberSaveable (screenWidthPx, sizePercent) {
+            val sizePx: Float by remember (screenWidthPx, sizePercent) {
                 mutableFloatStateOf(screenWidthPx * sizePercent)
             }
             val sizeDp : Dp by remember(sizePx, density) {
@@ -343,22 +343,22 @@ abstract class ScreenController : IScreenController {
                     if (readyToDrawControls) {
 
                         viewsToDraw.forEach { (id, view) ->
-                            val id = rememberSaveable (id) { id }
+                            val id = remember (id) { id }
                             val view = remember(view) { view }
                             remember(view.viewState) { view.viewState }.apply {
                                 val sizePercent = sizePercent.getComposableValue()
                                 val offsetXPercent = offsetXPercent.getComposableValue()
-                                val renderOffsetX by rememberSaveable (offsetXPercent, screenWidthPx) {
+                                val renderOffsetX by remember (offsetXPercent, screenWidthPx) {
                                     mutableFloatStateOf(offsetXPercent * screenWidthPx) }
                                 val offsetYPercent = offsetYPercent.getComposableValue()
                                 val isDeleted = isDeleted.getComposableValue()
                                 val viewRenderRule = viewRenderRule.observeAsState().value
                                 val showInQuickPanel = showInQuickPanel.getComposableValue()
 
-                                val renderOffsetY by rememberSaveable (offsetYPercent, screenHeightPx) {
+                                val renderOffsetY by remember (offsetYPercent, screenHeightPx) {
                                     mutableFloatStateOf(offsetYPercent * screenHeightPx) }
 
-                                val renderView by rememberSaveable(
+                                val renderView by remember(
                                     isDeleted,
                                     viewRenderRule,
                                     showInQuickPanel,
@@ -405,11 +405,11 @@ abstract class ScreenController : IScreenController {
 
         if (inGame && hideOnScreenControls){
             this.isEditMode = false
-            val showOnlyVirtualKeyboardButton = rememberSaveable {
+            val showOnlyVirtualKeyboardButton = remember {
                 preferencesStorage.hideScreenControls.getNotNullValue() && preferencesStorage.alwaysShowKeyboardButton.getNotNullValue() }
             val sdlKeyboard = koinInject<SDLKeyboard>(named(if (engineInfo is SDL2EngineInfo) KeyboardType.SDL2Keyboard.name
             else KeyboardType.SDL3Keyboard.name))
-            val keyboardInputType = rememberSaveable { keyboardInputType }
+            val keyboardInputType = remember { keyboardInputType }
 
             Box(modifier = Modifier.fillMaxSize()) {
                 Image(
