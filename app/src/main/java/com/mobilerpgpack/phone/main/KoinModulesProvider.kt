@@ -112,6 +112,7 @@ import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.SDL2GyroInput
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
+import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
 import com.zxw.bingtranslateapi.BingTranslator
@@ -141,13 +142,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     val allModules : List<Module>
 
     private val mainModule = module {
-        fun getRootDirToUse () : File{
-            val prefsStorage : PreferencesStorage = get()
-            val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
-            return if (pathToUserFolder.startsWith(externalFilesDir!!.absolutePath)) externalFilesDir
-            else File(pathToUserFolder)
-        }
-
         single<Context> { context }.withOptions { createdAtStart() }
         single<CoroutineScope> { scope }.withOptions {
             createdAtStart()
@@ -170,12 +164,19 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(KeyboardType.SDL3Keyboard.name)
             bind<SDLKeyboard>()
         }
-        single <File> { getRootDirToUse() }.withOptions {
+        single <File> {
+            val prefsStorage : PreferencesStorage = get()
+            val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
+            if (pathToUserFolder.startsWith(externalFilesDir!!.absolutePath)) externalFilesDir
+            else File(pathToUserFolder)
+        }.withOptions {
             named(ROOT_USER_DIRECTORY_KEY)
         }
         factory <SDL2GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL2GyroInput(ctx, engineInfo) }
         factory <SDL3GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL3GyroInput(ctx, engineInfo) }
-        factory <File>{ (pathToFile : String) -> File(getRootDirToUse(), pathToFile) }
+        factory <File>{ (pathToFile : String) -> File(get<File>(named(ROOT_USER_DIRECTORY_KEY)),
+            pathToFile) }
+        singleOf(::VirtualControllerJnaLayer)
     }
 
     private val httpModule = module {
