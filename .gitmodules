@@ -124,3 +124,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/libtiff/src/main/jni/libtiff"]
 	path = third_party/libtiff/src/main/jni/libtiff
 	url = https://gitlab.com/libtiff/libtiff.git
+[submodule "third_party/glbinding/src/main/jni/glbinding"]
+	path = third_party/glbinding/src/main/jni/glbinding
+	url = https://github.com/cginternals/glbinding.git
