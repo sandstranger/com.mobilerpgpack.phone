@@ -345,6 +345,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
+                MPG123_NATIVE_LIB_NAME,
                 GME_NATIVE_LIB_NAME,
                 SDL2_MIXER_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
