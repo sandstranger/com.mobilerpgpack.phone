@@ -127,3 +127,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/glbinding/src/main/jni/glbinding"]
 	path = third_party/glbinding/src/main/jni/glbinding
 	url = https://github.com/cginternals/glbinding.git
+[submodule "app/src/main/jni/widelands"]
+	path = app/src/main/jni/widelands
+	url = https://github.com/sandstranger/widelands.git
