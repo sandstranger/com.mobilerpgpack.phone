@@ -121,3 +121,6 @@ url=https://github.com/sandstranger/ODE
 [submodule "third_party/sdl2-image/src/main/jni/SDL_image"]
 	path = third_party/sdl2-image/src/main/jni/SDL_image
 url=https://github.com/sandstranger/SDL_image.git
+[submodule "third_party/libtiff/src/main/jni/libtiff"]
+	path = third_party/libtiff/src/main/jni/libtiff
+	url = https://gitlab.com/libtiff/libtiff.git
