@@ -147,7 +147,7 @@ android {
             aaptOptions {
                 noCompress "bin","spm","json","txt","sf2","ttf", "wad", "ini", "wopl", "wopn", "pk3", "mhr",
                 "conf", "csv", "fp", "icns", "jpg", "lua", "nakula", "ogg", "png", "po", "pot",
-                "README", "ttc", "vp", "wai", ''
+                "README", "ttc", "vp", "wai"
             }
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
@@ -167,9 +167,23 @@ android {
             aaptOptions {
                 noCompress "bin","spm","json","txt","sf2","ttf", "wad", "ini", "wopl", "wopn", "pk3", "mhr",
                         "conf", "csv", "fp", "icns", "jpg", "lua", "nakula", "ogg", "png", "po", "pot",
-                        "README", "ttc", "vp", "wai", ''
+                        "README", "ttc", "vp", "wai"
             }
         }
+
+        afterEvaluate {
+            def assetDir = file("src/main/assets")
+            if (assetDir.exists()) {
+                def noExtFiles = []
+                assetDir.eachFileRecurse { file ->
+                    if (file.isFile() && !file.name.contains('.')) {
+                        noExtFiles.add(file.name)
+                    }
+                }
+                if (!noExtFiles.empty) {
+                    android.aaptOptions.noCompress += noExtFiles.unique()
+                }
+            }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
