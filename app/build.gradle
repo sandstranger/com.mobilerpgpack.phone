@@ -184,6 +184,7 @@ android {
                     android.aaptOptions.noCompress += noExtFiles.unique()
                 }
             }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
