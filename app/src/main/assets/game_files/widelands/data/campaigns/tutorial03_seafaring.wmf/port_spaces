@@ -1,0 +1,12 @@
+# Automatically created by Widelands r24299[902bd84@ferry2] (Release)
+
+[global]
+packet_version="1"
+waterway_max_length="5"
+number_of_port_spaces="4"
+
+[port_spaces]
+0="85 5"
+1="37 27"
+2="102 36"
+3="41 43"
