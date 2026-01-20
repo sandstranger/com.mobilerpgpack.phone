@@ -92,7 +92,7 @@ set(FMOD_INC_DIR "${CMAKE_SOURCE_DIR}/third_party/fmod/src/main/include")
 set(FMOD_LIB "${CMAKE_SOURCE_DIR}/third_party/fmod/src/main/jniLibs/${ANDROID_ABI}/libfmod.so")
 
 set(libpng_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/libpng"
-        "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/include")
+        "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/include" CACHE STRING "" FORCE)
 
 set(PNG_INCLUDE_DIRS ${libpng_INCLUDE_DIRS} CACHE STRING "" FORCE)
 
@@ -225,7 +225,7 @@ else()
             CACHE STRING "" FORCE)
 endif ()
 
-set(ICU_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/icu4c/include/unicode CACHE STRING "" FORCE)
+set(ICU_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/icu4c/include CACHE STRING "" FORCE)
 
 set(ICU_LIBRARIES_FOLDER_LOCATION ${CMAKE_SOURCE_DIR}/third_party/icu4c/libs/android CACHE STRING "" FORCE)
 
@@ -234,7 +234,8 @@ set(ICU_LIBRARIES
         ${ICU_LIBRARIES_FOLDER_LOCATION}/${ANDROID_ABI}/libicuuc_floris.a
         CACHE STRING "" FORCE)
 
-set(GLBINDING_INCLUDES ${CMAKE_SOURCE_DIR}/third_party/glbinding/src/main/jni/glbinding/source/glbinding/include)
+set(GLBINDING_INCLUDES ${CMAKE_SOURCE_DIR}/third_party/glbinding/src/main/jni/glbinding/source/glbinding/include
+        ${CMAKE_SOURCE_DIR}/third_party/glbinding/src/main/jni/include)
 
 if (IS_DEBUG_BUILD)
     set(GLBINDING_LIBRARIES
@@ -242,7 +243,7 @@ if (IS_DEBUG_BUILD)
             CACHE STRING "" FORCE)
 else()
     set(GLBINDING_LIBRARIES
-            ${CMAKE_SOURCE_DIR}/third_party/glbinding/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libglbindingd.so
+            ${CMAKE_SOURCE_DIR}/third_party/glbinding/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libglbinding.so
             CACHE STRING "" FORCE)
 endif ()
 
@@ -294,9 +295,10 @@ endif()
 
 set(USE_XDG OFF CACHE BOOL "" FORCE)
 set(OPTION_BUILD_CODECHECK OFF CACHE BOOL "" FORCE)
-set(USE_XDG OFF CACHE BOOL "" FORCE)
 set(OPTION_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(OPTION_USE_GLBINDING ON CACHE BOOL "" FORCE)
+set(OPTION_FORCE_EMBEDDED_MINIZIP ON CACHE BOOL "" FORCE)
+set(OPTION_BUILD_WEBSITE_TOOLS OFF CACHE BOOL "" FORCE)
 
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
