@@ -25,7 +25,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     private val scope : CoroutineScope by inject ()
 
-    private val assetsExtractor : IAssetExtractor = get ()
+    private val assetsExtractor : IAssetExtractor by inject ()
 
     private val sourceFolder = context.getExternalFilesDir("")!!
 
@@ -49,7 +49,6 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
             assetsFinishCopyListeners += { allAssetsCopied.value = true }
         }
     }
-
 
     fun onResetResourcesClicked(){
         assetsExtractor.apply {
