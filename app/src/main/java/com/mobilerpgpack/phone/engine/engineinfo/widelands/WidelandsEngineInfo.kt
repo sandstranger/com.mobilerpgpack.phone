@@ -20,8 +20,11 @@ class WidelandsEngineInfo (mainEngineLib: String,
 
     override val touchFullScreenModeCanBeUsed = false
 
+    private external fun setPathsToResources (pathToRootUserFolder : String, pathToDataFolder : String)
+
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(WidelandsEngineInfo::class.java, mainLibraryName)
+        setPathsToResources(pathToWidelandsRootFolder, pathToResource)
     }
 }
