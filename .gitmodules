@@ -130,3 +130,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/widelands"]
 	path = app/src/main/jni/widelands
 	url = https://github.com/sandstranger/widelands.git
+[submodule "third_party/glob/src/main/jni/glob"]
+	path = third_party/glob/src/main/jni/glob
+	url = https://github.com/sandstranger/glob.git

@@ -218,7 +218,7 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':third_party:freetype:build',':third_party:zmusic:build',':third_party:bullet:build',
         ':third_party:libjpegturbo:build',':third_party:bzip2:build',':third_party:ode:build',
         ':third_party:yquake2:build',':third_party:sdl2-image:build',
-        ':third_party:glbinding:build'
+        ':third_party:glbinding:build',':third_party:glob:build'
 
 dependencies {
     implementation project(':third_party:sdl2:android-project:app')
@@ -245,6 +245,7 @@ dependencies {
     implementation (project(":third_party:yquake2"))
     implementation (project(":third_party:sdl2-image"))
     implementation (project(":third_party:glbinding"))
+    implementation (project(":third_party:glob"))
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
     implementation(libs.koin.core)
