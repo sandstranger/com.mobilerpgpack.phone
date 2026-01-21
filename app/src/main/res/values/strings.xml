@@ -294,4 +294,6 @@
     <string name="path_to_halflife_manifest">Path to Half Life 1 manifest (.fmf)</string>
     <string name="enable_fteqw_manifest_support">Enable custom manifest (.fmf) support</string>
     <string name="fteqw_game">Active FTEQW Game</string>
+    <string name="files_unpacking_title">Filed Unpacking…</string>
+    <string name="files_unpacking_text">This may take a few minutes</string>
 </resources>
