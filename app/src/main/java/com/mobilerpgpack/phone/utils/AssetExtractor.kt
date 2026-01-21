@@ -78,9 +78,9 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
                     assetsVersionFile.writeTextSafely(Json.encodeToString(
                         AssetsInfoProvider(assetsInfo!!.assetsVersion,true)))
                     assetsFinishCopyListeners.invoke()
-                    _assetsCopied = true
-                    assetsCopying = false
                 }
+                _assetsCopied = true
+                assetsCopying = false
             }
         }
     }

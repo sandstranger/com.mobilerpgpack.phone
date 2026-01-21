@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.viewmodels
 
 import android.app.Activity
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -24,7 +25,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     private val scope : CoroutineScope by inject ()
 
-    private val assetsExtractor : IAssetExtractor by inject ()
+    private val assetsExtractor : IAssetExtractor = get ()
 
     private val sourceFolder = context.getExternalFilesDir("")!!
 
@@ -32,6 +33,23 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     @Volatile
     private var contentCopied = true
+
+    private var wasInit = false
+
+    val allAssetsCopied = MutableLiveData (true)
+
+    fun initialize (){
+        if (wasInit){
+            return
+        }
+        wasInit = true
+        assetsExtractor.apply {
+            allAssetsCopied.value = assetsCopied
+            assetsStartedCopyListeners += { allAssetsCopied.value = false }
+            assetsFinishCopyListeners += { allAssetsCopied.value = true }
+        }
+    }
+
 
     fun onResetResourcesClicked(){
         assetsExtractor.apply {
@@ -55,9 +73,11 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
             return
         }
         contentCopied = false
+        allAssetsCopied.value = false
         scope.launch {
             copyFolder(sourceFolder, rootUserDirectory)
             contentCopied = true
+            allAssetsCopied.postValue(true)
         }
     }
 
