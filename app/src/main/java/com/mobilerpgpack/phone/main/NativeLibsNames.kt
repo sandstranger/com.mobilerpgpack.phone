@@ -34,6 +34,8 @@ const val JPEG_NATIVE_LIB_NAME = "jpeg"
 
 const val SDL3_NATIVE_LIB_NAME = "SDL3"
 
+const val GLOB_NATIVE_LIB_NAME = "glob"
+
 const val FMOD_NATIVE_LIB_NAME = "fmod"
 
 const val TIFF_NATIVE_LIB_NAME = "tiff"

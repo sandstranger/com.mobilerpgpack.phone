@@ -701,6 +701,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_MIXER_NATIVE_LIB_NAME,
                 SDL2_IMAGE_NATIVE_LIB_NAME,
+                GLOB_NATIVE_LIB_NAME,
                 WIDELANDS_MAIN_ENGINE_LIB
             )
             WidelandsEngineInfo(WIDELANDS_MAIN_ENGINE_LIB, allLibs)
