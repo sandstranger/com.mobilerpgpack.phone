@@ -22,6 +22,8 @@ const val ARX_LIBERTATIS_MAIN_ENGINE_LIB  = "arx"
 
 const val FTEQW_MAIN_ENGINE_LIB = "ftedroid"
 
+const val WIDELANDS_MAIN_ENGINE_LIB = "widelands"
+
 const val YQUAKE2_CORE_NATIVE_LIB_NAME = "game"
 
 const val BZ2_NATIVE_LIB_NAME = "bz2"
@@ -33,6 +35,10 @@ const val JPEG_NATIVE_LIB_NAME = "jpeg"
 const val SDL3_NATIVE_LIB_NAME = "SDL3"
 
 const val FMOD_NATIVE_LIB_NAME = "fmod"
+
+const val TIFF_NATIVE_LIB_NAME = "tiff"
+
+const val TIFFXX_NATIVE_LIB_NAME = "tiffxx"
 
 const val SDL3HELPER_NATIVE_LIB_NAME = "SDL3Helper"
 
@@ -51,6 +57,8 @@ const val ZMUSIC_NATIVE_LIB_NAME = "zmusic"
 const val OPENAL_NATIVE_LIB_NAME = "openal"
 
 const val SDL2_TTF_NATIVE_LIB_NAME = "SDL2_ttf"
+
+const val SDL2_IMAGE_NATIVE_LIB_NAME = "SDL2_image"
 
 const val FLUIDSYNTH_NATIVE_LIB_NAME = "fluidsynth"
 
@@ -75,6 +83,8 @@ const val FLAC_NATIVE_LIB_NAME = "FLAC"
 const val SND_FILE_NATIVE_LIB_NAME = "sndfile"
 
 val FREETYPE_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "freetyped" else "freetype"
+
+val GLBINDING_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "glbindingd" else "glbinding"
 
 val PNG_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "png16d" else "png16"
 
