@@ -1,0 +1,27 @@
+package com.mobilerpgpack.phone.engine.engineinfo.widelands
+
+import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.sun.jna.Native
+import java.io.File
+
+class WidelandsEngineInfo (mainEngineLib: String,
+                           allLibs: Array<String>) :
+    SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.Widelands) {
+
+    private val pathToWidelandsRootFolder get() =
+        preferencesStorage.pathToRootUserFolder.value!! + File.separator + "widelands"
+
+    override val pathToResource get() = pathToWidelandsRootFolder + File.separator + "data"
+
+    override val useGyroscope = false
+
+    override val mouseButtonsEventsCanBeInvoked = true
+
+    override val touchFullScreenModeCanBeUsed = false
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(WidelandsEngineInfo::class.java, mainLibraryName)
+    }
+}
