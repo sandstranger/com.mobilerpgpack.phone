@@ -61,16 +61,6 @@ import org.koin.core.component.get
 import org.koin.core.qualifier.named
 
 class SettingsScreen : ComposeScreen(SCREEN_NAME) {
-    private val allAssetsCopied  = MutableLiveData (false)
-    private val assetExtractor : IAssetExtractor = get ()
-
-    init {
-        assetExtractor.apply {
-            allAssetsCopied.value = assetsCopied
-            assetsStartedCopyListeners += { allAssetsCopied.value = assetsCopied }
-            assetsFinishCopyListeners += { allAssetsCopied.value = true}
-        }
-    }
 
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
@@ -82,9 +72,10 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         }
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
         val useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton.getComposableValue()
-        val allAssetsCopied = allAssetsCopied.getComposableValue(false)
+        val allAssetsCopied = settingsScreenViewModel.allAssetsCopied.getComposableValue(true)
 
         LaunchedEffect(Unit) {
+            settingsScreenViewModel.initialize()
             drawFloatingActionButton.value = preferencesStorage.useFloatingStartGameButton.value
         }
         
