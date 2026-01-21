@@ -23,6 +23,7 @@ import com.mobilerpgpack.phone.ui.items.SetupSystemBars
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
 import com.mobilerpgpack.phone.utils.waitUntil
@@ -120,6 +121,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             val composeScreens = get <Collection<ComposeScreen>> (
                 named(KoinModulesProvider.ALL_COMPOSE_SCREENS))
             composeScreens.forEach { it.onMainActivityFinish() }
+            get <IAssetExtractor> ().clearSubscribers()
         }
         super.finish()
     }

@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -37,6 +38,7 @@ import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.getButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
+import com.mobilerpgpack.phone.ui.items.CircularProgressDialog
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
 import com.mobilerpgpack.phone.ui.items.SwitchItem
@@ -50,6 +52,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
+import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.androidx.compose.koinViewModel
@@ -58,6 +61,16 @@ import org.koin.core.component.get
 import org.koin.core.qualifier.named
 
 class SettingsScreen : ComposeScreen(SCREEN_NAME) {
+    private val allAssetsCopied  = MutableLiveData (false)
+    private val assetExtractor : IAssetExtractor = get ()
+
+    init {
+        assetExtractor.apply {
+            allAssetsCopied.value = assetsCopied
+            assetsStartedCopyListeners += { allAssetsCopied.value = assetsCopied }
+            assetsFinishCopyListeners += { allAssetsCopied.value = true}
+        }
+    }
 
     @Composable
     override fun DrawScreenContent(innerPadding: PaddingValues, navController: NavHostController) {
@@ -69,6 +82,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         }
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
         val useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton.getComposableValue()
+        val allAssetsCopied = allAssetsCopied.getComposableValue(false)
 
         LaunchedEffect(Unit) {
             drawFloatingActionButton.value = preferencesStorage.useFloatingStartGameButton.value
@@ -85,6 +99,11 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             )
         } else {
             DrawAllSettings( innerPadding, activeEngine,navController, settingsScreenViewModel)
+        }
+
+        if (!allAssetsCopied){
+            CircularProgressDialog(stringResource(R.string.files_unpacking_title),
+                stringResource(R.string.files_unpacking_text))
         }
     }
 
