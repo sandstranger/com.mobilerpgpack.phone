@@ -7,5 +7,9 @@ interface IAssetExtractor{
 
     val assetsFinishCopyListeners : MulticastAction
 
+    fun clearSubscribers ()
+
+    fun resetAssetsInfo ()
+
     suspend fun copyAssetsContentToInternalStorage ()
 }

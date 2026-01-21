@@ -12,6 +12,7 @@ import com.mobilerpgpack.phone.utils.startGame
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -33,14 +34,17 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
     private var contentCopied = true
 
     fun onResetResourcesClicked(){
-        if (!assetsExtractor.assetsCopied){
-            return
+        assetsExtractor.apply {
+            if (!assetsCopied){
+                return
+            }
+            rootUserDirectory.apply {
+                deleteRecursively()
+                mkdirs()
+            }
+            resetAssetsInfo()
+            scope.launch { copyAssetsContentToInternalStorage() }
         }
-        rootUserDirectory.apply {
-            deleteRecursively()
-            mkdirs()
-        }
-        scope.launch { assetsExtractor.copyAssetsContentToInternalStorage() }
     }
 
     fun onStartGameClicked(activeEngine : EngineTypes,activity: Activity) =

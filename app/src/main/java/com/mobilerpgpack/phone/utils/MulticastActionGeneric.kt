@@ -16,4 +16,6 @@ class MulticastActionGeneric<T> {
     operator fun invoke(param: T) {
         listeners.forEach { it(param) }
     }
+
+    fun clear () = listeners.clear()
 }
