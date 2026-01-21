@@ -247,6 +247,18 @@ else()
             CACHE STRING "" FORCE)
 endif ()
 
+set(GLOB_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/glob/src/main/jni/glob)
+
+if (IS_DEBUG_BUILD)
+    set(GLOB_LIBRARY
+            ${CMAKE_SOURCE_DIR}/third_party/glob/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libglob.so
+            CACHE STRING "" FORCE)
+else()
+    set(GLOB_LIBRARY
+            ${CMAKE_SOURCE_DIR}/third_party/glob/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libglob.so
+            CACHE STRING "" FORCE)
+endif ()
+
 set(asio_location ${CMAKE_SOURCE_DIR}/third_party/asio/asio/include CACHE STRING "" FORCE)
 
 set (USE_OPENGL ON)
