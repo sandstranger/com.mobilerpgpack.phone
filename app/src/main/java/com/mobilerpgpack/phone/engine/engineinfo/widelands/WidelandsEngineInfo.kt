@@ -20,6 +20,8 @@ class WidelandsEngineInfo (mainEngineLib: String,
 
     override val touchFullScreenModeCanBeUsed = false
 
+    override val commandLineParams: String get() = preferencesStorage.widelandsCommandLineArgs.value!!
+
     private external fun setPathsToResources (pathToRootUserFolder : String, pathToDataFolder : String)
 
     override fun onNativeLibrariesLoaded() {
