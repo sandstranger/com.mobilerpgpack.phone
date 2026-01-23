@@ -21,9 +21,6 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private val context : Context by inject ()
 
-    private val assetToIgnoreChecking : Collection<String> by inject (
-        named(ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME))
-
     private val assetsVersionFile : File by inject { parametersOf(ASSETS_VERSION_FILE_NAME) }
 
     private val userFolder : File by inject (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
@@ -101,7 +98,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
                     if (subFiles != null && subFiles.isNotEmpty()) {
                         copyAssetsFolderToInternalStorage( assetPath, outFile)
                     } else {
-                        val shouldCopy = !outFile.exists() || !compareAssetAndFileSize(assetManager, assetPath, outFile)
+                        val shouldCopy = !outFile.exists() || assetsInfo!!.copyAllAssetsForced
                         if (shouldCopy) {
                             assetManager.open(assetPath).use { inputStream ->
                                 FileOutputStream(outFile).use { outputStream ->
@@ -114,22 +111,6 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
             }
         } catch (e: IOException) {
             e.printStackTrace()
-        }
-    }
-
-    private fun compareAssetAndFileSize(assetManager: AssetManager, assetPath: String, file: File): Boolean {
-        if (!assetsInfo!!.copyAllAssetsForced && assetToIgnoreChecking.any { assetPath.contains(it) }){
-            return true
-        }
-
-        return try {
-            assetManager.openFd(assetPath).use { assetFileDescriptor ->
-                val assetFileSize = assetFileDescriptor.length
-                val fileSize = file.length()
-                return assetFileSize == fileSize
-            }
-        } catch (_: IOException) {
-            false
         }
     }
 
@@ -164,8 +145,6 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     companion object{
-        const val ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME = "assets_to_ignore"
-
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
         private const val ASSETS_CURRENT_VERSION = 7
