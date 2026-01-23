@@ -151,10 +151,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
         single<PreferencesStorage> { PreferencesStorage() }.withOptions { createdAtStart() }
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
-        single { assetsToIgnoreChecking }.withOptions {
-            named(AssetExtractor.ASSETS_TO_IGNORE_CHECKING_COLLECTION_NAME)
-            bind<Collection<String>>()
-        }
         singleOf <IAssetExtractor> (::AssetExtractor)
         single <SharedPrefsDao> { SharedPrefsDatabase.createInstance().dao() }
 
