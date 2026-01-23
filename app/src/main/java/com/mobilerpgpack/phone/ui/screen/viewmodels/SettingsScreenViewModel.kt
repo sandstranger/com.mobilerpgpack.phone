@@ -33,6 +33,8 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     @Volatile
     private var contentCopied = true
+    @Volatile
+    private var resourcesInResetProcess = false
 
     private var wasInit = false
 
@@ -52,15 +54,21 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     fun onResetResourcesClicked(){
         assetsExtractor.apply {
-            if (!assetsCopied){
+            if (!assetsCopied || resourcesInResetProcess){
                 return
             }
-            rootUserDirectory.apply {
-                deleteRecursively()
-                mkdirs()
+            resourcesInResetProcess = true
+            allAssetsCopied.value = false
+            scope.launch {
+                resetAssetsInfo()
+                rootUserDirectory.apply {
+                    deleteRecursively()
+                    mkdirs()
+                }
+                resetAssetsInfo()
+                copyAssetsContentToInternalStorage()
+                resourcesInResetProcess = false
             }
-            resetAssetsInfo()
-            scope.launch { copyAssetsContentToInternalStorage() }
         }
     }
 
