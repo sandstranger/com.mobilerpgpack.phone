@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -20,6 +20,8 @@ https://github.com/fgsfdsfgs/perfect_dark
 https://github.com/arx/ArxLibertatis
 
 https://github.com/fte-team/fteqw
+
+https://github.com/widelands/widelands
 
 # System Requirements
 
@@ -223,6 +225,10 @@ All credits and licenses are properly acknowledged in this port. Any other ideas
 
 If you want to fix bugs in this engine from scratch yourself, feel free to fork the FTEQW source code and adapt it for Android.
 
+## Widelands
+
+At current state this RTS is unplayable yet
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
@@ -283,6 +289,8 @@ Perfect Dark engine source code: [Licence](https://github.com/fgsfdsfgs/perfect_
 ArxLibertatis engine source code: [Licence](https://github.com/arx/ArxLibertatis/blob/master/LICENSE)	https://github.com/arx/ArxLibertatis
 
 FTEQW engine source code: [Licence](https://github.com/fte-team/fteqw/blob/master/LICENSE)	https://github.com/fte-team/fteqw
+
+Widelands engine source code: [Licence](https://github.com/widelands/widelands/blob/master/COPYING) https://github.com/widelands/widelands
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
@@ -463,6 +471,16 @@ ODE:  [Licence](https://github.com/thomasmarsh/ODE/blob/master/LICENSE-BSD.TXT) 
 yquake2: [Licence](https://github.com/yquake2/yquake2/blob/master/LICENSE)  https://github.com/yquake2/yquake2
 
 code from FTEQW beloko android port: https://github.com/emileb/fteqw
+
+glbinding: [Licence](https://github.com/cginternals/glbinding/blob/master/LICENSE)  https://github.com/cginternals/glbinding
+
+libtiff: [Licence](https://gitlab.com/libtiff/libtiff/-/blob/master/LICENSE.md) https://gitlab.com/libtiff/libtiff
+
+asio: [Licence](https://github.com/chriskohlhoff/asio/blob/master/LICENSE_1_0.txt)  https://github.com/chriskohlhoff/asio/
+
+SDL2 Image: [Licence](https://github.com/libsdl-org/SDL_image/blob/SDL2/LICENSE.txt) https://github.com/libsdl-org/SDL_image/tree/SDL2
+
+Process Phoenix: [Licence](https://github.com/JakeWharton/ProcessPhoenix/blob/trunk/LICENSE.txt)  https://github.com/JakeWharton/ProcessPhoenix
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 

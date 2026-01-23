@@ -22,6 +22,7 @@ android {
                         "-Dtiff-install=OFF","-Dtiff-docs=OFF",
                         "-Dtiff-contrib=OFF","-Dtiff-tests=OFF",
                         "-Dtiff-tools=OFF",
+                        "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
                         "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
             }

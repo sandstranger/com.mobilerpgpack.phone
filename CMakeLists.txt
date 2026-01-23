@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 4.1)
 project(Engines_Hub)
 
+set(CMAKE_C_COMPILER_LAUNCHER ccache)
+set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
