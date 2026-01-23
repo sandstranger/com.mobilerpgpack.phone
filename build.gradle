@@ -17,10 +17,10 @@ buildscript {
             common_cpp_flags : ["-Os" ,"-flto=thin", "-fno-omit-frame-pointer", "-g"],
             ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=thin -Wl,-plugin-opt=-emulated-tls -Wl,--build-id",
             ndk_build_android_stl : "APP_STL=c++_shared",
-            CMAKE_CFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -g",
-            CMAKE_CXXFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -g",
+            CMAKE_CFLAGS : "-Os -flto=full -fno-omit-frame-pointer -g",
+            CMAKE_CXXFLAGS : "-Os -flto=full -fno-omit-frame-pointer -g",
             CMAKE_ANDROID_STL : "-DANDROID_STL=c++_shared",
-            CMAKE_SHADERLINKER_FLAGS :"-flto=thin -fuse-ld=lld -Wl,--build-id",
+            CMAKE_SHADERLINKER_FLAGS :"-flto=full -fuse-ld=lld -Wl,--build-id",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
     ]
     ext.abi_filters = ['armeabi-v7a','arm64-v8a',"x86","x86_64"]
