@@ -37,9 +37,7 @@ internal class VirtualControllerJnaLayer {
             joystickRegistered = true
             scope.launch {
                 createVirtualController()
-                withContext(Dispatchers.Main) {
-                    joystickRegisteredInSDL = true
-                }
+                joystickRegisteredInSDL = true
             }
         }
     }
@@ -49,9 +47,7 @@ internal class VirtualControllerJnaLayer {
             joystickRegisteredInSDL = false
             scope.launch {
                 destroyVirtualController()
-                withContext(Dispatchers.Main) {
-                    joystickRegistered = false
-                }
+                joystickRegistered = false
             }
         }
     }

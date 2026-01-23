@@ -59,6 +59,9 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val gyroscopeDeadZonePrefsKey = floatPreferencesKey("gyroscope_dead_zone")
     val invertGyroscopeXAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_x_axis")
     val invertGyroscopeYAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_y_axis")
+    val widelandsCommandLineArgsPrefsKey = stringPreferencesKey("widelands_command_line_args")
+
+    val widelandsCommandLineArgs = getStringValue(widelandsCommandLineArgsPrefsKey)
 
     val pathToRootUserFolder = getStringValue(
         pathToRootUserFolderPrefsKey,

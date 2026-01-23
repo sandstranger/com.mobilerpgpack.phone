@@ -28,12 +28,12 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private val userFolder : File by inject (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
 
+    private var assetsInfo: AssetsInfo? = null
+
     @Volatile
     private var assetsCopying = false
     @Volatile
-    private var _assetsCopied = false
-
-    private var alwaysCopyAllFiles = false
+    private var _assetsCopied = true
 
     override val assetsCopied get() = _assetsCopied
 
@@ -41,14 +41,29 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     override val assetsFinishCopyListeners = MulticastAction()
 
+    override fun clearSubscribers() {
+        assetsStartedCopyListeners.clear()
+        assetsFinishCopyListeners.clear()
+    }
+
+    override fun resetAssetsInfo() {
+        if (assetsInfo == null){
+            assetsInfo = if(assetsVersionFile.exists()) getAssetsInfo() else defaultAssetsInfo
+        }
+        assetsVersionFile.writeTextSafely(Json.encodeToString(
+            AssetsInfoProvider(assetsInfo!!.assetsVersion, false)))
+    }
+
     override suspend fun copyAssetsContentToInternalStorage (){
-        if (assetsCopying){
+        if (assetsCopying || assetsInfo?.allAssetsCopied == true){
             return
         }
-        withContext(Dispatchers.Main) {
-            assetsCopying = true
-            _assetsCopied = false
+        assetsInfo = getAssetsInfo()
+        if (assetsInfo!!.allAssetsCopied){
+            return
         }
+        assetsCopying = true
+        _assetsCopied = false
         waitUntil { !preferencesStorage.prefsWasLoaded }
         userFolder.apply {
             mkdirs()
@@ -56,15 +71,16 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
                 assetsStartedCopyListeners.invoke()
             }
             try {
-                alwaysCopyAllFiles = getAlwaysCopyFilesCurrentState()
-                copyAssetsFolderToInternalStorage( GAME_FILES_ASSETS_FOLDER, this)
+                copyAssetsFolderToInternalStorage(GAME_FILES_ASSETS_FOLDER, this)
             }
             finally {
                 withContext(Dispatchers.Main) {
+                    assetsVersionFile.writeTextSafely(Json.encodeToString(
+                        AssetsInfoProvider(assetsInfo!!.assetsVersion,true)))
                     assetsFinishCopyListeners.invoke()
-                    _assetsCopied = true
-                    assetsCopying = false
                 }
+                _assetsCopied = true
+                assetsCopying = false
             }
         }
     }
@@ -102,8 +118,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     private fun compareAssetAndFileSize(assetManager: AssetManager, assetPath: String, file: File): Boolean {
-
-        if (!alwaysCopyAllFiles && assetToIgnoreChecking.any { assetPath.contains(it) }){
+        if (!assetsInfo!!.copyAllAssetsForced && assetToIgnoreChecking.any { assetPath.contains(it) }){
             return true
         }
 
@@ -118,31 +133,32 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         }
     }
 
-    private fun getAlwaysCopyFilesCurrentState () : Boolean{
+    private fun getAssetsInfo () : AssetsInfo {
         assetsVersionFile.apply {
             mkdirs()
-            fun writeDefaultVersionToVersionsFile () =
-                writeTextSafely(Json.encodeToString(AssetsVersionProvider(
-                    ASSETS_CURRENT_VERSION)))
+            fun writeDefaultAssetInfoToFile () =
+                writeTextSafely(Json.encodeToString(AssetsInfoProvider(
+                    ASSETS_CURRENT_VERSION, false)))
 
             if (!exists()){
-                writeDefaultVersionToVersionsFile()
-                return true
+                writeDefaultAssetInfoToFile()
+                return defaultAssetsInfo
             }
 
             try {
-                val assetsVersionProvider = Json.decodeFromString<AssetsVersionProvider>(readText())
+                val assetsInfo = Json.decodeFromString<AssetsInfoProvider>(readText())
 
-                val copyAssetsForced = assetsVersionProvider.assetsVersion != ASSETS_CURRENT_VERSION
+                val copyAssetsForced = assetsInfo.assetsVersion != ASSETS_CURRENT_VERSION
                 if (copyAssetsForced) {
-                    writeDefaultVersionToVersionsFile()
+                    writeDefaultAssetInfoToFile()
                 }
 
-                return copyAssetsForced
+                return AssetsInfo(copyAssetsForced, assetsInfo.assetsVersion,
+                    if (copyAssetsForced) false else assetsInfo.allAssetsCopied)
             }
             catch (_ : Exception){
-                writeDefaultVersionToVersionsFile()
-                return true
+                writeDefaultAssetInfoToFile()
+                return defaultAssetsInfo
             }
         }
     }
@@ -156,7 +172,13 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
 
+        private val defaultAssetsInfo = AssetsInfo(true,
+            ASSETS_CURRENT_VERSION, false)
+
         @Serializable
-        private data class AssetsVersionProvider (val assetsVersion : Int)
+        private data class AssetsInfoProvider (val assetsVersion : Int, val allAssetsCopied : Boolean)
+
+        private data class AssetsInfo (val copyAllAssetsForced : Boolean,
+                                       val assetsVersion : Int, val allAssetsCopied : Boolean)
     }
 }

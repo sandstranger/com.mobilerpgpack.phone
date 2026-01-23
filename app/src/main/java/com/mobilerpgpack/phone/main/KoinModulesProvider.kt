@@ -55,6 +55,8 @@ import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZ
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomPreferenceStorage
+import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.translator.ITranslationManager
@@ -345,6 +347,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
+                MPG123_NATIVE_LIB_NAME,
                 GME_NATIVE_LIB_NAME,
                 SDL2_MIXER_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
@@ -654,8 +657,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             val allLibs = with(mutableListOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 FREETYPE_NATIVE_LIB_NAME,
-                OBOE_NATIVE_LUB_NAME,
-                OPENAL_NATIVE_LIB_NAME,
                 YQUAKE2_CORE_NATIVE_LIB_NAME,
                 BZ2_NATIVE_LIB_NAME,
                 ODE_NATIVE_LIB_NAME,
@@ -683,11 +684,41 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             }
     }
 
+    private val widelandsKoinModule = module {
+        val widelandsName = EngineTypes.Widelands.name
+        single<ControlsProvider> { ControlsProvider(EngineTypes.Widelands, hashMapOf(
+            ControlsType.OnScreenStick to fteQWOnScreenStickControlsLayout)) }.withOptions {
+            named(widelandsName) }
+
+        single {
+            val allLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                gl4esLibraryName,
+                GLBINDING_NATIVE_LIB_NAME,
+                TIFF_NATIVE_LIB_NAME,
+                TIFFXX_NATIVE_LIB_NAME,
+                PNG_NATIVE_LIB_NAME,
+                MPG123_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                SDL2_MIXER_NATIVE_LIB_NAME,
+                SDL2_IMAGE_NATIVE_LIB_NAME,
+                GLOB_NATIVE_LIB_NAME,
+                WIDELANDS_MAIN_ENGINE_LIB
+            )
+            WidelandsEngineInfo(WIDELANDS_MAIN_ENGINE_LIB, allLibs)
+        }.withOptions {
+            named(widelandsName)
+            bind<IEngineInfo>()
+        }
+        singleOf <IEngineUIController>(::WidelandsComposeSettings).withOptions {
+            named(widelandsName)
+        }
+    }
+
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
             psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,
-            arxLibertatisKoinModule, fteQWKoinModule)
+            arxLibertatisKoinModule, fteQWKoinModule,widelandsKoinModule)
     }
 
     companion object{

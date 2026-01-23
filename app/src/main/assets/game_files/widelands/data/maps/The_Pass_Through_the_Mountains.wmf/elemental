@@ -1,0 +1,13 @@
+# Automatically created by Widelands bzr7890[trunk] (Debug)
+
+[global]
+packet_version="1"
+map_w="64"
+map_h="64"
+nr_players="2"
+name=_"The Pass Through the Mountains"
+author="Quappo"
+descr=_"In this mountainous area two princes have settled. Now they are expanding their territories, unaware of the fact that they are not alone!"
+hint=
+tags="1v1,artifacts,balanced,ferries,official"
+theme="summer"

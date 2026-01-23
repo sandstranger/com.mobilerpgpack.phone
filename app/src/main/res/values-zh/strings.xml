@@ -294,4 +294,6 @@
     <string name="path_to_halflife_manifest">Half-Life 1 清单文件路径 (.fmf)</string>
     <string name="enable_fteqw_manifest_support">启用自定义清单文件支持 (.fmf)</string>
     <string name="fteqw_game">当前 FTEQW 游戏</string>
+    <string name="files_unpacking_title">正在解压文件……</string>
+    <string name="files_unpacking_text">这可能需要几分钟时间。</string>
 </resources>
