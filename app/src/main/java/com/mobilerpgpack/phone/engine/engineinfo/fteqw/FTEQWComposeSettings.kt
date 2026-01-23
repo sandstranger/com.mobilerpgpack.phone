@@ -51,13 +51,6 @@ class FTEQWComposeSettings : IEngineUIController {
 
         DrawHorizontalDivider()
 
-        ListPreferenceItem(stringResource(R.string.uzdoom_rendering_api),
-            prefsStorage.fteQWRenderType){
-            prefsStorage.setEnumValue(prefsStorage.fteQWRenderTypePrefsKey,it)
-        }
-
-        DrawHorizontalDivider()
-
         ListPreferenceItem(stringResource(R.string.fteqw_game),
             activeFTEQWGame){
             prefsStorage.setEnumValue(prefsStorage.activeFTEQWGamePrefsKey,it)

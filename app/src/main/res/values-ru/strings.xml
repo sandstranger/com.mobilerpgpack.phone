@@ -292,4 +292,6 @@
     <string name="path_to_halflife_manifest">Путь к манифесту Half-Life 1 (.fmf)</string>
     <string name="enable_fteqw_manifest_support">Включить поддержку пользовательских манифестов (.fmf)</string>
     <string name="fteqw_game">Активная игра FTEQW</string>
+    <string name="files_unpacking_title">Распаковка файлов…</string>
+    <string name="files_unpacking_text">Это может занять несколько минут</string>
 </resources>

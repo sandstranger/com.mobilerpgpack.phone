@@ -50,10 +50,12 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':third_party:sdl2:android-project:app:build'
+preBuild.dependsOn ':third_party:sdl2:android-project:app:build',
+        ':third_party:mpg123:build'
 
 dependencies {
     implementation(project(":third_party:sdl2:android-project:app"))
+    implementation(project(":third_party:mpg123"))
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material

@@ -115,3 +115,21 @@ url=https://github.com/sandstranger/ODE
 [submodule "third_party/yquake2/src/main/jni/yquake2"]
 	path = third_party/yquake2/src/main/jni/yquake2
 	url = https://github.com/sandstranger/yquake2.git
+[submodule "third_party/asio"]
+	path = third_party/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "third_party/sdl2-image/src/main/jni/SDL_image"]
+	path = third_party/sdl2-image/src/main/jni/SDL_image
+url=https://github.com/sandstranger/SDL_image.git
+[submodule "third_party/libtiff/src/main/jni/libtiff"]
+	path = third_party/libtiff/src/main/jni/libtiff
+	url = https://gitlab.com/libtiff/libtiff.git
+[submodule "third_party/glbinding/src/main/jni/glbinding"]
+	path = third_party/glbinding/src/main/jni/glbinding
+	url = https://github.com/cginternals/glbinding.git
+[submodule "app/src/main/jni/widelands"]
+	path = app/src/main/jni/widelands
+	url = https://github.com/sandstranger/widelands.git
+[submodule "third_party/glob/src/main/jni/glob"]
+	path = third_party/glob/src/main/jni/glob
+	url = https://github.com/sandstranger/glob.git

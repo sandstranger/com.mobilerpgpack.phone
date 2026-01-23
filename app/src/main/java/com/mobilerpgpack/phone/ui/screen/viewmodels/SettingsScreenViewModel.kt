@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.viewmodels
 
 import android.app.Activity
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -12,6 +13,7 @@ import com.mobilerpgpack.phone.utils.startGame
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -31,16 +33,43 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     @Volatile
     private var contentCopied = true
+    @Volatile
+    private var resourcesInResetProcess = false
 
-    fun onResetResourcesClicked(){
-        if (!assetsExtractor.assetsCopied){
+    private var wasInit = false
+
+    val allAssetsCopied = MutableLiveData (true)
+
+    fun initialize (){
+        if (wasInit){
             return
         }
-        rootUserDirectory.apply {
-            deleteRecursively()
-            mkdirs()
+        wasInit = true
+        assetsExtractor.apply {
+            allAssetsCopied.value = assetsCopied
+            assetsStartedCopyListeners += { allAssetsCopied.value = false }
+            assetsFinishCopyListeners += { allAssetsCopied.value = true }
         }
-        scope.launch { assetsExtractor.copyAssetsContentToInternalStorage() }
+    }
+
+    fun onResetResourcesClicked(){
+        assetsExtractor.apply {
+            if (!assetsCopied || resourcesInResetProcess){
+                return
+            }
+            resourcesInResetProcess = true
+            allAssetsCopied.value = false
+            scope.launch {
+                resetAssetsInfo()
+                rootUserDirectory.apply {
+                    deleteRecursively()
+                    mkdirs()
+                }
+                resetAssetsInfo()
+                copyAssetsContentToInternalStorage()
+                resourcesInResetProcess = false
+            }
+        }
     }
 
     fun onStartGameClicked(activeEngine : EngineTypes,activity: Activity) =
@@ -51,9 +80,11 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
             return
         }
         contentCopied = false
+        allAssetsCopied.value = false
         scope.launch {
             copyFolder(sourceFolder, rootUserDirectory)
             contentCopied = true
+            allAssetsCopied.postValue(true)
         }
     }
 
