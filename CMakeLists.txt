@@ -92,15 +92,19 @@ set(FMOD_INC_DIR "${CMAKE_SOURCE_DIR}/third_party/fmod/src/main/include")
 set(FMOD_LIB "${CMAKE_SOURCE_DIR}/third_party/fmod/src/main/jniLibs/${ANDROID_ABI}/libfmod.so")
 
 set(libpng_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/libpng"
-        "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/include")
+        "${CMAKE_SOURCE_DIR}/third_party/libpng/src/main/jni/include" CACHE STRING "" FORCE)
 
 set(PNG_INCLUDE_DIRS ${libpng_INCLUDE_DIRS} CACHE STRING "" FORCE)
+
+set(PNG_PNG_INCLUDE_DIR ${PNG_INCLUDE_DIRS} CACHE STRING "" FORCE)
 
 if (IS_DEBUG_BUILD)
     set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/libpng/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libpng16d.so)
 else ()
     set(libpng_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/libpng/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libpng16.so)
 endif ()
+
+set(PNG_LIBRARY ${libpng_LIBRARY} CACHE STRING "" FORCE)
 
 set(SDL3_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/sdl3/include")
 if (IS_DEBUG_BUILD)
@@ -207,6 +211,56 @@ else ()
     FORCE)
 endif ()
 
+set(SDL2_IMAGE_LOCATION ${CMAKE_SOURCE_DIR}/third_party/sdl2-image CACHE STRING "" FORCE)
+
+set(SDL2_IMAGE_INCLUDE_DIRS ${SDL2_IMAGE_LOCATION}/src/main/jni/SDL_image/include CACHE STRING "" FORCE)
+
+if (IS_DEBUG_BUILD)
+    set(SDL2_IMAGE_LIBRARIES
+            ${SDL2_IMAGE_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_image.so
+            CACHE STRING "" FORCE)
+else()
+    set(SDL2_IMAGE_LIBRARIES
+            ${SDL2_IMAGE_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_image.so
+            CACHE STRING "" FORCE)
+endif ()
+
+set(ICU_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/icu4c/include CACHE STRING "" FORCE)
+
+set(ICU_LIBRARIES_FOLDER_LOCATION ${CMAKE_SOURCE_DIR}/third_party/icu4c/libs/android CACHE STRING "" FORCE)
+
+set(ICU_LIBRARIES
+        ${ICU_LIBRARIES_FOLDER_LOCATION}/${ANDROID_ABI}/libicudata_floris.a
+        ${ICU_LIBRARIES_FOLDER_LOCATION}/${ANDROID_ABI}/libicuuc_floris.a
+        CACHE STRING "" FORCE)
+
+set(GLBINDING_INCLUDES ${CMAKE_SOURCE_DIR}/third_party/glbinding/src/main/jni/glbinding/source/glbinding/include
+        ${CMAKE_SOURCE_DIR}/third_party/glbinding/src/main/jni/include)
+
+if (IS_DEBUG_BUILD)
+    set(GLBINDING_LIBRARIES
+            ${CMAKE_SOURCE_DIR}/third_party/glbinding/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libglbindingd.so
+            CACHE STRING "" FORCE)
+else()
+    set(GLBINDING_LIBRARIES
+            ${CMAKE_SOURCE_DIR}/third_party/glbinding/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libglbinding.so
+            CACHE STRING "" FORCE)
+endif ()
+
+set(GLOB_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/glob/src/main/jni/glob)
+
+if (IS_DEBUG_BUILD)
+    set(GLOB_LIBRARY
+            ${CMAKE_SOURCE_DIR}/third_party/glob/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libglob.so
+            CACHE STRING "" FORCE)
+else()
+    set(GLOB_LIBRARY
+            ${CMAKE_SOURCE_DIR}/third_party/glob/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libglob.so
+            CACHE STRING "" FORCE)
+endif ()
+
+set(asio_location ${CMAKE_SOURCE_DIR}/third_party/asio/asio/include CACHE STRING "" FORCE)
+
 set (USE_OPENGL ON)
 set (WITH_SDL "2")
 set (BUILD_TOOLS OFF)
@@ -251,6 +305,13 @@ else()
     set(FTE_BIG_ENDIAN false CACHE BOOL "" FORCE)
 endif()
 
+set(USE_XDG OFF CACHE BOOL "" FORCE)
+set(OPTION_BUILD_CODECHECK OFF CACHE BOOL "" FORCE)
+set(OPTION_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(OPTION_USE_GLBINDING ON CACHE BOOL "" FORCE)
+set(OPTION_FORCE_EMBEDDED_MINIZIP ON CACHE BOOL "" FORCE)
+set(OPTION_BUILD_WEBSITE_TOOLS OFF CACHE BOOL "" FORCE)
+
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
@@ -261,6 +322,7 @@ add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
 add_subdirectory("${APP_ROOT_DIR}/UZDoom")
 add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
 add_subdirectory("${APP_ROOT_DIR}/fteqw")
+add_subdirectory("${APP_ROOT_DIR}/widelands")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 

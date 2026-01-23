@@ -120,20 +120,10 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                         }
                     }
                 }
-
                 this += gameType.commandLineArg
-
-                this += "+set"
-                this += "vid_renderer"
-                this += preferencesStorage.fteQWRenderType.value!!.jniRenderName
-
                 toTypedArray()
             }
         }
-
-    private external fun destroyVulkanSwapChain()
-
-    private external fun recreateVulkanSwapChain()
 
     private external fun setPathsToResources (pathToHomeDirectory : String, pathToBaseDirectory : String,
                                               dllDefaultPath : String)
@@ -150,16 +140,6 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         Native.register(FTEQWEngineInfo::class.java, mainLibraryName)
         setPathsToResources(homeDirFile.absolutePath,pathToBaseGameDirectory,
             activity.applicationInfo.nativeLibraryDir)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        recreateVulkanSwapChain()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        destroyVulkanSwapChain()
     }
 
     private companion object {
