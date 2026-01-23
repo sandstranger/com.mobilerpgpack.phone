@@ -144,11 +144,6 @@ android {
                     arguments "-DCMAKE_BUILD_TYPE=MinSizeRel"
                 }
             }
-            aaptOptions {
-                noCompress "bin","spm","json","txt","sf2","ttf", "wad", "ini", "wopl", "wopn", "pk3", "mhr",
-                "conf", "csv", "fp", "icns", "jpg", "lua", "nakula", "ogg", "png", "po", "pot",
-                "README", "ttc", "vp", "wai"
-            }
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
             }
@@ -164,11 +159,6 @@ android {
                 }
             }
             signingConfig signingConfigs.debug
-            aaptOptions {
-                noCompress "bin","spm","json","txt","sf2","ttf", "wad", "ini", "wopl", "wopn", "pk3", "mhr",
-                        "conf", "csv", "fp", "icns", "jpg", "lua", "nakula", "ogg", "png", "po", "pot",
-                        "README", "ttc", "vp", "wai"
-            }
         }
 
         afterEvaluate {
