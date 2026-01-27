@@ -13,9 +13,7 @@ import com.mobilerpgpack.phone.utils.startGame
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
@@ -33,9 +31,6 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     @Volatile
     private var contentCopied = true
-    @Volatile
-    private var resourcesInResetProcess = false
-
     private var wasInit = false
 
     val allAssetsCopied = MutableLiveData (true)
@@ -54,20 +49,14 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     fun onResetResourcesClicked(){
         assetsExtractor.apply {
-            if (!assetsCopied || resourcesInResetProcess){
+            if (!assetsCopied || !allAssetsCopied.value!!){
                 return
             }
-            resourcesInResetProcess = true
             allAssetsCopied.value = false
             scope.launch {
-                resetAssetsInfo()
-                rootUserDirectory.apply {
-                    deleteRecursively()
-                    mkdirs()
-                }
+                rootUserDirectory.mkdirs()
                 resetAssetsInfo()
                 copyAssetsContentToInternalStorage()
-                resourcesInResetProcess = false
             }
         }
     }
