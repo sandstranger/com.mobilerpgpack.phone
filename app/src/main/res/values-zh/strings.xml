@@ -232,7 +232,7 @@
     <string name="ignore_out_of_bounds_touch_events">忽略越界触摸事件</string>
     <string name="invoke_wheel_events">按住视图时持续触发滚轮事件</string>
     <string name="reset_all_resources">重置所有游戏资源</string>
-    <string name="reset_all_resources_confirm_message">这将重置所有游戏资源，并清除所有已保存的数据，例如游戏存档。\n是否继续？</string>
+    <string name="reset_all_resources_confirm_message">这将重置所有游戏资源。\n继续？</string>
     <string name="yes_text">是</string>
     <string name="no_text">否</string>
     <string name="resources_not_ready">游戏资源尚未复制，因此无法启动游戏</string>
