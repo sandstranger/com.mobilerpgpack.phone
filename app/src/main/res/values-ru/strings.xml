@@ -294,4 +294,5 @@
     <string name="fteqw_game">Активная игра FTEQW</string>
     <string name="files_unpacking_title">Распаковка файлов…</string>
     <string name="files_unpacking_text">Это может занять несколько минут</string>
+    <string name="screen_scale">Масштабирование экрана</string>
 </resources>
