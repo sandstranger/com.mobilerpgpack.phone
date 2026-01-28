@@ -26,10 +26,13 @@ class WidelandsEngineInfo (mainEngineLib: String,
 
     private external fun set_screen_scale (screenScale : Float)
 
+    private external fun set_screen_controls_state (isControlsActive : Boolean)
+
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(WidelandsEngineInfo::class.java, mainLibraryName)
         setPathsToResources(pathToWidelandsRootFolder, pathToResource)
         set_screen_scale(preferencesStorage.widelandsScreenScale.value!!)
+        set_screen_controls_state(!preferencesStorage.hideScreenControls.value!!)
     }
 }
