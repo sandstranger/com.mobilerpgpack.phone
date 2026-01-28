@@ -24,9 +24,12 @@ class WidelandsEngineInfo (mainEngineLib: String,
 
     private external fun setPathsToResources (pathToRootUserFolder : String, pathToDataFolder : String)
 
+    private external fun set_screen_scale (screenScale : Float)
+
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(WidelandsEngineInfo::class.java, mainLibraryName)
         setPathsToResources(pathToWidelandsRootFolder, pathToResource)
+        set_screen_scale(preferencesStorage.widelandsScreenScale.value!!)
     }
 }
