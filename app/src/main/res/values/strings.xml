@@ -296,4 +296,5 @@
     <string name="fteqw_game">Active FTEQW Game</string>
     <string name="files_unpacking_title">Files Unpacking…</string>
     <string name="files_unpacking_text">This may take a few minutes</string>
+    <string name="screen_scale">Screen scale</string>
 </resources>
