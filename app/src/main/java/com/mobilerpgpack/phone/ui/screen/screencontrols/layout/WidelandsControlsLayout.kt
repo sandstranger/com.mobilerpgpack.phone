@@ -245,7 +245,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.39f,
         sizePercent = 0.05f,
         buttonResId = R.drawable.house,
-        sdlKeyEvent = KeyEvent.KEYCODE_HOME,
+        sdlKeyEvent = KeyEvent.KEYCODE_MOVE_HOME,
         showInQuickPanel = true,
     ),
     SDL2ImageButton(
