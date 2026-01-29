@@ -64,18 +64,14 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         waitUntil { !preferencesStorage.prefsWasLoaded }
         userFolder.apply {
             mkdirs()
-            withContext(Dispatchers.Main) {
-                assetsStartedCopyListeners.invoke()
-            }
+            withContext(Dispatchers.Main) { assetsStartedCopyListeners.invoke() }
             try {
                 copyAssetsFolderToInternalStorage(GAME_FILES_ASSETS_FOLDER, this)
             }
             finally {
-                withContext(Dispatchers.Main) {
-                    assetsVersionFile.writeTextSafely(Json.encodeToString(
-                        AssetsInfoProvider(assetsInfo!!.assetsVersion,true)))
-                    assetsFinishCopyListeners.invoke()
-                }
+                assetsVersionFile.writeTextSafely(Json.encodeToString(
+                    AssetsInfoProvider(assetsInfo!!.assetsVersion,true)))
+                withContext(Dispatchers.Main) { assetsFinishCopyListeners.invoke() }
                 _assetsCopied = true
                 assetsCopying = false
             }
@@ -134,7 +130,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
                     writeDefaultAssetInfoToFile()
                 }
 
-                return AssetsInfo(copyAssetsForced, assetsInfo.assetsVersion,
+                return AssetsInfo(copyAssetsForced, ASSETS_CURRENT_VERSION,
                     if (copyAssetsForced) false else assetsInfo.allAssetsCopied)
             }
             catch (_ : Exception){
