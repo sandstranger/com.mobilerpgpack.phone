@@ -99,6 +99,10 @@ abstract class ScreenController : IScreenController {
 
     private val _showQuickPanelItems = MutableLiveData(false)
 
+    private val _isDragMode = MutableLiveData(false)
+
+    private val _isEditMode = MutableLiveData (false)
+
     final override val activeViewsToDraw: Collection<IScreenControlsView> get() = _activeViewsToDraw
 
     final override var showScreenControls : Boolean
@@ -113,7 +117,17 @@ abstract class ScreenController : IScreenController {
             _showQuickPanelItems.value = value
         }
 
-    final override var isEditMode by mutableStateOf(false)
+    final override var isDragMode
+        get() = _isDragMode.value!!
+        set(value){
+            _isDragMode.value = value
+        }
+
+    final override var isEditMode
+        get() = _isEditMode.value!!
+        set(value) {
+            _isEditMode.value = value
+        }
 
     @SuppressLint("ConfigurationScreenWidthHeight")
     @Composable
@@ -163,7 +177,7 @@ abstract class ScreenController : IScreenController {
         val clampButtonsPrefsKey = remember { booleanPreferencesKey("${activeEngineSaved.name.lowercase()}_${controlsType.name.lowercase()}") }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
-        val isEditMode by remember (isEditMode) { mutableStateOf(isEditMode) }
+        val isEditMode = _isEditMode.getComposableValue(!inGame)
         val backgroundColor by remember (inGame, isEditMode) {
             mutableStateOf(if (!inGame) {
                 Color.DarkGray
