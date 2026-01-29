@@ -111,6 +111,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val enableTouchScreenPressingEvents = preferencesStorage.enableTouchScreenPressingEvents.getComposableValue()
         val enableAbsoluteTouchMouseMode = preferencesStorage.enableAbsoluteTouchMouseMode.getComposableValue()
         val defaultTouchDeviceId = remember { defaultTouchDeviceId }
+        val zoomSensitivity = preferencesStorage.zoomSensitivity.getComposableValue(1.0f)
 
         var lastTouchX by remember { mutableFloatStateOf(0f) }
         var lastTouchY by remember { mutableFloatStateOf(0f) }
@@ -170,9 +171,9 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                     placeable.place(0, 0)
                 }
             }
-            .pointerInput(Unit){
+            .pointerInput(zoomSensitivity){
                 detectTransformGestures { _, _, zoom, _ ->
-                    onPinchZoom(if (zoom >= 1.0f) zoom else -1.0f * zoom, MotionEvent.ACTION_SCROLL)
+                    onPinchZoom((if (zoom >= 1.0f) zoom else -1.0f * zoom) * zoomSensitivity, MotionEvent.ACTION_SCROLL)
                 }
             }
             .pointerInput(

@@ -1,11 +1,14 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 
+import android.view.KeyEvent
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.MouseViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
@@ -13,6 +16,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.koin.core.component.inject
 
 abstract class SDLMouseWheelButton(
     id: String,
@@ -33,6 +37,11 @@ abstract class SDLMouseWheelButton(
         alpha, Int.MIN_VALUE, buttonResId, useToggle = false,
         defaultViewRenderRule,controlsType, isDeleted, consumeTouchEventsByDefault,
         ignoreOutOfBoundsTouchEvents, showInQuickPanel) {
+
+    private val preferencesStorage : PreferencesStorage by inject ()
+
+    private val wheelValue get() = if (wheelUp) preferencesStorage.zoomSensitivity.value!! else -1f *
+            preferencesStorage.zoomSensitivity.value!!
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -55,10 +64,10 @@ abstract class SDLMouseWheelButton(
     final override fun onTouchDown(keyCode: Int) {
         scope.coroutineContext.cancelChildren()
         if (mouseViewState.invokeWheelEventsWhilePressing.value!!){
-            scope.launch { mouseWheelAsync(keyCode) }
+            scope.launch { mouseWheelAsync() }
         }
         else{
-            mouseWheel(keyCode)
+            mouseWheel()
         }
     }
 
@@ -68,20 +77,14 @@ abstract class SDLMouseWheelButton(
 
     protected abstract fun onMouseWheel (keyCode: Int, x : Float, y : Float, event: Int )
 
-    private suspend fun mouseWheelAsync(keyCode: Int){
-        val wheelPosition = if (wheelUp) 100.0f else -1f * 100f
+    private suspend fun mouseWheelAsync(){
+        val wheelValue = this.wheelValue
         while (currentCoroutineContext().isActive){
-            onMouseWheel(keyCode,0f, wheelPosition, MotionEvent.ACTION_SCROLL)
-            delay(250)
+            onMouseWheel(KeyEvent.KEYCODE_UNKNOWN,0f, wheelValue, MotionEvent.ACTION_SCROLL)
+            delay(ONE_FRAME_DELAY)
         }
     }
 
-    private fun mouseWheel(keyCode: Int){
-        onMouseWheel(keyCode,0f, if (wheelUp) DEFAULT_POSITION else -DEFAULT_POSITION,
-            MotionEvent.ACTION_SCROLL)
-    }
-
-    private companion object{
-        private const val DEFAULT_POSITION = 500.0f
-    }
+    private fun mouseWheel() =
+        onMouseWheel(KeyEvent.KEYCODE_UNKNOWN,0f, wheelValue, MotionEvent.ACTION_SCROLL)
 }
