@@ -101,8 +101,6 @@ abstract class ScreenController : IScreenController {
 
     private val _isEditMode = MutableLiveData (false)
 
-    protected val _isDragMode = MutableLiveData(false)
-
     final override val activeViewsToDraw: Collection<IScreenControlsView> get() = _activeViewsToDraw
 
     final override var showScreenControls : Boolean
@@ -115,12 +113,6 @@ abstract class ScreenController : IScreenController {
         get() = _showQuickPanelItems.value!!
         set(value) {
             _showQuickPanelItems.value = value
-        }
-
-    final override var isDragMode
-        get() = _isDragMode.value!!
-        set(value){
-            _isDragMode.value = value
         }
 
     final override var isEditMode
