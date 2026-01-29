@@ -42,6 +42,9 @@ class SDL3ScreenController : SDLScreenController() {
         SDLSurface.getScaleGestureDetector().onTouchEvent(event)
     }
 
+    override fun onPinchZoom(zoom: Float, event: Int) =
+        SDLActivity.onNativeMouse(0, event, 0f, zoom, false)
+
     override fun buildCustomView(id: String, engineTypes: EngineTypes, keyCode: Int,controlsProvider: ControlsProvider) =
         CustomSDL3Button(id, engineTypes,offsetXPercent = 0.55f, offsetYPercent = 0.03f,
             sizePercent = 0.05f, sdlKeyEvent = keyCode, controlsType = controlsProvider.activeControlsType.value!!)

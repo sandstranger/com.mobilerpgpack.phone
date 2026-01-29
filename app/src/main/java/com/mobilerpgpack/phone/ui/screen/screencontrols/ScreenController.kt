@@ -99,9 +99,9 @@ abstract class ScreenController : IScreenController {
 
     private val _showQuickPanelItems = MutableLiveData(false)
 
-    private val _isDragMode = MutableLiveData(false)
-
     private val _isEditMode = MutableLiveData (false)
+
+    protected val _isDragMode = MutableLiveData(false)
 
     final override val activeViewsToDraw: Collection<IScreenControlsView> get() = _activeViewsToDraw
 

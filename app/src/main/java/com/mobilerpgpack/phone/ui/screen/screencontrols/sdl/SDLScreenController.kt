@@ -4,6 +4,7 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
@@ -15,7 +16,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerId
@@ -170,6 +170,11 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                     placeable.place(0, 0)
                 }
             }
+            .pointerInput(Unit){
+                detectTransformGestures { _, _, zoom, _ ->
+                    onPinchZoom(if (zoom >= 1.0f) zoom else -1.0f * zoom, MotionEvent.ACTION_SCROLL)
+                }
+            }
             .pointerInput(
                 isEditMode, mouseButtonsEventsCanBeInvoked, blockTouchEvents,
                 enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode) {
@@ -301,6 +306,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                          invokeMousePressingEvents : Boolean)
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
+
+    protected abstract fun onPinchZoom (zoom : Float, event: Int)
 
     protected abstract fun buildCustomView (id : String, engineTypes: EngineTypes,
                                             keyCode : Int, controlsProvider: ControlsProvider) : IScreenControlsView
