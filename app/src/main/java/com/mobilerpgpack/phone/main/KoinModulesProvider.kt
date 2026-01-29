@@ -684,7 +684,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     private val widelandsKoinModule = module {
         val widelandsName = EngineTypes.Widelands.name
         single<ControlsProvider> { ControlsProvider(EngineTypes.Widelands, hashMapOf(
-            ControlsType.OnScreenStick to widelandsAbsoluteControlsLayout)) }.withOptions {
+            ControlsType.AbsoluteTouchControls to widelandsAbsoluteControlsLayout)) }.withOptions {
             named(widelandsName) }
 
         single {
