@@ -40,6 +40,7 @@ import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.items.CircularProgressDialog
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
+import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
@@ -71,30 +72,28 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             enumValueOf<EngineTypes>(activeEngineString)
         }
         val settingsScreenViewModel : SettingsScreenViewModel = koinViewModel ()
-        val useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton.getComposableValue()
-        val allAssetsCopied = settingsScreenViewModel.allAssetsCopied.getComposableValue(true)
+        settingsScreenViewModel.apply {
+            val useFloatingStartGameButton = preferencesStorage.useFloatingStartGameButton.getComposableValue()
 
-        LaunchedEffect(Unit) {
-            settingsScreenViewModel.initialize()
-            drawFloatingActionButton.value = preferencesStorage.useFloatingStartGameButton.value
-        }
-        
-        super.onFloatingActionButtonClickedDelegate = {
-            settingsScreenViewModel.onStartGameClicked(activeEngine, activity)
-        }
+            LaunchedEffect(Unit) {
+                initialize()
+                drawFloatingActionButton.value = preferencesStorage.useFloatingStartGameButton.value
+            }
 
-        if (!useFloatingStartGameButton) {
-            DrawTelevisionSettings(innerPadding,
-                activeEngine,
-                navController, settingsScreenViewModel
-            )
-        } else {
-            DrawAllSettings( innerPadding, activeEngine,navController, settingsScreenViewModel)
-        }
+            super.onFloatingActionButtonClickedDelegate = {
+                onStartGameClicked(activeEngine, activity)
+            }
 
-        if (!allAssetsCopied){
-            CircularProgressDialog(stringResource(R.string.files_unpacking_title),
-                stringResource(R.string.files_unpacking_text))
+            if (!useFloatingStartGameButton) {
+                DrawTelevisionSettings(innerPadding,
+                    activeEngine,
+                    navController, this
+                )
+            } else {
+                DrawAllSettings( innerPadding, activeEngine,navController, this)
+            }
+
+            DrawUnpackingFilesProgressDialog(this)
         }
     }
 
@@ -445,6 +444,14 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.setFloatValue(preferencesStorage.gyroscopeDeadZonePrefsKey,
                 it.coerceAtLeast(0f))
         }
+
+        DrawHorizontalDivider()
+
+        EditTextItem(stringResource(R.string.zoom_sensitivity),
+            preferencesStorage.zoomSensitivity){
+            preferencesStorage.setFloatValue(preferencesStorage.zoomSensitivityPrefsKey,
+                it.coerceAtLeast(0.3f))
+        }
     }
 
     @Composable
@@ -465,6 +472,17 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         EditTextPreferenceItem(stringResource(R.string.custom_mouse_cursor_vertical_offset),
             preferencesStorage.offsetYMouse, preferencesStorage.OFFSET_Y_MOUSE.name)
+    }
+
+    @Composable
+    private fun DrawUnpackingFilesProgressDialog(settingsScreenViewModel : SettingsScreenViewModel){
+        val allAssetsCopied = settingsScreenViewModel.allAssetsCopied
+            .getComposableValue(true)
+
+        if (!allAssetsCopied){
+            CircularProgressDialog(stringResource(R.string.files_unpacking_title),
+                stringResource(R.string.files_unpacking_text))
+        }
     }
 
     companion object{

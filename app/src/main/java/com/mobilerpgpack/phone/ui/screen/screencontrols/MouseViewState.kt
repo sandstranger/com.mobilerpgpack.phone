@@ -21,7 +21,7 @@ class MouseViewState(id: String,
         false,false,true,true,
         false,false, showInQuickPanelInitialState) {
 
-    private val invokeWheelEventsWhilePressingPrefsKey = "invoke_wheel_events_while_pressing"
+    private val invokeWheelEventsWhilePressingPrefsKey = "${engineTypeString}_${controlsTypeString}_${id}invoke_wheel_events_while_pressing"
 
     val invokeWheelEventsWhilePressing = MutableLiveData(invokeWheelEventsWhilePressingDefaultState)
 

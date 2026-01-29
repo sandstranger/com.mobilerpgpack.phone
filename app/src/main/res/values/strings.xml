@@ -232,7 +232,7 @@
     <string name="ignore_out_of_bounds_touch_events">Ignore out of bounds touch events</string>
     <string name="invoke_wheel_events">Invoke wheel events permanently while pressing view</string>
     <string name="reset_all_resources">Reset all games resources</string>
-    <string name="reset_all_resources_confirm_message">This will reset all games resources and will erase all saved data, like saved games.\nContinue?</string>
+    <string name="reset_all_resources_confirm_message">This will reset all games resources.\nContinue?</string>
     <string name="yes_text">Yes</string>
     <string name="no_text">No</string>
     <string name="resources_not_ready">Game resources have not been copied yet, so the game cannot be launched</string>
@@ -294,6 +294,8 @@
     <string name="path_to_halflife_manifest">Path to Half Life 1 manifest (.fmf)</string>
     <string name="enable_fteqw_manifest_support">Enable custom manifest (.fmf) support</string>
     <string name="fteqw_game">Active FTEQW Game</string>
-    <string name="files_unpacking_title">Filed Unpacking…</string>
+    <string name="files_unpacking_title">Files Unpacking…</string>
     <string name="files_unpacking_text">This may take a few minutes</string>
+    <string name="screen_scale">Screen scale</string>
+    <string name="zoom_sensitivity">Zoom sensitivity</string>
 </resources>

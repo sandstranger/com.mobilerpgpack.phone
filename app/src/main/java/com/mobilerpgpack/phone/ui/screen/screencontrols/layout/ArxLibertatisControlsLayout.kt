@@ -9,6 +9,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibilityImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisibilityImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController.Companion.LEFT_MOUSE_BUTTON_ID
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
@@ -16,8 +17,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
-
-private const val LEFT_MOUSE_BUTTON_ID : Int = 1
 
 val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
     SDL2MouseImageButton(
