@@ -348,6 +348,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         private const val DEFAULT_POINTER_ID = 0
         private const val MAX_PRESSURE : Float = 1.0f
 
+        const val LEFT_MOUSE_BUTTON_ID : Int = 1
+        const val SDL_BUTTON_RIGHT = 3
         const val DEFAULT_ZOOM_SENSITIVITY = 1.0f
 
         private val defaultTouchDeviceId : Int by lazy {
