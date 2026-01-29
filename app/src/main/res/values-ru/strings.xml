@@ -295,4 +295,5 @@
     <string name="files_unpacking_title">Распаковка файлов…</string>
     <string name="files_unpacking_text">Это может занять несколько минут</string>
     <string name="screen_scale">Масштабирование экрана</string>
+    <string name="zoom_sensitivity">Чувствительность масштабирования</string>
 </resources>
