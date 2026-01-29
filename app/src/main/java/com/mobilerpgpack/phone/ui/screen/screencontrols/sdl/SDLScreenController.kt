@@ -4,6 +4,7 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.ViewTreeObserver
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
@@ -15,7 +16,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerId
@@ -25,6 +25,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
+import androidx.lifecycle.MutableLiveData
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
@@ -41,8 +42,10 @@ import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
 abstract class SDLScreenController : ScreenController(), KoinComponent {
+    private val _isZoomMode = MutableLiveData(false)
 
-    private val customViews : MutableMap<EngineTypes, MutableMap<ControlsType,Collection<IScreenControlsView>>> = mutableMapOf()
+    private val customViews : MutableMap<EngineTypes,
+            MutableMap<ControlsType,Collection<IScreenControlsView>>> = mutableMapOf()
 
     protected abstract val viewWidth : Int
 
@@ -51,6 +54,12 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
     protected abstract fun getMouseX(): Float
 
     protected abstract fun getMouseY(): Float
+
+    final override var isZoomMode
+        get() = _isZoomMode.value!!
+        set(value){
+            _isZoomMode.value = value
+        }
 
     @Composable
     final override fun DrawTouchScreen(activeEngine : EngineTypes, blockTouchCameraEvents : Boolean, inSafeArea : Boolean,
@@ -111,6 +120,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val enableTouchScreenPressingEvents = preferencesStorage.enableTouchScreenPressingEvents.getComposableValue()
         val enableAbsoluteTouchMouseMode = preferencesStorage.enableAbsoluteTouchMouseMode.getComposableValue()
         val defaultTouchDeviceId = remember { defaultTouchDeviceId }
+        val zoomSensitivity = preferencesStorage.zoomSensitivity.getComposableValue(DEFAULT_ZOOM_SENSITIVITY)
+        val isZoomMode = _isZoomMode.getComposableValue()
 
         var lastTouchX by remember { mutableFloatStateOf(0f) }
         var lastTouchY by remember { mutableFloatStateOf(0f) }
@@ -132,7 +143,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
 
         LaunchedEffect(isEditMode, blockTouchEvents,enableTouchScreenPressingEvents,
-            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode) {
+            mouseButtonsEventsCanBeInvoked,enableAbsoluteTouchMouseMode, isZoomMode) {
             clearResources()
         }
 
@@ -170,8 +181,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                     placeable.place(0, 0)
                 }
             }
-            .pointerInput(
-                isEditMode, mouseButtonsEventsCanBeInvoked, blockTouchEvents,
+            .pointerInput(isZoomMode, isEditMode,
+                mouseButtonsEventsCanBeInvoked, blockTouchEvents,
                 enableTouchScreenPressingEvents, enableAbsoluteTouchMouseMode) {
                 if (isEditMode || blockTouchEvents) {
                     return@pointerInput
@@ -179,6 +190,16 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                 awaitPointerEventScope {
                     while (true) {
                         val event = awaitPointerEvent()
+                        val pressedCount = event.changes.count { it.pressed }
+                        if (isZoomMode && pressedCount > 1){
+                            if (trackedPointerId != null){
+                                clearResources()
+                            }
+                            val zoom = event.calculateZoom()
+                            onPinchZoom((if (zoom >= 1.0f) zoom else -1.0f * zoom) * zoomSensitivity,
+                                MotionEvent.ACTION_SCROLL)
+                            continue
+                        }
                         val useAbsoluteTouchMode = enableAbsoluteTouchMouseMode || !mouseButtonsEventsCanBeInvoked
                         for (change in event.changes) {
                             change.apply {
@@ -186,7 +207,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                                 val y = position.y
                                 val pressure = (pressure).coerceAtMost(MAX_PRESSURE)
                                 fun useTouchPressEvents() = mouseButtonsEventsCanBeInvoked &&
-                                        enableTouchScreenPressingEvents
+                                        enableTouchScreenPressingEvents && !isZoomMode
 
                                 fun handlePointerLocal(
                                     touchAction: Int,
@@ -302,6 +323,8 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
 
     protected open fun onMotionEventFinished (event: MotionEvent){}
 
+    protected abstract fun onPinchZoom (zoom : Float, event: Int)
+
     protected abstract fun buildCustomView (id : String, engineTypes: EngineTypes,
                                             keyCode : Int, controlsProvider: ControlsProvider) : IScreenControlsView
 
@@ -321,9 +344,13 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
     }
 
-    private companion object{
+    companion object{
         private const val DEFAULT_POINTER_ID = 0
         private const val MAX_PRESSURE : Float = 1.0f
+
+        const val LEFT_MOUSE_BUTTON_ID : Int = 1
+        const val SDL_BUTTON_RIGHT = 3
+        const val DEFAULT_ZOOM_SENSITIVITY = 1.0f
 
         private val defaultTouchDeviceId : Int by lazy {
             InputDevice.getDeviceIds()

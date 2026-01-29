@@ -227,7 +227,19 @@ If you want to fix bugs in this engine from scratch yourself, feel free to fork 
 
 ## Widelands
 
-At current state this RTS is unplayable yet
+Widelands is a standalone RTS with its own assets. No third-party resources are required to run it on Android.
+
+Supports GLES 2.0 and GLES 3.2 renders.
+
+Works on ARMv7 devices.
+
+Gamepads are not supported and will not be added.
+
+Screen scaling and on-screen controls are implemented for mobile devices.
+
+Multiplayer is dead in this RTS, only remote asset downloading and local server were tested.
+
+For more information, see the official wiki - https://www.widelands.org/wiki/Main%20Page/
 
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
