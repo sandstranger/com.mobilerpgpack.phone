@@ -40,6 +40,7 @@ import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.items.CircularProgressDialog
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
+import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.ShowYesNoDialog
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
@@ -442,6 +443,14 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             preferencesStorage.gyroscopeDeadZone){
             preferencesStorage.setFloatValue(preferencesStorage.gyroscopeDeadZonePrefsKey,
                 it.coerceAtLeast(0f))
+        }
+
+        DrawHorizontalDivider()
+
+        EditTextItem(stringResource(R.string.zoom_sensitivity),
+            preferencesStorage.zoomSensitivity){
+            preferencesStorage.setFloatValue(preferencesStorage.zoomSensitivityPrefsKey,
+                it.coerceAtLeast(0.3f))
         }
     }
 
