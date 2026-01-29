@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.utils
 import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsRepository
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
@@ -60,8 +61,15 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val invertGyroscopeXAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_x_axis")
     val invertGyroscopeYAxisPrefsKey = booleanPreferencesKey("invert_gyroscope_y_axis")
     val widelandsCommandLineArgsPrefsKey = stringPreferencesKey("widelands_command_line_args")
+    val widelandsScreenScalePrefeKey = floatPreferencesKey("widelands_screen_scale")
+    val zoomSensitivityPrefsKey = floatPreferencesKey("zoom_sensitivity")
+
+    val widelandsScreenScale = getFloatValue(widelandsScreenScalePrefeKey, 2.0f)
 
     val widelandsCommandLineArgs = getStringValue(widelandsCommandLineArgsPrefsKey)
+
+    val zoomSensitivity = getFloatValue(zoomSensitivityPrefsKey,
+        SDLScreenController.DEFAULT_ZOOM_SENSITIVITY)
 
     val pathToRootUserFolder = getStringValue(
         pathToRootUserFolderPrefsKey,

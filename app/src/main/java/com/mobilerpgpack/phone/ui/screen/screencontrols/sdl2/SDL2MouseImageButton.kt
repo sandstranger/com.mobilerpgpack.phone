@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewState.Companion.NOT_EXISTING_RES
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLImageButton
@@ -22,11 +23,14 @@ class SDL2MouseImageButton(
     controlsType: ControlsType = ControlsType.Default,isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
     ignoreOutOfBoundsTouchEvents : Boolean = false,
-    showInQuickPanel : Boolean = false) :
+    showInQuickPanel : Boolean = false,
+    onTouchDownEvent : ((IScreenController?, Int) -> Unit)? = null,
+    onTouchUpEvent : ((IScreenController?, Int) -> Unit)? = null) :
     SDLImageButton(id, engineType, offsetXPercent, offsetYPercent, sizePercent,
         alpha,
         Int.MIN_VALUE, buttonResId, useToggle = useToggle, defaultViewRenderRule = defaultViewRenderRule,
-        controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents,showInQuickPanel) {
+        controlsType, isDeleted, consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents,showInQuickPanel,
+        onTouchDownEvent, onTouchUpEvent) {
 
     override fun onTouchDown(keyCode: Int) =
         SDLActivity.onVirtualMouse(sdlKeyEvent, MotionEvent.ACTION_DOWN)

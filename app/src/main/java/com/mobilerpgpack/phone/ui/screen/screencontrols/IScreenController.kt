@@ -7,11 +7,11 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 
 interface IScreenController{
-
     var showScreenControls : Boolean
     var showQuickPanelItems : Boolean
-    val activeViewsToDraw: Collection<IScreenControlsView>
     var isEditMode : Boolean
+    var isZoomMode : Boolean
+    val activeViewsToDraw: Collection<IScreenControlsView>
 
     @Composable
     fun DrawScreenControls(

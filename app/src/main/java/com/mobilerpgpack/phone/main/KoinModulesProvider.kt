@@ -96,6 +96,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.wolfen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.fteQWOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkAbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkOnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.widelandsAbsoluteControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
@@ -683,7 +684,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     private val widelandsKoinModule = module {
         val widelandsName = EngineTypes.Widelands.name
         single<ControlsProvider> { ControlsProvider(EngineTypes.Widelands, hashMapOf(
-            ControlsType.OnScreenStick to fteQWOnScreenStickControlsLayout)) }.withOptions {
+            ControlsType.OnScreenStick to widelandsAbsoluteControlsLayout)) }.withOptions {
             named(widelandsName) }
 
         single {

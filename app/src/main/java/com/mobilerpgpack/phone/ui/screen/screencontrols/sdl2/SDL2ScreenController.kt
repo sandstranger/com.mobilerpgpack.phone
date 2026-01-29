@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2
 
+import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
@@ -29,6 +30,9 @@ class SDL2ScreenController : SDLScreenController() {
             eventAction, normalizedX, normalizedY, pressure,
             invokeMousePressingEvents)
     }
+
+    override fun onPinchZoom(zoom: Float, event: Int) =
+        SDLActivity.onNativeMouse(0, event, 0f, zoom, false)
 
     override fun getMouseX() = SDLActivity.getMouseX().toFloat()
 
