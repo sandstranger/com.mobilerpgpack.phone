@@ -36,7 +36,9 @@ abstract class SDLImageButton(
     isDeleted : Boolean = false,
     consumeTouchEventsByDefault : Boolean = true,
     ignoreOutOfBoundsTouchEvents : Boolean = false,
-    showInQuickPanel : Boolean = false) : IScreenControlsView, KoinComponent {
+    showInQuickPanel : Boolean = false,
+    private val onTouchDownEvent : ((IScreenController?, Int) -> Unit)? = null,
+    private val onTouchUpEvent : ((IScreenController?, Int) -> Unit)? = null) : IScreenControlsView, KoinComponent {
 
     final override var screenController: IScreenController? = null
 
@@ -87,8 +89,10 @@ abstract class SDLImageButton(
         return modifierTouse.touchListenerModifier(isEditMode,viewState,
             onTouchDown = {
                 onTouchDown(sdlKeyCode)
+                onTouchDownEvent?.invoke (screenController, sdlKeyCode)
         }, onTouchUp = {
             onTouchUp(sdlKeyCode)
+            onTouchUpEvent?.invoke(screenController, sdlKeyCode)
         })
     }
 }

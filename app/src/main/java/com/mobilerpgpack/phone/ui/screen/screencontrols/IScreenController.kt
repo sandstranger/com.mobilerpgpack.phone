@@ -10,7 +10,7 @@ interface IScreenController{
     var showScreenControls : Boolean
     var showQuickPanelItems : Boolean
     var isEditMode : Boolean
-    var isDragMode : Boolean
+    var isZoomMode : Boolean
     val activeViewsToDraw: Collection<IScreenControlsView>
 
     @Composable
