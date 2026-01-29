@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.utils
 import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.translator.models.TranslationType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsRepository
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
@@ -67,7 +68,8 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
 
     val widelandsCommandLineArgs = getStringValue(widelandsCommandLineArgsPrefsKey)
 
-    val zoomSensitivity = getFloatValue(zoomSensitivityPrefsKey, 1.0f)
+    val zoomSensitivity = getFloatValue(zoomSensitivityPrefsKey,
+        SDLScreenController.DEFAULT_ZOOM_SENSITIVITY)
 
     val pathToRootUserFolder = getStringValue(
         pathToRootUserFolderPrefsKey,

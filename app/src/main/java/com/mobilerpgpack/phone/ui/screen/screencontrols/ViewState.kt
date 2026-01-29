@@ -32,14 +32,14 @@ open class ViewState(
     private val showInQuickPanelInitialState : Boolean = false) : KoinComponent {
 
     protected val preferencesStorage : PreferencesStorage = get()
+    protected val engineTypeString = engineType.toString().lowercase()
+    protected val controlsTypeString = controlsType.name.lowercase()
 
     private val defaultSdlKeyEvent = sdlKeyEvent
     private val defaultOffsetXPercent = offsetXPercent
     private val defaultOffsetYPercent = offsetYPercent
     private val defaultSizePercent = sizePercent
     private val defaultAlpha = alpha
-    private val engineTypeString = engineType.toString().lowercase()
-    private val controlsTypeString = controlsType.name.lowercase()
     private val keyX = floatPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_x")
     private val keyY = floatPreferencesKey("${engineTypeString}_${controlsTypeString}__${id}_y")
     private val keySize = floatPreferencesKey("${engineTypeString}_${controlsTypeString}_${id}_size_percent")

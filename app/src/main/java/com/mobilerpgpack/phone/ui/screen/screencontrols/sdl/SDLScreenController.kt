@@ -120,7 +120,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         val enableTouchScreenPressingEvents = preferencesStorage.enableTouchScreenPressingEvents.getComposableValue()
         val enableAbsoluteTouchMouseMode = preferencesStorage.enableAbsoluteTouchMouseMode.getComposableValue()
         val defaultTouchDeviceId = remember { defaultTouchDeviceId }
-        val zoomSensitivity = preferencesStorage.zoomSensitivity.getComposableValue(1.0f)
+        val zoomSensitivity = preferencesStorage.zoomSensitivity.getComposableValue(DEFAULT_ZOOM_SENSITIVITY)
         val isZoomMode = _isZoomMode.getComposableValue()
 
         var lastTouchX by remember { mutableFloatStateOf(0f) }
@@ -344,9 +344,11 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
         }
     }
 
-    private companion object{
+    companion object{
         private const val DEFAULT_POINTER_ID = 0
         private const val MAX_PRESSURE : Float = 1.0f
+
+        const val DEFAULT_ZOOM_SENSITIVITY = 1.0f
 
         private val defaultTouchDeviceId : Int by lazy {
             InputDevice.getDeviceIds()
