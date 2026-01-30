@@ -75,7 +75,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.03f,
         sizePercent = 0.05f,
         buttonResId = R.drawable.delete_icon,
-        sdlKeyEvent = KeyEvent.KEYCODE_DEL,
+        sdlKeyEvent = KeyEvent.KEYCODE_FORWARD_DEL,
         showInQuickPanel = true,
     ),
     SDL2ImageButton(
