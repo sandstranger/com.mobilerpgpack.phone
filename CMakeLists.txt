@@ -26,6 +26,7 @@ else()
 endif ()
 
 set(SDL2_LIBRARIES ${SDL2_LIBRARY} CACHE STRING "" FORCE)
+set(SDL2_SDLMAIN_LIBRARY ${SDL2_LIBRARY} CACHE STRING "" FORCE)
 
 set(OPENAL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/openal)
 set(OPENAL_INCLUDE_DIR ${OPENAL_LOCATION}/src/main/jni/openal/include)
@@ -326,6 +327,7 @@ add_subdirectory("${APP_ROOT_DIR}/UZDoom")
 add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
 add_subdirectory("${APP_ROOT_DIR}/fteqw")
 add_subdirectory("${APP_ROOT_DIR}/widelands")
+add_subdirectory("${APP_ROOT_DIR}/Vanilla-Conquer")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 
