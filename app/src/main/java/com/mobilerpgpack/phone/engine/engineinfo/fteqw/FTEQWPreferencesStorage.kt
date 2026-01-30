@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.fteqw
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.enumPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.floatPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 
 class FTEQWPreferencesStorage : PreferencesStorage() {
@@ -26,6 +27,7 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val enableFTEQWModsPrefsKey = booleanPreferencesKey("enable_fteqw_mods")
     val enableManifestSupportPrefsKey = booleanPreferencesKey("enable_fteqw_manifest")
     val activeFTEQWGamePrefsKey = enumPreferencesKey<FTEQWGames>("active_fteqw_game")
+    val fteqwUIScalePrefsKey = floatPreferencesKey("fteqw_ui_scale")
 
     val pathToQuake1 = getStringValue(pathToQuake1PrefsKey)
     val pathToQuake1BaseDir = getStringValue(pathToQuake1BaseDirPrefsKey)
@@ -54,4 +56,5 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
         FTEQWGames.Quake
     )
     val commandLineArgs = getStringValue(commandLineArgsPrefsKey)
+    val fteqwUIScale = getFloatValue(fteqwUIScalePrefsKey, 3.5f)
 }

@@ -128,6 +128,8 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun setPathsToResources (pathToHomeDirectory : String, pathToBaseDirectory : String,
                                               dllDefaultPath : String)
 
+    private external fun setUIScale (uiScale : Float)
+
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         if (!homeDirFile.exists()){
@@ -140,6 +142,7 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         Native.register(FTEQWEngineInfo::class.java, mainLibraryName)
         setPathsToResources(homeDirFile.absolutePath,pathToBaseGameDirectory,
             activity.applicationInfo.nativeLibraryDir)
+        setUIScale(preferencesStorage.fteqwUIScale.value!!)
     }
 
     private companion object {
