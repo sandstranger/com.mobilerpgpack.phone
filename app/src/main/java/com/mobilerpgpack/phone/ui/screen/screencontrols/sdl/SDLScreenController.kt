@@ -192,9 +192,7 @@ abstract class SDLScreenController : ScreenController(), KoinComponent {
                         val event = awaitPointerEvent()
                         val pressedCount = event.changes.count { it.pressed }
                         if (isZoomMode && pressedCount > 1){
-                            if (trackedPointerId != null){
-                                clearResources()
-                            }
+                            clearResources()
                             val zoom = event.calculateZoom()
                             onPinchZoom((if (zoom >= 1.0f) zoom else -1.0f * zoom) * zoomSensitivity,
                                 MotionEvent.ACTION_SCROLL)
