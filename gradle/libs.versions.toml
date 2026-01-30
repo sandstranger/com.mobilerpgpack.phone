@@ -41,7 +41,7 @@ translate = "17.0.3"
 ui = "1.10.2"
 navigationCompose = "2.9.7"
 zip4j = "2.11.5"
-runtime = "1.10.1"
+runtime = "1.10.2"
 window = "1.5.1"
 
 [libraries]
