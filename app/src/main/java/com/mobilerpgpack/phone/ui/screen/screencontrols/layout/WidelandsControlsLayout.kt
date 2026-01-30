@@ -386,6 +386,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.03f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard,
+        useReturnButton = true
     ),
     UpdateScreenControlsVisibilityImageButton(
         EngineTypes.Widelands,
