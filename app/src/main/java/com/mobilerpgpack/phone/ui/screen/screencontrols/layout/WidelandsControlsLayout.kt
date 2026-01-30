@@ -308,6 +308,16 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_O,
         showInQuickPanel = true,
     ),
+    SDL2ImageButton(
+        "toggle_building_spaces",
+        EngineTypes.Widelands,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.63f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.barracks,
+        sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
+        showInQuickPanel = true,
+    ),
     SDL2MouseWheelButton(
         "zoom_in",
         EngineTypes.Widelands,
