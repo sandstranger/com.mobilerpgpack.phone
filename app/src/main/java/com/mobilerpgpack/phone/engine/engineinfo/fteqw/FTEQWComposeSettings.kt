@@ -25,6 +25,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.getButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
+import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
@@ -48,6 +49,11 @@ class FTEQWComposeSettings : IEngineUIController {
 
         DrawCommandLinePreferences(prefsStorage.commandLineArgs,
             prefsStorage.commandLineArgsPrefsKey.name)
+
+        DrawHorizontalDivider()
+
+        EditTextItem(stringResource(R.string.ui_scale),
+            prefsStorage.fteqwUIScale, prefsStorage.fteqwUIScalePrefsKey.name)
 
         DrawHorizontalDivider()
 

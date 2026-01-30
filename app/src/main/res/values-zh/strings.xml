@@ -298,4 +298,5 @@
     <string name="files_unpacking_text">这可能需要几分钟时间。</string>
     <string name="screen_scale">屏幕缩放</string>
     <string name="zoom_sensitivity">缩放灵敏度</string>
+    <string name="ui_scale">界面缩放比例</string>
 </resources>
