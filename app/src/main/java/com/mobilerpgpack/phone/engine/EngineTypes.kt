@@ -11,7 +11,8 @@ enum class EngineTypes {
     PerfectDark,
     ArxLibertatis,
     FTEQW,
-    Widelands;
+    Widelands,
+    VanillaConquer;
 
     companion object{
         val DefaultActiveEngine = WolfensteinRpg
