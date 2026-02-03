@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer
 
+import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.main.RED_ALERT_NATIVE_LIB_NAME
@@ -8,9 +9,15 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
+import java.io.File
 
 class VanillaConquerEngineInfo :
     SDL2EngineInfo ("", emptyArray(), EngineTypes.VanillaConquer) {
+
+    private val configsDirectory by lazy {
+        File(prefsStorage.pathToRootUserFolder.value!! + File.separator + "vanilla-conquer")
+    }
+
     private val prefsStorage : VanillaConquerPreferencesStorage by inject (
         named(EngineTypes.VanillaConquer.name))
 
@@ -50,11 +57,19 @@ class VanillaConquerEngineInfo :
 
     override val preferencesStorage: PreferencesStorage get() = prefsStorage
 
+    private external fun setPathToConfigsDirectory (pathToConfigsDirectory : String)
+
     private external fun setPathToResources (pathToResource : String)
+
+    override fun initialize(activity: ComponentActivity) {
+        super.initialize(activity)
+        configsDirectory.mkdirs()
+    }
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(VanillaConquerEngineInfo::class.java, mainLibraryName)
         setPathToResources(pathToResource)
+        setPathToConfigsDirectory(configsDirectory.absolutePath)
     }
 }
