@@ -297,4 +297,7 @@
     <string name="screen_scale">Масштабирование экрана</string>
     <string name="zoom_sensitivity">Чувствительность масштабирования</string>
     <string name="ui_scale">Масштабирование UI</string>
+    <string name="vanilla_conquer_active_game">Активная игра VanillaConquer</string>
+    <string name="path_to_tiberian_dawn_resources">Путь к ресурсам Tiberian Dawn</string>
+    <string name="path_to_red_alert_resources">Путь к ресурсам Red Alert</string>
 </resources>
