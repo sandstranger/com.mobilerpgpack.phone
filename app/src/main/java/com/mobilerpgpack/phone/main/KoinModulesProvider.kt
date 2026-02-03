@@ -55,6 +55,10 @@ import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZ
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomPreferenceStorage
+import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerGames
+import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsEngineInfo
 import com.mobilerpgpack.phone.net.DriveDownloader
@@ -711,11 +715,43 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
     }
 
+    private val vanillaConquerKoinModule = module {
+        val engineName = EngineTypes.VanillaConquer.name
+        single<ControlsProvider> { ControlsProvider(EngineTypes.VanillaConquer, hashMapOf(
+            ControlsType.AbsoluteTouchControls to widelandsAbsoluteControlsLayout)) }.withOptions {
+            named(engineName) }
+        singleOf<VanillaConquerPreferencesStorage>(::VanillaConquerPreferencesStorage).withOptions {
+            named(engineName)
+        }
+        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
+                OPENAL_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                RED_ALERT_NATIVE_LIB_NAME)
+        }.withOptions {
+            named(VanillaConquerGames.RedAlert.name)
+        }
+        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
+                OPENAL_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                TIBERIAN_DAWN_NATIVE_LIB_NAME)
+        }.withOptions {
+            named(VanillaConquerGames.TiberianDawn.name)
+        }
+        singleOf<IEngineInfo>(::VanillaConquerEngineInfo).withOptions {
+            named(engineName)
+        }
+        singleOf <IEngineUIController>(::VanillaConquerComposeSettings).withOptions {
+            named(engineName)
+        }
+    }
+
     init {
         allModules = listOf<Module>(mainModule,httpModule,translationModule,
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
             psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,
-            arxLibertatisKoinModule, fteQWKoinModule,widelandsKoinModule)
+            arxLibertatisKoinModule, fteQWKoinModule,widelandsKoinModule, vanillaConquerKoinModule)
     }
 
     companion object{
