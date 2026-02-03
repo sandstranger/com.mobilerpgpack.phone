@@ -299,4 +299,7 @@
     <string name="screen_scale">Screen scale</string>
     <string name="zoom_sensitivity">Zoom sensitivity</string>
     <string name="ui_scale">UI scale</string>
+    <string name="vanilla_conquer_active_game">VanillaConquer active game</string>
+    <string name="path_to_tiberian_dawn_resources">Path to Tiberian Dawn resources</string>
+    <string name="path_to_red_alert_resources">Path to Red Alert resources</string>
 </resources>
