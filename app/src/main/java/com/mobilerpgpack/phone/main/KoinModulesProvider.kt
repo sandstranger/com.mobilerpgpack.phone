@@ -344,7 +344,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single {
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                gl4esLibraryName,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
