@@ -26,6 +26,10 @@ const val WIDELANDS_MAIN_ENGINE_LIB = "widelands"
 
 const val YQUAKE2_CORE_NATIVE_LIB_NAME = "game"
 
+const val TIBERIAN_DAWN_NATIVE_LIB_NAME = "vanillatd"
+
+const val RED_ALERT_NATIVE_LIB_NAME = "vanillara"
+
 const val BZ2_NATIVE_LIB_NAME = "bz2"
 
 const val ODE_NATIVE_LIB_NAME = "ode"
