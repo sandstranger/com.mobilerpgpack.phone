@@ -8,15 +8,14 @@ import com.mobilerpgpack.phone.main.TIBERIAN_DAWN_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
 class VanillaConquerEngineInfo :
     SDL2EngineInfo ("", emptyArray(), EngineTypes.VanillaConquer) {
 
-    private val configsDirectory by lazy {
-        File(prefsStorage.pathToRootUserFolder.value!! + File.separator + "vanilla-conquer")
-    }
+    private val configsDirectory : File by inject { parametersOf("vanilla-conquer") }
 
     private val prefsStorage : VanillaConquerPreferencesStorage by inject (
         named(EngineTypes.VanillaConquer.name))
