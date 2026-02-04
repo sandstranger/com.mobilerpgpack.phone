@@ -62,7 +62,11 @@ class VanillaConquerEngineInfo :
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
-        configsDirectory.mkdirs()
+        configsDirectory.run {
+            mkdirs()
+            File (this, "vanillatd").apply { mkdirs() }
+            File(this, "vanillara").mkdirs()
+        }
     }
 
     override fun onNativeLibrariesLoaded() {
