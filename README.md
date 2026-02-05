@@ -243,7 +243,7 @@ Multiplayer is dead in this RTS, only remote asset downloading and server connec
 
 For more information, see the official wiki - https://www.widelands.org/wiki/Main%20Page/
 
-## Vanilla-Conquer (Android Port)
+## Vanilla-Conquer
 
 This engine supports the classic Command & Conquer games:
 - Command & Conquer: Tiberian Dawn  
@@ -266,6 +266,10 @@ Multiplayer in this RTS is effectively inactive. Only basic server connection fu
 ARMv7 devices should be supported.  
 
 Gamepads are supported, because On-screen gamepad emulation is used, which works without any known issues
+
+This port is using some code from Vanilla-Conquer nintendo switch port - https://github.com/capsterx-switch/Vanilla-Conquer
+
+All credits for this code to capsterx-switch - https://github.com/capsterx-switch
 
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
