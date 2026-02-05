@@ -8,6 +8,7 @@ import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.R
+import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 import org.koin.compose.koinInject
@@ -22,7 +23,7 @@ class WidelandsComposeSettings : IEngineUIController {
 
             DrawHorizontalDivider()
 
-            EditTextItem(stringResource(R.string.screen_scale),
+            EditTextPreferenceItem(stringResource(R.string.screen_scale),
                 widelandsScreenScale){
                 setFloatValue(widelandsScreenScalePrefeKey, it.coerceAtLeast(1.0f))
             }

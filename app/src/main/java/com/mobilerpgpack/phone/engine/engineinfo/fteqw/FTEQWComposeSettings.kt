@@ -47,7 +47,7 @@ class FTEQWComposeSettings : IEngineUIController {
 
         DrawHorizontalDivider()
 
-        EditTextItem(stringResource(R.string.ui_scale), prefsStorage.fteqwUIScale){
+        EditTextPreferenceItem(stringResource(R.string.ui_scale), prefsStorage.fteqwUIScale){
             prefsStorage.setFloatValue(prefsStorage.fteqwUIScalePrefsKey, it.coerceAtLeast(2.0f))
         }
 
