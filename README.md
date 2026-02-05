@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -22,6 +22,8 @@ https://github.com/arx/ArxLibertatis
 https://github.com/fte-team/fteqw
 
 https://github.com/widelands/widelands
+
+https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
 # System Requirements
 
@@ -237,9 +239,33 @@ Gamepads are not supported and will not be added.
 
 Screen scaling and on-screen controls are implemented for mobile devices.
 
-Multiplayer is dead in this RTS, only remote asset downloading and local server were tested.
+Multiplayer is dead in this RTS, only remote asset downloading and server connection were tested.
 
 For more information, see the official wiki - https://www.widelands.org/wiki/Main%20Page/
+
+## Vanilla-Conquer (Android Port)
+
+This engine supports the classic Command & Conquer games:
+- Command & Conquer: Tiberian Dawn  
+- Command & Conquer: Red Alert  
+
+To run Tiberian Dawn, you need the original game resources.
+
+Recommended source: https://forums.cncnet.org/topic/8821-cc-1-tiberian-dawn-installation-on-windows-10/
+
+On mobile devices, DOS mode is enabled by default to provide a larger and more comfortable game screen on phones. However, without additional resources, Tiberian Dawn will show only a black screen in DOS mode.
+
+To fix this, download the required DOS version resources from here: https://www.moddb.com/games/cc-gold/downloads/command-and-conquer-dos
+
+From the DOS version of the game, extract the file **LOCAL.MIX** and copy it into your CNCNet Tiberian Dawn resources folder.
+
+To run Red Alert, use the official resources from CNCNet: https://cncnet.org/red-alert
+
+Multiplayer in this RTS is effectively inactive. Only basic server connection functionality was tested.
+
+ARMv7 devices should be supported.  
+
+Gamepads are supported, because On-screen gamepad emulation is used, which works without any known issues
 
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
@@ -303,6 +329,8 @@ ArxLibertatis engine source code: [Licence](https://github.com/arx/ArxLibertatis
 FTEQW engine source code: [Licence](https://github.com/fte-team/fteqw/blob/master/LICENSE)	https://github.com/fte-team/fteqw
 
 Widelands engine source code: [Licence](https://github.com/widelands/widelands/blob/master/COPYING) https://github.com/widelands/widelands
+
+Vanilla-Conquer engine source code: [Licence](https://github.com/TheAssemblyArmada/Vanilla-Conquer/blob/vanilla/License.txt)  https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
@@ -493,6 +521,8 @@ asio: [Licence](https://github.com/chriskohlhoff/asio/blob/master/LICENSE_1_0.tx
 SDL2 Image: [Licence](https://github.com/libsdl-org/SDL_image/blob/SDL2/LICENSE.txt) https://github.com/libsdl-org/SDL_image/tree/SDL2
 
 Process Phoenix: [Licence](https://github.com/JakeWharton/ProcessPhoenix/blob/trunk/LICENSE.txt)  https://github.com/JakeWharton/ProcessPhoenix
+
+Code from Vanilla-Conquer nintendo switch port: https://github.com/capsterx-switch/Vanilla-Conquer
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
