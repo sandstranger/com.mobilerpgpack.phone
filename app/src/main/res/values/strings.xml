@@ -299,4 +299,11 @@
     <string name="screen_scale">Screen scale</string>
     <string name="zoom_sensitivity">Zoom sensitivity</string>
     <string name="ui_scale">UI scale</string>
+    <string name="vanilla_conquer_active_game">VanillaConquer active game</string>
+    <string name="path_to_tiberian_dawn_resources">Path to Tiberian Dawn resources</string>
+    <string name="path_to_red_alert_resources">Path to Red Alert resources</string>
+    <string name="enable_dos_mode">Enable Dos mode (It will increase game screen scale)</string>
+    <string name="framerate_limit">Framerate limit</string>
+    <string name="mouse_sensitivity">Mouse sensitivity</string>
+    <string name="controller_pointer_speed">Controller pointer speed</string>
 </resources>

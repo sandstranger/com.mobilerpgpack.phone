@@ -36,7 +36,6 @@ class Doom64AutorunButton (engineType: EngineTypes,
         consumeTouchEventsByDefault, ignoreOutOfBoundsTouchEvents, showInQuickPanel), KoinComponent {
 
     private val preferencesStorage : PreferencesStorage by inject ()
-    @Volatile
     private var autoRunNativeMethodFound = false
 
     private external fun OnAutoRunStateChanged(enableAutorun : Boolean)
