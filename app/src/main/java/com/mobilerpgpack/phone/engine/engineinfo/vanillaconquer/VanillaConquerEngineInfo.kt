@@ -60,6 +60,18 @@ class VanillaConquerEngineInfo :
 
     private external fun setPathToResources (pathToResource : String)
 
+    private external fun setEnableVsyncState (enableVsync : Boolean)
+
+    private external fun setUseDoseModeState (useDosMode : Boolean)
+
+    private external fun setFrameRateLimit (frameRateLimit : Int)
+
+    private external fun setOnScreenControlsState (onscreenControlsActive : Boolean)
+
+    private external fun setMouseSensitivity (mouseSensitivity : Int)
+
+    private external fun setControllerPointerSpeed (controllerPointerSpeed : Int)
+
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         configsDirectory.run {
@@ -74,5 +86,13 @@ class VanillaConquerEngineInfo :
         Native.register(VanillaConquerEngineInfo::class.java, mainLibraryName)
         setPathToResources(pathToResource)
         setPathToConfigsDirectory(configsDirectory.absolutePath)
+        prefsStorage.apply {
+            setEnableVsyncState(vanillaConquerEnableVsync.value!!)
+            setUseDoseModeState(enableDosMode.value!!)
+            setFrameRateLimit(vanillaConquerFrameRateLimit.value!!)
+            setOnScreenControlsState(!preferencesStorage.hideScreenControls.value!!)
+            setMouseSensitivity(vanillaConquerMouseSensitivity.value!!)
+            setControllerPointerSpeed(vanillaConquerControllerPointerSpeed.value!!)
+        }
     }
 }
