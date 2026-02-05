@@ -143,7 +143,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     companion object{
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
-        private const val ASSETS_CURRENT_VERSION = 8
+        private const val ASSETS_CURRENT_VERSION = 9
 
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
 
