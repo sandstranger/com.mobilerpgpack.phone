@@ -378,7 +378,18 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2ImageButton(
-        "minimap",
+        "sidebar",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.63f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.menu_open,
+        sdlKeyEvent = KeyEvent.KEYCODE_TAB,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "map_toggle",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.79f,
         offsetYPercent = 0.85f,
