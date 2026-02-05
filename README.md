@@ -239,9 +239,33 @@ Gamepads are not supported and will not be added.
 
 Screen scaling and on-screen controls are implemented for mobile devices.
 
-Multiplayer is dead in this RTS, only remote asset downloading and local server were tested.
+Multiplayer is dead in this RTS, only remote asset downloading and server connection were tested.
 
 For more information, see the official wiki - https://www.widelands.org/wiki/Main%20Page/
+
+## Vanilla-Conquer (Android Port)
+
+This engine supports the classic Command & Conquer games:
+- Command & Conquer: Tiberian Dawn  
+- Command & Conquer: Red Alert  
+
+To run Tiberian Dawn, you need the original game resources.
+
+Recommended source: https://forums.cncnet.org/topic/8821-cc-1-tiberian-dawn-installation-on-windows-10/
+
+On mobile devices, DOS mode is enabled by default to provide a larger and more comfortable game screen on phones. However, without additional resources, Tiberian Dawn will show only a black screen in DOS mode.
+
+To fix this, download the required DOS version resources from here: https://www.moddb.com/games/cc-gold/downloads/command-and-conquer-dos
+
+From the DOS version of the game, extract the file **LOCAL.MIX** and copy it into your CNCNet Tiberian Dawn resources folder.
+
+To run Red Alert, use the official resources from CNCNet: https://cncnet.org/red-alert
+
+Multiplayer in this RTS is effectively inactive. Only basic server connection functionality was tested.
+
+ARMv7 devices should be supported.  
+
+Gamepads are supported, because On-screen gamepad emulation is used, which works without any known issues
 
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
