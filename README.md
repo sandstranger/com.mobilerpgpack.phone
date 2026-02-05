@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -22,6 +22,8 @@ https://github.com/arx/ArxLibertatis
 https://github.com/fte-team/fteqw
 
 https://github.com/widelands/widelands
+
+https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
 # System Requirements
 
@@ -304,6 +306,8 @@ FTEQW engine source code: [Licence](https://github.com/fte-team/fteqw/blob/maste
 
 Widelands engine source code: [Licence](https://github.com/widelands/widelands/blob/master/COPYING) https://github.com/widelands/widelands
 
+Vanilla-Conquer engine source code: [Licence](https://github.com/TheAssemblyArmada/Vanilla-Conquer/blob/vanilla/License.txt)  https://github.com/TheAssemblyArmada/Vanilla-Conquer
+
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
 VulkanMemoryAllocator: [Licence](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/blob/master/LICENSE.txt) 	https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
@@ -493,6 +497,8 @@ asio: [Licence](https://github.com/chriskohlhoff/asio/blob/master/LICENSE_1_0.tx
 SDL2 Image: [Licence](https://github.com/libsdl-org/SDL_image/blob/SDL2/LICENSE.txt) https://github.com/libsdl-org/SDL_image/tree/SDL2
 
 Process Phoenix: [Licence](https://github.com/JakeWharton/ProcessPhoenix/blob/trunk/LICENSE.txt)  https://github.com/JakeWharton/ProcessPhoenix
+
+Code from Vanilla-Conquer nintendo switch port: https://github.com/capsterx-switch/Vanilla-Conquer
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
