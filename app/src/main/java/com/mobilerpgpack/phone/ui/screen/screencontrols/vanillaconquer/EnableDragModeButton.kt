@@ -45,6 +45,7 @@ class EnableDragModeButton (engineType: EngineTypes,
                 TIBERIAN_DAWN_NATIVE_LIB_NAME else RED_ALERT_NATIVE_LIB_NAME)
         }
         updateRawInputState(isActive)
+        screenController?.apply { isZoomMode = isActive }
     }
 
 }
