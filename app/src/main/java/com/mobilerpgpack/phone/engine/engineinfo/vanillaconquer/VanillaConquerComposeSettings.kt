@@ -9,6 +9,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
+import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
@@ -58,19 +59,19 @@ class VanillaConquerComposeSettings : IEngineUIController {
 
             DrawHorizontalDivider()
 
-            EditTextItem(stringResource(R.string.framerate_limit), vanillaConquerFrameRateLimit){
+            EditTextPreferenceItem(stringResource(R.string.framerate_limit), vanillaConquerFrameRateLimit){
                 setIntValue(vanillaConquerFrameRateLimitPrefsKey, it.coerceAtLeast(10))
             }
 
             DrawHorizontalDivider()
 
-            EditTextItem(stringResource(R.string.mouse_sensitivity), vanillaConquerMouseSensitivity){
-                setIntValue(vanillaConquerMouseSensitivityPrefsKey, it.coerceAtLeast(10))
+            EditTextPreferenceItem(stringResource(R.string.mouse_sensitivity), vanillaConquerMouseSensitivity){
+                setIntValue(vanillaConquerMouseSensitivityPrefsKey, it.coerceAtLeast(1))
             }
 
             DrawHorizontalDivider()
 
-            EditTextItem(stringResource(R.string.controller_pointer_speed), vanillaConquerControllerPointerSpeed){
+            EditTextPreferenceItem(stringResource(R.string.controller_pointer_speed), vanillaConquerControllerPointerSpeed){
                 setIntValue(vanillaConquerControllerPointerSpeedPrefsKey, it.coerceAtLeast(1))
             }
         }
