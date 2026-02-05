@@ -15,8 +15,10 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
+import com.mobilerpgpack.phone.ui.screen.screencontrols.vanillaconquer.EnableDragModeButton
 
 val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
     EnableEditModeButton(
@@ -31,7 +33,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         offsetXPercent = 0.8f,
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
-        stickType = StickType.LeftStick,
+        stickType = StickType.RightStick,
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
@@ -40,7 +42,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
-        stickType = StickType.RightStick,
+        stickType = StickType.LeftStick,
         controlsType = ControlsType.OnScreenStick
     ),
     SDL2RadialWheel(
@@ -56,7 +58,8 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
-        controlsType = ControlsType.OnScreenStick
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
     ),
     SDL2MouseImageButton(
         "left_mouse_button",
@@ -70,6 +73,38 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         isDeleted = true,
         controlsType = ControlsType.OnScreenStick
     ),
+    EnableDragModeButton(
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.76f,
+        offsetYPercent = 0.45f,
+        sizePercent = 0.08f,
+        buttonResId = R.drawable.photo_camera,
+        consumeTouchEventsByDefault = true,
+        ignoreOutOfBoundsTouchEvents = false,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2MouseWheelButton(
+        "scroll_up",
+        EngineTypes.VanillaConquer,
+        wheelUp = true,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.06f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.next_weapon,
+        invokeWheelEventsWhilePressingDefaultState = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2MouseWheelButton(
+        "scroll_down",
+        EngineTypes.VanillaConquer,
+        wheelUp = false,
+        offsetXPercent = 0.85f,
+        offsetYPercent = 0.18f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.prev_weapon,
+        invokeWheelEventsWhilePressingDefaultState = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
     UpdateQuickPanelVisibilityImageButton(
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.1f,
@@ -77,6 +112,361 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sizePercent = 0.05f,
         buttonResId = R.drawable.quick_panel,
         controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_10",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.16f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.zero_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_0,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_1",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.first_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_1,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_2",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.second_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_2,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_3",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.third_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_3,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_4",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.4f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.fourth_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_4,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_5",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.46f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.five_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_5,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_6",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.52f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.six_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_6,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_7",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.16f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.seven_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_7,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_8",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.eight_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_8,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "team_9",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.nine_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_9,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "formation",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.15f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.stone_tower,
+        sdlKeyEvent = KeyEvent.KEYCODE_F,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "home",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.16f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.warehouse,
+        sdlKeyEvent = KeyEvent.KEYCODE_MOVE_HOME,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "base",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.barracks,
+        sdlKeyEvent = KeyEvent.KEYCODE_H,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "resign",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.flying_flag,
+        sdlKeyEvent = KeyEvent.KEYCODE_R,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "alliance",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.27f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.tower_flag,
+        sdlKeyEvent = KeyEvent.KEYCODE_A,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "bookmark_1",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.16f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.position_marker,
+        sdlKeyEvent = KeyEvent.KEYCODE_F9,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "bookmark_2",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.position_marker,
+        sdlKeyEvent = KeyEvent.KEYCODE_F10,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "bookmark_3",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.position_marker,
+        sdlKeyEvent = KeyEvent.KEYCODE_F11,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "bookmark_4",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.position_marker,
+        sdlKeyEvent = KeyEvent.KEYCODE_F12,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "select_view",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.4f,
+        offsetYPercent = 0.39f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.select_all,
+        sdlKeyEvent = KeyEvent.KEYCODE_E,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "repair_toggle",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.22f,
+        offsetYPercent = 0.51f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.auto_repair,
+        sdlKeyEvent = KeyEvent.KEYCODE_T,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "sell_toggle",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.51f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.sell_card,
+        sdlKeyEvent = KeyEvent.KEYCODE_Y,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "queue_move",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.34f,
+        offsetYPercent = 0.51f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.directions_walk,
+        sdlKeyEvent = KeyEvent.KEYCODE_Q,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "options",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.63f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.settings_knobs,
+        sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick
+    ),
+    SDL2ImageButton(
+        "minimap",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.79f,
+        offsetYPercent = 0.85f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.automap,
+        sdlKeyEvent = KeyEvent.KEYCODE_U,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = false
+    ),
+    SDL2ImageButton(
+        "force_move",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.72f,
+        offsetYPercent = 0.85f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.run,
+        sdlKeyEvent = KeyEvent.KEYCODE_ALT_LEFT,
+        controlsType = ControlsType.OnScreenStick,
+    ),
+    SDL2ImageButton(
+        "force_attack",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.87f,
+        offsetYPercent = 0.85f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.attack_button,
+        sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
+        controlsType = ControlsType.OnScreenStick,
+    ),
+    SDL2ImageButton(
+        "select",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.94f,
+        offsetYPercent = 0.85f,
+        sizePercent = 0.055f,
+        buttonResId = R.drawable.select,
+        sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
+        controlsType = ControlsType.OnScreenStick,
+    ),
+    SDL2ImageButton(
+        "scatter",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.94f,
+        offsetYPercent = 0.25f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.sprint,
+        sdlKeyEvent = KeyEvent.KEYCODE_X,
+        controlsType = ControlsType.OnScreenStick,
+    ),
+    SDL2ImageButton(
+        "guard",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.94f,
+        offsetYPercent = 0.4f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.checked_shield,
+        sdlKeyEvent = KeyEvent.KEYCODE_G,
+        controlsType = ControlsType.OnScreenStick,
+    ),
+    SDL2ImageButton(
+        "stop",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.94f,
+        offsetYPercent = 0.55f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.halt,
+        sdlKeyEvent = KeyEvent.KEYCODE_S,
+        controlsType = ControlsType.OnScreenStick,
+    ),
+    SDL2ImageButton(
+        "previous",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.72f,
+        offsetYPercent = 0.22f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.previous_item,
+        sdlKeyEvent = KeyEvent.KEYCODE_B,
+        controlsType = ControlsType.OnScreenStick,
+    ),
+    SDL2ImageButton(
+        "next",
+        EngineTypes.VanillaConquer,
+        offsetXPercent = 0.78f,
+        offsetYPercent = 0.22f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.next_item,
+        sdlKeyEvent = KeyEvent.KEYCODE_N,
+        controlsType = ControlsType.OnScreenStick,
     ),
     SDL2ImageButton(
         "escape",
