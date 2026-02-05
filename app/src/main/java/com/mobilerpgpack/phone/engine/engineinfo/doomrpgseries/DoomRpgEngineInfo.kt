@@ -17,6 +17,8 @@ class DoomRpgEngineInfo(
 
     override val requiredResourceExtensions = listOf(".zip", ".ZIP")
 
+    override val loadGL4ES = false
+
     private external fun setScreenResolution (screenWidth : Int, screenHeight : Int)
 
     private external fun setRecalculateScreenResolutionsState (recalculateScreenResolutions : Boolean)

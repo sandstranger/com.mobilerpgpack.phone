@@ -16,6 +16,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 
 val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
     EnableEditModeButton(
@@ -23,6 +24,13 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.015f,
         offsetYPercent = 0.02f,
         sizePercent = 0.055f,
+    ),
+    SDL2RadialWheel(
+        EngineTypes.Widelands,
+        offsetXPercent = 0.55f,
+        offsetYPercent = 0.28f,
+        sizePercent = 0.21f,
+        isDeleted = true
     ),
     SDL2Dpad(
         EngineTypes.Widelands,
@@ -308,6 +316,16 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_O,
         showInQuickPanel = true,
     ),
+    SDL2ImageButton(
+        "toggle_building_spaces",
+        EngineTypes.Widelands,
+        offsetXPercent = 0.28f,
+        offsetYPercent = 0.63f,
+        sizePercent = 0.05f,
+        buttonResId = R.drawable.barracks,
+        sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
+        showInQuickPanel = true,
+    ),
     SDL2MouseWheelButton(
         "zoom_in",
         EngineTypes.Widelands,
@@ -376,6 +394,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.03f,
         sizePercent = 0.08f,
         buttonResId = R.drawable.keyboard,
+        useReturnButton = true
     ),
     UpdateScreenControlsVisibilityImageButton(
         EngineTypes.Widelands,
