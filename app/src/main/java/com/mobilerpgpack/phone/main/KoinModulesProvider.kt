@@ -100,6 +100,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.wolfen
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.fteQWOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkAbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.perfectDarkOnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.vanillaConquerOnScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.widelandsAbsoluteControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
@@ -717,7 +718,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     private val vanillaConquerKoinModule = module {
         val engineName = EngineTypes.VanillaConquer.name
         single<ControlsProvider> { ControlsProvider(EngineTypes.VanillaConquer, hashMapOf(
-            ControlsType.AbsoluteTouchControls to widelandsAbsoluteControlsLayout)) }.withOptions {
+            ControlsType.OnScreenStick to vanillaConquerOnScreenStickControlsLayout)) }.withOptions {
             named(engineName) }
         singleOf<VanillaConquerPreferencesStorage>(::VanillaConquerPreferencesStorage).withOptions {
             named(engineName)
