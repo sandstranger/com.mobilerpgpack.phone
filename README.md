@@ -25,6 +25,11 @@ https://github.com/widelands/widelands
 
 https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
+# NOTE!!
+Development of this application is complete. No bugs, pull requests, or new issues are being accepted, and the repository is now in read-only mode.
+
+If I decide to port OpenXRay in the future, once a Vulkan renderer is implemented for it, I will unfreeze the repository and development will continue.
+
 # System Requirements
 
 This port for Android has the following system requirements:
