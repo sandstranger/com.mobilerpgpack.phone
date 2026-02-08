@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id 'com.google.devtools.ksp' version '2.3.4'
     id("com.google.gms.google-services")
-    id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.10'
     id("com.google.firebase.crashlytics") version "3.0.6"
 }
 

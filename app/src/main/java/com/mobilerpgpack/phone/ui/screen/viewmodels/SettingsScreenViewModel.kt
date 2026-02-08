@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.ui.screen.viewmodels
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jakewharton.processphoenix.ProcessPhoenix
