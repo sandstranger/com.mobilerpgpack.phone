@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.utils
 
 import android.content.Context
-import android.content.res.AssetManager
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -47,16 +46,16 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         if (assetsInfo == null){
             assetsInfo = if(assetsVersionFile.exists()) getAssetsInfo() else defaultAssetsInfo
         }
+        assetsInfo!!.allAssetsCopied = false
         assetsVersionFile.writeTextSafely(Json.encodeToString(
             AssetsInfoProvider(assetsInfo!!.assetsVersion, false)))
     }
 
     override suspend fun copyAssetsContentToInternalStorage (){
-        if (assetsCopying || assetsInfo?.allAssetsCopied == true){
-            return
+        if (assetsInfo == null){
+            assetsInfo = getAssetsInfo()
         }
-        assetsInfo = getAssetsInfo()
-        if (assetsInfo!!.allAssetsCopied){
+        if (assetsCopying || assetsInfo!!.allAssetsCopied){
             return
         }
         assetsCopying = true
@@ -143,7 +142,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     companion object{
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
 
-        private const val ASSETS_CURRENT_VERSION = 9
+        private const val ASSETS_CURRENT_VERSION = 10
 
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
 
@@ -154,6 +153,6 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         private data class AssetsInfoProvider (val assetsVersion : Int, val allAssetsCopied : Boolean)
 
         private data class AssetsInfo (val copyAllAssetsForced : Boolean,
-                                       val assetsVersion : Int, val allAssetsCopied : Boolean)
+                                       val assetsVersion : Int, var allAssetsCopied : Boolean)
     }
 }
