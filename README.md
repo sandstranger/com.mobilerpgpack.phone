@@ -26,9 +26,8 @@ https://github.com/widelands/widelands
 https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
 # NOTE!!
-Development of this application is complete. No bugs, pull requests, or new issues are being accepted, and the repository is now in read-only mode.
 
-If I decide to port OpenXRay in the future, once a Vulkan renderer is implemented for it, I will unfreeze the repository and development will continue.
+Development of this application is complete. No any new engines will be added at this application, until Vulkan renderer will be implemented in this oxr fork https://github.com/bearlikelion/xray-16-pub/, then I will port it, when I will have free time after will finish porting unity system shock 1 remake.
 
 # System Requirements
 
