@@ -103,6 +103,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         }
     }
 
+    @JvmName("_getAssetsInfo")
     private fun getAssetsInfo () : AssetsInfo {
         assetsVersionFile.apply {
             mkdirs()
