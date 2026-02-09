@@ -24,7 +24,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private val userFolder : File by inject (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
 
-    private var assetsInfo: AssetsInfo? = null
+    private val assetsInfo: AssetsInfo by lazy { getAssetsInfo() }
 
     @Volatile
     private var assetsCopying = false
@@ -43,19 +43,13 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
     }
 
     override fun resetAssetsInfo() {
-        if (assetsInfo == null){
-            assetsInfo = if(assetsVersionFile.exists()) getAssetsInfo() else defaultAssetsInfo
-        }
-        assetsInfo!!.allAssetsCopied = false
+        assetsInfo.allAssetsCopied = false
         assetsVersionFile.writeTextSafely(Json.encodeToString(
-            AssetsInfoProvider(assetsInfo!!.assetsVersion, false)))
+            AssetsInfoProvider(assetsInfo.assetsVersion, false)))
     }
 
     override suspend fun copyAssetsContentToInternalStorage (){
-        if (assetsInfo == null){
-            assetsInfo = getAssetsInfo()
-        }
-        if (assetsCopying || assetsInfo!!.allAssetsCopied){
+        if (assetsCopying || assetsInfo.allAssetsCopied){
             return
         }
         assetsCopying = true
@@ -69,7 +63,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
             }
             finally {
                 assetsVersionFile.writeTextSafely(Json.encodeToString(
-                    AssetsInfoProvider(assetsInfo!!.assetsVersion,true)))
+                    AssetsInfoProvider(assetsInfo.assetsVersion,true)))
                 withContext(Dispatchers.Main) { assetsFinishCopyListeners.invoke() }
                 _assetsCopied = true
                 assetsCopying = false
