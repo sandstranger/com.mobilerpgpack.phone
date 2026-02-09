@@ -87,7 +87,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
                     if (subFiles != null && subFiles.isNotEmpty()) {
                         copyAssetsFolderToInternalStorage( assetPath, outFile)
                     } else {
-                        val shouldCopy = !outFile.exists() || assetsInfo!!.copyAllAssetsForced
+                        val shouldCopy = !outFile.exists() || assetsInfo.copyAllAssetsForced
                         if (shouldCopy) {
                             assetManager.open(assetPath).use { inputStream ->
                                 FileOutputStream(outFile).use { outputStream ->
