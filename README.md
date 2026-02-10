@@ -25,10 +25,6 @@ https://github.com/widelands/widelands
 
 https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
-# NOTE!!
-
-Development of this application is complete. No any new engines will be added at this application, until Vulkan renderer will be implemented in this oxr fork https://github.com/bearlikelion/xray-16-pub/, then I will port it, when I will have free time after will finish porting unity system shock 1 remake.
-
 # System Requirements
 
 This port for Android has the following system requirements:
