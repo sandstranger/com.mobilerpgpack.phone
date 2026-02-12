@@ -142,6 +142,15 @@ else ()
     set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so" CACHE STRING "" FORCE)
 endif ()
 
+
+set(OGG_LOCATION ${CMAKE_SOURCE_DIR}/third_party/libvorbis)
+set(OGG_INCLUDE_DIR ${OGG_LOCATION}/src/main/libvorbis-android/jni/include)
+if (IS_DEBUG_BUILD)
+    set(OGG_LIBRARY ${OGG_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libogg.so)
+else ()
+    set(OGG_LIBRARY ${OGG_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libogg.so)
+endif ()
+
 set(BULLET_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/bullet/src/main/jni/bullet3/src" CACHE STRING "" FORCE)
 if (IS_DEBUG_BUILD)
     set(BULLET_LIBRARIES
@@ -265,6 +274,22 @@ endif ()
 
 set(asio_location ${CMAKE_SOURCE_DIR}/third_party/asio/asio/include CACHE STRING "" FORCE)
 
+set(THEORA_LOCATION ${CMAKE_SOURCE_DIR}/third_party/theora)
+set(THEORA_INCLUDE_DIR ${THEORA_LOCATION}/include)
+set(THEORA_LIBRARY ${THEORA_LOCATION}/jniLibs/${ANDROID_ABI}/libtheora.a)
+
+set(LZO_LOCATION ${CMAKE_SOURCE_DIR}/third_party/lzo)
+set(LZO_INCLUDE_DIR ${LZO_LOCATION}/src/main/jni/lzo/include)
+if (IS_DEBUG_BUILD)
+    set(LZO_LIBRARY ${LZO_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/liblzo2.so)
+else ()
+    set(LZO_LIBRARY ${LZO_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/liblzo2.so)
+endif ()
+
+set(LUA_LOCATION ${CMAKE_SOURCE_DIR}/third_party/luajit)
+set(LUA_INCLUDE_DIR ${LUA_LOCATION}/src/main/LuaJIT/src)
+set(LUA_LIBRARIES ${LUA_LOCATION}/jniLibs/${ANDROID_ABI}/libluajit.so)
+
 set (USE_OPENGL ON)
 set (WITH_SDL "2")
 set (BUILD_TOOLS OFF)
@@ -316,6 +341,8 @@ set(OPTION_USE_GLBINDING ON CACHE BOOL "" FORCE)
 set(OPTION_FORCE_EMBEDDED_MINIZIP ON CACHE BOOL "" FORCE)
 set(OPTION_BUILD_WEBSITE_TOOLS OFF CACHE BOOL "" FORCE)
 
+set(XRAY_USE_LUAJIT OFF CACHE BOOL "" FORCE)
+
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
@@ -328,6 +355,7 @@ add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
 add_subdirectory("${APP_ROOT_DIR}/fteqw")
 add_subdirectory("${APP_ROOT_DIR}/widelands")
 add_subdirectory("${APP_ROOT_DIR}/Vanilla-Conquer")
+add_subdirectory("${APP_ROOT_DIR}/xray-16")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 
