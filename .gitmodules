@@ -136,9 +136,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/Vanilla-Conquer"]
 	path = app/src/main/jni/Vanilla-Conquer
 	url = https://github.com/sandstranger/Vanilla-Conquer.git
-[submodule "third_party/luajit/src/main/LuaJIT"]
-	path = third_party/luajit/src/main/LuaJIT
-	url = https://github.com/OpenXRay/LuaJIT.git
 [submodule "app/src/main/jni/xray-16"]
 	path = app/src/main/jni/xray-16
 	url = https://github.com/sandstranger/xray-16
