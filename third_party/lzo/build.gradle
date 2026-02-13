@@ -18,12 +18,8 @@ android {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
-                        "-DBUILD_SHARED_LIBS=ON", "-DOPTION_CXX_14_COMPATABILITY=ON",
-                        "-DOPTION_BUILD_TOOLS=OFF","-DOPTION_BUILD_EXAMPLES=OFF",
-                        "-DOPTION_BUILD_TESTS=OFF","-DOPTION_BUILD_DOCS=OFF",
-                        "-DOPTION_USE_GIT_INFORMATION=OFF", "-DOPTION_BUILD_AUX=OFF",
-                        "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
+                        "-DENABLE_STATIC=0", "-DENABLE_SHARED=1",
                         "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
             }
         }

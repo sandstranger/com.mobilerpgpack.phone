@@ -287,8 +287,8 @@ else ()
 endif ()
 
 set(LUA_LOCATION ${CMAKE_SOURCE_DIR}/third_party/luajit)
-set(LUA_INCLUDE_DIR ${LUA_LOCATION}/src/main/LuaJIT/src)
-set(LUA_LIBRARIES ${LUA_LOCATION}/jniLibs/${ANDROID_ABI}/libluajit.so)
+set(LUA_INCLUDE_DIR ${LUA_LOCATION}/src/main/include)
+set(LUA_LIBRARIES ${LUA_LOCATION}/src/main/jniLibs/${ANDROID_ABI}/libluajit.so)
 
 set (USE_OPENGL ON)
 set (WITH_SDL "2")
