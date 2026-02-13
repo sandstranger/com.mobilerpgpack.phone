@@ -25,6 +25,23 @@ https://github.com/widelands/widelands
 
 https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
+# NOTE About openxray
+The project is built on hacks and workarounds, not on a proper architecture. There is no real way to make it work without PCH.
+
+Any attempt to “do it quickly” or “yesterday” is absolute nonsense, even for an experienced engineer. On Android, PCH doesn’t work at all.
+
+Using -include on a target forces Clang to create a PCH, which doesn’t work on Android and cannot be disabled.
+
+The only real solution is to manually include all the necessary headers in every .cpp and .h file, which will take an enormous amount of time, even for a very experienced person.
+
+Demanding work like this “to prove it” or “yesterday” is absurd, even for developers experienced in writing engines on PC.
+
+On Android, this engine with these hacks is exponentially more complicated than the 12 engines I’ve worked with before.
+
+This kind of work costs money, no matter how anyone perceives it.
+
+I will either continue working only the way I want, or I won’t do anything at all. Because without a contract for work I don't owe anyone anything.
+
 # System Requirements
 
 This port for Android has the following system requirements:
