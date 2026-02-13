@@ -144,7 +144,7 @@ endif ()
 
 
 set(OGG_LOCATION ${CMAKE_SOURCE_DIR}/third_party/libvorbis)
-set(OGG_INCLUDE_DIR ${OGG_LOCATION}/src/main/libvorbis-android/jni/include)
+set(OGG_INCLUDE_DIR ${OGG_LOCATION}/src/main/jni/libvorbis-android/jni/include)
 if (IS_DEBUG_BUILD)
     set(OGG_LIBRARY ${OGG_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libogg.so)
 else ()
