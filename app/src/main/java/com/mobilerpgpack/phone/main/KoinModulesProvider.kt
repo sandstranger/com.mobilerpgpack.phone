@@ -376,6 +376,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
                 TRANSLATOR_NATIVE_LIB_NAME,
+                DOOM2_RPG_HASH_LIBRARY_NAME,
                 DOOM2RPG_MAIN_ENGINE_LIB)
 
             Doom2RPGEngineInfo(DOOM2RPG_MAIN_ENGINE_LIB, nativeLibs)
@@ -400,6 +401,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
                 TRANSLATOR_NATIVE_LIB_NAME,
+                WOLFENSTEIN_RPG_HASH_LIBRARY_NAME,
                 WOLFENSTEINRPG_MAIN_ENGINE_LIB)
 
             WolfensteinRPGEngineInfo(WOLFENSTEINRPG_MAIN_ENGINE_LIB, nativeLibs)
