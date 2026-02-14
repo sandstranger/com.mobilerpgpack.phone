@@ -12,6 +12,7 @@ find_package(ZLIB REQUIRED)
 set(IS_DEBUG_BUILD OFF)
 if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(IS_DEBUG_BUILD ON)
+    add_compile_options(-fno-lto)
 endif()
 
 set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/sdl2)
