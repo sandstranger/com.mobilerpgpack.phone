@@ -1,14 +1,20 @@
 //file:noinspection ConfigurationAvoidance
 import com.google.gms.googleservices.GoogleServicesPlugin
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.jetbrains.kotlin.android)
     id 'com.google.devtools.ksp' version '2.3.5'
     id("com.google.gms.google-services")
     id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.10'
     id("com.google.firebase.crashlytics") version "3.0.6"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
 }
 
 def keystoreProperties = new Properties()
@@ -112,15 +118,88 @@ android {
         }
     }
 
-    applicationVariants.configureEach { variant ->
-        variant.outputs.configureEach { output ->
-            def appName = "Engines_Hub"
-            def versionName = variant.versionName
-            def versionCode = variant.versionCode
-            def buildType = variant.buildType.name
-            def flavor = variant.flavorName
-            def date = new Date().format("yyyy_MM_dd_HH_mm")
-            outputFileName = "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}_${date}.apk"
+    androidComponents {
+        onVariants(selector().all()) { variant ->
+            def androidExt = project.extensions.findByName("android")
+            def defaultVersionName = null
+            def defaultVersionCode = null
+            if (androidExt != null && androidExt.hasProperty("defaultConfig")) {
+                try {
+                    if (androidExt.defaultConfig.hasProperty("versionName")) {
+                        defaultVersionName = androidExt.defaultConfig.versionName?.toString()
+                    }
+                    if (androidExt.defaultConfig.hasProperty("versionCode")) {
+                        defaultVersionCode = androidExt.defaultConfig.versionCode?.toString()
+                    }
+                } catch (ignored) {
+                }
+            }
+
+            def safeGetProviderValue = { prop ->
+                if (prop == null) return null
+                try {
+                    if (prop.metaClass.respondsTo(prop, "get")) {
+                        return prop.get()
+                    } else {
+                        return prop.toString()
+                    }
+                } catch (ignored) {
+                    try {
+                        return prop.toString()
+                    } catch (e) {
+                        return null
+                    }
+                }
+            }
+
+            def versionName = null
+            def versionCode = null
+
+            try {
+                if (variant.hasProperty("versionName")) {
+                    versionName = safeGetProviderValue(variant.versionName)
+                }
+            } catch (ignored) {
+            }
+
+            try {
+                if (variant.hasProperty("versionCode")) {
+                    versionCode = safeGetProviderValue(variant.versionCode)
+                }
+            } catch (ignored) {
+            }
+
+            if (!versionName) versionName = defaultVersionName ?: "unknown"
+            if (!versionCode) versionCode = defaultVersionCode ?: "0"
+
+            variant.outputs.forEach { output ->
+                def appName = "Engines_Hub"
+                def buildType = variant.buildType
+                def flavor = variant.flavorName ?: "noflavor"
+                def date = new Date().format("yyyy_MM_dd_HH_mm")
+
+                output.outputFileName.set(
+                        "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}_${date}.apk"
+                )
+            }
+
+            if (variant.buildType == "release" && variant.name.contains("google")) {
+                def variantName = variant.name.capitalize()
+                def assembleTaskName = "assemble${variantName}"
+                def uploadSymbolsTaskName = "uploadCrashlyticsSymbolFile${variantName}"
+
+                project.afterEvaluate {
+                    def assembleTask = tasks.findByName(assembleTaskName)
+                    def uploadSymbolsTask = tasks.findByName(uploadSymbolsTaskName)
+
+                    if (assembleTask && uploadSymbolsTask) {
+                        assembleTask.finalizedBy(uploadSymbolsTask)
+                        println "SUCCESS: Task '${uploadSymbolsTask.name}' will run after '${assembleTask.name}'"
+                    } else {
+                        logger.warn("Tasks not found: ${assembleTaskName} or ${uploadSymbolsTaskName}")
+                    }
+                }
+            }
         }
     }
 
@@ -179,9 +258,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = '17'
     }
     buildFeatures {
         compose true
@@ -296,16 +372,4 @@ dependencies {
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.navigation.compose
     implementation libs.process.phoenix
-}
-
-android.applicationVariants.all { variant ->
-    if (variant.buildType.name == "release" && variant.name.contains("google")) {
-        def variantName = variant.name.capitalize()
-        def assembleTask = tasks.findByName("assemble${variantName}")
-        def uploadSymbolsTask = tasks.findByName("uploadCrashlyticsSymbolFile${variantName}")
-        if (assembleTask && uploadSymbolsTask) {
-            assembleTask.finalizedBy(uploadSymbolsTask)
-            println "SUCCESS: Task '${uploadSymbolsTask.name}' will run after '${assembleTask.name}'"
-        }
-    }
 }
