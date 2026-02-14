@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.main
 
 import com.mobilerpgpack.phone.BuildConfig
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRPGEngineInfo
 
 const val TRANSLATOR_NATIVE_LIB_NAME = "Translator"
 
@@ -53,6 +54,10 @@ const val PERFECT_DARK_JPN_NATIVE_LIB_NAME = "pd-jpn-final"
 const val PERFECT_DARK_NTSC_NATIVE_LIB_NAME = "pd-ntsc-final"
 
 const val PERFECT_DARK_PAL_NATIVE_LIB_NAME = "pd-pal-final"
+
+const val DOOM2_RPG_HASH_LIBRARY_NAME = "doomrpg2-Hash-Library"
+
+const val WOLFENSTEIN_RPG_HASH_LIBRARY_NAME = "wolfesteinrpg-Hash-Library"
 
 const val SDL2_NATIVE_LIB_NAME = "SDL2"
 
