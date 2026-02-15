@@ -215,9 +215,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
             externalNativeBuild {
                 cmake {
                     arguments "-DCMAKE_BUILD_TYPE=MinSizeRel"
@@ -229,9 +226,6 @@ android {
         }
         debug {
             jniDebuggable true
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
             externalNativeBuild {
                 cmake {
                     arguments "-DCMAKE_BUILD_TYPE=Debug"
