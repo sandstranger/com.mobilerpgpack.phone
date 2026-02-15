@@ -115,7 +115,9 @@ abstract class EngineInfo(
     private val isCursorVisible = MutableLiveData(false)
     private var displayInSafeArea: Boolean = false
     private val hideOnScreenControlsMutableState = MutableLiveData(false)
-    private val hasNGGL4ESLibrary get() = nativeLibraries.any { it == NG_GL4ES_NATIVE_LIB_NAME }
+    private val hasNGGL4ESLibrary by lazy {
+        nativeLibraries.any { it == NG_GL4ES_NATIVE_LIB_NAME }
+    }
 
     private external fun needToShowScreenControls() : Boolean
 
