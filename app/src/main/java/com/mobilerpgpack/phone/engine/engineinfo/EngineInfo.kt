@@ -105,6 +105,8 @@ abstract class EngineInfo(
 
     protected open val callExitProcessOnDestroy : Boolean = true
 
+    protected open val enableNGGL4ESSimpleShaderConv = true
+
     protected abstract val gyroInput : GyroInput
 
     private var wasInit = false
@@ -113,6 +115,7 @@ abstract class EngineInfo(
     private val isCursorVisible = MutableLiveData(false)
     private var displayInSafeArea: Boolean = false
     private val hideOnScreenControlsMutableState = MutableLiveData(false)
+    private val hasNGGL4ESLibrary get() = nativeLibraries.any { it == NG_GL4ES_NATIVE_LIB_NAME }
 
     private external fun needToShowScreenControls() : Boolean
 
@@ -192,9 +195,9 @@ abstract class EngineInfo(
         Native.register(EngineInfo::class.java, mainLibraryName)
         setUseGLES2_0State(BuildConfig.LEGACY_GLES2)
         setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
-        if (loadGL4ES && !BuildConfig.LEGACY_GLES2){
+        if (hasNGGL4ESLibrary){
             NGGL4ESJnaLayer.apply {
-                enableSimpleShaderConv = true
+                enableSimpleShaderConv = enableNGGL4ESSimpleShaderConv
                 initialize_gl4es()
             }
         }
@@ -239,7 +242,7 @@ abstract class EngineInfo(
 
     override fun onDestroy() {
         mainThreadScope.coroutineContext.cancelChildren()
-        if (loadGL4ES && !BuildConfig.LEGACY_GLES2){
+        if (hasNGGL4ESLibrary){
             NGGL4ESJnaLayer.close_gl4es()
         }
         if (callExitProcessOnDestroy) {
