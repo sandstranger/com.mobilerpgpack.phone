@@ -40,9 +40,6 @@ android {
                     arguments "-DCMAKE_BUILD_TYPE=MinSizeRel"
                 }
             }
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
         }
         debug {
             externalNativeBuild {
