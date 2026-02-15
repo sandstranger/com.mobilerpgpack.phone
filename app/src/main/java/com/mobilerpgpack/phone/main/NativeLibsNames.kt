@@ -99,7 +99,9 @@ val GLBINDING_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "glbindingd" else "glbind
 
 val PNG_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "png16d" else "png16"
 
-val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else "ng_gl4es"
+const val NG_GL4ES_NATIVE_LIB_NAME = "ng_gl4es"
+
+val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else NG_GL4ES_NATIVE_LIB_NAME
 
 val gl4esFullLibraryName = buildFullLibraryName(gl4esLibraryName)
 
