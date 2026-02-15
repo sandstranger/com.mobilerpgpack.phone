@@ -120,60 +120,10 @@ android {
 
     androidComponents {
         onVariants(selector().all()) { variant ->
-            def androidExt = project.extensions.findByName("android")
-            def defaultVersionName = null
-            def defaultVersionCode = null
-            if (androidExt != null && androidExt.hasProperty("defaultConfig")) {
-                try {
-                    if (androidExt.defaultConfig.hasProperty("versionName")) {
-                        defaultVersionName = androidExt.defaultConfig.versionName?.toString()
-                    }
-                    if (androidExt.defaultConfig.hasProperty("versionCode")) {
-                        defaultVersionCode = androidExt.defaultConfig.versionCode?.toString()
-                    }
-                } catch (ignored) {
-                }
-            }
-
-            def safeGetProviderValue = { prop ->
-                if (prop == null) return null
-                try {
-                    if (prop.metaClass.respondsTo(prop, "get")) {
-                        return prop.get()
-                    } else {
-                        return prop.toString()
-                    }
-                } catch (ignored) {
-                    try {
-                        return prop.toString()
-                    } catch (e) {
-                        return null
-                    }
-                }
-            }
-
-            def versionName = null
-            def versionCode = null
-
-            try {
-                if (variant.hasProperty("versionName")) {
-                    versionName = safeGetProviderValue(variant.versionName)
-                }
-            } catch (ignored) {
-            }
-
-            try {
-                if (variant.hasProperty("versionCode")) {
-                    versionCode = safeGetProviderValue(variant.versionCode)
-                }
-            } catch (ignored) {
-            }
-
-            if (!versionName) versionName = defaultVersionName ?: "unknown"
-            if (!versionCode) versionCode = defaultVersionCode ?: "0"
-
             variant.outputs.forEach { output ->
                 def appName = "Engines_Hub"
+                def versionName = versions.app_version_name
+                def versionCode = versions.app_version_code
                 def buildType = variant.buildType
                 def flavor = variant.flavorName ?: "noflavor"
                 def date = new Date().format("yyyy_MM_dd_HH_mm")
