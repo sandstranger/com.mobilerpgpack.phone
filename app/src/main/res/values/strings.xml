@@ -306,4 +306,7 @@
     <string name="framerate_limit">Framerate limit</string>
     <string name="mouse_sensitivity">Mouse sensitivity</string>
     <string name="controller_pointer_speed">Controller pointer speed</string>
+    <string name="openxray_active_game">OpenXRAY active game</string>
+    <string name="path_to_clear_sky_resources">Path to Clear Sky resources</string>
+    <string name="path_to_call_of_pripyat_resources">Path to Call of Pripyat resources</string>
 </resources>
