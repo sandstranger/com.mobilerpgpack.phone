@@ -173,6 +173,9 @@ android {
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
             }
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
         debug {
             jniDebuggable true

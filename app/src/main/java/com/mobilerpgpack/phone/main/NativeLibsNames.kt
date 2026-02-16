@@ -25,6 +25,8 @@ const val FTEQW_MAIN_ENGINE_LIB = "ftedroid"
 
 const val WIDELANDS_MAIN_ENGINE_LIB = "widelands"
 
+const val OPENXRAY_MAIN_ENGINE_LIB = "xr_3da"
+
 const val YQUAKE2_CORE_NATIVE_LIB_NAME = "game"
 
 const val TIBERIAN_DAWN_NATIVE_LIB_NAME = "vanillatd"
@@ -46,6 +48,8 @@ const val FMOD_NATIVE_LIB_NAME = "fmod"
 const val TIFF_NATIVE_LIB_NAME = "tiff"
 
 const val TIFFXX_NATIVE_LIB_NAME = "tiffxx"
+
+const val LZO_NATIVE_LIB_NAME = "lzo2"
 
 const val SDL3HELPER_NATIVE_LIB_NAME = "SDL3Helper"
 
@@ -92,6 +96,8 @@ const val OPUS_NATIVE_LIB_NAME = "opus"
 const val FLAC_NATIVE_LIB_NAME = "FLAC"
 
 const val SND_FILE_NATIVE_LIB_NAME = "sndfile"
+
+const val LUAJIT_NATIVE_LIB_NAME = "luajit"
 
 val FREETYPE_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "freetyped" else "freetype"
 
