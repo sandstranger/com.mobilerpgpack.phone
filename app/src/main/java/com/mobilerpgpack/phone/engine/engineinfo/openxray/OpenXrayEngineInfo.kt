@@ -32,14 +32,35 @@ class OpenXrayEngineInfo (mainEngineLib: String,
             }
         }
 
-    private external fun setPathToResources (pathToDataFolder : String)
+    override val commandLineArgs: Array<String>
+        get() {
+            val baseCommandLineArgs = super.commandLineArgs
 
-    private external fun setActiveGame (activeGame : String)
+            return mutableListOf<String>().let {
+                it += baseCommandLineArgs
+
+                if (!baseCommandLineArgs.contains(CLEAR_SKY_COMMAND) &&
+                    !baseCommandLineArgs.contains(CALL_OF_PRIPYAT_COMMAND)) {
+                    it += when (prefsStorage.activeOpenXrayGame.value!!) {
+                        OpenXrayGames.ClearSky -> CLEAR_SKY_COMMAND
+                        OpenXrayGames.CallOfPripyat -> CALL_OF_PRIPYAT_COMMAND
+                    }
+                }
+
+                it.toTypedArray()
+            }
+        }
+
+    private external fun setPathToResources (pathToDataFolder : String)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(OpenXrayEngineInfo::class.java, mainLibraryName)
         setPathToResources(pathToResource)
-        setActiveGame(activeGame.name)
+    }
+
+    private companion object{
+        private const val CALL_OF_PRIPYAT_COMMAND = "-cop"
+        private const val CLEAR_SKY_COMMAND = "-cs"
     }
 }
