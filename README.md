@@ -40,6 +40,16 @@ On Android, this engine with these hacks is exponentially more complicated than 
 
 This kind of work costs money, no matter how anyone perceives it.
 
+The actual cost of rewriting a renderer from desktop OpenGL 4.x to GLES 3.2 — even with the help of GL translators and SPIRV-Cross — is around $80,000–$100,000 and would realistically take about a year.
+
+That is what a real IT company would charge just for the rendering part. Adding the remaining work would increase the cost by another $50,000–$100,000.
+
+So, the total cost of porting OpenXRay to mobile devices in a professional environment would be roughly $150,000–$200,000.
+
+I have often seen “armchair experts” claim that almost nothing needs to be done when using SPIRV-Cross to convert desktop GL shaders to GLES 3.2. That is lie.
+
+Please don’t contact me with requests to port something or with your “cool ideas.” Do it yourself. Such messages will be ignored.
+
 I will either continue working only the way I want, or I won’t do anything at all. Because without a contract for work I don't owe anyone anything.
 
 # System Requirements
