@@ -40,7 +40,7 @@ On Android, this engine with these hacks is exponentially more complicated than 
 
 This kind of work costs money, no matter how anyone perceives it.
 
-The actual cost of rewriting a renderer from desktop OpenGL 4.x to GLES 3.2 — even with the help of GL translators and SPIRV-Cross — is around $80,000–$100,000 and would realistically take about a year.
+The actual cost of rewriting a renderer from desktop OpenGL 4.x to GLES 3.2 — even with the help of GL translators and SPIRV-Cross — is around $80,000–$100,000 and would realistically take about a year or even more.
 
 That is what a real IT company would charge just for the rendering part. Adding the remaining work would increase the cost by another $50,000–$100,000.
 
