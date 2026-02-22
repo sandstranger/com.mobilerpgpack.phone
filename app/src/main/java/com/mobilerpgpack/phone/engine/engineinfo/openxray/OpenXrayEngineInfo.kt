@@ -24,6 +24,8 @@ class OpenXrayEngineInfo (mainEngineLib: String,
 
     override val enableNGGL4ESSimpleShaderConv = false
 
+    override val mouseButtonsEventsCanBeInvoked = true
+
     override val pathToResource: String
         get() {
             return when (activeGame) {
