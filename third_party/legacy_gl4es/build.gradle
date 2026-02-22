@@ -31,18 +31,18 @@ android {
             path 'src/main/jni/gl4es/Android.mk'
         }
     }
-    buildTypes {
-        release {
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
-        }
-    }
     buildToolsVersion versions.build_tools_version
     ndkVersion versions.ndk_version
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+    }
+    buildTypes {
+        release {
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
+        }
     }
 }
 

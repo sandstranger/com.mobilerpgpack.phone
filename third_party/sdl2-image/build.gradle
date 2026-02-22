@@ -35,6 +35,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    buildTypes {
+        release {
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
+        }
+    }
 }
 
 preBuild.dependsOn ':third_party:sdl2:android-project:app:build',

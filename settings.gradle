@@ -11,6 +11,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -56,3 +59,5 @@ include ':third_party:sdl2-image'
 include ':third_party:libtiff'
 include ':third_party:glbinding'
 include ':third_party:glob'
+include ':third_party:luajit'
+include ':third_party:lzo'

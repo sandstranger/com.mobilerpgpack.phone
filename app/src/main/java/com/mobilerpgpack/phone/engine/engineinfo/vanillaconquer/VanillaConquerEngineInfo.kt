@@ -36,6 +36,8 @@ class VanillaConquerEngineInfo :
 
     override val touchFullScreenModeCanBeUsed = false
 
+    override val commandLineParams get() = prefsStorage.vanillaConquerCommandLineArgs.value!!
+
     override val pathToResource: String
         get() = when (activeGame) {
             VanillaConquerGames.TiberianDawn -> prefsStorage.pathToTiberianDawnResources.value!!
