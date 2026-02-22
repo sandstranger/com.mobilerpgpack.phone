@@ -306,4 +306,7 @@
     <string name="framerate_limit">帧率限制</string>
     <string name="mouse_sensitivity">鼠标灵敏度</string>
     <string name="controller_pointer_speed">控制器指针速度</string>
+    <string name="openxray_active_game">OpenXRAY 当前激活的游戏</string>
+    <string name="path_to_clear_sky_resources">晴空资源路径</string>
+    <string name="path_to_call_of_pripyat_resources">普里皮亚季的召唤资源路径</string>
 </resources>

@@ -1,14 +1,20 @@
 //file:noinspection ConfigurationAvoidance
 import com.google.gms.googleservices.GoogleServicesPlugin
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.jetbrains.kotlin.android)
     id 'com.google.devtools.ksp' version '2.3.5'
     id("com.google.gms.google-services")
     id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.10'
     id("com.google.firebase.crashlytics") version "3.0.6"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
 }
 
 def keystoreProperties = new Properties()
@@ -112,15 +118,38 @@ android {
         }
     }
 
-    applicationVariants.configureEach { variant ->
-        variant.outputs.configureEach { output ->
-            def appName = "Engines_Hub"
-            def versionName = variant.versionName
-            def versionCode = variant.versionCode
-            def buildType = variant.buildType.name
-            def flavor = variant.flavorName
-            def date = new Date().format("yyyy_MM_dd_HH_mm")
-            outputFileName = "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}_${date}.apk"
+    androidComponents {
+        onVariants(selector().all()) { variant ->
+            variant.outputs.forEach { output ->
+                def appName = "Engines_Hub"
+                def versionName = versions.app_version_name
+                def versionCode = versions.app_version_code
+                def buildType = variant.buildType
+                def flavor = variant.flavorName ?: "noflavor"
+                def date = new Date().format("yyyy_MM_dd_HH_mm")
+
+                output.outputFileName.set(
+                        "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}_${date}.apk"
+                )
+            }
+
+            if (variant.buildType == "release" && variant.name.contains("google")) {
+                def variantName = variant.name.capitalize()
+                def assembleTaskName = "assemble${variantName}"
+                def uploadSymbolsTaskName = "uploadCrashlyticsSymbolFile${variantName}"
+
+                project.afterEvaluate {
+                    def assembleTask = tasks.findByName(assembleTaskName)
+                    def uploadSymbolsTask = tasks.findByName(uploadSymbolsTaskName)
+
+                    if (assembleTask && uploadSymbolsTask) {
+                        assembleTask.finalizedBy(uploadSymbolsTask)
+                        println "SUCCESS: Task '${uploadSymbolsTask.name}' will run after '${assembleTask.name}'"
+                    } else {
+                        logger.warn("Tasks not found: ${assembleTaskName} or ${uploadSymbolsTaskName}")
+                    }
+                }
+            }
         }
     }
 
@@ -136,9 +165,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
             externalNativeBuild {
                 cmake {
                     arguments "-DCMAKE_BUILD_TYPE=MinSizeRel"
@@ -147,12 +173,12 @@ android {
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
             }
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
         debug {
             jniDebuggable true
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
             externalNativeBuild {
                 cmake {
                     arguments "-DCMAKE_BUILD_TYPE=Debug"
@@ -180,9 +206,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
     buildFeatures {
         compose true
         buildConfig true
@@ -208,7 +231,8 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':third_party:freetype:build',':third_party:zmusic:build',':third_party:bullet:build',
         ':third_party:libjpegturbo:build',':third_party:bzip2:build',':third_party:ode:build',
         ':third_party:yquake2:build',':third_party:sdl2-image:build',
-        ':third_party:glbinding:build',':third_party:glob:build'
+        ':third_party:glbinding:build',':third_party:glob:build',':third_party:luajit:build',
+        ':third_party:lzo:build'
 
 dependencies {
     implementation project(':third_party:sdl2:android-project:app')
@@ -236,6 +260,8 @@ dependencies {
     implementation (project(":third_party:sdl2-image"))
     implementation (project(":third_party:glbinding"))
     implementation (project(":third_party:glob"))
+    implementation (project(":third_party:luajit"))
+    implementation (project(":third_party:lzo"))
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
     implementation(libs.koin.core)
@@ -293,16 +319,4 @@ dependencies {
     implementation platform(libs.androidx.compose.bom)
     implementation libs.androidx.navigation.compose
     implementation libs.process.phoenix
-}
-
-android.applicationVariants.all { variant ->
-    if (variant.buildType.name == "release" && variant.name.contains("google")) {
-        def variantName = variant.name.capitalize()
-        def assembleTask = tasks.findByName("assemble${variantName}")
-        def uploadSymbolsTask = tasks.findByName("uploadCrashlyticsSymbolFile${variantName}")
-        if (assembleTask && uploadSymbolsTask) {
-            assembleTask.finalizedBy(uploadSymbolsTask)
-            println "SUCCESS: Task '${uploadSymbolsTask.name}' will run after '${assembleTask.name}'"
-        }
-    }
 }
