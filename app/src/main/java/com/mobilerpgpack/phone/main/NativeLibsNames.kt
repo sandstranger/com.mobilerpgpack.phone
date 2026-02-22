@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.main
 
 import com.mobilerpgpack.phone.BuildConfig
+import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRPGEngineInfo
 
 const val TRANSLATOR_NATIVE_LIB_NAME = "Translator"
 
@@ -24,6 +25,8 @@ const val FTEQW_MAIN_ENGINE_LIB = "ftedroid"
 
 const val WIDELANDS_MAIN_ENGINE_LIB = "widelands"
 
+const val OPENXRAY_MAIN_ENGINE_LIB = "xr_3da"
+
 const val YQUAKE2_CORE_NATIVE_LIB_NAME = "game"
 
 const val TIBERIAN_DAWN_NATIVE_LIB_NAME = "vanillatd"
@@ -46,6 +49,8 @@ const val TIFF_NATIVE_LIB_NAME = "tiff"
 
 const val TIFFXX_NATIVE_LIB_NAME = "tiffxx"
 
+const val LZO_NATIVE_LIB_NAME = "lzo2"
+
 const val SDL3HELPER_NATIVE_LIB_NAME = "SDL3Helper"
 
 const val PERFECT_DARK_JPN_NATIVE_LIB_NAME = "pd-jpn-final"
@@ -53,6 +58,10 @@ const val PERFECT_DARK_JPN_NATIVE_LIB_NAME = "pd-jpn-final"
 const val PERFECT_DARK_NTSC_NATIVE_LIB_NAME = "pd-ntsc-final"
 
 const val PERFECT_DARK_PAL_NATIVE_LIB_NAME = "pd-pal-final"
+
+const val DOOM2_RPG_HASH_LIBRARY_NAME = "doomrpg2-Hash-Library"
+
+const val WOLFENSTEIN_RPG_HASH_LIBRARY_NAME = "wolfesteinrpg-Hash-Library"
 
 const val SDL2_NATIVE_LIB_NAME = "SDL2"
 
@@ -88,13 +97,17 @@ const val FLAC_NATIVE_LIB_NAME = "FLAC"
 
 const val SND_FILE_NATIVE_LIB_NAME = "sndfile"
 
+const val LUAJIT_NATIVE_LIB_NAME = "luajit"
+
 val FREETYPE_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "freetyped" else "freetype"
 
 val GLBINDING_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "glbindingd" else "glbinding"
 
 val PNG_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "png16d" else "png16"
 
-val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else "ng_gl4es"
+const val NG_GL4ES_NATIVE_LIB_NAME = "ng_gl4es"
+
+val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else NG_GL4ES_NATIVE_LIB_NAME
 
 val gl4esFullLibraryName = buildFullLibraryName(gl4esLibraryName)
 

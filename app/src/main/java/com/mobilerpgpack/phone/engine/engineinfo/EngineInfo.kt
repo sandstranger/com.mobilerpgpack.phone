@@ -30,7 +30,9 @@ import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
+import com.mobilerpgpack.phone.main.gl4esLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
@@ -103,6 +105,8 @@ abstract class EngineInfo(
 
     protected open val callExitProcessOnDestroy : Boolean = true
 
+    protected open val enableNGGL4ESSimpleShaderConv = true
+
     protected abstract val gyroInput : GyroInput
 
     private var wasInit = false
@@ -111,6 +115,9 @@ abstract class EngineInfo(
     private val isCursorVisible = MutableLiveData(false)
     private var displayInSafeArea: Boolean = false
     private val hideOnScreenControlsMutableState = MutableLiveData(false)
+    private val hasNGGL4ESLibrary by lazy {
+        nativeLibraries.any { it == NG_GL4ES_NATIVE_LIB_NAME }
+    }
 
     private external fun needToShowScreenControls() : Boolean
 
@@ -190,6 +197,12 @@ abstract class EngineInfo(
         Native.register(EngineInfo::class.java, mainLibraryName)
         setUseGLES2_0State(BuildConfig.LEGACY_GLES2)
         setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
+        if (hasNGGL4ESLibrary){
+            NGGL4ESJnaLayer.apply {
+                enableSimpleShaderConv = enableNGGL4ESSimpleShaderConv
+                initialize_gl4es()
+            }
+        }
     }
 
     override fun initialize(activity: ComponentActivity) {
@@ -231,6 +244,9 @@ abstract class EngineInfo(
 
     override fun onDestroy() {
         mainThreadScope.coroutineContext.cancelChildren()
+        if (hasNGGL4ESLibrary){
+            NGGL4ESJnaLayer.close_gl4es()
+        }
         if (callExitProcessOnDestroy) {
             exitProcess(0)
         }
@@ -421,6 +437,33 @@ abstract class EngineInfo(
 
             onDispose {
                 choreographer.removeFrameCallback(frameCallback)
+            }
+        }
+    }
+
+    private object NGGL4ESJnaLayer {
+        private const val SIMPLE_SHADER_CONV_ENABLED_STATE : Int = 1
+        private const val SIMPLE_SHADER_CONV_DISABLED_STATE : Int = 0
+
+        private var _enableSimpleShaderConv = false
+
+        private external fun updateSimpleShaderConvState(shaderConvState : Int)
+        external fun initialize_gl4es()
+        external fun close_gl4es()
+
+        var enableSimpleShaderConv : Boolean
+            get() = _enableSimpleShaderConv
+            set(value) {
+                _enableSimpleShaderConv = value
+                if (!BuildConfig.LEGACY_GLES2) {
+                    updateSimpleShaderConvState(if (value) SIMPLE_SHADER_CONV_ENABLED_STATE
+                        else SIMPLE_SHADER_CONV_DISABLED_STATE)
+                }
+            }
+
+        init {
+            if (!BuildConfig.LEGACY_GLES2) {
+                Native.register(NGGL4ESJnaLayer::class.java, NG_GL4ES_NATIVE_LIB_NAME)
             }
         }
     }

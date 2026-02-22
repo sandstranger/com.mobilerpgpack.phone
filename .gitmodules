@@ -136,3 +136,9 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/Vanilla-Conquer"]
 	path = app/src/main/jni/Vanilla-Conquer
 	url = https://github.com/sandstranger/Vanilla-Conquer.git
+[submodule "app/src/main/jni/xray-16"]
+	path = app/src/main/jni/xray-16
+	url = https://github.com/sandstranger/xray-16
+[submodule "third_party/lzo/src/main/jni/lzo"]
+	path = third_party/lzo/src/main/jni/lzo
+	url = https://github.com/sandstranger/lzo.git
