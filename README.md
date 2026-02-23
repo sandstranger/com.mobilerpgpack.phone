@@ -542,6 +542,8 @@ Theora: [Licence](https://github.com/xiph/theora/blob/main/COPYING) https://gith
 
 Luajit cmake: [Licence](https://github.com/WohlSoft/LuaJIT/blob/v2.1/COPYRIGHT)  https://github.com/WohlSoft/LuaJIT
 
+Android Glob: https://github.com/freshHua/glob
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
