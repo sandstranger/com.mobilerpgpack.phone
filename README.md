@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer, OpenXRay for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer, OpenXRay projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -25,32 +25,7 @@ https://github.com/widelands/widelands
 
 https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
-# NOTE About openxray
-The project is built on hacks and workarounds, not on a proper architecture. There is no real way to make it work without PCH.
-
-Any attempt to “do it quickly” or “yesterday” is absolute nonsense, even for an experienced engineer. On Android, PCH doesn’t work at all.
-
-Using -include on a target forces Clang to create a PCH, which doesn’t work on Android and cannot be disabled.
-
-The only real solution is to manually include all the necessary headers in every .cpp and .h file, which will take an enormous amount of time, even for a very experienced person.
-
-Demanding work like this “to prove it” or “yesterday” is absurd, even for developers experienced in writing engines on PC.
-
-On Android, this engine with these hacks is exponentially more complicated than the 12 engines I’ve worked with before.
-
-This kind of work costs money, no matter how anyone perceives it.
-
-The actual cost of rewriting a renderer from desktop OpenGL 4.x to GLES 3.2 — even with the help of GL translators and SPIRV-Cross — is around $80,000–$100,000 and would realistically take about a year or even more.
-
-That is what a real IT company would charge just for the rendering part. Adding the remaining work would increase the cost by another $50,000–$100,000.
-
-So, the total cost of porting OpenXRay to mobile devices in a professional environment would be roughly $150,000–$200,000.
-
-I have often seen “armchair experts” claim that almost nothing needs to be done when using SPIRV-Cross to convert desktop GL shaders to GLES 3.2. That is lie.
-
-Please don’t contact me with requests to port something or with your “cool ideas.” Do it yourself. Such messages will be ignored.
-
-I will either continue working only the way I want, or I won’t do anything at all. Because without a contract for work I don't owe anyone anything.
+https://github.com/OpenXRay/xray-16
 
 # System Requirements
 
@@ -298,6 +273,10 @@ This port is using some code from Vanilla-Conquer nintendo switch port - https:/
 
 All credits for this code to capsterx-switch - https://github.com/capsterx-switch
 
+## Openxray
+
+Unplayable yet.
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
@@ -362,6 +341,8 @@ FTEQW engine source code: [Licence](https://github.com/fte-team/fteqw/blob/maste
 Widelands engine source code: [Licence](https://github.com/widelands/widelands/blob/master/COPYING) https://github.com/widelands/widelands
 
 Vanilla-Conquer engine source code: [Licence](https://github.com/TheAssemblyArmada/Vanilla-Conquer/blob/vanilla/License.txt)  https://github.com/TheAssemblyArmada/Vanilla-Conquer
+
+OpenXRay engine source code: [Licence](https://github.com/OpenXRay/xray-16/blob/dev/License.txt) https://github.com/OpenXRay/xray-16
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
@@ -553,7 +534,13 @@ SDL2 Image: [Licence](https://github.com/libsdl-org/SDL_image/blob/SDL2/LICENSE.
 
 Process Phoenix: [Licence](https://github.com/JakeWharton/ProcessPhoenix/blob/trunk/LICENSE.txt)  https://github.com/JakeWharton/ProcessPhoenix
 
-Code from Vanilla-Conquer nintendo switch port: https://github.com/capsterx-switch/Vanilla-Conquer
+Code from Vanilla-Conquer nintendo switch port: [Licence](https://github.com/capsterx-switch/Vanilla-Conquer/blob/vanilla/License.txt)  https://github.com/capsterx-switch/Vanilla-Conquer
+
+LZO fork: [Licence](https://github.com/nemequ/lzo/blob/master/COPYING) https://github.com/nemequ/lzo
+
+Theora: [Licence](https://github.com/xiph/theora/blob/main/COPYING) https://github.com/xiph/theora
+
+Luajit cmake: [Licence](https://github.com/WohlSoft/LuaJIT/blob/v2.1/COPYRIGHT)  https://github.com/WohlSoft/LuaJIT
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
