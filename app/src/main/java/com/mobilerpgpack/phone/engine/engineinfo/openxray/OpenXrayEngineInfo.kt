@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.openxray
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
 import org.koin.core.component.inject
@@ -10,6 +11,8 @@ import org.koin.core.qualifier.named
 class OpenXrayEngineInfo (mainEngineLib: String,
                           allLibs: Array<String>) :
     SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.OpenXRAY){
+
+    private val nggL4ESJniLayer by lazy { NGGL4ESJniLayer() }
 
     private val prefsStorage : OpenXrayPreferencesStorage by inject (
         named(EngineTypes.OpenXRAY.name))
@@ -59,10 +62,21 @@ class OpenXrayEngineInfo (mainEngineLib: String,
         super.onNativeLibrariesLoaded()
         Native.register(OpenXrayEngineInfo::class.java, mainLibraryName)
         setPathToResources(pathToResource)
+        nggL4ESJniLayer.enableOpenXray()
     }
 
     private companion object{
         private const val CALL_OF_PRIPYAT_COMMAND = "-cop"
         private const val CLEAR_SKY_COMMAND = "-cs"
+    }
+
+    private class NGGL4ESJniLayer {
+        private external fun setIsOpenXrayActive (isOpenXrayActive : Boolean)
+
+        init {
+            Native.register(NGGL4ESJniLayer::class.java, NG_GL4ES_NATIVE_LIB_NAME)
+        }
+
+        fun enableOpenXray () = setIsOpenXrayActive(true)
     }
 }
