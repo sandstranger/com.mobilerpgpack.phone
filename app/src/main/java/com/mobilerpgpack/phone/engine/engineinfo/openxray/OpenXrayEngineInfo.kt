@@ -12,8 +12,6 @@ class OpenXrayEngineInfo (mainEngineLib: String,
                           allLibs: Array<String>) :
     SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.OpenXRAY){
 
-    private val nggL4ESJniLayer by lazy { NGGL4ESJniLayer() }
-
     private val prefsStorage : OpenXrayPreferencesStorage by inject (
         named(EngineTypes.OpenXRAY.name))
 
@@ -62,21 +60,10 @@ class OpenXrayEngineInfo (mainEngineLib: String,
         super.onNativeLibrariesLoaded()
         Native.register(OpenXrayEngineInfo::class.java, mainLibraryName)
         setPathToResources(pathToResource)
-        nggL4ESJniLayer.enableOpenXray()
     }
 
     private companion object{
         private const val CALL_OF_PRIPYAT_COMMAND = "-cop"
         private const val CLEAR_SKY_COMMAND = "-cs"
-    }
-
-    private class NGGL4ESJniLayer {
-        private external fun setIsOpenXrayActive (isOpenXrayActive : Boolean)
-
-        init {
-            Native.register(NGGL4ESJniLayer::class.java, NG_GL4ES_NATIVE_LIB_NAME)
-        }
-
-        fun enableOpenXray () = setIsOpenXrayActive(true)
     }
 }
