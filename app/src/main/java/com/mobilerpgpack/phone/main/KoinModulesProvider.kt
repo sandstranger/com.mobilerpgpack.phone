@@ -488,6 +488,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 MP3LAME_NATIVE_LIB_NAME,
                 OGG_NATIVE_LIB_NAME,
                 VORBIS_NATIVE_LIB_NAME,
+                VORBIS_FILE_NATIVE_LIB_NAME,
+                VORBIS_ENC_NATIVE_LIB_NAME,
                 FLAC_NATIVE_LIB_NAME,
                 OPUS_NATIVE_LIB_NAME,
                 SND_FILE_NATIVE_LIB_NAME,
@@ -668,6 +670,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 JPEG_NATIVE_LIB_NAME,
                 OGG_NATIVE_LIB_NAME,
                 VORBIS_NATIVE_LIB_NAME,
+                VORBIS_FILE_NATIVE_LIB_NAME,
+                VORBIS_ENC_NATIVE_LIB_NAME,
                 OPUS_NATIVE_LIB_NAME,
             )){
                 addAll(ffmpegLibs)
@@ -766,6 +770,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 JPEG_NATIVE_LIB_NAME,
                 OGG_NATIVE_LIB_NAME,
                 VORBIS_NATIVE_LIB_NAME,
+                VORBIS_FILE_NATIVE_LIB_NAME,
+                VORBIS_ENC_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 LUAJIT_NATIVE_LIB_NAME,
