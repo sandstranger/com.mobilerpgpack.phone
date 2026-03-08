@@ -7,12 +7,13 @@ if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 if (IS_DEBUG_BUILD)
-    set(OGG_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libogg.so")
+    set(OGG_LIBRARY "${CMAKE_SOURCE_DIR}/../ogg/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libogg.so")
 else ()
-    set(OGG_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libogg.so")
+    set(OGG_LIBRARY "${CMAKE_SOURCE_DIR}/../ogg/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libogg.so")
 endif ()
 
-set(OGG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../libvorbis/src/main/jni/libvorbis-android/jni/include")
+set(OGG_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../ogg/src/main/jni/ogg/include")
+include_directories(${OGG_INCLUDE_DIR} "${CMAKE_SOURCE_DIR}/../ogg/src/main/include")
 
 if (IS_DEBUG_BUILD)
     set(FLAC_LIBRARY "${CMAKE_SOURCE_DIR}/../flac/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libFLAC.so")
@@ -43,15 +44,15 @@ set(mpg123_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../mpg123/src/main/jni/MPG123-Androi
 
 if (IS_DEBUG_BUILD)
     set(Vorbis_Vorbis_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so")
-    set(Vorbis_Enc_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so")
-    set(Vorbis_File_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so")
+    set(Vorbis_Enc_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbisenc.so")
+    set(Vorbis_File_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbisfile.so")
 else ()
     set(Vorbis_Vorbis_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so")
-    set(Vorbis_Enc_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so")
-    set(Vorbis_File_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so")
+    set(Vorbis_Enc_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbisenc.so")
+    set(Vorbis_File_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbisfile.so")
 endif ()
 
-set(Vorbis_Vorbis_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../libvorbis/src/main/jni/libvorbis-android/jni/include")
+set(Vorbis_Vorbis_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../libvorbis/src/main/jni/libvorbis-android/include")
 
 if (IS_DEBUG_BUILD)
     set(OPUS_LIBRARY "${CMAKE_SOURCE_DIR}/../opus/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libopus.so")
