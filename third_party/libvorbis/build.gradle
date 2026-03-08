@@ -13,26 +13,39 @@ android {
             abiFilters = abi_filters
         }
         externalNativeBuild {
-            ndkBuild {
-                arguments += build_flags.ndk_build_platform
-                arguments += build_flags.compiling_arguments
-                arguments += build_flags.ndk_build_android_stl
-                cFlags  = build_flags.common_c_flags
-                cppFlags = build_flags.common_cpp_flags
+            cmake {
+                arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
+                        "-DBUILD_SHARED_LIBS=ON", "-DBUILD_TESTING=OFF",
+                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
+                        "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
+                        "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
+                        "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
+                        "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
             }
         }
     }
     externalNativeBuild {
-        ndkBuild {
-            path 'src/main/jni/libvorbis-android/jni/Android.mk'
+        cmake {
+            path "CMakeLists.txt"
+            version versions.cmake_version
         }
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            externalNativeBuild {
+                cmake {
+                    arguments "-DCMAKE_BUILD_TYPE=MinSizeRel"
+                }
+            }
             ndk {
                 debugSymbolLevel 'FULL'
+            }
+        }
+        debug {
+            externalNativeBuild {
+                cmake {
+                    arguments "-DCMAKE_BUILD_TYPE=Debug"
+                }
             }
         }
     }
@@ -44,7 +57,10 @@ android {
     ndkVersion versions.ndk_version
 }
 
+preBuild.dependsOn ':third_party:ogg:build'
+
 dependencies {
+    implementation(project(":third_party:ogg"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
