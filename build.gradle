@@ -2,8 +2,8 @@
 buildscript {
     ext.versions = [
             app_package_name : "com.mobilerpgpack.phone",
-            app_version_code : 48,
-            app_version_name : "2.6.2",
+            app_version_code : 49,
+            app_version_name : "2.6.3",
             min_sdk : 24,
             target_sdk : 36,
             ndk_version : '29.0.14206865',
@@ -13,12 +13,12 @@ buildscript {
     ]
     ext.build_flags = [
             compiling_arguments : "-j${Runtime.getRuntime().availableProcessors()}",
-            common_c_flags : ["-Os","-flto=full", "-fno-omit-frame-pointer","-funwind-tables", "-g"],
-            common_cpp_flags : ["-Os" ,"-flto=full", "-fno-omit-frame-pointer","-funwind-tables", "-g"],
+            common_c_flags : ["-Os","-flto=full", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong", "-g"],
+            common_cpp_flags : ["-Os" ,"-flto=full", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong", "-g"],
             ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=full -Wl,--build-id",
             ndk_build_android_stl : "APP_STL=c++_shared",
-            CMAKE_CFLAGS : "-Os -flto=full -fno-omit-frame-pointer -funwind-tables -g",
-            CMAKE_CXXFLAGS : "-Os -flto=full -fno-omit-frame-pointer -funwind-tables -g",
+            CMAKE_CFLAGS : "-Os -flto=full -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g",
+            CMAKE_CXXFLAGS : "-Os -flto=full -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g",
             CMAKE_ANDROID_STL : "-DANDROID_STL=c++_shared",
             CMAKE_SHADERLINKER_FLAGS :"-flto=full -fuse-ld=lld -Wl,--build-id",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
