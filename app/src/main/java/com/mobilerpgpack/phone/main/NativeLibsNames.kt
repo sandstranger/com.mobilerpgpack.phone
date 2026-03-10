@@ -87,6 +87,10 @@ const val MP3LAME_NATIVE_LIB_NAME = "mp3lame"
 
 const val VORBIS_NATIVE_LIB_NAME = "vorbis"
 
+const val VORBIS_FILE_NATIVE_LIB_NAME = "vorbisfile"
+
+const val VORBIS_ENC_NATIVE_LIB_NAME = "vorbisenc"
+
 const val OPUS_NATIVE_LIB_NAME = "opus"
 
 const val FLAC_NATIVE_LIB_NAME = "FLAC"
