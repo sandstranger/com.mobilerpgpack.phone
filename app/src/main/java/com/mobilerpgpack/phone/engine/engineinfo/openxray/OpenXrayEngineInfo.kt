@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.openxray
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
 import org.koin.core.component.inject

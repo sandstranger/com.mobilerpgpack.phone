@@ -45,7 +45,7 @@ android {
                 }
             }
             ndk {
-                debugSymbolLevel 'SYMBOL_TABLE'
+                debugSymbolLevel 'FULL'
             }
         }
         debug {
@@ -63,10 +63,12 @@ android {
 }
 
 preBuild.dependsOn ':third_party:libvorbis:build',':third_party:flac:build',
-        ':third_party:opus:build',':third_party:mpg123:build',':third_party:libmp3lame:build'
+        ':third_party:opus:build',':third_party:mpg123:build',':third_party:libmp3lame:build',
+        ':third_party:ogg:build'
 
 dependencies {
     implementation(project(":third_party:libvorbis"))
+    implementation(project(":third_party:ogg"))
     implementation(project(":third_party:flac"))
     implementation(project(":third_party:opus"))
     implementation(project(":third_party:mpg123"))

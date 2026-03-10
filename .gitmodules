@@ -78,7 +78,7 @@ url=https://github.com/sandstranger/libsndfile.git
 	url = https://github.com/xiph/flac.git
 [submodule "third_party/libvorbis/src/main/jni/libvorbis-android"]
 	path = third_party/libvorbis/src/main/jni/libvorbis-android
-	url = https://github.com/sandstranger/libvorbis-android.git
+url=https://gitlab.xiph.org/xiph/vorbis.git
 [submodule "third_party/opus/src/main/jni/opus"]
 	path = third_party/opus/src/main/jni/opus
 	url = https://github.com/xiph/opus.git
@@ -142,3 +142,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/lzo/src/main/jni/lzo"]
 	path = third_party/lzo/src/main/jni/lzo
 	url = https://github.com/sandstranger/lzo.git
+[submodule "third_party/ogg/src/main/jni/ogg"]
+	path = third_party/ogg/src/main/jni/ogg
+	url = https://gitlab.xiph.org/xiph/ogg.git

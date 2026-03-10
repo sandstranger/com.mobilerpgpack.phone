@@ -144,16 +144,22 @@ else ()
     set(JPEG_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libjpeg.so" CACHE STRING "" FORCE)
 endif ()
 
-set(VORBISFILE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libvorbis/src/main/jni/libvorbis-android/jni/include" CACHE STRING "" FORCE)
+set(VORBISFILE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libvorbis/src/main/jni/libvorbis-android/include" CACHE STRING "" FORCE)
 if (IS_DEBUG_BUILD)
-    set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so" CACHE STRING "" FORCE)
+    set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so"
+       "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbisfile.so"
+        "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbisenc.so"
+        CACHE STRING "" FORCE)
 else ()
-    set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so" CACHE STRING "" FORCE)
+    set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so"
+     "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbisenc.so"
+     "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbisfile.so"
+     CACHE STRING "" FORCE)
 endif ()
 
 
-set(OGG_LOCATION ${CMAKE_SOURCE_DIR}/third_party/libvorbis)
-set(OGG_INCLUDE_DIR ${OGG_LOCATION}/src/main/jni/libvorbis-android/jni/include)
+set(OGG_LOCATION ${CMAKE_SOURCE_DIR}/third_party/ogg)
+set(OGG_INCLUDE_DIR ${OGG_LOCATION}/src/main/jni/ogg/include)
 if (IS_DEBUG_BUILD)
     set(OGG_LIBRARY ${OGG_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libogg.so)
 else ()
@@ -298,6 +304,8 @@ endif ()
 set(LUA_LOCATION ${CMAKE_SOURCE_DIR}/third_party/luajit)
 set(LUA_INCLUDE_DIR ${LUA_LOCATION}/src/main/include)
 set(LUA_LIBRARIES ${LUA_LOCATION}/src/main/jniLibs/${ANDROID_ABI}/libluajit.so)
+
+include_directories ("${OGG_LOCATION}/src/main/include")
 
 set (USE_OPENGL ON)
 set (WITH_SDL "2")
