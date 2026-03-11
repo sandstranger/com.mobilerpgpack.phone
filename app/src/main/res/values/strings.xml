@@ -222,6 +222,7 @@
     <string name="increase_controls_size">Size+</string>
     <string name="decrease_controls_size">Size-</string>
     <string name="decrease_controls_alpha">Alpha-</string>
+    <string name="alpha_value">Alpha:</string>
     <string name="increase_controls_alpha">Alpha+</string>
     <string name="reset_controls_to_default">Reset to defaults</string>
     <string name="close_controls_configuration">Back</string>
