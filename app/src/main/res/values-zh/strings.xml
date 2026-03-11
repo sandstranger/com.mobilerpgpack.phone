@@ -309,4 +309,5 @@
     <string name="openxray_active_game">OpenXRAY 当前激活的游戏</string>
     <string name="path_to_clear_sky_resources">晴空资源路径</string>
     <string name="path_to_call_of_pripyat_resources">普里皮亚季的召唤资源路径</string>
+    <string name="alpha_value">字母:</string>
 </resources>
