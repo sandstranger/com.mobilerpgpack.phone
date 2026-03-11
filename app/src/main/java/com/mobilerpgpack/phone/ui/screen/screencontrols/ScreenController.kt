@@ -89,6 +89,7 @@ import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
+import java.util.Locale
 import kotlin.math.roundToInt
 
 abstract class ScreenController : IScreenController {
@@ -169,6 +170,7 @@ abstract class ScreenController : IScreenController {
         val clampButtonsPrefsKey = remember { booleanPreferencesKey("${activeEngineSaved.name.lowercase()}_${controlsType.name.lowercase()}") }
         val viewsToDraw = remember { mutableMapOf<String, IScreenControlsView>() }
         var selectedButtonId by remember { mutableStateOf<String?>(null) }
+        var selectedButtonAlpha by remember { mutableStateOf<String?>(null) }
         val isEditMode = _isEditMode.getComposableValue(!inGame)
         val backgroundColor by remember (inGame, isEditMode) {
             mutableStateOf(if (!inGame) {
@@ -274,11 +276,12 @@ abstract class ScreenController : IScreenController {
                         val editControlsViewSize = getViewSize(0.3f)
                         EditControls(
                             selectedButtonId,
+                            selectedButtonAlpha,
                             onAlphaChange = { delta ->
                                 selectedButtonId?.let { id ->
                                     viewsToDraw[id]!!.viewState.apply {
-                                        alpha.value =
-                                            (alpha.value!! + delta).coerceIn(MIN_VIEW_ALPHA, MAX_VIEW_ALPHA)
+                                        alpha.value = (alpha.value!! + delta).coerceIn(MIN_VIEW_ALPHA, MAX_VIEW_ALPHA)
+                                        selectedButtonAlpha = alpha.value!!.roundToString()
                                         save()
                                     }
                                 }
@@ -308,9 +311,11 @@ abstract class ScreenController : IScreenController {
                                     save()
                                 }
                                 selectedButtonId = null
+                                selectedButtonAlpha = null
                             },
                             onReset = {
                                 selectedButtonId = null
+                                selectedButtonAlpha = null
                                 preferencesStorage.setBooleanValue(clampButtonsPrefsKey, true)
                                 clampButtons = true
                                 viewsToDraw.values.forEach { view ->
@@ -329,6 +334,7 @@ abstract class ScreenController : IScreenController {
                             },
                             onBack = {
                                 selectedButtonId = null
+                                selectedButtonAlpha = null
                                 if (!inGame) {
                                     onBackSaved()
                                 }
@@ -385,6 +391,7 @@ abstract class ScreenController : IScreenController {
                                         onClick = {
                                             if (isEditMode) {
                                                 selectedButtonId = id
+                                                selectedButtonAlpha = alpha.value!!.roundToString()
                                                 preferencesStorage.setBooleanValue(
                                                     clampButtonsPrefsKey,
                                                     false
@@ -537,6 +544,7 @@ abstract class ScreenController : IScreenController {
     @Composable
     private fun EditControls(
         selectedButtonId: String?,
+        currentAlpha : String?,
         onAlphaChange: (Float) -> Unit,
         onSizeChange: (Float) -> Unit,
         onCustomViewSelected : (selectedView : IScreenControlsView) -> Unit,
@@ -565,6 +573,14 @@ abstract class ScreenController : IScreenController {
                         color = Color.White,
                         style = MaterialTheme.typography.labelMedium,
                         fontSize = 18.sp
+                    )
+                }
+
+                if (!currentAlpha.isNullOrBlank()){
+                    Text(
+                        text = "${stringResource(R.string.alpha_value)} $currentAlpha",
+                        color = Color.White,
+                        fontSize = 16.sp
                     )
                 }
 
@@ -884,6 +900,8 @@ abstract class ScreenController : IScreenController {
         private val selectedViewBackgroundColor = Color.Red.copy(0.5f)
 
         private val transparentDarkColor = Color.DarkGray.copy(alpha = 0.5f)
+
+        private fun Float.roundToString () = "%.2f".format(Locale.ROOT,this).trimEnd('0').trimEnd('.')
     }
 }
 
