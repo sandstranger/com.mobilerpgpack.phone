@@ -89,6 +89,7 @@ import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
+import java.util.Locale
 import kotlin.math.roundToInt
 
 abstract class ScreenController : IScreenController {
@@ -900,7 +901,7 @@ abstract class ScreenController : IScreenController {
 
         private val transparentDarkColor = Color.DarkGray.copy(alpha = 0.5f)
 
-        private fun Float.roundToString () = "%.2f".format(this)
+        private fun Float.roundToString () = "%.2f".format(Locale.ROOT,this).trimEnd('0').trimEnd('.')
     }
 }
 
