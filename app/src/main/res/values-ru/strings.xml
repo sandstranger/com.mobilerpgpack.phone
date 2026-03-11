@@ -307,4 +307,5 @@
     <string name="openxray_active_game">Активная игра OpenXRAY</string>
     <string name="path_to_clear_sky_resources">Путь к ресурсам Clear Sky</string>
     <string name="path_to_call_of_pripyat_resources">Путь к ресурсам Call of Pripyat</string>
+    <string name="alpha_value">Альфа:</string>
 </resources>
