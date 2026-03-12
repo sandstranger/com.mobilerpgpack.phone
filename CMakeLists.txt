@@ -39,6 +39,7 @@ else ()
 endif ()
 
 set(NG_GL4ES_LOCATION ${CMAKE_SOURCE_DIR}/third_party/NG-GL4ES)
+set(NG_GL4ES_INCLUDE_DIR ${NG_GL4ES_LOCATION}/src/main/jni/NG-GL4ES/include)
 
 if (IS_DEBUG_BUILD)
     set(NG_GL4ES_LIBRARY ${NG_GL4ES_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libng_gl4es.so)
@@ -47,8 +48,7 @@ else ()
 endif ()
 
 if (NOT DEFINED LEGACY_GLES2 OR LEGACY_GLES2 STREQUAL "false")
-    set(OPENGL_LOCATION ${NG_GL4ES_LOCATION})
-    set(OPENGL_INCLUDE_DIR ${OPENGL_LOCATION}/src/main/jni/NG-GL4ES/include)
+    set(OPENGL_INCLUDE_DIR ${NG_GL4ES_INCLUDE_DIR})
     if (IS_DEBUG_BUILD)
         set(OPENGL_opengl_LIBRARY ${NG_GL4ES_LIBRARY})
         set(OPENGL_glx_LIBRARY ${NG_GL4ES_LIBRARY})
