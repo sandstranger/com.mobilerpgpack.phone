@@ -9,7 +9,6 @@ firebaseBom = "34.11.0"
 gson = "2.13.2"
 icu4j = "78.2"
 koinAnnotations = "4.2.0"
-kotlin = "2.3.10"
 jna = "5.18.1"
 coreKtx = "1.18.0"
 junit = "4.13.2"
@@ -107,5 +106,5 @@ androidx-window = { group = "androidx.window", name = "window", version.ref = "w
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinGradlePlugin" }
 
