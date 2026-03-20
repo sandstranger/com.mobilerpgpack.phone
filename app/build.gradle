@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id 'com.google.devtools.ksp' version '2.3.6'
     id("com.google.gms.google-services")
-    id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.20'
     id("com.google.firebase.crashlytics") version "3.0.6"
 }
 
@@ -264,7 +264,7 @@ dependencies {
     implementation (project(":third_party:lzo"))
     implementation (project(":third_party:ogg"))
 
-    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.2.0"))
     implementation(libs.koin.core)
     implementation(libs.koin.annotations)
     implementation(libs.koin.android)
