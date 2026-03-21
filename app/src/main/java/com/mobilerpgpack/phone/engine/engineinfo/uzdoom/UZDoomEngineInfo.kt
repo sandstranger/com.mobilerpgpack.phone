@@ -23,6 +23,8 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
 
+    private val uzDoomViewModel : UZDoomComposeSettingsViewModel by inject ()
+
     private val pathToUZDoomUserFolder by lazy{
         super.pathToRootUserFolder + File.separator + "uzdoom"
     }
@@ -114,6 +116,8 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
     private external fun setPathToUserFolder (pathToUserFolder : String)
 
+    private external fun UpdateUseOpenGLESState(useOpenGLES : Boolean)
+
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         val glesVersion = enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion.value!!).value
@@ -121,6 +125,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
         UpdateHarmGLESVersion(glesVersion)
         UpdateGLLiteShaderState(enableLightShaders)
         setPathToUserFolder(pathToUZDoomUserFolder)
+        UpdateUseOpenGLESState(uzDoomViewModel.renderAPI == UZDoomRenderAPI.OpenGLES)
     }
 
     override fun onResume() {
