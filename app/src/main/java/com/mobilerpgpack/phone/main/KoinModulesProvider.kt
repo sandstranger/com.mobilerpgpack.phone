@@ -348,6 +348,9 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single {
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                "feature_support_angle",
+                "GLESv2_angle",
+                "EGL_angle",
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
@@ -480,6 +483,9 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single  {
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                "feature_support_angle",
+                "GLESv2_angle",
+                "EGL_angle",
                 SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
@@ -628,6 +634,9 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single {
             val allLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                "feature_support_angle",
+                "GLESv2_angle",
+                "EGL_angle",
                 gl4esLibraryName,
                 SDL2_NATIVE_LIB_NAME,
                 FREETYPE_NATIVE_LIB_NAME,
@@ -661,6 +670,9 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             }
         single {
             val allLibs = with(mutableListOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                "feature_support_angle",
+                "GLESv2_angle",
+                "EGL_angle",
                 SDL2_NATIVE_LIB_NAME,
                 FREETYPE_NATIVE_LIB_NAME,
                 YQUAKE2_CORE_NATIVE_LIB_NAME,

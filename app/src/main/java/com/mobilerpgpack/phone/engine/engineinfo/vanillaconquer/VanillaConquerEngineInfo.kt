@@ -34,6 +34,8 @@ class VanillaConquerEngineInfo :
 
     override val enableGyroscope = false
 
+    override val allowedToEnableAngle = false
+
     override val touchFullScreenModeCanBeUsed = false
 
     override val commandLineParams get() = prefsStorage.vanillaConquerCommandLineArgs.value!!

@@ -37,6 +37,8 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     override val needToShowScreenControls = true
 
+    override val allowedToEnableAngle = false
+
     override val mouseButtonsEventsCanBeInvoked = false
 
     override fun isMouseShown() = false
