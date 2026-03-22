@@ -40,11 +40,9 @@ This port for Android has the following system requirements:
 
 ## Graphics
 
-These source ports supported OpenGL ES 3.2 render with NG-GL4ES, but have a lot of graphics issues.
+These source ports supported OpenGL ES 3.0 render with NG-GL4ES.
 
-Because NG-GL4ES is very buggy.
-
-If your device is not supported OPenGL ES 3.2 render or you have graphics issues like black screen, then use binary
+If your device is not supported OPenGL ES 3.0 render or you have graphics issues like black screen, then use binary
 
 with OpenGL ES 2.0 render
 
