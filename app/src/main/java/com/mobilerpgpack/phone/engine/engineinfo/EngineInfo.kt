@@ -30,7 +30,6 @@ import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.angleLibs
 import com.mobilerpgpack.phone.main.gl4esLibraryName
@@ -482,7 +481,7 @@ abstract class EngineInfo(
             }
 
         init {
-            Native.register(GL4ESJnaLayer::class.java, NG_GL4ES_NATIVE_LIB_NAME)
+            Native.register(GL4ESJnaLayer::class.java, gl4esLibraryName)
         }
     }
 
