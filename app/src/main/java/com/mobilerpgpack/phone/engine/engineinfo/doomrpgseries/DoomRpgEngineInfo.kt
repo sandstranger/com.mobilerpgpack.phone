@@ -19,6 +19,8 @@ class DoomRpgEngineInfo(
 
     override val loadGL4ES = false
 
+    override val allowedToEnableAngle = false
+
     private external fun setScreenResolution (screenWidth : Int, screenHeight : Int)
 
     private external fun setRecalculateScreenResolutionsState (recalculateScreenResolutions : Boolean)
