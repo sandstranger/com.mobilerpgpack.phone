@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.screen
 
+import android.os.Build
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -239,6 +240,16 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             customScreenResolution,preferencesStorage.customScreenResolutionPrefsKey.name, stringResource(R.string.custom_resolution_hint))
 
         DrawHorizontalDivider()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            SwitchPreferenceItem(
+                stringResource(R.string.enable_angle_support),
+                preferencesStorage.enableAngleSupport,
+                preferencesStorage.enableAngleSupportPrefsKey.name
+            )
+
+            DrawHorizontalDivider()
+        }
     }
 
     @Composable
