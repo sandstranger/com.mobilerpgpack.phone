@@ -4,15 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.utils.IAssetExtractor
-import com.mobilerpgpack.phone.utils.PreferencesStorage
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
 abstract class IniViewModel : ViewModel(), KoinComponent {
 
     private val assetsExtractor : IAssetExtractor = get()
-
-    private val preferencesStorage : PreferencesStorage = get ()
 
     private val iniFilesLoaded = MutableLiveData(false)
 
