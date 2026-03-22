@@ -33,7 +33,7 @@ android {
             dimension "store"
             buildConfigField "boolean", "LEGACY_GLES2", "false"
             manifestPlaceholders = [gles3Required: "true"]
-            versionName "${versions.app_version_name}_gles3.2"
+            versionName "${versions.app_version_name}_gles3.x"
             externalNativeBuild {
                 cmake {
                     arguments "-DLEGACY_GLES2=false"
@@ -44,7 +44,7 @@ android {
             dimension "store"
             buildConfigField "boolean", "LEGACY_GLES2", "false"
             manifestPlaceholders = [gles3Required: "true"]
-            versionName "${versions.app_version_name}_gles3.2"
+            versionName "${versions.app_version_name}_gles3.x"
             externalNativeBuild {
                 cmake {
                     arguments "-DLEGACY_GLES2=false"
