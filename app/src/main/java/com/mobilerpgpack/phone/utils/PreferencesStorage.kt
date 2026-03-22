@@ -63,6 +63,7 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val widelandsCommandLineArgsPrefsKey = stringPreferencesKey("widelands_command_line_args")
     val widelandsScreenScalePrefeKey = floatPreferencesKey("widelands_screen_scale")
     val zoomSensitivityPrefsKey = floatPreferencesKey("zoom_sensitivity")
+    val enableAngleSupportPrefsKey = booleanPreferencesKey("enable_angle_support")
 
     val widelandsScreenScale = getFloatValue(widelandsScreenScalePrefeKey, 2.0f)
 
@@ -94,6 +95,8 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
 
     val enableTouchScreenPressingEvents =
         getBooleanValue(enableTouchScreenPressingEventsPrefsKey, true)
+
+    val enableAngleSupport = getBooleanValue(enableAngleSupportPrefsKey, false)
 
     val useFloatingStartGameButton =
         getBooleanValue(useFloatingStartGameButtonPrefsKey, !context.isTelevision)
