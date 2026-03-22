@@ -27,7 +27,7 @@ https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
 https://github.com/OpenXRay/xray-16
 
-# System Requirements
+## System Requirements
 
 This port for Android has the following system requirements:
 ### Minimum
@@ -38,7 +38,7 @@ This port for Android has the following system requirements:
 ### Recommended
 * Operating system: Android 12 or later (I tested it mostly on my phone with Android 12)
 
-# Graphics
+## Graphics
 
 These source ports supported OpenGL ES 3.2 render with NG-GL4ES, but have a lot of graphics issues.
 
@@ -47,6 +47,12 @@ Because NG-GL4ES is very buggy.
 If your device is not supported OPenGL ES 3.2 render or you have graphics issues like black screen, then use binary
 
 with OpenGL ES 2.0 render
+
+## Angle
+
+At latest release all these source ports except (Doom1RPG and Vanilla-Conquer) started to support Vulkan render with Angle help.
+Angle support requries minimum Android 10 and vulkan 1.0 (1.1) support.
+On mtk it will be better to emulate gles 2.0 render with angle for better fps
 
 ## Controllers Support
 This Android ports support controllers
@@ -543,6 +549,8 @@ Theora: [Licence](https://github.com/xiph/theora/blob/main/COPYING) https://gith
 Luajit cmake: [Licence](https://github.com/WohlSoft/LuaJIT/blob/v2.1/COPYRIGHT)  https://github.com/WohlSoft/LuaJIT
 
 Android Glob: https://github.com/freshHua/glob
+
+Angle: [Licence](https://github.com/google/angle/blob/main/LICENSE) https://github.com/google/angle
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 

@@ -122,3 +122,5 @@ val bulletLibs = listOf("Bullet3Common", "LinearMath", "BulletCollision", "Bulle
 
 val ffmpegLibs = listOf("avcodec", "avdevice", "avfilter", "avformat",
     "avutil", "swresample", "swscale")
+
+val angleLibs = listOf("feature_support_angle","GLESv2_angle", "EGL_angle")

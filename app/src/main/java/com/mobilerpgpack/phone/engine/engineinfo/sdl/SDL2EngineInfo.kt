@@ -45,6 +45,8 @@ abstract class SDL2EngineInfo(
 
     private external fun SetSDLVideoGLDriver (pathToGLDriverToSet : String)
 
+    private external fun UpdateEnableAngleState (enableAngle : Boolean)
+
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = !SDL_GetRelativeMouseMode()
 
     override fun onNativeLibrariesLoaded() {
@@ -53,6 +55,7 @@ abstract class SDL2EngineInfo(
         if (loadGL4ES){
             SetSDLVideoGLDriver(gl4esFullLibraryName)
         }
+        UpdateEnableAngleState(enableAngleSupport)
     }
 
     override fun isMouseShown() = SDLActivity.isMouseShown()
