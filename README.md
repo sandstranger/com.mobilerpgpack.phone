@@ -49,7 +49,7 @@ with OpenGL ES 2.0 render
 ## Angle
 
 At latest release all these source ports except (Doom1RPG and Vanilla-Conquer) started to support Vulkan render with Angle help.
-Angle support requries minimum Android 10 and vulkan 1.0 (1.1) support.
+Angle support requries minimum Android 8 and vulkan 1.0 (1.1) support.
 On mtk it will be better to emulate gles 2.0 render with angle for better fps
 
 ## Controllers Support
