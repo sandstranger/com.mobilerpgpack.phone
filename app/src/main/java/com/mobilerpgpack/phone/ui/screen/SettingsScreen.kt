@@ -241,7 +241,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             SwitchPreferenceItem(
                 stringResource(R.string.enable_angle_support),
                 preferencesStorage.enableAngleSupport,
