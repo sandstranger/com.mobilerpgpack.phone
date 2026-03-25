@@ -136,12 +136,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/Vanilla-Conquer"]
 	path = app/src/main/jni/Vanilla-Conquer
 	url = https://github.com/sandstranger/Vanilla-Conquer.git
-[submodule "app/src/main/jni/xray-16"]
-	path = app/src/main/jni/xray-16
-	url = https://github.com/sandstranger/xray-16
-[submodule "third_party/lzo/src/main/jni/lzo"]
-	path = third_party/lzo/src/main/jni/lzo
-	url = https://github.com/sandstranger/lzo.git
 [submodule "third_party/ogg/src/main/jni/ogg"]
 	path = third_party/ogg/src/main/jni/ogg
 	url = https://gitlab.xiph.org/xiph/ogg.git
@@ -160,3 +154,12 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/dhewm3"]
 	path = app/src/main/jni/dhewm3
 	url = https://github.com/sandstranger/dhewm3.git
+[submodule "third_party/dhewm3_mods/sikkmod/src/main/jni/sikkmod"]
+	path = third_party/dhewm3_mods/sikkmod/src/main/jni/sikkmod
+	url = https://github.com/dhewm/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/rivensin/src/main/jni/rivensin"]
+	path = third_party/dhewm3_mods/rivensin/src/main/jni/rivensin
+	url = https://github.com/dhewm/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/realgibs/src/main/jni/realgibs"]
+	path = third_party/dhewm3_mods/realgibs/src/main/jni/realgibs
+	url = https://github.com/dhewm/dhewm3-sdk.git
