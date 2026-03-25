@@ -145,3 +145,15 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/ogg/src/main/jni/ogg"]
 	path = third_party/ogg/src/main/jni/ogg
 	url = https://gitlab.xiph.org/xiph/ogg.git
+[submodule "third_party/curl/src/main/jni/curl"]
+	path = third_party/curl/src/main/jni/curl
+	url = https://github.com/curl/curl.git
+[submodule "third_party/wolfssl/src/main/jni/wolfssl"]
+	path = third_party/wolfssl/src/main/jni/wolfssl
+	url = https://github.com/wolfSSL/wolfssl.git
+[submodule "third_party/brotli/src/main/jni/brotli"]
+	path = third_party/brotli/src/main/jni/brotli
+	url = https://github.com/google/brotli.git
+[submodule "third_party/zstd/src/main/jni/zstd"]
+	path = third_party/zstd/src/main/jni/zstd
+	url = https://github.com/facebook/zstd.git
