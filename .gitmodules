@@ -156,10 +156,13 @@ url=https://github.com/sandstranger/SDL_image.git
 	url = https://github.com/sandstranger/dhewm3.git
 [submodule "third_party/dhewm3_mods/sikkmod/src/main/jni/sikkmod"]
 	path = third_party/dhewm3_mods/sikkmod/src/main/jni/sikkmod
-	url = https://github.com/dhewm/dhewm3-sdk.git
+url=https://github.com/sandstranger/dhewm3-sdk.git
 [submodule "third_party/dhewm3_mods/rivensin/src/main/jni/rivensin"]
 	path = third_party/dhewm3_mods/rivensin/src/main/jni/rivensin
-	url = https://github.com/dhewm/dhewm3-sdk.git
+url=https://github.com/sandstranger/dhewm3-sdk.git
 [submodule "third_party/dhewm3_mods/realgibs/src/main/jni/realgibs"]
 	path = third_party/dhewm3_mods/realgibs/src/main/jni/realgibs
-	url = https://github.com/dhewm/dhewm3-sdk.git
+url=https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/perfected/src/main/jni/perfected"]
+	path = third_party/dhewm3_mods/perfected/src/main/jni/perfected
+	url = https://github.com/sandstranger/dhewm3-sdk.git
