@@ -373,6 +373,7 @@ add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
 add_subdirectory("${APP_ROOT_DIR}/fteqw")
 add_subdirectory("${APP_ROOT_DIR}/widelands")
 add_subdirectory("${APP_ROOT_DIR}/Vanilla-Conquer")
+add_subdirectory("${APP_ROOT_DIR}/dhewm3/neo")
 #add_subdirectory("${APP_ROOT_DIR}/xray-16")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
