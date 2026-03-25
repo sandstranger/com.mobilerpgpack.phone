@@ -157,3 +157,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/zstd/src/main/jni/zstd"]
 	path = third_party/zstd/src/main/jni/zstd
 	url = https://github.com/facebook/zstd.git
+[submodule "app/src/main/jni/dhewm3"]
+	path = app/src/main/jni/dhewm3
+	url = https://github.com/sandstranger/dhewm3.git
