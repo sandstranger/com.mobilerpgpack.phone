@@ -305,6 +305,13 @@ set(LUA_LOCATION ${CMAKE_SOURCE_DIR}/third_party/luajit)
 set(LUA_INCLUDE_DIR ${LUA_LOCATION}/src/main/include)
 set(LUA_LIBRARIES ${LUA_LOCATION}/src/main/jniLibs/${ANDROID_ABI}/libluajit.so)
 
+set (CURL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/curl/src/main/jni/curl/include")
+if (IS_DEBUG_BUILD)
+    set(CURL_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/curl/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libcurl-d.so)
+else ()
+    set(CURL_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/curl/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libcurl.so)
+endif ()
+
 include_directories ("${OGG_LOCATION}/src/main/include")
 
 set (USE_OPENGL ON)
