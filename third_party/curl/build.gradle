@@ -18,7 +18,7 @@ android {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
-                        "-DCURL_DISABLE_INSTALL=OFF", "-DBUILD_CURL_EXE=OFF",
+                        "-DCURL_DISABLE_INSTALL=ON", "-DBUILD_CURL_EXE=OFF",
                         "-DBUILD_STATIC_LIBS=OFF", "-DBUILD_STATIC_CURL=OFF",
                         "-DBUILD_SHARED_LIBS=ON", "-DCURL_USE_WOLFSSL=ON",
                         '-DCURL_DISABLE_LDAP=ON', "-DUSE_LIBIDN2=OFF",
