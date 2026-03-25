@@ -26,7 +26,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "src/main/jni/realgibs/CMakeLists.txt"
+            path "src/main/jni/perfected/CMakeLists.txt"
             version versions.cmake_version
         }
     }
