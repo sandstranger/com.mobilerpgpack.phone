@@ -199,3 +199,6 @@ url=https://github.com/sandstranger/dhewm3-sdk.git
 [submodule "third_party/dhewm3_mods/bloodmod/src/main/jni/bloodmod"]
 	path = third_party/dhewm3_mods/bloodmod/src/main/jni/bloodmod
 	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/nghttp2/src/main/jni/nghttp2"]
+	path = third_party/nghttp2/src/main/jni/nghttp2
+	url = https://github.com/nghttp2/nghttp2.git
