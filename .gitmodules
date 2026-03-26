@@ -166,3 +166,36 @@ url=https://github.com/sandstranger/dhewm3-sdk.git
 [submodule "third_party/dhewm3_mods/perfected/src/main/jni/perfected"]
 	path = third_party/dhewm3_mods/perfected/src/main/jni/perfected
 	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/hardcorps/src/main/jni/hardcorps"]
+	path = third_party/dhewm3_mods/hardcorps/src/main/jni/hardcorps
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/grimm/src/main/jni/grimm"]
+	path = third_party/dhewm3_mods/grimm/src/main/jni/grimm
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/fitz/src/main/jni/fitz"]
+	path = third_party/dhewm3_mods/fitz/src/main/jni/fitz
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/eoc/src/main/jni/eoc"]
+	path = third_party/dhewm3_mods/eoc/src/main/jni/eoc
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/eldoom/src/main/jni/eldoom"]
+	path = third_party/dhewm3_mods/eldoom/src/main/jni/eldoom
+url=https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/doom3cc/src/main/jni/doom3cc"]
+	path = third_party/dhewm3_mods/doom3cc/src/main/jni/doom3cc
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/desolated/src/main/jni/desolated"]
+	path = third_party/dhewm3_mods/desolated/src/main/jni/desolated
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/dentonmod/src/main/jni/dentonmod"]
+	path = third_party/dhewm3_mods/dentonmod/src/main/jni/dentonmod
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/d3le/src/main/jni/d3le"]
+	path = third_party/dhewm3_mods/d3le/src/main/jni/d3le
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/cdoom/src/main/jni/cdoom"]
+	path = third_party/dhewm3_mods/cdoom/src/main/jni/cdoom
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/bloodmod/src/main/jni/bloodmod"]
+	path = third_party/dhewm3_mods/bloodmod/src/main/jni/bloodmod
+	url = https://github.com/sandstranger/dhewm3-sdk.git
