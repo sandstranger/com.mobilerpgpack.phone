@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.mobilerpgpack.realgibs'
+    namespace 'com.mobilerpgpack.perfected'
     compileSdkVersion versions.target_sdk
 
     defaultConfig {
