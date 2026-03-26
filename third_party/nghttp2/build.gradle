@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.mobilerpgpack.curl'
+    namespace 'com.mobilerpgpack.nghttp2'
     compileSdkVersion versions.target_sdk
 
     defaultConfig {
@@ -18,27 +18,22 @@ android {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
-                        "-DCURL_DISABLE_INSTALL=ON", "-DBUILD_CURL_EXE=OFF",
-                        "-DBUILD_STATIC_LIBS=OFF", "-DBUILD_STATIC_CURL=OFF",
-                        "-DBUILD_SHARED_LIBS=ON", "-DCURL_USE_WOLFSSL=ON",
-                        '-DCURL_DISABLE_LDAP=ON', "-DUSE_LIBIDN2=OFF",
-                        "-DUSE_NGHTTP2=ON", "-DCURL_USE_LIBPSL=OFF",
-                        "-DBUILD_EXAMPLES=OFF", "-DENABLE_CURL_MANUAL=OFF",
-                        "-DBUILD_LIBCURL_DOCS=OFF","-DBUILD_MISC_DOCS=OFF",
+                        "-DBUILD_TESTING=OFF",
                         "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
                         "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
             }
         }
     }
-    buildToolsVersion versions.build_tools_version
-    ndkVersion versions.ndk_version
     externalNativeBuild {
         cmake {
-            path "CMakeLists.txt"
+            path "src/main/jni/nghttp2/CMakeLists.txt"
             version versions.cmake_version
         }
     }
+    buildToolsVersion versions.build_tools_version
+    ndkVersion versions.ndk_version
+
     buildTypes {
         release {
             externalNativeBuild {
@@ -58,21 +53,13 @@ android {
             }
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
 }
 
-preBuild.dependsOn ':third_party:wolfssl:build',':third_party:brotli:build',
-        ':third_party:zstd:build',':third_party:nghttp2:build'
-
 dependencies {
-    implementation (project(":third_party:wolfssl"))
-    implementation (project(":third_party:brotli"))
-    implementation (project(":third_party:zstd"))
-    implementation (project(":third_party:nghttp2"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
