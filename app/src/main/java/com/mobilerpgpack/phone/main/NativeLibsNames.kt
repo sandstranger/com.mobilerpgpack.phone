@@ -33,6 +33,8 @@ const val TIBERIAN_DAWN_NATIVE_LIB_NAME = "vanillatd"
 
 const val RED_ALERT_NATIVE_LIB_NAME = "vanillara"
 
+const val DHWEM3_NATIVE_LIB_NAME = "dhewm3"
+
 const val BZ2_NATIVE_LIB_NAME = "bz2"
 
 const val ODE_NATIVE_LIB_NAME = "ode"
@@ -111,16 +113,22 @@ val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else NG_GL4ES_NATIV
 
 val gl4esFullLibraryName = buildFullLibraryName(gl4esLibraryName)
 
+val curlLibraryName = if (BuildConfig.DEBUG) "curl-d" else "curl"
+
 fun buildFullLibraryName (libraryName : String ) = "lib${libraryName}.so"
 
-val fteQWNativePlugins = listOf("fteplug_bullet", "fteplug_cod", "fteplug_ezhud",
+val fteQWNativePlugins = arrayOf("fteplug_bullet", "fteplug_cod", "fteplug_ezhud",
     "fteplug_ffmpeg", "fteplug_hl2", "fteplug_models", "fteplug_ode",
     "fteplug_qi", "fteplug_quake3")
 
-val bulletLibs = listOf("Bullet3Common", "LinearMath", "BulletCollision", "BulletDynamics",
+val bulletLibs = arrayOf("Bullet3Common", "LinearMath", "BulletCollision", "BulletDynamics",
     "BulletInverseDynamics", "BulletSoftBody")
 
-val ffmpegLibs = listOf("avcodec", "avdevice", "avfilter", "avformat",
+val ffmpegLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
     "avutil", "swresample", "swscale")
 
-val angleLibs = listOf("feature_support_angle","GLESv2_angle", "EGL_angle")
+val angleLibs = arrayOf("feature_support_angle","GLESv2_angle", "EGL_angle")
+
+val dhewm3NativeLibs = arrayOf("zstd","nghttp2","wolfssl", "brotlicommon", "brotlidec",
+    "bbrotlienc",curlLibraryName,gl4esLibraryName,OBOE_NATIVE_LUB_NAME, OPENAL_NATIVE_LIB_NAME, SDL2_NATIVE_LIB_NAME,
+    SDL2_NATIVE_LIB_NAME,"base-dhewm3", DHWEM3_NATIVE_LIB_NAME)
