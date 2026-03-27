@@ -25,7 +25,11 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace 'com.mobilerpgpack.phone'
-    compileSdk versions.target_sdk
+    compileSdk {
+        version = release(versions.target_sdk) {
+            minorApiLevel = 0
+        }
+    }
 
     flavorDimensions "store"
     productFlavors {

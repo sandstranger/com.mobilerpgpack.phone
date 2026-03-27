@@ -11,7 +11,11 @@ kotlin {
 
 android {
     namespace 'com.mobilerpgpack.fluidsynth'
-    compileSdkVersion versions.target_sdk
+    compileSdk {
+        version = release(versions.target_sdk) {
+            minorApiLevel = 0
+        }
+    }
 
     defaultConfig {
         minSdk versions.min_sdk

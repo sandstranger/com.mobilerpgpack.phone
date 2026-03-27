@@ -4,7 +4,11 @@ plugins {
 
 android {
     namespace 'com.mobilerpgpack.ogg'
-    compileSdk versions.target_sdk
+    compileSdk {
+        version = release(versions.target_sdk) {
+            minorApiLevel = 0
+        }
+    }
 
     defaultConfig {
         targetSdk versions.target_sdk
