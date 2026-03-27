@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.mobilerpgpack.sikkmod'
+    namespace 'com.mobilerpgpack.lzo'
     compileSdkVersion versions.target_sdk
 
     defaultConfig {
@@ -18,15 +18,15 @@ android {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
-                        "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
+                        "-DENABLE_STATIC=0", "-DENABLE_SHARED=1",
                         "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
             }
         }
     }
     externalNativeBuild {
         cmake {
-            path "src/main/jni/sikkmod/CMakeLists.txt"
+            path "src/main/jni/lzo/CMakeLists.txt"
             version versions.cmake_version
         }
     }
