@@ -11,7 +11,11 @@ kotlin {
 
 android {
     namespace 'com.mobilerpgpack.sdl2_mixer'
-    compileSdk versions.target_sdk
+    compileSdk {
+        version = release(versions.target_sdk) {
+            minorApiLevel = 0
+        }
+    }
 
     defaultConfig {
         targetSdk versions.target_sdk
