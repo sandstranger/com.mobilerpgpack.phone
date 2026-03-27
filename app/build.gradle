@@ -269,6 +269,8 @@ dependencies {
     implementation (project(":third_party:sdl2-image"))
     implementation (project(":third_party:glbinding"))
     implementation (project(":third_party:glob"))
+    implementation (project(":third_party:luajit"))
+    implementation (project(":third_party:lzo"))
     implementation (project(":third_party:ogg"))
     implementation (project(":third_party:angle"))
     implementation (project(":third_party:curl"))
