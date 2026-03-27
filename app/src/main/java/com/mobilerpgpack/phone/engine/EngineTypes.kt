@@ -13,7 +13,6 @@ enum class EngineTypes {
     FTEQW,
     Widelands,
     VanillaConquer,
-    OpenXRAY,
     Dhewm3;
 
     companion object{

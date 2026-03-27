@@ -31,9 +31,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgCom
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWPreferencesStorage
-import com.mobilerpgpack.phone.engine.engineinfo.openxray.OpenXrayComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.openxray.OpenXrayEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.openxray.OpenXrayPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkPreferencesStorage
@@ -757,40 +754,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
     }
 
-    private val openXRAYKoinModule = module {
-        val engineName = EngineTypes.OpenXRAY.name
-        single<ControlsProvider> { ControlsProvider(EngineTypes.OpenXRAY, hashMapOf(
-            ControlsType.OnScreenStick to fteQWOnScreenStickControlsLayout)) }.withOptions {
-            named(engineName) }
-        singleOf<OpenXrayPreferencesStorage>(::OpenXrayPreferencesStorage).withOptions {
-            named(engineName)
-        }
-        single {
-            val allLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                NG_GL4ES_NATIVE_LIB_NAME,
-                SDL2_NATIVE_LIB_NAME,
-                GLOB_NATIVE_LIB_NAME,
-                JPEG_NATIVE_LIB_NAME,
-                OGG_NATIVE_LIB_NAME,
-                VORBIS_NATIVE_LIB_NAME,
-                VORBIS_FILE_NATIVE_LIB_NAME,
-                VORBIS_ENC_NATIVE_LIB_NAME,
-                OBOE_NATIVE_LUB_NAME,
-                OPENAL_NATIVE_LIB_NAME,
-                LUAJIT_NATIVE_LIB_NAME,
-                LZO_NATIVE_LIB_NAME,
-                OPENXRAY_MAIN_ENGINE_LIB
-            )
-            OpenXrayEngineInfo(OPENXRAY_MAIN_ENGINE_LIB, allLibs)
-        }.withOptions {
-            named(engineName)
-            bind<IEngineInfo>()
-        }
-        singleOf <IEngineUIController>(::OpenXrayComposeSettings).withOptions {
-            named(engineName)
-        }
-    }
-
     private val dhewm3KoinModule = module {
         val engineName = EngineTypes.Dhewm3.name
         single<ControlsProvider> { ControlsProvider(EngineTypes.Dhewm3, hashMapOf(
@@ -820,7 +783,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
             psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,
             arxLibertatisKoinModule, fteQWKoinModule,widelandsKoinModule,
-            vanillaConquerKoinModule, openXRAYKoinModule, dhewm3KoinModule)
+            vanillaConquerKoinModule, dhewm3KoinModule)
     }
 
     companion object{
