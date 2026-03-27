@@ -13,7 +13,7 @@ android {
     namespace 'com.mobilerpgpack.fluidsynth'
     compileSdk {
         version = release(versions.target_sdk) {
-            minorApiLevel = 0
+            minorApiLevel = versions.target_sdk_min_revision
         }
     }
 

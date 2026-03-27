@@ -6,7 +6,7 @@ android {
     namespace 'com.mobilerpgpack.phone.legacy_gl4es'
     compileSdk {
         version = release(versions.target_sdk) {
-            minorApiLevel = 0
+            minorApiLevel = versions.target_sdk_min_revision
         }
     }
 
