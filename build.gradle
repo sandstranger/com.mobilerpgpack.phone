@@ -5,9 +5,9 @@ buildscript {
             app_version_code : 51,
             app_version_name : "2.6.5",
             min_sdk : 24,
-            target_sdk : 36,
+            target_sdk : 37,
             ndk_version : '29.0.14206865',
-            build_tools_version : '36.1.0',
+            build_tools_version : '37.0.0',
             native_android_platform_version : 24,
             cmake_version : "4.1.2"
     ]
