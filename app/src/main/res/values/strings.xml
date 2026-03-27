@@ -311,4 +311,5 @@
     <string name="path_to_clear_sky_resources">Path to Clear Sky resources</string>
     <string name="path_to_call_of_pripyat_resources">Path to Call of Pripyat resources</string>
     <string name="enable_angle_support">Enable Angle for rendering (OpenGL ES implementation using Vulkan)</string>
+    <string name="path_to_doom3_resources">Path to Doom 3 resources</string>
 </resources>
