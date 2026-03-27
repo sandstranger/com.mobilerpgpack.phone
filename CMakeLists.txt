@@ -289,22 +289,6 @@ endif ()
 
 set(asio_location ${CMAKE_SOURCE_DIR}/third_party/asio/asio/include CACHE STRING "" FORCE)
 
-set(THEORA_LOCATION ${CMAKE_SOURCE_DIR}/third_party/theora)
-set(THEORA_INCLUDE_DIR ${THEORA_LOCATION}/include)
-set(THEORA_LIBRARY ${THEORA_LOCATION}/jniLibs/${ANDROID_ABI}/libtheora.a)
-
-set(LZO_LOCATION ${CMAKE_SOURCE_DIR}/third_party/lzo)
-set(LZO_INCLUDE_DIR ${LZO_LOCATION}/src/main/jni/lzo/include)
-if (IS_DEBUG_BUILD)
-    set(LZO_LIBRARY ${LZO_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/liblzo2.so)
-else ()
-    set(LZO_LIBRARY ${LZO_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/liblzo2.so)
-endif ()
-
-set(LUA_LOCATION ${CMAKE_SOURCE_DIR}/third_party/luajit)
-set(LUA_INCLUDE_DIR ${LUA_LOCATION}/src/main/include)
-set(LUA_LIBRARIES ${LUA_LOCATION}/src/main/jniLibs/${ANDROID_ABI}/libluajit.so)
-
 set (CURL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/curl/src/main/jni/curl/include")
 if (IS_DEBUG_BUILD)
     set(CURL_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/curl/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libcurl-d.so)
@@ -365,9 +349,6 @@ set(OPTION_USE_GLBINDING ON CACHE BOOL "" FORCE)
 set(OPTION_FORCE_EMBEDDED_MINIZIP ON CACHE BOOL "" FORCE)
 set(OPTION_BUILD_WEBSITE_TOOLS OFF CACHE BOOL "" FORCE)
 
-set(XRAY_USE_LUAJIT OFF CACHE BOOL "" FORCE)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
@@ -381,7 +362,6 @@ add_subdirectory("${APP_ROOT_DIR}/fteqw")
 add_subdirectory("${APP_ROOT_DIR}/widelands")
 add_subdirectory("${APP_ROOT_DIR}/Vanilla-Conquer")
 add_subdirectory("${APP_ROOT_DIR}/dhewm3/neo")
-#add_subdirectory("${APP_ROOT_DIR}/xray-16")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 
