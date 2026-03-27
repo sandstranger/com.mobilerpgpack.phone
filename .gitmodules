@@ -157,6 +157,9 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/dhewm3_mods/sikkmod/src/main/jni/sikkmod"]
 	path = third_party/dhewm3_mods/sikkmod/src/main/jni/sikkmod
 url=https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/rivensin/src/main/jni/rivensin"]
+	path = third_party/dhewm3_mods/rivensin/src/main/jni/rivensin
+url=https://github.com/sandstranger/dhewm3-sdk.git
 [submodule "third_party/dhewm3_mods/realgibs/src/main/jni/realgibs"]
 	path = third_party/dhewm3_mods/realgibs/src/main/jni/realgibs
 url=https://github.com/sandstranger/dhewm3-sdk.git
@@ -199,12 +202,3 @@ url=https://github.com/sandstranger/dhewm3-sdk.git
 [submodule "third_party/nghttp2/src/main/jni/nghttp2"]
 	path = third_party/nghttp2/src/main/jni/nghttp2
 	url = https://github.com/nghttp2/nghttp2.git
-[submodule "third_party/dhewm3_mods/rivensin/src/main/jni/rivensin"]
-    path = third_party/dhewm3_mods/rivensin/src/main/jni/rivensin
-	url=https://github.com/sandstranger/dhewm3-sdk.git	
-[submodule "app/src/main/jni/xray-16"]
-	path = app/src/main/jni/xray-16
-	url = https://github.com/sandstranger/xray-16
-[submodule "third_party/lzo/src/main/jni/lzo"]
-	path = third_party/lzo/src/main/jni/lzo
-	url = https://github.com/sandstranger/lzo.git
