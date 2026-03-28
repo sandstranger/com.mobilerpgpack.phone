@@ -12,10 +12,11 @@ import com.mobilerpgpack.phone.utils.sharesprefs.intPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 
 open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
 
-    private val context: Context = get()
+    private val context: Context by inject ()
 
     val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
     val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")

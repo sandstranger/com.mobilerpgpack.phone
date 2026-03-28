@@ -12,7 +12,11 @@ kotlin {
 
 android {
     namespace 'com.mobilerpgpack.phone.fmod'
-    compileSdkVersion versions.target_sdk
+    compileSdk {
+        version = release(versions.target_sdk) {
+            minorApiLevel = versions.target_sdk_min_revision
+        }
+    }
 
     defaultConfig {
         minSdk versions.min_sdk

@@ -136,12 +136,69 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/Vanilla-Conquer"]
 	path = app/src/main/jni/Vanilla-Conquer
 	url = https://github.com/sandstranger/Vanilla-Conquer.git
-[submodule "app/src/main/jni/xray-16"]
-	path = app/src/main/jni/xray-16
-	url = https://github.com/sandstranger/xray-16
-[submodule "third_party/lzo/src/main/jni/lzo"]
-	path = third_party/lzo/src/main/jni/lzo
-	url = https://github.com/sandstranger/lzo.git
 [submodule "third_party/ogg/src/main/jni/ogg"]
 	path = third_party/ogg/src/main/jni/ogg
 	url = https://gitlab.xiph.org/xiph/ogg.git
+[submodule "third_party/curl/src/main/jni/curl"]
+	path = third_party/curl/src/main/jni/curl
+	url = https://github.com/curl/curl.git
+[submodule "third_party/wolfssl/src/main/jni/wolfssl"]
+	path = third_party/wolfssl/src/main/jni/wolfssl
+url=https://github.com/sandstranger/wolfssl
+[submodule "third_party/brotli/src/main/jni/brotli"]
+	path = third_party/brotli/src/main/jni/brotli
+	url = https://github.com/google/brotli.git
+[submodule "third_party/zstd/src/main/jni/zstd"]
+	path = third_party/zstd/src/main/jni/zstd
+	url = https://github.com/facebook/zstd.git
+[submodule "app/src/main/jni/dhewm3"]
+	path = app/src/main/jni/dhewm3
+	url = https://github.com/sandstranger/dhewm3.git
+[submodule "third_party/dhewm3_mods/sikkmod/src/main/jni/sikkmod"]
+	path = third_party/dhewm3_mods/sikkmod/src/main/jni/sikkmod
+url=https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/rivensin/src/main/jni/rivensin"]
+	path = third_party/dhewm3_mods/rivensin/src/main/jni/rivensin
+url=https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/realgibs/src/main/jni/realgibs"]
+	path = third_party/dhewm3_mods/realgibs/src/main/jni/realgibs
+url=https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/perfected/src/main/jni/perfected"]
+	path = third_party/dhewm3_mods/perfected/src/main/jni/perfected
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/hardcorps/src/main/jni/hardcorps"]
+	path = third_party/dhewm3_mods/hardcorps/src/main/jni/hardcorps
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/grimm/src/main/jni/grimm"]
+	path = third_party/dhewm3_mods/grimm/src/main/jni/grimm
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/fitz/src/main/jni/fitz"]
+	path = third_party/dhewm3_mods/fitz/src/main/jni/fitz
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/eoc/src/main/jni/eoc"]
+	path = third_party/dhewm3_mods/eoc/src/main/jni/eoc
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/eldoom/src/main/jni/eldoom"]
+	path = third_party/dhewm3_mods/eldoom/src/main/jni/eldoom
+url=https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/doom3cc/src/main/jni/doom3cc"]
+	path = third_party/dhewm3_mods/doom3cc/src/main/jni/doom3cc
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/desolated/src/main/jni/desolated"]
+	path = third_party/dhewm3_mods/desolated/src/main/jni/desolated
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/dentonmod/src/main/jni/dentonmod"]
+	path = third_party/dhewm3_mods/dentonmod/src/main/jni/dentonmod
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/d3le/src/main/jni/d3le"]
+	path = third_party/dhewm3_mods/d3le/src/main/jni/d3le
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/cdoom/src/main/jni/cdoom"]
+	path = third_party/dhewm3_mods/cdoom/src/main/jni/cdoom
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/dhewm3_mods/bloodmod/src/main/jni/bloodmod"]
+	path = third_party/dhewm3_mods/bloodmod/src/main/jni/bloodmod
+	url = https://github.com/sandstranger/dhewm3-sdk.git
+[submodule "third_party/nghttp2/src/main/jni/nghttp2"]
+	path = third_party/nghttp2/src/main/jni/nghttp2
+	url = https://github.com/nghttp2/nghttp2.git

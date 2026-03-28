@@ -4,7 +4,11 @@ plugins {
 
 android {
     namespace 'com.mobilerpgpack.translator'
-    compileSdkVersion versions.target_sdk
+    compileSdk {
+        version = release(versions.target_sdk) {
+            minorApiLevel = versions.target_sdk_min_revision
+        }
+    }
 
     defaultConfig {
         minSdk versions.min_sdk

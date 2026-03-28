@@ -16,6 +16,9 @@ import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisC
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisPreferenceStorage
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisComposeSettingsViewModel
+import com.mobilerpgpack.phone.engine.engineinfo.dhewm3.Dhewm3ComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.dhewm3.Dhewm3EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.dhewm3.Dhewm3PreferenceStorage
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
@@ -28,9 +31,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgCom
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWPreferencesStorage
-import com.mobilerpgpack.phone.engine.engineinfo.openxray.OpenXrayComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.openxray.OpenXrayEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.openxray.OpenXrayPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkPreferencesStorage
@@ -754,36 +754,22 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
     }
 
-    private val openXRAYKoinModule = module {
-        val engineName = EngineTypes.OpenXRAY.name
-        single<ControlsProvider> { ControlsProvider(EngineTypes.OpenXRAY, hashMapOf(
+    private val dhewm3KoinModule = module {
+        val engineName = EngineTypes.Dhewm3.name
+        single<ControlsProvider> { ControlsProvider(EngineTypes.Dhewm3, hashMapOf(
             ControlsType.OnScreenStick to fteQWOnScreenStickControlsLayout)) }.withOptions {
             named(engineName) }
-        singleOf<OpenXrayPreferencesStorage>(::OpenXrayPreferencesStorage).withOptions {
+        singleOf<Dhewm3PreferenceStorage>(::Dhewm3PreferenceStorage).withOptions {
             named(engineName)
         }
-        single {
-            val allLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                NG_GL4ES_NATIVE_LIB_NAME,
-                SDL2_NATIVE_LIB_NAME,
-                GLOB_NATIVE_LIB_NAME,
-                JPEG_NATIVE_LIB_NAME,
-                OGG_NATIVE_LIB_NAME,
-                VORBIS_NATIVE_LIB_NAME,
-                VORBIS_FILE_NATIVE_LIB_NAME,
-                VORBIS_ENC_NATIVE_LIB_NAME,
-                OBOE_NATIVE_LUB_NAME,
-                OPENAL_NATIVE_LIB_NAME,
-                LUAJIT_NATIVE_LIB_NAME,
-                LZO_NATIVE_LIB_NAME,
-                OPENXRAY_MAIN_ENGINE_LIB
-            )
-            OpenXrayEngineInfo(OPENXRAY_MAIN_ENGINE_LIB, allLibs)
-        }.withOptions {
+
+        single { dhewm3NativeLibs }.withOptions { named(engineName) }
+
+        singleOf(::Dhewm3EngineInfo).withOptions {
             named(engineName)
             bind<IEngineInfo>()
         }
-        singleOf <IEngineUIController>(::OpenXrayComposeSettings).withOptions {
+        singleOf <IEngineUIController>(::Dhewm3ComposeSettings).withOptions {
             named(engineName)
         }
     }
@@ -793,7 +779,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
             psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,
             arxLibertatisKoinModule, fteQWKoinModule,widelandsKoinModule,
-            vanillaConquerKoinModule, openXRAYKoinModule)
+            vanillaConquerKoinModule, dhewm3KoinModule)
     }
 
     companion object{
