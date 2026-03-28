@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 4.1)
 project(curl_builder)
 
-include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/../nghttp2/src/main/include")
+include_directories(PUBLIC "${CMAKE_SOURCE_DIR}/../nghttp2/src/main/include"
+    "${CMAKE_SOURCE_DIR}/../wolfssl/src/main/include/${ANDROID_ABI}")
 
 if (DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(WOLFSSL_LIBRARY "${CMAKE_SOURCE_DIR}/../wolfssl/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libwolfssl.so")
@@ -9,7 +10,7 @@ else ()
     set(WOLFSSL_LIBRARY "${CMAKE_SOURCE_DIR}/../wolfssl/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libwolfssl.so")
 endif ()
 
-set(WOLFSSL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../wolfssl/src/main/include")
+set(WOLFSSL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../wolfssl/src/main/jni/wolfssl")
 
 if (DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(BROTLICOMMON_LIBRARY "${CMAKE_SOURCE_DIR}/../brotli/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libbrotlicommon.so")
