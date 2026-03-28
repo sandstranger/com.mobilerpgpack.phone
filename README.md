@@ -532,12 +532,6 @@ Process Phoenix: [Licence](https://github.com/JakeWharton/ProcessPhoenix/blob/tr
 
 Code from Vanilla-Conquer nintendo switch port: [Licence](https://github.com/capsterx-switch/Vanilla-Conquer/blob/vanilla/License.txt)  https://github.com/capsterx-switch/Vanilla-Conquer
 
-LZO fork: [Licence](https://github.com/nemequ/lzo/blob/master/COPYING) https://github.com/nemequ/lzo
-
-Theora: [Licence](https://github.com/xiph/theora/blob/main/COPYING) https://github.com/xiph/theora
-
-Luajit cmake: [Licence](https://github.com/WohlSoft/LuaJIT/blob/v2.1/COPYRIGHT)  https://github.com/WohlSoft/LuaJIT
-
 Android Glob: https://github.com/freshHua/glob
 
 Angle: [Licence](https://github.com/google/angle/blob/main/LICENSE) https://github.com/google/angle
