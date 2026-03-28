@@ -1,5 +1,5 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer, OpenXRay for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer, OpenXRay projects found here:
+# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer for Android
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer, projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -24,8 +24,6 @@ https://github.com/fte-team/fteqw
 https://github.com/widelands/widelands
 
 https://github.com/TheAssemblyArmada/Vanilla-Conquer
-
-https://github.com/OpenXRay/xray-16
 
 ## System Requirements
 
@@ -277,10 +275,6 @@ This port is using some code from Vanilla-Conquer nintendo switch port - https:/
 
 All credits for this code to capsterx-switch - https://github.com/capsterx-switch
 
-## Openxray
-
-Unplayable yet.
-
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
@@ -345,8 +339,6 @@ FTEQW engine source code: [Licence](https://github.com/fte-team/fteqw/blob/maste
 Widelands engine source code: [Licence](https://github.com/widelands/widelands/blob/master/COPYING) https://github.com/widelands/widelands
 
 Vanilla-Conquer engine source code: [Licence](https://github.com/TheAssemblyArmada/Vanilla-Conquer/blob/vanilla/License.txt)  https://github.com/TheAssemblyArmada/Vanilla-Conquer
-
-OpenXRay engine source code: [Licence](https://github.com/OpenXRay/xray-16/blob/dev/License.txt) https://github.com/OpenXRay/xray-16
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
