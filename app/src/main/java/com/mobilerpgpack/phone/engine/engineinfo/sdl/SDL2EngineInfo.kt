@@ -29,6 +29,8 @@ abstract class SDL2EngineInfo(
     activeEngineType: EngineTypes) :
     EngineInfo(mainEngineLib, allLibs, activeEngineType) {
 
+    constructor(activeEngineType: EngineTypes) : this("", emptyArray(), activeEngineType)
+
     private val mouseIcon: SDL2MouseIcon by inject()
 
     final override val sdlKeyboard: SDLKeyboard by inject (named(KeyboardType.SDL2Keyboard.name))

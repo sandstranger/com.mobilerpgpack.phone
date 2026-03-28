@@ -309,4 +309,5 @@
     <string name="path_to_call_of_pripyat_resources">Путь к ресурсам Call of Pripyat</string>
     <string name="alpha_value">Альфа:</string>
     <string name="enable_angle_support">Использовать Angle для рендеринга (реализация OpenGL ES на основе Vulkan)</string>
+    <string name="path_to_doom3_resources">Путь к ресурсам Doom 3</string>
 </resources>

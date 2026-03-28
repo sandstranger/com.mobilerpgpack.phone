@@ -6,8 +6,9 @@ buildscript {
             app_version_name : "2.6.5",
             min_sdk : 24,
             target_sdk : 36,
+            target_sdk_min_revision : 1,
             ndk_version : '29.0.14206865',
-            build_tools_version : '36.1.0',
+            build_tools_version : '37.0.0',
             native_android_platform_version : 24,
             cmake_version : "4.1.2"
     ]
@@ -23,7 +24,7 @@ buildscript {
             CMAKE_SHADERLINKER_FLAGS :"-flto=thin -fuse-ld=lld -Wl,--build-id",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
     ]
-    ext.abi_filters = ['armeabi-v7a','arm64-v8a',"x86","x86_64"]
+    ext.abi_filters = ['armeabi-v7a']
     ext.rootDir = rootProject.rootDir
     repositories {
         google()
