@@ -763,11 +763,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(engineName)
         }
 
-        single { mutableListOf<String>().run {
-            add(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME)
-            addAll(dhewm3NativeLibs)
-            toTypedArray()
-        } }.withOptions { named(engineName) }
+        single { dhewm3NativeLibs }.withOptions { named(engineName) }
 
         singleOf(::Dhewm3EngineInfo).withOptions {
             named(engineName)
