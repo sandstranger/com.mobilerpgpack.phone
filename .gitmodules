@@ -202,3 +202,6 @@ url=https://github.com/sandstranger/dhewm3-sdk.git
 [submodule "third_party/nghttp2/src/main/jni/nghttp2"]
 	path = third_party/nghttp2/src/main/jni/nghttp2
 	url = https://github.com/nghttp2/nghttp2.git
+[submodule "third_party/dhewm3_mods/tfphobos/src/main/jni/tfphobos"]
+	path = third_party/dhewm3_mods/tfphobos/src/main/jni/tfphobos
+	url = https://github.com/sandstranger/dhewm3-sdk.git
