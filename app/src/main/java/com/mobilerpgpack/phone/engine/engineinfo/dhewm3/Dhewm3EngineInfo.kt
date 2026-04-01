@@ -54,7 +54,7 @@ class Dhewm3EngineInfo : SDL2EngineInfo (EngineTypes.Dhewm3) {
         Native.register(Dhewm3EngineInfo::class.java, mainLibraryName)
         setPathsToResources(homeDirectoryFolder.absolutePath,
             pathToResource)
-        setPathToNativeLibsFolder (activity.applicationInfo.nativeLibraryDir)
+        setPathToNativeLibsFolder ("${activity.applicationInfo.nativeLibraryDir}/")
     }
 
     private companion object{
