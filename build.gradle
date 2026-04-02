@@ -2,8 +2,8 @@
 buildscript {
     ext.versions = [
             app_package_name : "com.mobilerpgpack.phone",
-            app_version_code : 51,
-            app_version_name : "2.6.5",
+            app_version_code : 52,
+            app_version_name : "2.7.0",
             min_sdk : 24,
             target_sdk : 36,
             target_sdk_min_revision : 1,
@@ -24,7 +24,7 @@ buildscript {
             CMAKE_SHADERLINKER_FLAGS :"-flto=thin -fuse-ld=lld -Wl,--build-id",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
     ]
-    ext.abi_filters = ['armeabi-v7a']
+    ext.abi_filters = ['armeabi-v7a','arm64-v8a',"x86","x86_64"]
     ext.rootDir = rootProject.rootDir
     repositories {
         google()
