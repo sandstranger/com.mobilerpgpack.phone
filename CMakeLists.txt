@@ -289,13 +289,6 @@ endif ()
 
 set(asio_location ${CMAKE_SOURCE_DIR}/third_party/asio/asio/include CACHE STRING "" FORCE)
 
-set (CURL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/curl/src/main/jni/curl/include")
-if (IS_DEBUG_BUILD)
-    set(CURL_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/curl/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libcurl-d.so)
-else ()
-    set(CURL_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/curl/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libcurl.so)
-endif ()
-
 include_directories ("${OGG_LOCATION}/src/main/include")
 
 set (USE_OPENGL ON)
@@ -361,7 +354,6 @@ add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
 add_subdirectory("${APP_ROOT_DIR}/fteqw")
 add_subdirectory("${APP_ROOT_DIR}/widelands")
 add_subdirectory("${APP_ROOT_DIR}/Vanilla-Conquer")
-add_subdirectory("${APP_ROOT_DIR}/dhewm3/neo")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 

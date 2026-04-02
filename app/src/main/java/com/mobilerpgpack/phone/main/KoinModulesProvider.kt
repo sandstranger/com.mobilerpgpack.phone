@@ -16,9 +16,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisC
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisPreferenceStorage
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisComposeSettingsViewModel
-import com.mobilerpgpack.phone.engine.engineinfo.dhewm3.Dhewm3ComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.dhewm3.Dhewm3EngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.dhewm3.Dhewm3PreferenceStorage
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
@@ -754,32 +751,12 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
     }
 
-    private val dhewm3KoinModule = module {
-        val engineName = EngineTypes.Dhewm3.name
-        single<ControlsProvider> { ControlsProvider(EngineTypes.Dhewm3, hashMapOf(
-            ControlsType.OnScreenStick to fteQWOnScreenStickControlsLayout)) }.withOptions {
-            named(engineName) }
-        singleOf<Dhewm3PreferenceStorage>(::Dhewm3PreferenceStorage).withOptions {
-            named(engineName)
-        }
-
-        single { dhewm3NativeLibs }.withOptions { named(engineName) }
-
-        singleOf(::Dhewm3EngineInfo).withOptions {
-            named(engineName)
-            bind<IEngineInfo>()
-        }
-        singleOf <IEngineUIController>(::Dhewm3ComposeSettings).withOptions {
-            named(engineName)
-        }
-    }
-
     init {
         allModules = listOf(mainModule,httpModule,translationModule,
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
             psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,
             arxLibertatisKoinModule, fteQWKoinModule,widelandsKoinModule,
-            vanillaConquerKoinModule, dhewm3KoinModule)
+            vanillaConquerKoinModule)
     }
 
     companion object{
