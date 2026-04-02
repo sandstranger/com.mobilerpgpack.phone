@@ -54,8 +54,8 @@ typedef struct FMOD_ASYNCREADINFO  FMOD_ASYNCREADINFO;
 /*
     FMOD constants
 */
-#define FMOD_VERSION    0x00020312                     /* 0xaaaabbcc -> aaaa = product version, bb = major version, cc = minor version.*/
-#define FMOD_BUILDNUMBER 160365
+#define FMOD_VERSION    0x00020313                     /* 0xaaaabbcc -> aaaa = product version, bb = major version, cc = minor version.*/
+#define FMOD_BUILDNUMBER 162576
 
 typedef unsigned int FMOD_DEBUG_FLAGS;
 #define FMOD_DEBUG_LEVEL_NONE                       0x00000000

@@ -237,15 +237,7 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':third_party:libjpegturbo:build',':third_party:bzip2:build',':third_party:ode:build',
         ':third_party:yquake2:build',':third_party:sdl2-image:build',
         ':third_party:glbinding:build',':third_party:glob:build',':third_party:ogg:build',
-        ':third_party:angle:build', ':third_party:curl:build',
-        ':third_party:dhewm3_mods:sikkmod:build', ':third_party:dhewm3_mods:rivensin:build',
-        ':third_party:dhewm3_mods:realgibs:build',':third_party:dhewm3_mods:perfected:build',
-        ':third_party:dhewm3_mods:hardcorps:build',':third_party:dhewm3_mods:grimm:build',
-        ':third_party:dhewm3_mods:fitz:build',':third_party:dhewm3_mods:eoc:build',
-        ':third_party:dhewm3_mods:eldoom:build',':third_party:dhewm3_mods:doom3cc:build',
-        ':third_party:dhewm3_mods:desolated:build',':third_party:dhewm3_mods:dentonmod:build',
-        ':third_party:dhewm3_mods:d3le:build',':third_party:dhewm3_mods:cdoom:build',
-        ':third_party:dhewm3_mods:bloodmod:build',':third_party:dhewm3_mods:tfphobos:build'
+        ':third_party:angle:build'
 
 dependencies {
     implementation project(':third_party:sdl2:android-project:app')
@@ -275,23 +267,6 @@ dependencies {
     implementation (project(":third_party:glob"))
     implementation (project(":third_party:ogg"))
     implementation (project(":third_party:angle"))
-    implementation (project(":third_party:curl"))
-    implementation (project(":third_party:dhewm3_mods:sikkmod"))
-    implementation (project(":third_party:dhewm3_mods:rivensin"))
-    implementation (project(":third_party:dhewm3_mods:realgibs"))
-    implementation (project(":third_party:dhewm3_mods:perfected"))
-    implementation (project(":third_party:dhewm3_mods:hardcorps"))
-    implementation (project(":third_party:dhewm3_mods:grimm"))
-    implementation (project(":third_party:dhewm3_mods:fitz"))
-    implementation (project(":third_party:dhewm3_mods:eoc"))
-    implementation (project(":third_party:dhewm3_mods:eldoom"))
-    implementation (project(":third_party:dhewm3_mods:doom3cc"))
-    implementation (project(":third_party:dhewm3_mods:desolated"))
-    implementation (project(":third_party:dhewm3_mods:dentonmod"))
-    implementation (project(":third_party:dhewm3_mods:d3le"))
-    implementation (project(":third_party:dhewm3_mods:cdoom"))
-    implementation (project(":third_party:dhewm3_mods:bloodmod"))
-    implementation (project(":third_party:dhewm3_mods:tfphobos"))
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
     implementation(libs.koin.core)
