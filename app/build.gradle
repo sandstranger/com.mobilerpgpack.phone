@@ -245,7 +245,7 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':third_party:dhewm3_mods:eldoom:build',':third_party:dhewm3_mods:doom3cc:build',
         ':third_party:dhewm3_mods:desolated:build',':third_party:dhewm3_mods:dentonmod:build',
         ':third_party:dhewm3_mods:d3le:build',':third_party:dhewm3_mods:cdoom:build',
-        ':third_party:dhewm3_mods:bloodmod:build'
+        ':third_party:dhewm3_mods:bloodmod:build',':third_party:dhewm3_mods:tfphobos:build'
 
 dependencies {
     implementation project(':third_party:sdl2:android-project:app')
@@ -291,6 +291,7 @@ dependencies {
     implementation (project(":third_party:dhewm3_mods:d3le"))
     implementation (project(":third_party:dhewm3_mods:cdoom"))
     implementation (project(":third_party:dhewm3_mods:bloodmod"))
+    implementation (project(":third_party:dhewm3_mods:tfphobos"))
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
     implementation(libs.koin.core)

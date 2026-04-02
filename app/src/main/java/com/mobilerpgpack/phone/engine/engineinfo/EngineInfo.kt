@@ -110,7 +110,7 @@ abstract class EngineInfo(
 
     protected open val callExitProcessOnDestroy : Boolean = true
 
-    protected open val enableNGGL4ESSimpleShaderConv = true
+    protected open val enableNGGL4ESSimpleShaderConv = false
 
     protected abstract val gyroInput : GyroInput
 
