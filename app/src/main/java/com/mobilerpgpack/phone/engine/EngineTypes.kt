@@ -12,8 +12,7 @@ enum class EngineTypes {
     ArxLibertatis,
     FTEQW,
     Widelands,
-    VanillaConquer,
-    Dhewm3;
+    VanillaConquer;
 
     companion object{
         val DefaultActiveEngine = WolfensteinRpg
