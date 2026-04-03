@@ -106,7 +106,7 @@ abstract class EngineInfo(
 
     protected open val loadGL4ES : Boolean = true
 
-    protected open val targetGLESVersion : Int = 300;
+    protected open val targetGLESVersion : Int = 300
 
     protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope.value!!
 
@@ -212,9 +212,8 @@ abstract class EngineInfo(
         setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
         if (loadGL4ES){
             GL4ESJnaLayer.apply {
-                enableSimpleShaderConv = enableNGGL4ESSimpleShaderConv
-                enableAngle = enableAngleSupport
-                setESVersion(targetGLESVersion)
+                initializeGL4ESData (enableNGGL4ESSimpleShaderConv,
+                    enableAngleSupport, targetGLESVersion)
                 initialize_gl4es()
             }
         }
@@ -457,32 +456,10 @@ abstract class EngineInfo(
     }
 
     private object GL4ESJnaLayer {
-        private const val SIMPLE_SHADER_CONV_ENABLED_STATE : Int = 1
-        private const val SIMPLE_SHADER_CONV_DISABLED_STATE : Int = 0
-
-        private var _enableSimpleShaderConv = false
-        private var _enableAngle = false
-
-        private external fun updateSimpleShaderConvState(shaderConvState : Int)
-        private external fun updateEnableAngleState(enableAngle : Boolean)
-        external fun setESVersion(targetESVersion : Int)
         external fun initialize_gl4es()
         external fun close_gl4es()
-
-        var enableSimpleShaderConv : Boolean
-            get() = _enableSimpleShaderConv
-            set(value) {
-                _enableSimpleShaderConv = value
-                updateSimpleShaderConvState(if (value) SIMPLE_SHADER_CONV_ENABLED_STATE
-                else SIMPLE_SHADER_CONV_DISABLED_STATE)
-            }
-
-        var enableAngle : Boolean
-            get() = _enableAngle
-            set(value) {
-                _enableAngle = value
-                updateEnableAngleState(value)
-            }
+        external fun initializeGL4ESData(enableSimpleShaderConv : Boolean,
+                                         enableAngle : Boolean,targetESVersion : Int)
 
         init {
             Native.register(GL4ESJnaLayer::class.java, gl4esLibraryName)
