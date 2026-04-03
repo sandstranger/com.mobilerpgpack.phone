@@ -106,6 +106,8 @@ abstract class EngineInfo(
 
     protected open val loadGL4ES : Boolean = true
 
+    protected open val targetGLESVersion : Int = 300;
+
     protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope.value!!
 
     protected open val callExitProcessOnDestroy : Boolean = true
@@ -212,6 +214,7 @@ abstract class EngineInfo(
             GL4ESJnaLayer.apply {
                 enableSimpleShaderConv = enableNGGL4ESSimpleShaderConv
                 enableAngle = enableAngleSupport
+                setESVersion(targetGLESVersion)
                 initialize_gl4es()
             }
         }
@@ -462,6 +465,7 @@ abstract class EngineInfo(
 
         private external fun updateSimpleShaderConvState(shaderConvState : Int)
         private external fun updateEnableAngleState(enableAngle : Boolean)
+        external fun setESVersion(targetESVersion : Int)
         external fun initialize_gl4es()
         external fun close_gl4es()
 
