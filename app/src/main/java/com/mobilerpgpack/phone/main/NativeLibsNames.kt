@@ -31,8 +31,6 @@ const val TIBERIAN_DAWN_NATIVE_LIB_NAME = "vanillatd"
 
 const val RED_ALERT_NATIVE_LIB_NAME = "vanillara"
 
-const val DHWEM3_NATIVE_LIB_NAME = "dhewm3"
-
 const val BZ2_NATIVE_LIB_NAME = "bz2"
 
 const val ODE_NATIVE_LIB_NAME = "ode"
@@ -124,7 +122,3 @@ val ffmpegLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
     "avutil", "swresample", "swscale")
 
 val angleLibs = arrayOf("feature_support_angle","GLESv2_angle", "EGL_angle")
-
-val dhewm3NativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,"zstd","nghttp2","wolfssl", "brotlicommon", "brotlidec",
-    "brotlienc",curlLibraryName,gl4esLibraryName,OBOE_NATIVE_LUB_NAME, OPENAL_NATIVE_LIB_NAME, SDL2_NATIVE_LIB_NAME,
-    SDL2_NATIVE_LIB_NAME,"base-dhewm3", DHWEM3_NATIVE_LIB_NAME)
