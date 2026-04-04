@@ -310,4 +310,5 @@
     <string name="alpha_value">Альфа:</string>
     <string name="enable_angle_support">Использовать Angle для рендеринга (реализация OpenGL ES на основе Vulkan)</string>
     <string name="path_to_doom3_resources">Путь к ресурсам Doom 3</string>
+    <string name="use_mediump_precision">использовать среднюю точность (mediump) шейдеров вместо высокой (highp) в gl4es</string>
 </resources>

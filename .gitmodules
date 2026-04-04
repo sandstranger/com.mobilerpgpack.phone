@@ -139,3 +139,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/ogg/src/main/jni/ogg"]
 	path = third_party/ogg/src/main/jni/ogg
 	url = https://gitlab.xiph.org/xiph/ogg.git
+[submodule "app/src/main/jni/Classic-RBDOOM-3-BFG"]
+	path = app/src/main/jni/Classic-RBDOOM-3-BFG
+	url = https://github.com/sandstranger/Classic-RBDOOM-3-BFG.git
