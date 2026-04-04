@@ -312,4 +312,5 @@
     <string name="path_to_call_of_pripyat_resources">Path to Call of Pripyat resources</string>
     <string name="enable_angle_support">Enable Angle for rendering (OpenGL ES implementation using Vulkan)</string>
     <string name="path_to_doom3_resources">Path to Doom 3 resources</string>
+    <string name="use_mediump_precision">use mediump shader precision instead highp in gl4es</string>
 </resources>

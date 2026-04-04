@@ -213,7 +213,8 @@ abstract class EngineInfo(
         if (loadGL4ES){
             GL4ESJnaLayer.apply {
                 initializeGL4ESData (enableNGGL4ESSimpleShaderConv,
-                    enableAngleSupport, targetGLESVersion)
+                    enableAngleSupport, targetGLESVersion,
+                    preferencesStorage.useMediumpShaderPrecision.value!!)
                 initialize_gl4es()
             }
         }
@@ -459,7 +460,8 @@ abstract class EngineInfo(
         external fun initialize_gl4es()
         external fun close_gl4es()
         external fun initializeGL4ESData(enableSimpleShaderConv : Boolean,
-                                         enableAngle : Boolean,targetESVersion : Int)
+                                         enableAngle : Boolean,targetESVersion : Int,
+                                         useMediumpShaderPrecision : Boolean)
 
         init {
             Native.register(GL4ESJnaLayer::class.java, gl4esLibraryName)
