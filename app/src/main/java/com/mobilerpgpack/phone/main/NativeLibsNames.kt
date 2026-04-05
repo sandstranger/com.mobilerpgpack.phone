@@ -21,6 +21,8 @@ const val WOLFENSTEINRPG_MAIN_ENGINE_LIB = "WolfensteinRPG"
 
 const val ARX_LIBERTATIS_MAIN_ENGINE_LIB  = "arx"
 
+const val DOOM_BFA_MAIN_LIB = "DoomBFA"
+
 const val FTEQW_MAIN_ENGINE_LIB = "ftedroid"
 
 const val WIDELANDS_MAIN_ENGINE_LIB = "widelands"
@@ -107,8 +109,6 @@ val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else NG_GL4ES_NATIV
 
 val gl4esFullLibraryName = buildFullLibraryName(gl4esLibraryName)
 
-val curlLibraryName = if (BuildConfig.DEBUG) "curl-d" else "curl"
-
 fun buildFullLibraryName (libraryName : String ) = "lib${libraryName}.so"
 
 val fteQWNativePlugins = arrayOf("fteplug_bullet", "fteplug_cod", "fteplug_ezhud",
@@ -122,3 +122,5 @@ val ffmpegLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
     "avutil", "swresample", "swscale")
 
 val angleLibs = arrayOf("feature_support_angle","GLESv2_angle", "EGL_angle")
+
+val opensslLibs = arrayOf("ssl_3","crypto_3")
