@@ -23,6 +23,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override val loadGL4ES = false
 
+    override val touchFullScreenModeCanBeUsed = false
+
     override val targetGLESVersion = 320
 
     private external fun setPathsToResources (pathToHomeFolder : String, pathToResourcesFolder : String)
