@@ -27,6 +27,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override val targetGLESVersion = 320
 
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
+
     private external fun setPathsToResources (pathToHomeFolder : String, pathToResourcesFolder : String)
 
     override fun onNativeLibrariesLoaded() {
