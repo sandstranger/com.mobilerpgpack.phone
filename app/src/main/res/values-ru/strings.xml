@@ -311,4 +311,19 @@
     <string name="enable_angle_support">Использовать Angle для рендеринга (реализация OpenGL ES на основе Vulkan)</string>
     <string name="path_to_doom3_resources">Путь к ресурсам Doom 3 BFG</string>
     <string name="use_mediump_precision">использовать среднюю точность (mediump) шейдеров вместо высокой (highp) в gl4es</string>
+    <string name="disable_postprocess_effects">Отключить все эффекты постобработки</string>
+    <string name="disable_shadows">Отключить все тени</string>
+    <string name="disable_particles">Отключить частицы</string>
+    <string name="disable_bfg_new_ambient_effect">Отключить новые эффекты окружения из BFG-издания</string>
+    <string name="disable_blend_lights">Отключить смешение света</string>
+    <string name="disable_dynamic_textures">Отключить динамические текстуры</string>
+    <string name="disable_copy_textures">Отключить копирование текстур</string>
+    <string name="skip_deforms">Пропустить деформации: оставить все деформируемые материалы в исходном состоянии</string>
+    <string name="use_shadow_mapping">Использовать карты теней вместо трафаретных теней</string>
+    <string name="disable_overlays">Пропускать поверхности наложений</string>
+    <string name="use_light_depth_bounds">Использовать тест границ глубины для источников света, чтобы уменьшить заполнение тенями и взаимодействиями</string>
+    <string name="disable_intel_workarounds">Отключить обходные решения для ошибок драйверов Intel</string>
+    <string name="use_shadow_depth_bounds">Использовать тест границ глубины для отдельных теневых объёмов, чтобы уменьшить заполнение тенями</string>
+    <string name="skip_prelight_shadows">Пропустить статические теневые объёмы, сгенерированные dmap</string>
+    <string name="enable_dxt_hardware_support">Включить аппаратную поддержку сжатия dxt текстур</string>
 </resources>
