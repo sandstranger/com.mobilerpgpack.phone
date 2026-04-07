@@ -52,6 +52,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_useShadowDepthBounds", useShadowDepthBounds.value!!)
                     this@with += buildCommand("r_skipPrelightShadows", disablePrelightShadows.value!!)
                     this@with += buildCommand("r_skipTranslucent", disableTranslucent.value!!)
+                    this@with += buildCommand("r_skipFogLights",
+                        disableFogLights.value!!)
 
                     val pathToModsDirectory = pathDoom3ModsDir.value!!
                     val modsDir = File(pathToModsDirectory)
