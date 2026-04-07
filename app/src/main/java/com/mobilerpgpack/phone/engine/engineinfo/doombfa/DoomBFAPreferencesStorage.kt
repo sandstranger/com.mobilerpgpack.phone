@@ -23,6 +23,7 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val enableDXTHardwareSupportPrefsKey = booleanPreferencesKey("enable_dxt_hardware_support")
     val disableShadowsPrefsKey = booleanPreferencesKey("disable_shadows")
     val disableTranslucentPrefsKey = booleanPreferencesKey("disable_translucent")
+    val disableFogLightsPrefsKey = booleanPreferencesKey("disable_fog_lights")
     val enableDoom3ModsPrefsKey = booleanPreferencesKey("enable_doom3_mods")
     val pathDoom3ModsDirPrefsKey = stringPreferencesKey("path_to_doom3_mods_dir")
 
@@ -30,6 +31,7 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val pathToDoom3Resources = getStringValue(pathToDoom3ResourcesPreferenceKey)
     val pathDoom3ModsDir = getStringValue(pathDoom3ModsDirPrefsKey)
     val enableDoom3Mods = getBooleanValue(enableDoom3ModsPrefsKey)
+    val disableFogLights = getBooleanValue(disableFogLightsPrefsKey)
     val disableTranslucent = getBooleanValue(disableTranslucentPrefsKey)
     val disablePostProcessEffects= getBooleanValue(disablePostProcessEffectsPrefsKey,false)
     val disableShadows = getBooleanValue(disableShadowsPrefsKey)
