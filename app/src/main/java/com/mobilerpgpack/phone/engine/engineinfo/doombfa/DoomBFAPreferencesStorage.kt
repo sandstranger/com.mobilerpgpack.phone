@@ -32,7 +32,7 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val disableBlendLights = getBooleanValue(disableBlendLightsPrefsKey)
     val disableDynamicTextures = getBooleanValue(disableDynamicTexturesPrefsKey)
     val disableCopyTextures= getBooleanValue(disableCopyTexturesPrefsKey)
-    val skipDeformsPrefs = getBooleanValue(skipDeformsPrefsKey)
+    val skipDeforms = getBooleanValue(skipDeformsPrefsKey)
     val useShadowMapping = getBooleanValue(useShadowMappingPrefsKey,false)
     val disableOverlays = getBooleanValue(disableOverlaysPrefsKey)
     val useLightDepthBounds = getBooleanValue(useLightDepthBoundsPrefsKey,true)
