@@ -1,5 +1,6 @@
 # Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer, projects found here:
+This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer,
+Classic-RBDOOM-3-BFG projects found here:
 
 https://github.com/Erick194/DoomRPG-RE
 
@@ -24,6 +25,8 @@ https://github.com/fte-team/fteqw
 https://github.com/widelands/widelands
 
 https://github.com/TheAssemblyArmada/Vanilla-Conquer
+
+https://github.com/MadDeCoDeR/Classic-RBDOOM-3-BFG
 
 ## System Requirements
 
@@ -275,6 +278,22 @@ This port is using some code from Vanilla-Conquer nintendo switch port - https:/
 
 All credits for this code to capsterx-switch - https://github.com/capsterx-switch
 
+## Classic-RBDOOM-3-BFG
+
+This Doom 3 BFG Edition port supports only the OpenGL ES 3.2 renderer because of the heavy use of modern GLSL 3.x features on desktop.
+
+The engine can run on ARMv7, but it is not officially supported.
+
+If you experience low FPS on your phone, try reducing the screen resolution and lowering the graphics settings.
+
+This fork of Classic-RBDOOM-3-BFG includes renderer code from glKarin’s Doom 3 BFG Edition Android port: https://github.com/glKarin/com.n0n3m4.diii4a
+
+It also includes bug fixes from beloko’s dhewm3 Android port: https://github.com/emileb/d3es-multithread
+
+All credit for the Android renderer changes in Doom 3 BFG Edition goes to glKarin: https://github.com/glKarin
+
+Additional Android bug fixes are credited to emileb: https://github.com/emileb
+
 ## Keyboard and Mouse Support
 This Android ports support keyboard and mouse
 
@@ -339,6 +358,8 @@ FTEQW engine source code: [Licence](https://github.com/fte-team/fteqw/blob/maste
 Widelands engine source code: [Licence](https://github.com/widelands/widelands/blob/master/COPYING) https://github.com/widelands/widelands
 
 Vanilla-Conquer engine source code: [Licence](https://github.com/TheAssemblyArmada/Vanilla-Conquer/blob/vanilla/License.txt)  https://github.com/TheAssemblyArmada/Vanilla-Conquer
+
+Classic-RBDOOM-3-BFG engine source code: [Licence](https://github.com/MadDeCoDeR/Classic-RBDOOM-3-BFG/blob/master/COPYING.txt) https://github.com/MadDeCoDeR/Classic-RBDOOM-3-BFG
 
 Glslang: [Licence](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt) 	https://github.com/KhronosGroup/glslang
 
@@ -535,6 +556,12 @@ Code from Vanilla-Conquer nintendo switch port: [Licence](https://github.com/cap
 Android Glob: https://github.com/freshHua/glob
 
 Angle: [Licence](https://github.com/google/angle/blob/main/LICENSE) https://github.com/google/angle
+
+android_openssl: [Licence](https://github.com/KDAB/android_openssl/blob/master/LICENSE) https://github.com/KDAB/android_openssl
+
+sse2neon: [Licence](https://github.com/DLTcollab/sse2neon/blob/master/LICENSE) https://github.com/DLTcollab/sse2neon
+
+d3es-multithread:  [Licence](https://github.com/emileb/d3es-multithread/blob/master/COPYING.txt) https://github.com/emileb/d3es-multithread
 
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 

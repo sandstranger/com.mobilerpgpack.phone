@@ -311,5 +311,23 @@
     <string name="path_to_call_of_pripyat_resources">普里皮亚季的召唤资源路径</string>
     <string name="alpha_value">字母:</string>
     <string name="enable_angle_support">启用 ANGLE 进行渲染（基于 Vulkan 的 OpenGL ES 实现）</string>
-    <string name="path_to_doom3_resources">Doom 3 资源路径</string>
+    <string name="path_to_doom3_resources">Doom 3 BFG 资源路径</string>
+    <string name="use_mediump_precision">在 gl4es 中使用着色器的 mediump 精度而不是 highp</string>
+    <string name="disable_postprocess_effects">禁用所有后期处理效果</string>
+    <string name="disable_shadows">禁用所有阴影</string>
+    <string name="disable_particles">禁用粒子效果</string>
+    <string name="disable_bfg_new_ambient_effect">禁用 BFG 版新增环境效果</string>
+    <string name="disable_blend_lights">禁用混合光照</string>
+    <string name="disable_dynamic_textures">禁用动态纹理</string>
+    <string name="disable_copy_textures">禁用纹理复制</string>
+    <string name="skip_deforms">保持所有变形材质为原始状态</string>
+    <string name="use_shadow_mapping">使用阴影映射替代模板阴影</string>
+    <string name="disable_overlays">跳过覆盖表面</string>
+    <string name="use_light_depth_bounds">对光源使用深度范围测试，以减少阴影和交互填充</string>
+    <string name="disable_intel_workarounds">跳过针对英特尔驱动错误的解决方案</string>
+    <string name="use_shadow_depth_bounds">对单个阴影体使用深度范围测试，以减少阴影填充</string>
+    <string name="skip_prelight_shadows">跳过 dmap 生成的静态阴影体</string>
+    <string name="enable_dxt_hardware_support">启用 DXT 纹理硬件支持</string>
+    <string name="disable_translucent">跳过半透明交互渲染</string>
+    <string name="disable_fog_lights">跳过所有雾光源</string>
 </resources>
