@@ -19,6 +19,10 @@ import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisC
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAComposeSettings.DoomBFAGraphicsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RPGEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSettings
@@ -91,6 +95,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.arxLibertatisOnSc
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom2RPGControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64AbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64OnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doomBFAScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doomRPGControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoomAbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoomOnScreenStickControlsLayout
@@ -751,12 +756,44 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
     }
 
+    private val doomBFAKoinModule = module {
+        val engineName = EngineTypes.Classic_RBDOOM_3_BFG.name
+        single<ControlsProvider> { ControlsProvider(EngineTypes.Classic_RBDOOM_3_BFG, hashMapOf(
+            ControlsType.OnScreenStick to doomBFAScreenStickControlsLayout)) }.withOptions {
+            named(engineName) }
+        singleOf<DoomBFAPreferencesStorage>(::DoomBFAPreferencesStorage).withOptions {
+            named(engineName)
+        }
+        single<DoomBFAEngineInfo> {
+            val libs = mutableListOf<String>().run {
+                add(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME)
+                addAll(ffmpegLibs)
+                addAll(opensslLibs)
+                add(OBOE_NATIVE_LUB_NAME)
+                add(OPENAL_NATIVE_LIB_NAME)
+                add(JPEG_NATIVE_LIB_NAME)
+                add(SDL3_NATIVE_LIB_NAME)
+                add(DOOM_BFA_MAIN_LIB)
+                toTypedArray()
+            }
+            DoomBFAEngineInfo(DOOM_BFA_MAIN_LIB, libs)
+        }.withOptions {
+            named(engineName)
+            bind<IEngineInfo>()
+        }
+        singleOf(::DoomBFAComposeSettings).withOptions {
+            named(engineName)
+            bind<IEngineUIController>()
+        }
+        singleOf(::DoomBFAGraphicsScreen).bind()
+    }
+
     init {
         allModules = listOf(mainModule,httpModule,translationModule,
             composeModule, doomRpgSeriesModule, doom64RegisterModule,
             psyDoomRegisterModule,uZDoomRegisterModule, perfectDarkKoinModule,
             arxLibertatisKoinModule, fteQWKoinModule,widelandsKoinModule,
-            vanillaConquerKoinModule)
+            vanillaConquerKoinModule,doomBFAKoinModule)
     }
 
     companion object{

@@ -311,5 +311,23 @@
     <string name="path_to_clear_sky_resources">Path to Clear Sky resources</string>
     <string name="path_to_call_of_pripyat_resources">Path to Call of Pripyat resources</string>
     <string name="enable_angle_support">Enable Angle for rendering (OpenGL ES implementation using Vulkan)</string>
-    <string name="path_to_doom3_resources">Path to Doom 3 resources</string>
+    <string name="path_to_doom3_resources">Path to Doom 3 BFG resources</string>
+    <string name="use_mediump_precision">use mediump shader precision instead highp in gl4es</string>
+    <string name="disable_postprocess_effects">Disable all postprocess effects</string>
+    <string name="disable_shadows">Disable all shadows</string>
+    <string name="disable_particles">Disable particles</string>
+    <string name="disable_bfg_new_ambient_effect">Disable BFG edition new ambient effects</string>
+    <string name="disable_blend_lights">Disable blend lights</string>
+    <string name="disable_dynamic_textures">Disable dynamic textures</string>
+    <string name="disable_copy_textures">Disable copy textures</string>
+    <string name="skip_deforms">Leave all deform materials in their original state</string>
+    <string name="use_shadow_mapping">Use shadow mapping instead of stencil shadows</string>
+    <string name="disable_overlays">Skip overlay surfaces"</string>
+    <string name="use_light_depth_bounds">Use depth bounds test on lights to reduce both shadow and interaction fill</string>
+    <string name="disable_intel_workarounds">Skip workarounds for Intel driver bugs</string>
+    <string name="use_shadow_depth_bounds">Use depth bounds test on individual shadow volumes to reduce shadow fill</string>
+    <string name="skip_prelight_shadows">Skip the dmap generated static shadow volumes</string>
+    <string name="disable_translucent">skip the translucent interaction rendering</string>
+    <string name="enable_dxt_hardware_support">Enable dxt textures hardware support</string>
+    <string name="disable_fog_lights">Skip all fog lights</string>
 </resources>

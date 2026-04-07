@@ -65,6 +65,9 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val widelandsScreenScalePrefeKey = floatPreferencesKey("widelands_screen_scale")
     val zoomSensitivityPrefsKey = floatPreferencesKey("zoom_sensitivity")
     val enableAngleSupportPrefsKey = booleanPreferencesKey("enable_angle_support")
+    val useMediumpShaderPrecisionKey = booleanPreferencesKey("use_mediump_shader_precision")
+
+    val useMediumpShaderPrecision = getBooleanValue(useMediumpShaderPrecisionKey, false)
 
     val widelandsScreenScale = getFloatValue(widelandsScreenScalePrefeKey, 2.0f)
 

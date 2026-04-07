@@ -1,0 +1,96 @@
+package com.mobilerpgpack.phone.engine.engineinfo.doombfa
+
+import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
+import com.sun.jna.Native
+import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
+import java.io.File
+
+class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
+    SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Classic_RBDOOM_3_BFG) {
+    private val homeDirectoryFolder : File by inject { parametersOf(HOME_DIRECTORY_NAME) }
+
+    private val doomBFAPreferenceStorage by inject<DoomBFAPreferencesStorage>(
+        named(EngineTypes.Classic_RBDOOM_3_BFG.name))
+
+    override val pathToResource: String get() = doomBFAPreferenceStorage.pathToDoom3Resources.value!!
+
+    override val preferencesStorage get() = doomBFAPreferenceStorage
+
+    override val commandLineParams: String get() = doomBFAPreferenceStorage.commandLineArgs.value!!
+
+    override val loadGL4ES = false
+
+    override val touchFullScreenModeCanBeUsed = false
+
+    override val targetGLESVersion = 320
+
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
+
+    override val commandLineArgs: Array<String>
+        get() {
+            val baseCommandLineArgs = super.commandLineArgs
+            return with(mutableListOf<String>()) {
+                this += baseCommandLineArgs
+                preferencesStorage.apply {
+                    this@with += buildCommand("r_skipPostProcess",
+                        disablePostProcessEffects.value!!)
+                    this@with += buildCommand("r_skipShadows", disableShadows.value!!)
+                    this@with += buildCommand("r_skipParticles", disableParticles.value!!)
+                    this@with += buildCommand("r_skipNewAmbient", disableNewAmbients.value!!)
+                    this@with += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
+                    this@with += buildCommand("r_skipDynamicTextures", disableDynamicTextures.value!!)
+                    this@with += buildCommand("r_skipCopyTexture", disableCopyTextures.value!!)
+                    this@with += buildCommand("r_skipDeforms", skipDeforms.value!!)
+                    this@with += buildCommand("r_useShadowMapping", useShadowMapping.value!!)
+                    this@with += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
+                    this@with += buildCommand("r_skipOverlays", disableOverlays.value!!)
+                    this@with += buildCommand("r_useLightDepthBounds", useLightDepthBounds.value!!)
+                    this@with += buildCommand("r_skipIntelWorkarounds", disableIntelWorkarounds.value!!)
+                    this@with += buildCommand("r_useShadowDepthBounds", useShadowDepthBounds.value!!)
+                    this@with += buildCommand("r_skipPrelightShadows", disablePrelightShadows.value!!)
+                    this@with += buildCommand("r_skipTranslucent", disableTranslucent.value!!)
+                    this@with += buildCommand("r_skipFogLights",
+                        disableFogLights.value!!)
+
+                    val pathToModsDirectory = pathDoom3ModsDir.value!!
+                    val modsDir = File(pathToModsDirectory)
+
+                    if (enableDoom3Mods.value!! && !baseCommandLineArgs.contains(GAME_COMMAND) && modsDir.exists() &&
+                        pathToModsDirectory.isNotEmpty() && pathToModsDirectory.startsWith(pathToResource)){
+                        this@with+= buildCommand(GAME_COMMAND, modsDir.name)
+                    }
+                    else{
+                        this@with += buildCommand(GAME_COMMAND, BASE_GAME)
+                    }
+                }
+                toTypedArray()
+            }
+        }
+
+    private external fun setPathsToResources (pathToHomeFolder : String, pathToResourcesFolder : String)
+
+    private external fun updateEnableDXTSupportState(enableHardwareDXTSupport : Boolean)
+
+    override fun onNativeLibrariesLoaded() {
+        super.onNativeLibrariesLoaded()
+        Native.register(DoomBFAEngineInfo::class.java, mainLibraryName)
+        setPathsToResources(homeDirectoryFolder.absolutePath,
+            pathToResource)
+        updateEnableDXTSupportState(preferencesStorage.enableDXTHardwareSupport.value!!)
+    }
+
+    private companion object{
+        private const val HOME_DIRECTORY_NAME = "doombfa"
+        private const val GAME_COMMAND = "fs_game"
+        private const val BASE_GAME = "base"
+
+        private fun buildCommand(commandKey : String, commandValue : String) =
+            arrayOf("+set",commandKey, commandValue)
+
+        private fun buildCommand(commandKey : String, commandValue : Boolean) =
+            buildCommand(commandKey, if(commandValue) "1" else "0")
+    }
+}
