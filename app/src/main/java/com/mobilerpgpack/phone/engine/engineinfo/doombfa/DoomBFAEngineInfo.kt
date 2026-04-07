@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
+import android.app.Activity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.sun.jna.Native
@@ -29,16 +30,51 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 
+    override val commandLineArgs: Array<String>
+        get() {
+            return with(mutableListOf<String>()) {
+                this += super.commandLineArgs
+                preferencesStorage.apply {
+                    this@with += buildCommand("r_skipPostProcess",
+                        disablePostProcessEffects.value!!)
+                    this@with += buildCommand("r_skipShadows", disableShadows.value!!)
+                    this@with += buildCommand("r_skipParticles", disableParticles.value!!)
+                    this@with += buildCommand("r_skipNewAmbient", disableNewAmbients.value!!)
+                    this@with += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
+                    this@with += buildCommand("r_skipDynamicTextures", disableDynamicTextures.value!!)
+                    this@with += buildCommand("r_skipCopyTexture", disableCopyTextures.value!!)
+                    this@with += buildCommand("r_skipDeforms", skipDeforms.value!!)
+                    this@with += buildCommand("r_useShadowMapping", useShadowMapping.value!!)
+                    this@with += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
+                    this@with += buildCommand("r_skipOverlays", disableOverlays.value!!)
+                    this@with += buildCommand("r_useLightDepthBounds", useLightDepthBounds.value!!)
+                    this@with += buildCommand("r_skipIntelWorkarounds", disableIntelWorkarounds.value!!)
+                    this@with += buildCommand("r_useShadowDepthBounds", useShadowDepthBounds.value!!)
+                    this@with += buildCommand("r_skipPrelightShadows", disablePrelightShadows.value!!)
+                }
+                toTypedArray()
+            }
+        }
+
     private external fun setPathsToResources (pathToHomeFolder : String, pathToResourcesFolder : String)
+
+    private external fun updateEnableDXTSupportState(enableHardwareDXTSupport : Boolean)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(DoomBFAEngineInfo::class.java, mainLibraryName)
         setPathsToResources(homeDirectoryFolder.absolutePath,
             pathToResource)
+        updateEnableDXTSupportState(preferencesStorage.enableDXTHardwareSupport.value!!)
     }
 
     private companion object{
         private const val HOME_DIRECTORY_NAME = "doombfa"
+
+        private fun buildCommand(commandKey : String, commandValue : String) =
+            arrayOf("+set",commandKey, commandValue)
+
+        private fun buildCommand(commandKey : String, commandValue : Boolean) =
+            buildCommand(commandKey, if(commandValue) "1" else "0")
     }
 }

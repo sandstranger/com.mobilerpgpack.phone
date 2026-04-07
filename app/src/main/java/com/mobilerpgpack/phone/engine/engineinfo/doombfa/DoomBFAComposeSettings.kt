@@ -65,7 +65,7 @@ class DoomBFAComposeSettings : IEngineUIController {
                 disableCopyTextures,disableCopyTexturesPrefsKey.name)
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.skip_deforms),
-                skipDeformsPrefs,skipDeformsPrefsKey.name)
+                skipDeforms,skipDeformsPrefsKey.name)
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.use_shadow_mapping),
                 useShadowMapping,useShadowMappingPrefsKey.name)
