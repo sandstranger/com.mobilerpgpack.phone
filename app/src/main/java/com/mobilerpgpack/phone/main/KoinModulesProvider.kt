@@ -95,6 +95,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.arxLibertatisOnSc
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom2RPGControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64AbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doom64OnScreenStickControlsLayout
+import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doomBFAScreenStickControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.doomRPGControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoomAbsoluteTouchControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.doomseries.psyDoomOnScreenStickControlsLayout
@@ -758,7 +759,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     private val doomBFAKoinModule = module {
         val engineName = EngineTypes.Classic_RBDOOM_3_BFG.name
         single<ControlsProvider> { ControlsProvider(EngineTypes.Classic_RBDOOM_3_BFG, hashMapOf(
-            ControlsType.AbsoluteTouchControls to doom64AbsoluteTouchControlsLayout)) }.withOptions {
+            ControlsType.OnScreenStick to doomBFAScreenStickControlsLayout)) }.withOptions {
             named(engineName) }
         singleOf<DoomBFAPreferencesStorage>(::DoomBFAPreferencesStorage).withOptions {
             named(engineName)
