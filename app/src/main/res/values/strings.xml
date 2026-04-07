@@ -327,5 +327,6 @@
     <string name="disable_intel_workarounds">Skip workarounds for Intel driver bugs</string>
     <string name="use_shadow_depth_bounds">Use depth bounds test on individual shadow volumes to reduce shadow fill</string>
     <string name="skip_prelight_shadows">Skip the dmap generated static shadow volumes</string>
+    <string name="disable_translucent">skip the translucent interaction rendering</string>
     <string name="enable_dxt_hardware_support">Enable dxt textures hardware support</string>
 </resources>

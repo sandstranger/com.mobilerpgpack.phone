@@ -326,4 +326,5 @@
     <string name="use_shadow_depth_bounds">Использовать тест границ глубины для отдельных теневых объёмов, чтобы уменьшить заполнение тенями</string>
     <string name="skip_prelight_shadows">Пропустить статические теневые объёмы, сгенерированные dmap</string>
     <string name="enable_dxt_hardware_support">Включить аппаратную поддержку сжатия dxt текстур</string>
+    <string name="disable_translucent">Отключить отрисовку полупрозрачных объектов</string>
 </resources>
