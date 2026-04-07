@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.ui.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.main.KoinModulesProvider
-import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getBackgroundColor
 import com.mobilerpgpack.phone.ui.items.SetupSystemBars
@@ -30,7 +29,6 @@ import com.mobilerpgpack.phone.utils.waitUntil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
@@ -69,6 +67,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             val permissionScreen: PermissionScreen = koinInject()
             val psyDoomSettingsScreens = koinInject<Collection<SettingScreen>>()
             val moreUZDoomSettingsScreen = koinInject<UZDoomMoreSettingsScreen>()
+            val doomBFAGraphicsSettingsScreen = koinInject<DoomBFAComposeSettings.DoomBFAGraphicsScreen>()
             val startScreen: String = remember { if (this@MainActivity.isExternalStoragePermissionGranted())
                 settingsScreen.route else permissionScreen.route }
             val navController = rememberNavController()
@@ -110,6 +109,12 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
                     composable(moreUZDoomSettingsScreen.route) {
                         moreUZDoomSettingsScreen.DrawScreen(navController)
+                    }
+
+                    doomBFAGraphicsSettingsScreen.apply {
+                        composable(this.route) {
+                            DrawScreen((navController))
+                        }
                     }
                 }
             }

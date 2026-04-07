@@ -20,6 +20,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAComposeSettings.DoomBFAGraphicsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RPGEngineInfo
@@ -782,6 +783,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         singleOf <IEngineUIController>(::DoomBFAComposeSettings).withOptions {
             named(engineName)
         }
+        singleOf(::DoomBFAGraphicsScreen).bind()
     }
 
     init {

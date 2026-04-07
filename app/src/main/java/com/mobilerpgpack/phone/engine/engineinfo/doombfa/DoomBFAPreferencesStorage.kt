@@ -1,12 +1,43 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 
 class DoomBFAPreferencesStorage : PreferencesStorage() {
     val pathToDoom3ResourcesPreferenceKey = stringPreferencesKey("path_to_doom3_resources")
     val commandLineArgsPrefsKey = stringPreferencesKey("doom3_command_line_args")
+    val disablePostProcessEffectsPrefsKey = booleanPreferencesKey("disable_postprocess_effects")
+    val disableParticlesPrefsKey = booleanPreferencesKey("disable_particles")
+    val disableNewAmbientsPrefsKey = booleanPreferencesKey("disable_bfg_new_ambients")
+    val disableBlendLightsPrefsKey = booleanPreferencesKey("disable_blend_lights")
+    val disableDynamicTexturesPrefsKey = booleanPreferencesKey("disable_dynamic_textures")
+    val disableCopyTexturesPrefsKey = booleanPreferencesKey("disable_copy_textures")
+    val skipDeformsPrefsKey = booleanPreferencesKey("skip_deforms")
+    val useShadowMappingPrefsKey = booleanPreferencesKey("use_shadow_mapping")
+    val disableOverlaysPrefsKey = booleanPreferencesKey("disable_overlays")
+    val useLightDepthBoundsPrefsKey = booleanPreferencesKey("use_light_depth_bounds")
+    val disableIntelWorkaroundsPrefsKey = booleanPreferencesKey("disable_intel_workarounds")
+    val useShadowDepthBoundsPrefsKey = booleanPreferencesKey("use_shadow_depth_bounds")
+    val disablePrelightShadowsPrefsKey = booleanPreferencesKey("disable_prelight_shadows")
+    val enableDXTHardwareSupportPrefsKey = booleanPreferencesKey("enable_dxt_hardware_support")
+    val disableShadowsPrefsKey = booleanPreferencesKey("disable_shadows")
 
     val commandLineArgs = getStringValue(commandLineArgsPrefsKey)
     val pathToDoom3Resources = getStringValue(pathToDoom3ResourcesPreferenceKey)
+    val disablePostProcessEffects= getBooleanValue(disablePostProcessEffectsPrefsKey,false)
+    val disableShadows = getBooleanValue(disableShadowsPrefsKey)
+    val disableParticles = getBooleanValue(disableParticlesPrefsKey)
+    val disableNewAmbients= getBooleanValue(disableNewAmbientsPrefsKey)
+    val disableBlendLights = getBooleanValue(disableBlendLightsPrefsKey)
+    val disableDynamicTextures = getBooleanValue(disableDynamicTexturesPrefsKey)
+    val disableCopyTextures= getBooleanValue(disableCopyTexturesPrefsKey)
+    val skipDeformsPrefs = getBooleanValue(skipDeformsPrefsKey)
+    val useShadowMapping = getBooleanValue(useShadowMappingPrefsKey,false)
+    val disableOverlays = getBooleanValue(disableOverlaysPrefsKey)
+    val useLightDepthBounds = getBooleanValue(useLightDepthBoundsPrefsKey,true)
+    val disableIntelWorkarounds = getBooleanValue(disableIntelWorkaroundsPrefsKey,false)
+    val useShadowDepthBounds = getBooleanValue(useShadowDepthBoundsPrefsKey,false)
+    val disablePrelightShadows = getBooleanValue(disablePrelightShadowsPrefsKey,false)
+    val enableDXTHardwareSupport = getBooleanValue(enableDXTHardwareSupportPrefsKey,false)
 }
