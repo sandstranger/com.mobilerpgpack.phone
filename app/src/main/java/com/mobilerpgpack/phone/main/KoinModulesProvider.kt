@@ -780,8 +780,9 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(engineName)
             bind<IEngineInfo>()
         }
-        singleOf <IEngineUIController>(::DoomBFAComposeSettings).withOptions {
+        singleOf(::DoomBFAComposeSettings).withOptions {
             named(engineName)
+            bind<IEngineUIController>()
         }
         singleOf(::DoomBFAGraphicsScreen).bind()
     }
