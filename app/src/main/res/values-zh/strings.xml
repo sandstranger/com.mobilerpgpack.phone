@@ -328,4 +328,5 @@
     <string name="use_shadow_depth_bounds">对单个阴影体使用深度范围测试，以减少阴影填充</string>
     <string name="skip_prelight_shadows">跳过 dmap 生成的静态阴影体</string>
     <string name="enable_dxt_hardware_support">启用 DXT 纹理硬件支持</string>
+    <string name="disable_translucent">跳过半透明交互渲染</string>
 </resources>

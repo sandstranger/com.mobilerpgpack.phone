@@ -1,6 +1,5 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
-import android.app.Activity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.sun.jna.Native
@@ -32,8 +31,9 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override val commandLineArgs: Array<String>
         get() {
+            val baseCommandLineArgs = super.commandLineArgs
             return with(mutableListOf<String>()) {
-                this += super.commandLineArgs
+                this += baseCommandLineArgs
                 preferencesStorage.apply {
                     this@with += buildCommand("r_skipPostProcess",
                         disablePostProcessEffects.value!!)
@@ -51,6 +51,18 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_skipIntelWorkarounds", disableIntelWorkarounds.value!!)
                     this@with += buildCommand("r_useShadowDepthBounds", useShadowDepthBounds.value!!)
                     this@with += buildCommand("r_skipPrelightShadows", disablePrelightShadows.value!!)
+                    this@with += buildCommand("r_skipTranslucent", disableTranslucent.value!!)
+
+                    val pathToModsDirectory = pathDoom3ModsDir.value!!
+                    val modsDir = File(pathToModsDirectory)
+
+                    if (enableDoom3Mods.value!! && !baseCommandLineArgs.contains(GAME_COMMAND) && modsDir.exists() &&
+                        pathToModsDirectory.isNotEmpty() && pathToModsDirectory.startsWith(pathToResource)){
+                        this@with+= buildCommand(GAME_COMMAND, modsDir.name)
+                    }
+                    else{
+                        this@with += buildCommand(GAME_COMMAND, BASE_GAME)
+                    }
                 }
                 toTypedArray()
             }
@@ -70,6 +82,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     private companion object{
         private const val HOME_DIRECTORY_NAME = "doombfa"
+        private const val GAME_COMMAND = "fs_game"
+        private const val BASE_GAME = "base"
 
         private fun buildCommand(commandKey : String, commandValue : String) =
             arrayOf("+set",commandKey, commandValue)

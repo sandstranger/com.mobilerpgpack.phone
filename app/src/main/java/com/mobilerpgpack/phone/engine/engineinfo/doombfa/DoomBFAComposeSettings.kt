@@ -11,7 +11,9 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
+import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
+import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.compose.koinInject
 import org.koin.core.qualifier.named
 
@@ -21,6 +23,7 @@ class DoomBFAComposeSettings : IEngineUIController {
         val prefsStorage : DoomBFAPreferencesStorage = koinInject(
             named(EngineTypes.Classic_RBDOOM_3_BFG.name))
         prefsStorage.apply {
+            val enableModsSupport = enableDoom3Mods.getComposableValue()
             DrawCommandLinePreferences(commandLineArgs,
                 commandLineArgsPrefsKey.name)
             DrawHorizontalDivider()
@@ -28,6 +31,15 @@ class DoomBFAComposeSettings : IEngineUIController {
                 pathToDoom3Resources,
                 pathToDoom3ResourcesPreferenceKey)
             DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.enable_mods_support),
+                enableModsSupport, enableDoom3ModsPrefsKey.name)
+            DrawHorizontalDivider()
+            if (enableModsSupport) {
+                RequestPath(stringResource(R.string.path_to_common_mods_folder),
+                    pathDoom3ModsDir,
+                    pathDoom3ModsDirPrefsKey, requestMode = RequestPathMode.Directory)
+                DrawHorizontalDivider()
+            }
             PreferenceItem(stringResource(R.string.graphics_settings)) {
                 navController.navigate(GRAPHICS_SETTINGS_SCREEN)
             }
@@ -81,6 +93,9 @@ class DoomBFAComposeSettings : IEngineUIController {
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.use_shadow_depth_bounds),
                 useLightDepthBounds,useLightDepthBoundsPrefsKey.name)
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.disable_translucent),
+                disableTranslucent,disableTranslucentPrefsKey.name)
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.enable_dxt_hardware_support),
                 enableDXTHardwareSupport,enableDXTHardwareSupportPrefsKey.name)
