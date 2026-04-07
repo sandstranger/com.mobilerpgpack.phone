@@ -333,8 +333,8 @@ val doomBFAScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
     SDL3ImageButton(
         "zoom",
         EngineTypes.Classic_RBDOOM_3_BFG,
-        offsetXPercent = 0.74f,
-        offsetYPercent = 0.67f,
+        offsetXPercent = 0.8f,
+        offsetYPercent = 0.72f,
         sizePercent = 0.055f,
         buttonResId = R.drawable.zoom,
         sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
