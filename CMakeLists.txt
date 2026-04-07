@@ -144,6 +144,9 @@ else ()
     set(JPEG_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libjpegturbo/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libjpeg.so" CACHE STRING "" FORCE)
 endif ()
 
+set(JPEG_INCLUDE_DIR "${JPEG_INCLUDE_DIRS}")
+set(JPEG_LIBRARY "${JPEG_LIBRARIES}")
+
 set(VORBISFILE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/libvorbis/src/main/jni/libvorbis-android/include" CACHE STRING "" FORCE)
 if (IS_DEBUG_BUILD)
     set(VORBISFILE_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so"
@@ -200,6 +203,7 @@ set(AVFORMAT_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${
 set(AVCODEC_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavcodec.so" CACHE STRING "" FORCE)
 set(AVUTIL_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavutil.so" CACHE STRING "" FORCE)
 set(AVSWSCALE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libswscale.so" CACHE STRING "" FORCE)
+set(SWRESAMPLE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libswresample.so" CACHE STRING "" FORCE)
 
 set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/include")
 set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
@@ -252,6 +256,11 @@ else()
             ${SDL2_IMAGE_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_image.so
             CACHE STRING "" FORCE)
 endif ()
+
+set(OpenSSL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/openssl/src/main/include CACHE STRING "" FORCE)
+set(OpenSSL_LIBRARY
+            ${CMAKE_SOURCE_DIR}/third_party/openssl/src/main/jniLibs/${ANDROID_ABI}/libcrypto_3.so
+            CACHE STRING "" FORCE)
 
 set(ICU_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/icu4c/include CACHE STRING "" FORCE)
 
@@ -342,6 +351,13 @@ set(OPTION_USE_GLBINDING ON CACHE BOOL "" FORCE)
 set(OPTION_FORCE_EMBEDDED_MINIZIP ON CACHE BOOL "" FORCE)
 set(OPTION_BUILD_WEBSITE_TOOLS OFF CACHE BOOL "" FORCE)
 
+set(USE_PRECOMPILED_HEADERS OFF CACHE BOOL "" FORCE)
+set(USE_SYSTEM_ZLIB ON CACHE BOOL "" FORCE)
+set(USE_SYSTEM_LIBGLEW ON CACHE BOOL "" FORCE)
+set(USE_SYSTEM_LIBJPEG ON CACHE BOOL "" FORCE)
+set(MONOLITH ON CACHE BOOL "" FORCE)
+set(MAKE_DLL OFF CACHE BOOL "" FORCE)
+
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
@@ -354,6 +370,7 @@ add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
 add_subdirectory("${APP_ROOT_DIR}/fteqw")
 add_subdirectory("${APP_ROOT_DIR}/widelands")
 add_subdirectory("${APP_ROOT_DIR}/Vanilla-Conquer")
+add_subdirectory("${APP_ROOT_DIR}/Classic-RBDOOM-3-BFG/neo")
 
 set(ROM_CONFIGS jpn-final ntsc-final pal-final)
 
