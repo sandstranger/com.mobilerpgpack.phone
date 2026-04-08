@@ -101,6 +101,12 @@ class DoomBFAComposeSettings : IEngineUIController {
             SwitchPreferenceItem(stringResource(R.string.disable_fog_lights),
                 disableFogLights,disableFogLightsPrefsKey.name)
             DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.disable_specular),
+                disableSpecular,disableSpecularPrefsKey.name)
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.disable_light_interactions),
+                disableLightInteractions,disableLightInteractionsPrefsKey.name)
+            DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.enable_dxt_hardware_support),
                 enableDXTHardwareSupport,enableDXTHardwareSupportPrefsKey.name)
             DrawHorizontalDivider()
