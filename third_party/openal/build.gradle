@@ -21,9 +21,9 @@ android {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
                         "-DALSOFT_EXAMPLES=OFF" ,"-DALSOFT_TESTS=OFF" ,"-DALSOFT_UTILS=OFF",
-                        "-DALSOFT_NO_CONFIG_UTIL=ON", "-DALSOFT_BACKEND_OPENSL=OFF",
-                        "-DALSOFT_BACKEND_WAVE=OFF", "-DALSOFT_BACKEND_OBOE=ON",
-                        "-DALSOFT_REQUIRE_OBOE=ON",
+                        "-DALSOFT_NO_CONFIG_UTIL=ON", "-DALSOFT_BACKEND_OPENSL=ON",
+                        "-DALSOFT_BACKEND_WAVE=OFF", "-DALSOFT_BACKEND_OBOE=OFF",
+                        "-DALSOFT_REQUIRE_OBOE=OFF",
                         "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
                         "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
@@ -34,7 +34,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "CMakeLists.txt"
+            path "src/main/jni/openal/CMakeLists.txt"
             version versions.cmake_version
         }
     }
@@ -65,10 +65,7 @@ android {
     }
 }
 
-preBuild.dependsOn ':third_party:oboe:build'
-
 dependencies {
-    implementation(project(":third_party:oboe"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
