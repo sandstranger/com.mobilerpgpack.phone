@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo.Companion.DEFAULT_SHADOW_IMAGE_MAP_SIZE
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
@@ -33,7 +34,7 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
 
     val commandLineArgs = getStringValue(commandLineArgsPrefsKey)
     val pathToDoom3Resources = getStringValue(pathToDoom3ResourcesPreferenceKey)
-    val shadowMapImageSize = getStringValue(shadowMapImageSizePrefsKey, "256")
+    val shadowMapImageSize = getStringValue(shadowMapImageSizePrefsKey, DEFAULT_SHADOW_IMAGE_MAP_SIZE)
     val pathDoom3ModsDir = getStringValue(pathDoom3ModsDirPrefsKey)
     val enableDoom3Mods = getBooleanValue(enableDoom3ModsPrefsKey)
     val simplifyCulling = getBooleanValue(simplifyCullingPrefsKey)
