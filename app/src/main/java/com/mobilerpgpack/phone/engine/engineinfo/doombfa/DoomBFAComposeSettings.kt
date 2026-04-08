@@ -111,9 +111,8 @@ class DoomBFAComposeSettings : IEngineUIController {
             SwitchPreferenceItem(stringResource(R.string.simplify_culling),
                 simplifyCulling,simplifyCullingPrefsKey.name)
             DrawHorizontalDivider()
-            val shadowMapSizes = rememberSaveable { shadowMapImageSizes }
             ListPreferenceItem(stringResource(R.string.shadow_map_image_size),
-                shadowMapImageSize,shadowMapSizes){
+                shadowMapImageSize,shadowMapImageSizes){
                 setStringValue(shadowMapImageSizePrefsKey, it)
             }
             DrawHorizontalDivider()
