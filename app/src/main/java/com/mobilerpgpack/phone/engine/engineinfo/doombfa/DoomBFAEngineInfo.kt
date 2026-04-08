@@ -58,6 +58,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     val cullingValue = if (simplifyCulling.value!!) "1" else "2"
                     this@with += buildCommand("r_useLightPortalCulling", cullingValue)
                     this@with += buildCommand("r_useLightAreaCulling", cullingValue)
+                    this@with += buildCommand("r_shadowMapImageSize", shadowMapImageSize.value!!)
 
                     val pathToModsDirectory = pathDoom3ModsDir.value!!
                     val modsDir = File(pathToModsDirectory)
@@ -86,10 +87,14 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         updateEnableDXTSupportState(preferencesStorage.enableDXTHardwareSupport.value!!)
     }
 
-    private companion object{
+    companion object{
+        const val DEFAULT_SHADOW_IMAGE_MAP_SIZE = "256"
+
         private const val HOME_DIRECTORY_NAME = "doombfa"
         private const val GAME_COMMAND = "fs_game"
         private const val BASE_GAME = "base"
+
+        val shadowMapImageSizes = listOf(DEFAULT_SHADOW_IMAGE_MAP_SIZE, "512", "1024")
 
         private fun buildCommand(commandKey : String, commandValue : String) =
             arrayOf("+set",commandKey, commandValue)

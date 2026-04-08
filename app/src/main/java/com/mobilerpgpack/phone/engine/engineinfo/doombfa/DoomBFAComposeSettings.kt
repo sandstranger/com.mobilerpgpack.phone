@@ -1,15 +1,19 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo.Companion.DEFAULT_SHADOW_IMAGE_MAP_SIZE
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo.Companion.shadowMapImageSizes
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
+import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
@@ -109,6 +113,12 @@ class DoomBFAComposeSettings : IEngineUIController {
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.simplify_culling),
                 simplifyCulling,simplifyCullingPrefsKey.name)
+            DrawHorizontalDivider()
+            val shadowMapSizes = rememberSaveable { shadowMapImageSizes }
+            ListPreferenceItem(stringResource(R.string.shadow_map_image_size),
+                DEFAULT_SHADOW_IMAGE_MAP_SIZE,shadowMapSizes){
+                setStringValue(shadowMapImageSizePrefsKey, it)
+            }
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.enable_dxt_hardware_support),
                 enableDXTHardwareSupport,enableDXTHardwareSupportPrefsKey.name)
