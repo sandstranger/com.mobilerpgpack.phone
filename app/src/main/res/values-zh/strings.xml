@@ -332,4 +332,5 @@
     <string name="disable_fog_lights">跳过所有雾光源</string>
     <string name="disable_specular">使用黑色代替高光</string>
     <string name="disable_light_interactions">跳过所有光照与表面的交互渲染</string>
+    <string name="simplify_culling">简化剔除（降低可见性计算开销，可能提高帧率）</string>
 </resources>

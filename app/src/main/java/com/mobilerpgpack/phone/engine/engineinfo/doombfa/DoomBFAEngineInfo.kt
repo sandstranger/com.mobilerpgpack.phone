@@ -54,8 +54,10 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_skipTranslucent", disableTranslucent.value!!)
                     this@with += buildCommand("r_skipFogLights", disableFogLights.value!!)
                     this@with += buildCommand("r_skipSpecular", disableSpecular.value!!)
-                    this@with += buildCommand("r_skipInteractions",
-                        disableLightInteractions.value!!)
+                    this@with += buildCommand("r_skipInteractions", disableLightInteractions.value!!)
+                    val cullingValue = if (simplifyCulling.value!!) "1" else "2"
+                    this@with += buildCommand("r_useLightPortalCulling", cullingValue)
+                    this@with += buildCommand("r_useLightAreaCulling", cullingValue)
 
                     val pathToModsDirectory = pathDoom3ModsDir.value!!
                     val modsDir = File(pathToModsDirectory)
