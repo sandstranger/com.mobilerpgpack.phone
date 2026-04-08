@@ -84,9 +84,6 @@ class DoomBFAComposeSettings : IEngineUIController {
             SwitchPreferenceItem(stringResource(R.string.skip_deforms),
                 skipDeforms,skipDeformsPrefsKey.name)
             DrawHorizontalDivider()
-            SwitchPreferenceItem(stringResource(R.string.use_shadow_mapping),
-                useShadowMapping,useShadowMappingPrefsKey.name)
-            DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.disable_overlays),
                 disableOverlays,disableOverlaysPrefsKey.name)
             DrawHorizontalDivider()

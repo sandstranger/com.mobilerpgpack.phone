@@ -44,7 +44,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_skipDynamicTextures", disableDynamicTextures.value!!)
                     this@with += buildCommand("r_skipCopyTexture", disableCopyTextures.value!!)
                     this@with += buildCommand("r_skipDeforms", skipDeforms.value!!)
-                    this@with += buildCommand("r_useShadowMapping", useShadowMapping.value!!)
                     this@with += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
                     this@with += buildCommand("r_skipOverlays", disableOverlays.value!!)
                     this@with += buildCommand("r_useLightDepthBounds", useLightDepthBounds.value!!)
