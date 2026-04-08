@@ -7,6 +7,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
+import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
@@ -51,7 +52,7 @@ class DoomBFAComposeSettings : IEngineUIController {
         val prefsStorage : DoomBFAPreferencesStorage = koinInject(
             named(EngineTypes.Classic_RBDOOM_3_BFG.name))
         prefsStorage.apply {
-            DrawHorizontalDivider()
+            DrawTitleText(stringResource(R.string.graphics_settings))
             SwitchPreferenceItem(stringResource(R.string.disable_postprocess_effects),
                 disablePostProcessEffects,disablePostProcessEffectsPrefsKey.name)
             DrawHorizontalDivider()
