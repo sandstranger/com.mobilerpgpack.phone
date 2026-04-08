@@ -331,4 +331,5 @@
     <string name="disable_specular">Использовать черный цвет для бликов</string>
     <string name="disable_light_interactions">Отключить отрисовку всех взаимодействий света и поверхности</string>
     <string name="simplify_culling">Упрощённое отсечение (снижает затраты на вычисление видимости, может повысить FPS)</string>
+    <string name="shadow_map_image_size">Размер изображения карты теней</string>
 </resources>

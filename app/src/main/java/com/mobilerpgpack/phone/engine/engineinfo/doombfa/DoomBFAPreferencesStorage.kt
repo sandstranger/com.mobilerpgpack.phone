@@ -29,9 +29,11 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val simplifyCullingPrefsKey = booleanPreferencesKey("simplify_culling")
     val enableDoom3ModsPrefsKey = booleanPreferencesKey("enable_doom3_mods")
     val pathDoom3ModsDirPrefsKey = stringPreferencesKey("path_to_doom3_mods_dir")
+    val shadowMapImageSizePrefsKey = stringPreferencesKey("shadow_map_image_size")
 
     val commandLineArgs = getStringValue(commandLineArgsPrefsKey)
     val pathToDoom3Resources = getStringValue(pathToDoom3ResourcesPreferenceKey)
+    val shadowMapImageSize = getStringValue(shadowMapImageSizePrefsKey, "256")
     val pathDoom3ModsDir = getStringValue(pathDoom3ModsDirPrefsKey)
     val enableDoom3Mods = getBooleanValue(enableDoom3ModsPrefsKey)
     val simplifyCulling = getBooleanValue(simplifyCullingPrefsKey)
