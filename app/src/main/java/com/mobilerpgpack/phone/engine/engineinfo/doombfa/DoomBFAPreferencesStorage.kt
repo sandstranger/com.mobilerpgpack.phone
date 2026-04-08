@@ -53,5 +53,5 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val disableIntelWorkarounds = getBooleanValue(disableIntelWorkaroundsPrefsKey,false)
     val useShadowDepthBounds = getBooleanValue(useShadowDepthBoundsPrefsKey,true)
     val disablePrelightShadows = getBooleanValue(disablePrelightShadowsPrefsKey,false)
-    val enableDXTHardwareSupport = getBooleanValue(enableDXTHardwareSupportPrefsKey,false)
+    val enableDXTHardwareSupport = getBooleanValue(enableDXTHardwareSupportPrefsKey,true)
 }
