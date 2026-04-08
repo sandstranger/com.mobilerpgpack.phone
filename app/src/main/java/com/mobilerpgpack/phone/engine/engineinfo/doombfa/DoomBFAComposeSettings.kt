@@ -92,7 +92,7 @@ class DoomBFAComposeSettings : IEngineUIController {
                 disableIntelWorkarounds,disableIntelWorkaroundsPrefsKey.name)
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.use_shadow_depth_bounds),
-                useLightDepthBounds,useLightDepthBoundsPrefsKey.name)
+                useShadowDepthBounds,useShadowDepthBoundsPrefsKey.name)
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.disable_translucent),
                 disableTranslucent,disableTranslucentPrefsKey.name)
