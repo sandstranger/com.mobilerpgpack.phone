@@ -113,7 +113,7 @@ class DoomBFAComposeSettings : IEngineUIController {
             DrawHorizontalDivider()
             val shadowMapSizes = rememberSaveable { shadowMapImageSizes }
             ListPreferenceItem(stringResource(R.string.shadow_map_image_size),
-                DEFAULT_SHADOW_IMAGE_MAP_SIZE,shadowMapSizes){
+                shadowMapImageSize,shadowMapSizes){
                 setStringValue(shadowMapImageSizePrefsKey, it)
             }
             DrawHorizontalDivider()
