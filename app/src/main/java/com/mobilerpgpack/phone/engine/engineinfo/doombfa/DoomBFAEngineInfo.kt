@@ -58,8 +58,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_useLightPortalCulling", cullingValue)
                     this@with += buildCommand("r_useLightAreaCulling", cullingValue)
                     this@with += buildCommand("r_shadowMapImageSize", shadowMapImageSize.value!!)
-                    this@with += buildCommand("r_useStateCaching",
-                        targetGLESVersion.value!! == GLESVersions.OpenGL_ES_3_2)
+                    this@with += buildCommand("r_useStateCaching", true)
 
                     val pathToModsDirectory = pathDoom3ModsDir.value!!
                     val modsDir = File(pathToModsDirectory)
