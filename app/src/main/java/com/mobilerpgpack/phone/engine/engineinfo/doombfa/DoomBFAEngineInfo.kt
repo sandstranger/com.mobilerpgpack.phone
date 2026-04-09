@@ -25,7 +25,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override val touchFullScreenModeCanBeUsed = false
 
-    override val targetGLESVersion = 320
+    override val targetGLESVersion get() = preferencesStorage.targetGLESVersion.value!!.glesIntVersion
 
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 
@@ -58,6 +58,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_useLightPortalCulling", cullingValue)
                     this@with += buildCommand("r_useLightAreaCulling", cullingValue)
                     this@with += buildCommand("r_shadowMapImageSize", shadowMapImageSize.value!!)
+                    this@with += buildCommand("r_useStateCaching",
+                        targetGLESVersion.value!! == GLESVersions.OpenGL_ES_3_2)
 
                     val pathToModsDirectory = pathDoom3ModsDir.value!!
                     val modsDir = File(pathToModsDirectory)
@@ -76,22 +78,25 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     private external fun setPathsToResources (pathToHomeFolder : String, pathToResourcesFolder : String)
 
-    private external fun updateEnableDXTSupportState(enableHardwareDXTSupport : Boolean)
+    private external fun setHardwareDXTSupport(enableHardwareDXTSupport : Boolean)
+
+    private external fun setGLESVersion (targetGLESVersion: Int)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(DoomBFAEngineInfo::class.java, mainLibraryName)
         setPathsToResources(homeDirectoryFolder.absolutePath,
             pathToResource)
-        updateEnableDXTSupportState(preferencesStorage.enableDXTHardwareSupport.value!!)
+        setHardwareDXTSupport(preferencesStorage.enableDXTHardwareSupport.value!!)
+        setGLESVersion(targetGLESVersion)
     }
 
     companion object{
-        const val DEFAULT_SHADOW_IMAGE_MAP_SIZE = "256"
-
-        private const val HOME_DIRECTORY_NAME = "doombfa"
         private const val GAME_COMMAND = "fs_game"
         private const val BASE_GAME = "base"
+
+        const val DEFAULT_SHADOW_IMAGE_MAP_SIZE = "256"
+        const val HOME_DIRECTORY_NAME = "doombfa"
 
         val shadowMapImageSizes = listOf(DEFAULT_SHADOW_IMAGE_MAP_SIZE, "512", "1024")
 
