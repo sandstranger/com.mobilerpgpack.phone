@@ -19,10 +19,11 @@ import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ui.ArxLibertatisC
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64ComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64EnhancedEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAComposeSettings
-import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAComposeSettings.DoomBFAGraphicsScreen
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.ui.DoomBFAComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.ui.DoomBFAComposeSettings.DoomBFAGraphicsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.ui.DoomBFAViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RPGEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.Doom2RpgComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.DoomRpgComposeSettings
@@ -778,6 +779,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             bind<IEngineUIController>()
         }
         singleOf(::DoomBFAGraphicsScreen).bind()
+        viewModelOf(::DoomBFAViewModel)
     }
 
     init {

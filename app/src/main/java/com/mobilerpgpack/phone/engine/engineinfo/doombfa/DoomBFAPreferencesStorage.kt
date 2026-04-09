@@ -1,8 +1,10 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
 import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo.Companion.DEFAULT_SHADOW_IMAGE_MAP_SIZE
+import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWGames
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.enumPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 
 class DoomBFAPreferencesStorage : PreferencesStorage() {
@@ -31,8 +33,11 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val enableDoom3ModsPrefsKey = booleanPreferencesKey("enable_doom3_mods")
     val pathDoom3ModsDirPrefsKey = stringPreferencesKey("path_to_doom3_mods_dir")
     val shadowMapImageSizePrefsKey = stringPreferencesKey("shadow_map_image_size")
+    val targetGLESVersionPrefsKey = enumPreferencesKey<GLESVersions>("target_gles_version")
 
     val commandLineArgs = getStringValue(commandLineArgsPrefsKey)
+    val targetGLESVersion = getEnumValue(targetGLESVersionPrefsKey, GLESVersions::class.java,
+        GLESVersions.defaultGLESVersion)
     val pathToDoom3Resources = getStringValue(pathToDoom3ResourcesPreferenceKey)
     val shadowMapImageSize = getStringValue(shadowMapImageSizePrefsKey, DEFAULT_SHADOW_IMAGE_MAP_SIZE)
     val pathDoom3ModsDir = getStringValue(pathDoom3ModsDirPrefsKey)
