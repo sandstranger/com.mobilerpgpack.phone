@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAComposeSettings
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.ui.DoomBFAComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.main.KoinModulesProvider
