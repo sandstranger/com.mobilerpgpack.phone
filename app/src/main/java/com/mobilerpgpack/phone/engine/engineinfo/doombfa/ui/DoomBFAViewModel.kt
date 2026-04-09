@@ -13,13 +13,8 @@ import java.io.File
 
 class DoomBFAViewModel : ViewModel(), KoinComponent {
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
-    private val glslCacheFolder : File by inject { parametersOf(
-        HOME_DIRECTORY_NAME + "${File.separator}base${File.separator}renderprogs${File.separator}glsl") }
-
-    private val hlslCacheFolder : File by inject { parametersOf(
-         "$HOME_DIRECTORY_NAME${File.separator}base${File.separator}renderprogs${File.separator}hlsl") }
-
+    private val glslCacheFolder : File by inject { parametersOf(buildPathToCacheFolder("glsl")) }
+    private val hlslCacheFolder : File by inject { parametersOf(buildPathToCacheFolder("hlsl")) }
     @Volatile
     private var cacheIsDeleted = true
 
@@ -40,4 +35,7 @@ class DoomBFAViewModel : ViewModel(), KoinComponent {
         }
         cacheIsDeleted = true
     }
+
+    private fun buildPathToCacheFolder (targetCacheFolder : String) =
+        "$HOME_DIRECTORY_NAME${File.separator}base${File.separator}renderprogs${File.separator}${targetCacheFolder}"
 }
