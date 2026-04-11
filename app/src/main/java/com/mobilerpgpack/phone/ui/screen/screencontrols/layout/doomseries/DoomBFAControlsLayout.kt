@@ -8,17 +8,30 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.IScreenControlsView
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibilityImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisibilityImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.doom64.Doom64AutorunButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController.Companion.LEFT_MOUSE_BUTTON_ID
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val doomBFAScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
+    SDL3MouseImageButton(
+        "alternate_left_mouse_button",
+        EngineTypes.Classic_RBDOOM_3_BFG,
+        offsetXPercent = 0.52f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.mouse,
+        sdlKeyEvent = LEFT_MOUSE_BUTTON_ID,
+        controlsType = ControlsType.OnScreenStick,
+        useToggle = true,
+        isDeleted = true
+    ),
     SDL3RadialWheel(
         EngineTypes.Classic_RBDOOM_3_BFG,
         offsetXPercent = 0.55f,
