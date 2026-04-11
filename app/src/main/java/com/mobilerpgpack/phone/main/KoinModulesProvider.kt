@@ -351,6 +351,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single {
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 MPG123_NATIVE_LIB_NAME,
@@ -376,6 +377,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single {
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
                 gl4esLibraryName,
+                OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
@@ -399,6 +401,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single {
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
                 gl4esLibraryName,
+                OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
@@ -481,6 +484,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single  {
             val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 MPG123_NATIVE_LIB_NAME,
@@ -630,6 +634,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 gl4esLibraryName,
                 SDL2_NATIVE_LIB_NAME,
                 FREETYPE_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 ARX_LIBERTATIS_MAIN_ENGINE_LIB,
             )
@@ -729,6 +734,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(engineName)
         }
         single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 RED_ALERT_NATIVE_LIB_NAME)
@@ -736,6 +742,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(VanillaConquerGames.RedAlert.name)
         }
         single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 TIBERIAN_DAWN_NATIVE_LIB_NAME)
@@ -763,6 +770,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 add(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME)
                 addAll(ffmpegLibs)
                 addAll(opensslLibs)
+                add(OBOE_NATIVE_LUB_NAME)
                 add(OPENAL_NATIVE_LIB_NAME)
                 add(JPEG_NATIVE_LIB_NAME)
                 add(SDL3_NATIVE_LIB_NAME)
