@@ -75,6 +75,8 @@ const val FLUIDSYNTH_NATIVE_LIB_NAME = "fluidsynth"
 
 const val GME_NATIVE_LIB_NAME = "gme"
 
+const val OBOE_NATIVE_LUB_NAME = "oboe"
+
 const val SDL2_MIXER_NATIVE_LIB_NAME = "SDL2_mixer"
 
 const val MPG123_NATIVE_LIB_NAME = "mpg123"
