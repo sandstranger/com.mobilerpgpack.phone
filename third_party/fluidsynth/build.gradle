@@ -73,7 +73,10 @@ android {
     }
 }
 
+preBuild.dependsOn ':third_party:oboe:build'
+
 dependencies {
+    implementation(project(":third_party:oboe"))
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
