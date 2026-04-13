@@ -5,10 +5,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.koin.compiler)
     id 'com.google.devtools.ksp' version '2.3.6'
     id("com.google.gms.google-services")
     id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.20'
-    id("com.google.firebase.crashlytics") version "3.0.6"
+    id("com.google.firebase.crashlytics") version "3.0.7"
 }
 
 kotlin {
@@ -269,14 +270,13 @@ dependencies {
     implementation (project(":third_party:angle"))
     implementation (project(":third_party:openssl"))
 
-    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.1.1"))
+    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.2.1"))
     implementation(libs.koin.core)
     implementation(libs.koin.annotations)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.androidx.compose.navigation)
     implementation(libs.koin.core.coroutines)
-    ksp(libs.koin.ksp.compiler)
 
     implementation(libs.kotlinx.serialization.json)
 

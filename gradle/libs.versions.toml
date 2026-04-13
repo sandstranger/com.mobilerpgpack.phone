@@ -1,14 +1,14 @@
 [versions]
-agp = "9.1.0"
+agp = "9.1.1"
 commonsBeanutils = "1.11.0"
-commonsConfiguration2 = "2.13.0"
+commonsConfiguration2 = "2.14.0"
 converterGson = "3.0.0"
 core = "3.3.0"
 googleServices = "4.4.4"
-firebaseBom = "34.11.0"
+firebaseBom = "34.12.0"
 gson = "2.13.2"
 icu4j = "78.3"
-koinAnnotations = "2.3.1"
+koinAnnotations = "4.2.1"
 jna = "5.18.1"
 coreKtx = "1.18.0"
 junit = "4.13.2"
@@ -17,7 +17,7 @@ espressoCore = "3.7.0"
 appcompat = "1.7.1"
 kotlinGradlePlugin = "2.3.20"
 kotlinxCoroutinesPlayServices = "1.10.2"
-kotlinxSerializationJson = "1.10.0"
+kotlinxSerializationJson = "1.11.0"
 lifecycleRuntimeKtx = "2.10.0"
 lombokVersion = "1.18.44"
 material = "1.13.0"
@@ -38,11 +38,11 @@ runtimeLivedata = "1.10.6"
 slf4jApi = "2.0.17"
 translate = "17.0.3"
 ui = "1.10.6"
-koinKspCompiler = "2.3.1"
 navigationCompose = "2.9.7"
 zip4j = "2.11.6"
 runtime = "1.10.6"
 window = "1.5.1"
+koinCompiler = "1.0.0-RC1"
 
 [libraries]
 androidx-compose-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
@@ -101,9 +101,9 @@ translate = { module = "com.google.mlkit:translate", version.ref = "translate" }
 zip4j = { module = "net.lingala.zip4j:zip4j", version.ref = "zip4j" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 androidx-window = { group = "androidx.window", name = "window", version.ref = "window" }
-koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinKspCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinGradlePlugin" }
+koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koinCompiler" }
