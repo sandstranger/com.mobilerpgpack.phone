@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
+import com.mobilerpgpack.phone.utils.supportedRefreshRates
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
@@ -81,6 +82,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     private external fun setGLESVersion (targetGLESVersion: Int)
 
+    private external fun setRefreshRates(targetRefreshRates : IntArray, arraySize: Int)
+
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(DoomBFAEngineInfo::class.java, mainLibraryName)
@@ -88,6 +91,9 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             pathToResource)
         setHardwareDXTSupport(preferencesStorage.enableDXTHardwareSupport.value!!)
         setGLESVersion(targetGLESVersion)
+        activity.supportedRefreshRates.toIntArray().apply {
+            setRefreshRates(this, size)
+        }
     }
 
     companion object{

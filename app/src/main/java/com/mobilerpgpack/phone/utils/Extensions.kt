@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -29,10 +30,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.io.Serializable
+import kotlin.math.roundToInt
 
 data class ScreenResolution (val screenWidth : Int, val screenHeight : Int)
 
 val Context.isTelevision get() = this.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
+
+@Suppress("DEPRECATION")
+val Activity.supportedRefreshRates: Collection<Int> get() =
+   this.windowManager.defaultDisplay.supportedModes.map { it.refreshRate.roundToInt() }.distinct().sorted()
 
 fun com.sun.jna.Function.invokeBool(inArgs : Array<Any?>? = null) = this.invokeAs(Boolean::class.java, inArgs)
 
