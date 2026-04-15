@@ -5,7 +5,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.koin.compiler)
     id 'com.google.devtools.ksp' version '2.3.6'
     id("com.google.gms.google-services")
     id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.20'

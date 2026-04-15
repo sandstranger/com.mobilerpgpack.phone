@@ -42,7 +42,6 @@ navigationCompose = "2.9.7"
 zip4j = "2.11.6"
 runtime = "1.10.6"
 window = "1.5.1"
-koinCompiler = "1.0.0-RC1"
 
 [libraries]
 androidx-compose-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
@@ -106,4 +105,3 @@ androidx-window = { group = "androidx.window", name = "window", version.ref = "w
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinGradlePlugin" }
-koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koinCompiler" }
