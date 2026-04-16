@@ -677,7 +677,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 VORBIS_ENC_NATIVE_LIB_NAME,
                 OPUS_NATIVE_LIB_NAME,
             )){
-                addAll(ffmpegLibs)
+                addAll(getFMPEGLibs(get()))
                 addAll(bulletLibs)
                 addAll(fteQWNativePlugins)
                 add(FTEQW_MAIN_ENGINE_LIB)
@@ -768,7 +768,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single<DoomBFAEngineInfo> {
             val libs = mutableListOf<String>().run {
                 add(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME)
-                addAll(ffmpegLibs)
+                addAll(getFMPEGLibs(get()))
                 addAll(opensslLibs)
                 add(OBOE_NATIVE_LUB_NAME)
                 add(OPENAL_NATIVE_LIB_NAME)
