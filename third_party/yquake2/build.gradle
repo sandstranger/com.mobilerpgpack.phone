@@ -32,7 +32,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "src/main/jni/yquake2/CMakeLists.txt"
+            path "CMakeLists.txt"
             version versions.cmake_version
         }
     }
