@@ -142,3 +142,18 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/Classic-RBDOOM-3-BFG"]
 	path = app/src/main/jni/Classic-RBDOOM-3-BFG
 	url = https://github.com/sandstranger/Classic-RBDOOM-3-BFG.git
+[submodule "third_party/yquake2/src/main/jni/xatrix"]
+	path = third_party/yquake2/src/main/jni/xatrix
+	url = https://github.com/sandstranger/xatrix.git
+[submodule "third_party/yquake2/src/main/jni/rogue"]
+	path = third_party/yquake2/src/main/jni/rogue
+	url = https://github.com/sandstranger/rogue.git
+[submodule "third_party/yquake2/src/main/jni/ctf"]
+	path = third_party/yquake2/src/main/jni/ctf
+	url = https://github.com/sandstranger/ctf.git
+[submodule "third_party/yquake2/src/main/jni/zaero"]
+	path = third_party/yquake2/src/main/jni/zaero
+	url = https://github.com/sandstranger/zaero.git
+[submodule "third_party/yquake2/src/main/jni/3zb2"]
+	path = third_party/yquake2/src/main/jni/3zb2
+	url = https://github.com/sandstranger/3zb2.git
