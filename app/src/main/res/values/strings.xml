@@ -334,4 +334,5 @@
     <string name="disable_light_interactions">Skip all light/surface interaction drawing</string>
     <string name="simplify_culling">Simplified culling (reduces visibility cost, may increase FPS)</string>
     <string name="shadow_map_image_size">Shadow map image size</string>
+    <string name="quake2_game_type">Quake2 game type</string>
 </resources>

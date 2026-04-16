@@ -7,7 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.retain.retain
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomRenderAPI
 import com.mobilerpgpack.phone.ui.getButtonsColors
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.items.EditTextItem
@@ -41,6 +46,10 @@ class FTEQWComposeSettings : IEngineUIController {
         val buttonsColors = getButtonsColors()
         val onPrimaryColor = getOnPrimaryColor()
         val allowedManifestExtensions = retain { listOf(".fmf", ".FMF") }
+        val quake2GameTypeStream = prefsStorage.quake2GameType.getComposableValue(Quake2Games.DefaultGame)
+        val quake2GameTypeDescription by remember(quake2GameTypeStream) {
+            mutableStateOf(quake2GameTypeStream.description) }
+        val quake2GameTypesDescriptions = retain { Quake2Games.descriptions }
 
         DrawCommandLinePreferences(prefsStorage.commandLineArgs,
             prefsStorage.commandLineArgsPrefsKey.name)
@@ -89,6 +98,14 @@ class FTEQWComposeSettings : IEngineUIController {
                 }
             }
             FTEQWGames.Quake2 -> {
+                ListPreferenceItem(stringResource(R.string.quake2_game_type),
+                    quake2GameTypeDescription, quake2GameTypesDescriptions){
+                    prefsStorage.setEnumValue(prefsStorage.quake2GameTypePrefsKey,
+                        Quake2Games.fromValue(it))
+                }
+
+                DrawHorizontalDivider()
+
                 RequestPath(stringResource(R.string.path_to_quake2_root_dir),
                     prefsStorage.pathToQuake2,
                     prefsStorage.pathToQuake2PrefsKey, requestMode = RequestPathMode.Directory)
