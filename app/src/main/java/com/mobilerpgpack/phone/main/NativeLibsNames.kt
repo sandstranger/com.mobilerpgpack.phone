@@ -123,7 +123,7 @@ val gl4esFullLibraryName = buildFullLibraryName(gl4esLibraryName)
 
 fun buildFullLibraryName (libraryName : String ) = "lib${libraryName}.so"
 
-val fteQWNativePlugins = arrayOf("fteplug_bullet", "fteplug_cod", "fteplug_ezhud",
+val fteQWNativePlugins = arrayOf("fteplug_openssl","fteplug_bullet", "fteplug_cod", "fteplug_ezhud",
     "fteplug_ffmpeg", "fteplug_hl2", "fteplug_models", "fteplug_ode",
     "fteplug_qi", "fteplug_quake3")
 
