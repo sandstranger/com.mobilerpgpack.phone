@@ -269,6 +269,7 @@ endif ()
 set(OpenSSL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/openssl/src/main/include CACHE STRING "" FORCE)
 set(OpenSSL_LIBRARY
             ${CMAKE_SOURCE_DIR}/third_party/openssl/src/main/jniLibs/${ANDROID_ABI}/libcrypto_3.so
+            ${CMAKE_SOURCE_DIR}/third_party/openssl/src/main/jniLibs/${ANDROID_ABI}/libssl_3.so
             CACHE STRING "" FORCE)
 
 set(ICU_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/third_party/icu4c/include CACHE STRING "" FORCE)

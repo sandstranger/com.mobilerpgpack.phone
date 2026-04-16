@@ -681,6 +681,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 )){
                     add(quake2GameType.nativeLibraryName)
                     addAll(getFMPEGLibs(get()))
+                    addAll(opensslLibs)
                     addAll(bulletLibs)
                     addAll(fteQWNativePlugins)
                     add(FTEQW_MAIN_ENGINE_LIB)
