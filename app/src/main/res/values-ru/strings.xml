@@ -332,4 +332,5 @@
     <string name="disable_light_interactions">Отключить отрисовку всех взаимодействий света и поверхности</string>
     <string name="simplify_culling">Упрощённое отсечение (снижает затраты на вычисление видимости, может повысить FPS)</string>
     <string name="shadow_map_image_size">Размер изображения карты теней</string>
+    <string name="quake2_game_type">Тип игры Quake2</string>
 </resources>

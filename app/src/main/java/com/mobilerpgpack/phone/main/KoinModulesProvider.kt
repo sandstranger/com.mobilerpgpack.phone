@@ -33,6 +33,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRpgCom
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWPreferencesStorage
+import com.mobilerpgpack.phone.engine.engineinfo.fteqw.Quake2Games
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkPreferencesStorage
@@ -662,32 +663,39 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             .withOptions {
                 named(EngineTypes.FTEQW.name)
             }
-        single {
-            val allLibs = with(mutableListOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                SDL2_NATIVE_LIB_NAME,
-                FREETYPE_NATIVE_LIB_NAME,
-                YQUAKE2_CORE_NATIVE_LIB_NAME,
-                BZ2_NATIVE_LIB_NAME,
-                ODE_NATIVE_LIB_NAME,
-                PNG_NATIVE_LIB_NAME,
-                JPEG_NATIVE_LIB_NAME,
-                OGG_NATIVE_LIB_NAME,
-                VORBIS_NATIVE_LIB_NAME,
-                VORBIS_FILE_NATIVE_LIB_NAME,
-                VORBIS_ENC_NATIVE_LIB_NAME,
-                OPUS_NATIVE_LIB_NAME,
-            )){
-                addAll(getFMPEGLibs(get()))
-                addAll(bulletLibs)
-                addAll(fteQWNativePlugins)
-                add(FTEQW_MAIN_ENGINE_LIB)
-                toTypedArray()
+
+        Quake2Games.entries.forEach { quake2GameType ->
+            single {
+                with(mutableListOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
+                    SDL2_NATIVE_LIB_NAME,
+                    FREETYPE_NATIVE_LIB_NAME,
+                    BZ2_NATIVE_LIB_NAME,
+                    ODE_NATIVE_LIB_NAME,
+                    PNG_NATIVE_LIB_NAME,
+                    JPEG_NATIVE_LIB_NAME,
+                    OGG_NATIVE_LIB_NAME,
+                    VORBIS_NATIVE_LIB_NAME,
+                    VORBIS_FILE_NATIVE_LIB_NAME,
+                    VORBIS_ENC_NATIVE_LIB_NAME,
+                    OPUS_NATIVE_LIB_NAME,
+                )){
+                    add(quake2GameType.nativeLibraryName)
+                    addAll(getFMPEGLibs(get()))
+                    addAll(bulletLibs)
+                    addAll(fteQWNativePlugins)
+                    add(FTEQW_MAIN_ENGINE_LIB)
+                    toTypedArray()
+                }
+            }.withOptions {
+                named(quake2GameType.name)
             }
-            FTEQWEngineInfo(FTEQW_MAIN_ENGINE_LIB, allLibs)
-        }.withOptions {
+        }
+
+        singleOf(::FTEQWEngineInfo).withOptions {
             named(EngineTypes.FTEQW.name)
             bind<IEngineInfo>()
         }
+
         singleOf(::FTEQWComposeSettings)
             .withOptions {
                 named(EngineTypes.FTEQW.name)

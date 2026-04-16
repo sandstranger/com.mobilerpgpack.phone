@@ -29,7 +29,17 @@ const val FTEQW_MAIN_ENGINE_LIB = "ftedroid"
 
 const val WIDELANDS_MAIN_ENGINE_LIB = "widelands"
 
-const val YQUAKE2_CORE_NATIVE_LIB_NAME = "game"
+const val YQUAKE2_CORE_NATIVE_LIB_NAME = "yquake2"
+
+const val XATRIX_NATIVE_LIB_NAME = "xatrix"
+
+const val ROGUE_NATIVE_LIB_NAME = "rogue"
+
+const val QUAKE2_CTF_NATIVE_LIB_NAME = "ctf"
+
+const val QUAKE2_BOT_NATIVE_LIB_NAME = "3zb2"
+
+const val QUAKE2_ZAERO_NATIVE_LIB_NAME = "zaero"
 
 const val TIBERIAN_DAWN_NATIVE_LIB_NAME = "vanillatd"
 
