@@ -157,3 +157,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/yquake2/src/main/jni/3zb2"]
 	path = third_party/yquake2/src/main/jni/3zb2
 	url = https://github.com/sandstranger/3zb2.git
+[submodule "third_party/sse2neon"]
+	path = third_party/sse2neon
+	url = https://github.com/DLTcollab/sse2neon.git
