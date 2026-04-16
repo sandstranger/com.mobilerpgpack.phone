@@ -125,7 +125,7 @@ android {
     androidComponents {
         onVariants(selector().all()) { variant ->
             variant.outputs.forEach { output ->
-                def appName = "Engines_Hub"
+                def appName = "Classic Core"
                 def versionName = versions.app_version_name
                 def versionCode = versions.app_version_code
                 def buildType = variant.buildType
