@@ -130,5 +130,5 @@ private val defaultFFMPEGLibs = arrayOf("avcodec", "avdevice", "avfilter", "avfo
 private val armv7FFMPEGLibs = arrayOf("avcodec_neon", "avdevice_neon", "avfilter_neon", "avformat_neon",
     "avutil_neon", "swresample_neon", "swscale_neon")
 
-fun getFMPEGLibs(context: Context): Array<String> = if (context.applicationInfo.nativeLibraryDir.contains("armeabi-v7a"))
+fun getFMPEGLibs(context: Context) = if (context.applicationInfo.nativeLibraryDir.endsWith("arm"))
     armv7FFMPEGLibs else defaultFFMPEGLibs
