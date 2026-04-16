@@ -22,7 +22,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Engines Hub"
+rootProject.name = "Classic Core"
 include ':app'
 include ':third_party:openal'
 include ':third_party:sdl2:android-project:app'

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingTranslation">
-    <string name="app_name">引擎中心</string>
     <string name="access_to_all_files">允许完整文件管理访问权限</string>
     <string name="downloaded_text">已下载</string>
     <string name="bytes_text">字节</string>
