@@ -334,4 +334,5 @@
     <string name="disable_light_interactions">跳过所有光照与表面的交互渲染</string>
     <string name="simplify_culling">简化剔除（降低可见性计算开销，可能提高帧率）</string>
     <string name="shadow_map_image_size">阴影贴图图像大小</string>
+    <string name="quake2_game_type">Quake2 游戏类型</string>
 </resources>

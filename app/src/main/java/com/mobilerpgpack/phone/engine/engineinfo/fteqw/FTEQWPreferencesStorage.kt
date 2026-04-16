@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.fteqw
 
+import com.mobilerpgpack.phone.engine.engineinfo.perfectdark.PerfectDarkRomVersions
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.enumPreferencesKey
@@ -28,12 +29,14 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val enableManifestSupportPrefsKey = booleanPreferencesKey("enable_fteqw_manifest")
     val activeFTEQWGamePrefsKey = enumPreferencesKey<FTEQWGames>("active_fteqw_game")
     val fteqwUIScalePrefsKey = floatPreferencesKey("fteqw_ui_scale")
+    val quake2GameTypePrefsKey = enumPreferencesKey<Quake2Games>("quake2_game_type")
 
     val pathToQuake1 = getStringValue(pathToQuake1PrefsKey)
     val pathToQuake1BaseDir = getStringValue(pathToQuake1BaseDirPrefsKey)
     val pathToQuake1ModsDir = getStringValue(pathToQuake1ModsDirPrefsKey)
     val pathToQuake1Manifest = getStringValue(pathToQuake1ManifestPrefsKey)
-
+    val quake2GameType = getEnumValue(quake2GameTypePrefsKey, Quake2Games::class.java,
+        Quake2Games.DefaultGame)
     val pathToQuake2 = getStringValue(pathToQuake2PrefsKey)
     val pathToQuake2BaseDir = getStringValue(pathToQuake2BaseDirPrefsKey)
     val pathToQuake2ModsDir = getStringValue(pathToQuake2ModsDirPrefsKey)

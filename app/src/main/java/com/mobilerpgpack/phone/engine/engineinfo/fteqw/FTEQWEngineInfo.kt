@@ -1,24 +1,27 @@
 package com.mobilerpgpack.phone.engine.engineinfo.fteqw
 
-import android.system.Os
+import android.util.Log
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
-import com.mobilerpgpack.phone.main.FREETYPE_NATIVE_LIB_NAME
+import com.mobilerpgpack.phone.main.FTEQW_MAIN_ENGINE_LIB
+import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
 import com.sun.jna.Native
+import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
-class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
-    SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.FTEQW){
+class FTEQWEngineInfo : SDL2EngineInfo( EngineTypes.FTEQW){
 
     private val homeDirFile : File by inject { parametersOf(FTEQW_CONFIGS_DIR) }
 
     private val gameType get() = fteQWPrefsStorage.activeFTEQWGame.value!!
 
     private val fteQWPrefsStorage : FTEQWPreferencesStorage by inject (named(EngineTypes.FTEQW.name))
+
+    private val quake2GameType get() = preferencesStorage.quake2GameType.value!!
 
     private val pathToModsDirectory : String get() {
         return when (gameType) {
@@ -45,6 +48,12 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3Manifest.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2Manifest.value!!
         }
+    }
+
+    override val mainLibraryName: String = FTEQW_MAIN_ENGINE_LIB
+
+    override val nativeLibraries: Array<String> by lazy {
+        get <Array<String>>(named(preferencesStorage.quake2GameType.value!!.name))
     }
 
     override val mouseButtonsEventsCanBeInvoked = false
@@ -87,7 +96,14 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this += pathToResources
                 }
 
-                if (pathToBaseGameDirectory.isNotEmpty()) {
+                val quake2GameType = preferencesStorage.quake2GameType.value!!
+
+                if (gameType == FTEQWGames.Quake2 &&
+                    quake2GameType != Quake2Games.Quake2 && quake2GameType.isPathToGameDirectoryExists()){
+                    this@with += BASE_GAME_COMMAND
+                    this@with += quake2GameType.directoryName
+                }
+                else if (pathToBaseGameDirectory.isNotEmpty()) {
                     File(pathToBaseGameDirectory).apply {
                         if (!baseCommandLineArgs.contains(BASE_GAME_COMMAND) && exists()){
                             this@with += BASE_GAME_COMMAND
@@ -109,7 +125,6 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     }
                 }
 
-
                 val pathToManifest = pathToManifest
 
                 if (pathToManifest.isNotEmpty() && pathToManifest.startsWith(pathToResource)) {
@@ -127,8 +142,8 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     private external fun setPathsToResources (pathToHomeDirectory : String, pathToBaseDirectory : String,
                                               dllDefaultPath : String)
-
     private external fun setUIScale (uiScale : Float)
+    private external fun setQuake2LibraryName (targetLibraryName : String)
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -143,6 +158,17 @@ class FTEQWEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         setPathsToResources(homeDirFile.absolutePath,pathToBaseGameDirectory,
             activity.applicationInfo.nativeLibraryDir)
         setUIScale(preferencesStorage.fteqwUIScale.value!!)
+        setQuake2LibraryName(getQuake2NativeLibraryName() + ".so")
+    }
+
+    private fun Quake2Games.isPathToGameDirectoryExists () =
+        File(pathToResource + File.separator + directoryName).exists()
+
+    private fun getQuake2NativeLibraryName () : String {
+        return quake2GameType.run {
+            if (this != Quake2Games.Quake2 && this.isPathToGameDirectoryExists()) this.nativeLibraryName else
+                Quake2Games.Quake2.nativeLibraryName
+        }
     }
 
     private companion object {
