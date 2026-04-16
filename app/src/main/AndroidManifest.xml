@@ -50,7 +50,7 @@
         android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:largeHeap="true"
-        android:banner="@mipmap/ic_launcher"
+        android:banner="@mipmap/ic_banner"
         android:icon="@mipmap/ic_launcher"
         android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
