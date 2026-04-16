@@ -197,6 +197,7 @@ set(FFMPEG_INCLUDE_DIRS
 )
 
 include_directories("${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/include" PUBLIC)
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third_party/sse2neon" PUBLIC)
 
 set(GNUTLS_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavformat.so" CACHE STRING "" FORCE)
 set(AVFORMAT_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavformat.so" CACHE STRING "" FORCE)
