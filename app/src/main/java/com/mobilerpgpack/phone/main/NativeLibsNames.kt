@@ -1,5 +1,7 @@
 package com.mobilerpgpack.phone.main
 
+import android.content.Context
+import android.os.Build
 import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRPGEngineInfo
 
@@ -118,9 +120,15 @@ val fteQWNativePlugins = arrayOf("fteplug_bullet", "fteplug_cod", "fteplug_ezhud
 val bulletLibs = arrayOf("Bullet3Common", "LinearMath", "BulletCollision", "BulletDynamics",
     "BulletInverseDynamics", "BulletSoftBody")
 
-val ffmpegLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
-    "avutil", "swresample", "swscale")
-
 val angleLibs = arrayOf("feature_support_angle","GLESv2_angle", "EGL_angle")
 
 val opensslLibs = arrayOf("ssl_3","crypto_3")
+
+private val defaultFFMPEGLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
+    "avutil", "swresample", "swscale")
+
+private val armv7FFMPEGLibs = arrayOf("avcodec_neon", "avdevice_neon", "avfilter_neon", "avformat_neon",
+    "avutil_neon", "swresample_neon", "swscale_neon")
+
+fun getFMPEGLibs(context: Context): Array<String> = if (context.applicationInfo.nativeLibraryDir.contains("armeabi-v7a"))
+    armv7FFMPEGLibs else defaultFFMPEGLibs
