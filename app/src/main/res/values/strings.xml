@@ -335,4 +335,8 @@
     <string name="simplify_culling">Simplified culling (reduces visibility cost, may increase FPS)</string>
     <string name="shadow_map_image_size">Shadow map image size</string>
     <string name="quake2_game_type">Quake2 game type</string>
+    <string name="skip_static_shadows">Disable static shadows</string>
+    <string name="skip_dynamic_shadows">Disable dynamic shadows</string>
+    <string name="use_shadow_precise_inside_test">Use a precise and more expensive test to determine whether the view is inside a shadow volume</string>
+    <string name="lod_distance">Surfaces further than this distance will use lower quality versions (if their material uses the lod1–4 keywords, persistentLOD disables the max distance checks)"</string>
 </resources>

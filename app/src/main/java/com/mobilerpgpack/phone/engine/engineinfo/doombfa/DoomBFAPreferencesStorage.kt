@@ -5,6 +5,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.fteqw.FTEQWGames
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.enumPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.intPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 
 class DoomBFAPreferencesStorage : PreferencesStorage() {
@@ -34,7 +35,15 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val pathDoom3ModsDirPrefsKey = stringPreferencesKey("path_to_doom3_mods_dir")
     val shadowMapImageSizePrefsKey = stringPreferencesKey("shadow_map_image_size")
     val targetGLESVersionPrefsKey = enumPreferencesKey<GLESVersions>("target_gles_version")
+    val disableStaticShadowsPrefsKey = booleanPreferencesKey("disable_static_shadows")
+    val disableDynamicShadowsPrefsKey = booleanPreferencesKey("disable_dynamic_shadows")
+    val useShadowPreciseInsideTestPrefsKey = booleanPreferencesKey("use_shadow_precise_inside_test")
+    val lodDistancePrefsKey = intPreferencesKey("lod_distance")
 
+    val disableStaticShadows = getBooleanValue(disableStaticShadowsPrefsKey)
+    val disableDynamicShadows = getBooleanValue(disableDynamicShadowsPrefsKey)
+    val useShadowPreciseInsideTest = getBooleanValue(useShadowPreciseInsideTestPrefsKey, true)
+    val lodDistance = getIntValue(lodDistancePrefsKey, 500)
     val commandLineArgs = getStringValue(commandLineArgsPrefsKey)
     val targetGLESVersion = getEnumValue(targetGLESVersionPrefsKey, GLESVersions::class.java,
         GLESVersions.defaultGLESVersion)

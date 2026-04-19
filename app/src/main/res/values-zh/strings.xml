@@ -334,4 +334,8 @@
     <string name="simplify_culling">简化剔除（降低可见性计算开销，可能提高帧率）</string>
     <string name="shadow_map_image_size">阴影贴图图像大小</string>
     <string name="quake2_game_type">Quake2 游戏类型</string>
+    <string name="skip_static_shadows">禁用静态阴影</string>
+    <string name="skip_dynamic_shadows">禁用动态阴影</string>
+    <string name="use_shadow_precise_inside_test">使用更精确且性能开销更高的测试，以确定视角是否处于阴影体积内部</string>
+    <string name="lod_distance">超出此距离的曲面将使用较低质量的版本（前提是其材质使用了 lod1–4 关键字；persistentLOD 会禁用最大距离检测）</string>
 </resources>

@@ -13,6 +13,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.ui.items.DrawTitleText
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
+import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
@@ -97,6 +98,25 @@ class DoomBFAComposeSettings : IEngineUIController {
                 stringResource(R.string.disable_shadows),
                 disableShadows, disableShadowsPrefsKey.name
             )
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(
+                stringResource(R.string.skip_static_shadows),
+                disableStaticShadows, disableStaticShadowsPrefsKey.name
+            )
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(
+                stringResource(R.string.skip_dynamic_shadows),
+                disableDynamicShadows, disableDynamicShadowsPrefsKey.name
+            )
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(
+                stringResource(R.string.use_shadow_precise_inside_test),
+                useShadowPreciseInsideTest, useShadowPreciseInsideTestPrefsKey.name
+            )
+            DrawHorizontalDivider()
+            EditTextPreferenceItem(stringResource(R.string.lod_distance), lodDistance){
+                this.setIntValue(lodDistancePrefsKey, it.coerceAtLeast(50))
+            }
             DrawHorizontalDivider()
             SwitchPreferenceItem(
                 stringResource(R.string.disable_particles),
