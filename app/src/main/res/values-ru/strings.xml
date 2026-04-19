@@ -336,5 +336,5 @@
     <string name="skip_static_shadows">Отключить статические тени</string>
     <string name="skip_dynamic_shadows">Отключить динамические тени</string>
     <string name="use_shadow_precise_inside_test">Использовать точный, но более ресурсоёмкий тест для определения нахождения камеры внутри теневого объёма</string>
-    <string name="lod_distance">Поверхности за пределами этого расстояния отображаются в упрощённом качестве (если в их материале используются ключевые слова LOD1–4; параметр persistentLOD отключает проверку максимального расстояния)</string>
+    <string name="lod_distance">Дальность детализации</string>
 </resources>
