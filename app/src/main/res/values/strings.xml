@@ -338,5 +338,5 @@
     <string name="skip_static_shadows">Disable static shadows</string>
     <string name="skip_dynamic_shadows">Disable dynamic shadows</string>
     <string name="use_shadow_precise_inside_test">Use a precise and more expensive test to determine whether the view is inside a shadow volume</string>
-    <string name="lod_distance">Surfaces further than this distance will use lower quality versions (if their material uses the lod1–4 keywords, persistentLOD disables the max distance checks)"</string>
+    <string name="lod_distance">Lod distance</string>
 </resources>
