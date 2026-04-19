@@ -62,6 +62,13 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_useLightAreaCulling", cullingValue)
                     this@with += buildCommand("r_shadowMapImageSize", shadowMapImageSize.value!!)
                     this@with += buildCommand("r_useStateCaching", true)
+                    this@with += buildCommand("r_skipStaticShadows", disableStaticShadows.value!!)
+                    this@with += buildCommand("r_skipDynamicShadows",
+                        disableDynamicShadows.value!!)
+                    this@with += buildCommand("r_useShadowPreciseInsideTest",
+                        useShadowPreciseInsideTest.value!!)
+                    this@with += buildCommand("r_lodMaterialDistance",
+                        lodDistance.value!!.toString())
 
                     val pathToModsDirectory = pathDoom3ModsDir.value!!
                     val modsDir = File(pathToModsDirectory)
