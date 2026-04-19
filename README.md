@@ -303,6 +303,8 @@ To build the APK file, clone this repository, open the project root directory in
 
 Important: Bulding from source code supported only for fdroid buld variants, google variants are propritary due to crashlytics using.
 
+To build, also need to install Python 3.x - https://www.python.org/downloads/, since it is used when building some dependencies.
+
 Only windows 11 25h2 x64 is supported as build host, others OS are not supported, because I am not using them.
 
 ## Download
