@@ -563,6 +563,12 @@ sse2neon: [Licence](https://github.com/DLTcollab/sse2neon/blob/master/LICENSE) h
 
 d3es-multithread:  [Licence](https://github.com/emileb/d3es-multithread/blob/master/COPYING.txt) https://github.com/emileb/d3es-multithread
 
+SPIRV-Tools - [Licence](https://github.com/KhronosGroup/SPIRV-Tools/blob/main/LICENSE) https://github.com/KhronosGroup/SPIRV-Tools
+
+SPIRV-Headers - [Licence](https://github.com/KhronosGroup/SPIRV-Headers/blob/main/LICENSE) https://github.com/KhronosGroup/SPIRV-Headers
+
+SPIRV-Cross - [Licence](https://github.com/KhronosGroup/SPIRV-Cross/blob/main/LICENSE) https://github.com/KhronosGroup/SPIRV-Cross
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
