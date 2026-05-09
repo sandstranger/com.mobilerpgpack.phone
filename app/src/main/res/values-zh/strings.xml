@@ -338,4 +338,7 @@
     <string name="skip_dynamic_shadows">禁用动态阴影</string>
     <string name="use_shadow_precise_inside_test">使用更精确且性能开销更高的测试，以确定视角是否处于阴影体积内部</string>
     <string name="lod_distance">细节层次距离</string>
+    <string name="path_to_nfs2se_resources">极品飞车2：特别版 资源路径</string>
+    <string name="path_to_nfs3hp_resources">极品飞车3：热力追踪 资源路径</string>
+    <string name="active_nfs_recompiled_game">当前激活的 NFS 重编译版游戏</string>
 </resources>

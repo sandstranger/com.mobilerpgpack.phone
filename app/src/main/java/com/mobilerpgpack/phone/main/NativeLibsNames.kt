@@ -1,9 +1,7 @@
 package com.mobilerpgpack.phone.main
 
 import android.content.Context
-import android.os.Build
 import com.mobilerpgpack.phone.BuildConfig
-import com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries.WolfensteinRPGEngineInfo
 
 const val TRANSLATOR_NATIVE_LIB_NAME = "Translator"
 

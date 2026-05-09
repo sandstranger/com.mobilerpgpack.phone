@@ -37,7 +37,7 @@ abstract sealed class ModsModel : KoinComponent {
 
     @Transient
     open val allowedModsExtensions: Collection<String> =
-        listOf("wad", "pk3", "iwad", "ipk3", "ipk7").let {
+        listOf("wad", "pk3","pk7", "iwad", "ipk3", "ipk7").let {
             val result = mutableListOf<String>()
             result += it
             it.forEach { fileExtension ->

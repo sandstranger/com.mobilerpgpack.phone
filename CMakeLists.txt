@@ -76,6 +76,14 @@ else ()
     set(SDL2_MIXER_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl2-mixer/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2_mixer.so)
 endif ()
 
+set(SDL3_MIXER_DIR ${CMAKE_SOURCE_DIR}/third_party/sdl3-mixer/src/main/jni/SDL_mixer)
+set(SDL3_MIXER_INCLUDE_DIR ${SDL3_MIXER_DIR}/include)
+if (IS_DEBUG_BUILD)
+    set(SDL3_MIXER_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl3-mixer/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL3_mixer.so)
+else ()
+    set(SDL3_MIXER_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl3-mixer/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL3_mixer.so)
+endif ()
+
 set(FLUIDSYNTH_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/fluidsynth/src/main/jni/fluidsynth-android/include")
 
 if (IS_DEBUG_BUILD)
@@ -196,6 +204,8 @@ set(FFMPEG_INCLUDE_DIRS
         CACHE STRING "" FORCE
 )
 
+set(FFMPEG_INCLUDE_DIR ${FFMPEG_INCLUDE_DIRS} CACHE STRING "" FORCE)
+
 include_directories("${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/include" PUBLIC)
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third_party/sse2neon" PUBLIC)
 
@@ -214,6 +224,13 @@ else()
     set(AVSWSCALE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libswscale.so" CACHE STRING "" FORCE)
     set(SWRESAMPLE_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libswresample.so" CACHE STRING "" FORCE)
 endif()
+
+set(FFMPEG_AVCODEC_LIBRARY ${AVCODEC_LIBRARY} CACHE STRING "" FORCE)
+set(FFMPEG_AVFORMAT_LIBRARY ${AVFORMAT_LIBRARY} CACHE STRING "" FORCE)
+set(FFMPEG_AVUTIL_LIBRARY ${AVUTIL_LIBRARY} CACHE STRING "" FORCE)
+set(FFMPEG_SWSCALE_LIBRARY ${AVSWSCALE_LIBRARY} CACHE STRING "" FORCE)
+set(FFMPEG_SWRESAMPLE_LIBRARY ${SWRESAMPLE_LIBRARY} CACHE STRING "" FORCE)
+
 set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/include")
 set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/lib/libvpx.a")
 
