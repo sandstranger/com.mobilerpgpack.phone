@@ -339,7 +339,4 @@
     <string name="skip_dynamic_shadows">Disable dynamic shadows</string>
     <string name="use_shadow_precise_inside_test">Use a precise and more expensive test to determine whether the view is inside a shadow volume</string>
     <string name="lod_distance">Lod distance</string>
-    <string name="path_to_nfs2se_resources">Path to NFS2SE resources</string>
-    <string name="path_to_nfs3hp_resources">Path to NFS3HP resources</string>
-    <string name="active_nfs_recompiled_game">Active NFS Recompiled game</string>
 </resources>
