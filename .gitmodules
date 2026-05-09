@@ -87,7 +87,7 @@ url=https://gitlab.xiph.org/xiph/vorbis.git
 url=https://github.com/sandstranger/libmp3lame-android.git
 [submodule "app/src/main/jni/perfect_dark"]
 	path = app/src/main/jni/perfect_dark
-url=git@gitlab.com:sandstranger/perfect_dark.git
+	url = https://github.com/sandstranger/perfect_dark.git
 [submodule "app/src/main/jni/ArxLibertatis"]
 	path = app/src/main/jni/ArxLibertatis
 	url = https://github.com/sandstranger/ArxLibertatis.git
