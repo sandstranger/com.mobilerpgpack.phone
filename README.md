@@ -28,6 +28,19 @@ https://github.com/TheAssemblyArmada/Vanilla-Conquer
 
 https://github.com/MadDeCoDeR/Classic-RBDOOM-3-BFG
 
+## STATUS UPDATE: READ-ONLY & LTS MODE
+
+This repository is now in Long-Term Support (LTS) mode.
+
+Public active development and feature implementation have ceased. The project is considered complete in its current state.
+
+What this means:
+* No New Features: No new functionality, optimizations, or new engine will be implemented publicly.
+   Source Sync Only: Future releases will occur rarely and exclusively to synchronize with upstream source code updates of the original engines (e.g., security patches, critical bug fixes from upstream).
+* No Community Support: I do not accept Issues, Pull Requests, or feature requests. I will not answer questions regarding compilation, installation, or 
+sage.
+* Self-Service: If you require specific changes, fork the repository and maintain your own version.
+
 ## System Requirements
 
 This port for Android has the following system requirements:

@@ -106,7 +106,7 @@ abstract class EngineInfo(
 
     protected open val loadGL4ES : Boolean = true
 
-    protected open val targetGLESVersion : Int = 300
+    protected open val targetGLESVersion : Int = GLES_320_VERSION
 
     protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope.value!!
 
@@ -468,7 +468,10 @@ abstract class EngineInfo(
         }
     }
 
-    private companion object {
+    protected companion object {
         private const val RESOLUTION_DELIMITER = "x"
+        const val GLES_320_VERSION = 320
+        const val GLES_310_VERSION = 30
+        const val GLES_300_VERSION = 300
     }
 }
