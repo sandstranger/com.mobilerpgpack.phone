@@ -471,7 +471,7 @@ abstract class EngineInfo(
     protected companion object {
         private const val RESOLUTION_DELIMITER = "x"
         const val GLES_320_VERSION = 320
-        const val GLES_310_VERSION = 30
+        const val GLES_310_VERSION = 310
         const val GLES_300_VERSION = 300
     }
 }
