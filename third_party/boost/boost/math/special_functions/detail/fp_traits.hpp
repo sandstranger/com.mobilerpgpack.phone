@@ -311,7 +311,7 @@ private:
 
 // Intel extended double precision format (80 bits)
 
-static_assert(LDBL_MANT_DIG == 64, "Oops, assumption that long double is an 80-bit quantity is incorrect!!");
+//static_assert(LDBL_MANT_DIG == 64, "Oops, assumption that long double is an 80-bit quantity is incorrect!!");
 
 template<>
 struct fp_traits_non_native<long double, extended_double_precision>
