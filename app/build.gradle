@@ -237,8 +237,7 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':third_party:libjpegturbo:build',':third_party:bzip2:build',':third_party:ode:build',
         ':third_party:yquake2:build',':third_party:sdl2-image:build',
         ':third_party:glbinding:build',':third_party:glob:build',':third_party:ogg:build',
-        ':third_party:angle:build',':third_party:openssl:build',':third_party:luajit:build',
-        ':third_party:lzo:build'
+        ':third_party:angle:build',':third_party:openssl:build'
 
 dependencies {
     implementation project(':third_party:sdl2:android-project:app')
