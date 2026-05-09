@@ -106,7 +106,7 @@ abstract class EngineInfo(
 
     protected open val loadGL4ES : Boolean = true
 
-    protected open val targetGLESVersion : Int = GLES_320_VERSION
+    protected open val targetGLESVersion : Int = GLES_300_VERSION
 
     protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope.value!!
 
