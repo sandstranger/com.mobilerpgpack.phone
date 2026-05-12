@@ -1,11 +1,9 @@
 package com.mobilerpgpack.phone.engine.engineinfo.fteqw
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
 import com.mobilerpgpack.phone.main.FTEQW_MAIN_ENGINE_LIB
-import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
 import com.sun.jna.Native
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -51,6 +49,8 @@ class FTEQWEngineInfo : SDL2EngineInfo( EngineTypes.FTEQW){
     }
 
     override val mainLibraryName: String = FTEQW_MAIN_ENGINE_LIB
+
+    override val supportRenderChanges = true
 
     override val nativeLibraries: Array<String> by lazy {
         mutableListOf<String>().run {
