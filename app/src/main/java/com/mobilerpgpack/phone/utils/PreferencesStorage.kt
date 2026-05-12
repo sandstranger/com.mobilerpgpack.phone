@@ -2,11 +2,13 @@ package com.mobilerpgpack.phone.utils
 
 import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.GlesRenderVersions
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsRepository
 import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.enumPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.floatPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.intPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
@@ -66,6 +68,10 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val zoomSensitivityPrefsKey = floatPreferencesKey("zoom_sensitivity")
     val enableAngleSupportPrefsKey = booleanPreferencesKey("enable_angle_support")
     val useMediumpShaderPrecisionKey = booleanPreferencesKey("use_mediump_shader_precision")
+    val glesRenderVersionPrefsKey = enumPreferencesKey<GlesRenderVersions>("gles_render_version")
+
+    val glesRenderVersion = getEnumValue(glesRenderVersionPrefsKey,
+        GlesRenderVersions::class.java, GlesRenderVersions.DefaultValue)
 
     val useMediumpShaderPrecision = getBooleanValue(useMediumpShaderPrecisionKey, false)
 

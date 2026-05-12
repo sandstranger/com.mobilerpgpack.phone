@@ -350,8 +350,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.DoomRpg.name) }
 
         single {
-            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                OBOE_NATIVE_LUB_NAME,
+            val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 MPG123_NATIVE_LIB_NAME,
@@ -375,9 +374,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.Doom2Rpg.name) }
 
         single {
-            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                gl4esLibraryName,
-                OBOE_NATIVE_LUB_NAME,
+            val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
@@ -399,9 +396,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.WolfensteinRpg.name) }
 
         single {
-            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                gl4esLibraryName,
-                OBOE_NATIVE_LUB_NAME,
+            val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
@@ -429,9 +424,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             }
 
         single  {
-            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                gl4esLibraryName,
-                SDL3_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 FMOD_NATIVE_LIB_NAME,
                 DOOM64_MAIN_ENGINE_LIB)
@@ -443,9 +436,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
 
         single  {
-            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                gl4esLibraryName,
-                SDL3_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 FMOD_NATIVE_LIB_NAME,
                 DOOM64_ENHANCED_MAIN_ENGINE_LIB)
@@ -482,8 +473,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.UZDoom.name) }
 
         single  {
-            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                SDL2_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
@@ -531,8 +521,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.PsyDoom.name) }
 
         single {
-            val nativeLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                FREETYPE_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
 
             PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB, nativeLibs)
@@ -576,22 +565,19 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     private val perfectDarkKoinModule = module{
-        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-            SDL2_NATIVE_LIB_NAME,
+        single { arrayOf(SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.NTSC.mainLibraryName,
         ) }.withOptions {
             named(PerfectDarkRomVersions.NTSC.name)
         }
 
-        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-            SDL2_NATIVE_LIB_NAME,
+        single { arrayOf(SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.PAL.mainLibraryName,
         ) }.withOptions {
             named(PerfectDarkRomVersions.PAL.name)
         }
 
-        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-            SDL2_NATIVE_LIB_NAME,
+        single { arrayOf(SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.JPN.mainLibraryName,
         ) }.withOptions {
             named(PerfectDarkRomVersions.JPN.name)
@@ -630,9 +616,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             }
 
         single {
-            val allLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                gl4esLibraryName,
-                SDL2_NATIVE_LIB_NAME,
+            val allLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
                 FREETYPE_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
@@ -665,8 +649,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         Quake2Games.entries.forEach { quake2GameType ->
             single {
-                with(mutableListOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                    SDL2_NATIVE_LIB_NAME,
+                with(mutableListOf(SDL2_NATIVE_LIB_NAME,
                     FREETYPE_NATIVE_LIB_NAME,
                     BZ2_NATIVE_LIB_NAME,
                     ODE_NATIVE_LIB_NAME,
@@ -710,9 +693,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(widelandsName) }
 
         single {
-            val allLibs = arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                gl4esLibraryName,
-                GLBINDING_NATIVE_LIB_NAME,
+            val allLibs = arrayOf(GLBINDING_NATIVE_LIB_NAME,
                 TIFF_NATIVE_LIB_NAME,
                 TIFFXX_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
@@ -741,16 +722,14 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         singleOf<VanillaConquerPreferencesStorage>(::VanillaConquerPreferencesStorage).withOptions {
             named(engineName)
         }
-        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                OBOE_NATIVE_LUB_NAME,
+        single { arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 RED_ALERT_NATIVE_LIB_NAME)
         }.withOptions {
             named(VanillaConquerGames.RedAlert.name)
         }
-        single { arrayOf(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME,
-                OBOE_NATIVE_LUB_NAME,
+        single { arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 TIBERIAN_DAWN_NATIVE_LIB_NAME)
@@ -775,7 +754,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
         single<DoomBFAEngineInfo> {
             val libs = mutableListOf<String>().run {
-                add(C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME)
                 addAll(getFMPEGLibs(get()))
                 addAll(opensslLibs)
                 add(OBOE_NATIVE_LUB_NAME)

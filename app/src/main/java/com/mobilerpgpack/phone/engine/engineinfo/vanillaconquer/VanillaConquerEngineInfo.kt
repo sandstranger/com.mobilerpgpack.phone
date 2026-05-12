@@ -7,6 +7,7 @@ import com.mobilerpgpack.phone.main.RED_ALERT_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.TIBERIAN_DAWN_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
+import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -46,10 +47,14 @@ class VanillaConquerEngineInfo :
             VanillaConquerGames.RedAlert -> prefsStorage.pathToRedAlertResources.value!!
         }
 
-    override val nativeLibraries: Array<String>
-        get() = when (activeGame) {
-            VanillaConquerGames.TiberianDawn -> tiberianDawnNativeLibs
-            VanillaConquerGames.RedAlert -> redAlertNativeLibs
+    override val nativeLibraries: Array<String> get() =
+        mutableListOf<String>().run {
+            this += super.nativeLibraries
+            this += when (activeGame) {
+                VanillaConquerGames.TiberianDawn -> tiberianDawnNativeLibs
+                VanillaConquerGames.RedAlert -> redAlertNativeLibs
+            }
+            toTypedArray()
         }
 
     override val mainLibraryName: String

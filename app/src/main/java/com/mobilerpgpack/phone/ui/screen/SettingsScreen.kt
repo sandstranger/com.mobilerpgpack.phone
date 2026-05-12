@@ -181,8 +181,19 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawResetResourcesDialog(viewModel)
         DrawHorizontalDivider()
 
-        val engineInfo : IEngineUIController = koinInject(named(activeEngine.toString()))
-        engineInfo.DrawSettings(navController)
+        val engineInfoUIController : IEngineUIController = koinInject(named(activeEngine.name))
+        engineInfoUIController.DrawSettings(navController)
+
+        val engineInfo : IEngineInfo = koinInject(named(activeEngine.name))
+
+        if (engineInfo.supportRenderChanges){
+            DrawHorizontalDivider()
+            ListPreferenceItem(
+                stringResource(R.string.uzdoom_rendering_api),
+                preferencesStorage.glesRenderVersion) {
+                preferencesStorage.setEnumValue(preferencesStorage.glesRenderVersionPrefsKey, it)
+            }
+        }
 
         DrawHorizontalDivider()
     }

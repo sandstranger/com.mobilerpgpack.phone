@@ -53,7 +53,11 @@ class FTEQWEngineInfo : SDL2EngineInfo( EngineTypes.FTEQW){
     override val mainLibraryName: String = FTEQW_MAIN_ENGINE_LIB
 
     override val nativeLibraries: Array<String> by lazy {
-        get <Array<String>>(named(preferencesStorage.quake2GameType.value!!.name))
+        mutableListOf<String>().run {
+            this += super.nativeLibraries
+            this + get <Array<String>>(named(preferencesStorage.quake2GameType.value!!.name))
+            toTypedArray()
+        }
     }
 
     override val mouseButtonsEventsCanBeInvoked = false
