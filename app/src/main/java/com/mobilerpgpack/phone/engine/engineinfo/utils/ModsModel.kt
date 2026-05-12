@@ -69,10 +69,12 @@ abstract sealed class ModsModel : KoinComponent {
                     this.enableModsSupport.value = it.enableModsSupport.value
                     this.enableModsAutoUpdateInFolder.value = it.enableModsAutoUpdateInFolder.value
                     this.pathToModsFolder.value = it.pathToModsFolder.value
-                    this.modsCount = it.modsCollection.sourceList.size
+                    val modsCollection = it.modsCollection.sourceList.filter { mod ->
+                        mod.pathToMod.value!!.isNotEmpty() && File(mod.pathToMod.value!!).exists()
+                    }.map { mod -> mod.pathToMod.value!! }
+                    this.modsCount = modsCollection.size
                     for (i in 0 until this.modsCount) {
-                        this.modsCollection.sourceList[i].pathToMod.value =
-                            it.modsCollection.sourceList[i].pathToMod.value
+                        this.modsCollection.sourceList[i].pathToMod.value = modsCollection[i]
                     }
                     this.modsCollection.updateComposeList()
                     save()
