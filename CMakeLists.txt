@@ -38,36 +38,6 @@ else ()
     set(OPENAL_LIBRARY ${OPENAL_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libopenal.so)
 endif ()
 
-set(NG_GL4ES_LOCATION ${CMAKE_SOURCE_DIR}/third_party/NG-GL4ES)
-set(NG_GL4ES_INCLUDE_DIR ${NG_GL4ES_LOCATION}/src/main/jni/NG-GL4ES/include)
-
-if (IS_DEBUG_BUILD)
-    set(NG_GL4ES_LIBRARY ${NG_GL4ES_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libng_gl4es.so)
-else ()
-    set(NG_GL4ES_LIBRARY ${NG_GL4ES_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libng_gl4es.so)
-endif ()
-
-if (NOT DEFINED LEGACY_GLES2 OR LEGACY_GLES2 STREQUAL "false")
-    set(OPENGL_INCLUDE_DIR ${NG_GL4ES_INCLUDE_DIR})
-    if (IS_DEBUG_BUILD)
-        set(OPENGL_opengl_LIBRARY ${NG_GL4ES_LIBRARY})
-        set(OPENGL_glx_LIBRARY ${NG_GL4ES_LIBRARY})
-    else ()
-        set(OPENGL_opengl_LIBRARY ${NG_GL4ES_LIBRARY})
-        set(OPENGL_glx_LIBRARY ${NG_GL4ES_LIBRARY})
-    endif ()
-else ()
-    set(OPENGL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/legacy_gl4es)
-    set(OPENGL_INCLUDE_DIR ${OPENGL_LOCATION}/src/main/jni/gl4es/include)
-    if (IS_DEBUG_BUILD)
-        set(OPENGL_opengl_LIBRARY ${OPENGL_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libgl4es.so)
-        set(OPENGL_glx_LIBRARY ${OPENGL_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libgl4es.so)
-    else ()
-        set(OPENGL_opengl_LIBRARY ${OPENGL_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libgl4es.so)
-        set(OPENGL_glx_LIBRARY ${OPENGL_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libgl4es.so)
-    endif ()
-endif ()
-
 set(SDL2_MIXER_DIR ${CMAKE_SOURCE_DIR}/third_party/sdl2-mixer/src/main/jni/SDL_mixer)
 set(SDL2_MIXER_INCLUDE_DIR ${SDL2_MIXER_DIR}/include)
 if (IS_DEBUG_BUILD)
@@ -418,27 +388,27 @@ target_link_libraries(DoomRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
         ${SDL2_TTF_LIBRARY} ZLIB::ZLIB ${TRANSLATOR_LIBRARY} ${FLUIDSYNTH_LIBRARY})
 
 target_include_directories(DoomIIRPG PRIVATE "${OPENAL_INCLUDE_DIR}/AL" ${SDL2_INCLUDE_DIR}
-        ${SDL2_TTF_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
+        ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
 target_link_libraries(DoomIIRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
-        ${OPENGL_opengl_LIBRARY} ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
+        ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
 
 target_include_directories(WolfensteinRPG PRIVATE "${OPENAL_INCLUDE_DIR}" ${SDL2_INCLUDE_DIR}
-        ${SDL2_TTF_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
+        ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
 target_link_libraries(WolfensteinRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
-        ${OPENGL_opengl_LIBRARY} ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
+         ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
 
-target_include_directories(DOOM64 PRIVATE  ${SDL3_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
-        ${FMOD_INC_DIR} ${OPENGL_INCLUDE_DIR})
+target_include_directories(DOOM64 PRIVATE ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
+        ${FMOD_INC_DIR})
 
-target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${OPENGL_opengl_LIBRARY} ${libpng_LIBRARY}
+target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
 
-target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
-        ${FMOD_INC_DIR} ${OPENGL_INCLUDE_DIR})
+target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
+        ${FMOD_INC_DIR})
 
-target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${OPENGL_opengl_LIBRARY} ${libpng_LIBRARY}
+target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
 
 target_include_directories(PsyDoom PRIVATE ${SDL2_INCLUDE_DIR})
