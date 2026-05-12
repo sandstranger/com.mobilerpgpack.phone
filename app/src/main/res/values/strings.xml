@@ -339,4 +339,6 @@
     <string name="skip_dynamic_shadows">Disable dynamic shadows</string>
     <string name="use_shadow_precise_inside_test">Use a precise and more expensive test to determine whether the view is inside a shadow volume</string>
     <string name="lod_distance">Lod distance</string>
+    <string name="import_mods">Import mods</string>
+    <string name="export_mods">Export mods</string>
 </resources>

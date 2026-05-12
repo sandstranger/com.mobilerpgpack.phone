@@ -55,6 +55,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsFilesUpdater.Companio
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
+import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.ModsExporterViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.SettingScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
@@ -323,6 +324,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 .build()
         }
 
+        viewModelOf(::ModsExporterViewModel)
         viewModelOf(::DownloadViewModel)
         viewModelOf(::SettingsScreenViewModel)
         singleOf(::SettingsScreen).bind<ComposeScreen>()

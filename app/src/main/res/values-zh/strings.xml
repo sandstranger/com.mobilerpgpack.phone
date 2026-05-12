@@ -338,4 +338,6 @@
     <string name="skip_dynamic_shadows">禁用动态阴影</string>
     <string name="use_shadow_precise_inside_test">使用更精确且性能开销更高的测试，以确定视角是否处于阴影体积内部</string>
     <string name="lod_distance">细节层次距离</string>
+    <string name="import_mods">导入模组</string>
+    <string name="export_mods">导出模组</string>
 </resources>
