@@ -30,9 +30,13 @@ import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.GlesRenderVersions
+import com.mobilerpgpack.phone.main.C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME
+import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.angleLibs
 import com.mobilerpgpack.phone.main.gl4esLibraryName
+import com.mobilerpgpack.phone.main.ngGL4ESFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
@@ -96,6 +100,9 @@ abstract class EngineInfo(
     protected lateinit var activity: ComponentActivity
         private set
 
+    protected val gl4esFullLibraryName get() = if (useLegacyGl4es) com.mobilerpgpack.phone.main.gl4esFullLibraryName else
+        ngGL4ESFullLibraryName
+
     protected val pathToRootUserFolder: String get() = preferencesStorage.pathToRootUserFolder.value!!
 
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControls()
@@ -122,6 +129,10 @@ abstract class EngineInfo(
     private val isCursorVisible = MutableLiveData(false)
     private var displayInSafeArea: Boolean = false
     private val hideOnScreenControlsMutableState = MutableLiveData(false)
+    private val useLegacyGl4es get() = preferencesStorage.glesRenderVersion.value == GlesRenderVersions.OpenGLES_2_0
+    private val gl4esLibraryName get() = if (useLegacyGl4es) com.mobilerpgpack.phone.main.gl4esLibraryName else
+        NG_GL4ES_NATIVE_LIB_NAME
+    private val gL4ESJnaLayer by lazy { GL4ESJnaLayer (gl4esLibraryName) }
 
     private external fun needToShowScreenControls() : Boolean
 
@@ -154,6 +165,8 @@ abstract class EngineInfo(
 
     override val useGyroscope: Boolean get() = !mouseButtonsEventsCanBeInvoked
 
+    override val supportRenderChanges get() = loadGL4ES
+
     final override val pathToResourceExists : Boolean
         get() {
             val pathToResource = this.pathToResource
@@ -166,16 +179,18 @@ abstract class EngineInfo(
 
     override val requiredResourceExtensions = emptyList<String>()
 
-    override val nativeLibraries: Array<String> get(){
-        if (enableAngleSupport) {
-            return mutableListOf<String>().run {
+    override val nativeLibraries: Array<String> get() =
+        mutableListOf<String>().run {
+            this += C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME
+            if (enableAngleSupport) {
                 this += angleLibs
-                this += allLibs
-                this.toTypedArray()
             }
+            if (loadGL4ES){
+                this += gl4esLibraryName
+            }
+            this += allLibs
+            this.toTypedArray()
         }
-        return allLibs
-    }
 
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 
@@ -208,10 +223,10 @@ abstract class EngineInfo(
 
     override fun onNativeLibrariesLoaded() {
         Native.register(EngineInfo::class.java, mainLibraryName)
-        setUseGLES2_0State(BuildConfig.LEGACY_GLES2)
+        setUseGLES2_0State(preferencesStorage.glesRenderVersion.value!! == GlesRenderVersions.OpenGLES_2_0)
         setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
         if (loadGL4ES){
-            GL4ESJnaLayer.apply {
+            gL4ESJnaLayer.apply {
                 initializeGL4ESData (enableNGGL4ESSimpleShaderConv,
                     enableAngleSupport, targetGLESVersion,
                     preferencesStorage.useMediumpShaderPrecision.value!!)
@@ -260,7 +275,7 @@ abstract class EngineInfo(
     override fun onDestroy() {
         mainThreadScope.coroutineContext.cancelChildren()
         if (loadGL4ES){
-            GL4ESJnaLayer.close_gl4es()
+            gL4ESJnaLayer.close_gl4es()
         }
         if (callExitProcessOnDestroy) {
             exitProcess(0)
@@ -456,7 +471,7 @@ abstract class EngineInfo(
         }
     }
 
-    private object GL4ESJnaLayer {
+    private class GL4ESJnaLayer (gl4esLibraryName : String) {
         external fun initialize_gl4es()
         external fun close_gl4es()
         external fun initializeGL4ESData(enableSimpleShaderConv : Boolean,

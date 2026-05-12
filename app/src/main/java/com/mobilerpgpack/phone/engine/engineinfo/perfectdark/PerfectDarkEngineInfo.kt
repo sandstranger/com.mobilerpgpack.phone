@@ -37,7 +37,13 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
 
     override val mainLibraryName: String by lazy { romVersion.mainLibraryName }
 
-    override val nativeLibraries by lazy { get<Array<String>> (named(romVersion.name)) }
+    override val nativeLibraries by lazy {
+        mutableListOf<String>().run {
+            this += super.nativeLibraries
+            this + get<Array<String>> (named(romVersion.name))
+            toTypedArray()
+        }
+    }
 
     override val pathToResource get() =
         when (romVersion) {

@@ -115,9 +115,11 @@ val PNG_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "png16d" else "png16"
 
 const val NG_GL4ES_NATIVE_LIB_NAME = "ng_gl4es"
 
-val gl4esLibraryName = if (BuildConfig.LEGACY_GLES2) "gl4es" else NG_GL4ES_NATIVE_LIB_NAME
+const val gl4esLibraryName = "gl4es"
 
 val gl4esFullLibraryName = buildFullLibraryName(gl4esLibraryName)
+
+val ngGL4ESFullLibraryName = buildFullLibraryName(NG_GL4ES_NATIVE_LIB_NAME)
 
 fun buildFullLibraryName (libraryName : String ) = "lib${libraryName}.so"
 

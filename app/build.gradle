@@ -33,52 +33,13 @@ android {
 
     flavorDimensions "store"
     productFlavors {
-        googleOpenGLES3_X {
+        google {
             dimension "store"
-            buildConfigField "boolean", "LEGACY_GLES2", "false"
-            manifestPlaceholders = [gles3Required: "true"]
-            versionName "${versions.app_version_name}_gles3.x"
-            externalNativeBuild {
-                cmake {
-                    arguments "-DLEGACY_GLES2=false"
-                }
-            }
+            versionName "${versions.app_version_name}"
         }
-        fdroidOpenGLES3_X {
+        fdroid {
             dimension "store"
-            buildConfigField "boolean", "LEGACY_GLES2", "false"
-            manifestPlaceholders = [gles3Required: "true"]
-            versionName "${versions.app_version_name}_gles3.x"
-            externalNativeBuild {
-                cmake {
-                    arguments "-DLEGACY_GLES2=false"
-                }
-            }
-            firebaseCrashlytics {
-                mappingFileUploadEnabled false
-            }
-        }
-        googleOpenGLES2_0 {
-            dimension "store"
-            buildConfigField "boolean", "LEGACY_GLES2", "true"
-            versionName "${versions.app_version_name}_gles2.0"
-            manifestPlaceholders = [gles3Required: "false"]
-            externalNativeBuild {
-                cmake {
-                    arguments "-DLEGACY_GLES2=true"
-                }
-            }
-        }
-        fdroidOpenGLES2_0 {
-            dimension "store"
-            buildConfigField "boolean", "LEGACY_GLES2", "true"
-            manifestPlaceholders = [gles3Required: "false"]
-            versionName "${versions.app_version_name}_gles2.0"
-            externalNativeBuild {
-                cmake {
-                    arguments "-DLEGACY_GLES2=true"
-                }
-            }
+            versionName "${versions.app_version_name}"
             firebaseCrashlytics {
                 mappingFileUploadEnabled false
             }
