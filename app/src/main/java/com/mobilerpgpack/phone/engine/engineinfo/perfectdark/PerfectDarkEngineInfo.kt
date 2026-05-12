@@ -40,7 +40,7 @@ class PerfectDarkEngineInfo : SDL2EngineInfo
     override val nativeLibraries by lazy {
         mutableListOf<String>().run {
             this += super.nativeLibraries
-            this + get<Array<String>> (named(romVersion.name))
+            this += get<Array<String>> (named(romVersion.name))
             toTypedArray()
         }
     }

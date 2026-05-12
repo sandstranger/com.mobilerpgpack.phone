@@ -55,7 +55,7 @@ class FTEQWEngineInfo : SDL2EngineInfo( EngineTypes.FTEQW){
     override val nativeLibraries: Array<String> by lazy {
         mutableListOf<String>().run {
             this += super.nativeLibraries
-            this + get <Array<String>>(named(preferencesStorage.quake2GameType.value!!.name))
+            this += get <Array<String>>(named(preferencesStorage.quake2GameType.value!!.name))
             toTypedArray()
         }
     }
