@@ -1,6 +1,8 @@
 package com.mobilerpgpack.phone.engine.engineinfo.utils.ui
 
-import android.util.Log
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,10 +36,11 @@ import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.items.EditTextItem
 import com.mobilerpgpack.phone.ui.items.SwitchItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
+import com.mobilerpgpack.phone.ui.items.prefsitems.PreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
 import com.mobilerpgpack.phone.utils.getComposableNullableValue
-import com.mobilerpgpack.phone.utils.getComposableValue
+import org.koin.androidx.compose.koinViewModel
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
@@ -59,6 +62,8 @@ fun DrawModsSupport(mods: ModsModel) {
         DrawHorizontalDivider()
 
         if (enableModsSupport!!) {
+            DrawExportAndImportModsUI(mods)
+            DrawHorizontalDivider()
             Row(verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                 Row (modifier = Modifier.weight(0.8f)) {
                     RequestPath(
@@ -201,6 +206,35 @@ private fun DrawModsLazyColumn(mods: ModsModel){
                         DrawHorizontalDivider()
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DrawExportAndImportModsUI (modsModel: ModsModel){
+    val modsExporterViewModel : ModsExporterViewModel = koinViewModel ()
+    modsModel.apply {
+        val allowedModsTypesExtensions = retain { listOf("json") }
+        val modsCount = this.modsCountAsLiveData.getComposableNullableValue()!!
+        val createFileLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument( "application/json")
+        ) { uri: Uri? ->
+            if (uri != null) {
+                modsExporterViewModel.exportMods(uri = uri, text = this.toString())
+            }
+        }
+
+        RequestPath(stringResource(R.string.import_mods),
+            previousSavedPath = "", requestMode = RequestPathMode.File,
+            requiredFileExtensions = allowedModsTypesExtensions){ pathToFile ->
+            modsExporterViewModel.importMods(this, pathToFile)
+        }
+
+        if (modsCount > 0) {
+            DrawHorizontalDivider()
+            PreferenceItem(stringResource(R.string.export_mods)) {
+                createFileLauncher.launch(this.jsonFileName)
             }
         }
     }

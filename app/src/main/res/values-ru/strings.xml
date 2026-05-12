@@ -337,4 +337,6 @@
     <string name="skip_dynamic_shadows">Отключить динамические тени</string>
     <string name="use_shadow_precise_inside_test">Использовать точный, но более ресурсоёмкий тест для определения нахождения камеры внутри теневого объёма</string>
     <string name="lod_distance">Дальность детализации</string>
+    <string name="import_mods">Импорт модов</string>
+    <string name="export_mods">Экспорт модов</string>
 </resources>

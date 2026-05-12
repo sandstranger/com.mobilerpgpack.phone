@@ -59,7 +59,7 @@ fun RequestPath(explorerItemTitle: String,
 }
 
 @Composable
-private fun RequestPath(explorerItemTitle: String,
+fun RequestPath(explorerItemTitle: String,
                 previousSavedPath: String = "",
                 key : Key<String>? = null,
                 requestMode: RequestPathMode = RequestPathMode.Directory,
