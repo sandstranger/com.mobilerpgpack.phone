@@ -2,7 +2,6 @@ package com.mobilerpgpack.phone.utils.sharesprefs
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -16,23 +15,28 @@ open class SharedPrefsRepository {
 
     fun loadAllEntries () = SharedPrefsRepository.loadAllEntries()
 
-    fun <T : Enum<T>> getEnumValue(key: String, enumClass: Class<T>, defaultValue: T): LiveData<T> {
-        return loadedEntries.getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }
+    fun <T : Enum<T>> getEnumValue(key: String, enumClass: Class<T>, defaultValue: T): MutableLiveData<T> {
+        val result = MutableLiveData<T>()
+        loadedEntries
+            .getOrPut(key) { buildSharedPrefsValue(key, defaultValue) }
             .stringValue
-            .map { stringValue ->
-                if (stringValue.isNotEmpty()) {
-                    try {
+            .observeForever { stringValue ->
+
+                result.value = try {
+                    if (stringValue.isNotEmpty()) {
                         java.lang.Enum.valueOf(enumClass, stringValue)
-                    } catch (_: Exception) {
+                    } else {
                         defaultValue
                     }
-                } else {
+                } catch (_: Exception) {
                     defaultValue
                 }
             }
+
+        return result
     }
 
-    fun <T : Enum<T>> getEnumValue(key: Key<T>,enumClass: Class<T>, defaultValue: T) =
+    fun <T : Enum<T>> getEnumValue(key: Key<T>, enumClass: Class<T>, defaultValue: T): LiveData<T> =
         getEnumValue(key.name, enumClass, defaultValue)
 
     fun getStringValue(key: String, defaultValue: String = "") : LiveData<String> =
