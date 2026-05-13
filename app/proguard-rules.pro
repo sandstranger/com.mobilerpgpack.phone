@@ -44,8 +44,5 @@
 -keep class * extends org.fmod.* { *; }
 -keepclassmembers class * extends org.fmod.* { public *; public static *;}
 
--dontwarn javax.script.**
--dontwarn org.apache.logging.**
-
 -keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
 -keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.

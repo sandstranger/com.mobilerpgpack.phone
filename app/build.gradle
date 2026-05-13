@@ -246,9 +246,6 @@ dependencies {
     implementation libs.androidx.compose.runtime
     implementation libs.androidx.window
 
-    implementation(libs.commons.configuration2)
-    implementation(libs.commons.beanutils)
-
     implementation(libs.jna){ artifact { type = "aar" } }
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ndk)
