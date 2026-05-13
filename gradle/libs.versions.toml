@@ -1,7 +1,5 @@
 [versions]
 agp = "9.2.1"
-commonsBeanutils = "1.11.0"
-commonsConfiguration2 = "2.14.0"
 converterGson = "3.0.0"
 core = "3.3.0"
 googleServices = "4.4.4"
@@ -20,7 +18,7 @@ kotlinxCoroutinesPlayServices = "1.11.0"
 kotlinxSerializationJson = "1.11.0"
 lifecycleRuntimeKtx = "2.10.0"
 lombokVersion = "1.18.46"
-material = "1.13.0"
+material = "1.14.0"
 kotlinxCoroutinesCore = "1.11.0"
 material3 = "1.4.0"
 materialIconsCoreAndroid = "1.7.8"
@@ -57,8 +55,6 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRunt
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "ui" }
-commons-beanutils = { module = "commons-beanutils:commons-beanutils", version.ref = "commonsBeanutils" }
-commons-configuration2 = { module = "org.apache.commons:commons-configuration2", version.ref = "commonsConfiguration2" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.afollestad.material-dialogs:core", version.ref = "core" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
