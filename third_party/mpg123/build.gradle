@@ -29,7 +29,7 @@ android {
     }
     externalNativeBuild {
         ndkBuild {
-            path 'src/main/jni/MPG123-Android/libmpg123/src/main/jni/Android.mk'
+            path 'src/main/jni/MPG123-Android/Android.mk'
         }
     }
 

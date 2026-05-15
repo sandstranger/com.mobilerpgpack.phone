@@ -39,8 +39,8 @@ else ()
     set(mpg123_LIBRARY "${CMAKE_SOURCE_DIR}/../mpg123/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libmpg123.so")
 endif ()
 
-set(mpg123_INCLUDE_DIR_Android "${CMAKE_SOURCE_DIR}/../mpg123/src/main/jni/MPG123-Android/libmpg123/src/main/jni/mpg123-1.28.2/src/libmpg123")
-set(mpg123_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../mpg123/src/main/jni/MPG123-Android/libmpg123/src/main/jni/mpg123-1.28.2/android")
+set(mpg123_INCLUDE_DIR_Android "${CMAKE_SOURCE_DIR}/../mpg123/src/main/jni/MPG123-Android/src/libmpg123")
+set(mpg123_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../mpg123/src/main/jni/MPG123-Android/android")
 
 if (IS_DEBUG_BUILD)
     set(Vorbis_Vorbis_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libvorbis.so")
