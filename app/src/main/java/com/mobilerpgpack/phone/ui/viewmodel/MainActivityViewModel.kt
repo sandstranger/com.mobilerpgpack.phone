@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.viewmodel
 
+import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.utils.IAssetExtractor
@@ -12,7 +13,7 @@ import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
-class MainActivityViewModel : KoinComponent {
+class MainActivityViewModel : ViewModel(), KoinComponent {
     private val scope : CoroutineScope by inject ()
     private val preferencesStorage : PreferencesStorage by inject()
     @Volatile
