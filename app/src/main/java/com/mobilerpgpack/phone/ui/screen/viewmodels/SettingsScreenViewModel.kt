@@ -19,15 +19,10 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
-
     private val context : Context by inject ()
-
     private val scope : CoroutineScope by inject ()
-
     private val assetsExtractor : IAssetExtractor by inject ()
-
-    private val sourceFolder = context.getExternalFilesDir("")!!
-
+    private val sourceFolder = context.filesDir
     private val rootUserDirectory : File by inject ( named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
 
     @Volatile
