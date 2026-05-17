@@ -22,6 +22,7 @@ import com.mobilerpgpack.phone.ui.items.SetupSystemBars
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.ui.screen.PermissionScreen
 import com.mobilerpgpack.phone.ui.screen.SettingsScreen
+import com.mobilerpgpack.phone.ui.viewmodel.MainActivityViewModel
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.isExternalStoragePermissionGranted
@@ -33,11 +34,13 @@ import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 class MainActivity : ComponentActivity(), KoinComponent {
     private var wasInitialized = false
     private val scope = CoroutineScope(Dispatchers.Main)
+    private val viewModel : MainActivityViewModel by inject ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -46,6 +49,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             finish()
             return
         }
+        viewModel.copyAllAssetsFromApk()
         scope.launch { buildScreensAsync() }
     }
 
