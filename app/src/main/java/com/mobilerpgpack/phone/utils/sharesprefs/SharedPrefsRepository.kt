@@ -199,7 +199,7 @@ open class SharedPrefsRepository {
     }
 
     private companion object {
-        private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
         private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
         private val loadedEntries = mutableMapOf<String, SharedPrefsValue>()
         @Volatile
@@ -210,15 +210,19 @@ open class SharedPrefsRepository {
         suspend fun loadAllEntriesAsync() {
             if (!loadAllEntriesWasCalled) {
                 loadAllEntriesWasCalled = true
-                withContext(Dispatchers.IO) { dao.getAllEntries() }.forEach { entry ->
-                    val existing = loadedEntries[entry.key]
-                    if (existing == null) {
-                        loadedEntries[entry.key] = buildSharedPrefsValue(entry)
-                    } else {
-                        existing.updateEntry(entry)
+                dao.getAllEntries().apply {
+                    withContext(Dispatchers.Main) {
+                        this@apply.forEach { entry ->
+                            val existing = loadedEntries[entry.key]
+                            if (existing == null) {
+                                loadedEntries[entry.key] = buildSharedPrefsValue(entry)
+                            } else {
+                                existing.updateEntry(entry)
+                            }
+                        }
+                        _prefsWasLoaded = true
                     }
                 }
-                _prefsWasLoaded = true
             }
         }
 
