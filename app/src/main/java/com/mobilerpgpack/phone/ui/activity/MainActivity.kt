@@ -58,6 +58,13 @@ class MainActivity : ComponentActivity(), KoinComponent {
         scope.coroutineContext.cancelChildren()
     }
 
+    override fun finish() {
+        if (wasInitialized){
+            viewModel.destroyAllComposeScreens()
+        }
+        super.finish()
+    }
+
     private suspend fun buildScreensAsync(){
         val preferencesStorage : PreferencesStorage = get()
         waitUntil { !preferencesStorage.prefsWasLoaded }
@@ -123,16 +130,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 }
             }
         }
-    }
-
-    override fun finish() {
-        if (wasInitialized){
-            val composeScreens = get <Collection<ComposeScreen>> (
-                named(KoinModulesProvider.ALL_COMPOSE_SCREENS))
-            composeScreens.forEach { it.onMainActivityFinish() }
-            get <IAssetExtractor> ().clearSubscribers()
-        }
-        super.finish()
     }
 
     companion object{

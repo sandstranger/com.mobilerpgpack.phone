@@ -3,12 +3,14 @@ package com.mobilerpgpack.phone.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
+import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -24,6 +26,13 @@ class MainActivityViewModel : ViewModel(), KoinComponent {
             assetsStartedToCopy = true
             scope.launch { copyAllAssetsFromApkAsync() }
         }
+    }
+
+    fun destroyAllComposeScreens(){
+        val composeScreens = get <Collection<ComposeScreen>> (
+            named(KoinModulesProvider.ALL_COMPOSE_SCREENS))
+        composeScreens.forEach { it.onMainActivityFinish() }
+        get <IAssetExtractor> ().clearSubscribers()
     }
 
     private suspend fun copyAllAssetsFromApkAsync(){
