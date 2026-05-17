@@ -327,7 +327,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         viewModelOf(::ModsExporterViewModel)
         viewModelOf(::DownloadViewModel)
         viewModelOf(::SettingsScreenViewModel)
-        singleOf(::MainActivityViewModel)
+        viewModelOf(::MainActivityViewModel)
         singleOf(::SettingsScreen).bind<ComposeScreen>()
         singleOf <IScreenController>(::SDL2ScreenController).withOptions {
             named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
