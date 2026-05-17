@@ -199,12 +199,13 @@ open class SharedPrefsRepository {
     }
 
     private companion object {
+        private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
+        private val loadedEntries = mutableMapOf<String, SharedPrefsValue>()
         @Volatile
         private var loadAllEntriesWasCalled = false
         @Volatile
         private var _prefsWasLoaded = false
-        private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
-        private val loadedEntries = mutableMapOf<String, SharedPrefsValue>()
 
         suspend fun loadAllEntriesAsync() {
             if (!loadAllEntriesWasCalled) {
