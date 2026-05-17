@@ -7,6 +7,8 @@ import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -16,14 +18,15 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 class MainActivityViewModel : ViewModel(), KoinComponent {
-    private val scope : CoroutineScope by inject ()
     private val preferencesStorage : PreferencesStorage by inject()
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     @Volatile
-    private var assetsStartedToCopy = false
+    private var assetsStartedToLoaded = false
 
-    fun copyAllAssetsFromApk(){
-        if (!assetsStartedToCopy) {
-            assetsStartedToCopy = true
+    fun loadAllAssets(){
+        if (!assetsStartedToLoaded) {
+            assetsStartedToLoaded = true
+            scope.launch { preferencesStorage.loadAllEntriesAsync() }
             scope.launch { copyAllAssetsFromApkAsync() }
         }
     }

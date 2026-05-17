@@ -13,14 +13,10 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
 
 class MainApplication : Application() {
-    private lateinit var preferencesStorage : PreferencesStorage
-
     override fun onCreate() {
         super.onCreate()
         setupJna()
         initializeKoin()
-        preferencesStorage = getKoin().get ()
-        preferencesStorage.loadAllEntries()
     }
 
     override fun onTerminate() {
