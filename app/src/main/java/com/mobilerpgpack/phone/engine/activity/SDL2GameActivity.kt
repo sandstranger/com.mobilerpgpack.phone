@@ -25,9 +25,6 @@ class SDL2GameActivity : SDLActivity(), KoinComponent {
         MainActivity.gameActivityStarted = true
         enableEdgeToEdge()
         val preferencesStorage : PreferencesStorage = get()
-        runBlocking {
-            waitUntil { !preferencesStorage.prefsWasLoaded }
-        }
         engineInfo = get (named(preferencesStorage.activeEngineString.value!!))
         engineInfo.apply {
             gameResourcesFound = isResourceCorrect(this@SDL2GameActivity, onCloseDialogBox = { finish() })
