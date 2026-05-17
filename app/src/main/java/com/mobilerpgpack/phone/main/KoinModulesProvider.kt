@@ -120,6 +120,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
 import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
+import com.mobilerpgpack.phone.ui.viewmodel.MainActivityViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
@@ -152,8 +153,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
-    private val externalFilesDir = context.getExternalFilesDir(null)
-
     val allModules : List<Module>
 
     private val mainModule = module {
@@ -176,9 +175,10 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             bind<SDLKeyboard>()
         }
         single <File> {
+            val filesDir = context.filesDir
             val prefsStorage : PreferencesStorage = get()
             val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
-            if (pathToUserFolder.startsWith(externalFilesDir!!.absolutePath)) externalFilesDir
+            if (pathToUserFolder.startsWith(filesDir!!.absolutePath)) filesDir
             else File(pathToUserFolder)
         }.withOptions {
             named(ROOT_USER_DIRECTORY_KEY)
@@ -327,6 +327,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         viewModelOf(::ModsExporterViewModel)
         viewModelOf(::DownloadViewModel)
         viewModelOf(::SettingsScreenViewModel)
+        singleOf(::MainActivityViewModel)
         singleOf(::SettingsScreen).bind<ComposeScreen>()
         singleOf <IScreenController>(::SDL2ScreenController).withOptions {
             named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
