@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             finish()
             return
         }
-        viewModel.copyAllAssetsFromApk()
+        viewModel.loadAllAssets()
         scope.launch { buildScreensAsync() }
     }
 

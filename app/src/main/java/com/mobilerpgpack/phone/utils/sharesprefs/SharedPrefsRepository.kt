@@ -10,10 +10,9 @@ import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent.get
 
 open class SharedPrefsRepository {
-
     val prefsWasLoaded get() = _prefsWasLoaded
 
-    fun loadAllEntries () = SharedPrefsRepository.loadAllEntries()
+    suspend fun loadAllEntriesAsync () = SharedPrefsRepository.loadAllEntriesAsync()
 
     fun <T : Enum<T>> getEnumValue(key: String, enumClass: Class<T>, defaultValue: T): MutableLiveData<T> {
         val result = MutableLiveData<T>()
@@ -204,27 +203,22 @@ open class SharedPrefsRepository {
         private var loadAllEntriesWasCalled = false
         @Volatile
         private var _prefsWasLoaded = false
-        private val scope: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
         private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
         private val loadedEntries = mutableMapOf<String, SharedPrefsValue>()
 
-        private fun loadAllEntries() {
+        suspend fun loadAllEntriesAsync() {
             if (!loadAllEntriesWasCalled) {
                 loadAllEntriesWasCalled = true
-                scope.launch { loadAllEntriesAsync() }
-            }
-        }
-
-        private suspend fun loadAllEntriesAsync() {
-            withContext(Dispatchers.IO) { dao.getAllEntries() }.forEach { entry ->
-                val existing = loadedEntries[entry.key]
-                if (existing == null) {
-                    loadedEntries[entry.key] = buildSharedPrefsValue(entry)
-                } else {
-                    existing.updateEntry(entry)
+                withContext(Dispatchers.IO) { dao.getAllEntries() }.forEach { entry ->
+                    val existing = loadedEntries[entry.key]
+                    if (existing == null) {
+                        loadedEntries[entry.key] = buildSharedPrefsValue(entry)
+                    } else {
+                        existing.updateEntry(entry)
+                    }
                 }
+                _prefsWasLoaded = true
             }
-            _prefsWasLoaded = true
         }
 
         private fun buildSharedPrefsValue(entry: SharedPrefsEntry): SharedPrefsValue {
