@@ -213,11 +213,10 @@ open class SharedPrefsRepository {
                 dao.getAllEntries().apply {
                     withContext(Dispatchers.Main) {
                         this@apply.forEach { entry ->
-                            val existing = loadedEntries[entry.key]
-                            if (existing == null) {
+                            if (!loadedEntries.containsKey(entry.key)) {
                                 loadedEntries[entry.key] = buildSharedPrefsValue(entry)
                             } else {
-                                existing.updateEntry(entry)
+                                loadedEntries[entry.key]!!.updateEntry(entry)
                             }
                         }
                         _prefsWasLoaded = true
