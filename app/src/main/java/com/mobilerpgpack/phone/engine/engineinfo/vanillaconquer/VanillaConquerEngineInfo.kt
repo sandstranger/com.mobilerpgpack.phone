@@ -14,38 +14,27 @@ import java.io.File
 
 class VanillaConquerEngineInfo :
     SDL3EngineInfo("", emptyArray(), EngineTypes.VanillaConquer) {
-
     private val configsDirectory : File by inject { parametersOf("vanilla-conquer") }
-
     private val prefsStorage : VanillaConquerPreferencesStorage by inject (
         named(EngineTypes.VanillaConquer.name))
-
     private val activeGame get() = prefsStorage.activeVanillaConquerGame.value!!
-
     private val redAlertNativeLibs : Array<String> by inject (
         named(VanillaConquerGames.RedAlert.name))
-
     private val tiberianDawnNativeLibs : Array<String> by inject (
         named(VanillaConquerGames.TiberianDawn.name))
 
     override val mouseButtonsEventsCanBeInvoked = true
-
     override val loadGL4ES = false
-
     override val enableGyroscope = false
-
     override val allowedToEnableAngle = false
-
     override val touchFullScreenModeCanBeUsed = false
-
     override val commandLineParams get() = prefsStorage.vanillaConquerCommandLineArgs.value!!
-
+    override val backPressedReleaseDelay = 80L
     override val pathToResource: String
         get() = when (activeGame) {
             VanillaConquerGames.TiberianDawn -> prefsStorage.pathToTiberianDawnResources.value!!
             VanillaConquerGames.RedAlert -> prefsStorage.pathToRedAlertResources.value!!
         }
-
     override val nativeLibraries: Array<String> get() =
         mutableListOf<String>().run {
             this += super.nativeLibraries
@@ -55,29 +44,20 @@ class VanillaConquerEngineInfo :
             }
             toTypedArray()
         }
-
     override val mainLibraryName: String
         get() = when (activeGame) {
             VanillaConquerGames.TiberianDawn -> TIBERIAN_DAWN_NATIVE_LIB_NAME
             VanillaConquerGames.RedAlert -> RED_ALERT_NATIVE_LIB_NAME
         }
-
     override val preferencesStorage: PreferencesStorage get() = prefsStorage
 
     private external fun setPathToConfigsDirectory (pathToConfigsDirectory : String)
-
     private external fun setPathToResources (pathToResource : String)
-
     private external fun setEnableVsyncState (enableVsync : Boolean)
-
     private external fun setUseDoseModeState (useDosMode : Boolean)
-
     private external fun setFrameRateLimit (frameRateLimit : Int)
-
     private external fun setOnScreenControlsState (onscreenControlsActive : Boolean)
-
     private external fun setMouseSensitivity (mouseSensitivity : Int)
-
     private external fun setControllerPointerSpeed (controllerPointerSpeed : Int)
 
     override fun initialize(activity: ComponentActivity) {

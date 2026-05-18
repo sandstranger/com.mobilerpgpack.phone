@@ -32,6 +32,8 @@ abstract class SDL3EngineInfo(
 
     constructor(activeEngineType: EngineTypes) : this("", emptyArray(), activeEngineType)
 
+    protected open val backPressedReleaseDelay = 50L
+
     private val mouseIcon: SDL3MouseIcon by inject()
 
     final override val gameActivityClazz: Class<*> = SDL3GameActivity::class.java
@@ -71,7 +73,7 @@ abstract class SDL3EngineInfo(
 
     final override fun onBackPressed(): Boolean {
         if(!super.onBackPressed()){
-            onKeyDown(KeyEvent.KEYCODE_ESCAPE, delayBeforeKeyRelease = 50L)
+            onKeyDown(KeyEvent.KEYCODE_ESCAPE, delayBeforeKeyRelease = backPressedReleaseDelay)
         }
         return true
     }
