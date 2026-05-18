@@ -21,8 +21,8 @@ android {
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
-                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS",
-                        "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
+                        "-DCMAKE_CXX_FLAGS=$build_flags.CMAKE_CXXFLAGS -fno-lto",
+                        "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS -fno-lto",
                         "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
                         "-DBUILD_SHARED_LIBS=true","$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
