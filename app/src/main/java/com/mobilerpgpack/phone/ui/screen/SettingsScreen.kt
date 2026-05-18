@@ -285,7 +285,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         val context = LocalContext.current
         val preferencesStorage : PreferencesStorage = koinInject()
         val settingsViewModel : SettingsScreenViewModel = koinViewModel ()
-        val sourceFolder = remember { context.getExternalFilesDir("")!!.absolutePath }
+        val sourceFolder = remember { context.filesDir.absolutePath }
         val pathToUserFolder =preferencesStorage.pathToRootUserFolder.getComposableValue()
         var showCopyContentDialog by rememberSaveable { mutableStateOf(false) }
 
