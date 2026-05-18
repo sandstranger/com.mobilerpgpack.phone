@@ -21,13 +21,12 @@ class MainApplication : Application() {
 
     override fun onTerminate() {
         super.onTerminate()
-        globalScope.coroutineContext.cancelChildren()
         val translationManager : TranslationManager = getKoin().get ()
         translationManager.terminate()
     }
 
     private fun initializeKoin(){
-        val koinModulesProvider = KoinModulesProvider(this@MainApplication,globalScope)
+        val koinModulesProvider = KoinModulesProvider(this@MainApplication)
         startKoin{
             androidLogger()
             androidContext(this@MainApplication)
@@ -36,8 +35,6 @@ class MainApplication : Application() {
     }
 
     private companion object{
-        val globalScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
         private fun setupJna(){
             System.setProperty("jna.nosys", "true")
             System.setProperty("jna.nounpack", "true")

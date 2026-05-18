@@ -148,15 +148,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
-class KoinModulesProvider(private val context: Context, private val scope: CoroutineScope) : KoinComponent  {
+class KoinModulesProvider(private val context: Context) : KoinComponent  {
     val allModules : List<Module>
 
     private val mainModule = module {
         single<Context> { context }.withOptions { createdAtStart() }
-        single<CoroutineScope> { scope }.withOptions {
-            createdAtStart()
-            named(COROUTINES_SCOPE)
-        }
         single<PreferencesStorage> { PreferencesStorage() }.withOptions { createdAtStart() }
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
         singleOf <IAssetExtractor> (::AssetExtractor)
@@ -203,8 +199,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(TARGET_LOCALE_NAMES_KEY)
             createdAtStart()
         }
-
-        factory { CoroutineScope(Dispatchers.IO) }.withOptions { named(COROUTINES_SCOPE) }
 
         factory { (sourceLocale: String, targetLocale: String) ->
             MLKitTranslationModel.buildMlkitTranslator(sourceLocale, targetLocale) }
@@ -788,7 +782,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         const val ROOT_USER_DIRECTORY_KEY = "root_user_directory"
         const val ALL_COMPOSE_SCREENS = "all_compose_screens"
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"
-        const val COROUTINES_SCOPE = "courotines_scope"
         const val ACTIVE_TRANSLATION_MODEL_KEY = "active_translation_model"
     }
 }
