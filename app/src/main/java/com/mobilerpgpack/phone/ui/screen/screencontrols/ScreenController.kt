@@ -67,8 +67,6 @@ import androidx.lifecycle.MutableLiveData
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
-import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.getButtonsColors
 import com.mobilerpgpack.phone.ui.getOnPrimaryColor
 import com.mobilerpgpack.phone.ui.getOnSurfaceColor
@@ -419,8 +417,7 @@ abstract class ScreenController : IScreenController {
             this.isEditMode = false
             val showOnlyVirtualKeyboardButton = remember {
                 preferencesStorage.hideScreenControls.getNotNullValue() && preferencesStorage.alwaysShowKeyboardButton.getNotNullValue() }
-            val sdlKeyboard = koinInject<SDLKeyboard>(named(if (engineInfo is SDL2EngineInfo) KeyboardType.SDL2Keyboard.name
-            else KeyboardType.SDL3Keyboard.name))
+            val sdlKeyboard = koinInject<SDLKeyboard>(named(KeyboardType.SDL3Keyboard.name))
             val keyboardInputType = remember { keyboardInputType }
 
             Box(modifier = Modifier.fillMaxSize()) {

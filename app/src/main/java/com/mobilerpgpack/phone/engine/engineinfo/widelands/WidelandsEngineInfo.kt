@@ -1,13 +1,13 @@
 package com.mobilerpgpack.phone.engine.engineinfo.widelands
 
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.sun.jna.Native
 import java.io.File
 
 class WidelandsEngineInfo (mainEngineLib: String,
                            allLibs: Array<String>) :
-    SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.Widelands) {
+    SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Widelands) {
 
     private val pathToWidelandsRootFolder get() =
         preferencesStorage.pathToRootUserFolder.value!! + File.separator + "widelands"

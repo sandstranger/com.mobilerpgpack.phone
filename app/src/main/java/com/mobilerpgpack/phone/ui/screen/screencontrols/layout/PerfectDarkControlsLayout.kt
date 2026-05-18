@@ -11,14 +11,15 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisi
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.PerfectDark,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -31,21 +32,21 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         offsetYPercent = 0.02f,
         sizePercent = 0.055f,
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.PerfectDark,
         offsetXPercent = 0.21f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
         showInQuickPanel = true
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         EngineTypes.PerfectDark,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
         stickType = StickType.RightStick,
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.PerfectDark,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
@@ -58,7 +59,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         sizePercent = 0.05f,
         buttonResId = R.drawable.quick_panel,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "attack",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.8f,
@@ -69,7 +70,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         consumeTouchEventsByDefault = false,
         ignoreOutOfBoundsTouchEvents = true
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "next_weapon",
         EngineTypes.PerfectDark,
         wheelUp = false,
@@ -78,7 +79,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         sizePercent = 0.06f,
         buttonResId = R.drawable.next_weapon,
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "prev_weapon",
         EngineTypes.PerfectDark,
         wheelUp = true,
@@ -87,7 +88,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         sizePercent = 0.06f,
         buttonResId = R.drawable.prev_weapon,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.99f,
@@ -96,7 +97,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "use",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.97f,
@@ -105,7 +106,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_E
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "aim_mode",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.89f,
@@ -115,7 +116,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_Z,
         useToggle = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "reload",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.79f,
@@ -124,7 +125,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         buttonResId = R.drawable.machine_gun_magazine,
         sdlKeyEvent = KeyEvent.KEYCODE_R
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "fire_mode",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.99f,
@@ -133,7 +134,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         buttonResId = R.drawable.reload_gun,
         sdlKeyEvent = KeyEvent.KEYCODE_F
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "radial_menu",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.99f,
@@ -143,7 +144,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_Q,
         useToggle = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "full_crouch",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.69f,
@@ -152,7 +153,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         buttonResId = R.drawable.smash_arrows,
         sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "half_crouch",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.6f,
@@ -162,7 +163,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.PerfectDark,
         offsetXPercent = 0.76f,
         offsetYPercent = 0.005f,
@@ -178,7 +179,7 @@ val perfectDarkAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = li
     ))
 
 val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.PerfectDark,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -186,14 +187,14 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.PerfectDark,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         EngineTypes.PerfectDark,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.54f,
@@ -201,7 +202,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         stickType = StickType.RightStick,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.PerfectDark,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
@@ -217,7 +218,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "attack",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.72f,
@@ -229,7 +230,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         ignoreOutOfBoundsTouchEvents = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "next_weapon",
         EngineTypes.PerfectDark,
         wheelUp = false,
@@ -239,7 +240,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         buttonResId = R.drawable.next_weapon,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "prev_weapon",
         EngineTypes.PerfectDark,
         wheelUp = true,
@@ -249,7 +250,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         buttonResId = R.drawable.prev_weapon,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.99f,
@@ -259,7 +260,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "use",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.97f,
@@ -269,7 +270,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_E,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "aim_mode",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.72f,
@@ -280,7 +281,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         useToggle = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "reload",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.73f,
@@ -290,7 +291,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_R,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "fire_mode",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.99f,
@@ -300,7 +301,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_F,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "radial_menu",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.99f,
@@ -311,7 +312,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         useToggle = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "full_crouch",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.63f,
@@ -321,7 +322,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "half_crouch",
         EngineTypes.PerfectDark,
         offsetXPercent = 0.53f,
@@ -332,7 +333,7 @@ val perfectDarkOnScreenStickControlsLayout: Collection<IScreenControlsView> = li
         controlsType = ControlsType.OnScreenStick
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.PerfectDark,
         offsetXPercent = 0.76f,
         offsetYPercent = 0.005f,

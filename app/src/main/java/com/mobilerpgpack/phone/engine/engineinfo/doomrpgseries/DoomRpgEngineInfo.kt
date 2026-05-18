@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.sun.jna.Native
-import org.libsdl.app.SDLSurface
+import org.libsdl3.app.SDLSurface
 
 class DoomRpgEngineInfo(
     mainEngineLib: String,

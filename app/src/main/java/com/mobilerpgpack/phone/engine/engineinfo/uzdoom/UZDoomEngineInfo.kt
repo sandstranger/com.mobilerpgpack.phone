@@ -1,9 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
-import android.system.Os
-import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.behFileCanBeUsed
@@ -12,14 +10,13 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.playingRecordsFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.xlatFileCanBeUsed
 import com.sun.jna.Native
-import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
 class UZDoomEngineInfo (mainEngineLib: String,
                         allLibs: Array<String>) :
-    SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.UZDoom) {
+    SDL3EngineInfo(mainEngineLib, allLibs, activeEngineType = EngineTypes.UZDoom) {
 
     private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
 

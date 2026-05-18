@@ -3,7 +3,6 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLMouseWheelButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
 
 interface IScreenControlsView {
@@ -17,8 +16,7 @@ val IScreenControlsView.isHideControlsButton get() = this is UpdateScreenControl
 
 val IScreenControlsView.isUpdateQuickPanelStateButton get() = this is UpdateQuickPanelVisibilityImageButton
 
-val IScreenControlsView.isMouseButton get() = this is SDL3MouseImageButton || this is SDL2MouseImageButton ||
-        this is SDLMouseWheelButton
+val IScreenControlsView.isMouseButton get() = this is SDL3MouseImageButton || this is SDLMouseWheelButton
 
 val IScreenControlsView.renderView : Boolean
     get() {

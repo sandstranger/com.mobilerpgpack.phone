@@ -25,7 +25,6 @@ dependencyResolutionManagement {
 rootProject.name = "Classic Core"
 include ':app'
 include ':third_party:openal'
-include ':third_party:sdl2:android-project:app'
 include ':third_party:sdl3:android-project:app'
 include ':third_party:sdl2-mixer'
 include ':third_party:fluidsynth'
@@ -62,3 +61,4 @@ include ':third_party:glob'
 include ':third_party:ogg'
 include ':third_party:angle'
 include ':third_party:openssl'
+include ':third_party:sdl2-compat'

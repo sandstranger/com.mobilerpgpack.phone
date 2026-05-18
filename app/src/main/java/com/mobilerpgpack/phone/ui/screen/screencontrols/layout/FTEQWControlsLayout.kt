@@ -11,15 +11,15 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisi
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.FTEQW,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -34,21 +34,21 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.055f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.FTEQW,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.FTEQW,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.FTEQW,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -65,7 +65,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.quick_panel,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "zero_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.16f,
@@ -76,7 +76,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "first_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.22f,
@@ -87,7 +87,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "second_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.28f,
@@ -98,7 +98,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "third_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.34f,
@@ -109,7 +109,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "fourth_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.4f,
@@ -120,7 +120,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "five_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.46f,
@@ -131,7 +131,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "six_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.22f,
@@ -142,7 +142,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "seven_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.28f,
@@ -153,7 +153,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "eight_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.34f,
@@ -164,7 +164,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "nine_number",
         EngineTypes.FTEQW,
         offsetXPercent = 0.4f,
@@ -175,7 +175,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "open_console",
         EngineTypes.FTEQW,
         offsetXPercent = 0.46f,
@@ -186,7 +186,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "previous_item",
         EngineTypes.FTEQW,
         offsetXPercent = 0.22f,
@@ -197,7 +197,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "next_item",
         EngineTypes.FTEQW,
         offsetXPercent = 0.28f,
@@ -208,7 +208,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "swim_up",
         EngineTypes.FTEQW,
         offsetXPercent = 0.95f,
@@ -218,7 +218,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_Q,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "swim_down",
         EngineTypes.FTEQW,
         offsetXPercent = 0.95f,
@@ -228,7 +228,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_Z,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "drop_item",
         EngineTypes.FTEQW,
         offsetXPercent = 0.34f,
@@ -239,7 +239,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "help_objectives",
         EngineTypes.FTEQW,
         offsetXPercent = 0.4f,
@@ -250,7 +250,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "info_frag",
         EngineTypes.FTEQW,
         offsetXPercent = 0.22f,
@@ -261,7 +261,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "torch",
         EngineTypes.FTEQW,
         offsetXPercent = 0.28f,
@@ -272,7 +272,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "qrtz_flask",
         EngineTypes.FTEQW,
         offsetXPercent = 0.34f,
@@ -283,7 +283,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "mystic_urn",
         EngineTypes.FTEQW,
         offsetXPercent = 0.4f,
@@ -294,7 +294,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "krater",
         EngineTypes.FTEQW,
         offsetXPercent = 0.22f,
@@ -305,7 +305,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "chaos_devc",
         EngineTypes.FTEQW,
         offsetXPercent = 0.28f,
@@ -316,7 +316,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "tome_power",
         EngineTypes.FTEQW,
         offsetXPercent = 0.34f,
@@ -327,7 +327,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "attack",
         EngineTypes.FTEQW,
         offsetXPercent = 0.8f,
@@ -339,7 +339,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         ignoreOutOfBoundsTouchEvents = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseImageButton(
+    SDL3MouseImageButton(
         "quake3_zoom",
         EngineTypes.FTEQW,
         offsetXPercent = 0.72f,
@@ -351,7 +351,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         useToggle = true,
         isDeleted = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "lift_item",
         EngineTypes.FTEQW,
         offsetXPercent = 0.72f,
@@ -362,7 +362,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "next_weapon",
         EngineTypes.FTEQW,
         wheelUp = true,
@@ -372,7 +372,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.next_weapon,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "prev_weapon",
         EngineTypes.FTEQW,
         wheelUp = false,
@@ -382,7 +382,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.prev_weapon,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "autorun",
         EngineTypes.FTEQW,
         offsetXPercent = 0.6f,
@@ -393,7 +393,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         useToggle = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.FTEQW,
         offsetXPercent = 0.99f,
@@ -403,7 +403,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quick_save",
         EngineTypes.FTEQW,
         offsetXPercent = 0.75f,
@@ -413,7 +413,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F6,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quick_load",
         EngineTypes.FTEQW,
         offsetXPercent = 0.83f,
@@ -423,7 +423,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F9,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "inventory",
         EngineTypes.FTEQW,
         offsetXPercent = 0.93f,
@@ -433,7 +433,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_I,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "use",
         EngineTypes.FTEQW,
         offsetXPercent = 0.93f,
@@ -443,7 +443,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_E,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "jump",
         EngineTypes.FTEQW,
         offsetXPercent = 0.87f,
@@ -453,7 +453,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "crouch",
         EngineTypes.FTEQW,
         offsetXPercent = 0.78f,
@@ -464,7 +464,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         useToggle = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_zoom",
         EngineTypes.FTEQW,
         offsetXPercent = 0.69f,
@@ -474,7 +474,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F11,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "autorun",
         EngineTypes.FTEQW,
         offsetXPercent = 0.60f,
@@ -486,7 +486,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         controlsType = ControlsType.OnScreenStick
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.FTEQW,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,

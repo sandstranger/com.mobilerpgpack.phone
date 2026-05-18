@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import com.sun.jna.Native
@@ -12,18 +12,12 @@ abstract class DoomRPGSeriesEngineInfo(
     mainEngineLib: String,
     allLibs: Array<String>,
     activeEngineType: EngineTypes) :
-    SDL2EngineInfo(mainEngineLib, allLibs, activeEngineType) {
-
+    SDL3EngineInfo(mainEngineLib, allLibs, activeEngineType) {
     private val translationManager: ITranslationManager by inject()
-
     final override val mouseButtonsEventsCanBeInvoked: Boolean = true
-
     override val requiredResourceExtensions = listOf(".ipa", ".IPA")
-
     final override val touchFullScreenModeCanBeUsed: Boolean = false
-
     final override val keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
-
     final override val enableGyroscope = false
 
     private external fun setEnableSDLTTFState (enableSDLTTF : Boolean)

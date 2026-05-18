@@ -5,9 +5,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLOnScreenStick
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
-import com.sun.jna.Native
-import org.libsdl3.app.SDLControllerManager
 
 class SDL3OnScreenStick(engineType: EngineTypes,
                         stickType: StickType = StickType.LeftStick,

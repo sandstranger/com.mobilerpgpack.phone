@@ -50,10 +50,10 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':third_party:sdl2:android-project:app:build'
+preBuild.dependsOn ':third_party:sdl2-compat:build'
 
 dependencies {
-    implementation(project(":third_party:sdl2:android-project:app"))
+    implementation(project(":third_party:sdl2-compat"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

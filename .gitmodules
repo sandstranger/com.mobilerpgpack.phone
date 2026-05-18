@@ -1,9 +1,6 @@
 [submodule "third_party/openal/src/main/jni/openal"]
 	path = third_party/openal/src/main/jni/openal
 url=https://github.com/kcat/openal-soft.git
-[submodule "third_party/sdl2"]
-	path = third_party/sdl2
-	url = https://github.com/sandstranger/SDL.git
 [submodule "app/src/main/jni/WolfensteinRPG-RE"]
 	path = app/src/main/jni/WolfensteinRPG-RE
 	url = https://github.com/sandstranger/WolfensteinRPG-RE.git
@@ -160,3 +157,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/sse2neon"]
 	path = third_party/sse2neon
 	url = https://github.com/DLTcollab/sse2neon.git
+[submodule "third_party/sdl2-compat/src/main/jni/sdl2-compat"]
+	path = third_party/sdl2-compat/src/main/jni/sdl2-compat
+	url = https://github.com/sandstranger/sdl2-compat.git

@@ -11,14 +11,15 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisi
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf(
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.PsyDoom,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -31,13 +32,13 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         offsetYPercent = 0.02f,
         sizePercent = 0.055f,
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.PsyDoom,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.PsyDoom,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
@@ -50,7 +51,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sizePercent = 0.05f,
         buttonResId = R.drawable.quick_panel,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "first_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.16f,
@@ -60,7 +61,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_1,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "second_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
@@ -70,7 +71,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_2,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "third_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.28f,
@@ -80,7 +81,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_3,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "fourth_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.34f,
@@ -90,7 +91,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_4,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "five_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.4f,
@@ -100,7 +101,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_5,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "six_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.46f,
@@ -110,7 +111,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_6,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "seven_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
@@ -120,7 +121,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_7,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "eight_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.28f,
@@ -130,7 +131,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_8,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "delete",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.34f,
@@ -140,7 +141,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_DEL,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "pan",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
@@ -150,7 +151,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_F,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "zoom_in",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.28f,
@@ -160,7 +161,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_EQUALS,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "zoom_out",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.34f,
@@ -170,7 +171,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_MINUS,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "demo_player",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
@@ -180,7 +181,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_V,
         showInQuickPanel = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "attack",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.8f,
@@ -191,7 +192,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         consumeTouchEventsByDefault = false,
         ignoreOutOfBoundsTouchEvents = true
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "next_weapon",
         EngineTypes.PsyDoom,
         wheelUp = true,
@@ -200,7 +201,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sizePercent = 0.06f,
         buttonResId = R.drawable.next_weapon,
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "prev_weapon",
         EngineTypes.PsyDoom,
         wheelUp = false,
@@ -209,7 +210,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sizePercent = 0.06f,
         buttonResId = R.drawable.prev_weapon,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "autorun",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.72f,
@@ -218,7 +219,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_CAPS_LOCK,
         buttonResId = R.drawable.run,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.99f,
@@ -227,7 +228,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quick_save",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.75f,
@@ -236,7 +237,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         buttonResId = R.drawable.save,
         sdlKeyEvent = KeyEvent.KEYCODE_F5
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quick_load",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.83f,
@@ -245,7 +246,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         buttonResId = R.drawable.load,
         sdlKeyEvent = KeyEvent.KEYCODE_F9
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "use",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.97f,
@@ -254,7 +255,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         buttonResId = R.drawable.use,
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "automap",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.83f,
@@ -264,7 +265,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.PsyDoom,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,
@@ -280,7 +281,7 @@ val psyDoomAbsoluteTouchControlsLayout: Collection<IScreenControlsView> = listOf
     ))
 
 val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.PsyDoom,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -295,21 +296,21 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         sizePercent = 0.055f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.PsyDoom,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.PsyDoom,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
         sizePercent = 0.21f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.PsyDoom,
         stickType = StickType.RightStick,
         offsetXPercent = 0.8f,
@@ -325,7 +326,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         buttonResId = R.drawable.quick_panel,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "first_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.16f,
@@ -336,7 +337,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "second_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
@@ -347,7 +348,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "third_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.28f,
@@ -358,7 +359,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "fourth_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.34f,
@@ -369,7 +370,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "five_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.4f,
@@ -380,7 +381,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "six_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.46f,
@@ -391,7 +392,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "seven_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
@@ -402,7 +403,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "eight_number",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.28f,
@@ -413,7 +414,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "delete",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.34f,
@@ -424,7 +425,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "pan",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
@@ -435,7 +436,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "zoom_in",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.28f,
@@ -446,7 +447,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "zoom_out",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.34f,
@@ -457,7 +458,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "demo_player",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.22f,
@@ -468,7 +469,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "attack",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.7f,
@@ -480,7 +481,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         ignoreOutOfBoundsTouchEvents = true,
         consumeTouchEventsByDefault = false
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "next_weapon",
         EngineTypes.PsyDoom,
         wheelUp = true,
@@ -490,7 +491,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         buttonResId = R.drawable.next_weapon,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "prev_weapon",
         EngineTypes.PsyDoom,
         wheelUp = false,
@@ -500,7 +501,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         buttonResId = R.drawable.prev_weapon,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "autorun",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.62f,
@@ -510,7 +511,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         buttonResId = R.drawable.run,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.99f,
@@ -520,7 +521,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quick_save",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.75f,
@@ -530,7 +531,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_F5,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quick_load",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.83f,
@@ -540,7 +541,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_F9,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "use",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.99f,
@@ -550,7 +551,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "automap",
         EngineTypes.PsyDoom,
         offsetXPercent = 0.73f,
@@ -561,7 +562,7 @@ val psyDoomOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf
         controlsType = ControlsType.OnScreenStick
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.PsyDoom,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.15f,

@@ -15,15 +15,17 @@ if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(-fno-lto)
 endif()
 
-set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/sdl2)
-set(SDL2_INCLUDE_DIR ${SDL_LOCATION}/include)
+set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/sdl2-compat CACHE STRING "" FORCE)
+set(SDL2_INCLUDE_DIR "${SDL_LOCATION}/src/main/jni/sdl2-compat/include" CACHE STRING "" FORCE)
 
 set(SDL2_INCLUDE_DIRS ${SDL2_INCLUDE_DIR} CACHE STRING "" FORCE)
 
 if (IS_DEBUG_BUILD)
-    set(SDL2_LIBRARY ${SDL_LOCATION}/android-project/app/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL2.so)
+    set(SDL2_LIBRARY "${SDL_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libSDL2.so"
+            CACHE STRING "" FORCE)
 else()
-    set(SDL2_LIBRARY ${SDL_LOCATION}/android-project/app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2.so)
+    set(SDL2_LIBRARY "${SDL_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL2.so"
+            CACHE STRING "" FORCE)
 endif ()
 
 set(SDL2_LIBRARIES ${SDL2_LIBRARY} CACHE STRING "" FORCE)
@@ -421,16 +423,6 @@ add_library(SDL3Helper SHARED)
 target_sources(SDL3Helper PRIVATE "${APP_ROOT_DIR}/SDL3Helper.c")
 target_include_directories(SDL3Helper PRIVATE ${SDL3_INCLUDE_DIR})
 target_link_libraries(SDL3Helper PRIVATE ${SDL3_LIBRARY})
-
-add_library(SDL2VirtualController SHARED)
-target_sources(SDL2VirtualController PRIVATE "${APP_ROOT_DIR}/SDL2VirtualController.c")
-target_include_directories(SDL2VirtualController PRIVATE ${SDL2_INCLUDE_DIR})
-target_link_libraries(SDL2VirtualController PRIVATE ${SDL2_LIBRARY})
-
-add_library(SDL2GyroInput SHARED)
-target_sources(SDL2GyroInput PRIVATE "${APP_ROOT_DIR}/SDL2GyroInput.c")
-target_include_directories(SDL2GyroInput PRIVATE ${SDL2_INCLUDE_DIR})
-target_link_libraries(SDL2GyroInput PRIVATE ${SDL2_LIBRARY})
 
 add_library(SDL3GyroInput SHARED)
 target_sources(SDL3GyroInput PRIVATE "${APP_ROOT_DIR}/SDL3GyroInput.c")
