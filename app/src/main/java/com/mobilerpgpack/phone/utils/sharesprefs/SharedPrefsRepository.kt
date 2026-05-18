@@ -2,11 +2,12 @@ package com.mobilerpgpack.phone.utils.sharesprefs
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.qualifier.named
 import org.koin.java.KoinJavaComponent.get
 
 open class SharedPrefsRepository {
@@ -199,7 +200,8 @@ open class SharedPrefsRepository {
     }
 
     private companion object {
-        private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+        private val scope : CoroutineScope = get(CoroutineScope::class.java,
+            named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
         private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
         private val loadedEntries = mutableMapOf<String, SharedPrefsValue>()
         @Volatile

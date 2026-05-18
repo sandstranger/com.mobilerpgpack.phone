@@ -1,12 +1,10 @@
 package com.mobilerpgpack.phone.translator.models
 
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.translator.TranslationManager
-import com.mobilerpgpack.phone.utils.AssetExtractor
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
 import org.koin.core.component.KoinComponent
@@ -14,8 +12,9 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
-class OpusMtTranslationModel() : ITranslationModel, KoinComponent {
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+class OpusMtTranslationModel : ITranslationModel, KoinComponent {
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
     private val lockObject = Any()
     private val opusMtTranslator : OpusMtTranslator = get()
     private val assetExtractor : IAssetExtractor by inject()

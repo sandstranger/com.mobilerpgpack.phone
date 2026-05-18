@@ -19,7 +19,8 @@ import java.io.File
 
 class MainActivityViewModel : ViewModel(), KoinComponent {
     private val preferencesStorage : PreferencesStorage by inject()
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
     @Volatile
     private var assetsStartedToLoaded = false
 

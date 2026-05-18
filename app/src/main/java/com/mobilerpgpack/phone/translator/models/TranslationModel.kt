@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.isWifiConnected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -9,9 +10,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.qualifier.named
+import kotlin.getValue
 
 abstract class TranslationModel (private val context : Context,
-                                 allowDownloadingOverMobile : Boolean = false ) : ITranslationModel {
+                                 allowDownloadingOverMobile : Boolean = false ) :
+    KoinComponent, ITranslationModel {
     private var currentDownload: Deferred<Boolean>? = null
     private val downloadMutex = Mutex()
 
@@ -20,7 +26,8 @@ abstract class TranslationModel (private val context : Context,
         protected set
 
     protected val lockObject = Any()
-    protected val scope = CoroutineScope(Dispatchers.IO)
+    protected val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
 
     protected abstract val supportedLocales : Collection<String>
 

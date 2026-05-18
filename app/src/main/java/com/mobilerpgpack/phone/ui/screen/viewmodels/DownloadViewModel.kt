@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.translator.ITranslationModelsDownloader
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import kotlinx.coroutines.CoroutineScope
@@ -16,9 +17,11 @@ import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
 class DownloadViewModel : ViewModel(), KoinComponent {
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
     private val assetsExtractor : IAssetExtractor by inject ()
     private val translationModelsDownloader : ITranslationModelsDownloader = get()
     private var currentTranslationModelType : String? = null

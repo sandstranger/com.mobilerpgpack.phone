@@ -22,7 +22,8 @@ import java.io.File
 
 internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
     private val context : Context by inject ()
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
     private val assetsExtractor : IAssetExtractor by inject ()
     private val sourceFolder = context.filesDir
     private val rootUserDirectory : File by inject ( named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
