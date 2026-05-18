@@ -15,7 +15,10 @@ import com.sun.jna.Library
 import com.sun.jna.Native
 import com.sun.jna.Pointer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -62,7 +65,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
 
     private val db: TranslationDatabase by inject ()
 
-    private val scope : CoroutineScope by inject()
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val intervalsTranslator : IntervalMarkerTranslator by inject()
 
@@ -132,6 +135,7 @@ class TranslationManager : KoinComponent, ITranslationManager {
         translationModels.values.forEach {
             it.release()
         }
+        scope.coroutineContext.cancelChildren()
     }
 
     override fun isTranslationSupportedAsFlow() = isTranslationSupportedFlow
