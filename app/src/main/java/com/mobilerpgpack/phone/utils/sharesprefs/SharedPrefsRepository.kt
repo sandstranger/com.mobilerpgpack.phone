@@ -201,7 +201,7 @@ open class SharedPrefsRepository {
 
     private companion object {
         private val scope : CoroutineScope = get(CoroutineScope::class.java,
-            named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
+            named(KoinModulesProvider.MAIN_THREAD_COROUTINE_KEY))
         private val dao: SharedPrefsDao = get(SharedPrefsDao::class.java)
         private val loadedEntries = mutableMapOf<String, SharedPrefsValue>()
         @Volatile
