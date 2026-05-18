@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.translator
 import android.content.res.Resources
 import android.os.Build
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.ACTIVE_TRANSLATION_MODEL_KEY
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.TARGET_LOCALE_NAMES_KEY
 import com.mobilerpgpack.phone.main.TRANSLATOR_NATIVE_LIB_NAME
@@ -65,7 +66,8 @@ class TranslationManager : KoinComponent, ITranslationManager {
 
     private val db: TranslationDatabase by inject ()
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
 
     private val intervalsTranslator : IntervalMarkerTranslator by inject()
 

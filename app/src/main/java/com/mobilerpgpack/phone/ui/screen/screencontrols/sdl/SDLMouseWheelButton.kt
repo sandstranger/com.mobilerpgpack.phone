@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl
 import android.view.KeyEvent
 import android.view.MotionEvent
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.MouseViewState
@@ -17,6 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
 abstract class SDLMouseWheelButton(
     id: String,
@@ -43,7 +45,8 @@ abstract class SDLMouseWheelButton(
     private val wheelValue get() = if (wheelUp) preferencesStorage.zoomSensitivity.value!! else -1f *
             preferencesStorage.zoomSensitivity.value!!
 
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.MAIN_THREAD_COROUTINE_KEY))
 
     private val mouseViewState = MouseViewState(
         id,

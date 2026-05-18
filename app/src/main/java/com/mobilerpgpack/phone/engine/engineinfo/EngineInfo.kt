@@ -32,6 +32,7 @@ import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.GlesRenderVersions
 import com.mobilerpgpack.phone.main.C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.angleLibs
@@ -75,7 +76,8 @@ abstract class EngineInfo(
 
     private var layoutBinding : GameLayoutBinding? = null
 
-    private val mainThreadScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private val mainThreadScope : CoroutineScope by inject (
+        named(KoinModulesProvider.MAIN_THREAD_COROUTINE_KEY))
 
     protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
 

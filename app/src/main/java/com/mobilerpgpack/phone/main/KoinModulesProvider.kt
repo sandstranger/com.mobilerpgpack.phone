@@ -130,6 +130,7 @@ import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
 import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -171,6 +172,12 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             named(ROOT_USER_DIRECTORY_KEY)
         }
         factory <SDL3GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL3GyroInput(ctx, engineInfo) }
+        factory <CoroutineScope> { CoroutineScope(Dispatchers.IO + SupervisorJob()) }.withOptions {
+            named(BACKGROUND_THREAD_COROUTINE_KEY)
+        }
+        factory <CoroutineScope> { CoroutineScope(Dispatchers.Main + SupervisorJob()) }.withOptions {
+            named(MAIN_THREAD_COROUTINE_KEY)
+        }
         factory <File>{ (pathToFile : String) -> File(get<File>(named(ROOT_USER_DIRECTORY_KEY)),
             pathToFile) }
         singleOf(::VirtualControllerJnaLayer)
@@ -783,6 +790,8 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         const val ALL_COMPOSE_SCREENS = "all_compose_screens"
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"
         const val ACTIVE_TRANSLATION_MODEL_KEY = "active_translation_model"
+        const val BACKGROUND_THREAD_COROUTINE_KEY = "background_thread_coroutine"
+        const val MAIN_THREAD_COROUTINE_KEY = "main_thread_coroutine"
     }
 }
 

@@ -1,14 +1,15 @@
 package com.mobilerpgpack.phone.utils
 
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
-internal class VirtualControllerJnaLayer {
+internal class VirtualControllerJnaLayer : KoinComponent {
     @Volatile
     private var jnaWasInit = false
     @Volatile
@@ -16,7 +17,8 @@ internal class VirtualControllerJnaLayer {
     @Volatile
     private var joystickRegisteredInSDL = false
 
-    private val scope : CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
 
     private external fun createVirtualController()
 

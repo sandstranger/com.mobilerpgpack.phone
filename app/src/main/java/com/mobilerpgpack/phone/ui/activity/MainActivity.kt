@@ -39,7 +39,8 @@ import org.koin.core.qualifier.named
 
 class MainActivity : ComponentActivity(), KoinComponent {
     private var wasInitialized = false
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.MAIN_THREAD_COROUTINE_KEY))
     private val viewModel : MainActivityViewModel by inject ()
 
     override fun onCreate(savedInstanceState: Bundle?) {

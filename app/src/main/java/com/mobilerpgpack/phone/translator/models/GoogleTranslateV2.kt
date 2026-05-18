@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.translator.models
 
 import android.content.Context
 import com.google.gson.annotations.SerializedName
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.isInternetAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,12 +11,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelChildren
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
+import kotlin.getValue
 
 class GoogleTranslateV2 (private val context : Context) : ITranslationModel,KoinComponent {
     private val supportedLocales = hashSetOf("af","sq","am","ar","hy","az","eu","be","bn","bs","bg","ca","ceb", "zh",
@@ -24,7 +27,8 @@ class GoogleTranslateV2 (private val context : Context) : ITranslationModel,Koin
         "ms","ml","mt","mi","mr","mn","my","ne","no","ny","ps","fa","pl","pt","pa","ro","ru","sm","gd","sr","st","sn","sd",
         "si","sk","sl","so","es","su","sw","sv","tl","tg","ta","te","th","tr","uk","ur","uz","vi","cy","xh","yi","yo","zu")
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
     private val retrofit : Retrofit = get { parametersOf("https://translate.googleapis.com/") }
     private val translateService = retrofit.create(GoogleTranslateApi::class.java)
     override val translationType: TranslationType = TranslationType.GoogleTranslate
