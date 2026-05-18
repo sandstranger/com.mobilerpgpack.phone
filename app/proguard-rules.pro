@@ -20,10 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontobfuscate
--keep class org.libsdl.app.** { *; }
--keepclassmembers class org.libsdl.app.SDLActivity {
-    public static <methods>;
-}
 -keep class org.libsdl3.app.** { *; }
 -keepclassmembers class org.libsdl3.app.SDLActivity {
     public static <methods>;
