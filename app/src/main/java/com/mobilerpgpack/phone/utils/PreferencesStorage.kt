@@ -84,8 +84,7 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
 
     val pathToRootUserFolder = getStringValue(
         pathToRootUserFolderPrefsKey,
-        context.getExternalFilesDir("")!!.absolutePath
-    )
+        context.filesDir.absolutePath)
 
     val enableGyroscope = getBooleanValue(enableGyroscopePrefsKey, false)
 
