@@ -12,6 +12,8 @@ import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.copyFolder
 import com.mobilerpgpack.phone.utils.startGame
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -20,7 +22,7 @@ import java.io.File
 
 internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
     private val context : Context by inject ()
-    private val scope : CoroutineScope by inject ()
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val assetsExtractor : IAssetExtractor by inject ()
     private val sourceFolder = context.filesDir
     private val rootUserDirectory : File by inject ( named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
