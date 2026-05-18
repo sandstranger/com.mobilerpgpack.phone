@@ -1,7 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis
 
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.sun.jna.Native
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
@@ -9,7 +9,7 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
-    SDL2EngineInfo(mainEngineLib, allLibs, EngineTypes.ArxLibertatis) {
+    SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.ArxLibertatis) {
 
     private val arxPreferenceStorage by inject<ArxLibertatisPreferenceStorage>(
         named(EngineTypes.ArxLibertatis.name))

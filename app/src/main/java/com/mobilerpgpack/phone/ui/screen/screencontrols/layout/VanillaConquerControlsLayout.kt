@@ -12,13 +12,13 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController.Companion.LEFT_MOUSE_BUTTON_ID
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 import com.mobilerpgpack.phone.ui.screen.screencontrols.vanillaconquer.EnableDragModeButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
     EnableEditModeButton(
@@ -28,7 +28,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sizePercent = 0.055f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.54f,
@@ -37,7 +37,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.VanillaConquer,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
@@ -45,7 +45,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         stickType = StickType.LeftStick,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -53,7 +53,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         isDeleted = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
@@ -61,7 +61,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2MouseImageButton(
+    SDL3MouseImageButton(
         "left_mouse_button",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.52f,
@@ -83,7 +83,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         ignoreOutOfBoundsTouchEvents = false,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "scroll_up",
         EngineTypes.VanillaConquer,
         wheelUp = true,
@@ -94,7 +94,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         invokeWheelEventsWhilePressingDefaultState = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "scroll_down",
         EngineTypes.VanillaConquer,
         wheelUp = false,
@@ -113,7 +113,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         buttonResId = R.drawable.quick_panel,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_10",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.16f,
@@ -124,7 +124,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_1",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.22f,
@@ -135,7 +135,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_2",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.28f,
@@ -146,7 +146,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_3",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.34f,
@@ -157,7 +157,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_4",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.4f,
@@ -168,7 +168,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_5",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.46f,
@@ -179,7 +179,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_6",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.52f,
@@ -190,7 +190,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_7",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.16f,
@@ -201,7 +201,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_8",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.22f,
@@ -212,7 +212,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "team_9",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.28f,
@@ -223,7 +223,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "formation",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.34f,
@@ -234,7 +234,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "home",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.16f,
@@ -245,7 +245,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "base",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.22f,
@@ -256,7 +256,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "resign",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.28f,
@@ -267,7 +267,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "alliance",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.34f,
@@ -278,7 +278,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "bookmark_1",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.16f,
@@ -289,7 +289,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "bookmark_2",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.22f,
@@ -300,7 +300,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "bookmark_3",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.28f,
@@ -311,7 +311,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "bookmark_4",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.34f,
@@ -322,7 +322,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "select_view",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.4f,
@@ -333,7 +333,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "repair_toggle",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.22f,
@@ -344,7 +344,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "sell_toggle",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.28f,
@@ -355,7 +355,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "queue_move",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.34f,
@@ -366,7 +366,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "options",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.28f,
@@ -377,7 +377,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "sidebar",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.34f,
@@ -388,7 +388,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "map_toggle",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.79f,
@@ -399,7 +399,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         controlsType = ControlsType.OnScreenStick,
         isDeleted = false
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "force_move",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.72f,
@@ -409,7 +409,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sdlKeyEvent = KeyEvent.KEYCODE_ALT_LEFT,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "force_attack",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.87f,
@@ -419,7 +419,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "select",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.94f,
@@ -429,7 +429,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "scatter",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.94f,
@@ -439,7 +439,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sdlKeyEvent = KeyEvent.KEYCODE_X,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "guard",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.94f,
@@ -449,7 +449,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sdlKeyEvent = KeyEvent.KEYCODE_G,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "stop",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.94f,
@@ -459,7 +459,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sdlKeyEvent = KeyEvent.KEYCODE_S,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "previous",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.72f,
@@ -469,7 +469,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sdlKeyEvent = KeyEvent.KEYCODE_B,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "next",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.78f,
@@ -479,7 +479,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         sdlKeyEvent = KeyEvent.KEYCODE_N,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.99f,
@@ -490,7 +490,7 @@ val vanillaConquerOnScreenStickControlsLayout: Collection<IScreenControlsView> =
         controlsType = ControlsType.OnScreenStick
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.VanillaConquer,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.03f,

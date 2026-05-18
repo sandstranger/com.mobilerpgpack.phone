@@ -1,12 +1,11 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.sun.jna.Native
-import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -14,7 +13,7 @@ import java.io.File
 class PsyDoomEngineInfo(mainEngineLib: String,
                         allLibs: Array<String>
 ) :
-    SDL2EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.PsyDoom) {
+    SDL3EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.PsyDoom) {
 
     private val modsModel : ModsModel by inject (named(EngineTypes.PsyDoom.toString()))
 

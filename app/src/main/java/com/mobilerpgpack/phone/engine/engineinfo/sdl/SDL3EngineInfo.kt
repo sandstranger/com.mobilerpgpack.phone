@@ -30,6 +30,8 @@ abstract class SDL3EngineInfo(
     activeEngineType: EngineTypes) :
     EngineInfo(mainEngineLib, allLibs, activeEngineType) {
 
+    constructor(activeEngineType: EngineTypes) : this("", emptyArray(), activeEngineType)
+
     private val mouseIcon: SDL3MouseIcon by inject()
 
     final override val gameActivityClazz: Class<*> = SDL3GameActivity::class.java
@@ -42,13 +44,13 @@ abstract class SDL3EngineInfo(
 
     final override val gyroInput: GyroInput by inject <SDL3GyroInput> { parametersOf(super.activity, this) }
 
-    private external fun SDL_GetRelativeMouseMode() : Boolean
+    private external fun SDL_GetRelativeMouseMode_Android() : Boolean
 
     private external fun SetSDLVideoGLDriver (pathToGLDriverToSet : String)
 
     private external fun UpdateEnableAngleState (enableAngle : Boolean)
 
-    override val mouseButtonsEventsCanBeInvoked: Boolean get() = !SDL_GetRelativeMouseMode()
+    override val mouseButtonsEventsCanBeInvoked: Boolean get() = !SDL_GetRelativeMouseMode_Android()
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()

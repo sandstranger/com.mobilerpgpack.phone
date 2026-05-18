@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.perfectdark
 
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
 import org.koin.core.component.get
@@ -11,7 +11,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
-class PerfectDarkEngineInfo : SDL2EngineInfo
+class PerfectDarkEngineInfo : SDL3EngineInfo
     ("", emptyArray(), EngineTypes.PerfectDark) {
 
     private val homeDirectory : File by inject { parametersOf(PERFECT_DARK_FOLDER_NAME) }

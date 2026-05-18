@@ -2,19 +2,18 @@ package com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer
 
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.main.RED_ALERT_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.TIBERIAN_DAWN_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.sun.jna.Native
-import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
 class VanillaConquerEngineInfo :
-    SDL2EngineInfo ("", emptyArray(), EngineTypes.VanillaConquer) {
+    SDL3EngineInfo("", emptyArray(), EngineTypes.VanillaConquer) {
 
     private val configsDirectory : File by inject { parametersOf("vanilla-conquer") }
 

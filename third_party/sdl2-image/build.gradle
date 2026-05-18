@@ -48,11 +48,10 @@ android {
     }
 }
 
-preBuild.dependsOn ':third_party:sdl2:android-project:app:build',
-        ':third_party:libtiff:build'
+preBuild.dependsOn ':third_party:sdl2-compat:build', ':third_party:libtiff:build'
 
 dependencies {
-    implementation(project(":third_party:sdl2:android-project:app"))
+    implementation(project(":third_party:sdl2-compat"))
     implementation(project(":third_party:libtiff"))
     implementation libs.androidx.appcompat
     implementation libs.material

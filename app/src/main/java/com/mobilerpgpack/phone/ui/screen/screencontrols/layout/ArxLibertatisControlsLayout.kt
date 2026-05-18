@@ -12,14 +12,15 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController.Companion.LEFT_MOUSE_BUTTON_ID
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2OnScreenStick
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
-    SDL2MouseImageButton(
+    SDL3MouseImageButton(
         "alternate_left_mouse_button",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.52f,
@@ -31,7 +32,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         useToggle = true,
         isDeleted = true
     ),
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -46,7 +47,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sizePercent = 0.055f,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
@@ -54,7 +55,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.8f,
         offsetYPercent = 0.54f,
@@ -63,7 +64,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2OnScreenStick(
+    SDL3OnScreenStick(
         engineType = EngineTypes.ArxLibertatis,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.54f,
@@ -78,7 +79,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         buttonResId = R.drawable.quick_panel,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "open_book",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.17f,
@@ -89,7 +90,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "character_sheet",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.24f,
@@ -100,7 +101,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "map",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.30f,
@@ -111,7 +112,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "spell_book",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.36f,
@@ -122,7 +123,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quest_book",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.42f,
@@ -133,7 +134,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "life_potion",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.1f,
@@ -144,7 +145,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "mana_potion",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.17f,
@@ -155,7 +156,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "antidote_potion",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.24f,
@@ -166,7 +167,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "torch",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.31f,
@@ -177,7 +178,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "open_console",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.38f,
@@ -188,7 +189,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "precast_spell_1",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.1f,
@@ -199,7 +200,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "precast_spell_2",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.17f,
@@ -210,7 +211,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "precast_spell_3",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.24f,
@@ -221,7 +222,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "interrupt_current_spell",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.31f,
@@ -232,7 +233,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "previous",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.1f,
@@ -244,7 +245,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "next",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.17f,
@@ -256,7 +257,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "keyboard_enter_button",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.24f,
@@ -268,7 +269,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "show_minimap",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.31f,
@@ -279,7 +280,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick,
     ),
-    SDL2MouseImageButton(
+    SDL3MouseImageButton(
         "action",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.8f,
@@ -291,7 +292,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         ignoreOutOfBoundsTouchEvents = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "lean_left",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.78f,
@@ -301,7 +302,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         buttonResId = R.drawable.previous,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "lean_right",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.87f,
@@ -311,7 +312,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         buttonResId = R.drawable.next,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.99f,
@@ -321,7 +322,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "use",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.97f,
@@ -331,7 +332,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_F,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quick_save",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.75f,
@@ -341,7 +342,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_F5,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "quick_load",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.83f,
@@ -352,7 +353,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         controlsType = ControlsType.OnScreenStick
     )
     ,
-    SDL2ImageButton(
+    SDL3ImageButton(
         "jump",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.84f,
@@ -362,7 +363,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "combat_mode",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.92f,
@@ -372,7 +373,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_TAB,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "stealth_mode",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.76f,
@@ -382,7 +383,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_SHIFT_LEFT,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "inventory",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.94f,
@@ -392,7 +393,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_I,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "magic_mode",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.94f,
@@ -402,7 +403,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_CTRL_LEFT,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "crouch",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.68f,
@@ -412,7 +413,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sdlKeyEvent = KeyEvent.KEYCODE_C,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "drop_weapon",
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.59f,
@@ -423,7 +424,7 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         controlsType = ControlsType.OnScreenStick
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.83f,
         offsetYPercent = 0.13f,

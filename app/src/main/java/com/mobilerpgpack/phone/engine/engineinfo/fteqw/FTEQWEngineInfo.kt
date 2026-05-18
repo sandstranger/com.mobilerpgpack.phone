@@ -2,7 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.fteqw
 
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL2EngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.main.FTEQW_MAIN_ENGINE_LIB
 import com.sun.jna.Native
 import org.koin.core.component.get
@@ -11,7 +11,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
 
-class FTEQWEngineInfo : SDL2EngineInfo( EngineTypes.FTEQW){
+class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
 
     private val homeDirFile : File by inject { parametersOf(FTEQW_CONFIGS_DIR) }
 

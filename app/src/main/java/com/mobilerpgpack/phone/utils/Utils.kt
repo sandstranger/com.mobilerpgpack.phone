@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.utils
 
 import android.app.Activity
-import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
 import com.mobilerpgpack.phone.R
@@ -9,8 +8,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
-import com.mobilerpgpack.phone.main.SDL2_NATIVE_LIB_NAME
-import com.sun.jna.Function
+import com.mobilerpgpack.phone.main.SDL3_NATIVE_LIB_NAME
 import com.sun.jna.Native
 import kotlinx.coroutines.delay
 import net.lingala.zip4j.ZipFile
@@ -119,7 +117,7 @@ private object KeyStoreProvider {
     private external fun TranslateKeycode(keyCode : Int) : Int
 
     init {
-        Native.register(KeyStoreProvider::class.java, SDL2_NATIVE_LIB_NAME)
+        Native.register(KeyStoreProvider::class.java, SDL3_NATIVE_LIB_NAME)
     }
 
     private fun isValidKeyCode (keyCodeField : Field) : Boolean{

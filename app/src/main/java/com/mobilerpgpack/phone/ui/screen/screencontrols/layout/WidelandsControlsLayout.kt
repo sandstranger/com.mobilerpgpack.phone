@@ -12,11 +12,12 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController.Companion.LEFT_MOUSE_BUTTON_ID
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController.Companion.SDL_BUTTON_RIGHT
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseWheelButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
     EnableEditModeButton(
@@ -25,20 +26,20 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.02f,
         sizePercent = 0.055f,
     ),
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.Widelands,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
         sizePercent = 0.21f,
         isDeleted = true
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.Widelands,
         offsetXPercent = 0.03f,
         offsetYPercent = 0.16f,
         sizePercent = 0.16f,
     ),
-    SDL2MouseImageButton(
+    SDL3MouseImageButton(
         "left_mouse_button",
         EngineTypes.Widelands,
         offsetXPercent = 0.52f,
@@ -56,7 +57,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sizePercent = 0.05f,
         buttonResId = R.drawable.quick_panel,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "encyclopedia",
         EngineTypes.Widelands,
         offsetXPercent = 0.16f,
@@ -66,7 +67,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F1,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "select_all",
         EngineTypes.Widelands,
         offsetXPercent = 0.22f,
@@ -76,7 +77,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F4,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "delete_item",
         EngineTypes.Widelands,
         offsetXPercent = 0.28f,
@@ -86,7 +87,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_FORWARD_DEL,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "tooltip_accessibility_mode",
         EngineTypes.Widelands,
         offsetXPercent = 0.34f,
@@ -96,7 +97,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F2,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "messages",
         EngineTypes.Widelands,
         offsetXPercent = 0.40f,
@@ -106,7 +107,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_N,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "objectives",
         EngineTypes.Widelands,
         offsetXPercent = 0.46f,
@@ -116,7 +117,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_T,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "diplomacy",
         EngineTypes.Widelands,
         offsetXPercent = 0.16f,
@@ -126,7 +127,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_D,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "game_chat",
         EngineTypes.Widelands,
         offsetXPercent = 0.22f,
@@ -136,7 +137,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "general_statistics",
         EngineTypes.Widelands,
         offsetXPercent = 0.28f,
@@ -146,7 +147,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_A,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "ware_statistics",
         EngineTypes.Widelands,
         offsetXPercent = 0.34f,
@@ -156,7 +157,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_P,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "building_statistics",
         EngineTypes.Widelands,
         offsetXPercent = 0.40f,
@@ -166,7 +167,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_B,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "soldier_statistics",
         EngineTypes.Widelands,
         offsetXPercent = 0.22f,
@@ -176,7 +177,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_X,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "seafaring_statistics",
         EngineTypes.Widelands,
         offsetXPercent = 0.28f,
@@ -186,7 +187,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_E,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_census",
         EngineTypes.Widelands,
         offsetXPercent = 0.34f,
@@ -196,7 +197,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_C,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_status_labels",
         EngineTypes.Widelands,
         offsetXPercent = 0.40f,
@@ -206,7 +207,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_S,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_soldier_levels",
         EngineTypes.Widelands,
         offsetXPercent = 0.22f,
@@ -216,7 +217,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_L,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_soldier_levels",
         EngineTypes.Widelands,
         offsetXPercent = 0.22f,
@@ -226,7 +227,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_L,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_building_visibility",
         EngineTypes.Widelands,
         offsetXPercent = 0.28f,
@@ -236,7 +237,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_U,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_overlapping_workareas",
         EngineTypes.Widelands,
         offsetXPercent = 0.34f,
@@ -246,7 +247,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_W,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "scroll_to_starting_field",
         EngineTypes.Widelands,
         offsetXPercent = 0.40f,
@@ -256,7 +257,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_MOVE_HOME,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_quick_navigation",
         EngineTypes.Widelands,
         offsetXPercent = 0.16f,
@@ -266,7 +267,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_V,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "pinned_note",
         EngineTypes.Widelands,
         offsetXPercent = 0.22f,
@@ -276,7 +277,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F8,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "go_to_location",
         EngineTypes.Widelands,
         offsetXPercent = 0.28f,
@@ -286,7 +287,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_G,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "go_to_ship",
         EngineTypes.Widelands,
         offsetXPercent = 0.34f,
@@ -296,7 +297,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_J,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "watch_ship",
         EngineTypes.Widelands,
         offsetXPercent = 0.16f,
@@ -306,7 +307,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_F,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "open_ship_window",
         EngineTypes.Widelands,
         offsetXPercent = 0.22f,
@@ -316,7 +317,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_O,
         showInQuickPanel = true,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "toggle_building_spaces",
         EngineTypes.Widelands,
         offsetXPercent = 0.28f,
@@ -326,7 +327,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_SPACE,
         showInQuickPanel = true,
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "zoom_in",
         EngineTypes.Widelands,
         wheelUp = true,
@@ -336,7 +337,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.next_weapon,
         invokeWheelEventsWhilePressingDefaultState = true
     ),
-    SDL2MouseWheelButton(
+    SDL3MouseWheelButton(
         "zoom_out",
         EngineTypes.Widelands,
         wheelUp = false,
@@ -346,7 +347,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.prev_weapon,
         invokeWheelEventsWhilePressingDefaultState = true
     ),
-    SDL2MouseImageButton(
+    SDL3MouseImageButton(
         "camera_movement_mode",
         EngineTypes.Widelands,
         offsetXPercent = 0.8f,
@@ -360,7 +361,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         onTouchDownEvent = { screenControls, _ -> screenControls?.apply { isZoomMode = true } },
         onTouchUpEvent = { screenControls, _ -> screenControls?.apply { isZoomMode = false } }
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.Widelands,
         offsetXPercent = 0.99f,
@@ -369,7 +370,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE,
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "minimap",
         EngineTypes.Widelands,
         offsetXPercent = 0.8f,
@@ -378,7 +379,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_M
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "inventory",
         EngineTypes.Widelands,
         offsetXPercent = 0.94f,
@@ -388,7 +389,7 @@ val widelandsAbsoluteControlsLayout: Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_I,
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.Widelands,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.03f,

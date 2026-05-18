@@ -10,13 +10,16 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateQuickPanelVisibili
 import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisibilityImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Dpad
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ImageButton
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2RadialWheel
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseWheelButton
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3OnScreenStick
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3RadialWheel
 
 val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
-    SDL2RadialWheel(
+    SDL3RadialWheel(
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.55f,
         offsetYPercent = 0.28f,
@@ -29,7 +32,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         offsetYPercent = 0.02f,
         sizePercent = 0.055f,
     ),
-    SDL2Dpad(
+    SDL3Dpad(
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.05f,
         offsetYPercent = 0.5f,
@@ -43,7 +46,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.quick_panel,
         isDeleted = true
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "move_left",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.05f,
@@ -52,7 +55,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.previous,
         sdlKeyEvent = KeyEvent.KEYCODE_A
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "move_right",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.23f,
@@ -61,7 +64,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.next,
         sdlKeyEvent = KeyEvent.KEYCODE_D
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "attack",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.8f,
@@ -70,7 +73,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.attack_button,
         sdlKeyEvent = KeyEvent.KEYCODE_ENTER
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "next_weapon",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.85f,
@@ -79,7 +82,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.next_weapon,
         sdlKeyEvent = KeyEvent.KEYCODE_Z
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "prev_weapon",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.85f,
@@ -88,7 +91,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.prev_weapon,
         sdlKeyEvent = KeyEvent.KEYCODE_X
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "pass_turn",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.97f,
@@ -97,7 +100,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pass_turn,
         sdlKeyEvent = KeyEvent.KEYCODE_C
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "automap",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.83f,
@@ -106,7 +109,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.automap,
         sdlKeyEvent = KeyEvent.KEYCODE_TAB
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "pda_menu",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.76f,
@@ -115,7 +118,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pda,
         sdlKeyEvent = KeyEvent.KEYCODE_P
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "items",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.72f,
@@ -124,7 +127,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.items,
         sdlKeyEvent = KeyEvent.KEYCODE_I
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "drinks",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.7f,
@@ -133,7 +136,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.bottle,
         sdlKeyEvent = KeyEvent.KEYCODE_O
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "escape",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.99f,
@@ -142,7 +145,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         buttonResId = R.drawable.pause,
         sdlKeyEvent = KeyEvent.KEYCODE_ESCAPE
     ),
-    SDL2ImageButton(
+    SDL3ImageButton(
         "bot",
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.99f,
@@ -152,7 +155,7 @@ val doom2RPGControlsLayout : Collection<IScreenControlsView> = listOf(
         sdlKeyEvent = KeyEvent.KEYCODE_B
     ),
     ShowSDLKeyboardButton(
-        KeyboardType.SDL2Keyboard,
+        KeyboardType.SDL3Keyboard,
         EngineTypes.Doom2Rpg,
         offsetXPercent = 0.75f,
         offsetYPercent = 0.05f,

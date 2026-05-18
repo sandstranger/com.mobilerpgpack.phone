@@ -112,9 +112,6 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.vanillaConquerOnS
 import com.mobilerpgpack.phone.ui.screen.screencontrols.layout.widelandsAbsoluteControlsLayout
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2Keyboard
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2MouseIcon
-import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl2.SDL2ScreenController
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Keyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseIcon
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ScreenController
@@ -126,7 +123,6 @@ import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
-import com.mobilerpgpack.phone.utils.SDL2GyroInput
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
 import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
@@ -165,11 +161,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
         singleOf <IAssetExtractor> (::AssetExtractor)
         single <SharedPrefsDao> { SharedPrefsDatabase.createInstance().dao() }
-
-        singleOf(::SDL2Keyboard).withOptions {
-            named(KeyboardType.SDL2Keyboard.name)
-            bind<SDLKeyboard>()
-        }
         singleOf(::SDL3Keyboard).withOptions {
             named(KeyboardType.SDL3Keyboard.name)
             bind<SDLKeyboard>()
@@ -183,7 +174,6 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }.withOptions {
             named(ROOT_USER_DIRECTORY_KEY)
         }
-        factory <SDL2GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL2GyroInput(ctx, engineInfo) }
         factory <SDL3GyroInput> { (ctx: Context, engineInfo: IEngineInfo) -> SDL3GyroInput(ctx, engineInfo) }
         factory <File>{ (pathToFile : String) -> File(get<File>(named(ROOT_USER_DIRECTORY_KEY)),
             pathToFile) }
@@ -329,14 +319,10 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         viewModelOf(::SettingsScreenViewModel)
         viewModelOf(::MainActivityViewModel)
         singleOf(::SettingsScreen).bind<ComposeScreen>()
-        singleOf <IScreenController>(::SDL2ScreenController).withOptions {
-            named(SDL2ScreenController.SDL2_SCREEN_CONTROLLER_NAME)
-        }
         singleOf <IScreenController>(::SDL3ScreenController).withOptions {
             named(SDL3ScreenController.SDL3_SCREEN_CONTROLLER_NAME)
         }
 
-        singleOf<SDL2MouseIcon>(::SDL2MouseIcon)
         singleOf<SDL3MouseIcon>(::SDL3MouseIcon)
         singleOf<IKeyCodesProvider>(::KeyCodesProvider)
         singleOf(::PermissionScreen).bind<ComposeScreen>()
@@ -355,6 +341,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single {
             val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
+                SDL3_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 MPG123_NATIVE_LIB_NAME,
                 GME_NATIVE_LIB_NAME,
@@ -379,6 +366,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single {
             val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
+                SDL3_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
                 TRANSLATOR_NATIVE_LIB_NAME,
@@ -401,6 +389,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         single {
             val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
+                SDL3_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
                 TRANSLATOR_NATIVE_LIB_NAME,
@@ -476,7 +465,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             named(EngineTypes.UZDoom.name) }
 
         single  {
-            val nativeLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
+            val nativeLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
@@ -525,7 +515,9 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         single {
             val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
-                SDL2_NATIVE_LIB_NAME, PSYDOOM_MAIN_ENGINE_LIB)
+                SDL3_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
+                PSYDOOM_MAIN_ENGINE_LIB)
 
             PsyDoomEngineInfo(PSYDOOM_MAIN_ENGINE_LIB, nativeLibs)
         }.withOptions {
@@ -568,19 +560,19 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
     }
 
     private val perfectDarkKoinModule = module{
-        single { arrayOf(SDL2_NATIVE_LIB_NAME,
+        single { arrayOf(SDL3_NATIVE_LIB_NAME,SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.NTSC.mainLibraryName,
         ) }.withOptions {
             named(PerfectDarkRomVersions.NTSC.name)
         }
 
-        single { arrayOf(SDL2_NATIVE_LIB_NAME,
+        single { arrayOf(SDL3_NATIVE_LIB_NAME,SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.PAL.mainLibraryName,
         ) }.withOptions {
             named(PerfectDarkRomVersions.PAL.name)
         }
 
-        single { arrayOf(SDL2_NATIVE_LIB_NAME,
+        single { arrayOf(SDL3_NATIVE_LIB_NAME,SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.JPN.mainLibraryName,
         ) }.withOptions {
             named(PerfectDarkRomVersions.JPN.name)
@@ -619,7 +611,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
             }
 
         single {
-            val allLibs = arrayOf(SDL2_NATIVE_LIB_NAME,
+            val allLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
+                SDL2_NATIVE_LIB_NAME,
                 FREETYPE_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
@@ -652,7 +645,8 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
 
         Quake2Games.entries.forEach { quake2GameType ->
             single {
-                with(mutableListOf(SDL2_NATIVE_LIB_NAME,
+                with(mutableListOf(SDL3_NATIVE_LIB_NAME,
+                    SDL2_NATIVE_LIB_NAME,
                     FREETYPE_NATIVE_LIB_NAME,
                     BZ2_NATIVE_LIB_NAME,
                     ODE_NATIVE_LIB_NAME,
@@ -701,6 +695,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
                 TIFFXX_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 MPG123_NATIVE_LIB_NAME,
+                SDL3_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_MIXER_NATIVE_LIB_NAME,
                 SDL2_IMAGE_NATIVE_LIB_NAME,
@@ -727,6 +722,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
         single { arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
+                SDL3_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 RED_ALERT_NATIVE_LIB_NAME)
         }.withOptions {
@@ -734,6 +730,7 @@ class KoinModulesProvider(private val context: Context, private val scope: Corou
         }
         single { arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
+                SDL3_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 TIBERIAN_DAWN_NATIVE_LIB_NAME)
         }.withOptions {
