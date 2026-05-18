@@ -10,6 +10,7 @@ import com.mobilerpgpack.phone.utils.IAssetExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -17,20 +18,13 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 
 class DownloadViewModel : ViewModel(), KoinComponent {
-
-    private val scope : CoroutineScope = get()
-
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val assetsExtractor : IAssetExtractor by inject ()
-
     private val translationModelsDownloader : ITranslationModelsDownloader = get()
-
-    val isLoading = MutableLiveData(false)
-
-    val downloadProgress = MutableLiveData("")
-
     private var currentTranslationModelType : String? = null
-
     private var downloadJob: Job? = null
+    val isLoading = MutableLiveData(false)
+    val downloadProgress = MutableLiveData("")
 
     init {
         assetsExtractor.assetsStartedCopyListeners += { cancelDownload() }
