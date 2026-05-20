@@ -188,46 +188,29 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTranslate2Proxy:build',
-        ':machine_translator:Translator:build',
-        ':third_party:openal:build', ':third_party:sdl2-mixer:build',':third_party:sdl2-ttf:build',
-        ':third_party:NG-GL4ES:build',
-        ':third_party:libpng:build',':third_party:sdl3:android-project:app:build',
-        ':third_party:fmod:build',':third_party:legacy_gl4es:build',
-        ':third_party:freetype:build',':third_party:zmusic:build',':third_party:bullet:build',
-        ':third_party:libjpegturbo:build',':third_party:bzip2:build',':third_party:ode:build',
-        ':third_party:yquake2:build',':third_party:sdl2-image:build',
-        ':third_party:glbinding:build',':third_party:glob:build',':third_party:ogg:build',
-        ':third_party:angle:build',':third_party:openssl:build',':third_party:sdl2-compat:build'
+preBuild.dependsOn ':machine_translator:CTranslate2Proxy:build',
+    ':third_party:openal:build', ':third_party:fluidsynth:build',
+    ':third_party:NG-GL4ES:build', ':third_party:legacy_gl4es:build',
+    ':third_party:angle:build', ':third_party:libpng:build',
+    ':third_party:sdl3:android-project:app:build', ':third_party:sdl2-compat:build',
+    ':third_party:freetype:build', ':third_party:zmusic:build',
+    ':third_party:libjpegturbo:build', ':third_party:bzip2:build'
 
 dependencies {
     implementation (project(":third_party:openal"))
-    implementation(project(":third_party:sdl2-mixer"))
     implementation(project(":third_party:fluidsynth"))
-    implementation (project(":third_party:sdl2-ttf"))
     implementation (project(":machine_translator:CTranslate2Proxy"))
-    implementation (project(":machine_translator:Translator"))
     implementation (project(":third_party:libpng"))
     implementation (project(":third_party:freetype"))
     implementation (project(":third_party:sdl3:android-project:app"))
-    implementation (project(":third_party:fmod"))
     implementation (project(":third_party:bing_translator"))
     implementation (project(":third_party:storage-chooser:storagechooser"))
     implementation (project(":third_party:NG-GL4ES"))
     implementation (project(":third_party:legacy_gl4es"))
     implementation (project(":third_party:zmusic"))
-    implementation (project(":third_party:bullet"))
-    implementation (project(":third_party:ffmpeg"))
     implementation (project(":third_party:libjpegturbo"))
     implementation (project(":third_party:bzip2"))
-    implementation (project(":third_party:ode"))
-    implementation (project(":third_party:yquake2"))
-    implementation (project(":third_party:sdl2-image"))
-    implementation (project(":third_party:glbinding"))
-    implementation (project(":third_party:glob"))
-    implementation (project(":third_party:ogg"))
     implementation (project(":third_party:angle"))
-    implementation (project(":third_party:openssl"))
     implementation (project(":third_party:sdl2-compat"))
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.2.1"))

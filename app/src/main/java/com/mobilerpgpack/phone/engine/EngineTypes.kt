@@ -16,6 +16,6 @@ enum class EngineTypes {
     Classic_RBDOOM_3_BFG;
 
     companion object{
-        val DefaultActiveEngine = WolfensteinRpg
+        val DefaultActiveEngine = UZDoom
     }
 }

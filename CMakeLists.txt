@@ -358,66 +358,72 @@ set(MONOLITH ON CACHE BOOL "" FORCE)
 set(MAKE_DLL OFF CACHE BOOL "" FORCE)
 
 set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
-add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
-add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
-add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
-add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
-add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
-add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
-add_subdirectory("${APP_ROOT_DIR}/UZDoom")
-add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
-add_subdirectory("${APP_ROOT_DIR}/fteqw")
-add_subdirectory("${APP_ROOT_DIR}/widelands")
-add_subdirectory("${APP_ROOT_DIR}/Vanilla-Conquer")
-add_subdirectory("${APP_ROOT_DIR}/Classic-RBDOOM-3-BFG/neo")
+option(BUILD_ONLY_UZDOOM "Build only the UZDoom native engine" ON)
 
-set(ROM_CONFIGS jpn-final ntsc-final pal-final)
+if(BUILD_ONLY_UZDOOM)
+    add_subdirectory("${APP_ROOT_DIR}/UZDoom")
+else()
+    add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
+    add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
+    add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
+    add_subdirectory("${APP_ROOT_DIR}/Doom64EX-Plus")
+    add_subdirectory("${APP_ROOT_DIR}/DOOM64-EX-Plus-Enhanced")
+    add_subdirectory("${APP_ROOT_DIR}/PsyDoom")
+    add_subdirectory("${APP_ROOT_DIR}/UZDoom")
+    add_subdirectory("${APP_ROOT_DIR}/ArxLibertatis")
+    add_subdirectory("${APP_ROOT_DIR}/fteqw")
+    add_subdirectory("${APP_ROOT_DIR}/widelands")
+    add_subdirectory("${APP_ROOT_DIR}/Vanilla-Conquer")
+    add_subdirectory("${APP_ROOT_DIR}/Classic-RBDOOM-3-BFG/neo")
 
-foreach(ROM_ID IN LISTS ROM_CONFIGS)
+    set(ROM_CONFIGS jpn-final ntsc-final pal-final)
+
+    foreach(ROM_ID IN LISTS ROM_CONFIGS)
     set(BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/build_${ROM_ID}")
     file(MAKE_DIRECTORY ${BUILD_DIR})
     set(CACHE_FILE "${BUILD_DIR}/CMakeCache.txt")
     set(ROMID ${ROM_ID} CACHE STRING "ROM ID" FORCE)
     add_subdirectory("${APP_ROOT_DIR}/perfect_dark" "${BUILD_DIR}")
-endforeach()
+    endforeach()
 
-target_include_directories(arx PRIVATE "${OPENAL_INCLUDE_DIR}/AL")
+    target_include_directories(arx PRIVATE "${OPENAL_INCLUDE_DIR}/AL")
 
-target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
-${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
+    target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
+    ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
 
-target_link_libraries(DoomRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
+    target_link_libraries(DoomRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
         ${SDL2_TTF_LIBRARY} ZLIB::ZLIB ${TRANSLATOR_LIBRARY} ${FLUIDSYNTH_LIBRARY})
 
-target_include_directories(DoomIIRPG PRIVATE "${OPENAL_INCLUDE_DIR}/AL" ${SDL2_INCLUDE_DIR}
+    target_include_directories(DoomIIRPG PRIVATE "${OPENAL_INCLUDE_DIR}/AL" ${SDL2_INCLUDE_DIR}
         ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
-target_link_libraries(DoomIIRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
+    target_link_libraries(DoomIIRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
         ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
 
-target_include_directories(WolfensteinRPG PRIVATE "${OPENAL_INCLUDE_DIR}" ${SDL2_INCLUDE_DIR}
+    target_include_directories(WolfensteinRPG PRIVATE "${OPENAL_INCLUDE_DIR}" ${SDL2_INCLUDE_DIR}
         ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
-target_link_libraries(WolfensteinRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
+    target_link_libraries(WolfensteinRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
          ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
 
-target_include_directories(DOOM64 PRIVATE ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
+    target_include_directories(DOOM64 PRIVATE ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
         ${FMOD_INC_DIR})
 
-target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
+    target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
 
-target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
+    target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
         ${FMOD_INC_DIR})
 
-target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
+    target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log )
 
-target_include_directories(PsyDoom PRIVATE ${SDL2_INCLUDE_DIR})
-target_link_libraries(PsyDoom PRIVATE ${SDL2_LIBRARY})
+    target_include_directories(PsyDoom PRIVATE ${SDL2_INCLUDE_DIR})
+    target_link_libraries(PsyDoom PRIVATE ${SDL2_LIBRARY})
 
-target_include_directories(VulkanGL PRIVATE ${SDL2_INCLUDE_DIR})
-target_link_libraries(VulkanGL PRIVATE ${SDL2_LIBRARY})
+    target_include_directories(VulkanGL PRIVATE ${SDL2_INCLUDE_DIR})
+    target_link_libraries(VulkanGL PRIVATE ${SDL2_LIBRARY})
+endif()
 
 add_library(SDL3Helper SHARED)
 target_sources(SDL3Helper PRIVATE "${APP_ROOT_DIR}/SDL3Helper.c")

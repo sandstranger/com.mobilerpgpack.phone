@@ -1,0 +1,99 @@
+name: Android PR APK
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-pr-apk-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build-apk:
+    name: Build APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Checkout required submodules
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive --depth 1 --jobs 4 \
+            app/src/main/jni/UZDoom \
+            third_party/openal/src/main/jni/openal \
+            third_party/sdl3 \
+            third_party/sdl2-compat/src/main/jni/sdl2-compat \
+            third_party/fluidsynth/src/main/jni/fluidsynth-android \
+            third_party/CTranslate2/src/main/jni/CTranslate2 \
+            third_party/sentencepiece/src/main/jni/sentencepiece \
+            third_party/NG-GL4ES/src/main/jni/NG-GL4ES \
+            third_party/libpng/src/main/jni/libpng \
+            third_party/storage-chooser \
+            third_party/legacy_gl4es/src/main/jni/gl4es \
+            third_party/bing_translator/src/main/java \
+            third_party/oboe/src/main/jni/oboe \
+            third_party/freetype/src/main/jni/freetype \
+            third_party/zmusic/src/main/jni/ZMusic \
+            third_party/mpg123/src/main/jni/MPG123-Android \
+            third_party/libsndfile/src/main/jni/libsndfile \
+            third_party/flac/src/main/jni/flac \
+            third_party/libvorbis/src/main/jni/libvorbis-android \
+            third_party/opus/src/main/jni/opus \
+            third_party/libmp3lame/src/main/jni/libmp3lame-android \
+            third_party/libjpegturbo/src/main/jni/libjpeg-turbo \
+            third_party/bzip2/src/main/jni/bzip2 \
+            third_party/ogg/src/main/jni/ogg \
+            third_party/sse2neon
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools
+        run: |
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager \
+            "platforms;android-36" \
+            "build-tools;37.0.0" \
+            "ndk;29.0.14206865" \
+            "cmake;4.1.2"
+
+      - name: Install native build cache
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ccache
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
+      - name: Build fdroid debug APK
+        run: ./gradlew --no-daemon --stacktrace :app:assembleFdroidDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: classic-core-fdroid-debug-apk
+          path: app/build/outputs/apk/fdroid/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
