@@ -309,6 +309,10 @@ Important: Bulding from source code supported only for fdroid buld variants, goo
 
 To build, also need to install Python 3.x - https://www.python.org/downloads/, since it is used when building some dependencies.
 
+Also - it will be better to use ccache (https://ccache.dev/) during building, because building 13 engines and all these native deps without ccache - is a 
+
+Drag Me to Hell difficulty level task. On windows you can use chocolatey (https://chocolatey.org/, https://community.chocolatey.org/packages/ccache) for installing ccache support.
+
 Only windows 11 25h2 x64 is supported as build host, others OS are not supported, because I am not using them.
 
 ## Download
