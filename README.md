@@ -577,6 +577,8 @@ SPIRV-Headers - [Licence](https://github.com/KhronosGroup/SPIRV-Headers/blob/mai
 
 SPIRV-Cross - [Licence](https://github.com/KhronosGroup/SPIRV-Cross/blob/main/LICENSE) https://github.com/KhronosGroup/SPIRV-Cross
 
+etcpack - [Licence](https://github.com/wolfpld/etcpak/blob/master/LICENSE.txt) https://github.com/wolfpld/etcpak
+
 All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
 
  Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
