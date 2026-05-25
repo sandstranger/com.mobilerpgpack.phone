@@ -341,4 +341,5 @@
     <string name="lod_distance">Lod distance</string>
     <string name="import_mods">Import mods</string>
     <string name="export_mods">Export mods</string>
+    <string name="enable_textures_shrinking_support">Enable textures shrinking (Reduces RAM usage, but textures can glitch)</string>
 </resources>

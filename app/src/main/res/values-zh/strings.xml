@@ -340,4 +340,5 @@
     <string name="lod_distance">细节层次距离</string>
     <string name="import_mods">导入模组</string>
     <string name="export_mods">导出模组</string>
+    <string name="enable_textures_shrinking_support">启用纹理缩减（降低 RAM 使用量，但纹理可能出现异常）</string>
 </resources>

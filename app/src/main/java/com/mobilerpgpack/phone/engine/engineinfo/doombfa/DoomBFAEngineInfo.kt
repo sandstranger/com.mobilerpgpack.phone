@@ -86,19 +86,20 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
 
     private external fun setPathsToResources (pathToHomeFolder : String, pathToResourcesFolder : String)
-
     private external fun setHardwareDXTSupport(enableHardwareDXTSupport : Boolean)
-
     private external fun setGLESVersion (targetGLESVersion: Int)
-
     private external fun setRefreshRates(targetRefreshRates : IntArray, arraySize: Int)
+    private external fun enableTexturesShrinking (enableTexturesShrinking : Boolean)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(DoomBFAEngineInfo::class.java, mainLibraryName)
         setPathsToResources(homeDirectoryFolder.absolutePath,
             pathToResource)
-        setHardwareDXTSupport(preferencesStorage.enableDXTHardwareSupport.value!!)
+        preferencesStorage.apply {
+            setHardwareDXTSupport(enableDXTHardwareSupport.value!!)
+            enableTexturesShrinking(enableTexturesShrinking.value!!)
+        }
         setGLESVersion(targetGLESVersion)
         activity.supportedRefreshRates.toIntArray().apply {
             setRefreshRates(this, size)

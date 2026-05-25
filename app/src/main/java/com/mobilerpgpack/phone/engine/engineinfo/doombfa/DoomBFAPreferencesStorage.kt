@@ -39,7 +39,9 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val disableDynamicShadowsPrefsKey = booleanPreferencesKey("disable_dynamic_shadows")
     val useShadowPreciseInsideTestPrefsKey = booleanPreferencesKey("use_shadow_precise_inside_test")
     val lodDistancePrefsKey = intPreferencesKey("lod_distance")
+    val enableTexturesShrinkingPrefsKey = booleanPreferencesKey("enable_textures_shrinking")
 
+    val enableTexturesShrinking = getBooleanValue(enableTexturesShrinkingPrefsKey)
     val disableStaticShadows = getBooleanValue(disableStaticShadowsPrefsKey)
     val disableDynamicShadows = getBooleanValue(disableDynamicShadowsPrefsKey)
     val useShadowPreciseInsideTest = getBooleanValue(useShadowPreciseInsideTestPrefsKey, true)
