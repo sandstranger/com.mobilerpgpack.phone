@@ -85,6 +85,10 @@ class DoomBFAComposeSettings : IEngineUIController {
         prefsStorage.apply {
             DrawTitleText(stringResource(R.string.graphics_settings))
             SwitchPreferenceItem(
+                stringResource(R.string.enable_textures_shrinking_support),
+                enableTexturesShrinking, enableTexturesShrinkingPrefsKey.name)
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(
                 stringResource(R.string.disable_postprocess_effects),
                 disablePostProcessEffects, disablePostProcessEffectsPrefsKey.name
             )

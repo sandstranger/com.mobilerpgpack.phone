@@ -339,4 +339,5 @@
     <string name="lod_distance">Дальность детализации</string>
     <string name="import_mods">Импорт модов</string>
     <string name="export_mods">Экспорт модов</string>
+    <string name="enable_textures_shrinking_support">Включить ужатие текстур (снижает расход ОЗУ, но возможны артефакты)</string>
 </resources>
