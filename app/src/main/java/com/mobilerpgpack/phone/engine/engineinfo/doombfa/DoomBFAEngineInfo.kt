@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
+import android.content.Context
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
@@ -12,11 +13,12 @@ import java.io.File
 
 class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Classic_RBDOOM_3_BFG) {
+    private val context : Context by inject ()
     private val homeDirectoryFolder : File by inject { parametersOf(HOME_DIRECTORY_NAME) }
     private val doomBFAPreferenceStorage by inject<DoomBFAPreferencesStorage>(
         named(EngineTypes.Classic_RBDOOM_3_BFG.name))
 
-    val textureCacheDir by lazy { homeDirectoryFolder.resolve("texture_cache") }
+    val textureCacheDir by lazy { File(context.filesDir,"doom3_texture_cache") }
 
     override val pathToResource: String get() = doomBFAPreferenceStorage.pathToDoom3Resources.value!!
     override val preferencesStorage get() = doomBFAPreferenceStorage
