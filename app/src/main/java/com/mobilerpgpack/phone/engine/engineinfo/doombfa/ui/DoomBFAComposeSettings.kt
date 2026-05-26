@@ -82,11 +82,19 @@ class DoomBFAComposeSettings : IEngineUIController {
         val prefsStorage : DoomBFAPreferencesStorage = koinInject(
             named(EngineTypes.Classic_RBDOOM_3_BFG.name)
         )
+        val viewModel : DoomBFAViewModel = koinViewModel()
         prefsStorage.apply {
             DrawTitleText(stringResource(R.string.graphics_settings))
             SwitchPreferenceItem(
                 stringResource(R.string.enable_textures_shrinking_support),
                 enableTexturesShrinking, enableTexturesShrinkingPrefsKey.name)
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.enable_etc_textures_cache),
+                enableETC2TextureCache, enableETC2TextureCachePrefsKey.name)
+            DrawHorizontalDivider()
+            PreferenceItem(stringResource(R.string.clean_etc_textures_cache)){
+                viewModel.deleteETC2TextureCacheFolder()
+            }
             DrawHorizontalDivider()
             SwitchPreferenceItem(
                 stringResource(R.string.disable_postprocess_effects),

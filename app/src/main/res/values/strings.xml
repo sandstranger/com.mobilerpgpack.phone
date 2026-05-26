@@ -342,4 +342,6 @@
     <string name="import_mods">Import mods</string>
     <string name="export_mods">Export mods</string>
     <string name="enable_textures_shrinking_support">Enable textures shrinking (Reduces RAM usage, but textures can glitch)</string>
+    <string name="enable_etc_textures_cache">Enable ETC2 texture cache (speedup etc2 textures loading, but on cheap UFS (EMMC) flash storages it may be slower with this option)</string>
+    <string name="clean_etc_textures_cache">Clean ETC2 texture cache</string>
 </resources>

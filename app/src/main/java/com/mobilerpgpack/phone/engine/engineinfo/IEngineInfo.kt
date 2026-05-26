@@ -29,6 +29,7 @@ interface IEngineInfo {
     fun loadLayout()
     fun onPause()
     fun onResume()
+    fun onNativeTrimMemory(aggressive : Boolean)
     fun onDestroy()
     fun onBackPressed() : Boolean
     fun onNativeLibrariesLoaded()

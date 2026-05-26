@@ -274,6 +274,8 @@ abstract class EngineInfo(
         }
     }
 
+    override fun onNativeTrimMemory(aggressive : Boolean) {}
+
     override fun onDestroy() {
         mainThreadScope.coroutineContext.cancelChildren()
         if (loadGL4ES){
