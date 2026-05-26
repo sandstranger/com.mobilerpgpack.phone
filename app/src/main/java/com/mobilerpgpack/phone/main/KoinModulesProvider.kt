@@ -768,6 +768,8 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         }.withOptions {
             named(engineName)
             bind<IEngineInfo>()
+        }.withOptions {
+            bind<DoomBFAEngineInfo>()
         }
         singleOf(::DoomBFAComposeSettings).withOptions {
             named(engineName)

@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa
 
+import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.utils.supportedRefreshRates
@@ -12,24 +13,18 @@ import java.io.File
 class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Classic_RBDOOM_3_BFG) {
     private val homeDirectoryFolder : File by inject { parametersOf(HOME_DIRECTORY_NAME) }
-
     private val doomBFAPreferenceStorage by inject<DoomBFAPreferencesStorage>(
         named(EngineTypes.Classic_RBDOOM_3_BFG.name))
 
+    val textureCacheDir by lazy { homeDirectoryFolder.resolve("texture_cache") }
+
     override val pathToResource: String get() = doomBFAPreferenceStorage.pathToDoom3Resources.value!!
-
     override val preferencesStorage get() = doomBFAPreferenceStorage
-
     override val commandLineParams: String get() = doomBFAPreferenceStorage.commandLineArgs.value!!
-
     override val loadGL4ES = false
-
     override val callExitProcessOnDestroy = true
-
     override val touchFullScreenModeCanBeUsed = false
-
     override val targetGLESVersion get() = preferencesStorage.targetGLESVersion.value!!.glesIntVersion
-
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 
     override val commandLineArgs: Array<String>
@@ -90,6 +85,13 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun setGLESVersion (targetGLESVersion: Int)
     private external fun setRefreshRates(targetRefreshRates : IntArray, arraySize: Int)
     private external fun enableTexturesShrinking (enableTexturesShrinking : Boolean)
+    private external fun setTextureCacheData(enableTextureCache : Boolean, pathToTextureCacheDir : String)
+    private external fun nativeTrimMemory(aggressive : Boolean)
+
+    override fun initialize(activity: ComponentActivity) {
+        super.initialize(activity)
+        textureCacheDir.mkdirs()
+    }
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
@@ -99,6 +101,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         preferencesStorage.apply {
             setHardwareDXTSupport(enableDXTHardwareSupport.value!!)
             enableTexturesShrinking(enableTexturesShrinking.value!!)
+            setTextureCacheData(enableETC2TextureCache.value!!,
+                textureCacheDir.absolutePath)
         }
         setGLESVersion(targetGLESVersion)
         activity.supportedRefreshRates.toIntArray().apply {
@@ -106,13 +110,16 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
     }
 
+    override fun onNativeTrimMemory(aggressive: Boolean) {
+        super.onNativeTrimMemory(aggressive)
+        nativeTrimMemory(aggressive)
+    }
+
     companion object{
         private const val GAME_COMMAND = "fs_game"
         private const val BASE_GAME = "base"
-
         const val DEFAULT_SHADOW_IMAGE_MAP_SIZE = "256"
         const val HOME_DIRECTORY_NAME = "doombfa"
-
         val shadowMapImageSizes = listOf(DEFAULT_SHADOW_IMAGE_MAP_SIZE, "512", "1024")
 
         private fun buildCommand(commandKey : String, commandValue : String) =

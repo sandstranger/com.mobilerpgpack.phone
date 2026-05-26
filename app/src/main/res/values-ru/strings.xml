@@ -340,4 +340,6 @@
     <string name="import_mods">Импорт модов</string>
     <string name="export_mods">Экспорт модов</string>
     <string name="enable_textures_shrinking_support">Включить ужатие текстур (снижает расход ОЗУ, но возможны артефакты)</string>
+    <string name="enable_etc_textures_cache">Включить кэш текстур ETC2 (ускоряет загрузку текстур ETC2, но на дешёвых накопителях типа UFS/eMMC это может работать медленнее)</string>
+    <string name="clean_etc_textures_cache">Очистить кэш текстур ETC2</string>
 </resources>

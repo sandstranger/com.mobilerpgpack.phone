@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.activity
 
 import android.annotation.SuppressLint
+import android.content.ComponentCallbacks2
 import android.os.Build
 import android.os.Bundle
 import android.window.OnBackInvokedDispatcher
@@ -11,8 +12,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.mainSharedObject
 import com.mobilerpgpack.phone.ui.activity.MainActivity
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.forceLandscapeOrientation
-import com.mobilerpgpack.phone.utils.waitUntil
-import kotlinx.coroutines.runBlocking
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
@@ -69,6 +68,38 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
             engineInfo.onResume()
         }
         forceLandscapeOrientation()
+    }
+
+    @Suppress("DEPRECATION")
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE -> {
+                when (level) {
+                    TRIM_MEMORY_RUNNING_LOW -> {
+                        engineInfo.onNativeTrimMemory(false)
+                    }
+                    TRIM_MEMORY_BACKGROUND,
+                    TRIM_MEMORY_UI_HIDDEN -> {
+                        engineInfo.onNativeTrimMemory(true)
+                    }
+                }
+            }
+            else -> {
+                when (level) {
+                    TRIM_MEMORY_RUNNING_LOW,
+                    TRIM_MEMORY_RUNNING_CRITICAL -> {
+                        engineInfo.onNativeTrimMemory(false)
+                    }
+                    TRIM_MEMORY_MODERATE,
+                    TRIM_MEMORY_COMPLETE,
+                    TRIM_MEMORY_BACKGROUND,
+                    TRIM_MEMORY_UI_HIDDEN -> {
+                        engineInfo.onNativeTrimMemory(true)
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
