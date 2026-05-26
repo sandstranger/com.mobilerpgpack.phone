@@ -18,7 +18,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private val doomBFAPreferenceStorage by inject<DoomBFAPreferencesStorage>(
         named(EngineTypes.Classic_RBDOOM_3_BFG.name))
 
-    val textureCacheDir by lazy { File(context.filesDir,"doom3_texture_cache") }
+    val textureCacheDir by lazy { File(context.cacheDir,"doom3_texture_cache") }
 
     override val pathToResource: String get() = doomBFAPreferenceStorage.pathToDoom3Resources.value!!
     override val preferencesStorage get() = doomBFAPreferenceStorage
