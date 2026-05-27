@@ -2,8 +2,8 @@
 buildscript {
     ext.versions = [
             app_package_name : "com.mobilerpgpack.phone",
-            app_version_code : 68,
-            app_version_name : "2.9.4",
+            app_version_code : 69,
+            app_version_name : "2.9.5",
             min_sdk : 24,
             target_sdk : 36,
             target_sdk_min_revision : 1,
@@ -14,8 +14,10 @@ buildscript {
     ]
     ext.build_flags = [
             compiling_arguments : "-j${Runtime.getRuntime().availableProcessors()}",
-            common_c_flags : ["-Os","-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong", "-g"],
-            common_cpp_flags : ["-Os" ,"-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong", "-g"],
+            common_c_flags : ["-Os","-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
+                              "-g", "-D_FILE_OFFSET_BITS=64"],
+            common_cpp_flags : ["-Os" ,"-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
+                                "-g", "-D_FILE_OFFSET_BITS=64"],
             ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=thin -Wl,--build-id",
             ndk_build_android_stl : "APP_STL=c++_shared",
             CMAKE_CFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g",

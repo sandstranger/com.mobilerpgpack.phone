@@ -34,7 +34,8 @@ android {
                         "-DBUILD_SHARED_LIBS=true", "-Denable-oboe=on",
                         "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
                         "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
-                        "-DCMAKE_VERBOSE_MAKEFILE=OFF", "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
+                        "-DCMAKE_VERBOSE_MAKEFILE=OFF", "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm",
+                        "-D_FILE_OFFSET_BITS=64"
             }
         }
     }

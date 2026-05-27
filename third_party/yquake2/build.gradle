@@ -26,7 +26,8 @@ android {
                         "-DCMAKE_C_FLAGS=$build_flags.CMAKE_CFLAGS",
                         "-DCMAKE_C_COMPILER_LAUNCHER=ccache", "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache",
                         "-DCMAKE_SHARED_LINKER_FLAGS=$build_flags.CMAKE_SHADERLINKER_FLAGS",
-                        "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm"
+                        "$build_flags.CMAKE_ANDROID_STL","-DANDROID_ARM_MODE=arm",
+                        "-D_FILE_OFFSET_BITS=64"
             }
         }
     }
