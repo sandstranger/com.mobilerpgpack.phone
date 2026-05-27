@@ -78,7 +78,7 @@ android {
                         "-DCMAKE_C_FLAGS=${build_flags.CMAKE_CFLAGS} -fno-builtin -U_FORTIFY_SOURCE -fno-delete-null-pointer-checks " +
                                 "-fno-strict-aliasing -Wno-format-security -w",
                         "-DCMAKE_SHARED_LINKER_FLAGS=${build_flags.CMAKE_SHADERLINKER_FLAGS} -Wl,--allow-shlib-undefined",
-                        "-DANDROID_ARM_MODE=arm", "${build_flags.CMAKE_ANDROID_STL}"
+                        "-DANDROID_ARM_MODE=arm", "${build_flags.CMAKE_ANDROID_STL}", "-D_FILE_OFFSET_BITS=64"
             }
         }
     }
