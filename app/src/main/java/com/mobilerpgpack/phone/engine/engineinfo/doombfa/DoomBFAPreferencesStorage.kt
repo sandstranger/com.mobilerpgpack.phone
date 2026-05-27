@@ -42,7 +42,7 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val enableTexturesShrinkingPrefsKey = booleanPreferencesKey("enable_textures_shrinking")
     val enableETC2TextureCachePrefsKey = booleanPreferencesKey("enable_etc2_texture_cache")
 
-    val enableETC2TextureCache = getBooleanValue(enableETC2TextureCachePrefsKey, false)
+    val enableETC2TextureCache = getBooleanValue(enableETC2TextureCachePrefsKey, true)
     val enableTexturesShrinking = getBooleanValue(enableTexturesShrinkingPrefsKey)
     val disableStaticShadows = getBooleanValue(disableStaticShadowsPrefsKey)
     val disableDynamicShadows = getBooleanValue(disableDynamicShadowsPrefsKey)
