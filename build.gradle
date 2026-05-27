@@ -20,8 +20,8 @@ buildscript {
                                 "-g", "-D_FILE_OFFSET_BITS=64"],
             ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=thin -Wl,--build-id",
             ndk_build_android_stl : "APP_STL=c++_shared",
-            CMAKE_CFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g",
-            CMAKE_CXXFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g",
+            CMAKE_CFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
+            CMAKE_CXXFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
             CMAKE_ANDROID_STL : "-DANDROID_STL=c++_shared",
             CMAKE_SHADERLINKER_FLAGS :"-flto=thin -fuse-ld=lld -Wl,--build-id",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
