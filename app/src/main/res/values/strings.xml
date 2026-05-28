@@ -16,13 +16,13 @@
     <string name="opus_mt_description">EN -> RU translator. High-quality translations. Included in build (for mid- and high-end devices)</string>
     <string name="m2m_mt_description">Multilingual translator. High-quality translations (for high-end devices with ample RAM)</string>
     <string name="small100_mt_description">Multilingual translator. Medium-quality translations (for mid- and high-end devices with sufficient RAM)</string>
-    <string name="loading_model_title">Downloading translation model</string>
+    <string name="loading_model_title">Downloading</string>
     <string name="load_translation_model">Download translation model</string>
-    <string name="wait_text">Please wait…\nThe model will continue downloading after the window is closed</string>
+    <string name="wait_text">Please wait…\nThe downloading will continue after the window is closed</string>
     <string name="use_sdl_ttf_for_rendering">Use SDL TTF for text rendering in DoomRPG series(required for text translation)</string>
     <string name="use_ai_for_text_translations">Enable machine text translation for DoomRpg series(this also enables “Use SDL TTF for text rendering”)</string>
     <string name="enable_launcher_text_translation">Enable launcher text translation</string>
-    <string name="allow_downloading_over_mobile_network">Allow translation model downloads over mobile networks</string>
+    <string name="allow_downloading_over_mobile_network">Allow downloads over mobile networks</string>
     <string name="grant_permission">Grant permission</string>
     <string name="clear">Clear</string>
     <string name="delete">Delete</string>
@@ -344,4 +344,5 @@
     <string name="enable_textures_shrinking_support">Enable textures shrinking (Reduces RAM usage, but textures can glitch)</string>
     <string name="enable_etc_textures_cache">Enable ETC2 texture cache (speeds up ETC2 texture loading, but on cheap UFS/eMMC flash storage this option may be slower)</string>
     <string name="clean_etc_textures_cache">Clean ETC2 texture cache</string>
+    <string name="download_widelands_resources">Download Widelands resources</string>
 </resources>

@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.utils
 import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.GlesRenderVersions
+import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsEngineInfo
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
@@ -68,8 +69,15 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val zoomSensitivityPrefsKey = floatPreferencesKey("zoom_sensitivity")
     val enableAngleSupportPrefsKey = booleanPreferencesKey("enable_angle_support")
     val useMediumpShaderPrecisionKey = booleanPreferencesKey("use_mediump_shader_precision")
-    val glesRenderVersionPrefsKey = enumPreferencesKey<GlesRenderVersions>("gles_render_version")
+    val glesRenderVersionPrefsKey = enumPreferencesKey<GlesRenderVersions>("g4les_render_version")
+    val allowWidelandsDownloadsOverMobileNetworkPrefsKey = booleanPreferencesKey("allow_widelands_downloads_over_mobile")
+    val widelandsFilesContentVersionPrefsKey = intPreferencesKey("widelands_files_content_version")
+    val widelandsFilesContentDownloadedPrefsKey = booleanPreferencesKey("widelands_files_content_downloaded")
 
+    val widelandsFilesContentDownloaded = getBooleanValue(widelandsFilesContentDownloadedPrefsKey, false)
+    val widelandsFilesContentVersion = getIntValue(widelandsFilesContentVersionPrefsKey,
+        WidelandsEngineInfo.WIDELANDS_FILES_CONTENT_CURRENT_VERSION)
+    val allowWidelandsDownloadsOverMobile = getBooleanValue(allowWidelandsDownloadsOverMobileNetworkPrefsKey, false)
     val glesRenderVersion = getEnumValue(glesRenderVersionPrefsKey,
         GlesRenderVersions::class.java, GlesRenderVersions.DefaultValue)
 

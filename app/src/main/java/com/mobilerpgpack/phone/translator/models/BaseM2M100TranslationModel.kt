@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.main.KoinModulesProvider
+import com.mobilerpgpack.phone.main.RESOURCES_DOWNLOADER_ID
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.computeSHA256
@@ -36,7 +37,7 @@ abstract class BaseM2M100TranslationModel(
         "si", "sk", "sl", "so", "sq", "sr", "ss", "su", "sv", "sw", "ta", "th", "tl", "tn", "tr", "uk", "ur",
         "uz", "vi", "wo", "xh", "yi", "yo", "zh", "zu")
 
-    private val modelDownloader : IDriveDownloader = get { parametersOf("AIzaSyCz-HWRD4hzUHB4aVEj6927ZjgTj-147PE") }
+    private val modelDownloader : IDriveDownloader by inject { parametersOf(RESOURCES_DOWNLOADER_ID) }
 
     private val zipFile : File by inject { parametersOf("${modelFolder.name}.zip") }
 
@@ -113,19 +114,8 @@ abstract class BaseM2M100TranslationModel(
     }
 
     private fun extractDownloadedModel(zipFile: File): Boolean {
-        try {
-            if (zipFileSha256 == computeSHA256(zipFile) &&
-                unzipArchive(zipFile, userDirectory.absolutePath)
-            ) {
-                isModelDownloaded = true
-                return true
-            }
-            return false
-        } finally {
-            zipFile.delete()
-        }
-
-        return false
+        isModelDownloaded = unzipArchive(zipFile,userDirectory.absolutePath,zipFileSha256)
+        return isModelDownloaded
     }
 
     private fun onAssetsStartedCopy () {

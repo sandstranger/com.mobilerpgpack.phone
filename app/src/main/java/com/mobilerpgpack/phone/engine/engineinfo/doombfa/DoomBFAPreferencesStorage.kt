@@ -40,7 +40,7 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val useShadowPreciseInsideTestPrefsKey = booleanPreferencesKey("use_shadow_precise_inside_test")
     val lodDistancePrefsKey = intPreferencesKey("lod_distance")
     val enableTexturesShrinkingPrefsKey = booleanPreferencesKey("enable_textures_shrinking")
-    val enableETC2TextureCachePrefsKey = booleanPreferencesKey("enable_etc2_texture_cache")
+    val enableETC2TextureCachePrefsKey = booleanPreferencesKey("enable_etc2_doom3_texture_cache")
 
     val enableETC2TextureCache = getBooleanValue(enableETC2TextureCachePrefsKey, true)
     val enableTexturesShrinking = getBooleanValue(enableTexturesShrinkingPrefsKey)

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface IEngineInfo {
     val screenController : IScreenController
     val engineType : EngineTypes
+    val engineReadyToStart : Boolean
     val supportRenderChanges : Boolean
     val useGyroscope : Boolean
     val pathToResourceIsCorrect : Boolean

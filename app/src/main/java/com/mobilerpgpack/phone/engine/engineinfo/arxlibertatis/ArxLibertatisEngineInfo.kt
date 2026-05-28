@@ -10,20 +10,16 @@ import java.io.File
 
 class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.ArxLibertatis) {
-
     private val arxPreferenceStorage by inject<ArxLibertatisPreferenceStorage>(
         named(EngineTypes.ArxLibertatis.name))
-
     private val pathToUserFolder by lazy {
         super.pathToRootUserFolder + File.separator + "ArxLibertatis"
     }
 
     override val pathToResource: String get() = arxPreferenceStorage.pathToArxFatalisFolder.value!!
-
     override val commandLineParams get() = arxPreferenceStorage.arxLibertatisCommandLineArgs.value!!
-
     override val touchFullScreenModeCanBeUsed = false
-
+    override val targetGLESVersion= GLES_320_VERSION
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
