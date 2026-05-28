@@ -26,7 +26,6 @@ buildscript {
             CMAKE_SHADERLINKER_FLAGS :"-flto=thin -fuse-ld=lld -Wl,--build-id",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
     ]
-    ext.abi_filters = ['armeabi-v7a','arm64-v8a',"x86","x86_64"]
     ext.rootDir = rootProject.rootDir
     repositories {
         google()
