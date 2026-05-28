@@ -2,6 +2,9 @@
 import com.google.gms.googleservices.GoogleServicesPlugin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -28,6 +31,15 @@ android {
     compileSdk {
         version = release(versions.target_sdk) {
             minorApiLevel = versions.target_sdk_min_revision
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            universalApk false
         }
     }
 
@@ -66,10 +78,6 @@ android {
         targetSdk versions.target_sdk
         versionCode versions.app_version_code
 
-        ndk {
-            abiFilters = abi_filters
-        }
-
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-${versions.native_android_platform_version}",
@@ -90,10 +98,12 @@ android {
                 def versionName = versions.app_version_name
                 def versionCode = versions.app_version_code
                 def buildType = variant.buildType
-                def flavor = variant.flavorName ?: "noflavor"
-                def date = new Date().format("yyyy_MM_dd_HH_mm")
-                def abi = output.filters.find { it.filterType == "ABI" }?.identifier
-                def abiPart = abi != null ? "_${abi}" : "_universal"
+                def flavor = variant.productFlavors.collect { it.second }.join("_")
+                if (!flavor) flavor = "noflavor"
+                def date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm"))
+                def abiFilter = output.filters.find { it.filterType.name() == 'ABI' }
+                def abi = abiFilter ? abiFilter.identifier : null
+                def abiPart = abi ? "_${abi}" : "_universal"
                 output.outputFileName.set(
                         "${appName}_${flavor}_${buildType}${abiPart}_v${versionName}_b${versionCode}_${date}.apk"
                 )
@@ -141,14 +151,7 @@ android {
             }
             ndk {
                 debugSymbolLevel 'FULL'
-            }
-            splits {
-                abi {
-                    enable true
-                    reset()
-                    include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-                    universalApk false
-                }
+                abiFilters.clear()
             }
         }
         debug {
@@ -158,12 +161,10 @@ android {
                     arguments "-DCMAKE_BUILD_TYPE=Debug"
                 }
             }
-            signingConfig signingConfigs.debug
-            splits {
-                abi {
-                    enable false
-                }
+            ndk {
+                abiFilters.clear()
             }
+            signingConfig signingConfigs.debug
         }
 
         afterEvaluate {

@@ -14,9 +14,6 @@ android {
         targetSdk versions.target_sdk
         minSdk versions.min_sdk
 
-        ndk {
-            abiFilters = abi_filters
-        }
         externalNativeBuild {
             ndkBuild {
                 arguments += build_flags.ndk_build_platform

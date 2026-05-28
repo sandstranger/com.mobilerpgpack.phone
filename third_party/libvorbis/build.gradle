@@ -13,9 +13,6 @@ android {
     defaultConfig {
         targetSdk versions.target_sdk
         minSdk versions.min_sdk
-        ndk {
-            abiFilters = abi_filters
-        }
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_PLATFORM=android-$versions.native_android_platform_version",
