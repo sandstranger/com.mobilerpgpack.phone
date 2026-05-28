@@ -86,15 +86,16 @@ android {
     androidComponents {
         onVariants(selector().all()) { variant ->
             variant.outputs.forEach { output ->
-                def appName = "Classic Core"
+                def appName = "Classic_Core"
                 def versionName = versions.app_version_name
                 def versionCode = versions.app_version_code
                 def buildType = variant.buildType
                 def flavor = variant.flavorName ?: "noflavor"
                 def date = new Date().format("yyyy_MM_dd_HH_mm")
-
+                def abi = output.filters.find { it.filterType == "ABI" }?.identifier
+                def abiPart = abi != null ? "_${abi}" : "_universal"
                 output.outputFileName.set(
-                        "${appName}_${flavor}_${buildType}_v${versionName}_b${versionCode}_${date}.apk"
+                        "${appName}_${flavor}_${buildType}${abiPart}_v${versionName}_b${versionCode}_${date}.apk"
                 )
             }
 
