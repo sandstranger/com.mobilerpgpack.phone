@@ -18,7 +18,7 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 abstract class BaseM2M100TranslationModel(
-    private val context: Context,
+    context: Context,
     private val pathToModelFolder: String,
     private val spmFile: String,
     allowDownloadingOverMobile: Boolean = false
