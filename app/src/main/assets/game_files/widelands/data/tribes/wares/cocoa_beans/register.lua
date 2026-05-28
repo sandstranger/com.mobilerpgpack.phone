@@ -1,3 +1,0 @@
-return {
-   cocoa_beans = {},
-}

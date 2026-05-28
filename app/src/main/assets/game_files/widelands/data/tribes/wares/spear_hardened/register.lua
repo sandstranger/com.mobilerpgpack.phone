@@ -1,3 +1,0 @@
-return {
-   spear_hardened = {},
-}

@@ -1,3 +1,0 @@
-return {
-   milking_tongs = {},
-}

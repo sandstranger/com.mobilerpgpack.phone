@@ -1,3 +1,0 @@
-return {
-   coin_silver = {},
-}

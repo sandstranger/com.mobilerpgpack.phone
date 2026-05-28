@@ -1,3 +1,0 @@
-return {
-   gold_thread = {},
-}

@@ -1,3 +1,0 @@
-return {
-   fire_tongs = {},
-}

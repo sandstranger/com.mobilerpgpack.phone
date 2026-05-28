@@ -1,3 +1,0 @@
-return {
-   warriors_coat = {},
-}

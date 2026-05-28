@@ -1,3 +1,0 @@
-return {
-   protector_padded = {},
-}

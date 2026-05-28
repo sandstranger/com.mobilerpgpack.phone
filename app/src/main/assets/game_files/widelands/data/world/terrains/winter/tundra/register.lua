@@ -1,3 +1,0 @@
-return {
-   winter_tundra = {}
-}

@@ -1,3 +1,0 @@
-return {
-   fishing_net = {},
-}

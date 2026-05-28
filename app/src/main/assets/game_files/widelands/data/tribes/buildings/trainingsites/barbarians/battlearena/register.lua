@@ -1,3 +1,0 @@
-return {
-   barbarians_battlearena = {},
-}

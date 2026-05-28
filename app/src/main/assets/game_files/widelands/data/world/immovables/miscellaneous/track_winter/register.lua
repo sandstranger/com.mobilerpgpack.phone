@@ -1,3 +1,0 @@
-return {
-   track_winter = {}
-}

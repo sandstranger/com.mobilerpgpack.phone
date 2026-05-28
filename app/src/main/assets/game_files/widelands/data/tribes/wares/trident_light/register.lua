@@ -1,3 +1,0 @@
-return {
-   trident_light = {},
-}
