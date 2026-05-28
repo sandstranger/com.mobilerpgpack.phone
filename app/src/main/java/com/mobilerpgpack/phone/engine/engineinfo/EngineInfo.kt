@@ -150,6 +150,8 @@ abstract class EngineInfo(
 
     private external fun setUseGLES2_0State (useGLES2_0 : Boolean)
 
+    override val engineReadyToStart = true
+
     final override val needToReInitGameControllers: Boolean get() = needToReInitGameControllers()
 
     final override val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean> by lazy{

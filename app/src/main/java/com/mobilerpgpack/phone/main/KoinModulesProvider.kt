@@ -68,6 +68,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerGa
 import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerPreferencesStorage
 import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsViewModel
 import com.mobilerpgpack.phone.net.DriveDownloader
 import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.translator.ITranslationManager
@@ -707,7 +708,10 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         }.withOptions {
             named(widelandsName)
             bind<IEngineInfo>()
+        }.withOptions {
+            bind<WidelandsEngineInfo>()
         }
+        viewModelOf(::WidelandsViewModel)
         singleOf <IEngineUIController>(::WidelandsComposeSettings).withOptions {
             named(widelandsName)
         }

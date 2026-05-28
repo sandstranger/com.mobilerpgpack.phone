@@ -28,13 +28,12 @@ val keyCodeMap : Map<Int, KeyCodeInfo> by lazy { KeyStoreProvider.keyCodeMap }
 
 fun startGame(activity: Activity, engineToPlay: EngineTypes) {
     val assetsExtractor: IAssetExtractor = get(IAssetExtractor::class.java)
-
-    if (!assetsExtractor.assetsCopied) {
+    val activeEngineInfo: IEngineInfo = get (IEngineInfo::class.java,
+        named(engineToPlay.toString()))
+    if (!assetsExtractor.assetsCopied || !activeEngineInfo.engineReadyToStart) {
         activity.showErrorDialogBox(R.string.resources_not_ready)
         return
     }
-    val activeEngineInfo: IEngineInfo = get (IEngineInfo::class.java,
-        named(engineToPlay.toString()))
     with(activity){
         if (activeEngineInfo.isResourceCorrect(this)) {
             startActivity(activeEngineInfo.gameActivityClazz)
@@ -46,6 +45,16 @@ suspend fun waitUntil (delegateToAwait : () -> Boolean ){
     while (delegateToAwait()){
         delay(ONE_FRAME_DELAY)
     }
+}
+
+fun unzipArchive(zipFile: File, destDir: String, zipFileSha256: String): Boolean {
+    try {
+        return zipFileSha256 == computeSHA256(zipFile) &&
+                unzipArchive(zipFile, destDir)
+    } finally {
+        zipFile.delete()
+    }
+    return false
 }
 
 fun unzipArchive(zipFile: File, destDir: String) : Boolean {

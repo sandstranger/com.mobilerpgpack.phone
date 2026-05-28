@@ -15,13 +15,13 @@
     <string name="opus_mt_description">EN -> RU переводчик. Высокое качество перевода. Включён в сборку (для средних и высокопроизводительных устройств)</string>
     <string name="m2m_mt_description">Многоязычный переводчик. Высокое качество перевода (для мощных устройств с большим объёмом ОЗУ)</string>
     <string name="small100_mt_description">Многоязычный переводчик. Среднее качество перевода (для средних и мощных устройств с достаточным объёмом ОЗУ)</string>
-    <string name="loading_model_title">Загрузка модели перевода</string>
+    <string name="loading_model_title">Загрузка</string>
     <string name="load_translation_model">Скачать модель перевода</string>
-    <string name="wait_text">Пожалуйста, подождите…\nМодель продолжит загрузку после закрытия окна</string>
+    <string name="wait_text">Пожалуйста, подождите…\nЗагрузка продолжится после закрытия окна</string>
     <string name="use_sdl_ttf_for_rendering">Использовать SDL TTF для отображения текста в играх серии DoomRPG (требуется для перевода текста)</string>
     <string name="use_ai_for_text_translations">Включить машинный перевод текста в играх серии DoomRPG (также включает «Использовать SDL TTF для отображения текста»)</string>
     <string name="enable_launcher_text_translation">Включить перевод текста лаунчера</string>
-    <string name="allow_downloading_over_mobile_network">Разрешить загрузку моделей перевода по мобильной сети</string>
+    <string name="allow_downloading_over_mobile_network">Разрешить загрузки по мобильной сети</string>
     <string name="grant_permission">Предоставить разрешение</string>
     <string name="selected_button">Выбранная кнопка</string>
     <string name="clear">Очистить</string>
@@ -342,4 +342,5 @@
     <string name="enable_textures_shrinking_support">Включить ужатие текстур (снижает расход ОЗУ, но возможны артефакты)</string>
     <string name="enable_etc_textures_cache">Включить кэш текстур ETC2 (ускоряет загрузку текстур ETC2, но на дешёвых накопителях типа UFS/eMMC это может работать медленнее)</string>
     <string name="clean_etc_textures_cache">Очистить кэш текстур ETC2</string>
+    <string name="download_widelands_resources">Скачать ресурсы Widelands</string>
 </resources>
