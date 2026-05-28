@@ -1,65 +1,20 @@
 package com.mobilerpgpack.phone.translator.models
 
+import android.content.Context
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
-import com.mobilerpgpack.phone.main.KoinModulesProvider
+import com.mobilerpgpack.ctranslate2proxy.Translator
 import com.mobilerpgpack.phone.translator.TranslationManager
-import com.mobilerpgpack.phone.utils.IAssetExtractor
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelChildren
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
-import org.koin.core.qualifier.named
 
-class OpusMtTranslationModel : ITranslationModel, KoinComponent {
-    private val scope : CoroutineScope by inject (
-        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
-    private val lockObject = Any()
-    private val opusMtTranslator : OpusMtTranslator = get()
-    private val assetExtractor : IAssetExtractor by inject()
-    @Volatile
-    private var wasInitialize = false
-
-    override val translationType: TranslationType = TranslationType.OpusMt
-
-    override fun isLocaleSupported(locale: String): Boolean {
-        return locale == TranslationManager.RUSSIAN_LOCALE
-    }
-
-    private fun initialize(){
-        if (wasInitialize || !assetExtractor.assetsCopied){
-            return
-        }
-        synchronized(lockObject) {
-            wasInitialize = true
-            opusMtTranslator.initialize()
-        }
-    }
-
-    override suspend fun translate(
-        text: String,
-        sourceLocale: String,
-        targetLocale: String
-    ): TranslationResult {
-        if (!isLocaleSupported(targetLocale) || !assetExtractor.assetsCopied){
-            return TranslationResult(text,false)
-        }
-        val deferred = scope.async {
-            initialize()
-            opusMtTranslator.translate(text,sourceLocale,targetLocale)
-        }
-
-        return TranslationResult(deferred.await(),true)
-    }
-
-    override fun release() {
-        synchronized(lockObject) {
-            super.release()
-            scope.coroutineContext.cancelChildren()
-            opusMtTranslator.release()
-        }
-    }
-
-    override suspend fun needToDownloadModel(): Boolean = false
+class OpusMtTranslationModel (context: Context,
+                              pathToModelFolder: String,
+                              spmFile: String,
+                              allowDownloadingOverMobile: Boolean = false):
+    BaseM2M100TranslationModel(context,pathToModelFolder,spmFile, allowDownloadingOverMobile) {
+    override val supportedLocales = listOf("ru")
+    override val translationType = TranslationType.OpusMt
+    override val zipFileId = "10db2umxImLHep0BoNllpJzdhqzryex1N"
+    override val zipFileSha256 = "3f50481e2da47aeffd72278b1427561614002dbd8154a8cd0fe2896b5e12d57c"
+    override val translator: Translator by inject<OpusMtTranslator>()
+    override fun isLocaleSupported(locale: String) = locale == TranslationManager.RUSSIAN_LOCALE
 }
