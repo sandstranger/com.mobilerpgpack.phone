@@ -218,18 +218,18 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         single <MLKitTranslationModel> {  MLKitTranslationModel(get(),
             TranslationManager.SOURCE_LOCALE, targetLocale, allowDownloadingModelsOverMobile) }
 
+        val pathToOptModel = "opus-ct2-en-ru"
+        val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
+        val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
+        val optModelSMPFILE = "${pathToOptModel}${File.separator}model.bin"
 
         single<OpusMtTranslator> {
-            val pathToOptModel = "opus-ct2-en-ru"
-            val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
-            val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
-
             OpusMtTranslator(pathToOptModel,
             optModelSourceProcessor, optModelTargetProcessor) }
 
-        singleOf(::OpusMtTranslationModel).bind()
-
-
+        single<OpusMtTranslationModel> {
+            OpusMtTranslationModel (get(), pathToOptModel, optModelSMPFILE,
+                allowDownloadingModelsOverMobile) }
         single <M2M100Translator> {
             val pathToM2M100Model = "m2m100_ct2"
             val m2m100smpFile = "${pathToM2M100Model}${File.separator}sentencepiece.model"
