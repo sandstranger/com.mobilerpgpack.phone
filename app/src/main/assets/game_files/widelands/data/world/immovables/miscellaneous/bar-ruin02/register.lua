@@ -1,3 +1,0 @@
-return {
-   ["bar-ruin02"] = {}
-}

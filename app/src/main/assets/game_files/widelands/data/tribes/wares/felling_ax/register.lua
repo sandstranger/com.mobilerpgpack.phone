@@ -1,3 +1,0 @@
-return {
-   felling_ax = {},
-}

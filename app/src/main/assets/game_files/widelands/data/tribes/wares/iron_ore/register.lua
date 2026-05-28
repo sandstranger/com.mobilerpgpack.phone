@@ -1,3 +1,0 @@
-return {
-   iron_ore = {},
-}

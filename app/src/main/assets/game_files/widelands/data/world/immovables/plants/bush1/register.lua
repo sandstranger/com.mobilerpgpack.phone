@@ -1,3 +1,0 @@
-return {
-   bush1 = {}
-}

@@ -1,3 +1,0 @@
-return {
-   sword_broad = {},
-}

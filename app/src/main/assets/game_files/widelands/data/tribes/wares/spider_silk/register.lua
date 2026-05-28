@@ -1,3 +1,0 @@
-return {
-   spider_silk = {},
-}

@@ -1,3 +1,0 @@
-return {
-   desert4 = {}
-}

@@ -1,3 +1,0 @@
-return {
-   shield_advanced = {},
-}

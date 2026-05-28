@@ -1,3 +1,0 @@
-return {
-   scrap_iron = {},
-}

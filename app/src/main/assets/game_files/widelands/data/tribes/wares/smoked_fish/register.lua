@@ -1,3 +1,0 @@
-return {
-   smoked_fish = {},
-}

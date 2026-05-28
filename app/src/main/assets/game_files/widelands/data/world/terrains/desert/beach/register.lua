@@ -1,3 +1,0 @@
-return {
-   desert_beach = {}
-}

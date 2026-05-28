@@ -1,3 +1,0 @@
-return {
-   vest_padded = {},
-}

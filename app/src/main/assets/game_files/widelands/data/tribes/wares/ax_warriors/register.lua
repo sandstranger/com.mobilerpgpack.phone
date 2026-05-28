@@ -1,3 +1,0 @@
-return {
-   ax_warriors = {},
-}

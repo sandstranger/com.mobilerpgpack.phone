@@ -1,3 +1,0 @@
-return {
-   wildboar = { "eatable" }
-}

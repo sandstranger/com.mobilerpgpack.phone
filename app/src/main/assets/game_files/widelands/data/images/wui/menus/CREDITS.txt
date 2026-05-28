@@ -1,1 +1,0 @@
-lua.png Copyright © 1998 Lua.org. Graphic design by Alexandre Nakonechnyj.

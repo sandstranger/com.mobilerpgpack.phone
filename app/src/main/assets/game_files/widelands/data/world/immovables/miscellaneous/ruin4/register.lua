@@ -1,3 +1,0 @@
-return {
-   ruin4 = {}
-}
