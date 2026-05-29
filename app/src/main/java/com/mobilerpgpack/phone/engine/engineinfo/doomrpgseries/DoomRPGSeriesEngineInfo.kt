@@ -19,11 +19,10 @@ abstract class DoomRPGSeriesEngineInfo(
     final override val touchFullScreenModeCanBeUsed: Boolean = false
     final override val keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
     final override val enableGyroscope = false
+    final override val enableNGGL4ESSimpleShaderConv = true
 
     private external fun setEnableSDLTTFState (enableSDLTTF : Boolean)
-
     private external fun setEnableMachineTranslationState (enableMachineTranslation : Boolean)
-
     private external fun setPathsToResources (pathToArchive : String, pathToUserFolder : String)
 
     override fun initialize(activity: ComponentActivity) {
