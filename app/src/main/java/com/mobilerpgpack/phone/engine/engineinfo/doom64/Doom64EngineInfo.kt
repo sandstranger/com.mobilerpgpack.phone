@@ -19,16 +19,13 @@ open class Doom64EngineInfo(
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Doom64ExPlus) {
 
     private var savedScreenResolution : ScreenResolution? = null
-
     private var customScreenResolutionWasApplied = false
-
     private val modsModel : ModsModel by inject (named(EngineTypes.Doom64ExPlus.toString()))
 
-    override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString.value!!
-
-    override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder.value!!
-
-    override val touchFullScreenModeCanBeUsed = false
+    final override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString.value!!
+    final override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder.value!!
+    final override val touchFullScreenModeCanBeUsed = false
+    final override val enableNGGL4ESSimpleShaderConv = true
 
     final override val commandLineArgs: Array<String>
         get() {
@@ -59,14 +56,11 @@ open class Doom64EngineInfo(
         }
 
     private external fun MouseCursorCanBeDrawn() : Boolean
-
     private external fun setScreenResolution (screenWidth : Int, screenHeight : Int)
-
     private external fun RecalculateScreenResolution(screenWidth : Int, screenHeight : Int)
-
     private external fun setPathsToResources (pathToWadsFolder : String, pathToUserFolder : String)
 
-    override fun onNativeLibrariesLoaded() {
+    final override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(Doom64EngineInfo::class.java, mainLibraryName)
         setPathsToResources(pathToResource, getPathToDoom64UserFolder())
