@@ -90,8 +90,7 @@ abstract class EngineInfo(
             preferencesStorage.enableAngleSupport.value!!
     protected open val keyboardInputType : CustomKeyboardView.KeyboardType =
         SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
-    protected open val isSDL2BasedEngine = true
-
+    
     protected lateinit var resolution: ScreenResolution
         private set
 
@@ -243,8 +242,6 @@ abstract class EngineInfo(
         wasInit = true
         this.activity = activity
         resolution = activity.getScreenResolution()
-        SDLActivity.isSDl2Activity = isSDL2BasedEngine
-
         hideScreenControls = preferencesStorage.hideScreenControls.value!!
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.value!!
         displayInSafeArea = preferencesStorage.enableDisplayInSafeArea.value!!
