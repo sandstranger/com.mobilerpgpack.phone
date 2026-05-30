@@ -62,6 +62,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZ
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomPreferenceStorage
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UzDoomIniProvider
 import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerGames
@@ -120,6 +121,7 @@ import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.ui.viewmodel.MainActivityViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
+import com.mobilerpgpack.phone.utils.GpuProbe
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
@@ -182,6 +184,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         factory <File>{ (pathToFile : String) -> File(get<File>(named(ROOT_USER_DIRECTORY_KEY)),
             pathToFile) }
         singleOf(::VirtualControllerJnaLayer)
+        singleOf(::GpuProbe)
     }
 
     private val httpModule = module {
@@ -456,6 +459,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
     }
 
     private val uZDoomRegisterModule = module {
+        singleOf<UzDoomIniProvider>(::UzDoomIniProvider).bind()
         single { UZDoomPreferenceStorage() }.withOptions {
             named(EngineTypes.UZDoom.toString())
             bind<UZDoomPreferenceStorage>()

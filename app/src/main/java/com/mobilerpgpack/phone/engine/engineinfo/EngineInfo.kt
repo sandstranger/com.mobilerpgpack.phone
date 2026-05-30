@@ -66,6 +66,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
+import org.libsdl3.app.SDLActivity
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -80,21 +81,16 @@ abstract class EngineInfo(
         named(KoinModulesProvider.MAIN_THREAD_COROUTINE_KEY))
 
     protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
-
     protected open val preferencesStorage: PreferencesStorage by inject()
-
     protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.run {
         blockTouchCameraEventsWhenOnScreenStickActive.value!! && activeControlsType.value!! == ControlsType.OnScreenStick }
-
     protected abstract val sdlKeyboard : SDLKeyboard
-
     protected open val allowedToEnableAngle = true
-
-    protected val enableAngleSupport get() = allowedToEnableAngle &&
+    protected open val enableAngleSupport get() = allowedToEnableAngle &&
             preferencesStorage.enableAngleSupport.value!!
-
     protected open val keyboardInputType : CustomKeyboardView.KeyboardType =
         SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
+    protected open val isSDL2BasedEngine = true
 
     protected lateinit var resolution: ScreenResolution
         private set
@@ -245,9 +241,9 @@ abstract class EngineInfo(
         }
 
         wasInit = true
-
         this.activity = activity
         resolution = activity.getScreenResolution()
+        SDLActivity.isSDl2Activity = isSDL2BasedEngine
 
         hideScreenControls = preferencesStorage.hideScreenControls.value!!
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.value!!

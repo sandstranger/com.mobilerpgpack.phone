@@ -44,11 +44,11 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
         super.unloadIniFiles()
     }
 
-    private companion object{
-        private const val PREFERRED_RENDER_API = "GlobalSettings.vid_preferbackend"
+    companion object{
         private const val AUTOLOAD_BRIGHTMAPS = "GlobalSettings.autoloadbrightmaps"
         private const val AUTOLOAD_LIGHTS = "GlobalSettings.autoloadlights"
         private const val AUTOLOAD_WIDESCREEN = "GlobalSettings.autoloadwidescreen"
+        const val PREFERRED_RENDER_API = "GlobalSettings.vid_preferbackend"
     }
 }
 
