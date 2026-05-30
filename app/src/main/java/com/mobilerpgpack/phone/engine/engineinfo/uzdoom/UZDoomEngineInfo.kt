@@ -31,11 +31,8 @@ class UZDoomEngineInfo (mainEngineLib: String,
     }
     private val enableLightShaders get() = preferencesStorage.enableLightShaders.value!!
     private val useAngleLayerForced: Boolean by lazy {
-        if (uzDoomIniProvider.useOpenGLESRender) {
-            false
-        } else {
-            gpuProbe.probe().run { !this.isAdreno && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O }
-        }
+       !uzDoomIniProvider.useOpenGLESRender && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+               gpuProbe.probe().run { !this.isAdreno }
     }
 
     override val preferencesStorage by inject <UZDoomPreferenceStorage>(named(
