@@ -26,7 +26,7 @@ open class Doom64EngineInfo(
     final override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder.value!!
     final override val touchFullScreenModeCanBeUsed = false
     final override val enableNGGL4ESSimpleShaderConv = true
-
+    final override val isSDL2BasedEngine = false
     final override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
