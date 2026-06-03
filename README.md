@@ -45,6 +45,12 @@ The following projects are scheduled for Android porting:
 
 ---
 
+## Vulkan Support via ANGLE
+Starting from the latest releases, all ports (except Doom1 RPG and Vanilla-Conquer) support **Vulkan** rendering through [ANGLE](https://github.com/google/angle).
+- **Requirements:** Android 8.0+ and Vulkan 1.0/1.1 hardware support.
+
+---
+
 ## Keyboard and Mouse Support
 Full keyboard and mouse input is supported across the ports.
 
