@@ -105,8 +105,7 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 
 ##  Engine-Specific Instructions & Known Issues
 
-### Doom RPG Series
-##  How to Run
+### How to run Doom RPG Series
 1. **Wolfenstein RPG:** Obtain the `.ipa` file, copy it to your device, and select its path in the launcher.
 2. **Doom RPG:** Obtain the Brew file. Use the [BarToZip PC tool](https://github.com/Erick194/DoomRPG-RE/releases/tag/v.0.2.2) and follow the [Doomworld instructions](https://www.doomworld.com/forum/topic/129997-doom-rpg-port-reverse-engineering-update-version-022-source-code-release/) to generate `DoomRPG.zip`. Copy the ZIP to your device and select it in the launcher.
 3. **Doom II RPG:** Obtain the `.ipa` file, copy it to your device, and select its path in the launcher.
