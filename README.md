@@ -192,7 +192,7 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 
 ---
 
-##Download
+## Download
 
 Pre-compiled APKs are available via:
 - [F-Droid](https://f-droid.org/packages/com.mobilerpgpack.phone/)
