@@ -145,7 +145,7 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 - **Engine Support:** 
   - **Quake 1, Hexen 2:** Fully playable in single-player. Multiplayer in Quake 1 is unstable.
   - **Quake 2:** Fully supported with all official addons via [yquake2](https://github.com/yquake2/yquake2) (all addons are pre-compiled for Android). Single-player is playable; multiplayer works only with local bots.
-  -  **Quake 3:** Support is nominal Single-player is playable; multiplayer is non-functiona.
+  -  **Quake 3:** Support is nominal. Single-player is partially playable; multiplayer is non-functional.
   - **Half-Life 1:** Not supported and excluded from the launcher.
 - **Known Bugs:** Audio playback for certain sounds may fail in Quake2. This is an upstream FTEQW bug and will not be addressed.
 - **Audio:** Uses SDL3 and AAUDIO.
