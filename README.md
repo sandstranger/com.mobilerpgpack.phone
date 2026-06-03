@@ -45,6 +45,11 @@ The following projects are scheduled for Android porting:
 
 ---
 
+## Keyboard and Mouse Support
+Full keyboard and mouse input is supported across the ports.
+
+---
+
 ##  Controllers Support
 
 Physical controllers and on-screen controls are mutually exclusive. Most legacy engines natively support only a single gamepad.
@@ -100,6 +105,12 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 
 ##  Engine-Specific Instructions & Known Issues
 
+### Doom RPG Series
+##  How to Run
+1. **Wolfenstein RPG:** Obtain the `.ipa` file, copy it to your device, and select its path in the launcher.
+2. **Doom RPG:** Obtain the Brew file. Use the [BarToZip PC tool](https://github.com/Erick194/DoomRPG-RE/releases/tag/v.0.2.2) and follow the [Doomworld instructions](https://www.doomworld.com/forum/topic/129997-doom-rpg-port-reverse-engineering-update-version-022-source-code-release/) to generate `DoomRPG.zip`. Copy the ZIP to your device and select it in the launcher.
+3. **Doom II RPG:** Obtain the `.ipa` file, copy it to your device, and select its path in the launcher.
+
 ### Doom 64 (Doom64 EX Plus)
 - **Game Data:** Requires the Doom 64 Remaster from [Steam](https://store.steampowered.com/app/1148590/DOOM_64/).
 - **Mods:** Community mods are available on the [Doom 64 Discord](https://discord.com/invite/doom-64-593915163896315905).
@@ -132,7 +143,11 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 ### FTEQW
 - **Game Data:** Follow the [FTEQW Wiki](https://quakewiki.org/wiki/FTEQW_Wiki).
 - **Vulkan Renderer:** The stock Vulkan renderer is completely disabled due to severe architectural flaws and instability. Use ANGLE if Vulkan rendering is strictly required.
-- **Quake 2 Support:** Fully supported with all official addons via [yquake2](https://github.com/yquake2/yquake2) (all addons are pre-compiled for Android).
+- **Engine Support:** 
+  - **Quake 1, Hexen 2:** Fully playable in single-player. Multiplayer in Quake 1 is unstable.
+  - **Quake 2:** Fully supported with all official addons via [yquake2](https://github.com/yquake2/yquake2) (all addons are pre-compiled for Android). Single-player is playable; multiplayer works only with local bots.
+  -  **Quake 3:** Support is nominal Single-player is playable; multiplayer is non-functiona.
+  - **Half-Life 1:** Not supported and excluded from the launcher.
 - **Known Bugs:** Audio playback for certain sounds may fail in Quake2. This is an upstream FTEQW bug and will not be addressed.
 - **Audio:** Uses SDL3 and AAUDIO.
 - **Credits:** Integrates upstream Android bugfixes from [glKarin](https://github.com/glKarin/com.n0n3m4.diii4a) and [emileb](https://github.com/emileb/fteqw).
@@ -166,11 +181,6 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 
 ---
 
-## Keyboard and Mouse Support
-Full keyboard and mouse input is supported across the ports.
-
----
-
 ## Building from Source
 
 1. Clone the repository and open the root directory in Android Studio.
@@ -188,14 +198,6 @@ Full keyboard and mouse input is supported across the ports.
 Pre-compiled APKs are available via:
 - [F-Droid](https://f-droid.org/packages/com.mobilerpgpack.phone/)
 - [GitHub Releases](https://github.com/sandstranger/doom-wolf-rpg-android-port/releases/latest)
-
----
-
-##  How to Run
-
-1. **Wolfenstein RPG:** Obtain the `.ipa` file, copy it to your device, and select its path in the launcher.
-2. **Doom RPG:** Obtain the Brew file. Use the [BarToZip PC tool](https://github.com/Erick194/DoomRPG-RE/releases/tag/v.0.2.2) and follow the [Doomworld instructions](https://www.doomworld.com/forum/topic/129997-doom-rpg-port-reverse-engineering-update-version-022-source-code-release/) to generate `DoomRPG.zip`. Copy the ZIP to your device and select it in the launcher.
-3. **Doom II RPG:** Obtain the `.ipa` file, copy it to your device, and select its path in the launcher.
 
 ---
 
