@@ -1,347 +1,207 @@
-# Unofficial ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer, Classic-RBDOOM-3-BFG for Android
-This is an Android ports of Doom 1,2, Wolfenstein RPG, Doom64 EX Plus, PsyDoom, UZDoom, Perfect Dark, Arx Libertatis, FTEQW, Widelands, Vanilla-Conquer,
-Classic-RBDOOM-3-BFG projects found here:
+# Unofficial Android Ports of Classic Game Engines
 
-https://github.com/Erick194/DoomRPG-RE
+This repository contains a collection of unofficial Android ports for the following classic game engines and projects:
 
-https://github.com/Erick194/DoomIIRPG-RE
+- **Doom RPG & Doom II RPG** ([RE](https://github.com/Erick194/DoomRPG-RE) | [II RE](https://github.com/Erick194/DoomIIRPG-RE))
+- **Wolfenstein RPG** ([RE](https://github.com/Erick194/WolfensteinRPG-RE))
+- **Doom64 EX Plus** ([atsb](https://github.com/atsb/Doom64EX-Plus/) | [Enhanced](https://github.com/Styd051/DOOM64-EX-Plus-Enhanced))
+- **PsyDoom** ([BodbDearg](https://github.com/BodbDearg/PsyDoom))
+- **UZDoom** ([UZDoom](https://github.com/UZDoom/UZDoom))
+- **Perfect Dark** ([fgsfdsfgs](https://github.com/fgsfdsfgs/perfect_dark))
+- **Arx Libertatis** ([arx](https://github.com/arx/ArxLibertatis))
+- **FTEQW** ([fte-team](https://github.com/fte-team/fteqw))
+- **Widelands** ([widelands](https://github.com/widelands/widelands))
+- **Vanilla-Conquer** ([TheAssemblyArmada](https://github.com/TheAssemblyArmada/Vanilla-Conquer))
+- **Classic-RBDOOM-3-BFG** ([MadDeCoDeR](https://github.com/MadDeCoDeR/Classic-RBDOOM-3-BFG))
 
-https://github.com/Erick194/WolfensteinRPG-RE
+---
 
-https://github.com/atsb/Doom64EX-Plus/
+## Status: Long-Term Support (LTS)
 
-https://github.com/Styd051/DOOM64-EX-Plus-Enhanced
+This repository is currently in **Long-Term Support (LTS)** mode. Active feature development is closed; the focus is strictly on stability and critical maintenance.
 
-https://github.com/BodbDearg/PsyDoom
+## Future Development
 
-https://github.com/UZDoom/UZDoom
+The following projects are scheduled for Android porting:
+- **[Citadel](https://github.com/JosiahJack/Citadel)** (Next release)
+- **[UnderworldGodot](https://github.com/hankmorgan/UnderworldGodot)** (Future roadmap)
 
-https://github.com/fgsfdsfgs/perfect_dark
+*Note: There are no other open-source mobile ports planned after these projects.*
 
-https://github.com/arx/ArxLibertatis
+---
 
-https://github.com/fte-team/fteqw
+> **  Global Architecture Note: SDL3 Migration**
+> All SDL2-based engines in this repository have been migrated to **SDL3** via [sdl2-compat](https://github.com/libsdl-org/sdl2-compat). Be aware that `sdl2-compat` on Android is **not officially supported** by the SDL team, but it is required for modernizing the input and window management layers across these legacy codebases.
 
-https://github.com/widelands/widelands
+##    System Requirements
 
-https://github.com/TheAssemblyArmada/Vanilla-Conquer
-
-https://github.com/MadDeCoDeR/Classic-RBDOOM-3-BFG
-
-## STATUS UPDATE: LTS MODE
-
-This repository is now in Long-Term Support (LTS) mode.
-
-## System Requirements
-
-This port for Android has the following system requirements:
 ### Minimum
-* Operating system: Android 7.0 or later
-* Graphics: videocard, which supports GLES 2.0 render
-* Memory: 1GB system RAM
+- **OS:** Android 7.0 or later
+- **GPU:** Hardware supporting OpenGL ES 2.0
+- **RAM:** 1 GB system RAM
 
 ### Recommended
-* Operating system: Android 12 or later (I tested it mostly on my phone with Android 12)
-
-## Graphics
-
-These source ports supported OpenGL ES 3.0 render with NG-GL4ES.
-
-If your device is not supported OPenGL ES 3.0 render or you have graphics issues like black screen, then use binary
-
-with OpenGL ES 2.0 render
-
-## Angle
-
-At latest release all these source ports except (Doom1RPG and Vanilla-Conquer) started to support Vulkan render with Angle help.
-Angle support requries minimum Android 8 and vulkan 1.0 (1.1) support.
-On mtk it will be better to emulate gles 2.0 render with angle for better fps
-
-## Controllers Support
-This Android ports support controllers
-
-On-Screen Controls and physical controllers cannot be used together. Most legacy engines support only one gamepad.
-
-On-screen controls already emulate an Xbox controller for player movement. Disable on-screen controls if you want real controller support.
-
-## Doom RPG Default Controllers controls
-
-| Action           | Button      	|
-| ---------------  | ------------- 	|
-| Move Forward     | D-pad up    	|
-| Move Backward    | D-pad down  	|
-| Turn Left        | D-pad left  	|
-| Turn Right       | D-pad right 	|
-| Attack/Talk/Use  | A           	|
-| Next Weapon      | Right trigger  |
-| Prev Weapon      | Left trigger   |
-| Pass Turn        | X           	|
-| Automap          | Select      	|
-| Menu Open/Back   | Start       	|
-
-## Doom 2 RPG Default Controllers controls
-
-| Action           | Button         |
-| ---------------  | -------------  |
-| Move Forward     | D-pad up       |
-| Move Backward    | D-pad down     |
-| Turn Left        | D-pad left     |
-| Turn Right       | D-pad right    |
-| Attack/Talk/Use  | A              |
-| Next Weapon      | Right trigger  |
-| Prev Weapon      | Left trigger   |
-| Pass Turn        | X              |
-| Automap          | Select         |
-| Menu Open/Back   | Start          |
-| Menu Open/Back   | Start          |
-| Items Info       | Left shoulder  |
-| Drinks           | Right shoulder |
-| Pda              | B				|
-| Bot Dis          | Y				|
-
-## Wolfenstein RPG Default Controllers controls
-
-| Action           | Button         |
-| ---------------  | -------------  |
-| Move Forward     | D-pad up       |
-| Move Backward    | D-pad down     |
-| Turn Left        | D-pad left     |
-| Turn Right       | D-pad right    |
-| Attack/Talk/Use  | A              |
-| Next Weapon      | Right trigger  |
-| Prev Weapon      | Left trigger   |
-| Pass Turn        | X              |
-| Automap          | Select         |
-| Menu Open/Back   | Start          |
-| Menu Open/Back   | Start          |
-| Items Info       | Left shoulder  |
-| Syringes         | Right shoulder |
-| Journal          | Y   			|
-
-## Translation
-
-This launcher supporting Doom RPG series machine translation to many languages by local AI directly on Android device via CTranslate2 API.
-
-## Doom64 
-
-For running Doom 64 EX Plus - get Doom 64 remaster from STEAM
-
-https://store.steampowered.com/app/1148590/DOOM_64/
-
-Mods can be used from this Doom64 discord server - https://discord.com/invite/doom-64-593915163896315905
-
-## PsyDoom
-
-For running PsyDoom - Get Doom PSX disc with cue as described here https://github.com/BodbDearg/PsyDoom?tab=readme-ov-file#running-the-game
-
-PsyDoom requires vulkan 1.0 render suppport.
-
-If your device does not support vulkan render, then use legacy opengl es render
-
-## UZDoom
-
-For running Uzdoom follow gzdoom docs - https://zdoom.org/w/index.php?title=Main_Page
-
-Uzdoom engine has rendering issues at all mobile gpu vendors, except adreno.
-
-Do not expect working vulkan render and OpenGL emulation at gpu vendors except adreno.
-
-At mobile vendors - like mali or powevr use GLES 2.0 or GLES 3.x render. 
-
-This project contains code from GZDoom android port (https://github.com/emileb/gzdoom),
-
-which is licensed under GPL v3. All modifications are clearly marked in commit history.
-
-And using render changes (like OGL emulation, gles render and some bugfixes for Android platform)
-
-credits for Android render changes and Android bugfixes to emileb - https://github.com/emileb
-
-And contains code from glKarin GZDoom android port - https://github.com/glKarin/com.n0n3m4.diii4a
-
-Gles 3.0 - Gles 3.2 native render support used from glKarin gzdoom port - https://github.com/glKarin/com.n0n3m4.diii4a
-
-All credits for Gles 3.x native render support to glKarin - https://github.com/glKarin
-
-This project is ALSO licensed under GPL v3.
-
-## Perfect Dark
-
-For running perfect dark follow these docs - https://github.com/fgsfdsfgs/perfect_dark?tab=readme-ov-file#perfect-dark-port
-
-All Rom binaries neeed to have .z64 or .Z64 file extensions. Otherwise, the game will not start.
-
-For running perfect dark - your device need to support OPEN GL ES 3.0 render. Otherwise, the game will not start again.
-
-This perfect dark port also supported legacy ARMV7 devices without any issues.
-
-## ArxLibertatis
-
-This port is far superior in quality to the old Arx Libertatis port, which was the first I ever developed for Android
-
-In particular, it is fully supports both GLES 3.2 and GLES 2.0 rendering, has more convenient controls, and it has full ArmV7 support.
-
-It is also has a ton of other improvements.
-
-For running this port follow these ArxLibertatis docs - https://wiki.arx-libertatis.org/Getting_the_game_data
-
-This port uses code from the legacy Android openmw repository as a solution to not working changing brightness bug - https://github.com/xyzz/openmw-android
-
-All credits for solution for not working changing brightness in Android Arx Libertatis to xyzz - https://github.com/xyzz
-
-This port is using gamepads code implementation from ArxLibertatis nintendo switch port - https://github.com/fgsfdsfgs/ArxLibertatis
-
-All credits for gamepads implementation in ArxLibertatis android port to fgsfdsfgs - https://github.com/fgsfdsfgs  
-
-## FTEQW
-
-For running FTEQW follow these docs - https://quakewiki.org/wiki/FTEQW_Wiki
-
-FTEQW supports quake 1, quake 2, quake 3, hexen 2 and half life 1. However quake 2 and quake 3 support is nominal
-
-This engine does not have quake 2 native support. Instead it - it is using this engine https://github.com/yquake2/yquake2
-
-This engine loaded core yquake2 in runtime. You can play quake 2 single player campaign with this support. But Multiplayer will not work.
-
-The same applies to Quake 3. Support for Quake 3 is purely nominal - therefore multiplayer does not work in it at all. You can only play with bots in the 
-
-single player, and even then it is unstable.
-
-There is no support for Half Life 1 at all. It just doesn't work at all. That's why I didn't even include it in the launcher
-
-quake 1 net code also unstable with a lot of bugs.
-
-You can play quake1 , quake 2 and hexen 2 single player I think without major bugs.
-
-Rendering support: This engine supports opengl and vulkan on desktop. 
-
-On mobiles - it is suppports gles 2.0, gles 3.0 and vulkan renders, because I fixed almost all vulkan renders bugs in this engine for mobiles,
-
-so, it is working now even on mtk
-
-However vulkan support in this engine architecturally inefficient. Rendering performance will be very low even on Adreno
-
-Due to this - do not use it, use gles 2.0 or gles 3.0 render instead it even on adreno.
-
-For audio - openal with oboe is using, instead of SDL2 with openSLES support.
-
-This port of FTEQW contains code from glKarin's FTEQW Android port: https://github.com/glKarin/com.n0n3m4.diii4a
-
-And also used some bugfixes from beloko FTEQW  Android port: https://github.com/emileb/fteqw
-
-All credits for FTEQW Android bugfixes go to glKarin: https://github.com/glKarin and to emileb - https://github.com/emileb
-
-I used these bugfixes for this legacy engine because fixing bugs in this awful legacy engine from scratch provides no practical benefit.
-
-I do not have time to fix legacy engine bugs from zero if fixes already exist.
-
-All credits and licenses are properly acknowledged in this port. Any other ideas or issues are not my responsibility.
-
-If you want to fix bugs in this engine from scratch yourself, feel free to fork the FTEQW source code and adapt it for Android.
-
-## Widelands
-
-Widelands is a standalone RTS with its own assets. No third-party resources are required to run it on Android.
-
-Supports GLES 2.0 and GLES 3.2 renders.
-
-Works on ARMv7 devices.
-
-Gamepads are not supported and will not be added.
-
-Screen scaling and on-screen controls are implemented for mobile devices.
-
-Multiplayer is dead in this RTS, only remote asset downloading and server connection were tested.
-
-For more information, see the official wiki - https://www.widelands.org/wiki/Main%20Page/
-
-## Vanilla-Conquer
-
-This engine supports the classic Command & Conquer games:
-- Command & Conquer: Tiberian Dawn  
-- Command & Conquer: Red Alert  
-
-To run Tiberian Dawn, you need the original game resources.
-
-Recommended source: https://forums.cncnet.org/topic/8821-cc-1-tiberian-dawn-installation-on-windows-10/
-
-On mobile devices, DOS mode is enabled by default to provide a larger and more comfortable game screen on phones. However, without additional resources, Tiberian Dawn will show only a black screen in DOS mode.
-
-To fix this, download the required DOS version resources from here: https://www.moddb.com/games/cc-gold/downloads/command-and-conquer-dos
-
-From the DOS version of the game, extract the file **LOCAL.MIX** and copy it into your CNCNet Tiberian Dawn resources folder.
-
-To run Red Alert, use the official resources from CNCNet: https://cncnet.org/red-alert
-
-Multiplayer in this RTS is effectively inactive. Only basic server connection functionality was tested.
-
-ARMv7 devices should be supported.  
-
-Gamepads are supported, because On-screen gamepad emulation is used, which works without any known issues
-
-This port is using some code from Vanilla-Conquer nintendo switch port - https://github.com/capsterx-switch/Vanilla-Conquer
-
-All credits for this code to capsterx-switch - https://github.com/capsterx-switch
-
-## Classic-RBDOOM-3-BFG
-
-This Doom 3 BFG Edition port supports only the OpenGL ES 3.2 renderer because of the heavy use of modern GLSL 3.x features on desktop.
-
-The engine can run on ARMv7, but it is not officially supported.
-
-If you experience low FPS on your phone, try reducing the screen resolution and lowering the graphics settings.
-
-This fork of Classic-RBDOOM-3-BFG includes renderer code from glKarin’s Doom 3 BFG Edition Android port: https://github.com/glKarin/com.n0n3m4.diii4a
-
-It also includes bug fixes from beloko’s dhewm3 Android port: https://github.com/emileb/d3es-multithread
-
-All credit for the Android renderer changes in Doom 3 BFG Edition goes to glKarin: https://github.com/glKarin
-
-Additional Android bug fixes are credited to emileb: https://github.com/emileb
+- **OS:** Android 12 or later
+
+---
+
+##  Controllers Support
+
+Physical controllers and on-screen controls are mutually exclusive. Most legacy engines natively support only a single gamepad.
+> **Note:** The on-screen controls emulate an Xbox controller layout. To use a physical controller, you must disable the on-screen overlay in the launcher settings.
+
+### Default Gamepad Mappings
+
+#### Doom RPG
+| Action | Button |
+| :--- | :--- |
+| Move Forward / Backward | D-pad Up / Down |
+| Turn Left / Right | D-pad Left / Right |
+| Attack / Talk / Use | **A** |
+| Next / Previous Weapon | Right / Left Trigger |
+| Pass Turn | **X** |
+| Automap | **Select** |
+| Menu Open / Back | **Start** |
+
+#### Doom II RPG
+| Action | Button |
+| :--- | :--- |
+| Move Forward / Backward | D-pad Up / Down |
+| Turn Left / Right | D-pad Left / Right |
+| Attack / Talk / Use | **A** |
+| Next / Previous Weapon | Right / Left Trigger |
+| Pass Turn | **X** |
+| Automap | **Select** |
+| Menu Open / Back | **Start** |
+| Items Info / Drinks | Left / Right Shoulder |
+| PDA | **B** |
+| Bot Dis | **Y** |
+
+#### Wolfenstein RPG
+| Action | Button |
+| :--- | :--- |
+| Move Forward / Backward | D-pad Up / Down |
+| Turn Left / Right | D-pad Left / Right |
+| Attack / Talk / Use | **A** |
+| Next / Previous Weapon | Right / Left Trigger |
+| Pass Turn | **X** |
+| Automap | **Select** |
+| Menu Open / Back | **Start** |
+| Items Info / Syringes | Left / Right Shoulder |
+| Journal | **Y** |
+
+---
+
+##  Translation
+
+The launcher supports machine translation for the Doom RPG series into multiple languages. Translation is performed locally on the Android device via the [CTranslate2](https://github.com/OpenNMT/CTranslate2) API, requiring no internet connection.
+
+---
+
+##  Engine-Specific Instructions & Known Issues
+
+### Doom 64 (Doom64 EX Plus)
+- **Game Data:** Requires the Doom 64 Remaster from [Steam](https://store.steampowered.com/app/1148590/DOOM_64/).
+- **Mods:** Community mods are available on the [Doom 64 Discord](https://discord.com/invite/doom-64-593915163896315905).
+
+### PsyDoom
+- **Game Data:** Requires a Doom PSX disc image (`.cue`/`.bin`). See the [official PsyDoom documentation](https://github.com/BodbDearg/PsyDoom?tab=readme-ov-file#running-the-game).
+- **Rendering:** Requires Vulkan 1.0 support. Devices without Vulkan must use the legacy OpenGL ES renderer.
+- **Mali/PowerVR Performance:** Low FPS on Mali and PowerVR GPUs is expected due to GPU stalls. This is an architectural limitation and will not be fixed.
+- **Alternative:** For a playable PS1 Doom experience on Android, it is highly recommended to use [DOOM CE via UZDoom](https://www.moddb.com/mods/doom-ce/downloads/psx-doom-ce-205-full-version).
+
+### UZDoom
+- **Game Data:** Follow the [GZDoom documentation](https://zdoom.org/w/index.php?title=Main_Page).
+- **Known Issues & Workarounds:**
+  - **Vulkan Renderer:** The native Vulkan renderer remains unplayable and will not be fixed. Upstream developers are responsible for this code.
+  - **OpenGL Emulation on Mali/PowerVR:** To avoid black screens caused by a bug in the UZDoom codebase (not the GPU drivers), OpenGL emulation now forces Vulkan rendering via ANGLE. **Requirements:** Vulkan support and Android 8.0+.
+  - **OpenGL Emulation on Adreno:** Works natively with the stock GLES driver without the aforementioned bugs; forced ANGLE is not applied.
+  - **Fallback:** If Vulkan/ANGLE is unavailable on Mali/PowerVR, use the legacy native OpenGL ES renderer (ported by beloko), which does not suffer from these black screen issues.
+- **Credits:** Contains code from [emileb's GZDoom Android port](https://github.com/emileb/gzdoom) and [glKarin's GLES 3.x native render](https://github.com/glKarin/com.n0n3m4.diii4a). Licensed under GPL v3.
+
+### Perfect Dark
+- **Game Data:** Follow the [Perfect Dark port documentation](https://github.com/fgsfdsfgs/perfect_dark?tab=readme-ov-file#perfect-dark-port).
+- **Requirements:** ROM binaries must have `.z64` or `.Z64` extensions. Requires OpenGL ES 3.0 support. Legacy ARMv7 devices are fully supported.
+
+### Arx Libertatis
+- **Game Data:** Follow the [Arx Libertatis wiki](https://wiki.arx-libertatis.org/Getting_the_game_data).
+- **Features:** Fully supports GLES 3.0 and GLES 2.0 rendering, improved controls, and full ARMv7 support.
+- **Vulkan on Mali:** Vulkan rendering via ANGLE is fully playable on Mali GPUs. Previous low FPS issues caused by GPU stalls have been resolved.
+- **Credits:** Integrates brightness fixes from [xyzz's OpenMW Android port](https://github.com/xyzz/openmw-android) and gamepad implementations from the [Nintendo Switch port](https://github.com/fgsfdsfgs/ArxLibertatis).
+
+### FTEQW
+- **Game Data:** Follow the [FTEQW Wiki](https://quakewiki.org/wiki/FTEQW_Wiki).
+- **Vulkan Renderer:** The stock Vulkan renderer is completely disabled due to severe architectural flaws and instability. Use ANGLE if Vulkan rendering is strictly required.
+- **Quake 2 Support:** Fully supported with all official addons via [yquake2](https://github.com/yquake2/yquake2) (all addons are pre-compiled for Android).
+- **Known Bugs:** Audio playback for certain sounds may fail in Quake2. This is an upstream FTEQW bug and will not be addressed.
+- **Audio:** Uses SDL3 and AAUDIO.
+- **Credits:** Integrates upstream Android bugfixes from [glKarin](https://github.com/glKarin/com.n0n3m4.diii4a) and [emileb](https://github.com/emileb/fteqw).
+
+### Widelands
+- **Game Data:** Standalone RTS; no third-party assets required.
+- **Features:** Supports GLES 2.0/3.0, ARMv7, screen scaling, and on-screen controls.
+- **Limitations:** Gamepads are not supported. Multiplayer is deprecated (only basic server connections were tested).
+- **Docs:** [Official Wiki](https://www.widelands.org/wiki/Main%20Page/).
+
+### Vanilla-Conquer
+- **Supported Games:** Command & Conquer: Tiberian Dawn, Red Alert.
+- **Game Data:** 
+  - **Tiberian Dawn:** Requires original resources. DOS mode is enabled by default for better mobile scaling. If you see a black screen, extract `LOCAL.MIX` from the [DOS version](https://www.moddb.com/games/cc-gold/downloads/command-and-conquer-dos) and place it in your CNCNet resources folder.
+  - **Red Alert:** Use official [CNCNet resources](https://cncnet.org/red-alert).
+- **Features:** ARMv7 support. Gamepads are supported via on-screen emulation.
+- **Known Issues:**
+  - **Screen Reposition (#55):** Rendering behind the camera is standard on Android in 2026, but Vanilla-Conquer fails to handle screen reposition events correctly, causing UI elements to render off-screen.
+  - **Hardware Back Button:** The Android hardware back button is non-functional.
+  - **Lifecycle Crashes:** Calling `onPause`/`onResume` events can cause immediate render crashes.
+- **Credits:** Integrates code from the [Nintendo Switch port](https://github.com/capsterx-switch/Vanilla-Conquer).
+
+### Classic-RBDOOM-3-BFG
+- **Rendering:** Strictly OpenGL ES 3.2 due to heavy reliance on modern GLSL 3.x features.
+- **Texture Compression (DXT vs ETC2):** Hardware DXT decoding is implemented and functional, but it is highly recommended to disable it and use the ETC2 fallback. **Do not disable the ETC2 texture cache** (even though the toggle exists).
+- **Adreno GPUs:** Enable Vulkan rendering via ANGLE for maximum frame rates.
+- **Mali/PowerVR GPUs:** Doom 3 BFG is a heavy IMR (Immediate Mode Rendering) engine. Performance on tile-based GPUs is inherently limited. Use the custom Android UI options to disable heavy effects and lower the screen resolution. No further engine-level optimizations will be made for these architectures.
+- **Memory Optimization (Texture Shrinking):** Enable texture shrinking (skipping MIP-map levels) in the launcher to save 200-300 MB of RAM. 
+- **ARMv7 Limitations:** Enabling texture shrinking or running heavy mods on ARMv7 devices will likely result in OOM (Out of Memory) crashes due to the severe RAM limitations of 32-bit architectures. This is expected behavior.
+- **Credits:** Integrates renderer code from [glKarin](https://github.com/glKarin/com.n0n3m4.diii4a) and bugfixes from [emileb's dhewm3 port](https://github.com/emileb/d3es-multithread).
+
+---
 
 ## Keyboard and Mouse Support
-This Android ports support keyboard and mouse
+Full keyboard and mouse input is supported across the ports.
 
-## Building
+---
 
-To build the APK file, clone this repository, open the project root directory in Android Studio and run the project.
+## Building from Source
 
-Important: Bulding from source code supported only for fdroid buld variants, google variants are propritary due to crashlytics using.
+1. Clone the repository and open the root directory in Android Studio.
+2. Install **Python 3.x** (required for building native dependencies).
+3. *Highly Recommended:* Install [ccache](https://ccache.dev/) to drastically reduce compilation times for the 13 engines and native dependencies. (Windows users can use [Chocolatey](https://community.chocolatey.org/packages/ccache)).
+4. Run the project.
 
-To build, also need to install Python 3.x - https://www.python.org/downloads/, since it is used when building some dependencies.
+> **Important:** Building from source is strictly supported only for **F-Droid** build variants. Google Play variants are proprietary due to Crashlytics integration.
+> **Build Host:** Only **Windows 11 (25H2) x64** is officially supported as the build environment.
 
-Also - it will be better to use ccache (https://ccache.dev/) during building, because building 13 engines and all these native deps without ccache - is a Drag Me to Hell difficulty level task. On windows you can use chocolatey (https://chocolatey.org/, https://community.chocolatey.org/packages/ccache) for installing ccache support.
+---
 
-Only windows 11 25h2 x64 is supported as build host, others OS are not supported, because I am not using them.
+##Download
 
-## Download
+Pre-compiled APKs are available via:
+- [F-Droid](https://f-droid.org/packages/com.mobilerpgpack.phone/)
+- [GitHub Releases](https://github.com/sandstranger/doom-wolf-rpg-android-port/releases/latest)
 
-To download a working APK file, either do it from F-Droid [here](https://f-droid.org/packages/com.mobilerpgpack.phone/), or in the [Releases Section](https://github.com/sandstranger/doom-wolf-rpg-android-port/releases/latest).
+---
 
-# How to run this engines
-1. For running Wolfenstein rpg get wolfenstein rpg ipa file.
+##  How to Run
 
-   Copy this ipa file to your device.
+1. **Wolfenstein RPG:** Obtain the `.ipa` file, copy it to your device, and select its path in the launcher.
+2. **Doom RPG:** Obtain the Brew file. Use the [BarToZip PC tool](https://github.com/Erick194/DoomRPG-RE/releases/tag/v.0.2.2) and follow the [Doomworld instructions](https://www.doomworld.com/forum/topic/129997-doom-rpg-port-reverse-engineering-update-version-022-source-code-release/) to generate `DoomRPG.zip`. Copy the ZIP to your device and select it in the launcher.
+3. **Doom II RPG:** Obtain the `.ipa` file, copy it to your device, and select its path in the launcher.
 
-   Run this android port and specify path to this file in launcher
+---
 
-2. For running Doom1 rpg get doom1 rpg brew file
+## Credits & Third-Party Licenses
 
-   get BarToZip exe from this PC release build https://github.com/Erick194/DoomRPG-RE/releases/tag/v.0.2.2 
-
-   and follow this instructions https://www.doomworld.com/forum/topic/129997-doom-rpg-port-reverse-engineering-update-version-022-source-code-release/
-
-   to get DoomRPG.zip file. Copy DoomRPG.zip to your device.
-
-   Run this android port and specify path to this file in launcher.
-
-4.  For running Doom2 rpg get Doom2 rpg ipa.
-
-   Copy this ipa file to your device.
-   
-   Run this android port and specify path to this file in launcher
-
-## Credits
-This port using
+This project is a compilation of numerous open-source components. Each component is distributed under its own license. Complete license texts are consolidated in [THIRD-PARTY-LICENSES.TXT](https://github.com/sandstranger/com.mobilerpg.phone/blob/main/THIRD-PARTY-LICENSES.TXT).
 
 DoomRPG engine source code: [Licence](https://github.com/Erick194/DoomRPG-RE/blob/main/LICENSE) 	https://github.com/Erick194/DoomRPG-RE
 
@@ -579,15 +439,15 @@ SPIRV-Cross - [Licence](https://github.com/KhronosGroup/SPIRV-Cross/blob/main/LI
 
 etcpack - [Licence](https://github.com/wolfpld/etcpak/blob/master/LICENSE.txt) https://github.com/wolfpld/etcpak
 
-All UZDoom credits and Doom credits belong the original authors (id Software (Doom), Raven Software (Hexen/Heretic),
+*All UZDoom and Doom credits belong to the original authors (id Software, Raven Software, Rogue Software, Digital Café, Nash Muhandes).*
 
- Rogue Software (Strife), Digital Café (Chex), Nash Muhandes)
+---
 
 ### Licenses
 
 This project is a compilation of many open-source components. Each component is distributed under its own license. The source code and license terms for each component can be found in their respective repositories linked above.
 
-Complete license texts for all third-party components are consolidated in the [THIRD-PARTY-LICENSES.TXT](https://github.com/sandstranger/com.mobilerpgpack.phone/blob/main/THIRD-PARTY-LICENSES.TXT)
+Complete license texts for all third-party components are consolidated in the [THIRD-PARTY-LICENSES.TXT](https://github.com/sandstranger/com.mobilerpg.phone/blob/main/THIRD-PARTY-LICENSES.TXT).
 
 The core project is distributed under the [GPL v3](LICENSE) license.
 
