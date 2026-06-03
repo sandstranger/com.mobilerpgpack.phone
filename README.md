@@ -181,7 +181,7 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 - **Adreno GPUs:** Enable Vulkan rendering via ANGLE for maximum frame rates.
 - **Mali/PowerVR GPUs:** Doom 3 BFG is a heavy IMR (Immediate Mode Rendering) engine. Performance on tile-based GPUs is inherently limited. Use the custom Android UI options to disable heavy effects and lower the screen resolution. No further engine-level optimizations will be made for these architectures.
 - **Memory Optimization (Texture Shrinking):** Enable texture shrinking (skipping MIP-map levels) in the launcher to save 200-300 MB of RAM. 
-- **ARMv7 Limitations:** Enabling texture shrinking or running heavy mods on ARMv7 devices will likely result in OOM (Out of Memory) crashes due to the severe RAM limitations of 32-bit architectures. This is expected behavior.
+- **ARMv7 Limitations:** Running this engine on ARMv7 devices will likely result in OOM (Out of Memory) crashes due to the severe RAM limitations of 32-bit architectures. This is expected behavior.
 - **Credits:** Integrates renderer code from [glKarin](https://github.com/glKarin/com.n0n3m4.diii4a) and bugfixes from [emileb's dhewm3 port](https://github.com/emileb/d3es-multithread).
 
 ---
