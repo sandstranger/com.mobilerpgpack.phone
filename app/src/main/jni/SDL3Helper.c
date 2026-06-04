@@ -3,19 +3,19 @@
 //
 #include "SDL3/SDL_mouse.h"
 
-__attribute__((used))
+__attribute__((used)) __attribute__((visibility("default")))
 float getMouseX() {
     float ret = 0;
     SDL_GetMouseState(&ret, NULL);
     return ret;
 }
 
-__attribute__((used))
+__attribute__((used)) __attribute__((visibility("default")))
 float getMouseY() {
     float ret = 0;
     SDL_GetMouseState(NULL, &ret);
     return ret;
 }
 
-__attribute__((used))
+__attribute__((used)) __attribute__((visibility("default")))
 bool isMouseShown() { return SDL_CursorVisible(); }

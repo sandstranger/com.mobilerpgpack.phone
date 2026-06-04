@@ -7,6 +7,7 @@
 static SDL_Joystick *virtualController = nullptr;
 static SDL_JoystickID virtualControllerID = -1;
 
+__attribute__((used)) __attribute__((visibility("default")))
 void createVirtualController(void) {
     if (virtualController != nullptr) {
         return;
@@ -37,6 +38,7 @@ void createVirtualController(void) {
     }
 }
 
+__attribute__((used)) __attribute__((visibility("default")))
 void setVirtualAxis(int axisX, float axisXValue,int axisY, float axisYValue) {
     if (virtualController != nullptr) {
         const float axisMultiplier = 32767.0f;
@@ -45,6 +47,7 @@ void setVirtualAxis(int axisX, float axisXValue,int axisY, float axisYValue) {
     }
 }
 
+__attribute__((used)) __attribute__((visibility("default")))
 void destroyVirtualController(void) {
     if (virtualController != nullptr) {
         SDL_CloseJoystick(virtualController);

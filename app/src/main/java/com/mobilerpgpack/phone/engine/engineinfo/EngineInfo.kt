@@ -31,6 +31,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.GlesRenderVersions
+import com.mobilerpgpack.phone.main.ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
@@ -224,6 +225,9 @@ abstract class EngineInfo(
         Native.register(EngineInfo::class.java, mainLibraryName)
         setUseGLES2_0State(preferencesStorage.glesRenderVersion.value!! == GlesRenderVersions.OpenGLES_2_0)
         setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
+        if (enableAngleSupport){
+            AngleShaderCacheJnaLayer.setAngleState(true)
+        }
         if (loadGL4ES){
             gL4ESJnaLayer.apply {
                 initializeGL4ESData (enableNGGL4ESSimpleShaderConv,
@@ -275,6 +279,9 @@ abstract class EngineInfo(
         mainThreadScope.coroutineContext.cancelChildren()
         if (loadGL4ES){
             gL4ESJnaLayer.close_gl4es()
+        }
+        if (enableAngleSupport){
+            AngleShaderCacheJnaLayer.angle_blobcache_shutdown()
         }
         if (callExitProcessOnDestroy) {
             exitProcess(0)
@@ -479,6 +486,17 @@ abstract class EngineInfo(
 
         init {
             Native.register(GL4ESJnaLayer::class.java, gl4esLibraryName)
+        }
+    }
+
+    private object AngleShaderCacheJnaLayer{
+        external fun setAngleState (enableAngle: Boolean)
+        external fun angle_blobcache_shutdown()
+
+        init {
+            Native.register(AngleShaderCacheJnaLayer::class.java,
+                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME
+            )
         }
     }
 
