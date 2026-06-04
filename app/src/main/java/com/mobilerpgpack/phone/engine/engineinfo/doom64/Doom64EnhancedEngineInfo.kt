@@ -10,7 +10,7 @@ class Doom64EnhancedEngineInfo(mainEngineLib: String,
 ) : Doom64EngineInfo(mainEngineLib,allLibs) {
 
     override val engineType: EngineTypes = EngineTypes.Doom64ExPlusEnhanced
-
+    override val gl4esShaderCacheFolderName = "doom64_enhanced_gl4es_cache"
     override fun getPathToDoom64UserFolder() =
         pathToRootUserFolder + File.separator + "doom64ex-plus-enhanced" + File.separator
 
