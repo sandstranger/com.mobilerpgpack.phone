@@ -9,6 +9,7 @@ static SDL_Window *window = nullptr;
 static Uint32 windowId;
 static SDL_Mouse *mouse;
 
+__attribute__((used)) __attribute__((visibility("default")))
 void nativeGyroMouse(float dx, float dy) {
     if (!mouse) {
         mouse = (SDL_Mouse *) SDL_GetMouseVoid();

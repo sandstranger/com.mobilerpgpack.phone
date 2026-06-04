@@ -7,6 +7,10 @@ set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+set (CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+
 find_package(ZLIB REQUIRED)
 
 set(IS_DEBUG_BUILD OFF)
@@ -357,7 +361,15 @@ set(USE_SYSTEM_LIBJPEG ON CACHE BOOL "" FORCE)
 set(MONOLITH ON CACHE BOOL "" FORCE)
 set(MAKE_DLL OFF CACHE BOOL "" FORCE)
 
-set(APP_ROOT_DIR "${CMAKE_SOURCE_DIR}/app/src/main/jni")
+set(APP_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/app/src/main/jni" CACHE STRING "" FORCE)
+set(ANGLE_SHADER_CACHE_INCLUDE_DIR "${APP_ROOT_DIR}/AngleShaderCache" CACHE STRING "" FORCE)
+include_directories(${ANGLE_SHADER_CACHE_INCLUDE_DIR})
+
+add_library(AngleShaderCache SHARED)
+target_sources(AngleShaderCache PRIVATE "${APP_ROOT_DIR}/AngleShaderCache/AngleShaderCache.cpp")
+target_include_directories(AngleShaderCache PRIVATE ${SDL3_INCLUDE_DIR})
+target_link_libraries(AngleShaderCache PRIVATE ${SDL3_LIBRARY})
+
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
@@ -393,25 +405,25 @@ target_include_directories(DoomIIRPG PRIVATE "${OPENAL_INCLUDE_DIR}/AL" ${SDL2_I
         ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
 target_link_libraries(DoomIIRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
-        ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
+        ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY} AngleShaderCache)
 
 target_include_directories(WolfensteinRPG PRIVATE "${OPENAL_INCLUDE_DIR}" ${SDL2_INCLUDE_DIR}
         ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
 target_link_libraries(WolfensteinRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
-         ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY})
+         ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY} AngleShaderCache)
 
 target_include_directories(DOOM64 PRIVATE ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
         ${FMOD_INC_DIR})
 
 target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
-        ${FMOD_LIB} ZLIB::ZLIB m log )
+        ${FMOD_LIB} ZLIB::ZLIB m log AngleShaderCache)
 
 target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
         ${FMOD_INC_DIR})
 
 target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
-        ${FMOD_LIB} ZLIB::ZLIB m log )
+        ${FMOD_LIB} ZLIB::ZLIB m log AngleShaderCache)
 
 target_include_directories(PsyDoom PRIVATE ${SDL2_INCLUDE_DIR})
 target_link_libraries(PsyDoom PRIVATE ${SDL2_LIBRARY})
