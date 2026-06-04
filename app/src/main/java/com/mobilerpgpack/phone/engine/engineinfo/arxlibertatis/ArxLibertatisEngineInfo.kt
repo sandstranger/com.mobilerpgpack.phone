@@ -21,6 +21,7 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override val touchFullScreenModeCanBeUsed = false
     override val targetGLESVersion= GLES_300_VERSION
     override val enableNGGL4ESSimpleShaderConv = true
+    override val gl4esShaderCacheFolderName = "arx_libertatis_gl4es_cache"
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs

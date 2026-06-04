@@ -19,6 +19,7 @@ class WidelandsEngineInfo (mainEngineLib: String,
     override val useGyroscope = false
     override val mouseButtonsEventsCanBeInvoked = true
     override val touchFullScreenModeCanBeUsed = false
+    override val gl4esShaderCacheFolderName = "widelands_gl4es_cache"
     override val engineReadyToStart: Boolean get() = widelandsDataFolder.exists() &&
             preferencesStorage.widelandsFilesContentDownloaded.value!!
     override val commandLineParams: String get() = preferencesStorage.widelandsCommandLineArgs.value!!

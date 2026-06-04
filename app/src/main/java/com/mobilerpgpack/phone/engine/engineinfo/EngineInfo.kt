@@ -91,34 +91,22 @@ abstract class EngineInfo(
             preferencesStorage.enableAngleSupport.value!!
     protected open val keyboardInputType : CustomKeyboardView.KeyboardType =
         SDLKeyboard.DEFAULT_KEYBOARD_INPUT_TYPE
-    
     protected lateinit var resolution: ScreenResolution
         private set
-
     protected lateinit var activity: ComponentActivity
         private set
-
     protected val gl4esFullLibraryName get() = if (useLegacyGl4es) com.mobilerpgpack.phone.main.gl4esFullLibraryName else
         ngGL4ESFullLibraryName
-
     protected val pathToRootUserFolder: String get() = preferencesStorage.pathToRootUserFolder.value!!
-
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControls()
-
     protected open val commandLineParams : String = ""
-
     protected abstract val pathToResource : String
-
     protected open val loadGL4ES : Boolean = true
-
     protected open val targetGLESVersion : Int = GLES_300_VERSION
-
     protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope.value!!
-
     protected open val callExitProcessOnDestroy : Boolean = true
-
     protected open val enableNGGL4ESSimpleShaderConv = false
-
+    protected open val gl4esShaderCacheFolderName : String = "gl4es_cache"
     protected abstract val gyroInput : GyroInput
 
     private var wasInit = false
@@ -133,17 +121,11 @@ abstract class EngineInfo(
     private val gL4ESJnaLayer by lazy { GL4ESJnaLayer (gl4esLibraryName) }
 
     private external fun needToShowScreenControls() : Boolean
-
     protected external fun needToInvokeMouseButtonsEvents() : Boolean
-
     private external fun onNativePause()
-
     private external fun onNativeResume()
-
     private external fun needToReInitGameControllers() : Boolean
-
     private external fun setPathToSDLControllerDB (pathToSDLControllerDB : String)
-
     private external fun setUseGLES2_0State (useGLES2_0 : Boolean)
 
     override val engineReadyToStart = true
@@ -230,9 +212,12 @@ abstract class EngineInfo(
         }
         if (loadGL4ES){
             gL4ESJnaLayer.apply {
+                val gl4esShaderCacheFolder = File(activity.cacheDir, gl4esShaderCacheFolderName)
+                gl4esShaderCacheFolder.mkdirs()
                 initializeGL4ESData (enableNGGL4ESSimpleShaderConv,
                     enableAngleSupport, targetGLESVersion,
-                    preferencesStorage.useMediumpShaderPrecision.value!!)
+                    preferencesStorage.useMediumpShaderPrecision.value!!,
+                    gl4esShaderCacheFolder.absolutePath)
                 initialize_gl4es()
             }
         }
@@ -482,7 +467,7 @@ abstract class EngineInfo(
         external fun close_gl4es()
         external fun initializeGL4ESData(enableSimpleShaderConv : Boolean,
                                          enableAngle : Boolean,targetESVersion : Int,
-                                         useMediumpShaderPrecision : Boolean)
+                                         useMediumpShaderPrecision : Boolean, pathToShaderCache : String)
 
         init {
             Native.register(GL4ESJnaLayer::class.java, gl4esLibraryName)

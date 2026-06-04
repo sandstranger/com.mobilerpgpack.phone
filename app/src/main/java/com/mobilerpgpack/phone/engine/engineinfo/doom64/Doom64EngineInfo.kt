@@ -22,6 +22,7 @@ open class Doom64EngineInfo(
     private var customScreenResolutionWasApplied = false
     private val modsModel : ModsModel by inject (named(EngineTypes.Doom64ExPlus.toString()))
 
+    override val gl4esShaderCacheFolderName = "doom64_gl4es_cache"
     final override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString.value!!
     final override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder.value!!
     final override val touchFullScreenModeCanBeUsed = false
