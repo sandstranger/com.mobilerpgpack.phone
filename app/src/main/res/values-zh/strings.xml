@@ -311,7 +311,6 @@
     <string name="alpha_value">字母:</string>
     <string name="enable_angle_support">启用 ANGLE 进行渲染（基于 Vulkan 的 OpenGL ES 实现）</string>
     <string name="path_to_doom3_resources">Doom 3 BFG 资源路径</string>
-    <string name="use_mediump_precision">在 gl4es 中使用着色器的 mediump 精度而不是 highp</string>
     <string name="disable_postprocess_effects">禁用所有后期处理效果</string>
     <string name="disable_shadows">禁用所有阴影</string>
     <string name="disable_particles">禁用粒子效果</string>
