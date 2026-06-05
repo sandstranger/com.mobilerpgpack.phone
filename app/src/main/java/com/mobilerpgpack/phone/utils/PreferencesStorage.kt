@@ -68,7 +68,6 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val widelandsScreenScalePrefeKey = floatPreferencesKey("widelands_screen_scale")
     val zoomSensitivityPrefsKey = floatPreferencesKey("zoom_sensitivity")
     val enableAngleSupportPrefsKey = booleanPreferencesKey("enable_angle_support")
-    val useMediumpShaderPrecisionKey = booleanPreferencesKey("use_mediump_shader_precision")
     val glesRenderVersionPrefsKey = enumPreferencesKey<GlesRenderVersions>("target_g4les_render_version")
     val allowWidelandsDownloadsOverMobileNetworkPrefsKey = booleanPreferencesKey("allow_widelands_downloads_over_mobile")
     val widelandsFilesContentVersionPrefsKey = intPreferencesKey("widelands_files_content_version")
@@ -80,8 +79,6 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val allowWidelandsDownloadsOverMobile = getBooleanValue(allowWidelandsDownloadsOverMobileNetworkPrefsKey, false)
     val glesRenderVersion = getEnumValue(glesRenderVersionPrefsKey,
         GlesRenderVersions::class.java, GlesRenderVersions.DefaultValue)
-
-    val useMediumpShaderPrecision = getBooleanValue(useMediumpShaderPrecisionKey, false)
 
     val widelandsScreenScale = getFloatValue(widelandsScreenScalePrefeKey, 2.0f)
 

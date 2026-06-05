@@ -216,7 +216,7 @@ abstract class EngineInfo(
                 gl4esShaderCacheFolder.mkdirs()
                 initializeGL4ESData (enableNGGL4ESSimpleShaderConv,
                     enableAngleSupport, targetGLESVersion,
-                    preferencesStorage.useMediumpShaderPrecision.value!!,
+                    false,
                     gl4esShaderCacheFolder.absolutePath)
                 initialize_gl4es()
             }

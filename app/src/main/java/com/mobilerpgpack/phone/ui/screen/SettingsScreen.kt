@@ -252,13 +252,6 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
-        SwitchPreferenceItem(
-            stringResource(R.string.use_mediump_precision),
-            preferencesStorage.useMediumpShaderPrecision,
-            preferencesStorage.useMediumpShaderPrecisionKey.name)
-
-        DrawHorizontalDivider()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             SwitchPreferenceItem(
                 stringResource(R.string.enable_angle_support),

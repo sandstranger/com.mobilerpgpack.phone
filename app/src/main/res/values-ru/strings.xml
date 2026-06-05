@@ -310,7 +310,6 @@
     <string name="alpha_value">Альфа:</string>
     <string name="enable_angle_support">Использовать Angle для рендеринга (реализация OpenGL ES на основе Vulkan)</string>
     <string name="path_to_doom3_resources">Путь к ресурсам Doom 3 BFG</string>
-    <string name="use_mediump_precision">использовать среднюю точность (mediump) шейдеров вместо высокой (highp) в gl4es</string>
     <string name="disable_postprocess_effects">Отключить все эффекты постобработки</string>
     <string name="disable_shadows">Отключить все тени</string>
     <string name="disable_particles">Отключить частицы</string>
