@@ -34,10 +34,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
        !uzDoomIniProvider.useOpenGLESRender && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
                !gpuProbe.probe().isAdreno
     }
-    @Volatile
-    var isCacheFolderDeleting = false
 
-    override val engineReadyToStart: Boolean get() = !isCacheFolderDeleting
     override val preferencesStorage by inject <UZDoomPreferenceStorage>(named(
         EngineTypes.UZDoom.toString()))
     override val commandLineParams: String get() = preferencesStorage.uZDoomCommandLineArgsString.value!!
