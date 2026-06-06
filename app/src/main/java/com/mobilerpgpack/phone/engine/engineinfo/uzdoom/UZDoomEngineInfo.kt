@@ -106,7 +106,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
     private external fun RecreateVulkanSwapChain()
     private external fun UpdateGLLiteShaderState(enableLightShaders : Boolean)
     private external fun UpdateHarmGLESVersion(glesVersion : Int)
-    private external fun setPathToUserFolder (pathToUserFolder : String)
+    private external fun setPathsToFolders (pathToUserFolder : String, pathToCacheFolder : String)
     private external fun UpdateUseOpenGLESState(useOpenGLES : Boolean)
 
     override fun onNativeLibrariesLoaded() {
@@ -115,7 +115,8 @@ class UZDoomEngineInfo (mainEngineLib: String,
         Native.register(UZDoomEngineInfo::class.java, mainLibraryName)
         UpdateHarmGLESVersion(glesVersion)
         UpdateGLLiteShaderState(enableLightShaders)
-        setPathToUserFolder(pathToUZDoomUserFolder)
+        setPathsToFolders(pathToUZDoomUserFolder,
+            activity.cacheDir.absolutePath)
         UpdateUseOpenGLESState(uzDoomViewModel.renderAPI == UZDoomRenderAPI.OpenGLES)
     }
 
