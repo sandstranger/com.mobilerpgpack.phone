@@ -342,5 +342,5 @@
     <string name="enable_etc_textures_cache">Включить кэш текстур ETC2 (ускоряет загрузку текстур ETC2, но на дешёвых накопителях типа UFS/eMMC это может работать медленнее)</string>
     <string name="clean_etc_textures_cache">Очистить кэш текстур ETC2</string>
     <string name="download_widelands_resources">Скачать ресурсы Widelands</string>
-    <string name="enable_spirv_cross">Включить SPIRV CROSS для конвертации шейдеров из GL 3.3 в GLES 3.1 в OpenGL-рендере.</string>
+    <string name="enable_spirv_cross">Включить SPIRV CROSS для конвертации шейдеров из GL 3.3 в GLES 3.1 в OpenGL-рендере</string>
 </resources>
