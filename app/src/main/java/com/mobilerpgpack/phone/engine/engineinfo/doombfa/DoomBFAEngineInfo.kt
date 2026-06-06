@@ -19,7 +19,10 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         named(EngineTypes.Classic_RBDOOM_3_BFG.name))
 
     val textureCacheDir by lazy { File(context.cacheDir,"doom3_texture_cache") }
+    @Volatile
+    var isTexturesResourcesDeleting = false
 
+    override val engineReadyToStart: Boolean get() = !isTexturesResourcesDeleting
     override val pathToResource: String get() = doomBFAPreferenceStorage.pathToDoom3Resources.value!!
     override val preferencesStorage get() = doomBFAPreferenceStorage
     override val commandLineParams: String get() = doomBFAPreferenceStorage.commandLineArgs.value!!

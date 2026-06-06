@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.doombfa.ui
 
 import androidx.lifecycle.ViewModel
+import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo.Companion.HOME_DIRECTORY_NAME
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import kotlinx.coroutines.CoroutineScope
@@ -16,12 +17,14 @@ class DoomBFAViewModel : ViewModel(), KoinComponent {
         named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
     private val glslCacheFolder : File by inject { parametersOf(buildPathToCacheFolder("glsl")) }
     private val hlslCacheFolder : File by inject { parametersOf(buildPathToCacheFolder("hlsl")) }
+    private val doomBfaInstance : DoomBFAEngineInfo by inject ()
     @Volatile
     private var cacheIsDeleted = true
 
     fun deleteCacheFolders(){
         if (cacheIsDeleted){
             cacheIsDeleted = false
+            doomBfaInstance.isTexturesResourcesDeleting = true
             scope.launch { deleteCacheFoldersAsync() }
         }
     }
@@ -35,6 +38,7 @@ class DoomBFAViewModel : ViewModel(), KoinComponent {
             hlslCacheFolder.deleteRecursively()
         }
         cacheIsDeleted = true
+        doomBfaInstance.isTexturesResourcesDeleting = false
     }
 
     private fun buildPathToCacheFolder (targetCacheFolder : String) =
