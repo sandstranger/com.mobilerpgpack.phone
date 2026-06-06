@@ -30,15 +30,19 @@ class DoomBFAViewModel : ViewModel(), KoinComponent {
     }
 
     private fun deleteCacheFoldersAsync (){
-        if (glslCacheFolder.exists()){
-            glslCacheFolder.deleteRecursively()
-        }
+        try {
+            if (glslCacheFolder.exists()){
+                glslCacheFolder.deleteRecursively()
+            }
 
-        if (hlslCacheFolder.exists()){
-            hlslCacheFolder.deleteRecursively()
+            if (hlslCacheFolder.exists()){
+                hlslCacheFolder.deleteRecursively()
+            }
         }
-        cacheIsDeleted = true
-        doomBfaInstance.isTexturesResourcesDeleting = false
+        finally {
+            cacheIsDeleted = true
+            doomBfaInstance.isTexturesResourcesDeleting = false
+        }
     }
 
     private fun buildPathToCacheFolder (targetCacheFolder : String) =
