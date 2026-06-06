@@ -82,13 +82,10 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             preferencesStorage.setStringValue(preferencesStorage.uzDoomGLESVersionPrefsKey, it)
         }
-
         DrawHorizontalDivider()
         SwitchPreferenceItem(stringResource(R.string.enable_spirv_cross),
             preferencesStorage.enableSpirvCross,
-            preferencesStorage.enableSpirvCrossPrefsKey.name){
-            viewModel.deleteCacheFolder()
-        }
+            preferencesStorage.enableSpirvCrossPrefsKey.name)
         DrawHorizontalDivider()
         SwitchPreferenceItem(
             stringResource(R.string.uzdoom_enable_light_shaders),
