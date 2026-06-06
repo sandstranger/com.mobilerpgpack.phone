@@ -1,16 +1,29 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
+import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.Ini
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.core.component.get
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
 class UZDoomComposeSettingsViewModel : IniViewModel(){
-
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
+    private val context : Context by inject ()
     private val uzDoomIni = Ini ("uzdoom${File.separator}uzdoom.ini", removeSpacesBetweenSeparator = true)
+    private val uzDoomInstance : UZDoomEngineInfo by inject ()
+    private val pathToUZDoomCacheFolder : File by lazy {
+        File(context.cacheDir, "uzdoom_cache")
+    }
+    @Volatile
+    private var cacheIsDeleting = false
 
     val uzDoomMods : UZDoomModsModel = get (named(EngineTypes.UZDoom.toString()))
     val renderAPIAsLiveData = uzDoomIni.getIntValue(PREFERRED_RENDER_API)
@@ -42,6 +55,22 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
     override fun unloadIniFiles() {
         uzDoomIni.clear()
         super.unloadIniFiles()
+    }
+
+    fun deleteCacheFolder(){
+        if (!cacheIsDeleting && pathToUZDoomCacheFolder.exists()){
+            cacheIsDeleting = true
+            uzDoomInstance.isCacheFolderDeleting = true
+            scope.launch {
+                try {
+                    pathToUZDoomCacheFolder.deleteRecursively()
+                }
+                finally {
+                    uzDoomInstance.isCacheFolderDeleting = false
+                    cacheIsDeleting = false
+                }
+            }
+        }
     }
 
     companion object{

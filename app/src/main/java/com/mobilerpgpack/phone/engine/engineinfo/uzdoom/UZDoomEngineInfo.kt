@@ -34,7 +34,10 @@ class UZDoomEngineInfo (mainEngineLib: String,
        !uzDoomIniProvider.useOpenGLESRender && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
                !gpuProbe.probe().isAdreno
     }
+    @Volatile
+    var isCacheFolderDeleting = false
 
+    override val engineReadyToStart: Boolean get() = !isCacheFolderDeleting
     override val preferencesStorage by inject <UZDoomPreferenceStorage>(named(
         EngineTypes.UZDoom.toString()))
     override val commandLineParams: String get() = preferencesStorage.uZDoomCommandLineArgsString.value!!
@@ -108,6 +111,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
     private external fun UpdateHarmGLESVersion(glesVersion : Int)
     private external fun setPathsToFolders (pathToUserFolder : String, pathToCacheFolder : String)
     private external fun UpdateUseOpenGLESState(useOpenGLES : Boolean)
+    private external fun setSpirvCrossState(enableSpirvCross : Boolean)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
@@ -118,6 +122,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
         setPathsToFolders(pathToUZDoomUserFolder,
             activity.cacheDir.absolutePath)
         UpdateUseOpenGLESState(uzDoomViewModel.renderAPI == UZDoomRenderAPI.OpenGLES)
+        setSpirvCrossState(preferencesStorage.enableSpirvCross.value!!)
     }
 
     override fun onResume() {

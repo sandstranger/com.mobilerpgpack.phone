@@ -343,4 +343,5 @@
     <string name="enable_etc_textures_cache">启用 ETC2 纹理缓存（加快 ETC2 纹理加载速度，但在廉价的 UFS/eMMC 闪存存储上，此选项可能导致速度变慢）</string>
     <string name="clean_etc_textures_cache">清除 ETC2 纹理缓存</string>
     <string name="download_widelands_resources">下载 Widelands 资源</string>
+    <string name="enable_spirv_cross">启用 SPIRV CROSS，在 OpenGL 渲染器中将着色器从 GL 3.3 转换为 GLES 3.1</string>
 </resources>

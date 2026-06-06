@@ -344,4 +344,5 @@
     <string name="enable_etc_textures_cache">Enable ETC2 texture cache (speeds up ETC2 texture loading, but on cheap UFS/eMMC flash storage this option may be slower)</string>
     <string name="clean_etc_textures_cache">Clean ETC2 texture cache</string>
     <string name="download_widelands_resources">Download Widelands resources</string>
+    <string name="enable_spirv_cross">Enable SPIRV CROSS for shaders conversion from gl 3.3 to GLES 3.1 in OpenGL render</string>
 </resources>
