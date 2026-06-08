@@ -4,12 +4,12 @@ buildscript {
             app_package_name : "com.mobilerpgpack.phone",
             app_version_code : 74,
             app_version_name : "2.9.7.2",
-            min_sdk : 24,
+            min_sdk : 26,
             target_sdk : 37,
             target_sdk_min_revision : 0,
             ndk_version : '29.0.14206865',
             build_tools_version : '37.0.0',
-            native_android_platform_version : 24,
+            native_android_platform_version : 26,
             cmake_version : "4.1.2"
     ]
     ext.build_flags = [
