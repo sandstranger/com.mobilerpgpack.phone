@@ -91,7 +91,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun setRefreshRates(targetRefreshRates : IntArray, arraySize: Int)
     private external fun enableTexturesShrinking (enableTexturesShrinking : Boolean)
     private external fun setTextureCacheData(enableTextureCache : Boolean, pathToTextureCacheDir : String)
-    private external fun nativeTrimMemory(aggressive : Boolean)
+    private external fun ClearRamCache()
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -117,7 +117,12 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     override fun onNativeTrimMemory(aggressive: Boolean) {
         super.onNativeTrimMemory(aggressive)
-        nativeTrimMemory(aggressive)
+        ClearRamCache()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        ClearRamCache()
     }
 
     companion object{
