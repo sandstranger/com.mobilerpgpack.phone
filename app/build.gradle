@@ -245,7 +245,7 @@ dependencies {
     implementation (project(":third_party:openssl"))
     implementation (project(":third_party:sdl2-compat"))
 
-    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.2.1"))
+    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.2.2"))
     implementation(libs.koin.core)
     implementation(libs.koin.annotations)
     implementation(libs.koin.android)

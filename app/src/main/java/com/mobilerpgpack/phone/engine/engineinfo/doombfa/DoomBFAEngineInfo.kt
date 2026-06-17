@@ -91,6 +91,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun setRefreshRates(targetRefreshRates : IntArray, arraySize: Int)
     private external fun enableTexturesShrinking (enableTexturesShrinking : Boolean)
     private external fun setTextureCacheData(enableTextureCache : Boolean, pathToTextureCacheDir : String)
+    private external fun updateAngleState(enableAngle : Boolean)
     private external fun ClearRamCache()
 
     override fun initialize(activity: ComponentActivity) {
@@ -109,6 +110,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             setTextureCacheData(enableETC2TextureCache.value!!,
                 textureCacheDir.absolutePath)
         }
+        updateAngleState(this@DoomBFAEngineInfo.enableAngleSupport)
         setGLESVersion(targetGLESVersion)
         activity.supportedRefreshRates.toIntArray().apply {
             setRefreshRates(this, size)
