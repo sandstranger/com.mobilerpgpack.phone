@@ -36,7 +36,7 @@ The following projects are scheduled for Android porting:
 ##    System Requirements
 
 ### Minimum
-- **OS:** Android 7.0 or later
+- **OS:** Android 8.0 or later
 - **GPU:** Hardware supporting OpenGL ES 2.0
 - **RAM:** 1 GB system RAM
 
@@ -178,7 +178,8 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 ### Classic-RBDOOM-3-BFG
 - **Rendering:** Strictly OpenGL ES 3.2 due to heavy reliance on modern GLSL 3.x features. GLES 3.1 and 3.0 API are supported, but expect issues, like lower FPS than with GLES 3.2 API
 - **Texture Compression (DXT vs ETC2):** Hardware DXT decoding is implemented and functional, but it is highly recommended to disable it and use the ETC2 fallback. **Do not disable the ETC2 texture cache** (even though the toggle exists).
-- **Adreno GPUs:** Enable Vulkan rendering via ANGLE for maximum frame rates.
+- **Shadows:** Use soft shadows only with vk render via angle on adreno, because soft shadows in this engine creates a lot of drawcalls, more than 2300. It is death for phones. 
+- **Vk render via angle:** - Vk render via angle always will be slower than native in this engine, due to low quality gpu syncronization code. To switch to an asynchronous version, I'd have to rewrite over 70% of this engine's rendering. I have no desire or motivation for such a feat for nothing in legacy. If someone wants to, they can rewrite everything themselves, without me.
 - **Mali/PowerVR GPUs:** Doom 3 BFG is a heavy IMR (Immediate Mode Rendering) engine. Performance on tile-based GPUs is inherently limited. Use the custom Android UI options to disable heavy effects and lower the screen resolution. No further engine-level optimizations will be made for these architectures.
 - **Memory Optimization (Texture Shrinking):** Enable texture shrinking (skipping MIP-map levels) in the launcher to save 200-300 MB of RAM. 
 - **ARMv7 Limitations:** Running this engine on ARMv7 devices will likely result in OOM (Out of Memory) crashes due to the severe RAM limitations of 32-bit architectures. This is expected behavior.
