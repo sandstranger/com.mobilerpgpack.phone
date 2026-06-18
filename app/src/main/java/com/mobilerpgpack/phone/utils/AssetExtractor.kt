@@ -87,12 +87,9 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
                     if (subFiles != null && subFiles.isNotEmpty()) {
                         copyAssetsFolderToInternalStorage( assetPath, outFile)
                     } else {
-                        val shouldCopy = !outFile.exists() || assetsInfo.copyAllAssetsForced
-                        if (shouldCopy) {
-                            assetManager.open(assetPath).use { inputStream ->
-                                FileOutputStream(outFile).use { outputStream ->
-                                    inputStream.copyTo(outputStream)
-                                }
+                        assetManager.open(assetPath).use { inputStream ->
+                            FileOutputStream(outFile).use { outputStream ->
+                                inputStream.copyTo(outputStream)
                             }
                         }
                     }
@@ -136,7 +133,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private companion object{
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
-        private const val ASSETS_CURRENT_VERSION = 25
+        private const val ASSETS_CURRENT_VERSION = 26
         private const val ASSETS_VERSION_FILE_NAME = "AssetsCurrentVersion.json"
         private val defaultAssetsInfo = AssetsInfo(true,
             ASSETS_CURRENT_VERSION, false)
