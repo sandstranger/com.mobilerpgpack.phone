@@ -262,9 +262,6 @@ abstract class EngineInfo(
 
     override fun onDestroy() {
         mainThreadScope.coroutineContext.cancelChildren()
-        if (loadGL4ES){
-            gL4ESJnaLayer.close_gl4es()
-        }
         if (enableAngleSupport){
             AngleShaderCacheJnaLayer.angle_blobcache_shutdown()
         }
