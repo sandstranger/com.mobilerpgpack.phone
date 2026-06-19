@@ -41,7 +41,9 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val lodDistancePrefsKey = intPreferencesKey("lod_distance")
     val enableTexturesShrinkingPrefsKey = booleanPreferencesKey("enable_textures_shrinking")
     val enableETC2TextureCachePrefsKey = booleanPreferencesKey("enable_etc2_doom3_texture_cache")
+    val enableEGLSynchronizationPrefsKey = booleanPreferencesKey("enable_egl_syncronization")
 
+    val enableEGLSynchronization = getBooleanValue(enableEGLSynchronizationPrefsKey,false)
     val enableETC2TextureCache = getBooleanValue(enableETC2TextureCachePrefsKey, true)
     val enableTexturesShrinking = getBooleanValue(enableTexturesShrinkingPrefsKey)
     val disableStaticShadows = getBooleanValue(disableStaticShadowsPrefsKey)
