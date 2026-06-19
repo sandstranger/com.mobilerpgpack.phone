@@ -37,7 +37,7 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val targetGLESVersionPrefsKey = enumPreferencesKey<GLESVersions>("target_gles_version")
     val disableStaticShadowsPrefsKey = booleanPreferencesKey("disable_static_shadows")
     val disableDynamicShadowsPrefsKey = booleanPreferencesKey("disable_dynamic_shadows")
-    val useShadowPreciseInsideTestPrefsKey = booleanPreferencesKey("use_shadows_precise_inside_test")
+    val useShadowPreciseInsideTestPrefsKey = booleanPreferencesKey("use_shadows_precise_inside_tests")
     val lodDistancePrefsKey = intPreferencesKey("lod_distance")
     val enableTexturesShrinkingPrefsKey = booleanPreferencesKey("enable_textures_shrinking")
     val enableETC2TextureCachePrefsKey = booleanPreferencesKey("enable_etc2_doom3_texture_cache")
