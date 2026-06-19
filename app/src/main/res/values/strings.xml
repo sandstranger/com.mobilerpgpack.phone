@@ -345,4 +345,5 @@
     <string name="clean_etc_textures_cache">Clean ETC2 texture cache</string>
     <string name="download_widelands_resources">Download Widelands resources</string>
     <string name="enable_spirv_cross">Enable SPIRV CROSS for shaders conversion from gl 3.3 to GLES 3.1 in OpenGL render</string>
+    <string name="enable_egl_synchronization">Enable EGL synchronization (will remove random rendering artifacts if you have them, but fps can be lower)</string>
 </resources>

@@ -92,6 +92,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun enableTexturesShrinking (enableTexturesShrinking : Boolean)
     private external fun setTextureCacheData(enableTextureCache : Boolean, pathToTextureCacheDir : String)
     private external fun ClearRamCache()
+    private external fun updateEGLSynchronizationState(enableEGLSynchronization : Boolean)
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -108,6 +109,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             enableTexturesShrinking(enableTexturesShrinking.value!!)
             setTextureCacheData(enableETC2TextureCache.value!!,
                 textureCacheDir.absolutePath)
+            updateEGLSynchronizationState(enableEGLSynchronization.value!!)
         }
         setGLESVersion(targetGLESVersion)
         activity.supportedRefreshRates.toIntArray().apply {
