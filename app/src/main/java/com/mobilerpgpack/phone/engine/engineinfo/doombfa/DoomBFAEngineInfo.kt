@@ -92,6 +92,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun enableTexturesShrinking (enableTexturesShrinking : Boolean)
     private external fun setTextureCacheData(enableTextureCache : Boolean, pathToTextureCacheDir : String)
     private external fun ClearRamCache()
+    private external fun clearBlobShaderCache()
     private external fun updateEGLSynchronizationState(enableEGLSynchronization : Boolean)
 
     override fun initialize(activity: ComponentActivity) {
@@ -120,6 +121,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override fun onNativeTrimMemory(aggressive: Boolean) {
         super.onNativeTrimMemory(aggressive)
         ClearRamCache()
+        clearBlobShaderCache()
     }
 
     override fun onPause() {
