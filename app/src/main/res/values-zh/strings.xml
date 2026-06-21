@@ -344,5 +344,5 @@
     <string name="clean_etc_textures_cache">清除 ETC2 纹理缓存</string>
     <string name="download_widelands_resources">下载 Widelands 资源</string>
     <string name="enable_spirv_cross">启用 SPIRV CROSS，在 OpenGL 渲染器中将着色器从 GL 3.3 转换为 GLES 3.1</string>
-    <string name="enable_egl_synchronization">启用 EGL 同步（可消除随机渲染伪影，但可能会导致帧率下降</string>
+    <string name="enable_gl_synchronization">启用 GL 同步（可消除随机渲染伪影，但可能会导致帧率下降</string>
 </resources>

@@ -85,8 +85,8 @@ class DoomBFAComposeSettings : IEngineUIController {
         prefsStorage.apply {
             DrawTitleText(stringResource(R.string.graphics_settings))
             SwitchPreferenceItem(
-                stringResource(R.string.enable_egl_synchronization),
-                enableEGLSynchronization, enableEGLSynchronizationPrefsKey.name)
+                stringResource(R.string.enable_gl_synchronization),
+                enableGLSynchronization, enableGLSynchronizationPrefsKey.name)
             DrawHorizontalDivider()
             SwitchPreferenceItem(
                 stringResource(R.string.enable_textures_shrinking_support),
