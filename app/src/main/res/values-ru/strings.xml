@@ -344,4 +344,8 @@
     <string name="download_widelands_resources">Скачать ресурсы Widelands</string>
     <string name="enable_spirv_cross">Включить SPIRV CROSS для конвертации шейдеров из GL 3.3 в GLES 3.1 в OpenGL-рендере</string>
     <string name="enable_gl_synchronization">Включить GL синхронизацию (устраняет случайные артефакты рендеринга, если они есть, но частота кадров может снизиться)</string>
+    <string name="framepacing_settings_title">Настройки синхронизации кадров (Frame Pacing)</string>
+    <string name="framepacing_target_fps">Целевая частота кадров (FPS)</string>
+    <string name="framepacing_enable_autoswap">Автоматический своп (Auto Swap)</string>
+    <string name="framepacing_enable_autopipeline_mode">Автоматический режим конвейера (Auto Pipeline)</string>
 </resources>

@@ -346,4 +346,8 @@
     <string name="download_widelands_resources">Download Widelands resources</string>
     <string name="enable_spirv_cross">Enable SPIRV CROSS for shaders conversion from gl 3.3 to GLES 3.1 in OpenGL render</string>
     <string name="enable_gl_synchronization">Enable GL synchronization (will remove random rendering artifacts if you have them, but fps can be lower)</string>
+    <string name="framepacing_settings_title">FramePacing settings</string>
+    <string name="framepacing_target_fps">Target FPS</string>
+    <string name="framepacing_enable_autoswap">Enable autoswap</string>
+    <string name="framepacing_enable_autopipeline_mode">Enable autopipeline mode</string>
 </resources>

@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 find_package(ZLIB REQUIRED)
+find_package(games-frame-pacing REQUIRED CONFIG)
 
 set(IS_DEBUG_BUILD OFF)
 if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -362,14 +363,9 @@ set(MONOLITH ON CACHE BOOL "" FORCE)
 set(MAKE_DLL OFF CACHE BOOL "" FORCE)
 
 set(APP_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/app/src/main/jni" CACHE STRING "" FORCE)
-set(ANGLE_SHADER_CACHE_INCLUDE_DIR "${APP_ROOT_DIR}/AngleShaderCache" CACHE STRING "" FORCE)
-include_directories(${ANGLE_SHADER_CACHE_INCLUDE_DIR})
+include_directories("${APP_ROOT_DIR}/AndroidGraphicsLayer/include")
 
-add_library(AngleShaderCache SHARED)
-target_sources(AngleShaderCache PRIVATE "${APP_ROOT_DIR}/AngleShaderCache/AngleShaderCache.cpp")
-target_include_directories(AngleShaderCache PRIVATE ${SDL3_INCLUDE_DIR})
-target_link_libraries(AngleShaderCache PRIVATE ${SDL3_LIBRARY})
-
+add_subdirectory("${APP_ROOT_DIR}/AndroidGraphicsLayer")
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomIIRPG-RE")
@@ -405,43 +401,28 @@ target_include_directories(DoomIIRPG PRIVATE "${OPENAL_INCLUDE_DIR}/AL" ${SDL2_I
         ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
 target_link_libraries(DoomIIRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
-        ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY} AngleShaderCache)
+        ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY} AndroidGraphicsLayer)
 
 target_include_directories(WolfensteinRPG PRIVATE "${OPENAL_INCLUDE_DIR}" ${SDL2_INCLUDE_DIR}
         ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
 target_link_libraries(WolfensteinRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
-         ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY} AngleShaderCache)
+         ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY} AndroidGraphicsLayer)
 
 target_include_directories(DOOM64 PRIVATE ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
         ${FMOD_INC_DIR})
 
 target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
-        ${FMOD_LIB} ZLIB::ZLIB m log AngleShaderCache)
+        ${FMOD_LIB} ZLIB::ZLIB m log AndroidGraphicsLayer)
 
 target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
         ${FMOD_INC_DIR})
 
 target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
-        ${FMOD_LIB} ZLIB::ZLIB m log AngleShaderCache)
+        ${FMOD_LIB} ZLIB::ZLIB m log AndroidGraphicsLayer)
 
 target_include_directories(PsyDoom PRIVATE ${SDL2_INCLUDE_DIR})
 target_link_libraries(PsyDoom PRIVATE ${SDL2_LIBRARY})
 
 target_include_directories(VulkanGL PRIVATE ${SDL2_INCLUDE_DIR})
 target_link_libraries(VulkanGL PRIVATE ${SDL2_LIBRARY})
-
-add_library(SDL3Helper SHARED)
-target_sources(SDL3Helper PRIVATE "${APP_ROOT_DIR}/SDL3Helper.c")
-target_include_directories(SDL3Helper PRIVATE ${SDL3_INCLUDE_DIR})
-target_link_libraries(SDL3Helper PRIVATE ${SDL3_LIBRARY})
-
-add_library(SDL3GyroInput SHARED)
-target_sources(SDL3GyroInput PRIVATE "${APP_ROOT_DIR}/SDL3GyroInput.c")
-target_include_directories(SDL3GyroInput PRIVATE ${SDL3_INCLUDE_DIR})
-target_link_libraries(SDL3GyroInput PRIVATE ${SDL3_LIBRARY})
-
-add_library(SDL3VirtualController SHARED)
-target_sources(SDL3VirtualController PRIVATE "${APP_ROOT_DIR}/SDL3VirtualController.c")
-target_include_directories(SDL3VirtualController PRIVATE ${SDL3_INCLUDE_DIR})
-target_link_libraries(SDL3VirtualController PRIVATE ${SDL3_LIBRARY})

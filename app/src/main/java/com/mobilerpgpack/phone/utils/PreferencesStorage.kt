@@ -72,6 +72,13 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val allowWidelandsDownloadsOverMobileNetworkPrefsKey = booleanPreferencesKey("allow_widelands_downloads_over_mobile")
     val widelandsFilesContentVersionPrefsKey = intPreferencesKey("widelands_files_content_version")
     val widelandsFilesContentDownloadedPrefsKey = booleanPreferencesKey("widelands_files_content_downloaded")
+    val enableFramePacingAutoPipelineModePrefsKey = booleanPreferencesKey("enable_framepacing_auto_pipeline_mode")
+    val enableFramePacingAutoSwapPrefsKey = booleanPreferencesKey("enable_framepacing_auto_swap")
+    val framePacingTargetFPSPrefsKey = intPreferencesKey("framepacing_target_fps")
+
+    val enableFramePacingAutoPipelineMode = getBooleanValue(enableFramePacingAutoPipelineModePrefsKey, true)
+    val enableFramePacingAutoSwap = getBooleanValue(enableFramePacingAutoSwapPrefsKey, false)
+    val framePacingTargetFPS = getIntValue(framePacingTargetFPSPrefsKey, 60)
 
     val widelandsFilesContentDownloaded = getBooleanValue(widelandsFilesContentDownloadedPrefsKey, false)
     val widelandsFilesContentVersion = getIntValue(widelandsFilesContentVersionPrefsKey,

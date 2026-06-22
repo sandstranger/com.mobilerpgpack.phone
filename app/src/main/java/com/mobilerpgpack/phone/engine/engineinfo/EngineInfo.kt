@@ -26,18 +26,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
-import com.mobilerpgpack.phone.BuildConfig
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.databinding.GameLayoutBinding
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.GlesRenderVersions
-import com.mobilerpgpack.phone.main.ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME
+import com.mobilerpgpack.phone.main.ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.angleLibs
-import com.mobilerpgpack.phone.main.gl4esLibraryName
 import com.mobilerpgpack.phone.main.ngGL4ESFullLibraryName
 import com.mobilerpgpack.phone.ui.Theme
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsProvider
@@ -46,6 +44,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.utils.GyroInput
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.ScreenResolution
+import com.mobilerpgpack.phone.utils.SwappyJNILayer
 import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.getComposableValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
@@ -53,8 +52,6 @@ import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -64,10 +61,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import org.libsdl3.app.SDLActivity
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -75,13 +70,11 @@ abstract class EngineInfo(
     mainEngineLib: String,
     private val allLibs: Array<String>,
     activeEngineType: EngineTypes) : KoinComponent, IEngineInfo {
-
     private var layoutBinding : GameLayoutBinding? = null
-
     private val mainThreadScope : CoroutineScope by inject (
         named(KoinModulesProvider.MAIN_THREAD_COROUTINE_KEY))
-
-    protected val controlsProvider : ControlsProvider = get (named(activeEngineType.name))
+    private val swappyJNILayer : SwappyJNILayer by inject ()
+    protected val controlsProvider : ControlsProvider by inject  (named(activeEngineType.name))
     protected open val preferencesStorage: PreferencesStorage by inject()
     protected open val blockTouchCameraEvents : Boolean get() = controlsProvider.run {
         blockTouchCameraEventsWhenOnScreenStickActive.value!! && activeControlsType.value!! == ControlsType.OnScreenStick }
@@ -221,6 +214,10 @@ abstract class EngineInfo(
                 initialize_gl4es()
             }
         }
+        preferencesStorage.apply {
+            swappyJNILayer.initSwappy(activity, enableFramePacingAutoPipelineMode.value!!,
+                enableFramePacingAutoSwap.value!!, framePacingTargetFPS.value!!)
+        }
     }
 
     override fun initialize(activity: ComponentActivity) {
@@ -265,6 +262,7 @@ abstract class EngineInfo(
         if (enableAngleSupport){
             AngleShaderCacheJnaLayer.angle_blobcache_shutdown()
         }
+        swappyJNILayer.destroySwappy()
         if (callExitProcessOnDestroy) {
             exitProcess(0)
         }
@@ -477,7 +475,7 @@ abstract class EngineInfo(
 
         init {
             Native.register(AngleShaderCacheJnaLayer::class.java,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME
             )
         }
     }

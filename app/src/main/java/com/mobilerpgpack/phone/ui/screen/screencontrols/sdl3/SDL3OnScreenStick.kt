@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3
 
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.main.ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ControlsType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.ViewRenderRule
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLOnScreenStick
@@ -19,9 +20,5 @@ class SDL3OnScreenStick(engineType: EngineTypes,
     SDLOnScreenStick(engineType, stickType,offsetXPercent,
         offsetYPercent, sizePercent, alpha, defaultViewRenderRule = defaultViewRenderRule, controlsType, isDeleted, showInQuickPanel) {
 
-    override val virtualControllerLibraryName: String get() = VIRTUAL_CONTROLLER_LIBRARY_NAME
-
-    private companion object{
-        private const val VIRTUAL_CONTROLLER_LIBRARY_NAME = "SDL3VirtualController"
-    }
+    override val virtualControllerLibraryName = ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME
 }

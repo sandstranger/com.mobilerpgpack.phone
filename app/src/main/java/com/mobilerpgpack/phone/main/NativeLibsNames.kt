@@ -51,7 +51,7 @@ const val JPEG_NATIVE_LIB_NAME = "jpeg"
 
 const val SDL3_NATIVE_LIB_NAME = "SDL3"
 
-const val SDL3_GYRO_HELPER_LIB_NAME = "SDL3GyroInput"
+const val ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME = "AndroidGraphicsLayer"
 
 const val GLOB_NATIVE_LIB_NAME = "glob"
 
@@ -62,8 +62,6 @@ const val TIFF_NATIVE_LIB_NAME = "tiff"
 const val TIFFXX_NATIVE_LIB_NAME = "tiffxx"
 
 const val LZO_NATIVE_LIB_NAME = "lzo2"
-
-const val SDL3HELPER_NATIVE_LIB_NAME = "SDL3Helper"
 
 const val PERFECT_DARK_JPN_NATIVE_LIB_NAME = "pd-jpn-final"
 
@@ -108,8 +106,6 @@ const val OPUS_NATIVE_LIB_NAME = "opus"
 const val FLAC_NATIVE_LIB_NAME = "FLAC"
 
 const val SND_FILE_NATIVE_LIB_NAME = "sndfile"
-
-const val ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME = "AngleShaderCache"
 
 val FREETYPE_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "freetyped" else "freetype"
 

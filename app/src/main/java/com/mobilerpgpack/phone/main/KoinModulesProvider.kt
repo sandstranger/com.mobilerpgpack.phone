@@ -127,6 +127,7 @@ import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
+import com.mobilerpgpack.phone.utils.SwappyJNILayer
 import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
@@ -160,6 +161,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         single<PreferencesStorage> { PreferencesStorage() }.withOptions { createdAtStart() }
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
         singleOf <IAssetExtractor> (::AssetExtractor)
+        singleOf(::SwappyJNILayer)
         single <SharedPrefsDao> { SharedPrefsDatabase.createInstance().dao() }
         singleOf(::SDL3Keyboard).withOptions {
             named(KeyboardType.SDL3Keyboard.name)
@@ -347,9 +349,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
                 SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 MPG123_NATIVE_LIB_NAME,
                 GME_NATIVE_LIB_NAME,
@@ -375,9 +375,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
                 TRANSLATOR_NATIVE_LIB_NAME,
@@ -401,9 +399,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             val nativeLibs = arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_TTF_NATIVE_LIB_NAME,
                 TRANSLATOR_NATIVE_LIB_NAME,
@@ -431,9 +427,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single  {
             val nativeLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 FMOD_NATIVE_LIB_NAME,
                 DOOM64_MAIN_ENGINE_LIB)
@@ -446,9 +440,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single  {
             val nativeLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 PNG_NATIVE_LIB_NAME,
                 FMOD_NATIVE_LIB_NAME,
                 DOOM64_ENHANCED_MAIN_ENGINE_LIB)
@@ -487,9 +479,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single  {
             val nativeLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 FLUIDSYNTH_NATIVE_LIB_NAME,
@@ -540,9 +530,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         single {
             val nativeLibs = arrayOf(FREETYPE_NATIVE_LIB_NAME,
                 SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 PSYDOOM_MAIN_ENGINE_LIB)
 
@@ -588,9 +576,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
     private val perfectDarkKoinModule = module{
         single { arrayOf(SDL3_NATIVE_LIB_NAME,
-            SDL3_GYRO_HELPER_LIB_NAME,
-            SDL3HELPER_NATIVE_LIB_NAME,
-            ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+            ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
             SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.NTSC.mainLibraryName,
         ) }.withOptions {
@@ -598,9 +584,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         }
 
         single { arrayOf(SDL3_NATIVE_LIB_NAME,
-            SDL3_GYRO_HELPER_LIB_NAME,
-            SDL3HELPER_NATIVE_LIB_NAME,
-            ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+            ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
             SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.PAL.mainLibraryName,
         ) }.withOptions {
@@ -608,9 +592,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         }
 
         single { arrayOf(SDL3_NATIVE_LIB_NAME,
-            SDL3_GYRO_HELPER_LIB_NAME,
-            SDL3HELPER_NATIVE_LIB_NAME,
-            ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+            ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
             SDL2_NATIVE_LIB_NAME,
             PerfectDarkRomVersions.JPN.mainLibraryName,
         ) }.withOptions {
@@ -651,9 +633,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single {
             val allLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 FREETYPE_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
@@ -688,9 +668,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         Quake2Games.entries.forEach { quake2GameType ->
             single {
                 with(mutableListOf(SDL3_NATIVE_LIB_NAME,
-                    SDL3_GYRO_HELPER_LIB_NAME,
-                    SDL3HELPER_NATIVE_LIB_NAME,
-                    ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                    ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                     SDL2_NATIVE_LIB_NAME,
                     FREETYPE_NATIVE_LIB_NAME,
                     BZ2_NATIVE_LIB_NAME,
@@ -741,9 +719,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
                 PNG_NATIVE_LIB_NAME,
                 MPG123_NATIVE_LIB_NAME,
                 SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 SDL2_MIXER_NATIVE_LIB_NAME,
                 SDL2_IMAGE_NATIVE_LIB_NAME,
@@ -774,9 +750,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         single { arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 RED_ALERT_NATIVE_LIB_NAME)
         }.withOptions {
@@ -785,9 +759,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         single { arrayOf(OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
                 SDL3_NATIVE_LIB_NAME,
-                SDL3_GYRO_HELPER_LIB_NAME,
-                SDL3HELPER_NATIVE_LIB_NAME,
-                ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME,
+                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
                 SDL2_NATIVE_LIB_NAME,
                 TIBERIAN_DAWN_NATIVE_LIB_NAME)
         }.withOptions {
@@ -817,9 +789,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
                 add(OPENAL_NATIVE_LIB_NAME)
                 add(JPEG_NATIVE_LIB_NAME)
                 add(SDL3_NATIVE_LIB_NAME)
-                add(SDL3_GYRO_HELPER_LIB_NAME)
-                add(SDL3HELPER_NATIVE_LIB_NAME)
-                add(ANGLE_SHADER_CACHE_NATLIVE_LIB_NAME)
+                add(ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME)
                 add(DOOM_BFA_MAIN_LIB)
                 toTypedArray()
             }
