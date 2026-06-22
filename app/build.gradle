@@ -190,6 +190,7 @@ android {
         compose true
         buildConfig true
         viewBinding true
+        prefab true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.15'
@@ -254,6 +255,7 @@ dependencies {
     implementation(libs.koin.core.coroutines)
 
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.games.frame.pacing)
 
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 

@@ -152,6 +152,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         ) {
             DrawCommonSettings(activeEngine, viewModel, navController)
             DrawGraphicsSettings()
+            DrawFramePacingSettings()
             DrawUserInterfaceSettings()
             DrawCustomUserPathSettings()
         }
@@ -252,15 +253,13 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            SwitchPreferenceItem(
-                stringResource(R.string.enable_angle_support),
-                preferencesStorage.enableAngleSupport,
-                preferencesStorage.enableAngleSupportPrefsKey.name
-            )
+        SwitchPreferenceItem(
+            stringResource(R.string.enable_angle_support),
+            preferencesStorage.enableAngleSupport,
+            preferencesStorage.enableAngleSupportPrefsKey.name
+        )
 
-            DrawHorizontalDivider()
-        }
+        DrawHorizontalDivider()
     }
 
     @Composable
@@ -268,9 +267,26 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawTitleText(stringResource(R.string.user_interface_settings))
         DrawEditScreenControlsSettings()
         DrawHorizontalDivider()
-
         DrawMouseCustomCursorSettings()
         DrawHorizontalDivider()
+    }
+
+    @Composable
+    private fun DrawFramePacingSettings() {
+        DrawTitleText(stringResource(R.string.framepacing_settings_title))
+        val preferencesStorage : PreferencesStorage = koinInject()
+        preferencesStorage.apply {
+            EditTextPreferenceItem(stringResource(R.string.framepacing_target_fps),
+                framePacingTargetFPS,preferencesStorage.framePacingTargetFPSPrefsKey.name, "60")
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.framepacing_enable_autoswap),
+                enableFramePacingAutoSwap,preferencesStorage.enableFramePacingAutoSwapPrefsKey.name)
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.framepacing_enable_autopipeline_mode),
+                enableFramePacingAutoPipelineMode,
+                preferencesStorage.enableFramePacingAutoPipelineModePrefsKey.name)
+            DrawHorizontalDivider()
+        }
     }
 
     @Composable
