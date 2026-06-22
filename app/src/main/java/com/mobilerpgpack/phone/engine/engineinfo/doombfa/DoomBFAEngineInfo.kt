@@ -69,6 +69,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                         useShadowPreciseInsideTest.value!!)
                     this@with += buildCommand("r_lodMaterialDistance",
                         lodDistance.value!!.toString())
+                    this@with += buildCommand("r_displayRefresh",framePacingTargetFPS.value!!.toString())
 
                     val pathToModsDirectory = pathDoom3ModsDir.value!!
                     val modsDir = File(pathToModsDirectory)
