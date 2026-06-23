@@ -245,6 +245,7 @@ dependencies {
     implementation (project(":third_party:angle"))
     implementation (project(":third_party:openssl"))
     implementation (project(":third_party:sdl2-compat"))
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.2.2"))
     implementation(libs.koin.core)
@@ -255,9 +256,6 @@ dependencies {
     implementation(libs.koin.core.coroutines)
 
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.games.frame.pacing)
-
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     implementation libs.reorderable
     implementation libs.androidx.compose.runtime

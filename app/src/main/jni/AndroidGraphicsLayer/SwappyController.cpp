@@ -9,13 +9,10 @@
 #include "SDL3/SDL_egl.h"
 #include "jni.h"
 
-using PFNEGLGETCURRENTDISPLAYPROC = EGLDisplay (*)();
 using PFNEGLGETCURRENTSURFACEPROC = EGLSurface (*)(EGLint);
 
 static bool swappyWasEnabled = false;
-static EGLDisplay display = nullptr;
 static PFNEGLGETCURRENTSURFACEPROC p_eglGetCurrentSurface = nullptr;
-static PFNEGLGETCURRENTDISPLAYPROC p_eglGetCurrentDisplay = nullptr;
 
 extern "C" {
 __attribute__((used)) __attribute__((visibility("default")))
@@ -36,8 +33,7 @@ Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_initSwappyGL(JNIEnv *env,jobje
 }
 
 __attribute__((used)) __attribute__((visibility("default")))
-JNIEXPORT void JNICALL Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_destroySwappyGL(JNIEnv *env,
-                                                                                         jobject thiz){
+JNIEXPORT void JNICALL Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_destroySwappyGL(JNIEnv *env,jobject thiz){
     DestroySwappy();
 }
 
@@ -46,13 +42,12 @@ bool SwappySwapBuffers(){
     if (!swappyWasEnabled){
         return false;
     }
-    if (display == nullptr){
-        p_eglGetCurrentDisplay = reinterpret_cast<PFNEGLGETCURRENTDISPLAYPROC>(SDL_EGL_GetProcAddress("eglGetCurrentDisplay"));
+    if (p_eglGetCurrentSurface == nullptr){
         p_eglGetCurrentSurface = reinterpret_cast<PFNEGLGETCURRENTSURFACEPROC>(SDL_EGL_GetProcAddress("eglGetCurrentSurface"));
-        display = p_eglGetCurrentDisplay();
     }
+    const auto display = SDL_EGL_GetCurrentDisplay();
     const auto surface = p_eglGetCurrentSurface(EGL_DRAW);
-    if (display!= nullptr && display != EGL_NO_DISPLAY && surface != EGL_NO_SURFACE)
+    if (display != EGL_NO_DISPLAY && surface != EGL_NO_SURFACE)
     {
         SwappyGL_swap(display, surface);
         return true;
@@ -62,7 +57,7 @@ bool SwappySwapBuffers(){
 
 __attribute__((used)) __attribute__((visibility("default")))
 void DestroySwappy(){
-    if (SwappyGL_isEnabled() && swappyWasEnabled){
+    if (swappyWasEnabled && SwappyGL_isEnabled()){
         swappyWasEnabled = false;
         SwappyGL_destroy();
     }

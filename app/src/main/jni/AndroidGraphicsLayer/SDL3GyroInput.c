@@ -13,19 +13,15 @@ __attribute__((used)) __attribute__((visibility("default")))
 void nativeGyroMouse(float dx, float dy) {
     if (!mouse) {
         mouse = (SDL_Mouse *) SDL_GetMouseVoid();
-        if (mouse) {
-            window = mouse->focus;
-            if (window) {
-                windowId = SDL_GetWindowID(window);
-            }
-        }
     }
 
     if (!window) {
-        window = SDL_GetGrabbedWindow();
-        if (window) {
-            windowId = SDL_GetWindowID(window);
+        int count = 0;
+        SDL_Window** windows = SDL_GetWindows(&count);
+        if (count > 0) {
+            window = windows[0];
         }
+        SDL_free(windows);
     }
 
     if (!window || !mouse) {
