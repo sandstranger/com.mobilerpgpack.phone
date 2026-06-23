@@ -215,7 +215,8 @@ abstract class EngineInfo(
             }
         }
         preferencesStorage.apply {
-            swappyJNILayer.initSwappy(activity, enableFramePacingAutoPipelineMode.value!!,
+            swappyJNILayer.initSwappy(activity,this@EngineInfo.enableAngleSupport,
+                enableFramePacingAutoPipelineMode.value!!,
                 enableFramePacingAutoSwap.value!!, framePacingTargetFPS.value!!)
         }
     }
