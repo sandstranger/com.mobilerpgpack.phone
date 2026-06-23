@@ -13,30 +13,21 @@ import java.io.File
 
 class PerfectDarkEngineInfo : SDL3EngineInfo
     ("", emptyArray(), EngineTypes.PerfectDark) {
-
     private val homeDirectory : File by inject { parametersOf(PERFECT_DARK_FOLDER_NAME) }
-
     private val savesDirectory : File by inject { parametersOf(PERFECT_DARK_FOLDER_NAME +
             File.separator + SAVE_FOLDER_NAME) }
-
     private val perfectDarkPreferencesStorage : PerfectDarkPreferencesStorage by inject (
         named(EngineTypes.PerfectDark.name))
-
     private val pathToModsDirectory by lazy {
         if (perfectDarkPreferencesStorage.enablePerfectDarkModsSupport.value!!) perfectDarkPreferencesStorage
             .pathToPerfectDarkModsFolder.value!! else ""
     }
-
     private val romVersion get() = perfectDarkPreferencesStorage.romVersion.value!!
 
     override val preferencesStorage: PreferencesStorage get() = perfectDarkPreferencesStorage
-
     override val commandLineParams by lazy { perfectDarkPreferencesStorage.commandLineArgs.value!! }
-
     override val requiredResourceExtensions = listOf(".z64", ".Z64")
-
     override val mainLibraryName: String by lazy { romVersion.mainLibraryName }
-
     override val nativeLibraries by lazy {
         mutableListOf<String>().run {
             this += super.nativeLibraries
@@ -44,16 +35,13 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
             toTypedArray()
         }
     }
-
     override val pathToResource get() =
         when (romVersion) {
             PerfectDarkRomVersions.NTSC -> perfectDarkPreferencesStorage.pathToNTSCRom.value!!
             PerfectDarkRomVersions.PAL -> perfectDarkPreferencesStorage.pathToPalRom.value!!
             PerfectDarkRomVersions.JPN -> perfectDarkPreferencesStorage.pathToJpnRom.value!!
         }
-
     override val loadGL4ES = false
-
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
@@ -102,6 +90,7 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
         }
 
     private external fun setPathToHomeDirectory (pathToHomeDirectory : String)
+    private external fun setTargetFPS (targetFPS : Int)
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -113,6 +102,7 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
         super.onNativeLibrariesLoaded()
         Native.register(PerfectDarkEngineInfo::class.java, mainLibraryName)
         setPathToHomeDirectory(homeDirectory.absolutePath)
+        setTargetFPS(preferencesStorage.framePacingTargetFPS.value!!)
     }
 
     private companion object{

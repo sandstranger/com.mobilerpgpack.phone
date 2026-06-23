@@ -277,7 +277,9 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         val preferencesStorage : PreferencesStorage = koinInject()
         preferencesStorage.apply {
             EditTextPreferenceItem(stringResource(R.string.framepacing_target_fps),
-                framePacingTargetFPS,preferencesStorage.framePacingTargetFPSPrefsKey.name, "60")
+                framePacingTargetFPS, hint = "60"){
+                preferencesStorage.setIntValue(framePacingTargetFPSPrefsKey.name, it.coerceAtLeast(5))
+            }
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.framepacing_enable_autoswap),
                 enableFramePacingAutoSwap,preferencesStorage.enableFramePacingAutoSwapPrefsKey.name)

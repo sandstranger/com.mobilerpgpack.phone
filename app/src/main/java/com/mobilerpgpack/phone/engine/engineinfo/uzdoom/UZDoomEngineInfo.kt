@@ -109,6 +109,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
     private external fun setPathsToFolders (pathToUserFolder : String, pathToCacheFolder : String)
     private external fun UpdateUseOpenGLESState(useOpenGLES : Boolean)
     private external fun setSpirvCrossState(enableSpirvCross : Boolean)
+    private external fun setTargetFPS (targetFPS : Int)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
@@ -119,7 +120,10 @@ class UZDoomEngineInfo (mainEngineLib: String,
         setPathsToFolders(pathToUZDoomUserFolder,
             activity.cacheDir.absolutePath)
         UpdateUseOpenGLESState(uzDoomViewModel.renderAPI == UZDoomRenderAPI.OpenGLES)
-        setSpirvCrossState(preferencesStorage.enableSpirvCross.value!!)
+        preferencesStorage.apply {
+            setSpirvCrossState(enableSpirvCross.value!!)
+            setTargetFPS(framePacingTargetFPS.value!!)
+        }
     }
 
     override fun onResume() {
