@@ -20,6 +20,9 @@ void nativeGyroMouse(float dx, float dy) {
         SDL_Window** windows = SDL_GetWindows(&count);
         if (count > 0) {
             window = windows[0];
+            if (window){
+                windowId = SDL_GetWindowID(window);
+            }
         }
         SDL_free(windows);
     }

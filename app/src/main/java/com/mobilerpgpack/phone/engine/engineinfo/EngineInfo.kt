@@ -418,7 +418,7 @@ abstract class EngineInfo(
     private fun parseString(input: String): Pair<Int, Int>? {
         if (input.isNotEmpty() && input.contains(RESOLUTION_DELIMITER)) {
             try {
-                val array = input.split(RESOLUTION_DELIMITER)
+                val array = input.trim().split(RESOLUTION_DELIMITER)
                 return Integer.parseInt(array[0]) to Integer.parseInt(array[1])
             } catch (_: Exception) {
             }
