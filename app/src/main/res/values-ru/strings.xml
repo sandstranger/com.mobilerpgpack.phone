@@ -348,4 +348,5 @@
     <string name="framepacing_target_fps">Целевая частота кадров (FPS)</string>
     <string name="framepacing_enable_autoswap">Автоматический своп (Auto Swap)</string>
     <string name="framepacing_enable_autopipeline_mode">Автоматический режим конвейера (Auto Pipeline)</string>
+    <string name="anisotropy_level">Степень анизотропии</string>
 </resources>

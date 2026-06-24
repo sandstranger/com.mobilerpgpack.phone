@@ -70,6 +70,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_lodMaterialDistance",
                         lodDistance.value!!.toString())
                     this@with += buildCommand("r_displayRefresh",framePacingTargetFPS.value!!.toString())
+                    this@with += buildCommand("r_maxAnisotropicFiltering",
+                        anisotropyLevel.value!!.toString())
 
                     val pathToModsDirectory = pathDoom3ModsDir.value!!
                     val modsDir = File(pathToModsDirectory)

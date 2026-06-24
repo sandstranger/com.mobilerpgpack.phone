@@ -42,7 +42,9 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val enableTexturesShrinkingPrefsKey = booleanPreferencesKey("enable_textures_shrinking")
     val enableETC2TextureCachePrefsKey = booleanPreferencesKey("enable_etc2_doom3_texture_cache")
     val enableGLSynchronizationPrefsKey = booleanPreferencesKey("enable_gl_syncronizations")
+    val anisotropyLevelPrefsKey = intPreferencesKey("anisotropy_level")
 
+    val anisotropyLevel = getIntValue(anisotropyLevelPrefsKey, 2)
     val enableGLSynchronization = getBooleanValue(enableGLSynchronizationPrefsKey,false)
     val enableETC2TextureCache = getBooleanValue(enableETC2TextureCachePrefsKey, true)
     val enableTexturesShrinking = getBooleanValue(enableTexturesShrinkingPrefsKey)

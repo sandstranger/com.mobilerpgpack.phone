@@ -350,4 +350,5 @@
     <string name="framepacing_target_fps">Target FPS</string>
     <string name="framepacing_enable_autoswap">Enable autoswap</string>
     <string name="framepacing_enable_autopipeline_mode">Enable autopipeline mode</string>
+    <string name="anisotropy_level">Anisotropy level</string>
 </resources>
