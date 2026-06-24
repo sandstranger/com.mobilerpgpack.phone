@@ -353,4 +353,5 @@
     <string name="enable_framepacing">帧率同步</string>
     <string name="buffer_staffing_fix_wait">缓冲填充修复延迟</string>
     <string name="blocking_wait">阻塞等待</string>
+    <string name="fence_timeout">栅栏超时（毫秒</string>
 </resources>

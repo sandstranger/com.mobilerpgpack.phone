@@ -20,6 +20,9 @@ fun LiveData<Double>.getComposableValue(defaultValue: Double = 0.0) = observeAsS
 fun LiveData<Int>.getComposableValue(defaultValue: Int = 0) = observeAsState(defaultValue).value
 
 @Composable
+fun LiveData<Long>.getComposableValue(defaultValue: Long = 0) = observeAsState(defaultValue).value
+
+@Composable
 fun LiveData<Boolean>.getComposableValue(defaultValue: Boolean = false) = observeAsState(defaultValue).value
 
 @Composable

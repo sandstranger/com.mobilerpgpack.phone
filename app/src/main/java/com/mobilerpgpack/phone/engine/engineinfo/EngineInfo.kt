@@ -222,6 +222,7 @@ abstract class EngineInfo(
                 enableFramePacing = enableFramePacing.value!!,
                 enableBlockingWait = enableBlockingWait.value!!,
                 bufferStuffingFixWait = bufferStaffingFixWait.value!!,
+                fenceTimeoutMS = framePacingFenceTimeout.value!!,
                 targetFPS = framePacingTargetFPS.value!!)
         }
     }

@@ -51,6 +51,18 @@ fun EditTextPreferenceItem(
 }
 
 @Composable
+@JvmName("EditTextPreferenceItemLiveDataLong")
+fun EditTextPreferenceItem(
+    title: String,
+    value: LiveData<Long>,
+    key : String = "",
+    hint: String = "",
+    onValueChanged: ((Long) -> Unit)? = null){
+    val liveDataState = value.getComposableValue()
+    EditTextPreferenceItem(title, liveDataState,key, hint, onValueChanged)
+}
+
+@Composable
 @JvmName("EditTextPreferenceItemInt")
 private fun EditTextPreferenceItem(
     title: String,
@@ -65,6 +77,26 @@ private fun EditTextPreferenceItem(
         val newValue = it.toIntOrNull() ?: 0
         if (key.isNotEmpty()){
             preferencesStorage.setIntValue(key, newValue)
+        }
+        onValueChanged?.invoke(newValue)
+    }
+}
+
+@Composable
+@JvmName("EditTextPreferenceItemLong")
+private fun EditTextPreferenceItem(
+    title: String,
+    value: Long,
+    key : String = "",
+    hint: String = "",
+    onValueChanged: ((Long) -> Unit)? = null){
+    val preferencesStorage : PreferencesStorage = koinInject()
+    val key = rememberSaveable(key) { key }
+    val stringValue = rememberSaveable (value) { value.toString() }
+    EditTextPreferenceItem(title, stringValue, "", hint,KeyboardType.Number){
+        val newValue = it.toLongOrNull() ?: 0
+        if (key.isNotEmpty()){
+            preferencesStorage.setLongValue(key, newValue)
         }
         onValueChanged?.invoke(newValue)
     }

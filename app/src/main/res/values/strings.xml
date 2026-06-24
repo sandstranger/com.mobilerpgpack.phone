@@ -354,4 +354,5 @@
     <string name="enable_framepacing">Enable FramePacing</string>
     <string name="buffer_staffing_fix_wait">Buffer stuffing fix delay</string>
     <string name="blocking_wait">Enable blocking wait (when framepacing off)</string>
+    <string name="fence_timeout">Fence timeout (ms)</string>
 </resources>
