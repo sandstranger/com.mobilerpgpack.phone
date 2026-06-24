@@ -351,4 +351,7 @@
     <string name="framepacing_enable_autoswap">Enable autoswap</string>
     <string name="framepacing_enable_autopipeline_mode">Enable autopipeline mode</string>
     <string name="anisotropy_level">Anisotropy level</string>
+    <string name="enable_framepacing">Enable FramePacing</string>
+    <string name="buffer_staffing_fix_wait">Buffer stuffing fix delay</string>
+    <string name="blocking_wait">Enable blocking wait (when framepacing off)</string>
 </resources>

@@ -215,9 +215,14 @@ abstract class EngineInfo(
             }
         }
         preferencesStorage.apply {
-            swappyJNILayer.initSwappy(activity,this@EngineInfo.enableAngleSupport,
-                enableFramePacingAutoPipelineMode.value!!,
-                enableFramePacingAutoSwap.value!!, framePacingTargetFPS.value!!)
+            swappyJNILayer.initSwappy(activity = activity,
+                enableAngle = this@EngineInfo.enableAngleSupport,
+                enableAutoPipelineMode = enableFramePacingAutoPipelineMode.value!!,
+                enableAutoSwap = enableFramePacingAutoSwap.value!!,
+                enableFramePacing = enableFramePacing.value!!,
+                enableBlockingWait = enableBlockingWait.value!!,
+                bufferStuffingFixWait = bufferStaffingFixWait.value!!,
+                targetFPS = framePacingTargetFPS.value!!)
         }
     }
 

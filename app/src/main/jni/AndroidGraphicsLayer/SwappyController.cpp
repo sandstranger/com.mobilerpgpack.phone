@@ -19,6 +19,9 @@ __attribute__((used)) __attribute__((visibility("default")))
 JNIEXPORT void JNICALL
 Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_initSwappyGL(JNIEnv *env,jobject thiz,jobject activity,
                                                              jboolean enableAutoPipelineMode,jboolean enableAutoSwap,
+                                                             jboolean enableFramePacing,
+                                                             jboolean enableBlockingWait,
+                                                             jint bufferStuffingFixWait,
                                                              jint targetFPS) {
     if (SwappyGL_init(env, activity)) {
         const auto ns = (targetFPS == 0) ? (SWAPPY_SWAP_60FPS) : (uint64_t) (1000000000L / targetFPS);
@@ -27,6 +30,9 @@ Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_initSwappyGL(JNIEnv *env,jobje
         SwappyGL_setUseAffinity(true);
         SwappyGL_enableStats(false);
         SwappyGL_setAutoPipelineMode(enableAutoPipelineMode);
+        SwappyGL_enableFramePacing(enableFramePacing);
+        SwappyGL_setBufferStuffingFixWait(bufferStuffingFixWait);
+        SwappyGL_enableBlockingWait(enableBlockingWait);
         SwappyGL_setSwapIntervalNS(ns);
         SwappyGL_setMaxAutoSwapIntervalNS(ns);
     }

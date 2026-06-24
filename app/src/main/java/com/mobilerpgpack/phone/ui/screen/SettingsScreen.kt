@@ -278,15 +278,26 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         preferencesStorage.apply {
             EditTextPreferenceItem(stringResource(R.string.framepacing_target_fps),
                 framePacingTargetFPS, hint = "60"){
-                preferencesStorage.setIntValue(framePacingTargetFPSPrefsKey.name, it.coerceAtLeast(5))
+                setIntValue(framePacingTargetFPSPrefsKey.name, it.coerceAtLeast(5))
             }
             DrawHorizontalDivider()
+            EditTextPreferenceItem(stringResource(R.string.buffer_staffing_fix_wait),
+                bufferStaffingFixWait, hint = "0"){
+                setIntValue(bufferStaffingFixWaitPrefsKey.name, it.coerceAtLeast(0))
+            }
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.enable_framepacing),
+                enableFramePacing,enableFramePacingPrefsKey.name)
+            DrawHorizontalDivider()
+            SwitchPreferenceItem(stringResource(R.string.blocking_wait),
+                enableBlockingWait,enableBlockingWaitPrefsKey.name)
+            DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.framepacing_enable_autoswap),
-                enableFramePacingAutoSwap,preferencesStorage.enableFramePacingAutoSwapPrefsKey.name)
+                enableFramePacingAutoSwap,enableFramePacingAutoSwapPrefsKey.name)
             DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.framepacing_enable_autopipeline_mode),
                 enableFramePacingAutoPipelineMode,
-                preferencesStorage.enableFramePacingAutoPipelineModePrefsKey.name)
+                enableFramePacingAutoPipelineModePrefsKey.name)
             DrawHorizontalDivider()
         }
     }

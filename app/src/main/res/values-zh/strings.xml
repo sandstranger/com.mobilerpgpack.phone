@@ -350,4 +350,7 @@
     <string name="framepacing_enable_autoswap">启用自动缓冲区交换</string>
     <string name="framepacing_enable_autopipeline_mode">启用自动渲染管线模式</string>
     <string name="anisotropy_level">各向异性级别</string>
+    <string name="enable_framepacing">帧率同步</string>
+    <string name="buffer_staffing_fix_wait">缓冲填充修复延迟</string>
+    <string name="blocking_wait">阻塞等待</string>
 </resources>

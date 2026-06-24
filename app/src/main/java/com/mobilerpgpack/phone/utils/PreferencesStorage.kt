@@ -75,7 +75,13 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val enableFramePacingAutoPipelineModePrefsKey = booleanPreferencesKey("enable_framepacing_auto_pipeline_mode")
     val enableFramePacingAutoSwapPrefsKey = booleanPreferencesKey("enable_framepacing_auto_swap")
     val framePacingTargetFPSPrefsKey = intPreferencesKey("framepacing_target_fps")
+    val enableFramePacingPrefsKey = booleanPreferencesKey("enable_framepacing")
+    val bufferStaffingFixWaitPrefsKey = intPreferencesKey("buffer_staffing_fix_wait")
+    val enableBlockingWaitPrefsKey = booleanPreferencesKey("enable_blocking_wait")
 
+    val enableFramePacing = getBooleanValue(enableFramePacingPrefsKey, true)
+    val bufferStaffingFixWait = getIntValue(bufferStaffingFixWaitPrefsKey, 0)
+    val enableBlockingWait = getBooleanValue(enableBlockingWaitPrefsKey, true)
     val enableFramePacingAutoPipelineMode = getBooleanValue(enableFramePacingAutoPipelineModePrefsKey, true)
     val enableFramePacingAutoSwap = getBooleanValue(enableFramePacingAutoSwapPrefsKey, false)
     val framePacingTargetFPS = getIntValue(framePacingTargetFPSPrefsKey, 60)
