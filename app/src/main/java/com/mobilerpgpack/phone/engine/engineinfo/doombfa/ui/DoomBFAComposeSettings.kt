@@ -129,6 +129,10 @@ class DoomBFAComposeSettings : IEngineUIController {
                 this.setIntValue(lodDistancePrefsKey, it.coerceAtLeast(50))
             }
             DrawHorizontalDivider()
+            EditTextPreferenceItem(stringResource(R.string.anisotropy_level), anisotropyLevel){
+                this.setIntValue(anisotropyLevelPrefsKey, it.coerceIn(1,16))
+            }
+            DrawHorizontalDivider()
             SwitchPreferenceItem(
                 stringResource(R.string.disable_particles),
                 disableParticles, disableParticlesPrefsKey.name

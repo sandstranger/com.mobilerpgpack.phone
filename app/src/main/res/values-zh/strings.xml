@@ -349,4 +349,5 @@
     <string name="framepacing_target_fps">目标帧率 (FPS)</string>
     <string name="framepacing_enable_autoswap">启用自动缓冲区交换</string>
     <string name="framepacing_enable_autopipeline_mode">启用自动渲染管线模式</string>
+    <string name="anisotropy_level">各向异性级别</string>
 </resources>
