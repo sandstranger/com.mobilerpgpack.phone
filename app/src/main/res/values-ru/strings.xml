@@ -349,4 +349,7 @@
     <string name="framepacing_enable_autoswap">Автоматический своп (Auto Swap)</string>
     <string name="framepacing_enable_autopipeline_mode">Автоматический режим конвейера (Auto Pipeline)</string>
     <string name="anisotropy_level">Степень анизотропии</string>
+    <string name="enable_framepacing">Синхронизация частоты кадров</string>
+    <string name="buffer_staffing_fix_wait">Задержка исправления буфера</string>
+    <string name="blocking_wait">Блокирующее ожидание</string>
 </resources>
