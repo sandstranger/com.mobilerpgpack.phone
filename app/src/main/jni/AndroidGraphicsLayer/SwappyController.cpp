@@ -9,6 +9,8 @@
 #include "SDL3/SDL_egl.h"
 #include "jni.h"
 
+#define NS_PER_MS 1000000ULL
+
 using PFNEGLGETCURRENTSURFACEPROC = EGLSurface (*)(EGLint);
 
 static bool swappyWasEnabled = false;
@@ -18,12 +20,15 @@ extern "C" {
 __attribute__((used)) __attribute__((visibility("default")))
 JNIEXPORT void JNICALL
 Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_initSwappyGL(JNIEnv *env,jobject thiz,jobject activity,
-                                                             jboolean enableAutoPipelineMode,jboolean enableAutoSwap,
+                                                             jboolean enableAutoPipelineMode,
+                                                             jboolean enableAutoSwap,
                                                              jboolean enableFramePacing,
                                                              jboolean enableBlockingWait,
                                                              jint bufferStuffingFixWait,
+                                                             jlong fenceTimeoutMS,
                                                              jint targetFPS) {
     if (SwappyGL_init(env, activity)) {
+        const uint64_t fenceTimeout = fenceTimeoutMS == 0 ? 50 * NS_PER_MS : fenceTimeoutMS * NS_PER_MS;
         const auto ns = (targetFPS == 0) ? (SWAPPY_SWAP_60FPS) : (uint64_t) (1000000000L / targetFPS);
         swappyWasEnabled = true;
         SwappyGL_setAutoSwapInterval(enableAutoSwap);
@@ -33,6 +38,7 @@ Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_initSwappyGL(JNIEnv *env,jobje
         SwappyGL_enableFramePacing(enableFramePacing);
         SwappyGL_setBufferStuffingFixWait(bufferStuffingFixWait);
         SwappyGL_enableBlockingWait(enableBlockingWait);
+        SwappyGL_setFenceTimeoutNS(fenceTimeout);
         SwappyGL_setSwapIntervalNS(ns);
         SwappyGL_setMaxAutoSwapIntervalNS(ns);
     }

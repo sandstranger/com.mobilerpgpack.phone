@@ -286,6 +286,11 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
                 setIntValue(bufferStaffingFixWaitPrefsKey.name, it.coerceAtLeast(0))
             }
             DrawHorizontalDivider()
+            EditTextPreferenceItem(stringResource(R.string.fence_timeout),
+                framePacingFenceTimeout, hint = "50"){
+                setLongValue(framePacingFenceTimeoutPrefsKey.name, it.coerceAtLeast(0))
+            }
+            DrawHorizontalDivider()
             SwitchPreferenceItem(stringResource(R.string.enable_framepacing),
                 enableFramePacing,enableFramePacingPrefsKey.name)
             DrawHorizontalDivider()

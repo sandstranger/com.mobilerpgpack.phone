@@ -12,6 +12,7 @@ import com.mobilerpgpack.phone.utils.sharesprefs.booleanPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.enumPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.floatPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.intPreferencesKey
+import com.mobilerpgpack.phone.utils.sharesprefs.longPreferencesKey
 import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
@@ -75,11 +76,13 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val enableFramePacingAutoPipelineModePrefsKey = booleanPreferencesKey("enable_framepacing_auto_pipeline_mode")
     val enableFramePacingAutoSwapPrefsKey = booleanPreferencesKey("enable_framepacing_auto_swap")
     val framePacingTargetFPSPrefsKey = intPreferencesKey("framepacing_target_fps")
-    val enableFramePacingPrefsKey = booleanPreferencesKey("enable_framepacing")
+    val enableFramePacingPrefsKey = booleanPreferencesKey("enable_framepacing_support")
     val bufferStaffingFixWaitPrefsKey = intPreferencesKey("buffer_staffing_fix_wait")
     val enableBlockingWaitPrefsKey = booleanPreferencesKey("enable_blocking_wait")
+    val framePacingFenceTimeoutPrefsKey = longPreferencesKey("framepacing_fence_timeout")
 
-    val enableFramePacing = getBooleanValue(enableFramePacingPrefsKey, true)
+    val framePacingFenceTimeout = getLongValue(framePacingFenceTimeoutPrefsKey, 50L)
+    val enableFramePacing = getBooleanValue(enableFramePacingPrefsKey, false)
     val bufferStaffingFixWait = getIntValue(bufferStaffingFixWaitPrefsKey, 0)
     val enableBlockingWait = getBooleanValue(enableBlockingWaitPrefsKey, true)
     val enableFramePacingAutoPipelineMode = getBooleanValue(enableFramePacingAutoPipelineModePrefsKey, true)
