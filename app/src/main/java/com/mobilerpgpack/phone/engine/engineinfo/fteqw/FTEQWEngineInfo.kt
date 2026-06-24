@@ -148,6 +148,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
                                               dllDefaultPath : String)
     private external fun setUIScale (uiScale : Float)
     private external fun setQuake2LibraryName (targetLibraryName : String)
+    private external fun setTargetFPS(targetFPS : Int)
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -161,7 +162,10 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
         Native.register(FTEQWEngineInfo::class.java, mainLibraryName)
         setPathsToResources(homeDirFile.absolutePath,pathToBaseGameDirectory,
             activity.applicationInfo.nativeLibraryDir)
-        setUIScale(preferencesStorage.fteqwUIScale.value!!)
+        preferencesStorage.apply {
+            setUIScale(fteqwUIScale.value!!)
+            setTargetFPS(framePacingTargetFPS.value!!)
+        }
         setQuake2LibraryName(getQuake2NativeLibraryName() + ".so")
     }
 
