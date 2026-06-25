@@ -12,9 +12,16 @@
 #define NS_PER_MS 1000000ULL
 
 using PFNEGLGETCURRENTSURFACEPROC = EGLSurface (*)(EGLint);
-
 static bool swappyWasEnabled = false;
-static PFNEGLGETCURRENTSURFACEPROC p_eglGetCurrentSurface = nullptr;
+
+static inline PFNEGLGETCURRENTSURFACEPROC GetEGLGetCurrentSurface() {
+    static PFNEGLGETCURRENTSURFACEPROC p_eglGetCurrentSurface = []() -> PFNEGLGETCURRENTSURFACEPROC {
+        return reinterpret_cast<PFNEGLGETCURRENTSURFACEPROC>(
+                SDL_EGL_GetProcAddress("eglGetCurrentSurface")
+        );
+    }();
+    return p_eglGetCurrentSurface;
+}
 
 extern "C" {
 __attribute__((used)) __attribute__((visibility("default")))
@@ -54,11 +61,9 @@ bool SwappySwapBuffers(){
     if (!swappyWasEnabled){
         return false;
     }
-    if (p_eglGetCurrentSurface == nullptr){
-        p_eglGetCurrentSurface = reinterpret_cast<PFNEGLGETCURRENTSURFACEPROC>(SDL_EGL_GetProcAddress("eglGetCurrentSurface"));
-    }
+    const auto eglGetCurrentSurfacePTR = GetEGLGetCurrentSurface();
     const auto display = SDL_EGL_GetCurrentDisplay();
-    const auto surface = p_eglGetCurrentSurface(EGL_DRAW);
+    const auto surface = eglGetCurrentSurfacePTR(EGL_DRAW);
     if (display != EGL_NO_DISPLAY && surface != EGL_NO_SURFACE)
     {
         SwappyGL_swap(display, surface);
