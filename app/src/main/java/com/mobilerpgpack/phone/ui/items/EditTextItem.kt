@@ -34,83 +34,76 @@ import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import com.mobilerpgpack.phone.ui.getTextButtonsColors
 import com.mobilerpgpack.phone.utils.getComposableValue
 
+
 @Composable
-fun EditTextItem(
-    title: String,
+fun EditTextItem(title: String,
     value: String,
     hint: String = "",
-    singleLine : Boolean = true,
-    keyboardType : KeyboardType = KeyboardType.Text,
-    onValueChange: ((String) -> Unit)? = null
-) {
-    val hint = rememberSaveable(hint) { hint }
-    val keyboardType = remember { keyboardType }
+    singleLine: Boolean = true,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    onValueChange: ((String) -> Unit)? = null) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
-    var currentTextValue by rememberSaveable (value) { mutableStateOf(value) }
+    var tempText by rememberSaveable { mutableStateOf(value) }
     val onSurfaceVariantColor = getOnSurfaceVariantColor()
     val onSurfaceColor = getOnSurfaceColor()
     val primaryColor = getPrimaryColor()
     val surfaceContainerHighColor = getSurfaceContainerHighColor()
     val textButtonsColor = getTextButtonsColors()
     val onBackgroundColor = getOnBackgroundColor()
-    val hintColor = remember {Color.Gray }
-    val textColor = if (currentTextValue.isEmpty() && hint.isNotEmpty()) hintColor else onBackgroundColor
-    var textToShowWhenDialogBoxActive by rememberSaveable { mutableStateOf(currentTextValue) }
-    val showText = (if (showDialog) textToShowWhenDialogBoxActive.isNotEmpty() else
-        currentTextValue.isNotEmpty()) || hint.isNotEmpty()
+    val hintColor = Color.Gray
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { showDialog = true }
-        .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)) {
-
+    Column(
+        modifier = Modifier.fillMaxWidth().clickable {
+                tempText = value
+                showDialog = true
+            }
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         Text(text = title, color = onBackgroundColor)
-
-        if (showText) {
-            Text(
-                text = if (showDialog) textToShowWhenDialogBoxActive.ifEmpty { hint }
-                else currentTextValue.ifEmpty { hint },
-                style = MaterialTheme.typography.bodyMedium,
-                color = textColor,
-            )
-        }
+        Text(
+            text = value.ifEmpty { hint },
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (value.isEmpty() && hint.isNotEmpty()) hintColor else onBackgroundColor
+        )
     }
 
     if (showDialog) {
-        val savedTextValue by rememberSaveable { mutableStateOf(currentTextValue)}
-        textToShowWhenDialogBoxActive = savedTextValue
         AlertDialog(
             containerColor = surfaceContainerHighColor,
             textContentColor = onSurfaceVariantColor,
             iconContentColor = onSurfaceVariantColor,
             titleContentColor = onSurfaceColor,
-            onDismissRequest = {
-                currentTextValue = savedTextValue
-                showDialog = false },
+            onDismissRequest = { showDialog = false },
             confirmButton = {
-                TextButton(onClick = {
-                    onValueChange?.invoke(currentTextValue)
-                    showDialog = false
-                }, colors = textButtonsColor) {
+                TextButton(
+                    onClick = {
+                        onValueChange?.invoke(tempText)
+                        showDialog = false
+                    },
+                    colors = textButtonsColor
+                ) {
                     Text(stringResource(R.string.ok_text), color = primaryColor)
                 }
             },
             dismissButton = {
-                TextButton(onClick = {
-                    currentTextValue = savedTextValue
-                    showDialog = false }, colors = textButtonsColor) {
+                TextButton(
+                    onClick = { showDialog = false },
+                    colors = textButtonsColor
+                ) {
                     Text(stringResource(R.string.cancel_text), color = primaryColor)
                 }
             },
             title = { Text(text = title, color = onSurfaceColor) },
             text = {
                 OutlinedTextField(
-                    value = currentTextValue,
-                    onValueChange = { currentTextValue = it },
-                    placeholder = { if (currentTextValue.isEmpty() && hint.isNotEmpty()) {
-                        Text(hint, color = hintColor)
-                    } },
+                    value = tempText,
+                    onValueChange = { tempText = it },
+                    placeholder = {
+                        if (tempText.isEmpty() && hint.isNotEmpty()) {
+                            Text(hint, color = hintColor)
+                        }
+                    },
                     singleLine = singleLine,
                     colors = getEditTextFieldColors(),
                     modifier = Modifier.fillMaxWidth(),

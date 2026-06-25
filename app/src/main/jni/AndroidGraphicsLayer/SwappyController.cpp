@@ -27,9 +27,9 @@ Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_initSwappyGL(JNIEnv *env,jobje
                                                              jint bufferStuffingFixWait,
                                                              jlong fenceTimeoutMS,
                                                              jint targetFPS) {
-    if (SwappyGL_init(env, activity)) {
-        const uint64_t fenceTimeout = fenceTimeoutMS == 0 ? 0 : fenceTimeoutMS * NS_PER_MS;
-        const auto ns = (targetFPS == 0) ? (SWAPPY_SWAP_60FPS) : (uint64_t) (1000000000L / targetFPS);
+    if (!swappyWasEnabled && SwappyGL_init(env, activity)) {
+        const uint64_t fenceTimeout = fenceTimeoutMS <= 0 ? 0 : fenceTimeoutMS * NS_PER_MS;
+        const auto ns = (targetFPS <= 0) ? (SWAPPY_SWAP_60FPS) : (uint64_t) (1000000000L / targetFPS);
         swappyWasEnabled = true;
         SwappyGL_setAutoSwapInterval(enableAutoSwap);
         SwappyGL_setUseAffinity(true);
