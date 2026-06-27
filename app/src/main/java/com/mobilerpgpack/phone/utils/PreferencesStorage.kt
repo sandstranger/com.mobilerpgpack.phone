@@ -82,7 +82,9 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val framePacingFenceTimeoutPrefsKey = longPreferencesKey("framepacing_fence_timeout")
     val assetsCurrentVersionPrefsKey = intPreferencesKey("assets_current_version")
     val allAssetsCopiedPrefsKey = booleanPreferencesKey("all_assets_copied")
+    val doom64AnisotropyTexturesValuePrefsKey = intPreferencesKey("doom64_anisotropy_textures_value")
 
+    val doom64AnisotropyTexturesValue = getIntValue(doom64AnisotropyTexturesValuePrefsKey,2)
     val assetsCurrentVersion = getIntValue(assetsCurrentVersionPrefsKey, 0)
     val allAssetsCopied = getBooleanValue(allAssetsCopiedPrefsKey, false)
     val framePacingFenceTimeout = getLongValue(framePacingFenceTimeoutPrefsKey, 50L)

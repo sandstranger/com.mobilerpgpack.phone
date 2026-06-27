@@ -14,6 +14,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
+import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -27,38 +28,47 @@ class Doom64ComposeSettings () :
 
     @Composable
     override fun DrawSettings(navController: NavHostController) {
-        val preferencesStorage : PreferencesStorage = koinInject()
-        val modsModel : ModsModel = koinInject (named(EngineTypes.Doom64ExPlus.name))
-        val previousPathToDoom64WadsFolder = preferencesStorage.pathToDoom64MainWadsFolder
-        DrawCommandLinePreferences(preferencesStorage.doom64CommandLineArgsString,
-            preferencesStorage.doom64CommandLineArgsStringPrefsKey.name)
+        val preferencesStorage: PreferencesStorage = koinInject()
+        preferencesStorage.apply {
+            val modsModel: ModsModel = koinInject(named(EngineTypes.Doom64ExPlus.name))
+            val previousPathToDoom64WadsFolder = pathToDoom64MainWadsFolder
+            DrawCommandLinePreferences(
+                doom64CommandLineArgsString,
+                doom64CommandLineArgsStringPrefsKey.name
+            )
 
-        DrawHorizontalDivider()
-
-        RequestPath(
-            stringResource(R.string.path_to_doom64_folder),
-            previousPathToDoom64WadsFolder) { selectedPath ->
-            preferencesStorage.setPathToDoom64MainWadsFolder(selectedPath)
-        }
-
-        DrawModsSupport(modsModel)
-
-        val enableDoom64Mods = preferencesStorage.enableDoom64Mods.getComposableValue()
-
-        SwitchPreferenceItem(
-            stringResource(R.string.enable_doom64_mods),
-            initialValue = preferencesStorage.enableDoom64Mods,
-            preferencesStorage.enableDoom64ModsPrefsKey.name
-        )
-
-        if (enableDoom64Mods) {
             DrawHorizontalDivider()
 
             RequestPath(
-                stringResource(R.string.path_to_doom64_mods_folder),
-                preferencesStorage.pathToDoom64ModsFolder,
-            ){ selectedPath ->
-                 preferencesStorage.setPathToDoom64ModsFolder(selectedPath)
+                stringResource(R.string.path_to_doom64_folder),
+                previousPathToDoom64WadsFolder
+            ) { selectedPath ->
+                setPathToDoom64MainWadsFolder(selectedPath)
+            }
+
+            DrawModsSupport(modsModel)
+
+            val enableDoom64Mods = enableDoom64Mods.getComposableValue()
+
+            SwitchPreferenceItem(
+                stringResource(R.string.enable_doom64_mods),
+                initialValue = enableDoom64Mods,
+                enableDoom64ModsPrefsKey.name
+            )
+
+            if (enableDoom64Mods) {
+                DrawHorizontalDivider()
+
+                RequestPath(
+                    stringResource(R.string.path_to_doom64_mods_folder),
+                    pathToDoom64ModsFolder,
+                ) { selectedPath ->
+                    setPathToDoom64ModsFolder(selectedPath)
+                }
+            }
+            DrawHorizontalDivider()
+            EditTextPreferenceItem(stringResource(R.string.anisotropy_level), doom64AnisotropyTexturesValue) {
+                setIntValue(doom64AnisotropyTexturesValuePrefsKey, it.coerceIn(1, 16))
             }
         }
     }

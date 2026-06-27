@@ -59,11 +59,13 @@ open class Doom64EngineInfo(
     private external fun setScreenResolution (screenWidth : Int, screenHeight : Int)
     private external fun RecalculateScreenResolution(screenWidth : Int, screenHeight : Int)
     private external fun setPathsToResources (pathToWadsFolder : String, pathToUserFolder : String)
+    private external fun updateMaxAnisotropyValue (targetAnisotropyValue : Int)
 
     final override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(Doom64EngineInfo::class.java, mainLibraryName)
         setPathsToResources(pathToResource, getPathToDoom64UserFolder())
+        updateMaxAnisotropyValue(preferencesStorage.doom64AnisotropyTexturesValue.value!!)
         savedScreenResolution?.run {
             setScreenResolution(screenWidth, screenHeight)
         }
