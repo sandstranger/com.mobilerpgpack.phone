@@ -16,9 +16,7 @@ This repository contains a collection of unofficial Android ports for the follow
 
 ---
 
-## Status: Long-Term Support (LTS)
-
-This repository is currently in **Long-Term Support (LTS)** mode. Active feature development is closed; the focus is strictly on stability and critical maintenance.
+## Status: Development Completed
 
 ## Future Development
 
