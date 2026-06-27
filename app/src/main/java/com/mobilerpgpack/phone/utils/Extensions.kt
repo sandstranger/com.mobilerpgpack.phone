@@ -87,8 +87,8 @@ inline fun <reified T> Context.startActivity(finishParentActivity : Boolean = tr
     this.startActivity(T::class.java, finishParentActivity)
 
 fun Activity.forceLandscapeOrientation() {
-    if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+    if (requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
     }
 }
 
