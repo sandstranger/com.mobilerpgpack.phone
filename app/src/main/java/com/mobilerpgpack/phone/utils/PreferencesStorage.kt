@@ -80,7 +80,11 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val bufferStaffingFixWaitPrefsKey = intPreferencesKey("buffer_staffing_fix_wait")
     val enableBlockingWaitPrefsKey = booleanPreferencesKey("enable_blocking_wait")
     val framePacingFenceTimeoutPrefsKey = longPreferencesKey("framepacing_fence_timeout")
+    val assetsCurrentVersionPrefsKey = intPreferencesKey("assets_current_version")
+    val allAssetsCopiedPrefsKey = booleanPreferencesKey("all_assets_copied")
 
+    val assetsCurrentVersion = getIntValue(assetsCurrentVersionPrefsKey, 0)
+    val allAssetsCopied = getBooleanValue(allAssetsCopiedPrefsKey, false)
     val framePacingFenceTimeout = getLongValue(framePacingFenceTimeoutPrefsKey, 50L)
     val enableFramePacing = getBooleanValue(enableFramePacingPrefsKey, true)
     val bufferStaffingFixWait = getIntValue(bufferStaffingFixWaitPrefsKey, 0)

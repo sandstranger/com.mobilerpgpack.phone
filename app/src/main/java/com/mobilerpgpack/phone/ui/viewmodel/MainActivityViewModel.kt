@@ -27,8 +27,10 @@ class MainActivityViewModel : ViewModel(), KoinComponent {
     fun loadAllAssets(){
         if (!assetsStartedToLoaded) {
             assetsStartedToLoaded = true
-            scope.launch { preferencesStorage.loadAllEntriesAsync() }
-            scope.launch { copyAllAssetsFromApkAsync() }
+            scope.launch {
+                preferencesStorage.loadAllEntriesAsync()
+                copyAllAssetsFromApkAsync()
+            }
         }
     }
 
