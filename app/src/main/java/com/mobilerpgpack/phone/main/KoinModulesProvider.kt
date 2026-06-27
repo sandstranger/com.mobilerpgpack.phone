@@ -129,6 +129,7 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
 import com.mobilerpgpack.phone.utils.SwappyJNILayer
 import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
+import com.mobilerpgpack.phone.utils.buildFinalPathToUserFolder
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
 import com.zxw.bingtranslateapi.BingTranslator
@@ -168,11 +169,9 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             bind<SDLKeyboard>()
         }
         single <File> {
-            val filesDir = context.filesDir
             val prefsStorage : PreferencesStorage = get()
             val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
-            if (pathToUserFolder.startsWith(filesDir!!.absolutePath)) filesDir
-            else File(pathToUserFolder)
+            context.buildFinalPathToUserFolder(pathToUserFolder)
         }.withOptions {
             named(ROOT_USER_DIRECTORY_KEY)
         }

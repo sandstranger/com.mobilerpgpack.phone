@@ -29,6 +29,7 @@ import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import java.io.File
 import java.io.Serializable
 import kotlin.math.roundToInt
 
@@ -41,6 +42,40 @@ val Activity.supportedRefreshRates: Collection<Int> get() =
    this.windowManager.defaultDisplay.supportedModes.map { it.refreshRate.roundToInt() }.distinct().sorted()
 
 fun com.sun.jna.Function.invokeBool(inArgs : Array<Any?>? = null) = this.invokeAs(Boolean::class.java, inArgs)
+
+fun Context.buildFinalPathToUserFolder(targetPath : String): File {
+    val internalStorage = filesDir
+    val applicationExternalStorage = getExternalFilesDir(null)?.parentFile?.parentFile?.parentFile?.parentFile?.parentFile
+
+    if (targetPath == internalStorage.absolutePath){
+        return internalStorage
+    }
+
+    if (applicationExternalStorage!=null && targetPath.startsWith(applicationExternalStorage.absolutePath)){
+        return File(applicationExternalStorage,targetPath.replace(
+            "${applicationExternalStorage.absolutePath}${File.separator}", ""))
+    }
+
+    getExternalStoragesRemovable().forEach {
+        if (targetPath.startsWith(it.absolutePath)){
+            return File(it,targetPath.replace(
+                "${it.absolutePath}${File.separator}", ""))
+        }
+    }
+
+    return internalStorage
+}
+
+fun Context.getExternalStoragesRemovable () : Collection<File> =
+    mutableListOf<File>().apply {
+        for (dir in getExternalFilesDirs(null)) {
+            if (dir != null && Environment.isExternalStorageRemovable(dir)) {
+                dir.parentFile?.parentFile?.parentFile?.parentFile?.let {
+                    add(it)
+                }
+            }
+        }
+    }
 
 @Suppress("UNCHECKED_CAST")
 fun <T> com.sun.jna.Function.invokeAs(returnType: Class<T>, inArgs : Array<Any?>? = null): T = this.invoke(returnType, inArgs) as T

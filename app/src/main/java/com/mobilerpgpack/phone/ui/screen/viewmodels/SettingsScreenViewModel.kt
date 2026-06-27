@@ -2,25 +2,26 @@ package com.mobilerpgpack.phone.ui.screen.viewmodels
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.IAssetExtractor
+import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.copyFolder
 import com.mobilerpgpack.phone.utils.startGame
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
 
 internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
+    private val preferencesStorage : PreferencesStorage by inject ()
     private val context : Context by inject ()
     private val scope : CoroutineScope by inject (
         named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
@@ -54,8 +55,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
             allAssetsCopied.value = false
             scope.launch {
                 rootUserDirectory.mkdirs()
-                resetAssetsInfo()
-                copyAssetsContentToInternalStorage()
+                copyAssetsContentToInternalStorage(copyForced = true)
             }
         }
     }
@@ -73,6 +73,16 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
             copyFolder(sourceFolder, rootUserDirectory)
             contentCopied = true
             allAssetsCopied.postValue(true)
+        }
+    }
+
+    fun changePathToUserFolderAndRestartApplication(sourceFolder : String){
+        scope.launch {
+            withContext(Dispatchers.Main){
+                preferencesStorage.setBooleanValueAsync(preferencesStorage.allAssetsCopiedPrefsKey, false)
+                preferencesStorage.setStringValueAsync(preferencesStorage.pathToRootUserFolderPrefsKey, sourceFolder)
+                restartApplication()
+            }
         }
     }
 
