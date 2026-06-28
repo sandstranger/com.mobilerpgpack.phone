@@ -8,11 +8,15 @@
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_egl.h"
 #include "jni.h"
+#include <atomic>
+#include <mutex>
 
 #define NS_PER_MS 1000000ULL
 
 using PFNEGLGETCURRENTSURFACEPROC = EGLSurface (*)(EGLint);
-static bool swappyWasEnabled = false;
+static std::atomic<bool> swappyWasEnabled = false;
+static std::atomic<bool> g_swappyDestroyed = false;
+static std::mutex g_swappyMutex;
 
 static inline PFNEGLGETCURRENTSURFACEPROC GetEGLGetCurrentSurface() {
     static PFNEGLGETCURRENTSURFACEPROC p_eglGetCurrentSurface = []() -> PFNEGLGETCURRENTSURFACEPROC {
@@ -34,7 +38,8 @@ Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_initSwappyGL(JNIEnv *env,jobje
                                                              jint bufferStuffingFixWait,
                                                              jlong fenceTimeoutMS,
                                                              jint targetFPS) {
-    if (!swappyWasEnabled && SwappyGL_init(env, activity)) {
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+    if (!swappyWasEnabled.load() && SwappyGL_init(env, activity)){
         const uint64_t fenceTimeout = fenceTimeoutMS <= 0 ? 0 : fenceTimeoutMS * NS_PER_MS;
         const auto ns = (targetFPS <= 0) ? (SWAPPY_SWAP_60FPS) : (uint64_t) (1000000000L / targetFPS);
         swappyWasEnabled = true;
@@ -58,7 +63,7 @@ JNIEXPORT void JNICALL Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_destroy
 
 __attribute__((used)) __attribute__((visibility("default")))
 bool SwappySwapBuffers(){
-    if (!swappyWasEnabled){
+    if (g_swappyDestroyed.load(std::memory_order_relaxed) || !swappyWasEnabled.load(std::memory_order_relaxed)) {
         return false;
     }
     const auto eglGetCurrentSurfacePTR = GetEGLGetCurrentSurface();
@@ -73,10 +78,16 @@ bool SwappySwapBuffers(){
 }
 
 __attribute__((used)) __attribute__((visibility("default")))
-void DestroySwappy(){
-    if (swappyWasEnabled && SwappyGL_isEnabled()){
-        swappyWasEnabled = false;
+void DestroySwappy() {
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+    if (g_swappyDestroyed.load(std::memory_order_acquire)) {
+        return;
+    }
+    const auto wasEnabled = swappyWasEnabled.exchange(false, std::memory_order_acq_rel);
+    if (wasEnabled) {
         SwappyGL_destroy();
     }
+    swappyWasEnabled.store(false, std::memory_order_release);
+    g_swappyDestroyed.store(true, std::memory_order_release);
 }
 }

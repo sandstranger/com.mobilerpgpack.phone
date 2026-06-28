@@ -269,7 +269,6 @@ abstract class EngineInfo(
         if (enableAngleSupport){
             AngleShaderCacheJnaLayer.angle_blobcache_shutdown()
         }
-        swappyJNILayer.destroySwappy()
         if (callExitProcessOnDestroy) {
             exitProcess(0)
         }
