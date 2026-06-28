@@ -134,11 +134,5 @@ val angleLibs = arrayOf("feature_support_angle","GLESv2_angle", "EGL_angle")
 
 val opensslLibs = arrayOf("ssl_3","crypto_3")
 
-private val defaultFFMPEGLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
+val defaultFFMPEGLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
     "avutil", "swresample", "swscale")
-
-private val armv7FFMPEGLibs = arrayOf("avcodec_neon", "avdevice_neon", "avfilter_neon", "avformat_neon",
-    "avutil_neon", "swresample_neon", "swscale_neon")
-
-fun getFMPEGLibs(context: Context) = if (context.applicationInfo.nativeLibraryDir.endsWith("arm"))
-    armv7FFMPEGLibs else defaultFFMPEGLibs
