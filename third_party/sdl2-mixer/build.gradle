@@ -17,6 +17,15 @@ android {
         }
     }
 
+    splits {
+        abi {
+            enable true
+            reset()
+            include("arm64-v8a")
+            universalApk false
+        }
+    }
+
     defaultConfig {
         targetSdk versions.target_sdk
         minSdk versions.min_sdk

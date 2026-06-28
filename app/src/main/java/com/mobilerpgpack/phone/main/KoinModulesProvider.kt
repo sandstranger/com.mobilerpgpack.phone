@@ -681,7 +681,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
                     OPUS_NATIVE_LIB_NAME,
                 )){
                     add(quake2GameType.nativeLibraryName)
-                    addAll(getFMPEGLibs(get()))
+                    addAll(defaultFFMPEGLibs)
                     addAll(opensslLibs)
                     addAll(bulletLibs)
                     addAll(fteQWNativePlugins)
@@ -782,7 +782,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         }
         single<DoomBFAEngineInfo> {
             val libs = mutableListOf<String>().run {
-                addAll(getFMPEGLibs(get()))
+                addAll(defaultFFMPEGLibs)
                 addAll(opensslLibs)
                 add(OBOE_NATIVE_LUB_NAME)
                 add(OPENAL_NATIVE_LIB_NAME)
