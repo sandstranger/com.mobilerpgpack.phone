@@ -24,7 +24,7 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val disableIntelWorkaroundsPrefsKey = booleanPreferencesKey("disable_all_intel_workarounds")
     val useShadowDepthBoundsPrefsKey = booleanPreferencesKey("use_shadows_depth_bounds")
     val disablePrelightShadowsPrefsKey = booleanPreferencesKey("disable_prelight_shadows")
-    val enableDXTHardwareSupportPrefsKey = booleanPreferencesKey("enable_dxt_hardware_support")
+    val enableDXTHardwareSupportPrefsKey = booleanPreferencesKey("enable_dxt_textures_hardware_support")
     val disableShadowsPrefsKey = booleanPreferencesKey("disable_shadows")
     val disableTranslucentPrefsKey = booleanPreferencesKey("disable_translucent")
     val disableFogLightsPrefsKey = booleanPreferencesKey("disable_fog_lights")
@@ -78,5 +78,5 @@ class DoomBFAPreferencesStorage : PreferencesStorage() {
     val disableIntelWorkarounds = getBooleanValue(disableIntelWorkaroundsPrefsKey,true)
     val useShadowDepthBounds = getBooleanValue(useShadowDepthBoundsPrefsKey,false)
     val disablePrelightShadows = getBooleanValue(disablePrelightShadowsPrefsKey,false)
-    val enableDXTHardwareSupport = getBooleanValue(enableDXTHardwareSupportPrefsKey,true)
+    val enableDXTHardwareSupport = getBooleanValue(enableDXTHardwareSupportPrefsKey,false)
 }
