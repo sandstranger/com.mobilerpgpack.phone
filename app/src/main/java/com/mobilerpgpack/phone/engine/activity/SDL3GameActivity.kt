@@ -18,6 +18,7 @@ import org.libsdl3.app.SDLActivity
 
 internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     private lateinit var engineInfo : IEngineInfo
+    private var callNativeEvents = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainActivity.gameActivityStarted = true
@@ -56,17 +57,18 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
 
     override fun onPause() {
         super.onPause()
-        if (gameResourcesFound) {
+        if (gameResourcesFound && callNativeEvents) {
             engineInfo.onPause()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (gameResourcesFound) {
+        if (gameResourcesFound && callNativeEvents) {
             engineInfo.onResume()
         }
         forceLandscapeOrientation()
+        callNativeEvents = true
     }
 
     override fun onLowMemory() {
