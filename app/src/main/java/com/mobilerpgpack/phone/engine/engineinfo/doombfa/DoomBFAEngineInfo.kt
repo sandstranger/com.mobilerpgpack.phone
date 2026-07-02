@@ -121,7 +121,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                 textureCacheDir.absolutePath)
             updateGLSynchronizationState(enableGLSynchronization.value!!)
         }
-        setGLESVersion(targetGLESVersion)
+        setGLESVersion(GLES_320_VERSION)
         activity.supportedRefreshRates.toIntArray().apply {
             setRefreshRates(this, size)
         }
