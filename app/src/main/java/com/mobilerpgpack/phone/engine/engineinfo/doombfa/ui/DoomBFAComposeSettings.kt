@@ -57,20 +57,6 @@ class DoomBFAComposeSettings : IEngineUIController {
                 DrawHorizontalDivider()
             }
 
-            val targetGLESVersion = prefsStorage.targetGLESVersion.getComposableValue(
-                GLESVersions.defaultGLESVersion)
-            val viewModel : DoomBFAViewModel = koinViewModel()
-
-            ListPreferenceItem(
-                stringResource(R.string.uzdoom_rendering_api),
-                targetGLESVersion
-            ) {
-                this.setEnumValue(targetGLESVersionPrefsKey, it)
-                viewModel.deleteCacheFolders()
-            }
-
-            DrawHorizontalDivider()
-
             PreferenceItem(stringResource(R.string.graphics_settings)) {
                 navController.navigate(GRAPHICS_SETTINGS_SCREEN)
             }
