@@ -17,6 +17,21 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private val homeDirectoryFolder : File by inject { parametersOf(HOME_DIRECTORY_NAME) }
     private val doomBFAPreferenceStorage by inject<DoomBFAPreferencesStorage>(
         named(EngineTypes.Classic_RBDOOM_3_BFG.name))
+    private val baseGameDirName by lazy {
+        return@lazy preferencesStorage.run {
+            val pathToModsDirectory = pathDoom3ModsDir.value!!
+            val modsDir = File(pathToModsDirectory)
+            return@run if (enableDoom3Mods.value!! && modsDir.exists() && pathToModsDirectory.isNotEmpty() &&
+                pathToModsDirectory.startsWith(
+                    pathToResource
+                )
+            ) {
+                modsDir.name
+            } else {
+                BASE_GAME
+            }
+        }
+    }
 
     val textureCacheDir by lazy { File(context.cacheDir,"doom3_texture_cache") }
     @Volatile
@@ -72,17 +87,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
                     this@with += buildCommand("r_displayRefresh",framePacingTargetFPS.value!!.toString())
                     this@with += buildCommand("r_maxAnisotropicFiltering",
                         anisotropyLevel.value!!.toString())
-
-                    val pathToModsDirectory = pathDoom3ModsDir.value!!
-                    val modsDir = File(pathToModsDirectory)
-
-                    if (enableDoom3Mods.value!! && !baseCommandLineArgs.contains(GAME_COMMAND) && modsDir.exists() &&
-                        pathToModsDirectory.isNotEmpty() && pathToModsDirectory.startsWith(pathToResource)){
-                        this@with+= buildCommand(GAME_COMMAND, modsDir.name)
-                    }
-                    else{
-                        this@with += buildCommand(GAME_COMMAND, BASE_GAME)
-                    }
+                    this@with += buildCommand(GAME_COMMAND,baseGameDirName )
                 }
                 toTypedArray()
             }
@@ -97,6 +102,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun ClearRamCache()
     private external fun clearBlobShaderCache()
     private external fun updateGLSynchronizationState(enableGLSynchronization : Boolean)
+    private external fun setBaseGameDir (baseGameDirName : String)
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -119,6 +125,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         activity.supportedRefreshRates.toIntArray().apply {
             setRefreshRates(this, size)
         }
+        setBaseGameDir(baseGameDirName)
     }
 
     override fun onNativeTrimMemory(aggressive: Boolean) {
