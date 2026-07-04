@@ -443,6 +443,8 @@ SPIRV-Cross - [Licence](https://github.com/KhronosGroup/SPIRV-Cross/blob/main/LI
 
 etcpack - [Licence](https://github.com/wolfpld/etcpak/blob/master/LICENSE.txt) https://github.com/wolfpld/etcpak
 
+Android framepacing - [Licence](https://android.googlesource.com/platform/frameworks/opt/gamesdk/+/refs/heads/android-games-sdk-games-frame-pacing-release/LICENSE) https://android.googlesource.com/platform/frameworks/opt/gamesdk/+/refs/heads/android-games-sdk-games-frame-pacing-release
+
 *All UZDoom and Doom credits belong to the original authors (id Software, Raven Software, Rogue Software, Digital Café, Nash Muhandes).*
 
 ---
