@@ -53,6 +53,8 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             return with(mutableListOf<String>()) {
                 this += baseCommandLineArgs
                 preferencesStorage.apply {
+                    this@with += buildCommand("r_skipInteractionFastPath", "1")
+                    this@with += buildCommand("r_useLightStencilSelect", "0")
                     this@with += buildCommand("r_skipPostProcess",
                         disablePostProcessEffects.value!!)
                     this@with += buildCommand("r_skipShadows", disableShadows.value!!)
