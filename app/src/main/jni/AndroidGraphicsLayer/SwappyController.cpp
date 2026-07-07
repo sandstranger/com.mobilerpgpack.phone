@@ -38,7 +38,7 @@ static inline PFNEGLGETERRORPROC GetEGLGetError()
     return p_eglGetError;
 }
 
-static SDL_Window* GetSDLWindow()
+static inline SDL_Window* GetSDLWindow()
 {
     static SDL_Window* window = []() -> SDL_Window*
     {
