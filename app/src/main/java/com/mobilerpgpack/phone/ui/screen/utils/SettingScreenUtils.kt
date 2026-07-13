@@ -11,8 +11,6 @@ fun buildTranslationsDescription () : Collection<String>{
 
     for (type in TranslationType.entries) {
         when (type) {
-            TranslationType.MLKit ->
-                result.add("${TranslationType.MLKit} ${context.getString(R.string.mlkit_description)}")
             TranslationType.OpusMt ->
                 result.add("${TranslationType.OpusMt} ${context.getString(R.string.opus_mt_description)}")
             TranslationType.M2M100 ->

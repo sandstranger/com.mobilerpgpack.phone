@@ -41,7 +41,7 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val gamesMachineTranslationsPrefsKey = booleanPreferencesKey("enable_games_translation")
     val allowDownloadingModelsOverMobilePrefsKey =
         booleanPreferencesKey("allow_downloading_over_mobile")
-    val translationModelTypePrefsKey = stringPreferencesKey("translation_model_type")
+    val translationModelTypePrefsKey = stringPreferencesKey("doom_rpg_series_translation_model_type")
     val pathToDoom64FolderWithMainWads = stringPreferencesKey("path_to_doom64_folder_wads")
     val pathToDoom64FolderWithMods = stringPreferencesKey("path_to_doom64_folder_mods")
     val enableDoom64ModsPrefsKey = booleanPreferencesKey("enable_doom64_mods")
