@@ -14,14 +14,14 @@ buildscript {
     ]
     ext.build_flags = [
             compiling_arguments : "-j${Runtime.getRuntime().availableProcessors()}",
-            common_c_flags : ["-O3","-flto=full", "-fomit-frame-pointer","-funwind-tables","-fstack-protector-strong",
+            common_c_flags : ["-O3","-flto=full", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
                               "-g", "-D_FILE_OFFSET_BITS=64"],
-            common_cpp_flags : ["-O3" ,"-flto=full", "-fomit-frame-pointer","-funwind-tables","-fstack-protector-strong",
+            common_cpp_flags : ["-O3" ,"-flto=full", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
                                 "-g", "-D_FILE_OFFSET_BITS=64"],
             ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=full -Wl,--build-id",
             ndk_build_android_stl : "APP_STL=c++_shared",
-            CMAKE_CFLAGS : "-O3 -flto=full -fomit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
-            CMAKE_CXXFLAGS : "-O3 -flto=full -fomit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
+            CMAKE_CFLAGS : "-O3 -flto=full -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
+            CMAKE_CXXFLAGS : "-O3 -flto=full -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
             CMAKE_ANDROID_STL : "-DANDROID_STL=c++_shared",
             CMAKE_SHADERLINKER_FLAGS :"-flto=full -fuse-ld=lld -Wl,--build-id",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
