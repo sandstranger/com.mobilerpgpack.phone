@@ -3,8 +3,6 @@ package com.mobilerpgpack.phone.main
 import android.app.Activity
 import android.content.Context
 import com.codekidlabs.storagechooser.StorageChooser
-import com.google.mlkit.common.model.RemoteModel
-import com.google.mlkit.nl.translate.TranslateRemoteModel
 import com.mobilerpgpack.ctranslate2proxy.M2M100Translator
 import com.mobilerpgpack.ctranslate2proxy.NLLB200Translator
 import com.mobilerpgpack.ctranslate2proxy.OpusMtTranslator
@@ -81,7 +79,6 @@ import com.mobilerpgpack.phone.translator.models.BingTranslatorModel
 import com.mobilerpgpack.phone.translator.models.GoogleTranslateV2
 import com.mobilerpgpack.phone.translator.models.ITranslationModel
 import com.mobilerpgpack.phone.translator.models.M2M100TranslationModel
-import com.mobilerpgpack.phone.translator.models.MLKitTranslationModel
 import com.mobilerpgpack.phone.translator.models.NLLB200TranslationModel
 import com.mobilerpgpack.phone.translator.models.OpusMtTranslationModel
 import com.mobilerpgpack.phone.translator.models.Small100TranslationModel
@@ -211,17 +208,6 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             createdAtStart()
         }
 
-        factory { (sourceLocale: String, targetLocale: String) ->
-            MLKitTranslationModel.buildMlkitTranslator(sourceLocale, targetLocale) }
-
-        factory { (allowDownloadingOveMobile: Boolean) -> MLKitTranslationModel.buildConditions(allowDownloadingOveMobile) }
-
-        factory<RemoteModel> { (modelCache : MutableMap<String, TranslateRemoteModel>,langCode: String) ->
-            MLKitTranslationModel.getRemoteModel(modelCache,langCode) }
-
-        single <MLKitTranslationModel> {  MLKitTranslationModel(get(),
-            TranslationManager.SOURCE_LOCALE, targetLocale, allowDownloadingModelsOverMobile) }
-
         val pathToOptModel = "opus-ct2-en-ru"
         val optModelSourceProcessor = "${pathToOptModel}${File.separator}source.spm"
         val optModelTargetProcessor = "${pathToOptModel}${File.separator}target.spm"
@@ -277,7 +263,6 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single<Map<TranslationType, ITranslationModel>> {
             mutableMapOf<TranslationType, ITranslationModel>().apply {
-                this[TranslationType.MLKit] = get<MLKitTranslationModel>()
                 this[TranslationType.OpusMt] = get<OpusMtTranslationModel>()
                 this[TranslationType.M2M100] = get<M2M100TranslationModel>()
                 this[TranslationType.Small100] = get<Small100TranslationModel>()
