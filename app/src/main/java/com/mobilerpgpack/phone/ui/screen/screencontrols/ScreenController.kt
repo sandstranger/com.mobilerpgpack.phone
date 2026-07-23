@@ -45,7 +45,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -76,6 +75,7 @@ import com.mobilerpgpack.phone.ui.getSurfaceContainerHighColor
 import com.mobilerpgpack.phone.ui.getTextButtonsColors
 import com.mobilerpgpack.phone.ui.items.CheckBox
 import com.mobilerpgpack.phone.ui.items.EnumDropdown
+import com.mobilerpgpack.phone.ui.items.safeAlpha
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLKeyboard
 import com.mobilerpgpack.phone.ui.screen.screencontrols.utils.onTouchDown
@@ -427,7 +427,7 @@ abstract class ScreenController : IScreenController {
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .size(getViewSize(0.075f))
-                        .alpha(0.5f)
+                        .safeAlpha(0.5f)
                         .minimumInteractiveComponentSize()
                         .padding(start = 8.dp, top = 8.dp)
                         .onTouchDown(isEditMode) {
@@ -444,7 +444,7 @@ abstract class ScreenController : IScreenController {
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .size(getViewSize(0.065f))
-                            .alpha(0.5f)
+                            .safeAlpha(0.5f)
                             .minimumInteractiveComponentSize()
                             .padding(end = 8.dp, top = 8.dp)
                             .onTouchDown(isEditMode) {
@@ -494,7 +494,7 @@ abstract class ScreenController : IScreenController {
                 .offset { intOffset }
                 .size(sizeDp)
                 .minimumInteractiveComponentSize()
-                .alpha(alpha)
+                .safeAlpha(alpha)
                 .background(color, shape)
                 .pointerInput(isEditMode, isSelected) {
                     if (!isEditMode) {

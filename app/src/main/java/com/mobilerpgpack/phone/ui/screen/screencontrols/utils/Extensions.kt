@@ -10,6 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.BlendModeColorFilter
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
@@ -80,10 +82,8 @@ fun Modifier.onTouchDown(
 @Composable
 fun Modifier.touchListenerModifier(
     isEditMode: Boolean, viewState: ViewState, changeItemColor: Boolean = true,
-    onTouchDown: () -> Unit = {}, onTouchUp: () -> Unit = {}
-): Modifier {
-
-    val changeItemColor = remember(changeItemColor) { changeItemColor }
+    onTouchDown: () -> Unit = {}, onTouchUp: () -> Unit = {},
+    onColorFilterChanged : (colorFilter : BlendModeColorFilter?) -> Unit = {}): Modifier {
     var inToggleMode by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
     val isEditMode by remember(isEditMode) { mutableStateOf(isEditMode) }
@@ -99,11 +99,6 @@ fun Modifier.touchListenerModifier(
     val useViewAsToggle = viewState.useViewAsToggle.getComposableValue()
     var pointerId by remember { mutableStateOf<PointerId?>(null) }
     val sdlKeyCode = viewState.sdlKeyCode.getComposableValue()
-    val colorFilterToUse by remember(inToggleMode, isEditMode, useViewAsToggle) {
-        mutableStateOf(
-            ColorFilter.tint(if (inToggleMode && !isEditMode && useViewAsToggle) Color.Yellow else Color.White)
-        )
-    }
     val showInQuickPanel by remember(viewState.showInQuickPanel) {
         mutableStateOf(viewState.showInQuickPanel)
     }
@@ -123,6 +118,12 @@ fun Modifier.touchListenerModifier(
     LaunchedEffect(isEditMode, mouseButtonsEventsCanBeInvoked, consumeTouchEvents,
         ignoreOutOfBoundsTouchEvents, useViewAsToggle, sdlKeyCode, showInQuickPanel, viewRenderRule) {
         clearResources()
+    }
+
+    LaunchedEffect(inToggleMode, isEditMode, useViewAsToggle) {
+        onColorFilterChanged(if (inToggleMode && !isEditMode && useViewAsToggle)
+            BlendModeColorFilter(Color.Yellow, BlendMode.SrcAtop)
+        else null)
     }
 
     DisposableEffect(Unit) {
@@ -179,5 +180,5 @@ fun Modifier.touchListenerModifier(
                 }
             }
         }
-    }.run { if (changeItemColor) graphicsLayer { colorFilter = colorFilterToUse } else this }
+    }
 }
