@@ -30,13 +30,9 @@ import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.core.component.KoinComponent
 
 abstract class ComposeScreen(val route: String) : KoinComponent {
-
     protected open val drawFloatingActionButton = MutableLiveData(false)
-
     protected open val drawBackButton = false
-
     protected var onFloatingActionButtonClickedDelegate: (() -> Unit)? = null
-
     protected var onBackPressedDelegate : (()->Unit)? = null
 
     @OptIn(ExperimentalMaterial3Api::class)

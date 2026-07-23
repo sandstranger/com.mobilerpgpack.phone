@@ -6,8 +6,12 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendModeColorFilter
+import androidx.compose.ui.input.pointer.PointerId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -65,9 +69,13 @@ abstract class SDLImageButton(
     @Composable
     override fun DrawView(isEditMode: Boolean, inGame: Boolean, size: Dp) {
         val viewState = remember { viewState }
+        var colorFilterToUse by remember { mutableStateOf<BlendModeColorFilter?>(null) }
         Image(painter = painterResource(id = viewState.buttonResId),
             contentDescription = viewState.id,
-            modifier = Modifier.interactiveControlModifier(isEditMode, inGame))
+            modifier = Modifier.interactiveControlModifier(isEditMode, inGame) {
+                colorFilterToUse = it
+            },
+            colorFilter = colorFilterToUse)
     }
 
     protected abstract fun onTouchDown(keyCode: Int)
@@ -75,7 +83,8 @@ abstract class SDLImageButton(
     protected abstract fun onTouchUp(keyCode: Int)
 
     @Composable
-    protected fun Modifier.interactiveControlModifier (isEditMode: Boolean, inGame: Boolean) : Modifier{
+    protected fun Modifier.interactiveControlModifier (isEditMode: Boolean, inGame: Boolean,
+                                                       onColorFilterChanged : (BlendModeColorFilter?) -> Unit = {}) : Modifier{
         val modifierTouse = this.fillMaxSize().minimumInteractiveComponentSize()
         val inGame = remember { inGame }
 
@@ -93,6 +102,6 @@ abstract class SDLImageButton(
         }, onTouchUp = {
             onTouchUp(sdlKeyCode)
             onTouchUpEvent?.invoke(screenController, sdlKeyCode)
-        })
+        }, onColorFilterChanged = { onColorFilterChanged(it) })
     }
 }
