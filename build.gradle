@@ -2,8 +2,8 @@
 buildscript {
     ext.versions = [
             app_package_name : "com.mobilerpgpack.phone",
-            app_version_code : 97,
-            app_version_name : "3.1.5",
+            app_version_code : 100,
+            app_version_name : "3.1.6",
             min_sdk : 26,
             target_sdk : 37,
             target_sdk_min_revision : 0,
@@ -14,16 +14,16 @@ buildscript {
     ]
     ext.build_flags = [
             compiling_arguments : "-j${Runtime.getRuntime().availableProcessors()}",
-            common_c_flags : ["-O3","-flto=full", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
+            common_c_flags : ["-Os","-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
                               "-g", "-D_FILE_OFFSET_BITS=64"],
-            common_cpp_flags : ["-O3" ,"-flto=full", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
+            common_cpp_flags : ["-Os" ,"-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
                                 "-g", "-D_FILE_OFFSET_BITS=64"],
-            ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=full -Wl,--build-id",
+            ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=thin -Wl,--build-id",
             ndk_build_android_stl : "APP_STL=c++_shared",
-            CMAKE_CFLAGS : "-O3 -flto=full -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
-            CMAKE_CXXFLAGS : "-O3 -flto=full -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
+            CMAKE_CFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
+            CMAKE_CXXFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
             CMAKE_ANDROID_STL : "-DANDROID_STL=c++_shared",
-            CMAKE_SHADERLINKER_FLAGS :"-flto=full -fuse-ld=lld -Wl,--build-id",
+            CMAKE_SHADERLINKER_FLAGS :"-flto=thin -fuse-ld=lld -Wl,--build-id",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
     ]
     ext.rootDir = rootProject.rootDir
