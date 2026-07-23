@@ -1,5 +1,5 @@
 [versions]
-agp = "9.2.1"
+agp = "9.3.0"
 converterGson = "3.0.0"
 core = "3.3.0"
 googleServices = "4.5.0"
