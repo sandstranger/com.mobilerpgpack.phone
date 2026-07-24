@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
@@ -105,6 +106,7 @@ fun Modifier.touchListenerModifier(
     val viewRenderRule by remember(viewState.viewRenderRule) {
         mutableStateOf(viewState.viewRenderRule)
     }
+    val yellowColorFilter = retain { BlendModeColorFilter(Color.Yellow, BlendMode.SrcAtop) }
 
     fun clearResources() {
         pointerId = null
@@ -121,9 +123,7 @@ fun Modifier.touchListenerModifier(
     }
 
     LaunchedEffect(inToggleMode, isEditMode, useViewAsToggle) {
-        onColorFilterChanged(if (inToggleMode && !isEditMode && useViewAsToggle)
-            BlendModeColorFilter(Color.Yellow, BlendMode.SrcAtop)
-        else null)
+        onColorFilterChanged(if (inToggleMode && !isEditMode && useViewAsToggle) yellowColorFilter else null)
     }
 
     DisposableEffect(Unit) {
