@@ -105,7 +105,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun clearBlobShaderCache()
     private external fun updateGLSynchronizationState(enableGLSynchronization : Boolean)
     private external fun setBaseGameDir (baseGameDirName : String)
-    private external fun updateOnScreenControlsActiveState (onScreenControlsActive : Boolean)
     private external fun onVirtualGamepadCreatedNativeEvent();
 
     override fun initialize(activity: ComponentActivity) {
@@ -124,7 +123,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             setTextureCacheData(enableETC2TextureCache.value!!,
                 textureCacheDir.absolutePath)
             updateGLSynchronizationState(enableGLSynchronization.value!!)
-            updateOnScreenControlsActiveState(!hideScreenControls.value!!)
         }
         setGLESVersion(GLES_320_VERSION)
         activity.supportedRefreshRates.toIntArray().apply {
