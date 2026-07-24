@@ -274,6 +274,8 @@ abstract class EngineInfo(
         }
     }
 
+    override fun onVirtualGamepadCreated() {}
+
     override fun onBackPressed(): Boolean {
         if (layoutBinding == null || !layoutBinding!!.customKeyboard.isExpanded){
             return false
