@@ -106,6 +106,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun updateGLSynchronizationState(enableGLSynchronization : Boolean)
     private external fun setBaseGameDir (baseGameDirName : String)
     private external fun updateOnScreenControlsActiveState (onScreenControlsActive : Boolean)
+    private external fun onVirtualGamepadCreatedNativeEvent();
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -141,6 +142,11 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override fun onPause() {
         super.onPause()
         ClearRamCache()
+    }
+
+    override fun onVirtualGamepadCreated() {
+        super.onVirtualGamepadCreated()
+        onVirtualGamepadCreatedNativeEvent()
     }
 
     companion object{
