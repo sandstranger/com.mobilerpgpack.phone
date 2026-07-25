@@ -37,9 +37,6 @@ url=https://github.com/pnggroup/libpng.git
 [submodule "app/src/main/jni/Doom64EX-Plus"]
 	path = app/src/main/jni/Doom64EX-Plus
 	url = https://github.com/sandstranger/Doom64EX-Plus.git
-[submodule "third_party/storage-chooser"]
-	path = third_party/storage-chooser
-	url = https://github.com/sandstranger/storage-chooser.git
 [submodule "third_party/legacy_gl4es/src/main/jni/gl4es"]
 	path = third_party/legacy_gl4es/src/main/jni/gl4es
 	url = https://github.com/sandstranger/gl4es.git
