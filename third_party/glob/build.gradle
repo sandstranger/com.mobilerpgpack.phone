@@ -68,8 +68,11 @@ android {
     }
 }
 
+preBuild.dependsOn ':third_party:SAFFAL:saffal:build'
+
 dependencies {
     implementation libs.androidx.appcompat
+    implementation (project(":third_party:SAFFAL:saffal"))
     implementation libs.material
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit

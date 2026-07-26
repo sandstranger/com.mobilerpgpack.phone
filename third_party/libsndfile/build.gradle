@@ -74,7 +74,7 @@ android {
 
 preBuild.dependsOn ':third_party:libvorbis:build',':third_party:flac:build',
         ':third_party:opus:build',':third_party:mpg123:build',':third_party:libmp3lame:build',
-        ':third_party:ogg:build'
+        ':third_party:ogg:build',':third_party:SAFFAL:saffal:build'
 
 dependencies {
     implementation(project(":third_party:libvorbis"))
@@ -83,6 +83,7 @@ dependencies {
     implementation(project(":third_party:opus"))
     implementation(project(":third_party:mpg123"))
     implementation(project(":third_party:libmp3lame"))
+    implementation (project(":third_party:SAFFAL:saffal"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

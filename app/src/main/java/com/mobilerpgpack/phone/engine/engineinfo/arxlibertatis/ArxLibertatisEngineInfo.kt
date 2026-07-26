@@ -2,8 +2,9 @@ package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis
 
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
+import com.opentouchgaming.saffal.FileSAF
+import com.opentouchgaming.saffal.UtilsSAF
 import com.sun.jna.Native
-import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
@@ -30,7 +31,7 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
                 val pathResource = pathToResource
                 if (!baseCommandLineArgs.contains(DATA_DIR_COMMAND) &&
-                    pathResource.isNotEmpty() && File(pathResource).exists()
+                    pathResource.isNotEmpty() && FileSAF(pathResource).exists()
                 ) {
                     this += DATA_DIR_COMMAND
                     this += pathResource
@@ -51,11 +52,13 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
 
     private external fun updateScreenControlsHidingState (controlsHided : Boolean)
+    private external fun setPathToResources(pathToResources : String)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
         updateScreenControlsHidingState(preferencesStorage.hideScreenControls.value!!)
+        setPathToResources(pathToResource)
     }
 
     private companion object {

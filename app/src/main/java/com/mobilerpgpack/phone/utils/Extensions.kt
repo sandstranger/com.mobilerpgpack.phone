@@ -26,6 +26,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
+import com.opentouchgaming.saffal.FileSAF
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -43,27 +44,27 @@ val Activity.supportedRefreshRates: Collection<Int> get() =
 
 fun com.sun.jna.Function.invokeBool(inArgs : Array<Any?>? = null) = this.invokeAs(Boolean::class.java, inArgs)
 
-fun Context.buildFinalPathToUserFolder(targetPath : String): File {
-    val internalStorage = filesDir
+fun Context.buildFinalPathToUserFolder(targetPath : String): FileSAF {
+    val internalStorage = getExternalFilesDir(null)!!
     val applicationExternalStorage = getExternalFilesDir(null)?.parentFile?.parentFile?.parentFile?.parentFile?.parentFile
 
     if (targetPath == internalStorage.absolutePath){
-        return internalStorage
+        return FileSAF(internalStorage.absolutePath)
     }
 
     if (applicationExternalStorage!=null && targetPath.startsWith(applicationExternalStorage.absolutePath)){
-        return File(applicationExternalStorage,targetPath.replace(
+        return FileSAF(applicationExternalStorage,targetPath.replace(
             "${applicationExternalStorage.absolutePath}${File.separator}", ""))
     }
 
     getExternalStoragesRemovable().forEach {
         if (targetPath.startsWith(it.absolutePath)){
-            return File(it,targetPath.replace(
+            return FileSAF(it,targetPath.replace(
                 "${it.absolutePath}${File.separator}", ""))
         }
     }
 
-    return internalStorage
+    return FileSAF(internalStorage.absolutePath)
 }
 
 fun Context.getExternalStoragesRemovable () : Collection<File> =

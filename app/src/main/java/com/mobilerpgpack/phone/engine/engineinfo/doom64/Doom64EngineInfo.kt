@@ -8,6 +8,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.utils.ScreenResolution
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -38,7 +39,7 @@ open class Doom64EngineInfo(
                     it += FILE_COMMAND
                     modsModel.mods.forEach { mod : Mod ->
                         val pathToMode = mod.pathToMod.liveData.value
-                        if (!pathToMode.isNullOrEmpty() && File(pathToMode).exists()){
+                        if (!pathToMode.isNullOrEmpty() && FileSAF(pathToMode).exists()){
                             it+=pathToMode
                         }
                     }
@@ -103,7 +104,7 @@ open class Doom64EngineInfo(
             return ""
         }
 
-        val pathToDoom64ModsFolderExists = File(pathToDoom64ModsFolder).exists()
+        val pathToDoom64ModsFolderExists = FileSAF(pathToDoom64ModsFolder).exists()
 
         if (!pathToDoom64ModsFolderExists) {
             pathToDoom64ModsFolder = ""

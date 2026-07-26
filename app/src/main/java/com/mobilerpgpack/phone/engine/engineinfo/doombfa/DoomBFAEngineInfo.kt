@@ -5,22 +5,22 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.utils.supportedRefreshRates
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
-import java.io.File
 
 class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.Classic_RBDOOM_3_BFG) {
     private val context : Context by inject ()
-    private val homeDirectoryFolder : File by inject { parametersOf(HOME_DIRECTORY_NAME) }
+    private val homeDirectoryFolder : FileSAF by inject { parametersOf(HOME_DIRECTORY_NAME) }
     private val doomBFAPreferenceStorage by inject<DoomBFAPreferencesStorage>(
         named(EngineTypes.Classic_RBDOOM_3_BFG.name))
     private val baseGameDirName by lazy {
         return@lazy preferencesStorage.run {
             val pathToModsDirectory = pathDoom3ModsDir.value!!
-            val modsDir = File(pathToModsDirectory)
+            val modsDir = FileSAF(pathToModsDirectory)
             return@run if (enableDoom3Mods.value!! && modsDir.exists() && pathToModsDirectory.isNotEmpty() &&
                 pathToModsDirectory.startsWith(
                     pathToResource
@@ -33,7 +33,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
     }
 
-    val textureCacheDir by lazy { File(context.cacheDir,"doom3_texture_cache") }
+    val textureCacheDir by lazy { FileSAF(context.cacheDir,"doom3_texture_cache") }
     @Volatile
     var isTexturesResourcesDeleting = false
 

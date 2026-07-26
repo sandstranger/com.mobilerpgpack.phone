@@ -1,7 +1,9 @@
 package com.mobilerpgpack.phone.utils
 
 import android.content.Context
+import com.mobilerpgpack.phone.main.GAME_CONTROLLER_DB_NAME
 import com.mobilerpgpack.phone.main.KoinModulesProvider
+import com.opentouchgaming.saffal.FileSAF
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
@@ -14,7 +16,8 @@ import java.io.IOException
 class AssetExtractor : IAssetExtractor, KoinComponent {
     private val preferencesStorage: PreferencesStorage by inject()
     private val context: Context by inject()
-    private val userFolder: File by inject(named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
+    private val userFolder: FileSAF by inject(named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
+    private val externalStorageFolder : File by inject (named(KoinModulesProvider.EXTERNAL_STORAGE_DIRECTORY_KEY))
     @Volatile
     private var assetsCopying = false
     @Volatile
@@ -38,20 +41,21 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
         assetsCopying = true
         _assetsCopied = false
         waitUntil { !preferencesStorage.prefsWasLoaded }
-        userFolder.apply {
-            mkdirs()
+        userFolder.mkdirs()
+        externalStorageFolder.mkdirs()
+        try {
             withContext(Dispatchers.Main) { assetsStartedCopyListeners.invoke() }
-            try {
-                copyAssetsFolderToInternalStorage(GAME_FILES_ASSETS_FOLDER, this)
-            } finally {
-                withContext(Dispatchers.Main) {
-                    preferencesStorage.setBooleanValueAsync(preferencesStorage.allAssetsCopiedPrefsKey, true)
-                    preferencesStorage.setIntValueAsync(preferencesStorage.assetsCurrentVersionPrefsKey, ASSETS_CURRENT_VERSION)
-                    assetsFinishCopyListeners.invoke()
-                }
-                _assetsCopied = true
-                assetsCopying = false
+            copyAssetsFolderToInternalStorage(GAME_FILES_ASSETS_FOLDER, userFolder)
+            copyAssetsFolderToInternalStorage(EXTERNAL_STORAGE_ASSETS_FOLDER, externalStorageFolder)
+        }
+        finally {
+            withContext(Dispatchers.Main) {
+                preferencesStorage.setBooleanValueAsync(preferencesStorage.allAssetsCopiedPrefsKey, true)
+                preferencesStorage.setIntValueAsync(preferencesStorage.assetsCurrentVersionPrefsKey, ASSETS_CURRENT_VERSION)
+                assetsFinishCopyListeners.invoke()
             }
+            _assetsCopied = true
+            assetsCopying = false
         }
     }
 
@@ -66,14 +70,18 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
                 for (filename in files) {
                     val assetPath =
                         if (assetsFolder.isEmpty()) filename else "$assetsFolder/$filename"
-                    val outFile = File(destFolder, filename)
+                    val outFile = FileSAF(destFolder, filename)
+                    outFile.parentFile.mkdirs()
 
                     val subFiles = assetManager.list(assetPath)
                     if (subFiles != null && subFiles.isNotEmpty()) {
                         copyAssetsFolderToInternalStorage(assetPath, outFile)
                     } else {
+                        if (!outFile.exists()) {
+                            outFile.createNewFile()
+                        }
                         assetManager.open(assetPath).use { inputStream ->
-                            FileOutputStream(outFile).use { outputStream ->
+                            outFile.outputStream.use { outputStream ->
                                 inputStream.copyTo(outputStream)
                             }
                         }
@@ -87,6 +95,7 @@ class AssetExtractor : IAssetExtractor, KoinComponent {
 
     private companion object {
         private const val GAME_FILES_ASSETS_FOLDER = "game_files"
-        private const val ASSETS_CURRENT_VERSION = 32
+        private const val EXTERNAL_STORAGE_ASSETS_FOLDER = "external_storage_files"
+        private const val ASSETS_CURRENT_VERSION = 33
     }
 }

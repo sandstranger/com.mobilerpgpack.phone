@@ -20,6 +20,17 @@ if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(-fno-lto)
 endif()
 
+set(SAFFAL_LOCATION "${CMAKE_SOURCE_DIR}/third_party/SAFFAL/saffal" CACHE STRING "" FORCE)
+set(SAFFAL_INCLUDE_DIR "${SAFFAL_LOCATION}/src/main/jni/include" CACHE STRING "" FORCE)
+
+if (IS_DEBUG_BUILD)
+    set(SAFFAL_LIBRARY "${SAFFAL_LOCATION}/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libsaffal.so"
+            CACHE STRING "" FORCE)
+else()
+    set(SAFFAL_LIBRARY "${SAFFAL_LOCATION}/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libsaffal.so"
+            CACHE STRING "" FORCE)
+endif ()
+
 set(SDL_LOCATION ${CMAKE_SOURCE_DIR}/third_party/sdl2-compat CACHE STRING "" FORCE)
 set(SDL2_INCLUDE_DIR "${SDL_LOCATION}/src/main/jni/sdl2-compat/include" CACHE STRING "" FORCE)
 
@@ -185,6 +196,7 @@ set(FFMPEG_INCLUDE_DIR ${FFMPEG_INCLUDE_DIRS} CACHE STRING "" FORCE)
 
 include_directories("${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/include" PUBLIC)
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/third_party/sse2neon" PUBLIC)
+include_directories(${SAFFAL_INCLUDE_DIR} PUBLIC)
 
 if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
     set(GNUTLS_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/ffmpeg/src/main/jniLibs/${ANDROID_ABI}/libavformat_neon.so" CACHE STRING "" FORCE)
@@ -394,35 +406,35 @@ target_include_directories(arx PRIVATE "${OPENAL_INCLUDE_DIR}/AL")
 target_include_directories(DoomRPG PRIVATE ${SDL2_INCLUDE_DIR} ${SDL2_MIXER_INCLUDE_DIR}
 ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR} ${FLUIDSYNTH_INCLUDE_DIR})
 
-target_link_libraries(DoomRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
+target_link_libraries(DoomRPG PRIVATE ${SAFFAL_LIBRARY} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY}
         ${SDL2_TTF_LIBRARY} ZLIB::ZLIB ${TRANSLATOR_LIBRARY} ${FLUIDSYNTH_LIBRARY})
 
 target_include_directories(DoomIIRPG PRIVATE "${OPENAL_INCLUDE_DIR}/AL" ${SDL2_INCLUDE_DIR}
         ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
-target_link_libraries(DoomIIRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
+target_link_libraries(DoomIIRPG PRIVATE ${SAFFAL_LIBRARY} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
         ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY} AndroidGraphicsLayer)
 
 target_include_directories(WolfensteinRPG PRIVATE "${OPENAL_INCLUDE_DIR}" ${SDL2_INCLUDE_DIR}
         ${SDL2_TTF_INCLUDE_DIR} ${TRANSLATOR_INCLUDE_DIR})
 
-target_link_libraries(WolfensteinRPG PRIVATE ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
+target_link_libraries(WolfensteinRPG PRIVATE ${SAFFAL_LIBRARY} ${SDL2_LIBRARY} ${SDL2_TTF_LIBRARY} ZLIB::ZLIB
          ${OPENAL_LIBRARY} ${TRANSLATOR_LIBRARY} AndroidGraphicsLayer)
 
 target_include_directories(DOOM64 PRIVATE ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
         ${FMOD_INC_DIR})
 
-target_link_libraries(DOOM64 PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
+target_link_libraries(DOOM64 PRIVATE ${SAFFAL_LIBRARY} ${SDL3_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log AndroidGraphicsLayer)
 
-target_include_directories(DOOM64-Enhanced PRIVATE  ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
+target_include_directories(DOOM64-Enhanced PRIVATE ${SDL3_INCLUDE_DIR} ${libpng_INCLUDE_DIRS}
         ${FMOD_INC_DIR})
 
-target_link_libraries(DOOM64-Enhanced PRIVATE ${SDL3_LIBRARY} ${libpng_LIBRARY}
+target_link_libraries(DOOM64-Enhanced PRIVATE ${SAFFAL_LIBRARY} ${SDL3_LIBRARY} ${libpng_LIBRARY}
         ${FMOD_LIB} ZLIB::ZLIB m log AndroidGraphicsLayer)
 
 target_include_directories(PsyDoom PRIVATE ${SDL2_INCLUDE_DIR})
-target_link_libraries(PsyDoom PRIVATE ${SDL2_LIBRARY})
+target_link_libraries(PsyDoom PRIVATE ${SAFFAL_LIBRARY} ${SDL2_LIBRARY})
 
 target_include_directories(VulkanGL PRIVATE ${SDL2_INCLUDE_DIR})
 target_link_libraries(VulkanGL PRIVATE ${SDL2_LIBRARY})

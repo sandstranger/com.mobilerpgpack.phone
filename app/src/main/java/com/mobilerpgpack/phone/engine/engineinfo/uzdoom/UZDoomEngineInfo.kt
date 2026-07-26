@@ -11,6 +11,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.playingRecordsFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.xlatFileCanBeUsed
 import com.mobilerpgpack.phone.utils.GpuProbe
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -50,7 +51,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
                 it += baseCommandLineArgs
 
                 val pathToWadFile = preferencesStorage.pathToUZDoomIWadFile.value!!
-                if (pathToWadFile.isNotEmpty() && File(pathToWadFile).exists() &&
+                if (pathToWadFile.isNotEmpty() && FileSAF(pathToWadFile).exists() &&
                     !baseCommandLineArgs.contains(IWAD_COMMAND)
                 ) {
                     it += IWAD_COMMAND
@@ -72,7 +73,7 @@ class UZDoomEngineInfo (mainEngineLib: String,
 
                     modsModel.mods.forEach { mod: Mod ->
                         val pathToMod = mod.pathToMod.liveData.value
-                        if (!pathToMod.isNullOrEmpty() && File(pathToMod).exists()) {
+                        if (!pathToMod.isNullOrEmpty() && FileSAF(pathToMod).exists()) {
                             it += pathToMod
                         }
                     }

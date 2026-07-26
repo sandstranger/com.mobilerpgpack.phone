@@ -6,6 +6,7 @@ import com.mobilerpgpack.phone.utils.ComposeImmutableList
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.MutableValue
 import com.mobilerpgpack.phone.utils.writeTextSafely
+import com.opentouchgaming.saffal.FileSAF
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -16,7 +17,6 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.get
-import java.io.File
 import java.util.Locale.getDefault
 
 @Serializable
@@ -26,7 +26,7 @@ abstract sealed class ModsModel : KoinComponent {
 
     private val modsCollection = ComposeImmutableList<Mod>()
 
-    private val jsonFile : File by inject { parametersOf(jsonFileName) }
+    private val jsonFile : FileSAF by inject { parametersOf(jsonFileName) }
 
     val enableModsAutoUpdateInFolder = MutableValue<Boolean>()
 
@@ -70,7 +70,7 @@ abstract sealed class ModsModel : KoinComponent {
                     this.enableModsAutoUpdateInFolder.value = it.enableModsAutoUpdateInFolder.value
                     this.pathToModsFolder.value = it.pathToModsFolder.value
                     val modsCollection = it.modsCollection.sourceList.filter { mod ->
-                        mod.pathToMod.value!!.isNotEmpty() && File(mod.pathToMod.value!!).exists()
+                        mod.pathToMod.value!!.isNotEmpty() && FileSAF(mod.pathToMod.value!!).exists()
                     }.map { mod -> mod.pathToMod.value!! }
                     this.modsCount = modsCollection.size
                     for (i in 0 until this.modsCount) {
@@ -102,9 +102,16 @@ abstract sealed class ModsModel : KoinComponent {
 
     protected companion object {
         inline fun <reified T> load(jsonFileName: String): T where T : ModsModel {
-            val jsonFile : File = get(File::class.java, parameters = { parametersOf(jsonFileName) })
-            val model = if (jsonFile.exists())
-                Json.decodeFromString<T>(jsonFile.readText()) else
+            val jsonFile: FileSAF = get(FileSAF::class.java, parameters = { parametersOf(jsonFileName) })
+            jsonFile.parentFile.mkdirs()
+            if (!jsonFile.exists()) {
+                jsonFile.createNewFile()
+            }
+            val jsonContent = jsonFile.inputStream.use { stream ->
+                stream.reader().readText()
+            }
+            val model = if (jsonContent.isNotEmpty())
+                Json.decodeFromString<T>(jsonContent) else
                 T::class.java.getDeclaredConstructor().newInstance()
             return model.apply {
                 initialize()
@@ -115,4 +122,4 @@ abstract sealed class ModsModel : KoinComponent {
 
 val ModsModel.modsCanBeUsed
     get() = enableModsSupport.liveData.value!! && modsCount > 0 &&
-            this.mods.any { mod -> !mod.pathToMod.liveData.value.isNullOrEmpty() && File(mod.pathToMod.liveData.value!!).exists() }
+            this.mods.any { mod -> !mod.pathToMod.liveData.value.isNullOrEmpty() && FileSAF(mod.pathToMod.liveData.value!!).exists() }

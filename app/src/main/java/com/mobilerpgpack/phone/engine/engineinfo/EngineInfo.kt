@@ -32,6 +32,7 @@ import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.GlesRenderVersions
 import com.mobilerpgpack.phone.main.ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.C_PLUS_PLUS_SHARED_NATIVE_LIB_NAME
+import com.mobilerpgpack.phone.main.GAME_CONTROLLER_DB_NAME
 import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.main.NG_GL4ES_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
@@ -49,6 +50,7 @@ import com.mobilerpgpack.phone.utils.displayInSafeArea
 import com.mobilerpgpack.phone.utils.getComposableValue
 import com.mobilerpgpack.phone.utils.getScreenResolution
 import com.mobilerpgpack.phone.utils.hideSystemBarsAndWait
+import com.opentouchgaming.saffal.FileSAF
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import com.sun.jna.Native
 import kotlinx.coroutines.CoroutineScope
@@ -112,6 +114,8 @@ abstract class EngineInfo(
     private val gl4esLibraryName get() = if (useLegacyGl4es) com.mobilerpgpack.phone.main.gl4esLibraryName else
         NG_GL4ES_NATIVE_LIB_NAME
     private val gL4ESJnaLayer by lazy { GL4ESJnaLayer (gl4esLibraryName) }
+    private val externalStorageFolder : File by inject (
+        named(KoinModulesProvider.EXTERNAL_STORAGE_DIRECTORY_KEY))
 
     private external fun needToShowScreenControls() : Boolean
     protected external fun needToInvokeMouseButtonsEvents() : Boolean
@@ -146,7 +150,7 @@ abstract class EngineInfo(
         get() {
             val pathToResource = this.pathToResource
             return pathToResource.isNotEmpty() &&
-                    File(pathToResource).exists()
+                    FileSAF(pathToResource).exists()
         }
 
     override val pathToResourceIsCorrect: Boolean get() = pathToResourceExists &&
@@ -199,13 +203,13 @@ abstract class EngineInfo(
     override fun onNativeLibrariesLoaded() {
         Native.register(EngineInfo::class.java, mainLibraryName)
         setUseGLES2_0State(preferencesStorage.glesRenderVersion.value!! == GlesRenderVersions.OpenGLES_2_0)
-        setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")
+        setPathToSDLControllerDB("${externalStorageFolder.absolutePath}${File.separator}${GAME_CONTROLLER_DB_NAME}")
         if (enableAngleSupport){
             AngleShaderCacheJnaLayer.setAngleState(true)
         }
         if (loadGL4ES){
             gL4ESJnaLayer.apply {
-                val gl4esShaderCacheFolder = File(activity.cacheDir, gl4esShaderCacheFolderName)
+                val gl4esShaderCacheFolder = FileSAF(activity.cacheDir, gl4esShaderCacheFolderName)
                 gl4esShaderCacheFolder.mkdirs()
                 initializeGL4ESData (enableNGGL4ESSimpleShaderConv,
                     enableAngleSupport, targetGLESVersion,

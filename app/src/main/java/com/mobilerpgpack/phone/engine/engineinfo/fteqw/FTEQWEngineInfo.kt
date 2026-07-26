@@ -1,9 +1,11 @@
 package com.mobilerpgpack.phone.engine.engineinfo.fteqw
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.main.FTEQW_MAIN_ENGINE_LIB
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -12,13 +14,9 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
-
-    private val homeDirFile : File by inject { parametersOf(FTEQW_CONFIGS_DIR) }
-
+    private val homeDirFile : FileSAF by inject { parametersOf(FTEQW_CONFIGS_DIR) }
     private val gameType get() = fteQWPrefsStorage.activeFTEQWGame.value!!
-
     private val fteQWPrefsStorage : FTEQWPreferencesStorage by inject (named(EngineTypes.FTEQW.name))
-
     private val quake2GameType get() = preferencesStorage.quake2GameType.value!!
 
     private val pathToModsDirectory : String get() {
@@ -95,7 +93,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
                 val pathToResources = pathToResource
 
                 if (!baseCommandLineArgs.contains(BASE_DIR_COMMAND) && pathToResources.isNotEmpty() &&
-                    File(pathToResources).exists()){
+                    FileSAF(pathToResources).exists()){
                     this += BASE_DIR_COMMAND
                     this += pathToResources
                 }
@@ -108,7 +106,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
                     this@with += quake2GameType.directoryName
                 }
                 else if (pathToBaseGameDirectory.isNotEmpty()) {
-                    File(pathToBaseGameDirectory).apply {
+                    FileSAF(pathToBaseGameDirectory).apply {
                         if (!baseCommandLineArgs.contains(BASE_GAME_COMMAND) && exists()){
                             this@with += BASE_GAME_COMMAND
                             this@with += name
@@ -119,7 +117,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
                 val pathToModsDirectory = pathToModsDirectory
 
                 if (pathToModsDirectory.isNotEmpty() && pathToModsDirectory.startsWith(pathToResource)) {
-                    File(pathToModsDirectory).apply {
+                    FileSAF(pathToModsDirectory).apply {
                         if (preferencesStorage.enableFTEQWModsSupport.value!! &&
                             !baseCommandLineArgs.contains(GAME_COMMAND) && exists()
                         ) {
@@ -132,7 +130,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
                 val pathToManifest = pathToManifest
 
                 if (pathToManifest.isNotEmpty() && pathToManifest.startsWith(pathToResource)) {
-                    File(pathToManifest).apply {
+                    FileSAF(pathToManifest).apply {
                         if (!baseCommandLineArgs.contains(MANIFEST_COMMAND) && exists()){
                             this@with += MANIFEST_COMMAND
                             this@with += name
@@ -170,7 +168,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
     }
 
     private fun Quake2Games.isPathToGameDirectoryExists () =
-        File(pathToResource + File.separator + directoryName).exists()
+        FileSAF(pathToResource + File.separator + directoryName).exists()
 
     private fun getQuake2NativeLibraryName () : String {
         return quake2GameType.run {

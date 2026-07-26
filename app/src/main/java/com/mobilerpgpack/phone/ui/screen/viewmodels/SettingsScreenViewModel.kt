@@ -11,6 +11,8 @@ import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.copyFolder
 import com.mobilerpgpack.phone.utils.startGame
+import com.opentouchgaming.saffal.FileSAF
+import com.opentouchgaming.saffal.UtilsSAF
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,12 +28,14 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
     private val scope : CoroutineScope by inject (
         named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
     private val assetsExtractor : IAssetExtractor by inject ()
-    private val sourceFolder = context.filesDir
-    private val rootUserDirectory : File by inject ( named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
+    private val sourceFolder : File by inject (named(KoinModulesProvider.EXTERNAL_STORAGE_DIRECTORY_KEY))
+    private val rootUserDirectory : FileSAF by inject ( named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
 
     @Volatile
     private var contentCopied = true
     private var wasInit = false
+    @Volatile
+    private var isSafStateUpdating = false
 
     val allAssetsCopied = MutableLiveData (true)
 
@@ -55,6 +59,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
             allAssetsCopied.value = false
             scope.launch {
                 rootUserDirectory.mkdirs()
+                sourceFolder.mkdirs()
                 copyAssetsContentToInternalStorage(copyForced = true)
             }
         }
@@ -62,6 +67,21 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
 
     fun onStartGameClicked(activeEngine : EngineTypes,activity: Activity) =
         startGame(activity, activeEngine)
+
+    fun updateSafUsingState(enableSaf : Boolean){
+        if (isSafStateUpdating){
+            return
+        }
+        isSafStateUpdating = true
+        scope.launch {
+            withContext(Dispatchers.Main){
+                preferencesStorage.setBooleanValueAsync(preferencesStorage.enableSAFPrefsKey, enableSaf)
+                UtilsSAF.setSafEnabled(enableSaf)
+                isSafStateUpdating = false
+                restartApplication()
+            }
+        }
+    }
 
     fun copyContentFromInternalStorage () {
         if (!contentCopied || sourceFolder.absolutePath == rootUserDirectory.absolutePath) {

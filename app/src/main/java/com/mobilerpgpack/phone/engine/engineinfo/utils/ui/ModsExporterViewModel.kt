@@ -4,15 +4,15 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
+import com.opentouchgaming.saffal.FileSAF
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.io.File
 
 class ModsExporterViewModel : ViewModel(), KoinComponent {
     private val context : Context by inject ()
 
     fun importMods(modsModel: ModsModel, pathToFile : String){
-        File(pathToFile).let { modsFile ->
+        FileSAF(pathToFile).let { modsFile ->
             if (modsFile.exists()){
                 modsModel.load((modsFile.readText()))
             }

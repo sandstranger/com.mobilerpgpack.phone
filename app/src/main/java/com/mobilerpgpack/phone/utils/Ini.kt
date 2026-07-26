@@ -2,13 +2,13 @@ package com.mobilerpgpack.phone.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.opentouchgaming.saffal.FileSAF
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import java.io.File
 
 class Ini(pathToFile: String, removeSpacesBetweenSeparator: Boolean = false) : KoinComponent {
-    private val iniFile : File by inject { parametersOf(pathToFile) }
+    private val iniFile : FileSAF by inject { parametersOf(pathToFile) }
     private val iniValues = mutableMapOf<String, IniValue>()
     private val sections = linkedMapOf<String, LinkedHashMap<String, String>>()
     private var loaded = false
@@ -150,27 +150,29 @@ class Ini(pathToFile: String, removeSpacesBetweenSeparator: Boolean = false) : K
         var currentSection = ROOT_SECTION
         sections.getOrPut(currentSection) { linkedMapOf() }
 
-        iniFile.bufferedReader(Charsets.UTF_8).useLines { lines ->
-            lines.forEach { rawLine ->
-                val line = rawLine.trim()
+        iniFile.inputStream.use { inputStream ->
+            inputStream.bufferedReader(Charsets.UTF_8).useLines { lines ->
+                lines.forEach { rawLine ->
+                    val line = rawLine.trim()
 
-                if (line.isEmpty()) return@forEach
-                if (line.startsWith(";") || line.startsWith("#")) return@forEach
+                    if (line.isEmpty()) return@forEach
+                    if (line.startsWith(";") || line.startsWith("#")) return@forEach
 
-                if (line.startsWith("[") && line.endsWith("]") && line.length >= 2) {
-                    currentSection = line.substring(1, line.length - 1).trim()
-                    sections.getOrPut(currentSection) { linkedMapOf() }
-                    return@forEach
-                }
+                    if (line.startsWith("[") && line.endsWith("]") && line.length >= 2) {
+                        currentSection = line.substring(1, line.length - 1).trim()
+                        sections.getOrPut(currentSection) { linkedMapOf() }
+                        return@forEach
+                    }
 
-                val sepIndex = findSeparatorIndex(line)
-                if (sepIndex <= 0) return@forEach
+                    val sepIndex = findSeparatorIndex(line)
+                    if (sepIndex <= 0) return@forEach
 
-                val key = line.substring(0, sepIndex).trim()
-                val value = normalizeIniValue(line.substring(sepIndex + 1))
+                    val key = line.substring(0, sepIndex).trim()
+                    val value = normalizeIniValue(line.substring(sepIndex + 1))
 
-                if (key.isNotEmpty()) {
-                    sections.getOrPut(currentSection) { linkedMapOf() }[key] = value
+                    if (key.isNotEmpty()) {
+                        sections.getOrPut(currentSection) { linkedMapOf() }[key] = value
+                    }
                 }
             }
         }
@@ -225,9 +227,14 @@ class Ini(pathToFile: String, removeSpacesBetweenSeparator: Boolean = false) : K
             root[entryKey] = stringValue
         }
 
-        iniFile.parentFile?.mkdirs()
-        iniFile.bufferedWriter(Charsets.UTF_8).use { writer ->
-            writeSections(writer)
+        iniFile.parentFile.mkdirs()
+        if (!iniFile.exists()) {
+            iniFile.createNewFile()
+        }
+        iniFile.outputStream.use { outputStream ->
+            outputStream.bufferedWriter(Charsets.UTF_8).use { writer ->
+                writeSections(writer)
+            }
         }
     }
 

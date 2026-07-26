@@ -214,7 +214,8 @@ preBuild.dependsOn ':third_party:fluidsynth:build',':machine_translator:CTransla
         ':third_party:libjpegturbo:build',':third_party:bzip2:build',':third_party:ode:build',
         ':third_party:yquake2:build',':third_party:sdl2-image:build',
         ':third_party:glbinding:build',':third_party:glob:build',':third_party:ogg:build',
-        ':third_party:angle:build',':third_party:openssl:build',':third_party:sdl2-compat:build'
+        ':third_party:angle:build',':third_party:openssl:build',':third_party:sdl2-compat:build',
+        ':third_party:SAFFAL:saffal:build'
 
 dependencies {
     implementation (project(":third_party:openal"))
@@ -228,7 +229,7 @@ dependencies {
     implementation (project(":third_party:sdl3:android-project:app"))
     implementation (project(":third_party:fmod"))
     implementation (project(":third_party:bing_translator"))
-    implementation (project(":third_party:storage-chooser:storagechooser"))
+    implementation (project(":third_party:SAFFAL:saffal"))
     implementation (project(":third_party:NG-GL4ES"))
     implementation (project(":third_party:legacy_gl4es"))
     implementation (project(":third_party:zmusic"))
@@ -245,6 +246,7 @@ dependencies {
     implementation (project(":third_party:angle"))
     implementation (project(":third_party:openssl"))
     implementation (project(":third_party:sdl2-compat"))
+    implementation (project(":third_party:storage-chooser:storagechooser"))
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.2.2"))

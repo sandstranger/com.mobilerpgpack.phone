@@ -55,10 +55,11 @@ android {
     ndkVersion versions.ndk_version
 }
 
-preBuild.dependsOn ':third_party:sdl2-compat:build'
+preBuild.dependsOn ':third_party:sdl2-compat:build',':third_party:SAFFAL:saffal:build'
 
 dependencies {
     implementation(project(":third_party:sdl2-compat"))
+    implementation (project(":third_party:SAFFAL:saffal"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit

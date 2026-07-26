@@ -9,6 +9,7 @@ import com.mobilerpgpack.phone.net.IDriveDownloader
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.computeSHA256
 import com.mobilerpgpack.phone.utils.unzipArchive
+import com.opentouchgaming.saffal.FileSAF
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -38,15 +39,10 @@ abstract class BaseM2M100TranslationModel(
         "uz", "vi", "wo", "xh", "yi", "yo", "zh", "zu")
 
     private val modelDownloader : IDriveDownloader by inject { parametersOf(RESOURCES_DOWNLOADER_ID) }
-
     private val zipFile : File by inject { parametersOf("${modelFolder.name}.zip") }
-
     private val modelFolder : File by inject { parametersOf(pathToModelFolder) }
-
     private val smpFile : File by inject { parametersOf(spmFile) }
-
-    private val userDirectory : File by inject (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
-
+    private val userDirectory : File by inject (named(KoinModulesProvider.EXTERNAL_STORAGE_DIRECTORY_KEY))
     private val assetsExtractor : IAssetExtractor = get ()
 
     @Volatile

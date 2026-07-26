@@ -445,6 +445,8 @@ etcpack - [Licence](https://github.com/wolfpld/etcpak/blob/master/LICENSE.txt) h
 
 Android framepacing - [Licence](https://android.googlesource.com/platform/frameworks/opt/gamesdk/+/refs/heads/android-games-sdk-games-frame-pacing-release/LICENSE) https://android.googlesource.com/platform/frameworks/opt/gamesdk/+/refs/heads/android-games-sdk-games-frame-pacing-release
 
+SAFFAL - https://github.com/emileb/SAFFAL
+
 *All UZDoom and Doom credits belong to the original authors (id Software, Raven Software, Rogue Software, Digital Café, Nash Muhandes).*
 
 ---

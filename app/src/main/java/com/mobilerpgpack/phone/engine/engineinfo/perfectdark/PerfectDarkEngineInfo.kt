@@ -4,6 +4,7 @@ import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -13,8 +14,8 @@ import java.io.File
 
 class PerfectDarkEngineInfo : SDL3EngineInfo
     ("", emptyArray(), EngineTypes.PerfectDark) {
-    private val homeDirectory : File by inject { parametersOf(PERFECT_DARK_FOLDER_NAME) }
-    private val savesDirectory : File by inject { parametersOf(PERFECT_DARK_FOLDER_NAME +
+    private val homeDirectory : FileSAF by inject { parametersOf(PERFECT_DARK_FOLDER_NAME) }
+    private val savesDirectory : FileSAF by inject { parametersOf(PERFECT_DARK_FOLDER_NAME +
             File.separator + SAVE_FOLDER_NAME) }
     private val perfectDarkPreferencesStorage : PerfectDarkPreferencesStorage by inject (
         named(EngineTypes.PerfectDark.name))
@@ -26,7 +27,6 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
 
     override val preferencesStorage: PreferencesStorage get() = perfectDarkPreferencesStorage
     override val commandLineParams by lazy { perfectDarkPreferencesStorage.commandLineArgs.value!! }
-    override val requiredResourceExtensions = listOf(".z64", ".Z64")
     override val mainLibraryName: String by lazy { romVersion.mainLibraryName }
     override val nativeLibraries by lazy {
         mutableListOf<String>().run {
@@ -50,7 +50,7 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
 
                 val pathToRom = pathToResource
                 if (!baseCommandLineArgs.contains(ROM_FILE_COMMAND) &&
-                    pathToRom.isNotEmpty() && File(pathToRom).exists()){
+                    pathToRom.isNotEmpty() && FileSAF(pathToRom).exists()){
                     this +=ROM_FILE_COMMAND
                     this +=pathToRom
                 }
@@ -60,7 +60,7 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
                 }
 
                 val enableMods = perfectDarkPreferencesStorage.enablePerfectDarkModsSupport.value!!
-                        && pathToModsDirectory.isNotEmpty() && File(pathToModsDirectory).exists()
+                        && pathToModsDirectory.isNotEmpty() && FileSAF(pathToModsDirectory).exists()
 
                 if (!baseCommandLineArgs.contains(MODS_DIR_COMMAND) && enableMods){
                     this += MODS_DIR_COMMAND

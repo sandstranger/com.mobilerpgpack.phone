@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.main
 import android.app.Application
 import com.mobilerpgpack.phone.translator.TranslationManager
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.opentouchgaming.saffal.UtilsSAF
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,6 +16,8 @@ import org.koin.core.context.GlobalContext.startKoin
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        UtilsSAF.setContext(applicationContext, true)
+        UtilsSAF.loadTreeRoots()
         setupJna()
         initializeKoin()
     }

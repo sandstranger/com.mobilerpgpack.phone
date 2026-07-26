@@ -1,11 +1,13 @@
 package com.mobilerpgpack.phone.utils
 
-import java.io.File
+import com.opentouchgaming.saffal.FileSAF
 
-fun File.writeTextSafely (textToWrite : String){
-    this.parentFile?.mkdirs()
-    if (exists()){
-        delete()
+fun FileSAF.writeTextSafely(textToWrite: String) {
+    parentFile.mkdirs()
+    if (!exists()) {
+        createNewFile()
     }
-    writeText(textToWrite)
+    outputStream.use { outputStream ->
+        outputStream.write(textToWrite.toByteArray(Charsets.UTF_8))
+    }
 }

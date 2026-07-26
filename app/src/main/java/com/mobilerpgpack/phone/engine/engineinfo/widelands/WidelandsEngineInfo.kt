@@ -1,13 +1,12 @@
 package com.mobilerpgpack.phone.engine.engineinfo.widelands
 
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.doombfa.DoomBFAEngineInfo.Companion.HOME_DIRECTORY_NAME
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import java.io.File
-import kotlin.getValue
 
 class WidelandsEngineInfo (mainEngineLib: String,
                            allLibs: Array<String>) :

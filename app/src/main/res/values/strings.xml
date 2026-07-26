@@ -75,7 +75,7 @@
     <string name="enable_uzdoom_beh_support">Enable .beh support</string>
     <string name="uzdoom_path_to_beh_file">Path to .beh file</string>
     <string name="path_to_doom64_mods_folder">Path to Doom 64 folder with mods</string>
-    <string name="path_to_psydoom_cue_file">Path to PSX Doom cue file</string>
+    <string name="path_to_psydoom_cue_directory">Path to PSX Doom cue directory</string>
     <string name="path_to_psydoom_mods_folder">Path to PsyDoom mods folder</string>
     <string name="psydoom_game_options_title">Game options</string>
     <string name="psydoom_record_demos">Record demos</string>
@@ -355,4 +355,5 @@
     <string name="buffer_staffing_fix_wait">Buffer stuffing fix delay</string>
     <string name="blocking_wait">Enable blocking wait (when framepacing off)</string>
     <string name="fence_timeout">Fence timeout (ms)</string>
+    <string name="enable_saf_short_desc">Enable SAF for file access (20–30× slower than native, use only if MANAGE_EXTERNAL_STORAGE is broken on your device)\n\nAfter enabling or disabling SAF, you must reconfigure all data file paths because SAF uses URIs instead of direct filesystem paths.</string>
 </resources>

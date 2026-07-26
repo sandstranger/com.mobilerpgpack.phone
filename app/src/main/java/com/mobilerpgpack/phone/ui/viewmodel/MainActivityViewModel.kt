@@ -6,16 +6,14 @@ import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.ui.screen.ComposeScreen
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.opentouchgaming.saffal.FileSAF
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import java.io.File
 
 class MainActivityViewModel : ViewModel(), KoinComponent {
     private val preferencesStorage : PreferencesStorage by inject()
@@ -45,7 +43,7 @@ class MainActivityViewModel : ViewModel(), KoinComponent {
         while (!preferencesStorage.prefsWasLoaded){
             delay(ONE_FRAME_DELAY)
         }
-        val rootUserDirectory : File = getKoin().get ( named (
+        val rootUserDirectory : FileSAF = getKoin().get ( named (
             KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
         rootUserDirectory.mkdirs()
         val assetExtractor : IAssetExtractor = getKoin().get ()

@@ -35,6 +35,7 @@ import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.ui.activity.ScreenControlsEditorActivity
 import com.mobilerpgpack.phone.ui.getButtonsColors
 import com.mobilerpgpack.phone.ui.getOnBackgroundColor
@@ -61,6 +62,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
+import java.io.File
 
 class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
@@ -180,6 +182,11 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
         DrawHorizontalDivider()
         DrawResetResourcesDialog(viewModel)
+        DrawHorizontalDivider()
+        SwitchPreferenceItem(stringResource(R.string.enable_saf_short_desc),
+            preferencesStorage.enableSAF){
+            viewModel.updateSafUsingState(it)
+        }
         DrawHorizontalDivider()
 
         val engineInfoUIController : IEngineUIController = koinInject(named(activeEngine.name))
@@ -309,10 +316,9 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
 
     @Composable
     private fun DrawCustomUserPathSettings(){
-        val context = LocalContext.current
         val preferencesStorage : PreferencesStorage = koinInject()
         val settingsViewModel : SettingsScreenViewModel = koinViewModel ()
-        val sourceFolder = remember { context.filesDir.absolutePath }
+        val sourceFolder = koinInject<File>(named(KoinModulesProvider.EXTERNAL_STORAGE_DIRECTORY_KEY))
         val pathToUserFolder =preferencesStorage.pathToRootUserFolder.getComposableValue()
         var showCopyContentDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -337,7 +343,7 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
         DrawHorizontalDivider()
 
         Button( modifier = Modifier.padding(start = 4.dp),
-            onClick = { settingsViewModel.changePathToUserFolderAndRestartApplication(sourceFolder) },
+            onClick = { settingsViewModel.changePathToUserFolderAndRestartApplication(sourceFolder.absolutePath) },
             colors = getButtonsColors()
         ) {
             Text(stringResource(R.string.reset_user_path),

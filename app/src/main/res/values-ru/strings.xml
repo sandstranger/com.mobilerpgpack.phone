@@ -117,7 +117,7 @@
     <string name="reset_key_code_to_default">Сбросить код кнопки</string>
     <string name="keys_editor">Редактор клавиш</string>
     <string name="controls_autohing">Включить автоматическое скрытие экранного управления (не работает в Doom RPG)</string>
-    <string name="path_to_psydoom_cue_file">Путь к cue-файлу PSX Doom</string>
+    <string name="path_to_psydoom_cue_directory">Путь к PSX Doom, содержащий cue file</string>
     <string name="path_to_psydoom_mods_folder">Путь к папке модов PsyDoom</string>
     <string name="psydoom_game_options_title">Настройки игры</string>
     <string name="psydoom_record_demos">Записывать демо</string>
@@ -353,4 +353,5 @@
     <string name="buffer_staffing_fix_wait">Задержка исправления буфера</string>
     <string name="blocking_wait">Блокирующее ожидание</string>
     <string name="fence_timeout">Таймаут fence (мс)</string>
+    <string name="enable_saf_short_desc">Включить SAF для доступа к файлам (в 20–30 раз медленнее нативного, используйте только если MANAGE_EXTERNAL_STORAGE не работает на вашем устройстве)\n\nПосле включения или отключения SAF необходимо заново указать пути к файлам данных, поскольку SAF использует URI вместо прямых путей файловой системы.</string>
 </resources>

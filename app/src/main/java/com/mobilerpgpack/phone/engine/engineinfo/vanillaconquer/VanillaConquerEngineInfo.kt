@@ -6,15 +6,15 @@ import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.main.RED_ALERT_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.TIBERIAN_DAWN_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.utils.PreferencesStorage
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
-import java.io.File
 
 class VanillaConquerEngineInfo :
     SDL3EngineInfo("", emptyArray(), EngineTypes.VanillaConquer) {
-    private val configsDirectory : File by inject { parametersOf("vanilla-conquer") }
+    private val configsDirectory : FileSAF by inject { parametersOf("vanilla-conquer") }
     private val prefsStorage : VanillaConquerPreferencesStorage by inject (
         named(EngineTypes.VanillaConquer.name))
     private val activeGame get() = prefsStorage.activeVanillaConquerGame.value!!
@@ -64,8 +64,8 @@ class VanillaConquerEngineInfo :
         super.initialize(activity)
         configsDirectory.run {
             mkdirs()
-            File (this, "vanillatd").apply { mkdirs() }
-            File(this, "vanillara").mkdirs()
+            FileSAF (this, "vanillatd").apply { mkdirs() }
+            FileSAF(this, "vanillara").mkdirs()
         }
     }
 

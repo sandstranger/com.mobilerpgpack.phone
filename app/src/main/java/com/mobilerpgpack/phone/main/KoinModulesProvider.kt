@@ -128,6 +128,7 @@ import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
 import com.mobilerpgpack.phone.utils.buildFinalPathToUserFolder
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
+import com.opentouchgaming.saffal.FileSAF
 import com.zxw.bingtranslateapi.BingTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -155,6 +156,9 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
     private val mainModule = module {
         single<Context> { context }.withOptions { createdAtStart() }
+        single <File> { context.getExternalFilesDir(null)!! }.withOptions {
+            named(EXTERNAL_STORAGE_DIRECTORY_KEY)
+        }.withOptions { createdAtStart() }
         single<PreferencesStorage> { PreferencesStorage() }.withOptions { createdAtStart() }
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
         singleOf <IAssetExtractor> (::AssetExtractor)
@@ -164,10 +168,11 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             named(KeyboardType.SDL3Keyboard.name)
             bind<SDLKeyboard>()
         }
-        single <File> {
+        single <FileSAF> {
             val prefsStorage : PreferencesStorage = get()
             val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
-            context.buildFinalPathToUserFolder(pathToUserFolder)
+            val enableSaf = prefsStorage.enableSAF.value!!
+            if(enableSaf) FileSAF(pathToUserFolder) else context.buildFinalPathToUserFolder(pathToUserFolder)
         }.withOptions {
             named(ROOT_USER_DIRECTORY_KEY)
         }
@@ -178,7 +183,9 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         factory <CoroutineScope> { CoroutineScope(Dispatchers.Main + SupervisorJob()) }.withOptions {
             named(MAIN_THREAD_COROUTINE_KEY)
         }
-        factory <File>{ (pathToFile : String) -> File(get<File>(named(ROOT_USER_DIRECTORY_KEY)),
+        factory <FileSAF>{ (pathToFile : String) -> FileSAF(get<FileSAF>(named(ROOT_USER_DIRECTORY_KEY)),
+            pathToFile) }
+        factory <File>{ (pathToFile : String) -> File(get<File>(named(EXTERNAL_STORAGE_DIRECTORY_KEY)),
             pathToFile) }
         singleOf(::VirtualControllerJnaLayer)
         singleOf(::GpuProbe)
@@ -287,7 +294,6 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
     @Suppress("DEPRECATION")
     private val composeModule = module {
         viewModelOf(::FileExplorerViewModel)
-
         factory <StorageChooser> { (requestMode: RequestPathMode, predefinedPath : String, activity: Activity) ->
             StorageChooser.Builder()
                 .withActivity(activity)
@@ -295,7 +301,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
                 .withMemoryBar(false)
                 .allowCustomPath(true)
                 .setType( if (requestMode == RequestPathMode.Directory)
-                StorageChooser.DIRECTORY_CHOOSER else StorageChooser.FILE_PICKER)
+                    StorageChooser.DIRECTORY_CHOOSER else StorageChooser.FILE_PICKER)
                 .apply {
                     if (predefinedPath.isNotEmpty()) {
                         withPredefinedPath(predefinedPath)
@@ -303,7 +309,6 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
                 }
                 .build()
         }
-
         viewModelOf(::ModsExporterViewModel)
         viewModelOf(::DownloadViewModel)
         viewModelOf(::SettingsScreenViewModel)
@@ -314,8 +319,8 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         }
 
         singleOf<SDL3MouseIcon>(::SDL3MouseIcon)
-        singleOf<IKeyCodesProvider>(::KeyCodesProvider)
         singleOf(::PermissionScreen).bind<ComposeScreen>()
+        singleOf<IKeyCodesProvider>(::KeyCodesProvider)
         single<Collection<ComposeScreen>> { getAll<ComposeScreen>() }.withOptions {
             named(ALL_COMPOSE_SCREENS)
         }
@@ -799,6 +804,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
     }
 
     companion object{
+        const val EXTERNAL_STORAGE_DIRECTORY_KEY = "external_storage_directory"
         const val ROOT_USER_DIRECTORY_KEY = "root_user_directory"
         const val ALL_COMPOSE_SCREENS = "all_compose_screens"
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"

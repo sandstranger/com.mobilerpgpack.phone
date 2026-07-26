@@ -75,7 +75,7 @@
     <string name="enable_uzdoom_beh_support">启用.beh支持</string>
     <string name="uzdoom_path_to_beh_file">.beh文件路径</string>
     <string name="path_to_doom64_mods_folder">包含模组的Doom 64文件夹路径</string>
-    <string name="path_to_psydoom_cue_file">PSX Doom CUE文件路径</string>
+    <string name="path_to_psydoom_cue_directory">PSX Doom cue 目录路径</string>
     <string name="path_to_psydoom_mods_folder">PsyDoom模组文件夹路径</string>
     <string name="psydoom_game_options_title">游戏选项</string>
     <string name="psydoom_record_demos">录制演示</string>
@@ -354,4 +354,5 @@
     <string name="buffer_staffing_fix_wait">缓冲填充修复延迟</string>
     <string name="blocking_wait">阻塞等待</string>
     <string name="fence_timeout">栅栏超时（毫秒</string>
+    <string name="enable_saf_short_desc">启用 SAF 文件访问（比原生慢 20–30 倍，仅在「管理所有文件」权限异常时使用）\n\n启用或关闭 SAF 后，需重新配置文件数据路径，因为 SAF 使用 URI 而非直接的文件系统路径。</string>
 </resources>

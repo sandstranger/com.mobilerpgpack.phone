@@ -52,6 +52,12 @@ else ()
     set(Vorbis_File_LIBRARY "${CMAKE_SOURCE_DIR}/../libvorbis/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libvorbisfile.so")
 endif ()
 
+if (IS_DEBUG_BUILD)
+    set(SAFFAL_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/../SAFFAL/saffal/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libsaffal.so")
+else ()
+    set(SAFFAL_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/../SAFFAL/saffal/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libsaffal.so")
+endif ()
+
 set(Vorbis_Vorbis_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../libvorbis/src/main/jni/libvorbis-android/include")
 
 if (IS_DEBUG_BUILD)
@@ -67,3 +73,5 @@ add_subdirectory("src/main/jni/libsndfile")
 target_include_directories(sndfile PRIVATE ${OPUS_INCLUDE_DIR} ${OGG_INCLUDE_DIR}
         ${FLAC_INCLUDE_DIR} ${MP3LAME_INCLUDE_DIR} ${mpg123_INCLUDE_DIR}
         ${mpg123_INCLUDE_DIR_Android} ${Vorbis_Vorbis_INCLUDE_DIR})
+
+target_link_libraries(sndfile PRIVATE ${SAFFAL_LIBRARY})

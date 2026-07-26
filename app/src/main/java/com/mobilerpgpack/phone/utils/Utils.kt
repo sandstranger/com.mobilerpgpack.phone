@@ -9,6 +9,7 @@ import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.isResourceCorrect
 import com.mobilerpgpack.phone.main.ONE_FRAME_DELAY
 import com.mobilerpgpack.phone.main.SDL3_NATIVE_LIB_NAME
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import kotlinx.coroutines.delay
 import net.lingala.zip4j.ZipFile
@@ -87,17 +88,21 @@ fun computeSHA256(inputStream: InputStream): ByteArray {
     return digest.digest()
 }
 
-fun copyFolder(src: File, dst: File) {
+fun copyFolder(src: File, dst: FileSAF) {
     if (!src.exists()) return
     if (src.isDirectory) {
         if (!dst.exists()) dst.mkdirs()
         src.listFiles()?.forEach { file ->
-            copyFolder(file, File(dst, file.name))
+            copyFolder(file, FileSAF(dst, file.name))
         }
     } else {
         try {
             src.inputStream().use { input ->
-                dst.outputStream().use { output ->
+                dst.parentFile.mkdirs()
+                if (!dst.exists()){
+                    dst.createNewFile()
+                }
+                dst.outputStream.use { output ->
                     input.copyTo(output)
                 }
             }

@@ -4,6 +4,7 @@ import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.GlesRenderVersions
 import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsEngineInfo
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
@@ -17,10 +18,13 @@ import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
+import java.io.File
 
 open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
-
     private val context: Context by inject ()
+    private val externalStorageFolder : File by inject (
+        named(KoinModulesProvider.EXTERNAL_STORAGE_DIRECTORY_KEY))
 
     val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
     val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
@@ -83,7 +87,9 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val assetsCurrentVersionPrefsKey = intPreferencesKey("assets_current_version")
     val allAssetsCopiedPrefsKey = booleanPreferencesKey("all_assets_copied")
     val doom64AnisotropyTexturesValuePrefsKey = intPreferencesKey("doom64_anisotropy_textures_value")
+    val enableSAFPrefsKey = booleanPreferencesKey("enable_saf")
 
+    val enableSAF = getBooleanValue(enableSAFPrefsKey, false)
     val doom64AnisotropyTexturesValue = getIntValue(doom64AnisotropyTexturesValuePrefsKey,2)
     val assetsCurrentVersion = getIntValue(assetsCurrentVersionPrefsKey, 0)
     val allAssetsCopied = getBooleanValue(allAssetsCopiedPrefsKey, false)
@@ -110,8 +116,7 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
         SDLScreenController.DEFAULT_ZOOM_SENSITIVITY)
 
     val pathToRootUserFolder = getStringValue(
-        pathToRootUserFolderPrefsKey,
-        context.filesDir.absolutePath)
+        pathToRootUserFolderPrefsKey, externalStorageFolder.absolutePath)
 
     val enableGyroscope = getBooleanValue(enableGyroscopePrefsKey, false)
 

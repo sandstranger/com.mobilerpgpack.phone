@@ -5,45 +5,26 @@ import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.utils.Mod
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
+import com.opentouchgaming.saffal.FileSAF
 import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import java.io.File
 
 class PsyDoomEngineInfo(mainEngineLib: String,
-                        allLibs: Array<String>
-) :
+                        allLibs: Array<String>) :
     SDL3EngineInfo (mainEngineLib, allLibs, activeEngineType = EngineTypes.PsyDoom) {
-
     private val modsModel : ModsModel by inject (named(EngineTypes.PsyDoom.toString()))
-
     private val psyDoomPreferencesStorage by inject <PsyDoomPreferencesStorage>(named(
         EngineTypes.PsyDoom.toString()))
 
-    private external fun destroyVulkanSwapChain()
-
-    private external fun recreateVulkanSwapChain()
-
-    private external fun setPathToUserFolder (pathToUserFolder : String)
-
     override val commandLineParams: String get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString.value!!
-
     override val preferencesStorage = psyDoomPreferencesStorage
-
-    override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueFile.value!!
-
-    override val requiredResourceExtensions = listOf(".cue", ".CUE")
-
+    override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueDirectory.value!!
     override val needToShowScreenControls = true
-
     override val allowedToEnableAngle = false
-
     override val mouseButtonsEventsCanBeInvoked = false
-
     override fun isMouseShown() = false
-
     override val loadGL4ES: Boolean = false
-
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
@@ -51,13 +32,15 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             return mutableListOf<String>().let {
                 it += baseCommandLineArgs
 
-                val pathToCue = psyDoomPreferencesStorage.pathToPsyDoomCueFile.value!!
+                val pathToCueDirectory = psyDoomPreferencesStorage.pathToPsyDoomCueDirectory.value!!
+                if (pathToCueDirectory.isNotEmpty()) {
+                    val pathToCueFile = FileSAF(pathToCueDirectory).findFirstCueFile()
 
-                if (pathToCue.isNotEmpty() && File(pathToCue).exists() &&
-                    !baseCommandLineArgs.contains(CUE_COMMAND)
-                ) {
-                    it += CUE_COMMAND
-                    it += pathToCue
+                    if (pathToCueFile!=null && !baseCommandLineArgs.contains(CUE_COMMAND)
+                    ) {
+                        it += CUE_COMMAND
+                        it += pathToCueFile.absolutePath
+                    }
                 }
 
                 if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed) {
@@ -65,7 +48,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
                     modsModel.mods.forEach { mod: Mod ->
                         val pathToMod = mod.pathToMod.liveData.value
-                        if (!pathToMod.isNullOrEmpty() && File(pathToMod).exists()) {
+                        if (!pathToMod.isNullOrEmpty() && FileSAF(pathToMod).exists()) {
                             it += pathToMod
                         }
                     }
@@ -76,7 +59,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
                 if (enablePsyDoomMods) {
                     val modsFolder = psyDoomPreferencesStorage.pathToPsyDoomModsFolder.value!!
 
-                    if (modsFolder.isNotEmpty() && File(modsFolder).exists() &&
+                    if (modsFolder.isNotEmpty() && FileSAF(modsFolder).exists() &&
                         !baseCommandLineArgs.contains(DATA_DIR_COMMAND)
                     ) {
                         it += DATA_DIR_COMMAND
@@ -151,6 +134,10 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             }
         }
 
+    private external fun destroyVulkanSwapChain()
+    private external fun recreateVulkanSwapChain()
+    private external fun setPathToUserFolder (pathToUserFolder : String)
+
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(PsyDoomEngineInfo::class.java, mainLibraryName)
@@ -178,5 +165,11 @@ class PsyDoomEngineInfo(mainEngineLib: String,
         private const val TURBO_COMMAND = "-turbo"
         private const val SERVER_COMMAND = "-server"
         private const val BOSS_FIX_COMMAND = "-nmbossfixup"
+
+        private fun FileSAF.findFirstCueFile(): FileSAF? {
+            if (!isDirectory || !exists()) return null
+            val files = listFiles() ?: return null
+            return files.firstOrNull { it.isFile && it.name.endsWith(".cue", ignoreCase = true) }
+        }
     }
 }

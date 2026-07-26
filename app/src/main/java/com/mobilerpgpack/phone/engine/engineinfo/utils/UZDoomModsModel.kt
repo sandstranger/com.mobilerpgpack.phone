@@ -3,10 +3,10 @@
 package com.mobilerpgpack.phone.engine.engineinfo.utils
 
 import com.mobilerpgpack.phone.utils.MutableValue
+import com.opentouchgaming.saffal.FileSAF
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonIgnoreUnknownKeys
-import java.io.File
 
 @Serializable
 @JsonIgnoreUnknownKeys
@@ -66,16 +66,16 @@ class UZDoomModsModel : ModsModel() {
 
 val UZDoomModsModel.playingRecordsFileCanBeUsed get() =
     enableDemoPlayingSupport.liveData.value!! && !this.pathToDemoFile
-        .liveData.value.isNullOrEmpty() && File(pathToDemoFile.liveData.value!!).exists()
+        .liveData.value.isNullOrEmpty() && FileSAF(pathToDemoFile.liveData.value!!).exists()
 
 val UZDoomModsModel.xlatFileCanBeUsed get() =
     this.enableXLatSupport.liveData.value!! && !this.pathToXLatFile.liveData.value.isNullOrEmpty() &&
-            File(pathToXLatFile.liveData.value!!).exists()
+            FileSAF(pathToXLatFile.liveData.value!!).exists()
 
 val UZDoomModsModel.behFileCanBeUsed get() =
     this.enableBehSupport.liveData.value!! && !
-    this.pathToBehFile.liveData.value.isNullOrEmpty() && File(pathToBehFile.liveData.value!!).exists()
+    this.pathToBehFile.liveData.value.isNullOrEmpty() && FileSAF(pathToBehFile.liveData.value!!).exists()
 
 val UZDoomModsModel.dehFileCanBeUsed get() =
     this.enableDehSupport.liveData.value!! && !this.pathToDehFile.liveData.value.isNullOrEmpty() &&
-            File(pathToDehFile.liveData.value!!).exists()
+            FileSAF(pathToDehFile.liveData.value!!).exists()

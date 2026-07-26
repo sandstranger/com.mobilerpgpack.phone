@@ -19,7 +19,6 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloader {
-
     private val context: Context by inject()
     private val client: OkHttpClient by inject()
 

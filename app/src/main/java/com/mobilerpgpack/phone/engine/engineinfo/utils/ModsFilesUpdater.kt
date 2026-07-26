@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.utils
 
+import com.opentouchgaming.saffal.FileSAF
 import java.io.File
 
 class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
@@ -56,7 +57,7 @@ class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
             val modsToRemove = mutableSetOf<Mod>()
 
             mods.forEach {
-                if (!it.pathToMod.liveData.value.isNullOrEmpty() && !File(it.pathToMod.liveData.value!!).exists()){
+                if (!it.pathToMod.liveData.value.isNullOrEmpty() && !FileSAF(it.pathToMod.liveData.value!!).exists()){
                     modsToRemove += it
                 }
             }
@@ -72,7 +73,7 @@ class ModsFilesUpdater private constructor(private val modsModel: ModsModel){
     }
 
     private fun getModsFromModsFolder () = if (modsModel.pathToModsFolder.liveData.value.isNullOrEmpty()) null else
-        File(modsModel.pathToModsFolder.liveData.value!!).listFiles()?.filter { file -> file.isMod }?.toList()
+        FileSAF(modsModel.pathToModsFolder.liveData.value!!).listFiles()?.filter { file -> file.isMod }?.toList()
 
     private val File.isMod get() = this.isFile && modsModel.allowedModsExtensions.contains(this.extension)
 

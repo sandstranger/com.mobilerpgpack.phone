@@ -3,10 +3,13 @@ package com.mobilerpgpack.phone.engine.engineinfo.doomrpgseries
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
+import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.translator.ITranslationManager
 import com.quantuminventions.customkeyboard.components.keyboard.CustomKeyboardView
 import com.sun.jna.Native
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
+import java.io.File
 
 abstract class DoomRPGSeriesEngineInfo(
     mainEngineLib: String,
@@ -14,6 +17,7 @@ abstract class DoomRPGSeriesEngineInfo(
     activeEngineType: EngineTypes) :
     SDL3EngineInfo(mainEngineLib, allLibs, activeEngineType) {
     private val translationManager: ITranslationManager by inject()
+    private val externalStorageFolder : File by inject (named(KoinModulesProvider.EXTERNAL_STORAGE_DIRECTORY_KEY))
     final override val mouseButtonsEventsCanBeInvoked: Boolean = true
     override val requiredResourceExtensions = listOf(".ipa", ".IPA")
     final override val touchFullScreenModeCanBeUsed: Boolean = false
@@ -38,7 +42,8 @@ abstract class DoomRPGSeriesEngineInfo(
         val enableMachineTranslation = preferencesStorage.enableGameMachineTextTranslation.value!!
         setEnableSDLTTFState(useSdlTTFForTextRendering)
         setEnableMachineTranslationState(enableMachineTranslation)
-        setPathsToResources(pathToResource, preferencesStorage.pathToRootUserFolder.value!!)
+        externalStorageFolder.mkdirs()
+        setPathsToResources(pathToResource, externalStorageFolder.absolutePath)
     }
 
     override fun isMouseShown() = true

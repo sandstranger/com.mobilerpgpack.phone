@@ -1,14 +1,9 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
@@ -32,7 +27,6 @@ import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 
 class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
@@ -61,10 +55,10 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         DrawHorizontalDivider()
 
         RequestPath(
-            stringResource(R.string.path_to_psydoom_cue_file),
-            preferencesStorage.pathToPsyDoomCueFile,
-            preferencesStorage.pathToPsyDoomCueFilePrefsKey,
-            RequestPathMode.File,
+            stringResource(R.string.path_to_psydoom_cue_directory),
+            preferencesStorage.pathToPsyDoomCueDirectory,
+            preferencesStorage.pathToPsyDoomCueDirectoryPrefsKey,
+            RequestPathMode.Directory,
             requiredFileExtensions = engineInfo.requiredResourceExtensions
         )
 

@@ -71,12 +71,13 @@ android {
 }
 
 preBuild.dependsOn ':third_party:fluidsynth:build',':third_party:mpg123:build',
-        ':third_party:libsndfile:build'
+        ':third_party:libsndfile:build',':third_party:SAFFAL:saffal:build'
 
 dependencies {
     implementation(project(":third_party:fluidsynth"))
     implementation(project(":third_party:mpg123"))
     implementation(project(":third_party:libsndfile"))
+    implementation (project(":third_party:SAFFAL:saffal"))
     implementation libs.androidx.appcompat
     implementation libs.material
     testImplementation libs.junit
