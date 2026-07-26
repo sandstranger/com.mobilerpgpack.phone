@@ -24,6 +24,11 @@
 -keepclassmembers class org.libsdl3.app.SDLActivity {
     public static <methods>;
 }
+-keep class com.opentouchgaming.saffal.** { *; }
+-keepclassmembers class com.opentouchgaming.saffal.** {
+    public <methods>;
+    public static <methods>;
+}
 -keep class com.mobilerpgpack.phone.translator.** { *; }
 -keepclassmembers class com.mobilerpgpack.phone.translator.TranslationManager {
     public <methods>;
