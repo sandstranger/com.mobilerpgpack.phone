@@ -42,10 +42,8 @@ internal class VirtualControllerJnaLayer : KoinComponent {
             scope.launch {
                 createVirtualController()
                 joystickRegisteredInSDL = true
-                withContext(Dispatchers.Main){
-                    get<IEngineInfo>(named(preferencesStorage.activeEngineString.value!!)).apply {
-                        onVirtualGamepadCreated()
-                    }
+                get<IEngineInfo>(named(preferencesStorage.activeEngineString.value!!)).apply {
+                    onVirtualGamepadCreated()
                 }
             }
         }
