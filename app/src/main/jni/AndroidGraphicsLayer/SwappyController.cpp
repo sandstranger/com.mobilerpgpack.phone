@@ -126,6 +126,7 @@ bool SwappySwapBuffers(){
 
 __attribute__((used)) __attribute__((visibility("default")))
 void DestroySwappy() {
+    return;
     std::lock_guard<std::mutex> lock(g_swappyMutex);
     if (g_swappyDestroyed.load(std::memory_order_acquire)) {
         return;
