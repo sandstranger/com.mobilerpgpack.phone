@@ -51,11 +51,13 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
 
     private external fun updateScreenControlsHidingState (controlsHided : Boolean)
+    private external fun setPathToResources (pathToResources : String)
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
         updateScreenControlsHidingState(preferencesStorage.hideScreenControls.value!!)
+        setPathToResources(pathToResource)
     }
 
     private companion object {
