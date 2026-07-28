@@ -26,7 +26,7 @@ internal class SettingsScreenViewModel : ViewModel(), KoinComponent {
     private val scope : CoroutineScope by inject (
         named(KoinModulesProvider.BACKGROUND_THREAD_COROUTINE_KEY))
     private val assetsExtractor : IAssetExtractor by inject ()
-    private val sourceFolder = context.filesDir
+    private val sourceFolder: File by inject ( named(KoinModulesProvider.SANDBOX_STORAGE_DIRECTORY_KEY))
     private val rootUserDirectory : File by inject ( named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
 
     @Volatile
