@@ -73,6 +73,7 @@ abstract class EngineInfo(
     private var layoutBinding : GameLayoutBinding? = null
     private val mainThreadScope : CoroutineScope by inject (
         named(KoinModulesProvider.MAIN_THREAD_COROUTINE_KEY))
+    private val userFolder : File by inject (named(KoinModulesProvider.ROOT_USER_DIRECTORY_KEY))
     private val swappyJNILayer : SwappyJNILayer by inject ()
     protected val controlsProvider : ControlsProvider by inject  (named(activeEngineType.name))
     protected open val preferencesStorage: PreferencesStorage by inject()
@@ -90,7 +91,7 @@ abstract class EngineInfo(
         private set
     protected val gl4esFullLibraryName get() = if (useLegacyGl4es) com.mobilerpgpack.phone.main.gl4esFullLibraryName else
         ngGL4ESFullLibraryName
-    protected val pathToRootUserFolder: String get() = preferencesStorage.pathToRootUserFolder.value!!
+    protected val pathToRootUserFolder: String get() = userFolder.absolutePath
     protected open val needToShowScreenControls : Boolean get() = needToShowScreenControls()
     protected open val commandLineParams : String = ""
     protected abstract val pathToResource : String
