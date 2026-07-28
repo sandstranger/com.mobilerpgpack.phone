@@ -4,6 +4,7 @@ import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.GlesRenderVersions
 import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsEngineInfo
+import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.SANDBOX_STORAGE_DIRECTORY_KEY
 import com.mobilerpgpack.phone.translator.models.TranslationType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.SDLScreenController
 import com.mobilerpgpack.phone.utils.sharesprefs.Key
@@ -17,10 +18,12 @@ import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
+import java.io.File
 
 open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
-
     private val context: Context by inject ()
+    private val sandboxStorage : File by inject(named(SANDBOX_STORAGE_DIRECTORY_KEY))
 
     val displayInSafeAreaPrefsKey = booleanPreferencesKey("display_in_safe_area")
     val showCustomMouseCursorPrefsKey = booleanPreferencesKey("show_custom_mouse_cursor")
@@ -110,8 +113,7 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
         SDLScreenController.DEFAULT_ZOOM_SENSITIVITY)
 
     val pathToRootUserFolder = getStringValue(
-        pathToRootUserFolderPrefsKey,
-        context.filesDir.absolutePath)
+        pathToRootUserFolderPrefsKey, sandboxStorage.absolutePath)
 
     val enableGyroscope = getBooleanValue(enableGyroscopePrefsKey, false)
 

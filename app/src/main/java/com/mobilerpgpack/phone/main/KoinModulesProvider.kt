@@ -125,7 +125,6 @@ import com.mobilerpgpack.phone.utils.PreferencesStorage
 import com.mobilerpgpack.phone.utils.SDL3GyroInput
 import com.mobilerpgpack.phone.utils.SwappyJNILayer
 import com.mobilerpgpack.phone.utils.VirtualControllerJnaLayer
-import com.mobilerpgpack.phone.utils.buildFinalPathToUserFolder
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDao
 import com.mobilerpgpack.phone.utils.sharesprefs.SharedPrefsDatabase
 import com.zxw.bingtranslateapi.BingTranslator
@@ -155,6 +154,14 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
     private val mainModule = module {
         single<Context> { context }.withOptions { createdAtStart() }
+        single<File> { context.getExternalFilesDir(null)!! }.withOptions {
+            createdAtStart()
+            named(SANDBOX_STORAGE_DIRECTORY_KEY)
+        }
+        single<File> { context.filesDir }.withOptions {
+            createdAtStart()
+            named(INTERNAL_STORAGE_DIRECTORY_KEY)
+        }
         single<PreferencesStorage> { PreferencesStorage() }.withOptions { createdAtStart() }
         single <TranslationDatabase> { TranslationDatabase.createInstance(get()) }
         singleOf <IAssetExtractor> (::AssetExtractor)
@@ -167,7 +174,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         single <File> {
             val prefsStorage : PreferencesStorage = get()
             val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
-            context.buildFinalPathToUserFolder(pathToUserFolder)
+            File(pathToUserFolder)
         }.withOptions {
             named(ROOT_USER_DIRECTORY_KEY)
         }
@@ -800,6 +807,8 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
     companion object{
         const val ROOT_USER_DIRECTORY_KEY = "root_user_directory"
+        const val SANDBOX_STORAGE_DIRECTORY_KEY = "sanddbox_storage_directory"
+        const val INTERNAL_STORAGE_DIRECTORY_KEY = "internal_storage_directory"
         const val ALL_COMPOSE_SCREENS = "all_compose_screens"
         const val TARGET_LOCALE_NAMES_KEY = "target_locale"
         const val ACTIVE_TRANSLATION_MODEL_KEY = "active_translation_model"
