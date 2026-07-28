@@ -176,7 +176,8 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             val prefsStorage : PreferencesStorage = get()
             val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
             val targetUserFolder = File(pathToUserFolder)
-            if (targetUserFolder.exists()) targetUserFolder else externalStorageFolder
+            if (targetUserFolder.exists() && targetUserFolder.absolutePath != externalStorageFolder.absolutePath)
+                targetUserFolder else externalStorageFolder
         }.withOptions {
             named(ROOT_USER_DIRECTORY_KEY)
         }
