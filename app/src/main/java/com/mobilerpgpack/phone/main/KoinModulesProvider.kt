@@ -150,11 +150,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class KoinModulesProvider(private val context: Context) : KoinComponent  {
+    private val externalStorageFolder = context.getExternalFilesDir(null)!!
     val allModules : List<Module>
 
     private val mainModule = module {
         single<Context> { context }.withOptions { createdAtStart() }
-        single<File> { context.getExternalFilesDir(null)!! }.withOptions {
+        single<File> { externalStorageFolder }.withOptions {
             createdAtStart()
             named(SANDBOX_STORAGE_DIRECTORY_KEY)
         }
@@ -174,7 +175,8 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         single <File> {
             val prefsStorage : PreferencesStorage = get()
             val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
-            File(pathToUserFolder)
+            val targetUserFolder = File(pathToUserFolder)
+            if (targetUserFolder.exists()) targetUserFolder else externalStorageFolder
         }.withOptions {
             named(ROOT_USER_DIRECTORY_KEY)
         }
