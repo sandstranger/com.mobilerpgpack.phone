@@ -150,7 +150,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class KoinModulesProvider(private val context: Context) : KoinComponent  {
-    private val externalStorageFolder = context.getExternalFilesDir(null)!!
+    private val externalStorageFolder = context.getExternalFilesDir(null) ?: context.filesDir
     val allModules : List<Module>
 
     private val mainModule = module {
