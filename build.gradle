@@ -2,8 +2,8 @@
 buildscript {
     ext.versions = [
             app_package_name : "com.mobilerpgpack.phone",
-            app_version_code : 111,
-            app_version_name : "3.1.10",
+            app_version_code : 112,
+            app_version_name : "3.1.11",
             min_sdk : 26,
             target_sdk : 37,
             target_sdk_min_revision : 0,
@@ -18,12 +18,16 @@ buildscript {
                               "-g", "-D_FILE_OFFSET_BITS=64"],
             common_cpp_flags : ["-Os" ,"-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
                                 "-g", "-D_FILE_OFFSET_BITS=64"],
-            ndk_build_flags : "APP_LDFLAGS=-fuse-ld=lld -flto=thin -Wl,--build-id",
+            ndk_build_release_c_flags : ["-ffunction-sections", "-fdata-sections"],
+            ndk_build_release_cpp_flags : ["-ffunction-sections", "-fdata-sections"],
+            ndk_build_flags : "APP_LDFLAGS+=-fuse-ld=lld -flto=thin -Wl,--build-id -Wl,--gc-sections",
             ndk_build_android_stl : "APP_STL=c++_shared",
             CMAKE_CFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
+            CMAKE_C_RELEASE_FLAGS : ["-ffunction-sections", "-fdata-sections"],
+            CMAKE_CXX_RELEASE_FLAGS : ["-ffunction-sections", "-fdata-sections"],
             CMAKE_CXXFLAGS : "-Os -flto=thin -fno-omit-frame-pointer -funwind-tables -fstack-protector-strong -g -D_FILE_OFFSET_BITS=64",
             CMAKE_ANDROID_STL : "-DANDROID_STL=c++_shared",
-            CMAKE_SHADERLINKER_FLAGS :"-flto=thin -fuse-ld=lld -Wl,--build-id",
+            CMAKE_SHADERLINKER_FLAGS :"-flto=thin -fuse-ld=lld -Wl,--build-id -Wl,--gc-sections",
             ndk_build_platform : "APP_PLATFORM=android-${versions.native_android_platform_version}"
     ]
     ext.rootDir = rootProject.rootDir

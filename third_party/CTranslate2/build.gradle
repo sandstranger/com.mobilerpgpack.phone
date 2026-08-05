@@ -41,6 +41,8 @@ android {
             externalNativeBuild {
                 cmake {
                     arguments "-DCMAKE_BUILD_TYPE=MinSizeRel"
+                    cppFlags += build_flags.CMAKE_CXX_RELEASE_FLAGS
+                    cFlags += build_flags.CMAKE_C_RELEASE_FLAGS
                 }
             }
             ndk {
