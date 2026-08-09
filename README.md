@@ -22,7 +22,6 @@ This repository contains a collection of unofficial Android ports for the follow
 
 The following projects are scheduled for Android porting:
 - **[Citadel](https://github.com/JosiahJack/Citadel)** (Next release)
-- **[UnderworldGodot](https://github.com/hankmorgan/UnderworldGodot)** (Future roadmap)
 
 *Note: There are no other open-source mobile ports planned after these projects.*
 
