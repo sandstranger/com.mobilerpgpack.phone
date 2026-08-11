@@ -101,8 +101,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun setRefreshRates(targetRefreshRates : IntArray, arraySize: Int)
     private external fun enableTexturesShrinking (enableTexturesShrinking : Boolean)
     private external fun setTextureCacheData(enableTextureCache : Boolean, pathToTextureCacheDir : String)
-    private external fun ClearRamCache()
-    private external fun clearBlobShaderCache()
     private external fun updateGLSynchronizationState(enableGLSynchronization : Boolean)
     private external fun setBaseGameDir (baseGameDirName : String)
     private external fun onVirtualGamepadCreatedNativeEvent();
@@ -129,17 +127,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             setRefreshRates(this, size)
         }
         setBaseGameDir(baseGameDirName)
-    }
-
-    override fun onNativeTrimMemory(aggressive: Boolean) {
-        super.onNativeTrimMemory(aggressive)
-        ClearRamCache()
-        clearBlobShaderCache()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        ClearRamCache()
     }
 
     override fun onVirtualGamepadCreated() {
