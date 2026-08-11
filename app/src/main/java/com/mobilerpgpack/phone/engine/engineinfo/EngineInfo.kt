@@ -116,8 +116,6 @@ abstract class EngineInfo(
 
     private external fun needToShowScreenControls() : Boolean
     protected external fun needToInvokeMouseButtonsEvents() : Boolean
-    private external fun onNativePause()
-    private external fun onNativeResume()
     private external fun needToReInitGameControllers() : Boolean
     private external fun setPathToSDLControllerDB (pathToSDLControllerDB : String)
     private external fun setUseGLES2_0State (useGLES2_0 : Boolean)
@@ -250,14 +248,12 @@ abstract class EngineInfo(
     }
 
     override fun onPause() {
-        onNativePause()
         if (enableGyroscope) {
             gyroInput.stop()
         }
     }
 
     override fun onResume() {
-        onNativeResume()
         if (enableGyroscope) {
             gyroInput.start()
         }
