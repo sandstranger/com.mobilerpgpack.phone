@@ -20,30 +20,15 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     private val psyDoomPreferencesStorage by inject <PsyDoomPreferencesStorage>(named(
         EngineTypes.PsyDoom.toString()))
 
-    private external fun destroyVulkanSwapChain()
-
-    private external fun recreateVulkanSwapChain()
-
-    private external fun setPathToUserFolder (pathToUserFolder : String)
-
     override val commandLineParams: String get() = psyDoomPreferencesStorage.psyDoomCommandLineArgsString.value!!
-
     override val preferencesStorage = psyDoomPreferencesStorage
-
     override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueFile.value!!
-
     override val requiredResourceExtensions = listOf(".cue", ".CUE")
-
     override val needToShowScreenControls = true
-
     override val allowedToEnableAngle = false
-
     override val mouseButtonsEventsCanBeInvoked = false
-
     override fun isMouseShown() = false
-
     override val loadGL4ES: Boolean = false
-
     override val commandLineArgs: Array<String>
         get() {
             val baseCommandLineArgs = super.commandLineArgs
@@ -151,20 +136,12 @@ class PsyDoomEngineInfo(mainEngineLib: String,
             }
         }
 
+    private external fun setPathToUserFolder (pathToUserFolder : String)
+
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(PsyDoomEngineInfo::class.java, mainLibraryName)
         setPathToUserFolder(pathToRootUserFolder)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        recreateVulkanSwapChain()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        destroyVulkanSwapChain()
     }
 
     private companion object{

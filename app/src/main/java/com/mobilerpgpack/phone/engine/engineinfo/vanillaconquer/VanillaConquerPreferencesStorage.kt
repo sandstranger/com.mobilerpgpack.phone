@@ -13,7 +13,7 @@ class VanillaConquerPreferencesStorage : PreferencesStorage () {
     val vanillaConquerCommandLineArgsPrefsKey = stringPreferencesKey("vanilla_conquer_command_line_args")
     val vanillaConquerEnableVsyncPrefsKey = booleanPreferencesKey("vanilla_conquer_enable_vsync")
     val enableDosModePrefsKey = booleanPreferencesKey("vanilla_conquer_enable_dos_mode")
-    val vanillaConquerFrameRateLimitPrefsKey = intPreferencesKey("vanilla_conquer_framerate_limit")
+    val vanillaConquerFrameRateLimitPrefsKey = intPreferencesKey("vanilla_conquer_fps_limit")
     val vanillaConquerMouseSensitivityPrefsKey = intPreferencesKey("vanilla_conquer_mouse_sensitivity")
     val vanillaConquerControllerPointerSpeedPrefsKey = intPreferencesKey("vanilla_conquer_controller_speed")
 
@@ -25,7 +25,7 @@ class VanillaConquerPreferencesStorage : PreferencesStorage () {
     val vanillaConquerCommandLineArgs = getStringValue(vanillaConquerCommandLineArgsPrefsKey)
     val vanillaConquerEnableVsync = getBooleanValue(vanillaConquerEnableVsyncPrefsKey, true)
     val enableDosMode = getBooleanValue(enableDosModePrefsKey, true)
-    val vanillaConquerFrameRateLimit = getIntValue(vanillaConquerFrameRateLimitPrefsKey, 120)
+    val vanillaConquerFrameRateLimit = getIntValue(vanillaConquerFrameRateLimitPrefsKey, 60)
     val vanillaConquerMouseSensitivity = getIntValue(vanillaConquerMouseSensitivityPrefsKey, 70)
     val vanillaConquerControllerPointerSpeed = getIntValue(vanillaConquerControllerPointerSpeedPrefsKey, 10)
 }
