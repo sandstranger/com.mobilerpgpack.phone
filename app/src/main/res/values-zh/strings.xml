@@ -354,4 +354,5 @@
     <string name="buffer_staffing_fix_wait">缓冲填充修复延迟</string>
     <string name="blocking_wait">阻塞等待</string>
     <string name="fence_timeout">栅栏超时（毫秒</string>
+    <string name="enable_etc2_texture_support">在启用 GLES 3.0 时开启 ETC2 纹理原生支持（由于 GPU 驱动限制，压缩纹理不支持 mipmap）</string>
 </resources>

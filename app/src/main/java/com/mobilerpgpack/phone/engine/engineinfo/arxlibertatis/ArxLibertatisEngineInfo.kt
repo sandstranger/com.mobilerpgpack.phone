@@ -56,7 +56,7 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     private external fun updateScreenControlsHidingState (controlsHided : Boolean)
     private external fun setPathToResources (pathToResources : String)
-    private external fun setTextureCacheData(pathToTextureCacheDir : String)
+    private external fun setTextureData(enableETC2TextureSupport: Boolean, pathToTextureCacheDir : String)
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -66,9 +66,11 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
-        updateScreenControlsHidingState(preferencesStorage.hideScreenControls.value!!)
+        arxPreferenceStorage.apply {
+            updateScreenControlsHidingState(hideScreenControls.value!!)
+            setTextureData(enableEtc2TextureSupport.value!!,textureCacheDir.absolutePath)
+        }
         setPathToResources(pathToResource)
-        setTextureCacheData(textureCacheDir.absolutePath)
     }
 
     private companion object {
