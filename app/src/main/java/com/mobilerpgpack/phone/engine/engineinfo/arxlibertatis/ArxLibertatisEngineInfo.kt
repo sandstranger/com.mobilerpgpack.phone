@@ -1,5 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis
 
+import android.content.Context
+import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
 import com.sun.jna.Native
@@ -12,9 +14,11 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.ArxLibertatis) {
     private val arxPreferenceStorage by inject<ArxLibertatisPreferenceStorage>(
         named(EngineTypes.ArxLibertatis.name))
+    private val context : Context by inject ()
     private val pathToUserFolder by lazy {
         super.pathToRootUserFolder + File.separator + "ArxLibertatis"
     }
+    private val textureCacheDir by lazy { File(context.cacheDir,"axrx_libertatis_texture_cache") }
 
     override val pathToResource: String get() = arxPreferenceStorage.pathToArxFatalisFolder.value!!
     override val commandLineParams get() = arxPreferenceStorage.arxLibertatisCommandLineArgs.value!!
@@ -52,12 +56,19 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
     private external fun updateScreenControlsHidingState (controlsHided : Boolean)
     private external fun setPathToResources (pathToResources : String)
+    private external fun setTextureCacheData(pathToTextureCacheDir : String)
+
+    override fun initialize(activity: ComponentActivity) {
+        super.initialize(activity)
+        textureCacheDir.mkdirs()
+    }
 
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
         updateScreenControlsHidingState(preferencesStorage.hideScreenControls.value!!)
         setPathToResources(pathToResource)
+        setTextureCacheData(textureCacheDir.absolutePath)
     }
 
     private companion object {

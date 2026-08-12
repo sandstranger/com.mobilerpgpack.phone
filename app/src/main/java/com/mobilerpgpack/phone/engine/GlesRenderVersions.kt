@@ -5,6 +5,6 @@ enum class GlesRenderVersions {
     OpenGLES_3_0;
 
     companion object{
-        val DefaultValue = OpenGLES_2_0
+        val DefaultValue = OpenGLES_3_0
     }
 }

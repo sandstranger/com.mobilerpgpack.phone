@@ -365,6 +365,11 @@ set(MAKE_DLL OFF CACHE BOOL "" FORCE)
 set(APP_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/app/src/main/jni" CACHE STRING "" FORCE)
 include_directories("${APP_ROOT_DIR}/AndroidGraphicsLayer/include")
 
+set(ETC_PAK_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/app/src/main/jni/etcpaksources/etcpak")
+set(SQUISH_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/app/src/main/jni/libsquish/lib/include")
+
+add_subdirectory("${APP_ROOT_DIR}/libsquish")
+add_subdirectory("${APP_ROOT_DIR}/etcpaksources")
 add_subdirectory("${APP_ROOT_DIR}/AndroidGraphicsLayer")
 add_subdirectory("${APP_ROOT_DIR}/WolfensteinRPG-RE")
 add_subdirectory("${APP_ROOT_DIR}/DoomRPG-RE")
