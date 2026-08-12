@@ -7,6 +7,7 @@ import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import androidx.preference.SwitchPreference
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.arxlibertatis.ArxLibertatisLocalizationType
@@ -18,6 +19,7 @@ import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPathMode
+import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.utils.getComposableValue
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -78,6 +80,12 @@ class ArxLibertatisComposeSettings : IEngineUIController {
                 viewModel.cursorScaleAsLiveData) {
                 viewModel.cursorScale = it
             }
+
+            DrawHorizontalDivider()
+
+            SwitchPreferenceItem(stringResource(R.string.enable_etc2_texture_support),
+                preferencesStorage.enableEtc2TextureSupport,
+                preferencesStorage.enableEtc2TextureSupportPrefsKey.name)
         }
     }
 }
