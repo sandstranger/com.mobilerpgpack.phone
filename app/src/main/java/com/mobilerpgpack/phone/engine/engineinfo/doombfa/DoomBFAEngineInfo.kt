@@ -32,8 +32,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             }
         }
     }
-
-    val textureCacheDir by lazy { File(context.cacheDir,"doom3_texture_cache") }
+    private val textureCacheDir by lazy { File(context.cacheDir,"doom3_texture_cache") }
     @Volatile
     var isTexturesResourcesDeleting = false
 
