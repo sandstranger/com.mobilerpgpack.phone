@@ -353,5 +353,5 @@
     <string name="buffer_staffing_fix_wait">Задержка исправления буфера</string>
     <string name="blocking_wait">Блокирующее ожидание</string>
     <string name="fence_timeout">Таймаут fence (мс)</string>
-    <string name="enable_etc2_texture_support">Включить встроенную поддержку текстур ETC2 при использовании GLES 3.0 (мипмапы не работают со сжатыми текстурами из-за ограничений драйвера GPU)</string>
+    <string name="enable_etc2_texture_support">Включить встроенную поддержку текстур ETC2 при использовании GLES 3.0</string>
 </resources>
