@@ -7,9 +7,9 @@ import com.mobilerpgpack.phone.utils.sharesprefs.stringPreferencesKey
 class ArxLibertatisPreferenceStorage : PreferencesStorage() {
     val pathToArxFatalisFolderPrefsKey = stringPreferencesKey("path_to_arx_fatalis_folder")
     val arxLibertatisCommandLineArgsPrefsKey = stringPreferencesKey("arx_fatalis_command_line_args")
-    val enableEtc2TextureSupportPrefsKey = booleanPreferencesKey("enable_arx_fatalis_etc2_texture_support")
+    val enableEtc2TextureSupportPrefsKey = booleanPreferencesKey("enable_arx_libertatis_etc2_texture_support")
 
-    val enableEtc2TextureSupport = getBooleanValue(enableEtc2TextureSupportPrefsKey, false)
+    val enableEtc2TextureSupport = getBooleanValue(enableEtc2TextureSupportPrefsKey, true)
     val pathToArxFatalisFolder = getStringValue(pathToArxFatalisFolderPrefsKey)
     val arxLibertatisCommandLineArgs = getStringValue(arxLibertatisCommandLineArgsPrefsKey)
 }

@@ -355,5 +355,5 @@
     <string name="buffer_staffing_fix_wait">Buffer stuffing fix delay</string>
     <string name="blocking_wait">Enable blocking wait (when framepacing off)</string>
     <string name="fence_timeout">Fence timeout (ms)</string>
-    <string name="enable_etc2_texture_support">Enable etc2 native texture support when gles 3.0 is enabled (mipmaps won`t work with compressed textures, due to gpu driver limitations)</string>
+    <string name="enable_etc2_texture_support">Enable etc2 native texture format support when gles 3.0 is enabled</string>
 </resources>
