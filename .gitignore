@@ -27,3 +27,4 @@ app/googleOpenGLES3_2
 bin
 app/googleOpenGLES3_X
 app/fdroidOpenGLES3_X
+third_party/fmod
