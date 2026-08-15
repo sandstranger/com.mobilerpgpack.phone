@@ -102,7 +102,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private external fun setTextureCacheData(enableTextureCache : Boolean, pathToTextureCacheDir : String)
     private external fun updateGLSynchronizationState(enableGLSynchronization : Boolean)
     private external fun setBaseGameDir (baseGameDirName : String)
-    private external fun onVirtualGamepadCreatedNativeEvent();
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -126,11 +125,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             setRefreshRates(this, size)
         }
         setBaseGameDir(baseGameDirName)
-    }
-
-    override fun onVirtualGamepadCreated() {
-        super.onVirtualGamepadCreated()
-        onVirtualGamepadCreatedNativeEvent()
     }
 
     companion object{

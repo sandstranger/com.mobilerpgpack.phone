@@ -34,7 +34,6 @@ interface IEngineInfo {
     fun onDestroy()
     fun onBackPressed() : Boolean
     fun onNativeLibrariesLoaded()
-    fun onVirtualGamepadCreated()
 }
 
 val IEngineInfo.mainSharedObject get() = buildFullLibraryName(this.mainLibraryName)
