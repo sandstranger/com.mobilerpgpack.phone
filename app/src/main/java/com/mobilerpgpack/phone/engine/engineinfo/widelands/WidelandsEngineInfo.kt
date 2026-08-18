@@ -37,6 +37,6 @@ class WidelandsEngineInfo (mainEngineLib: String,
     }
 
     companion object{
-        const val WIDELANDS_FILES_CONTENT_CURRENT_VERSION : Int = 1
+        const val WIDELANDS_FILES_CONTENT_CURRENT_VERSION : Int = 2
     }
 }
