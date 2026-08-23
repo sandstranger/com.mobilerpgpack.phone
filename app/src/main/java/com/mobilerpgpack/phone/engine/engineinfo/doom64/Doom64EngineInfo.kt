@@ -9,6 +9,7 @@ import com.sun.jna.Native
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
+import kotlin.collections.contains
 
 open class Doom64EngineInfo(
     mainEngineLib: String,
@@ -21,33 +22,6 @@ open class Doom64EngineInfo(
     final override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder.value!!
     final override val touchFullScreenModeCanBeUsed = false
     final override val enableNGGL4ESSimpleShaderConv = false
-    final override val commandLineArgs: Array<String>
-        get() {
-            val baseCommandLineArgs = super.commandLineArgs
-
-            return mutableListOf<String>().let {
-                it += baseCommandLineArgs
-
-                if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed){
-                    it += FILE_COMMAND
-                    modsModel.mods.forEach { mod : Mod ->
-                        val pathToMode = mod.pathToMod.liveData.value
-                        if (!pathToMode.isNullOrEmpty() && File(pathToMode).exists()){
-                            it+=pathToMode
-                        }
-                    }
-                }
-
-                val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
-
-                if (!baseCommandLineArgs.contains(MODS_COMMAND) && pathToDoom64ModsFolder.isNotEmpty()){
-                    it +=MODS_COMMAND
-                    it +=pathToDoom64ModsFolder
-                }
-
-                it.toTypedArray()
-            }
-        }
 
     private external fun MouseCursorCanBeDrawn() : Boolean
     private external fun setScreenResolution (screenWidth : Int, screenHeight : Int)
@@ -62,6 +36,27 @@ open class Doom64EngineInfo(
     }
 
     final override fun isMouseShown() = MouseCursorCanBeDrawn()
+
+    final override fun buildCustomCommandLineArgs () : Collection<String>{
+        return mutableListOf<String>().also {
+            if (modsModel.modsCanBeUsed){
+                it += FILE_COMMAND
+                modsModel.mods.forEach { mod : Mod ->
+                    val pathToMode = mod.pathToMod.liveData.value
+                    if (!pathToMode.isNullOrEmpty() && File(pathToMode).exists()){
+                        it+=pathToMode
+                    }
+                }
+            }
+
+            val pathToDoom64ModsFolder = getPathToDoom64ModsFolder()
+
+            if (pathToDoom64ModsFolder.isNotEmpty()){
+                it +=MODS_COMMAND
+                it +=pathToDoom64ModsFolder
+            }
+        }
+    }
 
     protected open fun getPathToDoom64UserFolder() =
         pathToRootUserFolder + File.separator + "doom64ex-plus" + File.separator

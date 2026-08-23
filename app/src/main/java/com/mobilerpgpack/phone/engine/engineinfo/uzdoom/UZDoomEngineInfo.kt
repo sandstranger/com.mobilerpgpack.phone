@@ -16,6 +16,7 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
+import kotlin.collections.contains
 
 class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
     private val gpuProbe by inject <GpuProbe>()
@@ -47,65 +48,6 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
     override val requiredResourceExtensions = listOf(".wad", ".WAD")
     override val loadGL4ES = false
     override val enableAngleSupport: Boolean get() = super.enableAngleSupport || useAngleLayerForced
-    override val commandLineArgs: Array<String>
-        get() {
-            val baseCommandLineArgs = super.commandLineArgs
-
-            return mutableListOf<String>().let {
-                it += baseCommandLineArgs
-
-                val pathToWadFile = preferencesStorage.pathToUZDoomIWadFile.value!!
-                if (pathToWadFile.isNotEmpty() && File(pathToWadFile).exists() &&
-                    !baseCommandLineArgs.contains(IWAD_COMMAND)
-                ) {
-                    it += IWAD_COMMAND
-                    it += pathToWadFile
-                }
-
-                if (!baseCommandLineArgs.contains(CONFIG_FILE_COMMAND)) {
-                    it += CONFIG_FILE_COMMAND
-                    it += pathToUZDoomConfigsFile
-                }
-
-                if (!baseCommandLineArgs.contains(SAVE_DIR_COMMAND)) {
-                    it += SAVE_DIR_COMMAND
-                    it += pathToUZDoomUserFolder
-                }
-
-                if (!baseCommandLineArgs.contains(FILE_COMMAND) && modsModel.modsCanBeUsed) {
-                    it += FILE_COMMAND
-
-                    modsModel.mods.forEach { mod: Mod ->
-                        val pathToMod = mod.pathToMod.liveData.value
-                        if (!pathToMod.isNullOrEmpty() && File(pathToMod).exists()) {
-                            it += pathToMod
-                        }
-                    }
-                }
-
-                if (!baseCommandLineArgs.contains(PLAY_DEMO_COMMAND) && modsModel.playingRecordsFileCanBeUsed) {
-                    it += PLAY_DEMO_COMMAND
-                    it += modsModel.pathToDemoFile.liveData.value!!
-                }
-
-                if (!baseCommandLineArgs.contains(XLAT_FILE_COMMAND) && modsModel.xlatFileCanBeUsed) {
-                    it += XLAT_FILE_COMMAND
-                    it += modsModel.pathToXLatFile.liveData.value!!
-                }
-
-                if (!baseCommandLineArgs.contains(DEH_COMMAND) && modsModel.dehFileCanBeUsed) {
-                    it += DEH_COMMAND
-                    it += modsModel.pathToDehFile.liveData.value!!
-                }
-
-                if (!baseCommandLineArgs.contains(BEH_COMMAND) && modsModel.behFileCanBeUsed) {
-                    it += BEH_COMMAND
-                    it += modsModel.pathToBehFile.liveData.value!!
-                }
-
-                it.toTypedArray()
-            }
-        }
 
     private external fun UpdateGLLiteShaderState(enableLightShaders : Boolean)
     private external fun UpdateHarmGLESVersion(glesVersion : Int)
@@ -133,6 +75,53 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
         preferencesStorage.apply {
             setSpirvCrossState(enableSpirvCross.value!!)
             setTargetFPS(framePacingTargetFPS.value!!)
+        }
+    }
+
+    override fun buildCustomCommandLineArgs () : Collection<String>{
+        return mutableListOf<String>().also {
+            val pathToWadFile = preferencesStorage.pathToUZDoomIWadFile.value!!
+            if (pathToWadFile.isNotEmpty() && File(pathToWadFile).exists()) {
+                it += IWAD_COMMAND
+                it += pathToWadFile
+            }
+
+            it += CONFIG_FILE_COMMAND
+            it += pathToUZDoomConfigsFile
+
+            it += SAVE_DIR_COMMAND
+            it += pathToUZDoomUserFolder
+
+            if (modsModel.modsCanBeUsed) {
+                it += FILE_COMMAND
+
+                modsModel.mods.forEach { mod: Mod ->
+                    val pathToMod = mod.pathToMod.liveData.value
+                    if (!pathToMod.isNullOrEmpty() && File(pathToMod).exists()) {
+                        it += pathToMod
+                    }
+                }
+            }
+
+            if (modsModel.playingRecordsFileCanBeUsed) {
+                it += PLAY_DEMO_COMMAND
+                it += modsModel.pathToDemoFile.liveData.value!!
+            }
+
+            if (modsModel.xlatFileCanBeUsed) {
+                it += XLAT_FILE_COMMAND
+                it += modsModel.pathToXLatFile.liveData.value!!
+            }
+
+            if (modsModel.dehFileCanBeUsed) {
+                it += DEH_COMMAND
+                it += modsModel.pathToDehFile.liveData.value!!
+            }
+
+            if (modsModel.behFileCanBeUsed) {
+                it += BEH_COMMAND
+                it += modsModel.pathToBehFile.liveData.value!!
+            }
         }
     }
 

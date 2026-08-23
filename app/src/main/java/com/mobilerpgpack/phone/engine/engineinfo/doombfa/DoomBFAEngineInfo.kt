@@ -46,54 +46,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override val targetGLESVersion get() = preferencesStorage.targetGLESVersion.value!!.glesIntVersion
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 
-    override val commandLineArgs: Array<String>
-        get() {
-            val baseCommandLineArgs = super.commandLineArgs
-            return with(mutableListOf<String>()) {
-                this += baseCommandLineArgs
-                preferencesStorage.apply {
-                    this@with += buildCommand("r_skipInteractionFastPath", "1")
-                    this@with += buildCommand("r_useLightStencilSelect", "0")
-                    this@with += buildCommand("r_skipPostProcess",
-                        disablePostProcessEffects.value!!)
-                    this@with += buildCommand("r_skipShadows", disableShadows.value!!)
-                    this@with += buildCommand("r_skipParticles", disableParticles.value!!)
-                    this@with += buildCommand("r_skipNewAmbient", disableNewAmbients.value!!)
-                    this@with += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
-                    this@with += buildCommand("r_skipDynamicTextures", disableDynamicTextures.value!!)
-                    this@with += buildCommand("r_skipCopyTexture", disableCopyTextures.value!!)
-                    this@with += buildCommand("r_skipDeforms", skipDeforms.value!!)
-                    this@with += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
-                    this@with += buildCommand("r_skipOverlays", disableOverlays.value!!)
-                    this@with += buildCommand("r_useLightDepthBounds", useLightDepthBounds.value!!)
-                    this@with += buildCommand("r_skipIntelWorkarounds", disableIntelWorkarounds.value!!)
-                    this@with += buildCommand("r_useShadowDepthBounds", useShadowDepthBounds.value!!)
-                    this@with += buildCommand("r_skipPrelightShadows", disablePrelightShadows.value!!)
-                    this@with += buildCommand("r_skipTranslucent", disableTranslucent.value!!)
-                    this@with += buildCommand("r_skipFogLights", disableFogLights.value!!)
-                    this@with += buildCommand("r_skipSpecular", disableSpecular.value!!)
-                    this@with += buildCommand("r_skipInteractions", disableLightInteractions.value!!)
-                    val cullingValue = if (simplifyCulling.value!!) "1" else "2"
-                    this@with += buildCommand("r_useLightPortalCulling", cullingValue)
-                    this@with += buildCommand("r_useLightAreaCulling", cullingValue)
-                    this@with += buildCommand("r_shadowMapImageSize", shadowMapImageSize.value!!)
-                    this@with += buildCommand("r_useStateCaching", true)
-                    this@with += buildCommand("r_skipStaticShadows", disableStaticShadows.value!!)
-                    this@with += buildCommand("r_skipDynamicShadows",
-                        disableDynamicShadows.value!!)
-                    this@with += buildCommand("r_useShadowPreciseInsideTest",
-                        useShadowPreciseInsideTest.value!!)
-                    this@with += buildCommand("r_lodMaterialDistance",
-                        lodDistance.value!!.toString())
-                    this@with += buildCommand("r_displayRefresh",framePacingTargetFPS.value!!.toString())
-                    this@with += buildCommand("r_maxAnisotropicFiltering",
-                        anisotropyLevel.value!!.toString())
-                    this@with += buildCommand(GAME_COMMAND,baseGameDirName )
-                }
-                toTypedArray()
-            }
-        }
-
     private external fun setPathsToResources (pathToHomeFolder : String, pathToResourcesFolder : String)
     private external fun setHardwareDXTSupport(enableHardwareDXTSupport : Boolean)
     private external fun setGLESVersion (targetGLESVersion: Int)
@@ -125,6 +77,50 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             setRefreshRates(this, size)
         }
         setBaseGameDir(baseGameDirName)
+    }
+
+    override fun buildCustomCommandLineArgs () : Collection<String>{
+        return mutableListOf<String>().also { list ->
+            preferencesStorage.apply {
+                list += buildCommand("r_skipInteractionFastPath", "1")
+                list += buildCommand("r_useLightStencilSelect", "0")
+                list += buildCommand("r_skipPostProcess",
+                    disablePostProcessEffects.value!!)
+                list += buildCommand("r_skipShadows", disableShadows.value!!)
+                list += buildCommand("r_skipParticles", disableParticles.value!!)
+                list += buildCommand("r_skipNewAmbient", disableNewAmbients.value!!)
+                list += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
+                list += buildCommand("r_skipDynamicTextures", disableDynamicTextures.value!!)
+                list += buildCommand("r_skipCopyTexture", disableCopyTextures.value!!)
+                list += buildCommand("r_skipDeforms", skipDeforms.value!!)
+                list += buildCommand("r_skipBlendLights", disableBlendLights.value!!)
+                list += buildCommand("r_skipOverlays", disableOverlays.value!!)
+                list += buildCommand("r_useLightDepthBounds", useLightDepthBounds.value!!)
+                list += buildCommand("r_skipIntelWorkarounds", disableIntelWorkarounds.value!!)
+                list += buildCommand("r_useShadowDepthBounds", useShadowDepthBounds.value!!)
+                list += buildCommand("r_skipPrelightShadows", disablePrelightShadows.value!!)
+                list += buildCommand("r_skipTranslucent", disableTranslucent.value!!)
+                list += buildCommand("r_skipFogLights", disableFogLights.value!!)
+                list += buildCommand("r_skipSpecular", disableSpecular.value!!)
+                list += buildCommand("r_skipInteractions", disableLightInteractions.value!!)
+                val cullingValue = if (simplifyCulling.value!!) "1" else "2"
+                list += buildCommand("r_useLightPortalCulling", cullingValue)
+                list += buildCommand("r_useLightAreaCulling", cullingValue)
+                list += buildCommand("r_shadowMapImageSize", shadowMapImageSize.value!!)
+                list += buildCommand("r_useStateCaching", true)
+                list += buildCommand("r_skipStaticShadows", disableStaticShadows.value!!)
+                list += buildCommand("r_skipDynamicShadows",
+                    disableDynamicShadows.value!!)
+                list += buildCommand("r_useShadowPreciseInsideTest",
+                    useShadowPreciseInsideTest.value!!)
+                list += buildCommand("r_lodMaterialDistance",
+                    lodDistance.value!!.toString())
+                list += buildCommand("r_displayRefresh",framePacingTargetFPS.value!!.toString())
+                list += buildCommand("r_maxAnisotropicFiltering",
+                    anisotropyLevel.value!!.toString())
+                list += buildCommand(GAME_COMMAND,baseGameDirName )
+            }
+        }
     }
 
     companion object{

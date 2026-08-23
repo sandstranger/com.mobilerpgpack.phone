@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import java.io.File
+import kotlin.collections.contains
 
 class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     SDL3EngineInfo(mainEngineLib, allLibs, EngineTypes.ArxLibertatis) {
@@ -26,33 +27,6 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override val targetGLESVersion= GLES_300_VERSION
     override val enableNGGL4ESSimpleShaderConv = true
     override val gl4esShaderCacheFolderName = "arx_libertatis_gl4es_cache"
-    override val commandLineArgs: Array<String>
-        get() {
-            val baseCommandLineArgs = super.commandLineArgs
-            return with(mutableListOf<String>()) {
-                this += baseCommandLineArgs
-
-                val pathResource = pathToResource
-                if (!baseCommandLineArgs.contains(DATA_DIR_COMMAND) &&
-                    pathResource.isNotEmpty() && File(pathResource).exists()
-                ) {
-                    this += DATA_DIR_COMMAND
-                    this += pathResource
-                }
-
-                if (!baseCommandLineArgs.contains(USER_DIR_COMMAND)) {
-                    this += USER_DIR_COMMAND
-                    this += pathToUserFolder
-                }
-
-                if (!baseCommandLineArgs.contains(CONFIGS_DIR_COMMAND)) {
-                    this += CONFIGS_DIR_COMMAND
-                    this += pathToUserFolder
-                }
-
-                this.toTypedArray()
-            }
-        }
 
     private external fun updateScreenControlsHidingState (controlsHided : Boolean)
     private external fun setPathToResources (pathToResources : String)
@@ -71,6 +45,22 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             setTextureData(enableEtc2TextureSupport.value!!,textureCacheDir.absolutePath)
         }
         setPathToResources(pathToResource)
+    }
+
+    override fun buildCustomCommandLineArgs () : Collection<String>{
+        return mutableListOf<String>().apply {
+            val pathResource = pathToResource
+            if (pathResource.isNotEmpty() && File(pathResource).exists()) {
+                this += DATA_DIR_COMMAND
+                this += pathResource
+            }
+
+            this += USER_DIR_COMMAND
+            this += pathToUserFolder
+
+            this += CONFIGS_DIR_COMMAND
+            this += pathToUserFolder
+        }
     }
 
     private companion object {

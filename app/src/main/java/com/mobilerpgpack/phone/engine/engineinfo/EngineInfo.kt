@@ -113,6 +113,7 @@ abstract class EngineInfo(
     private val gl4esLibraryName get() = if (useLegacyGl4es) com.mobilerpgpack.phone.main.gl4esLibraryName else
         NG_GL4ES_NATIVE_LIB_NAME
     private val gL4ESJnaLayer by lazy { GL4ESJnaLayer (gl4esLibraryName) }
+    private val customCommandLineArgs = mutableListOf<String>()
 
     private external fun needToShowScreenControls() : Boolean
     protected external fun needToInvokeMouseButtonsEvents() : Boolean
@@ -170,11 +171,11 @@ abstract class EngineInfo(
 
     override val touchFullScreenModeCanBeUsed: Boolean = true
 
-    override val commandLineArgs: Array<String>
+    final override val commandLineArgs: Array<String>
         get() {
             commandLineParams.apply {
                 if (isEmpty() || contains("-")) {
-                    return emptyArray()
+                    return customCommandLineArgs.toTypedArray()
                 }
 
                 return try {
@@ -186,7 +187,8 @@ abstract class EngineInfo(
                                 }
                             }
                         }
-
+                        this += customCommandLineArgs
+                        distinct()
                         toTypedArray()
                     }
                 } catch (_: Exception) {
@@ -233,6 +235,7 @@ abstract class EngineInfo(
 
         wasInit = true
         this.activity = activity
+        customCommandLineArgs.addAll(buildCustomCommandLineArgs())
         resolution = activity.getScreenResolution()
         hideScreenControls = preferencesStorage.hideScreenControls.value!!
         showCustomMouseCursor = preferencesStorage.showCustomMouseCursor.value!!
@@ -290,6 +293,8 @@ abstract class EngineInfo(
     }
 
     protected abstract fun setScreenResolution(screenResolution: ScreenResolution)
+
+    protected open fun buildCustomCommandLineArgs () : Collection<String> = emptyList()
 
     protected open fun isMouseShown(): Boolean = true
 

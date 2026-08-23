@@ -176,6 +176,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             val prefsStorage : PreferencesStorage = get()
             val pathToUserFolder = prefsStorage.pathToRootUserFolder.value!!
             val targetUserFolder = File(pathToUserFolder)
+            targetUserFolder.mkdirs()
             if (targetUserFolder.exists() && targetUserFolder.absolutePath != externalStorageFolder.absolutePath)
                 targetUserFolder else externalStorageFolder
         }.withOptions {
@@ -453,10 +454,8 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single<ModsModel> { Doom64ModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
-            createdAtStart()
         }.withOptions {
             named(EngineTypes.Doom64ExPlusEnhanced.toString())
-            createdAtStart()
         }
     }
 
@@ -537,7 +536,6 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single<UZDoomModsModel> { UZDoomModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.UZDoom.toString())
-            createdAtStart()
         }
     }
 
@@ -596,7 +594,6 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         singleOf(::PsyDoomMoreSettingsScreen).bind()
         single <ModsModel> { PsyDoomModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.PsyDoom.toString())
-            createdAtStart()
         }
     }
 

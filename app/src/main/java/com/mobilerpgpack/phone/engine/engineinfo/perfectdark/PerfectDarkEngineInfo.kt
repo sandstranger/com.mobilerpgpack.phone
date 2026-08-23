@@ -10,6 +10,7 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import java.io.File
+import kotlin.collections.contains
 
 class PerfectDarkEngineInfo : SDL3EngineInfo
     ("", emptyArray(), EngineTypes.PerfectDark) {
@@ -42,52 +43,6 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
             PerfectDarkRomVersions.JPN -> perfectDarkPreferencesStorage.pathToJpnRom.value!!
         }
     override val loadGL4ES = false
-    override val commandLineArgs: Array<String>
-        get() {
-            val baseCommandLineArgs = super.commandLineArgs
-            return with(mutableListOf<String>()){
-                this += baseCommandLineArgs
-
-                val pathToRom = pathToResource
-                if (!baseCommandLineArgs.contains(ROM_FILE_COMMAND) &&
-                    pathToRom.isNotEmpty() && File(pathToRom).exists()){
-                    this +=ROM_FILE_COMMAND
-                    this +=pathToRom
-                }
-
-                if (!baseCommandLineArgs.contains(PORTABLE_COMMAND)){
-                    this +=PORTABLE_COMMAND
-                }
-
-                val enableMods = perfectDarkPreferencesStorage.enablePerfectDarkModsSupport.value!!
-                        && pathToModsDirectory.isNotEmpty() && File(pathToModsDirectory).exists()
-
-                if (!baseCommandLineArgs.contains(MODS_DIR_COMMAND) && enableMods){
-                    this += MODS_DIR_COMMAND
-                    this += pathToModsDirectory
-                }
-
-                if (!baseCommandLineArgs.contains(BASE_DIR_COMMAND)){
-                    this += BASE_DIR_COMMAND
-                    this += homeDirectory.absolutePath
-                }
-
-                if (!baseCommandLineArgs.contains(SAVE_DIR_COMMAND)){
-                    this += SAVE_DIR_COMMAND
-                    this += savesDirectory.absolutePath
-                }
-
-                if (!baseCommandLineArgs.contains(SKIP_INTROS_COMMAND) &&
-                    perfectDarkPreferencesStorage.skipIntroCutScenes.value!!){
-                    this += SKIP_INTROS_COMMAND
-                }
-
-                this += GL_VERSION_COMMAND
-                this + OPENGL_ES_3_0_VERSION
-
-                this.toTypedArray()
-            }
-        }
 
     private external fun setPathToHomeDirectory (pathToHomeDirectory : String)
     private external fun setTargetFPS (targetFPS : Int)
@@ -103,6 +58,39 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
         Native.register(PerfectDarkEngineInfo::class.java, mainLibraryName)
         setPathToHomeDirectory(homeDirectory.absolutePath)
         setTargetFPS(preferencesStorage.framePacingTargetFPS.value!!)
+    }
+
+    override fun buildCustomCommandLineArgs () : Collection<String>{
+        return mutableListOf<String>().apply{
+            val pathToRom = pathToResource
+            if (pathToRom.isNotEmpty() && File(pathToRom).exists()){
+                this +=ROM_FILE_COMMAND
+                this +=pathToRom
+            }
+
+            this +=PORTABLE_COMMAND
+
+            val enableMods = perfectDarkPreferencesStorage.enablePerfectDarkModsSupport.value!!
+                    && pathToModsDirectory.isNotEmpty() && File(pathToModsDirectory).exists()
+
+            if (enableMods){
+                this += MODS_DIR_COMMAND
+                this += pathToModsDirectory
+            }
+
+            this += BASE_DIR_COMMAND
+            this += homeDirectory.absolutePath
+
+            this += SAVE_DIR_COMMAND
+            this += savesDirectory.absolutePath
+
+            if (perfectDarkPreferencesStorage.skipIntroCutScenes.value!!){
+                this += SKIP_INTROS_COMMAND
+            }
+
+            this += GL_VERSION_COMMAND
+            this + OPENGL_ES_3_0_VERSION
+        }
     }
 
     private companion object{
