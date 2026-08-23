@@ -446,8 +446,6 @@ Android framepacing - [Licence](https://android.googlesource.com/platform/framew
 
 DocumentsProvider working solution from - https://github.com/glKarin/com.n0n3m4.diii4a
 
-libsquish - [Licence](https://github.com/oblivioncth/libsquish/blob/master/LICENSE) https://github.com/oblivioncth/libsquish
-
 *All UZDoom and Doom credits belong to the original authors (id Software, Raven Software, Rogue Software, Digital Café, Nash Muhandes).*
 
 ---

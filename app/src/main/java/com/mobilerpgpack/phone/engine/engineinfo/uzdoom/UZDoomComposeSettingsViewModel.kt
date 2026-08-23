@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 import android.content.Context
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
@@ -8,20 +9,37 @@ import com.mobilerpgpack.phone.main.KoinModulesProvider
 import com.mobilerpgpack.phone.utils.Ini
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.koin.core.component.get
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
-import java.io.File
 
 class UZDoomComposeSettingsViewModel : IniViewModel(){
-    private val uzDoomIni = Ini ("uzdoom${File.separator}uzdoom.ini", removeSpacesBetweenSeparator = true)
-    private val uzDoomInstance : UZDoomEngineInfo by inject ()
+    private val prefsStorage : UZDoomPreferenceStorage by inject()
+    private val context : Context by inject ()
+    private val scope : CoroutineScope by inject (
+        named(KoinModulesProvider.MAIN_THREAD_COROUTINE_KEY))
+    private val uzDoomIni : Ini by lazy {
+        Ini ("${if (prefsStorage.uzDoomEngineVersion.value == UZDoomEngineVersions.Dev)
+            UZDoomEngineInfo.DEV_GZDOOM_USER_FOLDER_NAME else UZDoomEngineInfo.LEGACY_GZDOOM_USER_FOLDER_NAME}/uzdoom.ini", removeSpacesBetweenSeparator = true)
+    }
+    @Volatile
+    private var isEngineVersionSaving = false
 
-    val uzDoomMods : UZDoomModsModel = get (named(EngineTypes.UZDoom.toString()))
-    val renderAPIAsLiveData = uzDoomIni.getIntValue(PREFERRED_RENDER_API)
-    val autoLoadBrightMapsAsLiveData = uzDoomIni.getBooleanValue(AUTOLOAD_BRIGHTMAPS)
-    val autoLoadWideScreenAsLiveData = uzDoomIni.getBooleanValue(AUTOLOAD_WIDESCREEN)
-    val autoLoadLightsAsLiveData = uzDoomIni.getBooleanValue(AUTOLOAD_LIGHTS)
+    val uzDoomMods : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
+
+    val renderAPIAsLiveData by lazy {
+        uzDoomIni.getIntValue(PREFERRED_RENDER_API)
+    }
+    val autoLoadBrightMapsAsLiveData by lazy {
+        uzDoomIni.getBooleanValue(AUTOLOAD_BRIGHTMAPS)
+    }
+    val autoLoadWideScreenAsLiveData by lazy {
+        uzDoomIni.getBooleanValue(AUTOLOAD_WIDESCREEN)
+    }
+    val autoLoadLightsAsLiveData by lazy {
+        uzDoomIni.getBooleanValue(AUTOLOAD_LIGHTS)
+    }
+
+    val useOpenGLESRender get() = renderAPI == UZDoomRenderAPI.OpenGLES
 
     var renderAPI : UZDoomRenderAPI
         get() = UZDoomRenderAPI.fromValue(renderAPIAsLiveData.value!!)
@@ -47,6 +65,17 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
     override fun unloadIniFiles() {
         uzDoomIni.clear()
         super.unloadIniFiles()
+    }
+
+    fun onEngineVersionChanged(engineVersion: UZDoomEngineVersions){
+        if (prefsStorage.uzDoomEngineVersion.value!! != engineVersion && !isEngineVersionSaving){
+            isEngineVersionSaving = true
+            scope.launch {
+                prefsStorage.setEnumValueAsync(prefsStorage.uzDoomEngineVersionPrefsKey, engineVersion)
+                isEngineVersionSaving = false
+                ProcessPhoenix.triggerRebirth(context)
+            }
+        }
     }
 
     companion object{

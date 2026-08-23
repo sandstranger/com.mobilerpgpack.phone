@@ -7,7 +7,9 @@ const val TRANSLATOR_NATIVE_LIB_NAME = "Translator"
 
 const val PSYDOOM_MAIN_ENGINE_LIB = "PsyDoom"
 
-const val UZDOOM_MAIN_ENGINE_LIB = "uzdoom"
+const val UZDOOM_MAIN_ENGINE_LIB = "zdoom"
+
+const val UZDOOM_LEGACY_MAIN_ENGINE_LIB = "uzdoom"
 
 const val DOOM64_MAIN_ENGINE_LIB = "DOOM64"
 
@@ -134,5 +136,11 @@ val angleLibs = arrayOf("feature_support_angle","GLESv2_angle", "EGL_angle")
 
 val opensslLibs = arrayOf("ssl_3","crypto_3")
 
-val defaultFFMPEGLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
+private val defaultFFMPEGLibs = arrayOf("avcodec", "avdevice", "avfilter", "avformat",
     "avutil", "swresample", "swscale")
+
+private val armv7FFMPEGLibs = arrayOf("avcodec_neon", "avdevice_neon", "avfilter_neon", "avformat_neon",
+    "avutil_neon", "swresample_neon", "swscale_neon")
+
+fun getFMPEGLibs(context: Context) = if (context.applicationInfo.nativeLibraryDir.endsWith("arm"))
+    armv7FFMPEGLibs else defaultFFMPEGLibs

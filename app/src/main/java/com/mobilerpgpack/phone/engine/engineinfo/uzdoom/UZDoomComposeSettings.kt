@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -48,6 +49,19 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
             preferencesStorage.uZDoomCommandLineArgsString,
             preferencesStorage.uZDoomCommandLineArgsPrefsKey.name
         )
+
+        DrawHorizontalDivider()
+
+        val engineVersionStream = preferencesStorage.uzDoomEngineVersion.getComposableValue(
+            UZDoomEngineVersions.Dev)
+        val engineVersion by rememberSaveable(engineVersionStream) {
+            mutableStateOf(engineVersionStream) }
+
+        ListPreferenceItem(
+            stringResource(R.string.uzdoom_engine_version),
+            engineVersion) {
+            viewModel.onEngineVersionChanged(it)
+        }
 
         DrawHorizontalDivider()
 

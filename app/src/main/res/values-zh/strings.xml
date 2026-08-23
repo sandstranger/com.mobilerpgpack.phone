@@ -355,4 +355,5 @@
     <string name="blocking_wait">阻塞等待</string>
     <string name="fence_timeout">栅栏超时（毫秒</string>
     <string name="enable_etc2_texture_support">在启用 GLES 3.0 时开启 ETC2 纹理原生支持</string>
+    <string name="uzdoom_engine_version">UZDoom引擎版本（更改后重启应用）</string>
 </resources>

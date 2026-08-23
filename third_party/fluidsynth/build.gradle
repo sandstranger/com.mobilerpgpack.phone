@@ -21,7 +21,7 @@ android {
         abi {
             enable true
             reset()
-            include("arm64-v8a")
+            include(*build_flags.abi_filters)
             universalApk false
         }
     }

@@ -356,4 +356,5 @@
     <string name="blocking_wait">Enable blocking wait (when framepacing off)</string>
     <string name="fence_timeout">Fence timeout (ms)</string>
     <string name="enable_etc2_texture_support">Enable etc2 native texture format support when gles 3.0 is enabled</string>
+    <string name="uzdoom_engine_version">UZDoom Engine version (the app will restart after changing this value)</string>
 </resources>

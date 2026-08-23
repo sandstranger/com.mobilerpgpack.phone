@@ -58,8 +58,8 @@ import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettings.UZDoomMoreSettingsScreen
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomComposeSettingsViewModel
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineInfo
+import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomEngineVersions
 import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UZDoomPreferenceStorage
-import com.mobilerpgpack.phone.engine.engineinfo.uzdoom.UzDoomIniProvider
 import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerComposeSettings
 import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerEngineInfo
 import com.mobilerpgpack.phone.engine.engineinfo.vanillaconquer.VanillaConquerGames
@@ -453,13 +453,14 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single<ModsModel> { Doom64ModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.Doom64ExPlus.toString())
+            createdAtStart()
         }.withOptions {
             named(EngineTypes.Doom64ExPlusEnhanced.toString())
+            createdAtStart()
         }
     }
 
     private val uZDoomRegisterModule = module {
-        singleOf<UzDoomIniProvider>(::UzDoomIniProvider).bind()
         single { UZDoomPreferenceStorage() }.withOptions {
             named(EngineTypes.UZDoom.toString())
             bind<UZDoomPreferenceStorage>()
@@ -470,27 +471,57 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             ControlsType.OnScreenStick to uzDoomOnScreenStickControlsLayout)) }.withOptions {
             named(EngineTypes.UZDoom.name) }
 
-        single  {
-            val nativeLibs = arrayOf(SDL3_NATIVE_LIB_NAME,
-                ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
-                SDL2_NATIVE_LIB_NAME,
-                OBOE_NATIVE_LUB_NAME,
-                FLUIDSYNTH_NATIVE_LIB_NAME,
-                OPENAL_NATIVE_LIB_NAME,
-                MPG123_NATIVE_LIB_NAME,
-                MP3LAME_NATIVE_LIB_NAME,
-                OGG_NATIVE_LIB_NAME,
-                VORBIS_NATIVE_LIB_NAME,
-                VORBIS_FILE_NATIVE_LIB_NAME,
-                VORBIS_ENC_NATIVE_LIB_NAME,
-                FLAC_NATIVE_LIB_NAME,
-                OPUS_NATIVE_LIB_NAME,
-                SND_FILE_NATIVE_LIB_NAME,
-                ZMUSIC_NATIVE_LIB_NAME,
-                UZDOOM_MAIN_ENGINE_LIB)
+        single { arrayOf(SDL3_NATIVE_LIB_NAME,
+            ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
+            SDL2_NATIVE_LIB_NAME,
+            OBOE_NATIVE_LUB_NAME,
+            FLUIDSYNTH_NATIVE_LIB_NAME,
+            OPENAL_NATIVE_LIB_NAME,
+            MPG123_NATIVE_LIB_NAME,
+            MP3LAME_NATIVE_LIB_NAME,
+            OGG_NATIVE_LIB_NAME,
+            VORBIS_NATIVE_LIB_NAME,
+            VORBIS_FILE_NATIVE_LIB_NAME,
+            VORBIS_ENC_NATIVE_LIB_NAME,
+            FLAC_NATIVE_LIB_NAME,
+            OPUS_NATIVE_LIB_NAME,
+            SND_FILE_NATIVE_LIB_NAME,
+            ZMUSIC_NATIVE_LIB_NAME,
+            UZDOOM_MAIN_ENGINE_LIB,
+        ) }.withOptions {
+            named(UZDoomEngineVersions.Dev.name)
+        }
 
-            UZDoomEngineInfo(UZDOOM_MAIN_ENGINE_LIB,
-                nativeLibs) }.withOptions {
+        single { arrayOf(SDL3_NATIVE_LIB_NAME,
+            ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
+            SDL2_NATIVE_LIB_NAME,
+            OBOE_NATIVE_LUB_NAME,
+            FLUIDSYNTH_NATIVE_LIB_NAME,
+            OPENAL_NATIVE_LIB_NAME,
+            MPG123_NATIVE_LIB_NAME,
+            MP3LAME_NATIVE_LIB_NAME,
+            OGG_NATIVE_LIB_NAME,
+            VORBIS_NATIVE_LIB_NAME,
+            VORBIS_FILE_NATIVE_LIB_NAME,
+            VORBIS_ENC_NATIVE_LIB_NAME,
+            FLAC_NATIVE_LIB_NAME,
+            OPUS_NATIVE_LIB_NAME,
+            SND_FILE_NATIVE_LIB_NAME,
+            ZMUSIC_NATIVE_LIB_NAME,
+            UZDOOM_LEGACY_MAIN_ENGINE_LIB,
+        ) }.withOptions {
+            named(UZDoomEngineVersions.Legacy.name)
+        }
+
+        single { UZDOOM_LEGACY_MAIN_ENGINE_LIB }.withOptions {
+            named(UZDoomEngineVersions.Legacy.name)
+        }
+
+        single { UZDOOM_MAIN_ENGINE_LIB }.withOptions {
+            named(UZDoomEngineVersions.Dev.name)
+        }
+
+        singleOf(::UZDoomEngineInfo).withOptions {
             named(EngineTypes.UZDoom.toString())
             bind<IEngineInfo>()
         }
@@ -506,6 +537,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
 
         single<UZDoomModsModel> { UZDoomModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.UZDoom.toString())
+            createdAtStart()
         }
     }
 
@@ -564,6 +596,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         singleOf(::PsyDoomMoreSettingsScreen).bind()
         single <ModsModel> { PsyDoomModsModel.load().updateFiles() }.withOptions {
             named(EngineTypes.PsyDoom.toString())
+            createdAtStart()
         }
     }
 
@@ -675,7 +708,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
                     OPUS_NATIVE_LIB_NAME,
                 )){
                     add(quake2GameType.nativeLibraryName)
-                    addAll(defaultFFMPEGLibs)
+                    addAll(getFMPEGLibs(get()))
                     addAll(opensslLibs)
                     addAll(bulletLibs)
                     addAll(fteQWNativePlugins)
@@ -776,7 +809,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         }
         single<DoomBFAEngineInfo> {
             val libs = mutableListOf<String>().run {
-                addAll(defaultFFMPEGLibs)
+                addAll(getFMPEGLibs(get()))
                 addAll(opensslLibs)
                 add(OBOE_NATIVE_LUB_NAME)
                 add(OPENAL_NATIVE_LIB_NAME)

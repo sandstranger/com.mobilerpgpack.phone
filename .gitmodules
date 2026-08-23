@@ -160,9 +160,9 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "third_party/sdl2-compat/src/main/jni/sdl2-compat"]
 	path = third_party/sdl2-compat/src/main/jni/sdl2-compat
 	url = https://github.com/sandstranger/sdl2-compat.git
-[submodule "app/src/main/jni/libsquish"]
-	path = app/src/main/jni/libsquish
-	url = https://github.com/sandstranger/libsquish.git
 [submodule "app/src/main/jni/etcpaksources/etcpak"]
 	path = app/src/main/jni/etcpaksources/etcpak
 	url = https://github.com/wolfpld/etcpak.git
+[submodule "app/src/main/jni/UZDoomLegacy"]
+	path = app/src/main/jni/UZDoomLegacy
+	url = https://github.com/sandstranger/UZDoom.git
