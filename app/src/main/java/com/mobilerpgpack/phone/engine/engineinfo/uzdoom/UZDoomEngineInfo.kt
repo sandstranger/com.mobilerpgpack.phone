@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
+import android.os.Build
 import androidx.activity.ComponentActivity
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.sdl.SDL3EngineInfo
@@ -35,7 +36,7 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
     }
     private val enableLightShaders get() = preferencesStorage.enableLightShaders.value!!
     private val useAngleLayerForced: Boolean by lazy { !uzDoomViewModel.useOpenGLESRender &&
-            !gpuProbe.probe().isAdreno }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !gpuProbe.probe().isAdreno }
 
     private val pathToUZDoomConfigsFile by lazy { pathToUZDoomUserFolder + File.separator + "uzdoom.ini" }
 

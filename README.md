@@ -33,7 +33,7 @@ The following projects are scheduled for Android porting:
 ##    System Requirements
 
 ### Minimum
-- **OS:** Android 8.0 or later
+- **OS:** Android 7.0 or later
 - **GPU:** Hardware supporting OpenGL ES 2.0
 - **RAM:** 1 GB system RAM
 

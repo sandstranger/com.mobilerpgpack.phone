@@ -254,14 +254,13 @@ class SettingsScreen : ComposeScreen(SCREEN_NAME) {
             customScreenResolution,preferencesStorage.customScreenResolutionPrefsKey.name, stringResource(R.string.custom_resolution_hint))
 
         DrawHorizontalDivider()
-
-        SwitchPreferenceItem(
-            stringResource(R.string.enable_angle_support),
-            preferencesStorage.enableAngleSupport,
-            preferencesStorage.enableAngleSupportPrefsKey.name
-        )
-
-        DrawHorizontalDivider()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            SwitchPreferenceItem(
+                stringResource(R.string.enable_angle_support),
+                preferencesStorage.enableAngleSupport,
+                preferencesStorage.enableAngleSupportPrefsKey.name)
+            DrawHorizontalDivider()
+        }
     }
 
     @Composable
