@@ -21,6 +21,7 @@ interface IEngineInfo {
     val requiredResourceExtensions : Collection<String>
     val mouseButtonsEventsCanBeInvokedAsFlow : Flow<Boolean>
     val mainLibraryName : String
+    val callExitProcessOnDestroy : Boolean
     val nativeLibraries : Array<String>
     val gameActivityClazz: Class<*>
     val commandLineArgs : Array<String>

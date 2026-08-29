@@ -15,6 +15,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.qualifier.named
 import org.libsdl3.app.SDLActivity
+import kotlin.system.exitProcess
 
 internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     private lateinit var engineInfo : IEngineInfo
@@ -77,8 +78,11 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         engineInfo.onDestroy()
+        super.onDestroy()
+        if (engineInfo.callExitProcessOnDestroy) {
+            exitProcess(0)
+        }
     }
 
     @SuppressLint("MissingSuperCall", "GestureBackNavigation")

@@ -98,7 +98,7 @@ abstract class EngineInfo(
     protected open val loadGL4ES : Boolean = true
     protected open val targetGLESVersion : Int = GLES_300_VERSION
     protected open val enableGyroscope : Boolean get() = preferencesStorage.enableGyroscope.value!!
-    protected open val callExitProcessOnDestroy : Boolean = true
+    override val callExitProcessOnDestroy : Boolean = true
     protected open val enableNGGL4ESSimpleShaderConv = false
     protected open val gl4esShaderCacheFolderName : String = "gl4es_cache"
     protected abstract val gyroInput : GyroInput
@@ -268,9 +268,6 @@ abstract class EngineInfo(
         mainThreadScope.coroutineContext.cancelChildren()
         if (enableAngleSupport){
             AngleShaderCacheJnaLayer.angle_blobcache_shutdown()
-        }
-        if (callExitProcessOnDestroy) {
-            exitProcess(0)
         }
     }
 
