@@ -24,15 +24,18 @@ open class Doom64EngineInfo(
     final override val enableNGGL4ESSimpleShaderConv = false
 
     private external fun MouseCursorCanBeDrawn() : Boolean
-    private external fun setScreenResolution (screenWidth : Int, screenHeight : Int)
     private external fun setPathsToResources (pathToWadsFolder : String, pathToUserFolder : String)
     private external fun updateMaxAnisotropyValue (targetAnisotropyValue : Int)
+    private external fun updateOnScreenControlsState (onScreenControlsActive : Boolean)
 
     final override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
         Native.register(Doom64EngineInfo::class.java, mainLibraryName)
         setPathsToResources(pathToResource, getPathToDoom64UserFolder())
-        updateMaxAnisotropyValue(preferencesStorage.doom64AnisotropyTexturesValue.value!!)
+        preferencesStorage.apply {
+            updateMaxAnisotropyValue(doom64AnisotropyTexturesValue.value!!)
+            updateOnScreenControlsState(!hideScreenControls.value!!)
+        }
     }
 
     final override fun isMouseShown() = MouseCursorCanBeDrawn()
