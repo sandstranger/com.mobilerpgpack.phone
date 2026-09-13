@@ -18,13 +18,6 @@ This repository contains a collection of unofficial Android ports for the follow
 
 ## Status: Development Completed
 
-## Future Development
-
-The following projects are scheduled for Android porting:
-- **[Citadel](https://github.com/JosiahJack/Citadel)** (Next release)
-
-*Note: There are no other open-source mobile ports planned after these projects.*
-
 ---
 
 > **  Global Architecture Note: SDL3 Migration**
