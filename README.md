@@ -16,7 +16,7 @@ This repository contains a collection of unofficial Android ports for the follow
 
 ---
 
-## Status: Development Completed
+## Status: No longer under development, and I have absolutely no any plans to return to FOSS development in future. I am done with it forever.
 
 ---
 
