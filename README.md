@@ -16,10 +16,6 @@ This repository contains a collection of unofficial Android ports for the follow
 
 ---
 
-## Status: Development Completed
-
----
-
 > **  Global Architecture Note: SDL3 Migration**
 > All SDL2-based engines in this repository have been migrated to **SDL3** via [sdl2-compat](https://github.com/libsdl-org/sdl2-compat). Be aware that `sdl2-compat` on Android is **not officially supported** by the SDL team, but it is required for modernizing the input and window management layers across these legacy codebases.
 
