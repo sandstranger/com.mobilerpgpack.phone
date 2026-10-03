@@ -46,7 +46,8 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
     override val mainLibraryName: String get() = mainNativeLibrary
     override val nativeLibraries get() = allNativeLibraries
     override val pathToResource get() = preferencesStorage.pathToUZDoomIWadFile.value!!
-    override val requiredResourceExtensions = listOf(".wad", ".WAD")
+    override val requiredResourceExtensions = listOf(".wad", ".WAD", ".pk3",
+        ".PK3", ".ipk3",".IPK3")
     override val loadGL4ES = false
     override val enableAngleSupport: Boolean get() = super.enableAngleSupport || useAngleLayerForced
 

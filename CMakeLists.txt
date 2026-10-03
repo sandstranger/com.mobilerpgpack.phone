@@ -211,7 +211,8 @@ set(FFMPEG_SWRESAMPLE_LIBRARY ${SWRESAMPLE_LIBRARY} CACHE STRING "" FORCE)
 set(VPX_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/include" CACHE STRING "" FORCE)
 set(VPX_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/vpx/android/${ANDROID_ABI}/lib/libvpx.a" CACHE STRING "" FORCE)
 
-set(ZMUSIC_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/zmusic/src/main/jni/ZMusic/include")
+set(ZMUSIC_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/zmusic/src/main/jni/ZMusic/include"
+        "${CMAKE_SOURCE_DIR}/third_party/zmusic/src/main/jni/ZMusic/source/loader")
 set(ZMUSIC_FOUND TRUE)
 if (IS_DEBUG_BUILD)
     set(ZMUSIC_LIBRARIES "${CMAKE_SOURCE_DIR}/third_party/zmusic/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libzmusic.so")

@@ -56,7 +56,7 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
     fun start() {
         initialize()
         if (gyro != null) {
-            sm?.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME)
+            sm?.registerListener(this, gyro, SensorManager.SENSOR_DELAY_FASTEST)
         }
     }
 

@@ -28,7 +28,7 @@ class WidelandsViewModel : ViewModel(), KoinComponent {
     private val engineInfo : WidelandsEngineInfo by inject()
     private val prefsStorage : PreferencesStorage by inject()
     private val downloader : IDriveDownloader by inject { parametersOf(RESOURCES_DOWNLOADER_ID) }
-    private val zipFile : File by inject { parametersOf("widelands-data-files.zip") }
+    private val zipFile : File by inject { parametersOf("data.zip") }
     private val allowDownloading get() = prefsStorage.allowWidelandsDownloadsOverMobile.value!! || context.isWifiConnected()
     private var downloadJob: Job? = null
     val downloadProgress = MutableLiveData("")
@@ -82,7 +82,7 @@ class WidelandsViewModel : ViewModel(), KoinComponent {
     }
 
     private companion object {
-        const val ZIP_FILE_ID = "1UTy2JZFloDYeuwKz68jSmCyA0XF_Ydh_"
-        const val ZIP_FILE_SHA256 = "5cd78a2b0c08802338844b6cf6e716b9c92b581c6fd0db119fe05f1df9def94a"
+        const val ZIP_FILE_ID = "1K45XBWFyOF1YdbXA6dJVe6yMm5KVOnAQ"
+        const val ZIP_FILE_SHA256 = "bc8b44c208e0e677e01ff0fa34d5943d8af418f4ecfcef1c31d4042e2efb0a9d"
     }
 }

@@ -19,7 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--dontobfuscate
 -keep class org.libsdl3.app.** { *; }
 -keepclassmembers class org.libsdl3.app.SDLActivity {
     public static <methods>;
