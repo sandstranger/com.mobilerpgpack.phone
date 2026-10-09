@@ -1,0 +1,38 @@
+# Spells made in Arx Studio.
+#
+# The game carries a hundred empty spells and asks this file what
+# they are, which is why none of this needs a compiler. Change a
+# line, start the game, cast it.
+#
+# To change what a spell is drawn with, edit its "runes" line: two or
+# more of these, in the order you draw them.
+#
+#   AAM NHI MEGA YOK TAAR KAOM VITAE VISTA STREGUM MORTE
+#   COSUM COMUNICATUM MOVIS TEMPUS FOLGORA SPACIUM TERA
+#   CETRIUS RHAA FRIDD AKBAA
+#
+# Pick a sequence no spell in the game already uses. If it is taken
+# the spell is left out and arx.log says which spell has it, so
+# nothing breaks while you find another.
+#
+# Keep new spells at the end: a save made while one of these was
+# being cast remembers its place in this list.
+
+spell summon_coop
+name   Summon Co-op
+runes  YOK AAM
+level  1
+kind   pull_partner
+visual SummonRift
+sound  magic_spell_summon_creature.wav
+
+spell revive
+name   Revive
+runes  MEGA YOK AAM
+level  2
+mana   50%
+kind   revive_partner
+visual Heal
+sound  magic_spell_healing.wav
+icon   graph/interface/icons/spell_lightning_strike
+

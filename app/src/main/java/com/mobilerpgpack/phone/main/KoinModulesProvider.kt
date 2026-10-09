@@ -661,6 +661,7 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
                 FREETYPE_NATIVE_LIB_NAME,
                 OBOE_NATIVE_LUB_NAME,
                 OPENAL_NATIVE_LIB_NAME,
+                ENET_NATIVE_LIBRARY_NAME,
                 ARX_LIBERTATIS_MAIN_ENGINE_LIB,
             )
             ArxLibertatisEngineInfo(ARX_LIBERTATIS_MAIN_ENGINE_LIB, allLibs)

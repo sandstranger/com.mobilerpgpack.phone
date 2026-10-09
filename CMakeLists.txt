@@ -235,6 +235,18 @@ else ()
     FORCE)
 endif ()
 
+set(ENET_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/enet/src/main/jni/enet/include" CACHE STRING "" FORCE)
+
+if (IS_DEBUG_BUILD)
+    set(ENET_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/enet/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libenet.so"
+    CACHE STRING "enet library"
+    FORCE)
+else ()
+    set(ENET_LIBRARY "${CMAKE_SOURCE_DIR}/third_party/enet/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libenet.so"
+    CACHE STRING "enet library"
+    FORCE)
+endif ()
+
 set(ODE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/ode/src/main/jni/ODE/include" CACHE STRING "" FORCE)
 
 if (IS_DEBUG_BUILD)

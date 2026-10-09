@@ -111,6 +111,8 @@ const val FLAC_NATIVE_LIB_NAME = "FLAC"
 
 const val SND_FILE_NATIVE_LIB_NAME = "sndfile"
 
+const val ENET_NATIVE_LIBRARY_NAME = "enet"
+
 val FREETYPE_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "freetyped" else "freetype"
 
 val GLBINDING_NATIVE_LIB_NAME = if (BuildConfig.DEBUG) "glbindingd" else "glbinding"

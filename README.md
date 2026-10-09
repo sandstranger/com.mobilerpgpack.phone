@@ -154,10 +154,6 @@ The launcher supports machine translation for the Doom RPG series into multiple 
   - **Tiberian Dawn:** Requires original resources. DOS mode is enabled by default for better mobile scaling. If you see a black screen, extract `LOCAL.MIX` from the [DOS version](https://www.moddb.com/games/cc-gold/downloads/command-and-conquer-dos) and place it in your CNCNet resources folder.
   - **Red Alert:** Use official [CNCNet resources](https://cncnet.org/red-alert).
 - **Features:** ARMv7 support. Gamepads are supported via on-screen emulation.
-- **Known Issues:**
-  - **Screen Reposition (#55):** Rendering behind the camera is standard on Android in 2026, but Vanilla-Conquer fails to handle screen reposition events correctly, causing UI elements to render off-screen.
-  - **Hardware Back Button:** The Android hardware back button is non-functional.
-  - **Lifecycle Crashes:** Calling `onPause`/`onResume` events can cause immediate render crashes.
 - **Credits:** Integrates code from the [Nintendo Switch port](https://github.com/capsterx-switch/Vanilla-Conquer).
 
 ### Classic-RBDOOM-3-BFG
@@ -433,6 +429,30 @@ etcpack - [Licence](https://github.com/wolfpld/etcpak/blob/master/LICENSE.txt) h
 Android framepacing - [Licence](https://android.googlesource.com/platform/frameworks/opt/gamesdk/+/refs/heads/android-games-sdk-games-frame-pacing-release/LICENSE) https://android.googlesource.com/platform/frameworks/opt/gamesdk/+/refs/heads/android-games-sdk-games-frame-pacing-release
 
 DocumentsProvider working solution from - https://github.com/glKarin/com.n0n3m4.diii4a
+
+enet - [Licence](https://github.com/lsalzman/enet/blob/master/LICENSE) https://github.com/lsalzman/enet
+
+https://github.com/kingzmanh/arx-fatalis-coop
+
+https://github.com/arx-insanity/ArxLibertatis-ArxInsanity
+
+https://github.com/RockeyLol/ArxLibertatis
+
+https://github.com/ProtoAus/ftequakers
+
+https://github.com/yquake2/xatrix
+
+https://github.com/yquake2/rogue
+
+https://github.com/yquake2/ctf
+
+https://github.com/yquake2/rogue
+
+https://github.com/yquake2/zaero
+
+https://github.com/yquake2/slightmechanicaldestruction
+
+https://github.com/yquake2/3zb2
 
 *All UZDoom and Doom credits belong to the original authors (id Software, Raven Software, Rogue Software, Digital Café, Nash Muhandes).*
 

@@ -32,6 +32,42 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         useToggle = true,
         isDeleted = true
     ),
+    SDL3ImageButton(
+        "coop_talk",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.52f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.nothing_to_say,
+        sdlKeyEvent = KeyEvent.KEYCODE_P,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
+    SDL3ImageButton(
+        "third_person",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.52f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.person,
+        sdlKeyEvent = KeyEvent.KEYCODE_K,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
+    SDL3ImageButton(
+        "mmo_target",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.52f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.follow,
+        sdlKeyEvent = KeyEvent.KEYCODE_Y,
+        showInQuickPanel = true,
+        controlsType = ControlsType.OnScreenStick,
+        isDeleted = true
+    ),
     SDL3RadialWheel(
         EngineTypes.ArxLibertatis,
         offsetXPercent = 0.55f,

@@ -1,0 +1,59 @@
+# Arx Fatalis Co-op - world edits.
+#
+# Read after every level has loaded and run its scripts. One order per line,
+# and only what a line names is changed. A "#" starts a comment.
+#
+#   level <number>            the orders below apply in that level only
+#   show <entity>             bring a hidden thing back into view
+#   put <container> rune <name>       create that rune inside a body or a chest
+#   put <container> <class path>      create any item inside it
+#
+# Entity names are the ones the level uses: rune_aam_0003, corpse_0004,
+# chest_0012. A class path can be short of the common root, for example
+# items/provisions/potion_life/potion_life.
+
+#   keepbody <class> [item ...]   a creature of that class leaves a body to
+#                             loot, even where its death effect would burn it
+#                             away; the items listed are in its pack
+
+# The developers' hidden boss burns away when she dies; kept, she can be
+# looted: the plate set her script only ever hinted at is in her pack.
+# (not yet proven in play - left off until it is)
+# keepbody y_mx armor/chest_plate_cm/chest_plate_cm armor/helmet_plate_cm/helmet_plate_cm armor/legging_plate_cm/legging_plate_cm
+
+#   face <texture> [<head mesh> [neck <u> <v> [<height>]]]
+#                             one more face for character creation: a head
+#                             texture from the game's data, the head shape it
+#                             was painted for when that is not the hero's own
+#                             (the game's four faces come first), and a spot
+#                             of the texture to paint its neck with
+
+# The bare male heads. Kultar's head is its own shape; the hero's has hair,
+# and Kultar and Erzog were painted without it.
+# Left out: the chainmail, plate and leather heads (a hood or helm painted
+# on), the shadow (no face), the Ylside head, the priests (their bald head
+# was cut for the priest's body and hangs wrong on the hero's) and the king
+# (his fur collar is painted onto his neck).
+face npc_human_base_kultar_head      human_base/tweaks/human_kultar
+face npc_human_base_erzog_head       human_base/tweaks/human_kultar
+face npc_human_base_ortiern_head
+face npc_human_base_calpal_head
+face npc_human_base_thorgal_head
+face npc_human_cm_hero_head
+face npc_human__base_hero_head
+
+#   wear <item class> <body mesh> [<skin from> <skin to>]
+#                             how that piece looks on a body, instead of what
+#                             its own script says (for looks that were never made)
+
+# The cm plate set names a body shape that does not exist. Worn, it takes the
+# Ylside armour shape in the red-and-gold "mx" paint its owner wears.
+wear chest_plate_cm   human_ylside.teo  npc_human_ylside_body  npc_human_ylside_body_mx
+wear helmet_plate_cm  human_ylside.teo  npc_human_ylside_body  npc_human_ylside_body_mx
+wear legging_plate_cm human_ylside.teo  npc_human_ylside_body  npc_human_ylside_body_mx
+
+# Mega and Vista were placed in the first level for the demo version and hide
+# themselves in the full game. Shown again, they lie where they were put.
+level 15
+show rune_aam_0003
+show rune_aam_0004

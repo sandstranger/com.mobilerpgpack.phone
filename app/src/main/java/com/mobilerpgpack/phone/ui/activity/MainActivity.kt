@@ -1,5 +1,6 @@
 package com.mobilerpgpack.phone.ui.activity
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -50,6 +51,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
             finish()
             return
         }
+        requestLocalNetworkPermission()
         viewModel.loadAllAssets()
         scope.launch { buildScreensAsync() }
     }
@@ -133,7 +135,18 @@ class MainActivity : ComponentActivity(), KoinComponent {
         }
     }
 
+    private fun requestLocalNetworkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN &&
+            checkSelfPermission(LOCAL_NETWORK_PERMISSION) !=
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(LOCAL_NETWORK_PERMISSION), DEFAULT_NETWORK_PERMISSION_REQUEST_CODE)
+        }
+    }
+
     companion object{
+        private const val DEFAULT_NETWORK_PERMISSION_REQUEST_CODE = 1001
+        private const val LOCAL_NETWORK_PERMISSION = "android.permission.ACCESS_LOCAL_NETWORK"
         var gameActivityStarted = false
     }
 }
