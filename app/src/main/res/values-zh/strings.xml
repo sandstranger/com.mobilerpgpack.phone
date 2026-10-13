@@ -51,7 +51,7 @@
     <string name="always_show_keyboard_button">始终显示屏幕键盘按钮，即使屏幕控制完全禁用</string>
     <string name="block_touch_camera_events">触摸屏虚拟摇杆激活时，屏蔽触摸屏相机事件</string>
     <string name="command_line_args">命令行参数</string>
-    <string name="path_to_uzdoom_wad_file">UZDoom主WAD文件路径</string>
+    <string name="path_to_uzdoom_wad_file">UZDoom主文件路径</string>
     <string name="path_to_mods_folder">模组文件夹路径。这将覆盖当前的模组历史记录</string>
     <string name="enable_mods_autoupdate">如果选择了模组文件夹，则在应用启动时启用模组自动更新</string>
     <string name="uzdoom_enable_light_shaders">启用在光照着色器</string>

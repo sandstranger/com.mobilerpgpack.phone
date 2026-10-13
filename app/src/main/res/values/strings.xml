@@ -51,7 +51,7 @@
     <string name="always_show_keyboard_button">Always show keyboard onscreen button, even when screen controls completely disabled</string>
     <string name="block_touch_camera_events">Block touchscreen, when onscreen joystick type for touch is active</string>
     <string name="command_line_args">Command Line args</string>
-    <string name="path_to_uzdoom_wad_file">Path to UZDoom main wad file</string>
+    <string name="path_to_uzdoom_wad_file">Path to UZDoom main file</string>
     <string name="path_to_mods_folder">Path to mods folder. This will overwrite current mod history</string>
     <string name="enable_mods_autoupdate">Enable mods autoupdate at app startup, if mods folder is selected</string>
     <string name="uzdoom_enable_light_shaders">Enable light shaders</string>
