@@ -166,3 +166,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/UZDoomLegacy"]
 	path = app/src/main/jni/UZDoomLegacy
 	url = https://gitlab.com/sandstranger/uzdoom.git
+[submodule "third_party/yquake2/src/main/jni/slightmechanicaldestruction"]
+	path = third_party/yquake2/src/main/jni/slightmechanicaldestruction
+	url = https://github.com/sandstranger/slightmechanicaldestruction.git

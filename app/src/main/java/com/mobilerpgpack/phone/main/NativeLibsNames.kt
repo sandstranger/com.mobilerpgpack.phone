@@ -41,6 +41,8 @@ const val QUAKE2_BOT_NATIVE_LIB_NAME = "3zb2"
 
 const val QUAKE2_ZAERO_NATIVE_LIB_NAME = "zaero"
 
+const val QUAKE2_SMD_NATIVE_LIB_NAME = "smd"
+
 const val TIBERIAN_DAWN_NATIVE_LIB_NAME = "vanillatd"
 
 const val RED_ALERT_NATIVE_LIB_NAME = "vanillara"

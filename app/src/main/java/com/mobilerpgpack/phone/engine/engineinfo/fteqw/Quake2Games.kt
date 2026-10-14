@@ -2,6 +2,7 @@ package com.mobilerpgpack.phone.engine.engineinfo.fteqw
 
 import com.mobilerpgpack.phone.main.QUAKE2_BOT_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.QUAKE2_CTF_NATIVE_LIB_NAME
+import com.mobilerpgpack.phone.main.QUAKE2_SMD_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.QUAKE2_ZAERO_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.ROGUE_NATIVE_LIB_NAME
 import com.mobilerpgpack.phone.main.XATRIX_NATIVE_LIB_NAME
@@ -21,7 +22,9 @@ enum class Quake2Games(val description: String,
     Quake2_Zaero("Quake2: Missionpack Zaero (zaero/)","zaero",
         QUAKE2_ZAERO_NATIVE_LIB_NAME),
     Quake2_3zb2("Quake2: The 3rd Zigock Bot II mod (3zb2/)","3zb2",
-        QUAKE2_BOT_NATIVE_LIB_NAME);
+        QUAKE2_BOT_NATIVE_LIB_NAME),
+    Quake2_slightmechanicaldestruction("Quake2: slightmechanicaldestruction (smd/)","smd",
+        QUAKE2_SMD_NATIVE_LIB_NAME);
 
     companion object {
         val DefaultGame = Quake2
