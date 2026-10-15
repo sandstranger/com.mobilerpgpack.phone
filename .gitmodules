@@ -51,7 +51,7 @@ url=https://github.com/pnggroup/libpng.git
 url=https://github.com/google/oboe.git
 [submodule "app/src/main/jni/DOOM64-EX-Plus-Enhanced"]
 	path = app/src/main/jni/DOOM64-EX-Plus-Enhanced
-	url = https://gitlab.com/sandstranger/doom64-ex-plus-enhanced.git
+	url = https://github.com/sandstranger/DOOM64-EX-Plus-Enhanced.git
 [submodule "app/src/main/jni/PsyDoom"]
 	path = app/src/main/jni/PsyDoom
 	url = https://github.com/sandstranger/PsyDoom.git
@@ -63,7 +63,7 @@ url=https://github.com/google/oboe.git
 url=https://github.com/sandstranger/ZMusic.git
 [submodule "app/src/main/jni/UZDoom"]
 	path = app/src/main/jni/UZDoom
-	url = https://gitlab.com/sandstranger/uzdoom.git
+	url = https://github.com/sandstranger/UZDoom.git
 [submodule "third_party/mpg123/src/main/jni/MPG123-Android"]
 	path = third_party/mpg123/src/main/jni/MPG123-Android
 url=https://github.com/sandstranger/MPG123-Android.git
@@ -84,10 +84,10 @@ url=https://gitlab.xiph.org/xiph/vorbis.git
 url=https://github.com/sandstranger/libmp3lame-android.git
 [submodule "app/src/main/jni/perfect_dark"]
 	path = app/src/main/jni/perfect_dark
-	url = https://gitlab.com/sandstranger/perfect_dark.git
+	url = https://github.com/sandstranger/perfect_dark.git
 [submodule "app/src/main/jni/ArxLibertatis"]
 	path = app/src/main/jni/ArxLibertatis
-	url = https://gitlab.com/sandstranger/arxlibertatis.git
+	url = https://github.com/sandstranger/ArxLibertatis.git
 [submodule "third_party/glm"]
 	path = third_party/glm
 	url = https://github.com/g-truc/glm
@@ -99,7 +99,7 @@ url=https://github.com/sandstranger/libmp3lame-android.git
 url=https://github.com/FFmpeg/FFmpeg
 [submodule "app/src/main/jni/fteqw"]
 	path = app/src/main/jni/fteqw
-	url = https://gitlab.com/sandstranger/fteqw.git
+	url = https://github.com/sandstranger/fteqw.git
 [submodule "third_party/libjpegturbo/src/main/jni/libjpeg-turbo"]
 	path = third_party/libjpegturbo/src/main/jni/libjpeg-turbo
 	url = https://github.com/libjpeg-turbo/libjpeg-turbo.git
@@ -126,7 +126,7 @@ url=https://github.com/sandstranger/SDL_image.git
 	url = https://github.com/cginternals/glbinding.git
 [submodule "app/src/main/jni/widelands"]
 	path = app/src/main/jni/widelands
-	url = https://gitlab.com/sandstranger/widelands.git
+	url = https://github.com/sandstranger/widelands.git
 [submodule "third_party/glob/src/main/jni/glob"]
 	path = third_party/glob/src/main/jni/glob
 	url = https://github.com/sandstranger/glob.git
@@ -138,7 +138,7 @@ url=https://github.com/sandstranger/SDL_image.git
 	url = https://gitlab.xiph.org/xiph/ogg.git
 [submodule "app/src/main/jni/Classic-RBDOOM-3-BFG"]
 	path = app/src/main/jni/Classic-RBDOOM-3-BFG
-	url = https://gitlab.com/sandstranger/classic-rbdoom-3-bfg.git
+	url = https://github.com/sandstranger/Classic-RBDOOM-3-BFG.git
 [submodule "third_party/yquake2/src/main/jni/xatrix"]
 	path = third_party/yquake2/src/main/jni/xatrix
 	url = https://github.com/sandstranger/xatrix.git
@@ -165,7 +165,7 @@ url=https://github.com/sandstranger/SDL_image.git
 	url = https://github.com/wolfpld/etcpak.git
 [submodule "app/src/main/jni/UZDoomLegacy"]
 	path = app/src/main/jni/UZDoomLegacy
-	url = https://gitlab.com/sandstranger/uzdoom.git
+	url = https://github.com/sandstranger/UZDoom.git
 [submodule "third_party/yquake2/src/main/jni/slightmechanicaldestruction"]
 	path = third_party/yquake2/src/main/jni/slightmechanicaldestruction
 	url = https://github.com/sandstranger/slightmechanicaldestruction.git
