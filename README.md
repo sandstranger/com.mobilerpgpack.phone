@@ -129,6 +129,8 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 - **Game Data:** Follow the [Arx Libertatis wiki](https://wiki.arx-libertatis.org/Getting_the_game_data).
 - **Features:** Fully supports GLES 3.0 and GLES 2.0 rendering, improved controls, and full ARMv7 support.
 - **Vulkan on Mali:** Vulkan rendering via ANGLE is fully playable on Mali GPUs. Previous low FPS issues caused by GPU stalls have been resolved.
+- **Fully supports web cooperative:** This android fork supports web cooperative by using this repo https://github.com/kingzmanh/arx-fatalis-coop
+Connection is working without issues even between PC and android devices, use tailscale if you want to play in global web - https://tailscale.com/ (not in localhost)
 - **Credits:** Integrates brightness fixes from [xyzz's OpenMW Android port](https://github.com/xyzz/openmw-android) and gamepad implementations from the [Nintendo Switch port](https://github.com/fgsfdsfgs/ArxLibertatis).
 
 ### FTEQW
