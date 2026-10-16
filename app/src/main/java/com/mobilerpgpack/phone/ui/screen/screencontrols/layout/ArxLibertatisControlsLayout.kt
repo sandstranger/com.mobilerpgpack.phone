@@ -40,7 +40,6 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sizePercent = 0.06f,
         buttonResId = R.drawable.nothing_to_say,
         sdlKeyEvent = KeyEvent.KEYCODE_P,
-        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
@@ -52,7 +51,6 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sizePercent = 0.06f,
         buttonResId = R.drawable.person,
         sdlKeyEvent = KeyEvent.KEYCODE_K,
-        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
@@ -64,7 +62,6 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         sizePercent = 0.06f,
         buttonResId = R.drawable.follow,
         sdlKeyEvent = KeyEvent.KEYCODE_Y,
-        showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick,
         isDeleted = true
     ),
