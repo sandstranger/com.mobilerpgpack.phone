@@ -170,8 +170,8 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         offsetXPercent = 0.4f,
         offsetYPercent = 0.15f,
         sizePercent = 0.05f,
-        buttonResId = R.drawable.eight_number,
-        sdlKeyEvent = KeyEvent.KEYCODE_8,
+        buttonResId = R.drawable.nine_number,
+        sdlKeyEvent = KeyEvent.KEYCODE_9,
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
