@@ -10,11 +10,11 @@ class UZDoomPreferenceStorage : PreferencesStorage() {
     val pathToUZDoomIWadFilePrefsKey = stringPreferencesKey("path_to_uzdoom_iwad_file")
     val uZDoomCommandLineArgsPrefsKey = stringPreferencesKey("uzdoom_command_line_args")
     val uzDoomGLESVersionPrefsKey = stringPreferencesKey("uzdoom_new_gles_version")
-    val enableSpirvCrossPrefsKey = booleanPreferencesKey("enable_spirv_cross")
+    val enableSpirvCrossPrefsKey = booleanPreferencesKey("enable_spirv_cross_for_shaders")
     val uzDoomEngineVersionPrefsKey = enumPreferencesKey<UZDoomEngineVersions>(
         "uzdoom_engine_version")
 
-    val enableSpirvCross = getBooleanValue(enableSpirvCrossPrefsKey);
+    val enableSpirvCross = getBooleanValue(enableSpirvCrossPrefsKey, true);
     val pathToUZDoomIWadFile = getStringValue(pathToUZDoomIWadFilePrefsKey)
     val enableLightShaders = getBooleanValue(enableLightShadersPrefsKey)
     val uzDoomGLESVersion = getStringValue(
