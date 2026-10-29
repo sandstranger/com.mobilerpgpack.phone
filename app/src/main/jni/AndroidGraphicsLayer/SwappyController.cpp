@@ -61,17 +61,7 @@ static inline SDL_Window* GetSDLWindow() {
 // registration, so registering this after Swappy is configured (which creates that singleton) stops
 // Swappy's threads before anything they use is torn down.
 static void DestroySwappyAtExit() {
-    std::lock_guard<std::mutex> lock(g_swappyMutex);
-
-    if (g_swappyDestroyed.exchange(true, std::memory_order_acq_rel)) {
-        return;
-    }
-
-    const auto wasEnabled = swappyWasEnabled.exchange(false, std::memory_order_acq_rel);
-    if (wasEnabled) {
-        g_swappyDestroyed = true;
-        SwappyGL_destroy();
-    }
+    DestroySwappy();
 }
 
 extern "C" {
@@ -183,5 +173,16 @@ bool SwappySwapBuffers() {
 
 __attribute__((used)) __attribute__((visibility("default")))
 void DestroySwappy() {
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+
+    if (g_swappyDestroyed.exchange(true, std::memory_order_acq_rel)) {
+        return;
+    }
+
+    const auto wasEnabled = swappyWasEnabled.exchange(false, std::memory_order_acq_rel);
+    if (wasEnabled) {
+        g_swappyDestroyed = true;
+        SwappyGL_destroy();
+    }
 }
 }
