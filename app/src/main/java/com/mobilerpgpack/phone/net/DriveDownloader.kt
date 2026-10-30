@@ -59,8 +59,6 @@ class DriveDownloader(private val apiKey: String) : KoinComponent, IDriveDownloa
         resp.use { response ->
 
             if (!response.isSuccessful) {
-                Log.d(TAG, "HTTP ${response.code}: ${response.message}")
-                Log.d(TAG, url)
                 return
             }
             val body = response.body
