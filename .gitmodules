@@ -163,9 +163,6 @@ url=https://github.com/sandstranger/SDL_image.git
 [submodule "app/src/main/jni/etcpaksources/etcpak"]
 	path = app/src/main/jni/etcpaksources/etcpak
 	url = https://github.com/wolfpld/etcpak.git
-[submodule "app/src/main/jni/UZDoomLegacy"]
-	path = app/src/main/jni/UZDoomLegacy
-	url = https://github.com/sandstranger/UZDoom.git
 [submodule "third_party/yquake2/src/main/jni/slightmechanicaldestruction"]
 	path = third_party/yquake2/src/main/jni/slightmechanicaldestruction
 	url = https://github.com/sandstranger/slightmechanicaldestruction.git

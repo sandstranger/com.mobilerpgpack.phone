@@ -1,7 +1,6 @@
 package com.mobilerpgpack.phone.engine.engineinfo.uzdoom
 
 import android.content.Context
-import com.jakewharton.processphoenix.ProcessPhoenix
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.engineinfo.utils.UZDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
@@ -65,17 +64,6 @@ class UZDoomComposeSettingsViewModel : IniViewModel(){
     override fun unloadIniFiles() {
         uzDoomIni.clear()
         super.unloadIniFiles()
-    }
-
-    fun onEngineVersionChanged(engineVersion: UZDoomEngineVersions){
-        if (prefsStorage.uzDoomEngineVersion.value!! != engineVersion && !isEngineVersionSaving){
-            isEngineVersionSaving = true
-            scope.launch {
-                prefsStorage.setEnumValueAsync(prefsStorage.uzDoomEngineVersionPrefsKey, engineVersion)
-                isEngineVersionSaving = false
-                ProcessPhoenix.triggerRebirth(context)
-            }
-        }
     }
 
     companion object{

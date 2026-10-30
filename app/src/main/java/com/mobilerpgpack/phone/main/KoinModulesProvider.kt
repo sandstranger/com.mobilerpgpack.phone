@@ -491,31 +491,6 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
             named(UZDoomEngineVersions.Dev.name)
         }
 
-        single { arrayOf(SDL3_NATIVE_LIB_NAME,
-            ANDROID_GRAPHICS_LAYER_NATIVE_LIB_NAME,
-            SDL2_NATIVE_LIB_NAME,
-            OBOE_NATIVE_LUB_NAME,
-            FLUIDSYNTH_NATIVE_LIB_NAME,
-            OPENAL_NATIVE_LIB_NAME,
-            MPG123_NATIVE_LIB_NAME,
-            MP3LAME_NATIVE_LIB_NAME,
-            OGG_NATIVE_LIB_NAME,
-            VORBIS_NATIVE_LIB_NAME,
-            VORBIS_FILE_NATIVE_LIB_NAME,
-            VORBIS_ENC_NATIVE_LIB_NAME,
-            FLAC_NATIVE_LIB_NAME,
-            OPUS_NATIVE_LIB_NAME,
-            SND_FILE_NATIVE_LIB_NAME,
-            ZMUSIC_NATIVE_LIB_NAME,
-            UZDOOM_LEGACY_MAIN_ENGINE_LIB,
-        ) }.withOptions {
-            named(UZDoomEngineVersions.Legacy.name)
-        }
-
-        single { UZDOOM_LEGACY_MAIN_ENGINE_LIB }.withOptions {
-            named(UZDoomEngineVersions.Legacy.name)
-        }
-
         single { UZDOOM_MAIN_ENGINE_LIB }.withOptions {
             named(UZDoomEngineVersions.Dev.name)
         }

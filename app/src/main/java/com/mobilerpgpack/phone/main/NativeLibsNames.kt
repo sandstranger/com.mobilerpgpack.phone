@@ -9,8 +9,6 @@ const val PSYDOOM_MAIN_ENGINE_LIB = "PsyDoom"
 
 const val UZDOOM_MAIN_ENGINE_LIB = "zdoom"
 
-const val UZDOOM_LEGACY_MAIN_ENGINE_LIB = "uzdoom"
-
 const val DOOM64_MAIN_ENGINE_LIB = "DOOM64"
 
 const val DOOM64_ENHANCED_MAIN_ENGINE_LIB = "DOOM64-Enhanced"

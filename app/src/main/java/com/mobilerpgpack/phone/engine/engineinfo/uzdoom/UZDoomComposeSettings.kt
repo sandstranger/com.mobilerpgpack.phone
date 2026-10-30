@@ -52,19 +52,6 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
 
         DrawHorizontalDivider()
 
-        val engineVersionStream = preferencesStorage.uzDoomEngineVersion.getComposableValue(
-            UZDoomEngineVersions.Dev)
-        val engineVersion by rememberSaveable(engineVersionStream) {
-            mutableStateOf(engineVersionStream) }
-
-        ListPreferenceItem(
-            stringResource(R.string.uzdoom_engine_version),
-            engineVersion) {
-            viewModel.onEngineVersionChanged(it)
-        }
-
-        DrawHorizontalDivider()
-
         RequestPath(
             stringResource(R.string.path_to_uzdoom_wad_file),
             preferencesStorage.pathToUZDoomIWadFile,
@@ -96,10 +83,6 @@ class UZDoomComposeSettings : IEngineUIController, KoinComponent {
         ) {
             preferencesStorage.setStringValue(preferencesStorage.uzDoomGLESVersionPrefsKey, it)
         }
-        DrawHorizontalDivider()
-        SwitchPreferenceItem(stringResource(R.string.enable_spirv_cross),
-            preferencesStorage.enableSpirvCross,
-            preferencesStorage.enableSpirvCrossPrefsKey.name)
         DrawHorizontalDivider()
         SwitchPreferenceItem(
             stringResource(R.string.uzdoom_enable_light_shaders),

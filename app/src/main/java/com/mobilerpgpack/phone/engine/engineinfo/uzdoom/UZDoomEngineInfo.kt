@@ -21,18 +21,15 @@ import kotlin.collections.contains
 
 class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
     private val gpuProbe by inject <GpuProbe>()
-    private val currentEngineVersion get() = preferencesStorage.uzDoomEngineVersion.value!!
-    private val allNativeLibraries : Array<String> by lazy { get (named(currentEngineVersion.name)) }
-    private val mainNativeLibrary : String by lazy { get (named(currentEngineVersion.name)) }
+    private val allNativeLibraries : Array<String> by lazy { get (named(UZDoomEngineVersions.Dev.name)) }
+    private val mainNativeLibrary : String by lazy { get (named(UZDoomEngineVersions.Dev.name)) }
     private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
     private val uzDoomViewModel : UZDoomComposeSettingsViewModel by inject ()
     private val uzDoomCacheFolder : File by lazy {
-        File(activity.cacheDir, if (currentEngineVersion == UZDoomEngineVersions.Dev)
-            "dev_uzdoom_cache" else "legacy_uzdoom_cache")
+        File(activity.cacheDir, "dev_uzdoom_cache")
     }
     private val pathToUZDoomUserFolder by lazy{
-        super.pathToRootUserFolder + File.separator + if (currentEngineVersion == UZDoomEngineVersions.Dev)
-            DEV_GZDOOM_USER_FOLDER_NAME else LEGACY_GZDOOM_USER_FOLDER_NAME
+        super.pathToRootUserFolder + File.separator + DEV_GZDOOM_USER_FOLDER_NAME
     }
     private val enableLightShaders get() = preferencesStorage.enableLightShaders.value!!
     private val useAngleLayerForced: Boolean by lazy { !uzDoomViewModel.useOpenGLESRender &&
@@ -74,8 +71,8 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
         setPathsToFolders(pathToUZDoomUserFolder,
             uzDoomCacheFolder.absolutePath)
         UpdateUseOpenGLESState(uzDoomViewModel.renderAPI == UZDoomRenderAPI.OpenGLES)
+        setSpirvCrossState(true)
         preferencesStorage.apply {
-            setSpirvCrossState(enableSpirvCross.value!!)
             setTargetFPS(framePacingTargetFPS.value!!)
         }
     }
