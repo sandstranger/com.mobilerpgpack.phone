@@ -35,7 +35,6 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
             initialize(this@SDL3GameActivity)
             super.onCreate(savedInstanceState)
             loadLayout()
-            onNativeLibrariesLoaded()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 onBackInvokedDispatcher.registerOnBackInvokedCallback(
                     OnBackInvokedDispatcher.PRIORITY_DEFAULT
