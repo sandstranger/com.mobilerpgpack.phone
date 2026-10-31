@@ -18,13 +18,16 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     private val doomBFAPreferenceStorage by inject<DoomBFAPreferencesStorage>(
         named(EngineTypes.Classic_RBDOOM_3_BFG.name))
     private val baseGameDirName by lazy {
-        return@lazy preferencesStorage.run {
+        preferencesStorage.run {
             val pathToModsDirectory = pathDoom3ModsDir.value!!
             val modsDir = File(pathToModsDirectory)
-            return@run if (enableDoom3Mods.value!! && modsDir.exists() && pathToModsDirectory.isNotEmpty() &&
-                pathToModsDirectory.startsWith(
-                    pathToResource
-                )
+            val resourceRoot = runCatching { File(pathToResource).canonicalPath }.getOrNull()
+            val canonicalModsPath = runCatching { modsDir.canonicalPath }.getOrNull()
+            val isInsideResourceRoot = resourceRoot != null && canonicalModsPath != null &&
+                canonicalModsPath.startsWith(resourceRoot.trimEnd(File.separatorChar) + File.separator)
+
+            if (enableDoom3Mods.value!! && pathToModsDirectory.isNotEmpty() &&
+                modsDir.isDirectory && isInsideResourceRoot
             ) {
                 modsDir.name
             } else {
@@ -33,6 +36,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         }
     }
     private val textureCacheDir by lazy { File(context.cacheDir,"doom3_texture_cache") }
+    private var startupConfigurationInitialized = false
     @Volatile
     var isTexturesResourcesDeleting = false
 
@@ -60,11 +64,20 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         textureCacheDir.mkdirs()
     }
 
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        if (startupConfigurationInitialized) return
+
+        Native.register(DoomBFAEngineInfo::class.java, mainLibraryName)
+        // FileSystem::Init() consumes baseGameDir, so set it before SDL_main starts.
+        setBaseGameDir(baseGameDirName)
+        // This call releases the native startup barrier after all paths are installed.
+        setPathsToResources(homeDirectoryFolder.absolutePath, pathToResource)
+        startupConfigurationInitialized = true
+    }
+
     override fun onNativeLibrariesLoaded() {
         super.onNativeLibrariesLoaded()
-        Native.register(DoomBFAEngineInfo::class.java, mainLibraryName)
-        setPathsToResources(homeDirectoryFolder.absolutePath,
-            pathToResource)
+        onNativeLibrariesLoadedBeforeStart()
         preferencesStorage.apply {
             setHardwareDXTSupport(enableDXTHardwareSupport.value!!)
             enableTexturesShrinking(enableTexturesShrinking.value!!)
@@ -76,7 +89,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         activity.supportedRefreshRates.toIntArray().apply {
             setRefreshRates(this, size)
         }
-        setBaseGameDir(baseGameDirName)
     }
 
     override fun buildCustomCommandLineArgs () : Collection<String>{

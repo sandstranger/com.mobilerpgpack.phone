@@ -47,6 +47,13 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
         forceLandscapeOrientation()
     }
 
+    override fun loadLibraries() {
+        super.loadLibraries()
+        if (gameResourcesFound) {
+            engineInfo.onNativeLibrariesLoadedBeforeStart()
+        }
+    }
+
     override fun getMainSharedObject() = engineInfo.mainSharedObject
 
     override fun getLibraries() = engineInfo.nativeLibraries

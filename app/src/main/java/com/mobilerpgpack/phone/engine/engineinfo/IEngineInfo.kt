@@ -35,6 +35,11 @@ interface IEngineInfo {
     fun onDestroy()
     fun onBackPressed() : Boolean
     fun onNativeLibrariesLoaded()
+
+    /**
+     * Called after SDL has loaded the native libraries but before its native main thread starts.
+     */
+    fun onNativeLibrariesLoadedBeforeStart() {}
 }
 
 val IEngineInfo.mainSharedObject get() = buildFullLibraryName(this.mainLibraryName)
