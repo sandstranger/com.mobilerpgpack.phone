@@ -36,9 +36,9 @@ struct VS_IN {
 
 struct VS_OUT {
 	float4 position		: POSITION;
-	float3 texcoord0	: TEXCOORD0;
-	float3 texcoord1	: TEXCOORD1;
-	float4 color		: COLOR0;
+	half3 texcoord0	: TEXCOORD0;
+	half3 texcoord1	: TEXCOORD1;
+	half4 color		: COLOR0;
 };
 
 void main( VS_IN vertex, out VS_OUT result ) {

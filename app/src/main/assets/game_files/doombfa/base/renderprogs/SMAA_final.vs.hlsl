@@ -31,6 +31,9 @@ If you have questions concerning this license or the applicable additional terms
 
 #define SMAA_INCLUDE_VS 1
 #define SMAA_INCLUDE_PS 0
+#if defined( TBR_MOBILE )
+#define SMAA_PRESET_LOW
+#endif
 #include "SMAA.inc.hlsl"
 
 struct VS_IN 
@@ -45,8 +48,8 @@ struct VS_IN
 struct VS_OUT
 {
 	float4 position : POSITION;
-	float2 texcoord0 : TEXCOORD0;
-	float4 texcoord1 : TEXCOORD1;
+	half2 texcoord0 : TEXCOORD0;
+	half4 texcoord1 : TEXCOORD1;
 };
 
 void main( VS_IN vertex, out VS_OUT result )

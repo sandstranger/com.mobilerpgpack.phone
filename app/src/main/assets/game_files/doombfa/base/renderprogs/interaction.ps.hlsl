@@ -39,13 +39,13 @@ uniform sampler2D samp4 : register(s4); // texture 5 is the light projection tex
 struct PS_IN
 {
 	half4 position	: VPOS;
-	half4 texcoord0	: TEXCOORD0_centroid;
-	half4 texcoord1	: TEXCOORD1_centroid;
-	half4 texcoord2	: TEXCOORD2_centroid;
-	half4 texcoord3	: TEXCOORD3_centroid;
-	half4 texcoord4	: TEXCOORD4_centroid;
-	half4 texcoord5	: TEXCOORD5_centroid;
-	half4 texcoord6	: TEXCOORD6_centroid;
+	float4 texcoord0	: TEXCOORD0_centroid;
+	float4 texcoord1	: TEXCOORD1_centroid;
+	float4 texcoord2	: TEXCOORD2_centroid;
+	float4 texcoord3	: TEXCOORD3_centroid;
+	float4 texcoord4	: TEXCOORD4_centroid;
+	float4 texcoord5	: TEXCOORD5_centroid;
+	float4 texcoord6	: TEXCOORD6_centroid;
 	half4 color		: COLOR0;
 };
 
@@ -103,7 +103,7 @@ void main( PS_IN fragment, out PS_OUT result )
 	const half roughness = specMapSRGB.r;
 	const half glossiness = 1.0 - roughness;
 
-	// the vast majority of real-world materials (anything not metal or gems) have F(0°)
+	// the vast majority of real-world materials (anything not metal or gems) have F(0Â°)
 	// values in a very narrow range (~0.02 - 0.08)
 	
 	// approximate non-metals with linear RGB 0.04 which is 0.08 * 0.5 (default in UE4)
@@ -174,10 +174,11 @@ void main( PS_IN fragment, out PS_OUT result )
 	OLD Blinn Phong
 	*/
 
-	const half specularPower = 10.0f;
-	
-	// RB: added abs
-	half3 specularContribution = _half3( pow( hdotN, specularPower ) );
+	// hdotN is clamped to [0, 1]; replace the general pow path with an exact multiply chain.
+	half specularBase2 = hdotN * hdotN;
+	half specularBase4 = specularBase2 * specularBase2;
+	half specularBase8 = specularBase4 * specularBase4;
+	half3 specularContribution = _half3( specularBase8 * specularBase2 );
 
 	half3 diffuseColor = diffuseMap * sRGBToLinearRGB( rpDiffuseModifier.xyz );
 	half3 specularColor = specMap.xyz * specularContribution * sRGBToLinearRGB( rpSpecularModifier.xyz );

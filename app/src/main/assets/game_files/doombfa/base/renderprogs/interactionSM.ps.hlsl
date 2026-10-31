@@ -43,16 +43,16 @@ uniform sampler2D				samp6 : register(s6); // texture 7 is the jitter texture
 struct PS_IN
 {
 	half4 position		: VPOS;
-	half4 texcoord0		: TEXCOORD0_centroid;
-	half4 texcoord1		: TEXCOORD1_centroid;
-	half4 texcoord2		: TEXCOORD2_centroid;
-	half4 texcoord3		: TEXCOORD3_centroid;
-	half4 texcoord4		: TEXCOORD4_centroid;
-	half4 texcoord5		: TEXCOORD5_centroid;
-	half4 texcoord6		: TEXCOORD6_centroid;
-	half4 texcoord7		: TEXCOORD7_centroid;
-	half4 texcoord8		: TEXCOORD8_centroid;
-	half4 texcoord9		: TEXCOORD9_centroid;
+	float4 texcoord0		: TEXCOORD0_centroid;
+	float4 texcoord1		: TEXCOORD1_centroid;
+	float4 texcoord2		: TEXCOORD2_centroid;
+	float4 texcoord3		: TEXCOORD3_centroid;
+	float4 texcoord4		: TEXCOORD4_centroid;
+	float4 texcoord5		: TEXCOORD5_centroid;
+	float4 texcoord6		: TEXCOORD6_centroid;
+	float4 texcoord7		: TEXCOORD7_centroid;
+	float4 texcoord8		: TEXCOORD8_centroid;
+	float4 texcoord9		: TEXCOORD9_centroid;
 	half4 color			: COLOR0;
 };
 
@@ -106,39 +106,33 @@ void main( PS_IN fragment, out PS_OUT result )
 	int shadowIndex = 0;
 	
 #if defined( LIGHT_POINT )
-	float3 toLightGlobal = normalize( fragment.texcoord8.xyz );
-	
-	float axis[6];
-	axis[0] = -toLightGlobal.x;
-	axis[1] =  toLightGlobal.x;
-	axis[2] = -toLightGlobal.y;
-	axis[3] =  toLightGlobal.y;
-	axis[4] = -toLightGlobal.z;
-	axis[5] =  toLightGlobal.z;
-
-	for( int i = 0; i < 6; i++ )
+	// Face selection depends only on the largest absolute component; normalization
+	// and a dynamically indexed six-element array are unnecessary here.
+	float3 toLightGlobal = fragment.texcoord8.xyz;
+	float3 absToLightGlobal = abs( toLightGlobal );
+	if( absToLightGlobal.x >= absToLightGlobal.y && absToLightGlobal.x >= absToLightGlobal.z )
 	{
-		if( axis[i] > axis[shadowIndex] )
-		{
-			shadowIndex = i;
-		}
+		shadowIndex = ( toLightGlobal.x > 0.0 ) ? 1 : 0;
+	}
+	else if( absToLightGlobal.y >= absToLightGlobal.z )
+	{
+		shadowIndex = ( toLightGlobal.y > 0.0 ) ? 3 : 2;
+	}
+	else
+	{
+		shadowIndex = ( toLightGlobal.z > 0.0 ) ? 5 : 4;
 	}
 
 #endif // #if defined( POINTLIGHT )
 
 #if defined( LIGHT_PARALLEL )
-	
 	float viewZ = -fragment.texcoord9.z;
-	
-	shadowIndex = 4;
-	for( int i = 0; i < 4; i++ )
-	{
-		if( viewZ < rpCascadeDistances[i] )
-		{
-			shadowIndex = i;
-			break;
-		}
-	}
+	// Cascades are ordered by increasing split distance; count passed splits
+	// instead of looping over a dynamically indexed uniform array.
+	shadowIndex = int( viewZ >= rpCascadeDistances.x )
+			 + int( viewZ >= rpCascadeDistances.y )
+			 + int( viewZ >= rpCascadeDistances.z )
+			 + int( viewZ >= rpCascadeDistances.w );
 #endif
 	
 #if 0
@@ -234,51 +228,55 @@ void main( PS_IN fragment, out PS_OUT result )
 	shadow *= stepSize;
 #else
 	
+#if defined( TBR_MOBILE )
+	// Four-tap Poisson kernel for a lower-cost soft-shadow comparison.
+	// Keep samples distributed around the disk to avoid a directional bias.
+	const float2 poissonDisk[4] = float2[](
+		float2( 0.6111618, 0.1050905 ),
+		float2( 0.3030421, -0.6292974 ),
+		float2( -0.6411021, -0.4748057 ),
+		float2( -0.1314865, 0.8404058 ) );
+	const int shadowSampleCount = 4;
+#else
 	const float2 poissonDisk[12] = float2[](
-	float2(0.6111618, 0.1050905),
-	float2(0.1088336, 0.1127091),
-	float2(0.3030421, -0.6292974),
-	float2(0.4090526, 0.6716492),
-	float2(-0.1608387, -0.3867823),
-	float2(0.7685862, -0.6118501),
-	float2(-0.1935026, -0.856501),
-	float2(-0.4028573, 0.07754025),
-	float2(-0.6411021, -0.4748057),
-	float2(-0.1314865, 0.8404058),
-	float2(-0.7005203, 0.4596822),
-	float2(-0.9713828, -0.06329931) );
-	
-	float shadow = 1.0;
-	
-	// RB: casting a float to int and using it as index can really kill the performance ...
-	float numSamples = 12.0f; //int(rpScreenCorrectionFactor.w);
-	float stepSize = 1.0 / numSamples;
-	
+		float2(0.6111618, 0.1050905),
+		float2(0.1088336, 0.1127091),
+		float2(0.3030421, -0.6292974),
+		float2(0.4090526, 0.6716492),
+		float2(-0.1608387, -0.3867823),
+		float2(0.7685862, -0.6118501),
+		float2(-0.1935026, -0.856501),
+		float2(-0.4028573, 0.07754025),
+		float2(-0.6411021, -0.4748057),
+		float2(-0.1314865, 0.8404058),
+		float2(-0.7005203, 0.4596822),
+		float2(-0.9713828, -0.06329931) );
+	const int shadowSampleCount = 12;
+#endif
+
+	// Preserve the original visibility floor and normalized Poisson kernel.
+	float shadow = float( shadowSampleCount ) / 12.0;
+	float stepSize = 1.0 / float( shadowSampleCount );
 	float4 jitterTC = ( fragment.position * rpScreenCorrectionFactor ) + rpJitterTexOffset;
-	float4 random = tex2D( samp6, jitterTC.xy ) * PI;
-	//float4 random = fragment.position;
-	
-	float2 rot;
-	rot.x = cos( random.x );
-	rot.y = sin( random.x );
-	
+	float randomAngle = tex2D( samp6, jitterTC.xy ).x * PI;
+
+	float2 rot = float2( cos( randomAngle ), sin( randomAngle ) );
 	float shadowTexelSize = rpScreenCorrectionFactor.z * rpJitterTexScale.x;
-    for( int i = 0; i < 12; i++ )
-    {
-        float2 jitter = poissonDisk[i];
+	for( int i = 0; i < shadowSampleCount; i++ )
+	{
+		float2 jitter = poissonDisk[i];
 		float2 jitterRotated;
 		jitterRotated.x = jitter.x * rot.x - jitter.y * rot.y;
 		jitterRotated.y = jitter.x * rot.y + jitter.y * rot.x;
-        
-		float4 shadowTexcoordJittered = float4( shadowTexcoord.xy + jitterRotated * shadowTexelSize, shadowTexcoord.z, shadowTexcoord.w );
-       
-        shadow += texture( samp5, shadowTexcoordJittered.xywz);
-    }
 
-   shadow *= stepSize;
+		float4 shadowTexcoordJittered = float4( shadowTexcoord.xy + jitterRotated * shadowTexelSize, shadowTexcoord.z, shadowTexcoord.w );
+		shadow += texture( samp5, shadowTexcoordJittered.xywz );
+	}
+	shadow *= stepSize;
+
 
 	//float shadow = texture( samp5, shadowTexcoord.xywz );
-#endif
+#endif // original disabled multi-tap experiment
 
 
 	half3 halfAngleVector = normalize( lightVector + viewVector );
@@ -362,10 +360,11 @@ void main( PS_IN fragment, out PS_OUT result )
 	OLD Blinn Phong
 	*/
 
-	const half specularPower = 10.0f;
-	
-	// RB: added abs
-	half3 specularContribution = _half3( pow( hdotN, specularPower ) );
+	// hdotN is clamped to [0, 1]; replace the general pow path with an exact multiply chain.
+	half specularBase2 = hdotN * hdotN;
+	half specularBase4 = specularBase2 * specularBase2;
+	half specularBase8 = specularBase4 * specularBase4;
+	half3 specularContribution = _half3( specularBase8 * specularBase2 );
 
 	half3 diffuseColor = diffuseMap * sRGBToLinearRGB( rpDiffuseModifier.xyz );
 	half3 specularColor = specMap.xyz * specularContribution * sRGBToLinearRGB( rpSpecularModifier.xyz );

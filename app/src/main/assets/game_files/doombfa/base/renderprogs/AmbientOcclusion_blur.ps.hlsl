@@ -143,23 +143,19 @@ float3 reconstructCSPosition( float2 S, float z )
 	return csP.xyz;
 }
 
-float getKey( int2 ssP )
+float getKey( int2 ssP, out float3 position )
 {
+    float depth = texelFetch( cszBuffer, ssP, 0 ).r;
+    position = reconstructCSPosition( float2( ssP ) + float2( 0.5 ), depth );
 #if PEELED_LAYER
-	float key = texelFetch( cszBuffer, ssP, 0 ).g;
+    // Preserve the peeled-layer key path; the normal position output remains
+    // the same red-channel position used by getPosition() in the original code.
+    float peeledDepth = texelFetch( cszBuffer, ssP, 0 ).g;
+    float3 keyPosition = reconstructCSPosition( float2( ssP ) + float2( 0.5 ), peeledDepth );
+    return clamp( keyPosition.z * ( 1.0 / FAR_PLANE_Z ), 0.0, 1.0 );
 #else
-	float key = texelFetch( cszBuffer, ssP, 0 ).r;
+    return clamp( position.z * ( 1.0 / FAR_PLANE_Z ), 0.0, 1.0 );
 #endif
-	
-#if 0
-	key = reconstructCSZ( key );
-#else
-	float3 P = reconstructCSPosition( float2( ssP ) + float2( 0.5 ), key );
-	key = P.z;
-#endif
-	
-	key = clamp( key * ( 1.0 / FAR_PLANE_Z ), 0.0, 1.0 );
-	return key;
 }
 
 float3 positionFromKey( float key, int2 ssC )
@@ -181,7 +177,7 @@ float3 getPosition( int2 ssP, sampler2D cszBuffer )
 	return P;
 }
 
-float calculateBilateralWeight( float key, float tapKey, int2 tapLoc, float3 n_C, float3 C )
+float calculateBilateralWeight( float key, float tapKey, int2 tapLoc, float3 tapC, float3 n_C, float3 C )
 {
 	// range domain (the "bilateral" weight). As depth difference increases, decrease weight.
 	float depthWeight = max( 0.0, 1.0 - ( EDGE_SHARPNESS * 2000.0 ) * abs( tapKey - key ) );
@@ -203,7 +199,6 @@ float calculateBilateralWeight( float key, float tapKey, int2 tapLoc, float3 n_C
 	float lowDistanceThreshold2 = 0.001;
 	
 	//float3 tapC = positionFromKey( tapKey, tapLoc, projInfo );
-	float3 tapC = getPosition( tapLoc, cszBuffer );
 	
 	// Change in position in camera space
 	float3 dq = C - tapC;
@@ -215,8 +210,8 @@ float calculateBilateralWeight( float key, float tapKey, int2 tapLoc, float3 n_C
 	// How far off the expected plane (on the perpendicular) is this point?  Max value is unbounded.
 	float planeError = max( abs( dot( dq, tapN_C ) ), abs( dot( dq, n_C ) ) );
 	
-	planeWeight = ( distance2 < lowDistanceThreshold2 ) ? 1.0 :
-				  pow( max( 0.0, 1.0 - EDGE_SHARPNESS * 2.0 * k_plane * planeError / sqrt( distance2 ) ), 2.0 );
+	float planeFactor = max( 0.0, 1.0 - EDGE_SHARPNESS * 2.0 * k_plane * planeError * rsqrt( max( distance2, lowDistanceThreshold2 ) ) );
+	planeWeight = ( distance2 < lowDistanceThreshold2 ) ? 1.0 : planeFactor * planeFactor;
 				  
 				  
 #endif
@@ -281,7 +276,8 @@ void main( PS_IN fragment, out PS_OUT result )
 #endif
 	
 #if 0
-	float key = getKey( ssC );
+	float3 centerPosition;
+	float key = getKey( ssC, centerPosition );
 	float3 C = positionFromKey( key, ssC );
 #else
 	float3 C = getPosition( ssC, cszBuffer );
@@ -322,13 +318,14 @@ void main( PS_IN fragment, out PS_OUT result )
 			temp = texelFetch( source, tapLoc, 0 );
 			
 			
-			float tapKey = getKey( tapLoc );
+			float3 tapC;
+            float tapKey = getKey( tapLoc, tapC );
 			VALUE_TYPE value  = temp.VALUE_COMPONENTS;
 			
 			// spatial domain: offset kernel tap
 			float weight = 0.3 + kernel[abs( r )];
 			
-			float bilateralWeight = calculateBilateralWeight( key, tapKey, tapLoc, n_C, C );
+			float bilateralWeight = calculateBilateralWeight( key, tapKey, tapLoc, tapC, n_C, C );
 			
 			weight *= bilateralWeight;
 			sum += value * weight;
@@ -342,7 +339,8 @@ void main( PS_IN fragment, out PS_OUT result )
 	{
 		int2 tapLoc = ssC + int2( rpJitterTexScale.xy ) * ( r * SCALE );
 		temp = texelFetch( source, tapLoc, 0 );
-		float      tapKey = getKey( tapLoc );
+		float3 tapC;
+		float      tapKey = getKey( tapLoc, tapC );
 	
 		VALUE_TYPE value  = temp.VALUE_COMPONENTS;
 	
@@ -350,7 +348,7 @@ void main( PS_IN fragment, out PS_OUT result )
 		float weight = 0.3 + kernel[abs( r )];
 	
 		// range domain (the "bilateral" weight). As depth difference increases, decrease weight.
-		float bilateralWeight = calculateBilateralWeight( key, tapKey, tapLoc, n_C, C );
+		float bilateralWeight = calculateBilateralWeight( key, tapKey, tapLoc, tapC, n_C, C );
 		bilateralWeight = min( lastBilateralWeight, bilateralWeight );
 		lastBilateralWeight = bilateralWeight;
 		weight *= bilateralWeight;
@@ -363,14 +361,15 @@ void main( PS_IN fragment, out PS_OUT result )
 	{
 		int2 tapLoc = ssC + int2( rpJitterTexScale.xy ) * ( r * SCALE );
 		temp = texelFetch( source, tapLoc, 0 );
-		float      tapKey = getKey( tapLoc );
+		float3 tapC;
+		float      tapKey = getKey( tapLoc, tapC );
 		VALUE_TYPE value  = temp.VALUE_COMPONENTS;
 	
 		// spatial domain: offset kernel tap
 		float weight = 0.3 + kernel[abs( r )];
 	
 		// range domain (the "bilateral" weight). As depth difference increases, decrease weight.
-		float bilateralWeight = calculateBilateralWeight( key, tapKey, tapLoc, n_C, C );
+		float bilateralWeight = calculateBilateralWeight( key, tapKey, tapLoc, tapC, n_C, C );
 		bilateralWeight = min( lastBilateralWeight, bilateralWeight );
 		lastBilateralWeight = bilateralWeight;
 		weight *= bilateralWeight;

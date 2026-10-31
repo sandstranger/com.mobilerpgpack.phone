@@ -17,18 +17,21 @@
 #define HIGH_QUALITY 0
 
 #if HIGH_QUALITY
-// Total number of direct samples to take at each pixel
-#define NUM_SAMPLES 39
-
-// This is the number of turns around the circle that the spiral pattern makes.  This should be prime to prevent
-// taps from lining up.  This particular choice was tuned for NUM_SAMPLES == 9
-#define NUM_SPIRAL_TURNS 14
-
+#if defined( TBR_MOBILE )
+#define NUM_SAMPLES 24
+#define NUM_SPIRAL_TURNS 13
 #else
-
+#define NUM_SAMPLES 39
+#define NUM_SPIRAL_TURNS 14
+#endif
+#else
+#if defined( TBR_MOBILE )
+#define NUM_SAMPLES 8
+#define NUM_SPIRAL_TURNS 5
+#else
 #define NUM_SAMPLES 11
 #define NUM_SPIRAL_TURNS 7
-
+#endif
 #endif
 
 // If using depth mip levels, the log of the maximum pixel offset before we need to switch to a lower
@@ -190,18 +193,6 @@ void sampleBothNormals( sampler2D normalBuffer, int2 ssC, int mipLevel, out floa
 	n_tap0 = decode16( encodedNormals.xy );
 	n_tap1 = decode16( encodedNormals.zw );
 }
-
-/** Returns a unit vector and a screen-space radius for the tap on a unit disk (the caller should scale by the actual disk radius) */
-float2 tapLocation( int sampleNumber, float spinAngle, float radialJitter, out float ssR )
-{
-	// Radius relative to ssR
-	float alpha = ( float( sampleNumber ) + radialJitter) * ( 1.0 / float( NUM_SAMPLES ) );
-	float angle = alpha * ( float( NUM_SPIRAL_TURNS ) * 6.28 ) + spinAngle;
-	
-	ssR = alpha;
-	return float2( cos( angle ), sin( angle ) );
-}
-
 
 /** Read the camera-space position of the point at screen-space pixel ssP */
 float3 getPosition( int2 ssP, sampler2D cszBuffer )
@@ -408,9 +399,8 @@ void sampleIndirectLight
   in float3           C_peeled,
   in float3           n_C_peeled,
   in float            ssDiskRadius,
-  in int              tapIndex,
-  in float            randomPatternRotationAngle,
-  in float            radialJitter,
+  in float            sampleRadius,
+  in float2           unitOffset,
   in sampler2D        cszBuffer,
   in sampler2D        nBuffer,
   in sampler2D        bounceBuffer,
@@ -423,10 +413,9 @@ void sampleIndirectLight
 	// Not used yet, quality optimization in progress...
 	float visibilityWeightPeeled0, visibilityWeightPeeled1;
 	
-	// Offset on the unit disk, spun for this pixel
-	float ssR;
-	float2 unitOffset = tapLocation( tapIndex, randomPatternRotationAngle, radialJitter, ssR );
-	ssR *= ssDiskRadius;
+	// Offset direction is advanced incrementally by the caller, avoiding
+	// per-tap sine/cosine evaluation.
+	float ssR = sampleRadius * ssDiskRadius;
 	int2 ssP = int2( ssR * unitOffset ) + ssC;
 	
 #if USE_DEPTH_PEEL
@@ -517,19 +506,24 @@ void main( PS_IN fragment, out PS_OUT result )
 	randomPatternRotationAngle += rpJitterTexOffset.x;
 #endif
 	
-	float radialJitter = fract( sin( gl_FragCoord.x * 1e2 +
-#if TEMPORALLY_VARY_TAPS
-									 rpJitterTexOffset.x +
-#endif
-									 gl_FragCoord.y ) * 1e5 + sin( gl_FragCoord.y * 1e3 ) * 1e3 ) * 0.8 + 0.1;
+	float radialJitter = rand( float2( ssC ) ) * 0.8 + 0.1;
 									 
 	float numSamplesUsed = 0.0;
 	float3 irradianceSum = float3( 0 );
 	float3 ii_peeled = float3( 0 );
 	float peeledSum = 0.0;
+	const float spiralAngle = float( NUM_SPIRAL_TURNS ) * 6.28;
+	const float spiralAngleStep = spiralAngle / float( NUM_SAMPLES );
+	const float firstSampleAngle = randomPatternRotationAngle + ( radialJitter / float( NUM_SAMPLES ) ) * spiralAngle;
+	const float2 spiralStep = float2( cos( spiralAngleStep ), sin( spiralAngleStep ) );
+	float2 tapDirection = float2( cos( firstSampleAngle ), sin( firstSampleAngle ) );
 	for( int i = 0; i < NUM_SAMPLES; ++i )
 	{
-		sampleIndirectLight( ssC, C, n_C, C_peeled, n_C_peeled, ssDiskRadius, i, randomPatternRotationAngle, radialJitter, CS_Z_buffer, normal_buffer, colorBuffer, irradianceSum, numSamplesUsed, ii_peeled, peeledSum );
+		float tapRadius = ( float( i ) + radialJitter ) / float( NUM_SAMPLES );
+		sampleIndirectLight( ssC, C, n_C, C_peeled, n_C_peeled, ssDiskRadius, tapRadius, tapDirection, CS_Z_buffer, normal_buffer, colorBuffer, irradianceSum, numSamplesUsed, ii_peeled, peeledSum );
+		tapDirection = float2(
+			tapDirection.x * spiralStep.x - tapDirection.y * spiralStep.y,
+			tapDirection.x * spiralStep.y + tapDirection.y * spiralStep.x );
 	}
 	
 	const float solidAngleHemisphere = 2.0 * PI;

@@ -41,12 +41,15 @@
 #define USE_OCT16 0
 #define USE_MIPMAPS 1
 
-// Total number of direct samples to take at each pixel
+// The mobile path uses fewer taps and a prime spiral count to reduce texture
+// and arithmetic work while retaining a well-distributed sampling pattern.
+#if defined( TBR_MOBILE )
+#define NUM_SAMPLES 8
+#define NUM_SPIRAL_TURNS 5
+#else
 #define NUM_SAMPLES 11
-
-// This is the number of turns around the circle that the spiral pattern makes.  This should be prime to prevent
-// taps from lining up.  This particular choice was tuned for NUM_SAMPLES == 9
 #define NUM_SPIRAL_TURNS 7
+#endif
 
 // If using depth mip levels, the log of the maximum pixel offset before we need to switch to a lower
 // miplevel to maintain reasonable spatial locality in the cache
@@ -171,19 +174,6 @@ float3 sampleNormal( sampler2D normalBuffer, int2 ssC, int mipLevel )
 #endif
 }
 
-/** Returns a unit vector and a screen-space radius for the tap on a unit disk
-    (the caller should scale by the actual disk radius) */
-float2 tapLocation( int sampleNumber, float spinAngle, out float ssR )
-{
-	// Radius relative to ssR
-	float alpha = ( float( sampleNumber ) + 0.5 ) * ( 1.0 / float( NUM_SAMPLES ) );
-	float angle = alpha * ( float( NUM_SPIRAL_TURNS ) * 6.28 ) + spinAngle;
-	
-	ssR = alpha;
-	return float2( cos( angle ), sin( angle ) );
-}
-
-
 /** Read the camera-space position of the point at screen-space pixel ssP */
 float3 getPosition( int2 ssP, sampler2D cszBuffer )
 {
@@ -297,12 +287,8 @@ float aoValueFromPositionsAndNormal( float3 C, float3 n_C, float3 Q )
 
     When sampling from the peeled depth buffer, make sure ssDiskRadius has been premultiplied by cszBufferScale
 */
-float sampleAO( int2 issC, in float3 C, in float3 n_C, in float ssDiskRadius, in int tapIndex, in float randomPatternRotationAngle, in sampler2D cszBuffer, in float invCszBufferScale )
+float sampleAO( int2 issC, in float3 C, in float3 n_C, in float ssDiskRadius, in float ssR, in float2 unitOffset, in sampler2D cszBuffer, in float invCszBufferScale )
 {
-	// Offset on the unit disk, spun for this pixel
-	float ssR;
-	float2 unitOffset = tapLocation( tapIndex, randomPatternRotationAngle, ssR );
-	
 	// Ensure that the taps are at least 1 pixel away
 	ssR = max( 0.75, ssR * ssDiskRadius );
 	
@@ -363,7 +349,7 @@ void main( PS_IN fragment, out PS_OUT result )
 #if 1
 	float3 n_C = sampleNormal( samp0, ssP, 0 );
 	
-	if( length( n_C ) < 0.01 )
+	if( dot( n_C, n_C ) < 0.0001 )
 	{
 		visibility = 1.0;
 		return;
@@ -418,9 +404,18 @@ void main( PS_IN fragment, out PS_OUT result )
 #endif
 	
 	float sum = 0.0;
+	const float spiralAngle = float( NUM_SPIRAL_TURNS ) * 6.28;
+	const float spiralAngleStep = spiralAngle / float( NUM_SAMPLES );
+	const float firstSampleAngle = randomPatternRotationAngle + ( 0.5 / float( NUM_SAMPLES ) ) * spiralAngle;
+	const float2 spiralStep = float2( cos( spiralAngleStep ), sin( spiralAngleStep ) );
+	float2 tapDirection = float2( cos( firstSampleAngle ), sin( firstSampleAngle ) );
 	for( int i = 0; i < NUM_SAMPLES; ++i )
 	{
-		sum += sampleAO( ssP, C, n_C, ssDiskRadius, i, randomPatternRotationAngle, CS_Z_buffer, 1.0 );
+		float tapRadius = ( float( i ) + 0.5 ) / float( NUM_SAMPLES );
+		sum += sampleAO( ssP, C, n_C, ssDiskRadius, tapRadius, tapDirection, CS_Z_buffer, 1.0 );
+		tapDirection = float2(
+			tapDirection.x * spiralStep.x - tapDirection.y * spiralStep.y,
+			tapDirection.x * spiralStep.y + tapDirection.y * spiralStep.x );
 	}
 	
 #if HIGH_QUALITY

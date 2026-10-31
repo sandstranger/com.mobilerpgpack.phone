@@ -34,7 +34,7 @@ uniform sampler2D samp0		: register(s0);
 struct PS_IN
 {
 	float4 position : VPOS;
-	float2 texcoord0 : TEXCOORD0_centroid;
+	half2 texcoord0 : TEXCOORD0_centroid;
 };
 
 struct PS_OUT
@@ -66,62 +66,65 @@ void main( PS_IN fragment, out PS_OUT result )
 {
 	float2 st = fragment.texcoord0;
 	
-	// base color with tone mapping applied
-	float4 color = tex2D( samp0, st );
-	
-	const float gaussFact[9] = float[9](0.13298076, 0.12579441, 0.10648267, 0.08065691, 0.05467002, 0.03315905, 0.01799699, 0.00874063, 0.00379866);
-	
-	const float3 chromaticOffsets[9] = float3[](
-	float3(0.5, 0.5, 0.5), // w
-	float3(0.8, 0.3, 0.3),
-//	float3(1.0, 0.2, 0.2), // r
-	float3(0.5, 0.2, 0.8),
-	float3(0.2, 0.2, 1.0), // b
-	float3(0.2, 0.3, 0.9),
-	float3(0.2, 0.9, 0.2), // g
-	float3(0.3, 0.5, 0.3),
-	float3(0.3, 0.5, 0.3),
-	float3(0.3, 0.5, 0.3)
-	//float3(0.3, 0.5, 0.3)
-	);
-	
-	float3 sumColor = float3( 0.0 );
-	float3 sumSpectrum = float3( 0.0 );
+	// The mobile and desktop kernels sample their own taps below.
+#if defined( TBR_MOBILE )
+	// Pair adjacent Gaussian taps into one bilinear lookup. Weighted spectral
+	// offsets preserve the broad chromatic profile with 9 reads instead of 17.
+	const float mobileWeights[5] = float[5](
+		0.13298076, 0.23227708, 0.13532693, 0.05115604, 0.01253929 );
+	const float mobileOffsets[5] = float[5](
+		0.0, 1.45842952, 3.40398478, 5.35180577, 7.30294060 );
+	const float3 mobileSpectrum[5] = float3[](
+		float3( 0.5, 0.5, 0.5 ),
+		float3( 0.66247114, 0.25415705, 0.52921476 ),
+		float3( 0.2, 0.24039848, 0.95960152 ),
+		float3( 0.23518058, 0.75927769, 0.23518058 ),
+		float3( 0.3, 0.5, 0.3 ) );
 
-	const int tap = 4;
-	const int samples = 9;
-	
-	float scale = 13.0; // bloom width
-	const float weightScale = 1.9; // bloom strength
-	
-	for( int i = 0; i < samples; i++ )
-    {
-	    //float t = ( ( float( 4 + ( i ) ) ) / ( float( samples ) - 1.0 ) );
-		//float t = log2( float( i ) / ( float( samples ) - 1.0 ) );
-		//float t = ( float( i ) / ( float( samples ) - 1.0 ) );
-		
-		//float3 so = spectrumoffset( t );
-		float3 so = chromaticOffsets[ i ];
-		float4 color = tex2D( samp0, st + float2( float( i ), 0 ) * rpWindowCoord.xy * scale );
-			
-		float weight = gaussFact[ i ];
-		sumColor += color.rgb * ( so.rgb * weight * weightScale );
+	const float scale = 13.0;
+	const float weightScale = 1.9;
+	float3 sumColor = float3( 0.0 );
+	for( int i = 0; i < 5; ++i )
+	{
+		float2 offset = float2( mobileOffsets[i], 0.0 ) * rpWindowCoord.xy * scale;
+		float weight = mobileWeights[i] * weightScale;
+		float4 positiveColor = tex2D( samp0, st + offset );
+		sumColor += positiveColor.rgb * ( mobileSpectrum[i] * weight );
+		if( i > 0 )
+		{
+			float4 negativeColor = tex2D( samp0, st - offset );
+			sumColor += negativeColor.rgb * ( mobileSpectrum[i] * weight );
+		}
 	}
-	
-#if 1
-	for( int i = 1; i < samples; i++ )
-    {
-	    //float t = ( ( float( 4 + ( i ) ) ) / ( float( samples ) - 1.0 ) );
-		
-		//float3 so = spectrumoffset( t );
-		float3 so = chromaticOffsets[ i ];
-		float4 color = tex2D( samp0, st + float2( float( -i ), 0 ) * rpWindowCoord.xy * scale );
-			
-		float weight = gaussFact[ i ];
-		sumColor += color.rgb * ( so.rgb * weight * weightScale );
+#else
+	const float gaussFact[9] = float[9](0.13298076, 0.12579441, 0.10648267, 0.08065691, 0.05467002, 0.03315905, 0.01799699, 0.00874063, 0.00379866);
+	const float3 chromaticOffsets[9] = float3[](
+		float3(0.5, 0.5, 0.5),
+		float3(0.8, 0.3, 0.3),
+		float3(0.5, 0.2, 0.8),
+		float3(0.2, 0.2, 1.0),
+		float3(0.2, 0.3, 0.9),
+		float3(0.2, 0.9, 0.2),
+		float3(0.3, 0.5, 0.3),
+		float3(0.3, 0.5, 0.3),
+		float3(0.3, 0.5, 0.3) );
+	const int samples = 9;
+	const float scale = 13.0;
+	const float weightScale = 1.9;
+	float3 sumColor = float3( 0.0 );
+	for( int i = 0; i < samples; ++i )
+	{
+		float3 so = chromaticOffsets[i];
+		float4 color = tex2D( samp0, st + float2( float( i ), 0.0 ) * rpWindowCoord.xy * scale );
+		sumColor += color.rgb * ( so * gaussFact[i] * weightScale );
+	}
+	for( int i = 1; i < samples; ++i )
+	{
+		float3 so = chromaticOffsets[i];
+		float4 color = tex2D( samp0, st + float2( -float( i ), 0.0 ) * rpWindowCoord.xy * scale );
+		sumColor += color.rgb * ( so * gaussFact[i] * weightScale );
 	}
 #endif
-	
 	result.color = float4( sumColor, 1.0 );
 	//result.color = float4( sumColor / float(samples), 1.0 );
 	//result.color = float4( sumColor / sumSpectrum, 1.0 );

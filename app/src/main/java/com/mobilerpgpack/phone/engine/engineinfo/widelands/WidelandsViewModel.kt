@@ -82,7 +82,7 @@ class WidelandsViewModel : ViewModel(), KoinComponent {
     }
 
     private companion object {
-        const val ZIP_FILE_ID = "1K45XBWFyOF1YdbXA6dJVe6yMm5KVOnAQ"
-        const val ZIP_FILE_SHA256 = "bc8b44c208e0e677e01ff0fa34d5943d8af418f4ecfcef1c31d4042e2efb0a9d"
+        const val ZIP_FILE_ID = "1lrYm6t6bf6kpavxaEZUBbWOOezuYpKl7"
+        const val ZIP_FILE_SHA256 = "9ca3d79b0560ecee7b361b76d431567f23f6366126aeb52398273da4719a57ab"
     }
 }

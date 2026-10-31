@@ -35,7 +35,7 @@ uniform sampler2D	samp1 : register(s1); // texture 1 is heatmap
 struct PS_IN
 {
 	float4 position : VPOS;
-	float2 texcoord0 : TEXCOORD0_centroid;
+	half2 texcoord0 : TEXCOORD0_centroid;
 };
 
 struct PS_OUT
@@ -141,11 +141,11 @@ void main( PS_IN fragment, out PS_OUT result )
 	//float exposureOffset = rpScreenCorrectionFactor.w;
 	
 	float avgLuminance = max( hdrAverageLuminance, 0.001 );
-	float linearExposure = ( hdrKey / avgLuminance );
-	float exposure = log2( max( linearExposure, 0.0001 ) );
+	float linearExposure = max( hdrKey / avgLuminance, 0.0001 );
 	
-	//exposure = -2.0;
-	float3 exposedColor = exp2( exposure ) * color.rgb;
+	// exp2(log2(x)) is an identity for positive x; keep exposure linear
+	// and avoid two transcendental operations in this full-screen pass.
+	float3 exposedColor = linearExposure * color.rgb;
 	
 	color.rgb = ACESFilm( exposedColor );
 	

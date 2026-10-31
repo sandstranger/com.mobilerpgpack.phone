@@ -45,7 +45,7 @@ uniform float4 rpUser6 : register( c134 );
 
 struct PS_IN {
 	float4 position : VPOS;
-	float2 texcoord0 : TEXCOORD0_centroid;
+	half2 texcoord0 : TEXCOORD0_centroid;
 };
 
 struct PS_OUT {	

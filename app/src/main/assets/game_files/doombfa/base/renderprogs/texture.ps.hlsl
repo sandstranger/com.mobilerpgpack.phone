@@ -32,7 +32,7 @@ uniform sampler2D samp0 : register(s0);
 
 struct PS_IN {
 	float4 position : VPOS;
-	float2 texcoord0 : TEXCOORD0_centroid;
+	half2 texcoord0 : TEXCOORD0_centroid;
 };
 
 struct PS_OUT {
@@ -40,7 +40,8 @@ struct PS_OUT {
 };
 
 void main( PS_IN fragment, out PS_OUT result ) {
-	result.color = tex2D( samp0, fragment.texcoord0 ) * rpColor;
+	half4 color = half4( tex2D( samp0, fragment.texcoord0 ) ) * half4( rpColor );
+	result.color = color;
 	//result.color = textureLod( samp0, fragment.texcoord0, 2.0 ) * rpColor;
 	//result.color = float4( 0.0, 1.0, 0.0, 1.0 ) * rpColor;
 }

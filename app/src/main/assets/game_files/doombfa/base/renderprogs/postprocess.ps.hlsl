@@ -36,7 +36,7 @@ uniform sampler2D samp1		: register(s1);
 struct PS_IN
 {
 	float4 position : VPOS;
-	float2 texcoord0 : TEXCOORD0_centroid;
+	half2 texcoord0 : TEXCOORD0_centroid;
 };
  
 struct PS_OUT
@@ -59,75 +59,71 @@ struct PS_OUT
 
 #define USE_FILMGRAIN 						1
 
-float3 overlay( float3 a, float3 b )
+half3 overlay( half3 a, half3 b )
 {
-	//return pow( abs( b ), 2.2 ) < 0.5 ? ( 2.0 * a * b ) : float3( 1.0, 1.0, 1.0 ) - float3( 2.0, 2.0, 2.0 ) * ( float3( 1.0, 1.0, 1.0 ) - a ) * ( 1.0 - b );
-	//return abs( b ) < 0.5 ? ( 2.0 * a * b ) : float3( 1.0, 1.0, 1.0 ) - float3( 2.0, 2.0, 2.0 ) * ( float3( 1.0, 1.0, 1.0 ) - a ) * ( 1.0 - b );
-	
-	return float3(
-			   b.x < 0.5 ? ( 2.0 * a.x * b.x ) : ( 1.0 - 2.0 * ( 1.0 - a.x ) * ( 1.0 - b.x ) ),
-			   b.y < 0.5 ? ( 2.0 * a.y * b.y ) : ( 1.0 - 2.0 * ( 1.0 - a.y ) * ( 1.0 - b.y ) ),
-			   b.z < 0.5 ? ( 2.0 * a.z * b.z ) : ( 1.0 - 2.0 * ( 1.0 - a.z ) * ( 1.0 - b.z ) ) );
+	// Branchless overlay blend. step() selects the low/high branch per channel.
+	half3 lowResult = 2.0 * a * b;
+	half3 highResult = 1.0 - 2.0 * ( 1.0 - a ) * ( 1.0 - b );
+	half3 lowMask = 1.0 - step( half3( 0.5 ), b );
+	return lerp( highResult, lowResult, lowMask );
 }
 
 
-void TechnicolorPass( inout float4 color )
+void TechnicolorPass( inout half4 color )
 {
-	const float3 cyanFilter = float3( 0.0, 1.30, 1.0 );
-	const float3 magentaFilter = float3( 1.0, 0.0, 1.05 );
-	const float3 yellowFilter = float3( 1.6, 1.6, 0.05 );
-	const float3 redOrangeFilter = float3( 1.05, 0.62, 0.0 );
-	const float3 greenFilter = float3( 0.3, 1.0, 0.0 );
+	const half3 cyanFilter = half3( 0.0, 1.30, 1.0 );
+	const half3 magentaFilter = half3( 1.0, 0.0, 1.05 );
+	const half3 yellowFilter = half3( 1.6, 1.6, 0.05 );
+	const half3 redOrangeFilter = half3( 1.05, 0.62, 0.0 );
+	const half3 greenFilter = half3( 0.3, 1.0, 0.0 );
 	
-	float2 redNegativeMul   = color.rg * ( 1.0 / ( Technicolor_RedNegativeAmount * Technicolor_Power ) );
-	float2 greenNegativeMul = color.rg * ( 1.0 / ( Technicolor_GreenNegativeAmount * Technicolor_Power ) );
-	float2 blueNegativeMul  = color.rb * ( 1.0 / ( Technicolor_BlueNegativeAmount * Technicolor_Power ) );
+	half2 redNegativeMul   = color.rg * ( 1.0 / ( Technicolor_RedNegativeAmount * Technicolor_Power ) );
+	half2 greenNegativeMul = color.rg * ( 1.0 / ( Technicolor_GreenNegativeAmount * Technicolor_Power ) );
+	half2 blueNegativeMul  = color.rb * ( 1.0 / ( Technicolor_BlueNegativeAmount * Technicolor_Power ) );
 	
-	float redNegative   = dot( redOrangeFilter.rg, redNegativeMul );
-	float greenNegative = dot( greenFilter.rg, greenNegativeMul );
-	float blueNegative  = dot( magentaFilter.rb, blueNegativeMul );
+	half redNegative   = dot( redOrangeFilter.rg, redNegativeMul );
+	half greenNegative = dot( greenFilter.rg, greenNegativeMul );
+	half blueNegative  = dot( magentaFilter.rb, blueNegativeMul );
 	
-	float3 redOutput   = float3( redNegative ) + cyanFilter;
-	float3 greenOutput = float3( greenNegative ) + magentaFilter;
-	float3 blueOutput  = float3( blueNegative ) + yellowFilter;
+	half3 redOutput   = half3( redNegative ) + cyanFilter;
+	half3 greenOutput = half3( greenNegative ) + magentaFilter;
+	half3 blueOutput  = half3( blueNegative ) + yellowFilter;
 	
-	float3 result = redOutput * greenOutput * blueOutput;
-	color.rgb = lerp( color.rgb, result, Technicolor_Amount );
+	half3 technicolorResult = redOutput * greenOutput * blueOutput;
+	color.rgb = lerp( color.rgb, technicolorResult, half( Technicolor_Amount ) );
 }
 
 
-void VibrancePass( inout float4 color )
+void VibrancePass( inout half4 color )
 {
-	const float3 vibrance = Vibrance_RGB_Balance * Vibrance;
+	const half3 vibrance = half3( Vibrance_RGB_Balance * Vibrance );
 	
-	float Y = dot( LUMINANCE_SRGB, color );
+	half Y = dot( LUMINANCE_SRGB, color );
 	
-	float minColor = min( color.r, min( color.g, color.b ) );
-	float maxColor = max( color.r, max( color.g, color.b ) );
+	half minColor = min( color.r, min( color.g, color.b ) );
+	half maxColor = max( color.r, max( color.g, color.b ) );
 	
-	float colorSat = maxColor - minColor;
+	half colorSat = maxColor - minColor;
 	
-	color.rgb = lerp( float3( Y ), color.rgb, ( 1.0 + ( vibrance * ( 1.0 - ( sign( vibrance ) * colorSat ) ) ) ) );
+	color.rgb = lerp( half3( Y ), color.rgb, ( 1.0 + ( vibrance * ( 1.0 - ( sign( vibrance ) * colorSat ) ) ) ) );
 }
 
 
-void FilmgrainPass( inout float4 color )
+void FilmgrainPass( inout half4 color )
 {
 	float4 jitterTC = ( fragment.position * rpScreenCorrectionFactor ) + rpJitterTexOffset;
 	//float4 jitterTC = ( fragment.position * ( 1.0 / 128.0 ) ) + rpJitterTexOffset;
 	//float2 jitterTC = fragment.position.xy * 2.0;
 	//jitterTC.x *= rpWindowCoord.y / rpWindowCoord.x;
 	
-	float4 noiseColor = tex2D( samp1, fragment.position.xy + jitterTC.xy );
-	float Y = noiseColor.r;
+	half4 noiseColor = tex2D( samp1, fragment.position.xy + jitterTC.xy );
 	//float Y = dot( LUMINANCE_VECTOR, noiseColor );
 	//noiseColor.rgb = float3( Y, Y, Y );
 	
-	float exposureFactor = 1.0;
-	exposureFactor = sqrt( exposureFactor );
-	const float noiseIntensity = 1.7; //rpScreenCorrectionFactor.z;
+	const half exposureFactor = 1.0;
+	const half noiseIntensity = 1.7; //rpScreenCorrectionFactor.z;
 	
-	float t = lerp( 3.5 * noiseIntensity, 1.13 * noiseIntensity, exposureFactor );
+	half t = lerp( 3.5 * noiseIntensity, 1.13 * noiseIntensity, exposureFactor );
 	color.rgb = overlay( color.rgb, lerp( float3( 0.5 ), noiseColor.rgb, t ) );
 	
 	//color.rgb = noiseColor.rgb;
@@ -137,10 +133,10 @@ void FilmgrainPass( inout float4 color )
 
 void main( PS_IN fragment, out PS_OUT result )
 {
-	float2 tCoords = fragment.texcoord0;
+	half2 tCoords = fragment.texcoord0;
 	
 	// base color with tone mapping and other post processing applied
-	float4 color = tex2D( samp0, tCoords );
+	half4 color = tex2D( samp0, tCoords );
 	
 #if USE_TECHNICOLOR
 	TechnicolorPass( color );

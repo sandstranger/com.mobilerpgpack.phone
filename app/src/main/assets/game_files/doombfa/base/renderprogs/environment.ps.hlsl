@@ -32,9 +32,9 @@ uniform samplerCUBE	samp0 : register(s0); // texture 0 is the cube map
 
 struct PS_IN {
 	float4 position		: VPOS;
-	float3 texcoord0	: TEXCOORD0_centroid;
-	float3 texcoord1	: TEXCOORD1_centroid;
-	float4 color		: COLOR0;
+	half3 texcoord0	: TEXCOORD0_centroid;
+	half3 texcoord1	: TEXCOORD1_centroid;
+	half4 color		: COLOR0;
 };
 
 struct PS_OUT {
@@ -43,14 +43,14 @@ struct PS_OUT {
 
 void main( PS_IN fragment, out PS_OUT result ) {
 
-	float3 globalNormal = normalize( fragment.texcoord1 );
-	float3 globalEye = normalize( fragment.texcoord0 );
+	half3 globalNormal = normalize( fragment.texcoord1 );
+	half3 globalEye = normalize( fragment.texcoord0 );
 
-	float3 reflectionVector = _float3( dot3( globalEye, globalNormal ) );
+	half3 reflectionVector = _half3( dot3( globalEye, globalNormal ) );
 	reflectionVector *= globalNormal;
 	reflectionVector = ( reflectionVector * 2.0f ) - globalEye;
 
-	float4 envMap = texCUBE( samp0, reflectionVector );
+	half4 envMap = texCUBE( samp0, reflectionVector );
 
-	result.color = float4( sRGBToLinearRGB( envMap.xyz ), 1.0f ) * fragment.color;
+	result.color = half4( sRGBToLinearRGB( envMap.xyz ), 1.0f ) * half4( fragment.color );
 }

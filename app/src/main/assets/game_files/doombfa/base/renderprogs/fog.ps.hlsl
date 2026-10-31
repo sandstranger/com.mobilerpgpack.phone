@@ -33,8 +33,8 @@ uniform sampler2D samp1 : register(s1);
 
 struct PS_IN {
 	float4 position : VPOS;
-	float2 texcoord0 : TEXCOORD0_centroid;
-	float2 texcoord1 : TEXCOORD1_centroid;
+	half2 texcoord0 : TEXCOORD0_centroid;
+	half2 texcoord1 : TEXCOORD1_centroid;
 };
 
 struct PS_OUT {
@@ -42,6 +42,7 @@ struct PS_OUT {
 };
 
 void main( PS_IN fragment, out PS_OUT result ) {
-	result.color = sRGBAToLinearRGBAUnclamped(tex2D( samp0, fragment.texcoord0 ) * tex2D( samp1, fragment.texcoord1 ) * rpColor );
+	half4 fogColor = half4( tex2D( samp0, fragment.texcoord0 ) ) * half4( tex2D( samp1, fragment.texcoord1 ) ) * half4( rpColor );
+	result.color = sRGBAToLinearRGBAUnclamped( fogColor );
 }
 

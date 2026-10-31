@@ -38,8 +38,8 @@ struct VS_IN {
 
 struct VS_OUT {
 	float4 position : POSITION;
-	float3 texcoord0 : TEXCOORD0;
-	float4 color : COLOR0;
+	half3 texcoord0 : TEXCOORD0;
+	half4 color : COLOR0;
 };
 
 void main( VS_IN vertex, out VS_OUT result ) {

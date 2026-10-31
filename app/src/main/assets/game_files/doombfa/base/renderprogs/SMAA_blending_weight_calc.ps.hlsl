@@ -32,6 +32,9 @@ If you have questions concerning this license or the applicable additional terms
 #define SMAA_INCLUDE_VS 0
 #define SMAA_INCLUDE_PS 1
 
+#if defined( TBR_MOBILE )
+#define SMAA_PRESET_LOW
+#endif
 #include "SMAA.inc.hlsl"
 
 // *INDENT-OFF*
@@ -42,10 +45,10 @@ uniform sampler2D samp2		: register(s2);		// _smaaSearch
 struct PS_IN
 {
 	float4 position : VPOS;
-	float2 texcoord0 : TEXCOORD0_centroid;
-	float4 texcoord1 : TEXCOORD1_centroid;
-	float4 texcoord2 : TEXCOORD2_centroid;
-	float4 texcoord3 : TEXCOORD3_centroid;
+	half2 texcoord0 : TEXCOORD0_centroid;
+	half4 texcoord1 : TEXCOORD1_centroid;
+	half4 texcoord2 : TEXCOORD2_centroid;
+	half4 texcoord3 : TEXCOORD3_centroid;
 	float4 texcoord4 : TEXCOORD4_centroid;
 };
  
