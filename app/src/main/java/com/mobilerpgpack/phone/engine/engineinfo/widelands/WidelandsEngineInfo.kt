@@ -28,8 +28,8 @@ class WidelandsEngineInfo (mainEngineLib: String,
     private external fun set_screen_scale (screenScale : Float)
     private external fun set_screen_controls_state (isControlsActive : Boolean)
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(WidelandsEngineInfo::class.java, mainLibraryName)
         setPathsToResources(widelandsRootFolder.absolutePath, pathToResource)
         set_screen_scale(preferencesStorage.widelandsScreenScale.value!!)
@@ -37,6 +37,6 @@ class WidelandsEngineInfo (mainEngineLib: String,
     }
 
     companion object{
-        const val WIDELANDS_FILES_CONTENT_CURRENT_VERSION : Int = 3
+        const val WIDELANDS_FILES_CONTENT_CURRENT_VERSION : Int = 4
     }
 }

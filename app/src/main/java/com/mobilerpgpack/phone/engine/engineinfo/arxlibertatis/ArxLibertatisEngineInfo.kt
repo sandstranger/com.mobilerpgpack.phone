@@ -37,8 +37,8 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         textureCacheDir.mkdirs()
     }
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(ArxLibertatisEngineInfo::class.java, mainLibraryName)
         arxPreferenceStorage.apply {
             updateScreenControlsHidingState(hideScreenControls.value!!)

@@ -31,8 +31,8 @@ abstract class DoomRPGSeriesEngineInfo(
         translationManager.activeEngine = engineType
     }
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(DoomRPGSeriesEngineInfo::class.java, mainLibraryName)
         val useSdlTTFForTextRendering = preferencesStorage.useSDLTTFForFontsRendering.value!!
         val enableMachineTranslation = preferencesStorage.enableGameMachineTextTranslation.value!!

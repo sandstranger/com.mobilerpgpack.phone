@@ -53,8 +53,8 @@ class PerfectDarkEngineInfo : SDL3EngineInfo
         savesDirectory.mkdirs()
     }
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(PerfectDarkEngineInfo::class.java, mainLibraryName)
         setPathToHomeDirectory(homeDirectory.absolutePath)
         setTargetFPS(preferencesStorage.framePacingTargetFPS.value!!)

@@ -95,8 +95,8 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
         }
     }
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(FTEQWEngineInfo::class.java, mainLibraryName)
         setPathsToResources(homeDirFile.absolutePath,pathToBaseGameDirectory,
             activity.applicationInfo.nativeLibraryDir)

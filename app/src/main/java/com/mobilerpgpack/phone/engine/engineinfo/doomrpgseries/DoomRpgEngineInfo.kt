@@ -25,8 +25,8 @@ class DoomRpgEngineInfo(
 
     private external fun setRecalculateScreenResolutionsState (recalculateScreenResolutions : Boolean)
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(DoomRpgEngineInfo::class.java, mainLibraryName)
         recalculateGameScreenResolution()
     }

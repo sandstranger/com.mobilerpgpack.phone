@@ -197,7 +197,7 @@ abstract class EngineInfo(
             }
         }
 
-    override fun onNativeLibrariesLoaded() {
+    override fun onNativeLibrariesLoadedBeforeStart() {
         Native.register(EngineInfo::class.java, mainLibraryName)
         setUseGLES2_0State(preferencesStorage.glesRenderVersion.value!! == GlesRenderVersions.OpenGLES_2_0)
         setPathToSDLControllerDB("${pathToRootUserFolder}${File.separator}gamecontrollerdb.txt")

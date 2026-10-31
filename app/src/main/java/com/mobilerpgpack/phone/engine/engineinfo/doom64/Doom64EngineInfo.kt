@@ -28,8 +28,8 @@ open class Doom64EngineInfo(
     private external fun updateMaxAnisotropyValue (targetAnisotropyValue : Int)
     private external fun updateOnScreenControlsState (onScreenControlsActive : Boolean)
 
-    final override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    final override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(Doom64EngineInfo::class.java, mainLibraryName)
         setPathsToResources(pathToResource, getPathToDoom64UserFolder())
         preferencesStorage.apply {

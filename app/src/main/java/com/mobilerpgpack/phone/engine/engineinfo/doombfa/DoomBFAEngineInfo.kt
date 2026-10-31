@@ -65,19 +65,15 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     }
 
     override fun onNativeLibrariesLoadedBeforeStart() {
-        if (startupConfigurationInitialized) return
-
+        if (startupConfigurationInitialized) {
+            return
+        }
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(DoomBFAEngineInfo::class.java, mainLibraryName)
         // FileSystem::Init() consumes baseGameDir, so set it before SDL_main starts.
         setBaseGameDir(baseGameDirName)
         // This call releases the native startup barrier after all paths are installed.
         setPathsToResources(homeDirectoryFolder.absolutePath, pathToResource)
-        startupConfigurationInitialized = true
-    }
-
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
-        onNativeLibrariesLoadedBeforeStart()
         preferencesStorage.apply {
             setHardwareDXTSupport(enableDXTHardwareSupport.value!!)
             enableTexturesShrinking(enableTexturesShrinking.value!!)
@@ -89,6 +85,7 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         activity.supportedRefreshRates.toIntArray().apply {
             setRefreshRates(this, size)
         }
+        startupConfigurationInitialized = true
     }
 
     override fun buildCustomCommandLineArgs () : Collection<String>{

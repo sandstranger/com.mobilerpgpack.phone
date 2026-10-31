@@ -69,8 +69,8 @@ class VanillaConquerEngineInfo :
         }
     }
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(VanillaConquerEngineInfo::class.java, mainLibraryName)
         setPathToResources(pathToResource)
         setPathToConfigsDirectory(configsDirectory.absolutePath)

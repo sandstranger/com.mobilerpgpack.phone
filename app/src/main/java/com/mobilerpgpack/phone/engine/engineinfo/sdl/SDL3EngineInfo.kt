@@ -54,8 +54,8 @@ abstract class SDL3EngineInfo(
 
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = !SDL_GetRelativeMouseMode_Android()
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(SDL3EngineInfo::class.java, SDL3_NATIVE_LIB_NAME)
         if (loadGL4ES){
             SetSDLVideoGLDriver(gl4esFullLibraryName)

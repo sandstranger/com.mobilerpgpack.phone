@@ -62,8 +62,8 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
         File(uzDoomCacheFolder, "uzdoom_cache").mkdirs()
     }
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         val glesVersion = enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion.value!!).value
         Native.register(UZDoomEngineInfo::class.java, mainLibraryName)
         UpdateHarmGLESVersion(glesVersion)

@@ -33,8 +33,8 @@ class PsyDoomEngineInfo(mainEngineLib: String,
 
     private external fun setPathToUserFolder (pathToUserFolder : String)
 
-    override fun onNativeLibrariesLoaded() {
-        super.onNativeLibrariesLoaded()
+    override fun onNativeLibrariesLoadedBeforeStart() {
+        super.onNativeLibrariesLoadedBeforeStart()
         Native.register(PsyDoomEngineInfo::class.java, mainLibraryName)
         setPathToUserFolder(pathToRootUserFolder)
     }
