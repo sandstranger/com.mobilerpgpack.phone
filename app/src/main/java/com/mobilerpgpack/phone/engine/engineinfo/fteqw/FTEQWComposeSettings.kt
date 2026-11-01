@@ -41,6 +41,7 @@ class FTEQWComposeSettings : IEngineUIController {
     override fun DrawSettings(navController: NavHostController) {
         val prefsStorage : FTEQWPreferencesStorage = koinInject(named((EngineTypes.FTEQW.name)))
         val activeFTEQWGame = prefsStorage.activeFTEQWGame.getComposableValue(FTEQWGames.Quake)
+        val customGameName = prefsStorage.customGameName.getComposableValue()
         val enableModsSupport = prefsStorage.enableFTEQWModsSupport.getComposableValue()
         val enableCustomManifestSupport = prefsStorage.enableManifestSupport.getComposableValue()
         val buttonsColors = getButtonsColors()
@@ -186,6 +187,18 @@ class FTEQWComposeSettings : IEngineUIController {
                     }
                 }
             }
+            FTEQWGames.CustomGame -> {
+                EditTextItem(
+                    title = "Custom game directory",
+                    value = customGameName,
+                    hint = "data"
+                ) {
+                    prefsStorage.setStringValue(
+                        prefsStorage.customGameNamePrefsKey,
+                        it.trim()
+                    )
+                }
+            }
         }
 
         DrawHorizontalDivider()
@@ -217,6 +230,7 @@ class FTEQWComposeSettings : IEngineUIController {
                         prefsStorage.pathToHexen2ModsDir,
                         prefsStorage.pathToHexen2ModsDirPrefsKey, requestMode = RequestPathMode.Directory)
                 }
+                FTEQWGames.CustomGame -> Unit
             }
 
             DrawHorizontalDivider()
@@ -252,6 +266,7 @@ class FTEQWComposeSettings : IEngineUIController {
                         prefsStorage.pathToHexen2ManifestPrefsKey, requestMode = RequestPathMode.File,
                         requiredFileExtensions = allowedManifestExtensions)
                 }
+                FTEQWGames.CustomGame -> Unit
             }
         }
     }

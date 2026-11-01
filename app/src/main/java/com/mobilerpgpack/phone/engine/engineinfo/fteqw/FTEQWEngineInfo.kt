@@ -28,6 +28,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2ModsDir.value!!
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3ModsDir.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2ModsDir.value!!
+            FTEQWGames.CustomGame -> ""
         }
     }
 
@@ -37,6 +38,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2BaseDir.value!!
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3BaseDir.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2BaseDir.value!!
+            FTEQWGames.CustomGame -> ""
         }
     }
 
@@ -46,6 +48,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2Manifest.value!!
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3Manifest.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2Manifest.value!!
+            FTEQWGames.CustomGame -> ""
         }
     }
 
@@ -77,6 +80,9 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2.value!!
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2.value!!
+            FTEQWGames.CustomGame -> homeDirFile.apply {
+                if (!exists()) mkdirs()
+            }.absolutePath
         }
     }
 
@@ -114,7 +120,8 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
 
             val pathToResources = pathToResource
 
-            if (pathToResources.isNotEmpty() && File(pathToResources).exists()){
+            if (gameType != FTEQWGames.CustomGame &&
+                pathToResources.isNotEmpty() && File(pathToResources).exists()){
                 this += BASE_DIR_COMMAND
                 this += pathToResources
             }
@@ -158,7 +165,13 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
                     }
                 }
             }
-            this += gameType.commandLineArg
+            if (gameType == FTEQWGames.CustomGame) {
+                fteQWPrefsStorage.customGameName.value!!.trim()
+                    .takeIf { it.isNotEmpty() }
+                    ?.let { this += it }
+            } else if (gameType.commandLineArg.isNotEmpty()) {
+                this += gameType.commandLineArg
+            }
         }
     }
 
