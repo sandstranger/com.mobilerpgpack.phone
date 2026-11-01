@@ -28,7 +28,8 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2ModsDir.value!!
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3ModsDir.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2ModsDir.value!!
-            FTEQWGames.CustomGame -> ""
+            FTEQWGames.CustomGame -> fteQWPrefsStorage.pathToCustomGameModsDir.value!!
+            FTEQWGames.HalfLife -> fteQWPrefsStorage.pathToHalfLifeModsDir.value!!
         }
     }
 
@@ -38,7 +39,8 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2BaseDir.value!!
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3BaseDir.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2BaseDir.value!!
-            FTEQWGames.CustomGame -> ""
+            FTEQWGames.CustomGame -> fteQWPrefsStorage.pathToCustomGameBaseDir.value!!
+            FTEQWGames.HalfLife -> fteQWPrefsStorage.pathToHalfLifeBaseDir.value!!
         }
     }
 
@@ -48,7 +50,8 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2Manifest.value!!
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3Manifest.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2Manifest.value!!
-            FTEQWGames.CustomGame -> ""
+            FTEQWGames.CustomGame -> fteQWPrefsStorage.pathToCustomGameManifest.value!!
+            FTEQWGames.HalfLife -> fteQWPrefsStorage.pathToHalfLifeManifest.value!!
         }
     }
 
@@ -81,10 +84,16 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2.value!!
             FTEQWGames.CustomGame -> fteQWPrefsStorage.pathToCustomGame.value!!
+            FTEQWGames.HalfLife -> fteQWPrefsStorage.pathToHalfLife.value!!
         }
     }
 
     override val touchFullScreenModeCanBeUsed: Boolean get() = gameType != FTEQWGames.Quake3
+
+    val attackWithLeftMouseButton : Boolean get() = gameType.attackWithLeftMouseButton
+
+    // a menu (engine, menuqc) or a csqc interface is driving the mouse cursor
+    val menuUsesMouse : Boolean get() = needToInvokeMouseButtonsEvents()
 
     private external fun setPathsToResources (pathToHomeDirectory : String, pathToBaseDirectory : String,
                                               dllDefaultPath : String)

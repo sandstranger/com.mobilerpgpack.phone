@@ -207,6 +207,55 @@ class FTEQWComposeSettings : IEngineUIController {
                         it.trim()
                     )
                 }
+
+                DrawHorizontalDivider()
+
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)) {
+
+                    Box(modifier = Modifier.weight(1.0f)){
+                        RequestPath(stringResource(R.string.path_to_custom_game_base_dir),
+                            prefsStorage.pathToCustomGameBaseDir,
+                            prefsStorage.pathToCustomGameBaseDirPrefsKey, requestMode = RequestPathMode.Directory)
+                    }
+
+                    Button(modifier = Modifier.padding(end = 4.dp), onClick = {
+                        prefsStorage.setStringValue(prefsStorage.pathToCustomGameBaseDirPrefsKey, "")
+                    }, colors = buttonsColors) {
+                        Text(
+                            text = stringResource(R.string.clear),
+                            textAlign = TextAlign.Center,
+                            color = onPrimaryColor
+                        )
+                    }
+                }
+            }
+            FTEQWGames.HalfLife -> {
+                RequestPath(stringResource(R.string.path_to_halflife_root_dir),
+                    prefsStorage.pathToHalfLife,
+                    prefsStorage.pathToHalfLifePrefsKey, requestMode = RequestPathMode.Directory)
+
+                DrawHorizontalDivider()
+
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)) {
+
+                    Box(modifier = Modifier.weight(1.0f)){
+                        RequestPath(stringResource(R.string.path_to_halflife_base_dir),
+                            prefsStorage.pathToHalfLifeBaseDir,
+                            prefsStorage.pathToHalfLifeBaseDirPrefsKey, requestMode = RequestPathMode.Directory)
+                    }
+
+                    Button(modifier = Modifier.padding(end = 4.dp), onClick = {
+                        prefsStorage.setStringValue(prefsStorage.pathToHalfLifeBaseDirPrefsKey, "")
+                    }, colors = buttonsColors) {
+                        Text(
+                            text = stringResource(R.string.clear),
+                            textAlign = TextAlign.Center,
+                            color = onPrimaryColor
+                        )
+                    }
+                }
             }
         }
 
@@ -239,7 +288,16 @@ class FTEQWComposeSettings : IEngineUIController {
                         prefsStorage.pathToHexen2ModsDir,
                         prefsStorage.pathToHexen2ModsDirPrefsKey, requestMode = RequestPathMode.Directory)
                 }
-                FTEQWGames.CustomGame -> Unit
+                FTEQWGames.CustomGame -> {
+                    RequestPath(stringResource(R.string.path_to_custom_game_mods_dir),
+                        prefsStorage.pathToCustomGameModsDir,
+                        prefsStorage.pathToCustomGameModsDirPrefsKey, requestMode = RequestPathMode.Directory)
+                }
+                FTEQWGames.HalfLife -> {
+                    RequestPath(stringResource(R.string.path_to_halflife_mods_dir),
+                        prefsStorage.pathToHalfLifeModsDir,
+                        prefsStorage.pathToHalfLifeModsDirPrefsKey, requestMode = RequestPathMode.Directory)
+                }
             }
 
             DrawHorizontalDivider()
@@ -275,7 +333,18 @@ class FTEQWComposeSettings : IEngineUIController {
                         prefsStorage.pathToHexen2ManifestPrefsKey, requestMode = RequestPathMode.File,
                         requiredFileExtensions = allowedManifestExtensions)
                 }
-                FTEQWGames.CustomGame -> Unit
+                FTEQWGames.CustomGame -> {
+                    RequestPath(stringResource(R.string.path_to_custom_game_manifest),
+                        prefsStorage.pathToCustomGameManifest,
+                        prefsStorage.pathToCustomGameManifestPrefsKey, requestMode = RequestPathMode.File,
+                        requiredFileExtensions = allowedManifestExtensions)
+                }
+                FTEQWGames.HalfLife -> {
+                    RequestPath(stringResource(R.string.path_to_halflife_manifest),
+                        prefsStorage.pathToHalfLifeManifest,
+                        prefsStorage.pathToHalfLifeManifestPrefsKey, requestMode = RequestPathMode.File,
+                        requiredFileExtensions = allowedManifestExtensions)
+                }
             }
         }
     }

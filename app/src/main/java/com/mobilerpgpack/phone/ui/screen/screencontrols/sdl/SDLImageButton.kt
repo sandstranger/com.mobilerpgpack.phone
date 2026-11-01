@@ -82,6 +82,9 @@ abstract class SDLImageButton(
 
     protected abstract fun onTouchUp(keyCode: Int)
 
+    // true keeps the press that is starting from reaching the touch screen, whatever consumeTouchEvents says
+    protected open fun consumesPress(): Boolean = false
+
     @Composable
     protected fun Modifier.interactiveControlModifier (isEditMode: Boolean, inGame: Boolean,
                                                        onColorFilterChanged : (BlendModeColorFilter?) -> Unit = {}) : Modifier{
@@ -102,6 +105,6 @@ abstract class SDLImageButton(
         }, onTouchUp = {
             onTouchUp(sdlKeyCode)
             onTouchUpEvent?.invoke(screenController, sdlKeyCode)
-        }, onColorFilterChanged = { onColorFilterChanged(it) })
+        }, onColorFilterChanged = { onColorFilterChanged(it) }, consumePress = { consumesPress() })
     }
 }

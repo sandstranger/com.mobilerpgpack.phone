@@ -84,7 +84,8 @@ fun Modifier.onTouchDown(
 fun Modifier.touchListenerModifier(
     isEditMode: Boolean, viewState: ViewState, changeItemColor: Boolean = true,
     onTouchDown: () -> Unit = {}, onTouchUp: () -> Unit = {},
-    onColorFilterChanged : (colorFilter : BlendModeColorFilter?) -> Unit = {}): Modifier {
+    onColorFilterChanged : (colorFilter : BlendModeColorFilter?) -> Unit = {},
+    consumePress : () -> Boolean = { false }): Modifier {
     var inToggleMode by remember { mutableStateOf(false) }
     var isPressed by remember { mutableStateOf(false) }
     val isEditMode by remember(isEditMode) { mutableStateOf(isEditMode) }
@@ -142,11 +143,14 @@ fun Modifier.touchListenerModifier(
         }
 
         awaitPointerEventScope {
+            // asked when a press starts, keeps that whole press from reaching the touch screen behind the view
+            var consumeCurrentPress = false
             while (true) {
                 val event = awaitPointerEvent()
                 val consumeEvents = consumeTouchEvents || mouseButtonsEventsCanBeInvoked
                 for (change in event.changes) {
                     change.apply {
+                        val isCurrentPress = pointerId == id
                         when{
                             changedToDown() && pointerId == null -> {
                                 pointerId = id
@@ -161,6 +165,7 @@ fun Modifier.touchListenerModifier(
                                     }
                                     inToggleMode = !inToggleMode
                                 }
+                                consumeCurrentPress = consumePress()
                             }
 
                             (changedToUp() || (isOutOfBounds(size, extendedTouchPadding) && !ignoreOutOfBoundsTouchEvents) ||
@@ -173,7 +178,7 @@ fun Modifier.touchListenerModifier(
                             }
                         }
 
-                        if (consumeEvents) {
+                        if (consumeEvents || (consumeCurrentPress && (isCurrentPress || pointerId == id))) {
                             consume()
                         }
                     }

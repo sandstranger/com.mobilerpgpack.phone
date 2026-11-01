@@ -24,12 +24,19 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val pathToHexen2BaseDirPrefsKey = stringPreferencesKey("path_to_hexen2_base_dir")
     val pathToHexen2ModsDirPrefsKey = stringPreferencesKey("path_to_hexen2_mods_dir")
     val pathToHexen2ManifestPrefsKey = stringPreferencesKey("path_to_hexen2_manifest")
+    val pathToHalfLifePrefsKey = stringPreferencesKey("path_to_half_life1")
+    val pathToHalfLifeBaseDirPrefsKey = stringPreferencesKey("path_to_half_life1_base_dir")
+    val pathToHalfLifeModsDirPrefsKey = stringPreferencesKey("path_to_half_life1_mods_dir")
+    val pathToHalfLifeManifestPrefsKey = stringPreferencesKey("path_to_half_life1_manifest")
     val commandLineArgsPrefsKey = stringPreferencesKey("fteqw_command_line_args")
     val enableFTEQWModsPrefsKey = booleanPreferencesKey("enable_fteqw_mods")
     val enableManifestSupportPrefsKey = booleanPreferencesKey("enable_fteqw_manifest")
     val activeFTEQWGamePrefsKey = enumPreferencesKey<FTEQWGames>("active_fteqw_game")
     val customGameNamePrefsKey = stringPreferencesKey("custom_fteqw_game_name")
     val pathToCustomGamePrefsKey = stringPreferencesKey("path_to_custom_fteqw_game")
+    val pathToCustomGameBaseDirPrefsKey = stringPreferencesKey("path_to_custom_fteqw_game_base_dir")
+    val pathToCustomGameModsDirPrefsKey = stringPreferencesKey("path_to_custom_fteqw_game_mods_dir")
+    val pathToCustomGameManifestPrefsKey = stringPreferencesKey("path_to_custom_fteqw_game_manifest")
     val fteqwUIScalePrefsKey = floatPreferencesKey("fteqw_ui_scale")
     val quake2GameTypePrefsKey = enumPreferencesKey<Quake2Games>("quake2_game_type")
 
@@ -54,6 +61,11 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val pathToHexen2ModsDir = getStringValue(pathToHexen2ModsDirPrefsKey)
     val pathToHexen2Manifest = getStringValue(pathToHexen2ManifestPrefsKey)
 
+    val pathToHalfLife = getStringValue(pathToHalfLifePrefsKey)
+    val pathToHalfLifeBaseDir = getStringValue(pathToHalfLifeBaseDirPrefsKey)
+    val pathToHalfLifeModsDir = getStringValue(pathToHalfLifeModsDirPrefsKey)
+    val pathToHalfLifeManifest = getStringValue(pathToHalfLifeManifestPrefsKey)
+
     val enableFTEQWModsSupport = getBooleanValue(enableFTEQWModsPrefsKey)
     val enableManifestSupport = getBooleanValue(enableManifestSupportPrefsKey)
     val activeFTEQWGame = getEnumValue(
@@ -62,6 +74,9 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     )
     val customGameName = getStringValue(customGameNamePrefsKey)
     val pathToCustomGame = getStringValue(pathToCustomGamePrefsKey)
+    val pathToCustomGameBaseDir = getStringValue(pathToCustomGameBaseDirPrefsKey)
+    val pathToCustomGameModsDir = getStringValue(pathToCustomGameModsDirPrefsKey)
+    val pathToCustomGameManifest = getStringValue(pathToCustomGameManifestPrefsKey)
     val commandLineArgs = getStringValue(commandLineArgsPrefsKey)
     val fteqwUIScale = getFloatValue(fteqwUIScalePrefsKey, 3.5f)
 }

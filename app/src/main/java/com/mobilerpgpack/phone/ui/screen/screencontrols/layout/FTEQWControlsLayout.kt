@@ -11,6 +11,7 @@ import com.mobilerpgpack.phone.ui.screen.screencontrols.UpdateScreenControlsVisi
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.KeyboardType
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.ShowSDLKeyboardButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl.StickType
+import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.FTEQWAttackButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3Dpad
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3ImageButton
 import com.mobilerpgpack.phone.ui.screen.screencontrols.sdl3.SDL3MouseImageButton
@@ -327,7 +328,7 @@ val fteQWOnScreenStickControlsLayout: Collection<IScreenControlsView> = listOf(
         showInQuickPanel = true,
         controlsType = ControlsType.OnScreenStick
     ),
-    SDL3ImageButton(
+    FTEQWAttackButton(
         "attack",
         EngineTypes.FTEQW,
         offsetXPercent = 0.8f,
