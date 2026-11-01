@@ -189,7 +189,7 @@ class FTEQWComposeSettings : IEngineUIController {
             }
             FTEQWGames.CustomGame -> {
                 EditTextItem(
-                    title = "Custom game directory",
+                    title = stringResource(R.string.custom_game_directory),
                     value = customGameName,
                     hint = "data"
                 ) {
