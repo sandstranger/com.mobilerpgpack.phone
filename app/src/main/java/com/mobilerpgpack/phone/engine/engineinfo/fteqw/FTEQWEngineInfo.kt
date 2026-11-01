@@ -148,6 +148,16 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
                 }
             }
 
+            // before the mods directory: the engine searches the last -game first
+            if (gameType == FTEQWGames.CustomGame) {
+                val customGameName = fteQWPrefsStorage.customGameName.value!!.trim()
+
+                if (customGameName.isNotEmpty()) {
+                    this += GAME_COMMAND
+                    this += customGameName
+                }
+            }
+
             val pathToModsDirectory = pathToModsDirectory
 
             if (pathToModsDirectory.isNotEmpty() && pathToModsDirectory.startsWith(pathToResource)) {
@@ -171,11 +181,8 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
                     }
                 }
             }
-            if (gameType == FTEQWGames.CustomGame) {
-                fteQWPrefsStorage.customGameName.value!!.trim()
-                    .takeIf { it.isNotEmpty() }
-                    ?.let { this += it }
-            } else if (gameType.commandLineArg.isNotEmpty()) {
+
+            if (gameType.commandLineArg.isNotEmpty()) {
                 this += gameType.commandLineArg
             }
         }
