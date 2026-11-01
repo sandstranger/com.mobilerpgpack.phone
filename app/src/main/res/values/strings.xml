@@ -286,6 +286,7 @@
     <string name="path_to_quake3_mods_dir">Path to Quake3 mods directory</string>
     <string name="path_to_quake3_manifest">Path to Quake3 manifest (.fmf)</string>
     <string name="path_to_hexen2_root_dir">Path to Hexen2 root directory</string>
+    <string name="path_to_custom_game_root_dir">Path to the directory containing the custom game</string>
     <string name="path_to_hexen2_base_dir">Path to Hexen2 base directory</string>
     <string name="path_to_hexen2_mods_dir">Path to Hexen2 mods directory</string>
     <string name="path_to_hexen2_manifest">Path to Hexen2 manifest (.fmf)</string>

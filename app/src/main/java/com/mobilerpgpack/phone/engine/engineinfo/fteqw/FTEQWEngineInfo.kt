@@ -80,9 +80,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
             FTEQWGames.Quake2 -> fteQWPrefsStorage.pathToQuake2.value!!
             FTEQWGames.Quake3 -> fteQWPrefsStorage.pathToQuake3.value!!
             FTEQWGames.Hexen2 -> fteQWPrefsStorage.pathToHexen2.value!!
-            FTEQWGames.CustomGame -> homeDirFile.apply {
-                if (!exists()) mkdirs()
-            }.absolutePath
+            FTEQWGames.CustomGame -> fteQWPrefsStorage.pathToCustomGame.value!!
         }
     }
 
@@ -120,8 +118,7 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
 
             val pathToResources = pathToResource
 
-            if (gameType != FTEQWGames.CustomGame &&
-                pathToResources.isNotEmpty() && File(pathToResources).exists()){
+            if (pathToResources.isNotEmpty() && File(pathToResources).exists()){
                 this += BASE_DIR_COMMAND
                 this += pathToResources
             }

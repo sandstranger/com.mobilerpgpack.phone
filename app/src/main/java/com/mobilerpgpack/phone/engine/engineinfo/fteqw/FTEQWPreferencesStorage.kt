@@ -29,6 +29,7 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
     val enableManifestSupportPrefsKey = booleanPreferencesKey("enable_fteqw_manifest")
     val activeFTEQWGamePrefsKey = enumPreferencesKey<FTEQWGames>("active_fteqw_game")
     val customGameNamePrefsKey = stringPreferencesKey("custom_fteqw_game_name")
+    val pathToCustomGamePrefsKey = stringPreferencesKey("path_to_custom_fteqw_game")
     val fteqwUIScalePrefsKey = floatPreferencesKey("fteqw_ui_scale")
     val quake2GameTypePrefsKey = enumPreferencesKey<Quake2Games>("quake2_game_type")
 
@@ -60,6 +61,7 @@ class FTEQWPreferencesStorage : PreferencesStorage() {
         FTEQWGames.Quake
     )
     val customGameName = getStringValue(customGameNamePrefsKey)
+    val pathToCustomGame = getStringValue(pathToCustomGamePrefsKey)
     val commandLineArgs = getStringValue(commandLineArgsPrefsKey)
     val fteqwUIScale = getFloatValue(fteqwUIScalePrefsKey, 3.5f)
 }

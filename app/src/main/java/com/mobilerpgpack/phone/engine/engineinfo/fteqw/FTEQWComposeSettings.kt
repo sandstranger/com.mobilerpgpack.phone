@@ -188,6 +188,15 @@ class FTEQWComposeSettings : IEngineUIController {
                 }
             }
             FTEQWGames.CustomGame -> {
+                RequestPath(
+                    stringResource(R.string.path_to_custom_game_root_dir),
+                    prefsStorage.pathToCustomGame,
+                    prefsStorage.pathToCustomGamePrefsKey,
+                    requestMode = RequestPathMode.Directory
+                )
+
+                DrawHorizontalDivider()
+
                 EditTextItem(
                     title = stringResource(R.string.custom_game_directory),
                     value = customGameName,

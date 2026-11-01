@@ -283,6 +283,7 @@
     <string name="path_to_quake3_mods_dir">Путь к каталогу модификаций Quake III Arena</string>
     <string name="path_to_quake3_manifest">Путь к манифесту Quake III Arena (.fmf)</string>
     <string name="path_to_hexen2_root_dir">Путь к корневому каталогу Hexen II</string>
+    <string name="path_to_custom_game_root_dir">Путь к каталогу, содержащему пользовательскую игру</string>
     <string name="path_to_hexen2_base_dir">Путь к базовому каталогу Hexen II</string>
     <string name="path_to_hexen2_mods_dir">Путь к каталогу модификаций Hexen II</string>
     <string name="path_to_hexen2_manifest">Путь к манифесту Hexen II (.fmf)</string>

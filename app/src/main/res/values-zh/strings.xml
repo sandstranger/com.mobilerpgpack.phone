@@ -284,6 +284,7 @@
     <string name="path_to_quake3_mods_dir">Quake III 模组目录路径</string>
     <string name="path_to_quake3_manifest">Quake III 清单文件路径 (.fmf)</string>
     <string name="path_to_hexen2_root_dir">Hexen II 根目录路径</string>
+    <string name="path_to_custom_game_root_dir">自定义游戏所在目录的路径</string>
     <string name="path_to_hexen2_base_dir">Hexen II 基础目录路径</string>
     <string name="path_to_hexen2_mods_dir">Hexen II 模组目录路径</string>
     <string name="path_to_hexen2_manifest">Hexen II 清单文件路径 (.fmf)</string>
