@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.engine.activity
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.enableEdgeToEdge
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineInfo
@@ -19,7 +20,6 @@ import kotlin.system.exitProcess
 
 internal class SDL3GameActivity : SDLActivity(), KoinComponent {
     private lateinit var engineInfo : IEngineInfo
-    private var callNativeEvents = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainActivity.gameActivityStarted = true
@@ -39,7 +39,7 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
                 onBackInvokedDispatcher.registerOnBackInvokedCallback(
                     OnBackInvokedDispatcher.PRIORITY_DEFAULT
                 ) {
-                    onBackPressed()
+                    engineInfo.onBackPressed()
                 }
             }
         }
@@ -64,18 +64,17 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
 
     override fun onPause() {
         super.onPause()
-        if (gameResourcesFound && callNativeEvents) {
+        if (gameResourcesFound) {
             engineInfo.onPause()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (gameResourcesFound && callNativeEvents) {
+        if (gameResourcesFound) {
             engineInfo.onResume()
         }
         forceLandscapeOrientation()
-        callNativeEvents = true
     }
 
     override fun onLowMemory() {
@@ -89,6 +88,19 @@ internal class SDL3GameActivity : SDLActivity(), KoinComponent {
         if (engineInfo.callExitProcessOnDestroy) {
             exitProcess(0)
         }
+    }
+
+    @SuppressLint("GestureBackNavigation")
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        // If predictive back is off (some firmwares disable it), the system ignores the
+        // OnBackInvokedCallback and sends KEYCODE_BACK instead. If it is on, the key never
+        // gets here, or (Android 16) arrives after the callback already canceled.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && gameResourcesFound &&
+            event.keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP &&
+            !event.isCanceled) {
+            engineInfo.onBackPressed()
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     @SuppressLint("MissingSuperCall", "GestureBackNavigation")

@@ -15,6 +15,11 @@ void nativeGyroMouse(float dx, float dy) {
         mouse = (SDL_Mouse *) SDL_GetMouseVoid();
     }
 
+    // The engine may recreate its window, so drop a cached one that no longer exists
+    if (window && SDL_GetWindowID(window) != windowId) {
+        window = nullptr;
+    }
+
     if (!window) {
         int count = 0;
         SDL_Window** windows = SDL_GetWindows(&count);
@@ -32,6 +37,7 @@ void nativeGyroMouse(float dx, float dy) {
     }
 
     SDL_Event ev;
+    SDL_zero(ev);
     ev.type = SDL_EVENT_MOUSE_MOTION;
     ev.motion.windowID = windowId;
     ev.motion.which = 0;

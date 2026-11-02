@@ -56,7 +56,7 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
     fun start() {
         initialize()
         if (gyro != null) {
-            sm?.registerListener(this, gyro, SensorManager.SENSOR_DELAY_FASTEST)
+            sm?.registerListener(this, gyro, SAMPLING_PERIOD_US)
         }
     }
 
@@ -93,5 +93,8 @@ abstract class GyroInput(private val ctx: Context,private val engineInfo: IEngin
         const val DEFAULT_SENS_X : Float = 15.0f
         const val DEFAULT_SENS_Y : Float = 15.0f
         const val DEFAULT_DEAD_ZONE : Float = 0.02f
+        // 200 Hz, the fastest rate without HIGH_SAMPLING_RATE_SENSORS. SENSOR_DELAY_FASTEST is capped
+        // to it in release builds and throws SecurityException in debuggable ones.
+        private const val SAMPLING_PERIOD_US = 5000
     }
 }
