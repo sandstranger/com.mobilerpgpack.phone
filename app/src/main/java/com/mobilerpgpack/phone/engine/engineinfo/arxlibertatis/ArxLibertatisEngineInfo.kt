@@ -20,6 +20,7 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
         super.pathToRootUserFolder + File.separator + "ArxLibertatis"
     }
     private val textureCacheDir by lazy { File(context.cacheDir,"axrx_libertatis_texture_cache") }
+    private val glesShaderCacheDir by lazy { File(context.cacheDir,"arx_libertatis_gles_shader_cache") }
 
     override val pathToResource: String get() = arxPreferenceStorage.pathToArxFatalisFolder.value!!
     override val commandLineParams get() = arxPreferenceStorage.arxLibertatisCommandLineArgs.value!!
@@ -27,6 +28,8 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override val targetGLESVersion= GLES_300_VERSION
     override val enableNGGL4ESSimpleShaderConv = true
     override val gl4esShaderCacheFolderName = "arx_libertatis_gl4es_cache"
+    override val loadGL4ES = false
+    override val supportRenderChanges = true
 
     private external fun updateScreenControlsHidingState (controlsHided : Boolean)
     private external fun setPathToResources (pathToResources : String)
@@ -35,6 +38,7 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
         textureCacheDir.mkdirs()
+        glesShaderCacheDir.mkdirs()
     }
 
     override fun onNativeLibrariesLoadedBeforeStart() {
@@ -45,6 +49,18 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
             setTextureData(enableEtc2TextureSupport.value!!,textureCacheDir.absolutePath)
         }
         setPathToResources(pathToResource)
+        setGLESShaderCacheDir()
+    }
+
+    // Program binary cache of the OpenGL ES renderer. Builds of the engine without that
+    // renderer do not export the function: it is registered on its own, so only the
+    // cache is skipped then.
+    private fun setGLESShaderCacheDir() {
+        try {
+            GLESShaderCacheJnaLayer.register(mainLibraryName)
+            GLESShaderCacheJnaLayer.setGLESShaderCacheDir(glesShaderCacheDir.absolutePath)
+        } catch (_: UnsatisfiedLinkError) {
+        }
     }
 
     override fun buildCustomCommandLineArgs () : Collection<String>{
@@ -60,6 +76,19 @@ class ArxLibertatisEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
 
             this += CONFIGS_DIR_COMMAND
             this += pathToUserFolder
+        }
+    }
+
+    private object GLESShaderCacheJnaLayer {
+        private var registered = false
+
+        external fun setGLESShaderCacheDir(path: String)
+
+        fun register(libraryName: String) {
+            if (!registered) {
+                Native.register(GLESShaderCacheJnaLayer::class.java, libraryName)
+                registered = true
+            }
         }
     }
 
