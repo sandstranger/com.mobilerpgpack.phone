@@ -456,6 +456,8 @@ https://github.com/yquake2/slightmechanicaldestruction
 
 https://github.com/yquake2/3zb2
 
+https://github.com/hyangkk/Vanilla-Conquer
+
 *All UZDoom and Doom credits belong to the original authors (id Software, Raven Software, Rogue Software, Digital Café, Nash Muhandes).*
 
 ---
