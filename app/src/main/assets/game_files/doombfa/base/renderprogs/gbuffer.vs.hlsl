@@ -40,6 +40,17 @@ struct VS_IN {
 	float4 tangent : TANGENT;
 	float4 color : COLOR0;
 	float4 color2 : COLOR1;
+#if defined( USE_GPU_INSTANCING )
+	float4 instanceMVPX : INSTANCE_MVP_X;
+	float4 instanceMVPY : INSTANCE_MVP_Y;
+	float4 instanceMVPZ : INSTANCE_MVP_Z;
+	float4 instanceMVPW : INSTANCE_MVP_W;
+	float4 instanceModelViewX : INSTANCE_MODELVIEW_X;
+	float4 instanceModelViewY : INSTANCE_MODELVIEW_Y;
+	float4 instanceModelViewZ : INSTANCE_MODELVIEW_Z;
+	float4 instanceModelViewW : INSTANCE_MODELVIEW_W;
+	float4 instanceLocalViewOrigin : INSTANCE_LOCAL_VIEW_ORIGIN;
+#endif
 };
 
 struct VS_OUT {
@@ -121,10 +132,17 @@ void main( VS_IN vertex, out VS_OUT result ) {
 	float3 bitangent = vBitangent.xyz;
 #endif
 
+#if defined( USE_GPU_INSTANCING )
+	result.position.x = dot4( modelPosition, vertex.instanceMVPX );
+	result.position.y = dot4( modelPosition, vertex.instanceMVPY );
+	result.position.z = dot4( modelPosition, vertex.instanceMVPZ );
+	result.position.w = dot4( modelPosition, vertex.instanceMVPW );
+#else
 	result.position.x = dot4( modelPosition, rpMVPmatrixX );
 	result.position.y = dot4( modelPosition, rpMVPmatrixY );
 	result.position.z = dot4( modelPosition, rpMVPmatrixZ );
 	result.position.w = dot4( modelPosition, rpMVPmatrixW );
+#endif
 
 	// textures 0 takes the base coordinates by the texture matrix
 	result.texcoord0.x = dot4( vertex.texcoord.xy, rpBumpMatrixS );
@@ -151,6 +169,19 @@ void main( VS_IN vertex, out VS_OUT result ) {
 	
 #else
 	// rotate into view space
+#if defined( USE_GPU_INSTANCING )
+	result.texcoord2.x = dot3( tangent, vertex.instanceModelViewX );
+	result.texcoord3.x = dot3( tangent, vertex.instanceModelViewY );
+	result.texcoord4.x = dot3( tangent, vertex.instanceModelViewZ );
+
+	result.texcoord2.y = dot3( bitangent, vertex.instanceModelViewX );
+	result.texcoord3.y = dot3( bitangent, vertex.instanceModelViewY );
+	result.texcoord4.y = dot3( bitangent, vertex.instanceModelViewZ );
+
+	result.texcoord2.z = dot3( normal, vertex.instanceModelViewX );
+	result.texcoord3.z = dot3( normal, vertex.instanceModelViewY );
+	result.texcoord4.z = dot3( normal, vertex.instanceModelViewZ );
+#else
 	result.texcoord2.x = dot3( tangent, rpModelViewMatrixX );
 	result.texcoord3.x = dot3( tangent, rpModelViewMatrixY );
 	result.texcoord4.x = dot3( tangent, rpModelViewMatrixZ );
@@ -161,7 +192,8 @@ void main( VS_IN vertex, out VS_OUT result ) {
 
 	result.texcoord2.z = dot3( normal, rpModelViewMatrixX );
 	result.texcoord3.z = dot3( normal, rpModelViewMatrixY );
-	result.texcoord4.z = dot3( normal, rpModelViewMatrixZ );	
+	result.texcoord4.z = dot3( normal, rpModelViewMatrixZ );
+#endif	
 #endif
 
 #if defined( USE_GPU_SKINNING )

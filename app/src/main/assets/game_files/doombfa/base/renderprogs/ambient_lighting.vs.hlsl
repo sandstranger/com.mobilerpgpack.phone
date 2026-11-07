@@ -40,6 +40,17 @@ struct VS_IN {
 	float4 tangent : TANGENT;
 	float4 color : COLOR0;
 	float4 color2 : COLOR1;
+#if defined( USE_GPU_INSTANCING )
+	float4 instanceMVPX : INSTANCE_MVP_X;
+	float4 instanceMVPY : INSTANCE_MVP_Y;
+	float4 instanceMVPZ : INSTANCE_MVP_Z;
+	float4 instanceMVPW : INSTANCE_MVP_W;
+	float4 instanceModelViewX : INSTANCE_MODELVIEW_X;
+	float4 instanceModelViewY : INSTANCE_MODELVIEW_Y;
+	float4 instanceModelViewZ : INSTANCE_MODELVIEW_Z;
+	float4 instanceModelViewW : INSTANCE_MODELVIEW_W;
+	float4 instanceLocalViewOrigin : INSTANCE_LOCAL_VIEW_ORIGIN;
+#endif
 };
 
 struct VS_OUT {
@@ -123,10 +134,17 @@ void main( VS_IN vertex, out VS_OUT result ) {
 	float3 bitangent = vBitangent.xyz;
 #endif
 
+#if defined( USE_GPU_INSTANCING )
+	result.position.x = dot4( modelPosition, vertex.instanceMVPX );
+	result.position.y = dot4( modelPosition, vertex.instanceMVPY );
+	result.position.z = dot4( modelPosition, vertex.instanceMVPZ );
+	result.position.w = dot4( modelPosition, vertex.instanceMVPW );
+#else
 	result.position.x = dot4( modelPosition, rpMVPmatrixX );
 	result.position.y = dot4( modelPosition, rpMVPmatrixY );
 	result.position.z = dot4( modelPosition, rpMVPmatrixZ );
 	result.position.w = dot4( modelPosition, rpMVPmatrixW );
+#endif
 
 	float4 defaultTexCoord = float4( 0.0f, 0.5f, 0.0f, 1.0f );
 
@@ -173,7 +191,11 @@ void main( VS_IN vertex, out VS_OUT result ) {
 	toLight = normalize( toLight );
 
 	//# calculate normalized vector to viewer in R1
+#if defined( USE_GPU_INSTANCING )
+	float4 toView = normalize( vertex.instanceLocalViewOrigin - modelPosition );
+#else
 	float4 toView = normalize( rpLocalViewOrigin - modelPosition );
+#endif
 	
 	//# add together to become the half angle vector in object space (non-normalized)
 	float4 halfAngleVector = toLight + toView;

@@ -34,6 +34,16 @@ struct VS_IN {
 	float4 normal : NORMAL;
 	float4 tangent : TANGENT;
 	float4 color : COLOR0;
+#if defined( USE_GPU_INSTANCING )
+	float4 instanceMVPX : INSTANCE_MVP_X;
+	float4 instanceMVPY : INSTANCE_MVP_Y;
+	float4 instanceMVPZ : INSTANCE_MVP_Z;
+	float4 instanceMVPW : INSTANCE_MVP_W;
+	float4 instanceModelViewX : INSTANCE_MODELVIEW_X;
+	float4 instanceModelViewY : INSTANCE_MODELVIEW_Y;
+	float4 instanceModelViewZ : INSTANCE_MODELVIEW_Z;
+	float4 instanceModelViewW : INSTANCE_MODELVIEW_W;
+#endif
 };
 
 struct VS_OUT {
@@ -43,14 +53,28 @@ struct VS_OUT {
 };
 
 void main( VS_IN vertex, out VS_OUT result ) {
+#if defined( USE_GPU_INSTANCING )
+	result.position.x = dot4( vertex.position, vertex.instanceMVPX );
+	result.position.y = dot4( vertex.position, vertex.instanceMVPY );
+	result.position.z = dot4( vertex.position, vertex.instanceMVPZ );
+	result.position.w = dot4( vertex.position, vertex.instanceMVPW );
+#else
 	result.position.x = dot4( vertex.position, rpMVPmatrixX );
 	result.position.y = dot4( vertex.position, rpMVPmatrixY );
 	result.position.z = dot4( vertex.position, rpMVPmatrixZ );
 	result.position.w = dot4( vertex.position, rpMVPmatrixW );
+#endif
 
+#if defined( USE_GPU_INSTANCING )
+	result.texcoord0.x = dot4( vertex.position, vertex.instanceModelViewX );
+	result.texcoord0.y = dot4( vertex.position, vertex.instanceModelViewY );
+	result.texcoord1.x = dot4( vertex.position, vertex.instanceModelViewW );
+	result.texcoord1.y = dot4( vertex.position, vertex.instanceModelViewZ );
+#else
 	result.texcoord0.x = dot4( vertex.position, rpTexGen0S );
 	result.texcoord0.y = dot4( vertex.position, rpTexGen0T );
 
 	result.texcoord1.x = dot4( vertex.position, rpTexGen1S );
 	result.texcoord1.y = dot4( vertex.position, rpTexGen1T );
+#endif
 }

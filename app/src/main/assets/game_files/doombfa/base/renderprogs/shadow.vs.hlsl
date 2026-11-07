@@ -30,6 +30,13 @@ If you have questions concerning this license or the applicable additional terms
 
 struct VS_IN {
 	float4 position : POSITION;
+#if defined( USE_GPU_INSTANCING )
+	float4 instanceMVPX : INSTANCE_MVP_X;
+	float4 instanceMVPY : INSTANCE_MVP_Y;
+	float4 instanceMVPZ : INSTANCE_MVP_Z;
+	float4 instanceMVPW : INSTANCE_MVP_W;
+	float4 instanceLocalLightOrigin : INSTANCE_LOCAL_LIGHT_ORIGIN;
+#endif
 };
 
 struct VS_OUT {
@@ -37,11 +44,23 @@ struct VS_OUT {
 };
 
 void main( VS_IN vertex, out VS_OUT result ) {
-	float4 vPos = vertex.position - rpLocalLightOrigin;
-	vPos = ( vPos.wwww * rpLocalLightOrigin ) + vPos;
+#if defined( USE_GPU_INSTANCING )
+	float4 localLightOrigin = vertex.instanceLocalLightOrigin;
+#else
+	float4 localLightOrigin = rpLocalLightOrigin;
+#endif
+	float4 vPos = vertex.position - localLightOrigin;
+	vPos = ( vPos.wwww * localLightOrigin ) + vPos;
 
+#if defined( USE_GPU_INSTANCING )
+	result.position.x = dot4( vPos, vertex.instanceMVPX );
+	result.position.y = dot4( vPos, vertex.instanceMVPY );
+	result.position.z = dot4( vPos, vertex.instanceMVPZ );
+	result.position.w = dot4( vPos, vertex.instanceMVPW );
+#else
 	result.position.x = dot4( vPos, rpMVPmatrixX );
 	result.position.y = dot4( vPos, rpMVPmatrixY );
 	result.position.z = dot4( vPos, rpMVPmatrixZ );
 	result.position.w = dot4( vPos, rpMVPmatrixW );
+#endif
 }

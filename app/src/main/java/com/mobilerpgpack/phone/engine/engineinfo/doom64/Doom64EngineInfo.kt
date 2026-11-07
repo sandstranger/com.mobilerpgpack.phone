@@ -22,6 +22,8 @@ open class Doom64EngineInfo(
     final override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder.value!!
     final override val touchFullScreenModeCanBeUsed = false
     final override val enableNGGL4ESSimpleShaderConv = false
+    final override val loadGL4ES = true
+    final override val supportRenderChanges = true
 
     private external fun MouseCursorCanBeDrawn() : Boolean
     private external fun setPathsToResources (pathToWadsFolder : String, pathToUserFolder : String)

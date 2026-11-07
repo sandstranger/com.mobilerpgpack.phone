@@ -34,6 +34,18 @@ struct VS_IN {
 	float4 normal : NORMAL;
 	float4 tangent : TANGENT;
 	float4 color : COLOR0;
+#if defined( USE_GPU_INSTANCING )
+	float4 instanceMVPX : INSTANCE_MVP_X;
+	float4 instanceMVPY : INSTANCE_MVP_Y;
+	float4 instanceMVPZ : INSTANCE_MVP_Z;
+	float4 instanceMVPW : INSTANCE_MVP_W;
+	float4 instanceModelViewX : INSTANCE_MODELVIEW_X;
+	float4 instanceModelViewY : INSTANCE_MODELVIEW_Y;
+	float4 instanceModelViewZ : INSTANCE_MODELVIEW_Z;
+	float4 instanceModelViewW : INSTANCE_MODELVIEW_W;
+	float4 instanceLocalViewOrigin : INSTANCE_LOCAL_VIEW_ORIGIN;
+	float4 instanceLocalLightOrigin : INSTANCE_LOCAL_LIGHT_ORIGIN;
+#endif
 };
 
 struct VS_OUT {
@@ -53,15 +65,26 @@ void main( VS_IN vertex, out VS_OUT result ) {
 	float4 tangent = vertex.tangent * 2.0 - 1.0;
 	float3 binormal = cross( normal.xyz, tangent.xyz ) * tangent.w;
 
+#if defined( USE_GPU_INSTANCING )
+	result.position.x = dot4( vertex.position, vertex.instanceMVPX );
+	result.position.y = dot4( vertex.position, vertex.instanceMVPY );
+	result.position.z = dot4( vertex.position, vertex.instanceMVPZ );
+	result.position.w = dot4( vertex.position, vertex.instanceMVPW );
+#else
 	result.position.x = dot4( vertex.position, rpMVPmatrixX );
 	result.position.y = dot4( vertex.position, rpMVPmatrixY );
 	result.position.z = dot4( vertex.position, rpMVPmatrixZ );
 	result.position.w = dot4( vertex.position, rpMVPmatrixW );
+#endif
 
 	float4 defaultTexCoord = float4( 0.0f, 0.5f, 0.0f, 1.0f );
 
 	//calculate vector to light in R0
+#if defined( USE_GPU_INSTANCING )
+	float4 toLight = vertex.instanceLocalLightOrigin - vertex.position;
+#else
 	float4 toLight = rpLocalLightOrigin - vertex.position;
+#endif
 
 	//textures 1 takes the base coordinates by the texture matrix
 	result.texcoord1 = defaultTexCoord;
@@ -70,13 +93,24 @@ void main( VS_IN vertex, out VS_OUT result ) {
 
 	//# texture 2 has one texgen
 	result.texcoord2 = defaultTexCoord;
+#if defined( USE_GPU_INSTANCING )
+	result.texcoord2.x = dot4( vertex.position, vertex.instanceModelViewW );
+#else
 	result.texcoord2.x = dot4( vertex.position, rpLightFalloffS );
+#endif
 
 	//# texture 3 has three texgens
+#if defined( USE_GPU_INSTANCING )
+	result.texcoord3.x = dot4( vertex.position, vertex.instanceModelViewX );
+	result.texcoord3.y = dot4( vertex.position, vertex.instanceModelViewY );
+	result.texcoord3.z = 0.0f;
+	result.texcoord3.w = dot4( vertex.position, vertex.instanceModelViewZ );
+#else
 	result.texcoord3.x = dot4( vertex.position, rpLightProjectionS );
 	result.texcoord3.y = dot4( vertex.position, rpLightProjectionT );
 	result.texcoord3.z = 0.0f;
 	result.texcoord3.w = dot4( vertex.position, rpLightProjectionQ );
+#endif
 
 	//# textures 4 takes the base coordinates by the texture matrix
 	result.texcoord4 = defaultTexCoord;
@@ -94,7 +128,11 @@ void main( VS_IN vertex, out VS_OUT result ) {
 	toLight = normalize( toLight );
 
 	//# calculate normalized vector to viewer in R1
+#if defined( USE_GPU_INSTANCING )
+	float4 toView = normalize( vertex.instanceLocalViewOrigin - vertex.position );
+#else
 	float4 toView = normalize( rpLocalViewOrigin - vertex.position );
+#endif
 	
 	//# add together to become the half angle vector in object space (non-normalized)
 	float4 halfAngleVector = toLight + toView;
