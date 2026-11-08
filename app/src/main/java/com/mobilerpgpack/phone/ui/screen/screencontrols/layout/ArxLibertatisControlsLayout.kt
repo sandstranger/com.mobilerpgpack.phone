@@ -32,6 +32,18 @@ val arxLibertatisOnScreenStickControlsLayout: Collection<IScreenControlsView> = 
         useToggle = true,
         isDeleted = true
     ),
+    SDL3MouseImageButton(
+        "right_mouse_button",
+        EngineTypes.ArxLibertatis,
+        offsetXPercent = 0.52f,
+        offsetYPercent = 0.03f,
+        sizePercent = 0.06f,
+        buttonResId = R.drawable.mouse,
+        sdlKeyEvent = 3,
+        controlsType = ControlsType.OnScreenStick,
+        useToggle = false,
+        isDeleted = true
+    ),
     SDL3ImageButton(
         "coop_talk",
         EngineTypes.ArxLibertatis,
