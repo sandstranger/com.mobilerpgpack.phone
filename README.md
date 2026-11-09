@@ -458,6 +458,8 @@ https://github.com/yquake2/3zb2
 
 https://github.com/hyangkk/Vanilla-Conquer
 
+https://github.com/notenoughsp/Doom64EX-Plus
+
 *All UZDoom and Doom credits belong to the original authors (id Software, Raven Software, Rogue Software, Digital Café, Nash Muhandes).*
 
 ---
