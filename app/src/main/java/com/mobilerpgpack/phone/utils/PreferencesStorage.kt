@@ -3,6 +3,7 @@ package com.mobilerpgpack.phone.utils
 import android.content.Context
 import com.mobilerpgpack.phone.engine.EngineTypes
 import com.mobilerpgpack.phone.engine.GlesRenderVersions
+import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64NetworkMode
 import com.mobilerpgpack.phone.engine.engineinfo.widelands.WidelandsEngineInfo
 import com.mobilerpgpack.phone.main.KoinModulesProvider.Companion.SANDBOX_STORAGE_DIRECTORY_KEY
 import com.mobilerpgpack.phone.translator.models.TranslationType
@@ -51,6 +52,20 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val savedDoomRpgScreenWidthPrefsKey = intPreferencesKey("doomrpg_screen_width")
     val savedDoomRpgScreenHeightPrefsKey = intPreferencesKey("doomrpg_screen_height")
     val doom64CommandLineArgsStringPrefsKey = stringPreferencesKey("doom64_command_line_args")
+    val doom64NetworkModePrefsKey = enumPreferencesKey<Doom64NetworkMode>("doom64_network_mode")
+    val doom64CoopPlayerNamePrefsKey = stringPreferencesKey("doom64_coop_player_name")
+    val doom64CoopServerAddressPrefsKey = stringPreferencesKey("doom64_coop_server_address")
+    val doom64CoopPortPrefsKey = intPreferencesKey("doom64_coop_port")
+    val doom64CoopPlayersToStartPrefsKey = intPreferencesKey("doom64_coop_players_to_start")
+    val doom64CoopMapPrefsKey = intPreferencesKey("doom64_coop_map")
+    val doom64CoopSkillPrefsKey = intPreferencesKey("doom64_coop_skill")
+    val doom64CoopDeathmatchPrefsKey = booleanPreferencesKey("doom64_coop_deathmatch")
+    val doom64CoopRespawnMonstersPrefsKey = booleanPreferencesKey("doom64_coop_respawn_monsters")
+    val doom64CoopRespawnItemsPrefsKey = booleanPreferencesKey("doom64_coop_respawn_items")
+    val doom64CoopFastMonstersPrefsKey = booleanPreferencesKey("doom64_coop_fast_monsters")
+    val doom64CoopNoMonstersPrefsKey = booleanPreferencesKey("doom64_coop_no_monsters")
+    val doom64CoopFriendlyFirePrefsKey = booleanPreferencesKey("doom64_coop_friendly_fire")
+    val doom64CoopKeepItemsPrefsKey = booleanPreferencesKey("doom64_coop_keep_items")
     val customOnScreenKeyboardTransparencyPrefsKey =
         floatPreferencesKey("custom_keyboard_transparency")
     val alwaysUseFullScreenTouchModePrefsKey =
@@ -88,6 +103,22 @@ open class PreferencesStorage : SharedPrefsRepository(), KoinComponent {
     val doom64AnisotropyTexturesValuePrefsKey = intPreferencesKey("doom64_anisotropy_textures_value")
 
     val doom64AnisotropyTexturesValue = getIntValue(doom64AnisotropyTexturesValuePrefsKey,2)
+    val doom64NetworkMode = getEnumValue(
+        doom64NetworkModePrefsKey, Doom64NetworkMode::class.java, Doom64NetworkMode.Disabled
+    )
+    val doom64CoopPlayerName = getStringValue(doom64CoopPlayerNamePrefsKey, "Player")
+    val doom64CoopServerAddress = getStringValue(doom64CoopServerAddressPrefsKey)
+    val doom64CoopPort = getIntValue(doom64CoopPortPrefsKey, 2342)
+    val doom64CoopPlayersToStart = getIntValue(doom64CoopPlayersToStartPrefsKey, 2)
+    val doom64CoopMap = getIntValue(doom64CoopMapPrefsKey, 1)
+    val doom64CoopSkill = getIntValue(doom64CoopSkillPrefsKey, 3)
+    val doom64CoopDeathmatch = getBooleanValue(doom64CoopDeathmatchPrefsKey)
+    val doom64CoopRespawnMonsters = getBooleanValue(doom64CoopRespawnMonstersPrefsKey)
+    val doom64CoopRespawnItems = getBooleanValue(doom64CoopRespawnItemsPrefsKey)
+    val doom64CoopFastMonsters = getBooleanValue(doom64CoopFastMonstersPrefsKey)
+    val doom64CoopNoMonsters = getBooleanValue(doom64CoopNoMonstersPrefsKey)
+    val doom64CoopFriendlyFire = getBooleanValue(doom64CoopFriendlyFirePrefsKey)
+    val doom64CoopKeepItems = getBooleanValue(doom64CoopKeepItemsPrefsKey)
     val assetsCurrentVersion = getIntValue(assetsCurrentVersionPrefsKey, 0)
     val allAssetsCopied = getBooleanValue(allAssetsCopiedPrefsKey, false)
     val framePacingFenceTimeout = getLongValue(framePacingFenceTimeoutPrefsKey, 50L)
