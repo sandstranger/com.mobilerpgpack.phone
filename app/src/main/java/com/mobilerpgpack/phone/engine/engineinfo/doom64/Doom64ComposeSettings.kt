@@ -9,7 +9,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
-import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64NetworkMode
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
@@ -47,7 +46,6 @@ class Doom64ComposeSettings () :
             ) { selectedPath ->
                 setPathToDoom64MainWadsFolder(selectedPath)
             }
-
 
             DrawHorizontalDivider()
 
