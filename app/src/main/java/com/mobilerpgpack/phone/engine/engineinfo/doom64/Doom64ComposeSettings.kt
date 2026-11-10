@@ -9,12 +9,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.engineinfo.doom64.Doom64NetworkMode
 import com.mobilerpgpack.phone.engine.engineinfo.IEngineUIController
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ui.DrawModsSupport
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawCommandLinePreferences
 import com.mobilerpgpack.phone.ui.items.prefsitems.DrawHorizontalDivider
 import com.mobilerpgpack.phone.ui.items.prefsitems.EditTextPreferenceItem
+import com.mobilerpgpack.phone.ui.items.prefsitems.ListPreferenceItem
 import com.mobilerpgpack.phone.ui.items.prefsitems.RequestPath
 import com.mobilerpgpack.phone.ui.items.prefsitems.SwitchPreferenceItem
 import com.mobilerpgpack.phone.utils.PreferencesStorage
@@ -44,6 +46,151 @@ class Doom64ComposeSettings () :
                 previousPathToDoom64WadsFolder
             ) { selectedPath ->
                 setPathToDoom64MainWadsFolder(selectedPath)
+            }
+
+
+            DrawHorizontalDivider()
+
+            val networkMode = doom64NetworkMode.getComposableValue(Doom64NetworkMode.Disabled)
+            val networkModeOptions = listOf(
+                stringResource(R.string.doom64_coop_disabled),
+                stringResource(R.string.doom64_coop_host),
+                stringResource(R.string.doom64_coop_join),
+                stringResource(R.string.doom64_coop_autojoin)
+            )
+            val selectedNetworkMode = when (networkMode) {
+                Doom64NetworkMode.Disabled -> networkModeOptions[0]
+                Doom64NetworkMode.Host -> networkModeOptions[1]
+                Doom64NetworkMode.Join -> networkModeOptions[2]
+                Doom64NetworkMode.AutoJoin -> networkModeOptions[3]
+            }
+
+            ListPreferenceItem(
+                stringResource(R.string.doom64_coop_mode),
+                selectedNetworkMode,
+                networkModeOptions
+            ) { selectedMode ->
+                val newMode = when (selectedMode) {
+                    networkModeOptions[1] -> Doom64NetworkMode.Host
+                    networkModeOptions[2] -> Doom64NetworkMode.Join
+                    networkModeOptions[3] -> Doom64NetworkMode.AutoJoin
+                    else -> Doom64NetworkMode.Disabled
+                }
+                setEnumValue(doom64NetworkModePrefsKey, newMode)
+            }
+
+            if (networkMode != Doom64NetworkMode.Disabled) {
+                DrawHorizontalDivider()
+
+                EditTextPreferenceItem(
+                    stringResource(R.string.doom64_coop_player_name),
+                    doom64CoopPlayerName,
+                    doom64CoopPlayerNamePrefsKey.name
+                )
+
+                DrawHorizontalDivider()
+
+                EditTextPreferenceItem(
+                    stringResource(R.string.doom64_coop_port),
+                    doom64CoopPort,
+                    doom64CoopPortPrefsKey.name
+                ) {
+                    setIntValue(doom64CoopPortPrefsKey, it.coerceIn(1, 65535))
+                }
+
+                when (networkMode) {
+                    Doom64NetworkMode.Disabled -> Unit
+
+                    Doom64NetworkMode.Host -> {
+                        DrawHorizontalDivider()
+                        EditTextPreferenceItem(
+                            stringResource(R.string.doom64_coop_players_to_start),
+                            doom64CoopPlayersToStart,
+                            doom64CoopPlayersToStartPrefsKey.name
+                        ) {
+                            setIntValue(doom64CoopPlayersToStartPrefsKey, it.coerceIn(1, 4))
+                        }
+
+                        DrawHorizontalDivider()
+                        EditTextPreferenceItem(
+                            stringResource(R.string.doom64_coop_map),
+                            doom64CoopMap,
+                            doom64CoopMapPrefsKey.name
+                        ) {
+                            setIntValue(doom64CoopMapPrefsKey, it.coerceIn(1, 32))
+                        }
+
+                        DrawHorizontalDivider()
+                        EditTextPreferenceItem(
+                            stringResource(R.string.doom64_coop_skill),
+                            doom64CoopSkill,
+                            doom64CoopSkillPrefsKey.name
+                        ) {
+                            setIntValue(doom64CoopSkillPrefsKey, it.coerceIn(1, 5))
+                        }
+
+                        DrawHorizontalDivider()
+                        SwitchPreferenceItem(
+                            stringResource(R.string.doom64_coop_deathmatch),
+                            doom64CoopDeathmatch,
+                            doom64CoopDeathmatchPrefsKey.name
+                        )
+
+                        DrawHorizontalDivider()
+                        SwitchPreferenceItem(
+                            stringResource(R.string.doom64_coop_respawn_monsters),
+                            doom64CoopRespawnMonsters,
+                            doom64CoopRespawnMonstersPrefsKey.name
+                        )
+
+                        DrawHorizontalDivider()
+                        SwitchPreferenceItem(
+                            stringResource(R.string.doom64_coop_respawn_items),
+                            doom64CoopRespawnItems,
+                            doom64CoopRespawnItemsPrefsKey.name
+                        )
+
+                        DrawHorizontalDivider()
+                        SwitchPreferenceItem(
+                            stringResource(R.string.doom64_coop_fast_monsters),
+                            doom64CoopFastMonsters,
+                            doom64CoopFastMonstersPrefsKey.name
+                        )
+
+                        DrawHorizontalDivider()
+                        SwitchPreferenceItem(
+                            stringResource(R.string.doom64_coop_no_monsters),
+                            doom64CoopNoMonsters,
+                            doom64CoopNoMonstersPrefsKey.name
+                        )
+
+                        DrawHorizontalDivider()
+                        SwitchPreferenceItem(
+                            stringResource(R.string.doom64_coop_friendly_fire),
+                            doom64CoopFriendlyFire,
+                            doom64CoopFriendlyFirePrefsKey.name
+                        )
+
+                        DrawHorizontalDivider()
+                        SwitchPreferenceItem(
+                            stringResource(R.string.doom64_coop_keep_items),
+                            doom64CoopKeepItems,
+                            doom64CoopKeepItemsPrefsKey.name
+                        )
+                    }
+
+                    Doom64NetworkMode.Join -> {
+                        DrawHorizontalDivider()
+                        EditTextPreferenceItem(
+                            stringResource(R.string.doom64_coop_server_address),
+                            doom64CoopServerAddress,
+                            doom64CoopServerAddressPrefsKey.name,
+                            stringResource(R.string.doom64_coop_server_address_hint)
+                        )
+                    }
+
+                    Doom64NetworkMode.AutoJoin -> Unit
+                }
             }
 
             DrawModsSupport(modsModel)
