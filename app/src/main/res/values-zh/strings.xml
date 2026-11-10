@@ -361,4 +361,23 @@
     <string name="fence_timeout">栅栏超时（毫秒</string>
     <string name="enable_etc2_texture_support">在启用 GLES 3.0 时开启 ETC2 纹理原生支持</string>
     <string name="uzdoom_engine_version">UZDoom引擎版本（更改后重启应用）</string>
+    <string name="doom64_coop_mode">网络合作模式</string>
+    <string name="doom64_coop_disabled">禁用</string>
+    <string name="doom64_coop_host">创建游戏</string>
+    <string name="doom64_coop_join">通过地址加入</string>
+    <string name="doom64_coop_autojoin">搜索局域网游戏</string>
+    <string name="doom64_coop_player_name">玩家名称</string>
+    <string name="doom64_coop_server_address">服务器地址</string>
+    <string name="doom64_coop_server_address_hint">IP 地址或主机名，可选填写 :端口</string>
+    <string name="doom64_coop_port">UDP 端口</string>
+    <string name="doom64_coop_players_to_start">达到此玩家人数后开始（包括主机）</string>
+    <string name="doom64_coop_map">起始地图</string>
+    <string name="doom64_coop_skill">难度（1–5）</string>
+    <string name="doom64_coop_deathmatch">使用死亡竞赛模式代替合作模式</string>
+    <string name="doom64_coop_respawn_monsters">怪物重生</string>
+    <string name="doom64_coop_respawn_items">物品重生</string>
+    <string name="doom64_coop_fast_monsters">快速怪物</string>
+    <string name="doom64_coop_no_monsters">无怪物</string>
+    <string name="doom64_coop_friendly_fire">允许误伤队友</string>
+    <string name="doom64_coop_keep_items">重生时保留物品</string>
 </resources>
