@@ -360,4 +360,24 @@
     <string name="fence_timeout">Таймаут fence (мс)</string>
     <string name="enable_etc2_texture_support">Включить встроенную поддержку текстур ETC2 при использовании GLES 3.0</string>
     <string name="uzdoom_engine_version">Версия UZDoom (перезапуск приложения после смены)</string>
-</resources>
+
+    <string name="doom64_coop_mode">Режим сетевой игры</string>
+    <string name="doom64_coop_disabled">Отключено</string>
+    <string name="doom64_coop_host">Создать сервер</string>
+    <string name="doom64_coop_join">Подключиться по адресу</string>
+    <string name="doom64_coop_autojoin">Найти игру в локальной сети</string>
+    <string name="doom64_coop_player_name">Имя игрока</string>
+    <string name="doom64_coop_server_address">Адрес сервера</string>
+    <string name="doom64_coop_server_address_hint">IP-адрес или имя хоста, порт можно указать через :порт</string>
+    <string name="doom64_coop_port">UDP-порт</string>
+    <string name="doom64_coop_players_to_start">Начать после подключения игроков (включая хоста)</string>
+    <string name="doom64_coop_map">Начальная карта</string>
+    <string name="doom64_coop_skill">Сложность (1–5)</string>
+    <string name="doom64_coop_deathmatch">Deathmatch вместо кооператива</string>
+    <string name="doom64_coop_respawn_monsters">Возрождение монстров</string>
+    <string name="doom64_coop_respawn_items">Возрождение предметов</string>
+    <string name="doom64_coop_fast_monsters">Быстрые монстры</string>
+    <string name="doom64_coop_no_monsters">Без монстров</string>
+    <string name="doom64_coop_friendly_fire">Разрешить огонь по своим</string>
+    <string name="doom64_coop_keep_items">Сохранять предметы после возрождения</string>
+    </resources>
