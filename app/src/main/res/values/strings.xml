@@ -362,4 +362,24 @@
     <string name="fence_timeout">Fence timeout (ms)</string>
     <string name="enable_etc2_texture_support">Enable etc2 native texture format support when gles 3.0 is enabled</string>
     <string name="uzdoom_engine_version">UZDoom Engine version (the app will restart after changing this value)</string>
-</resources>
+
+    <string name="doom64_coop_mode">Network co-op mode</string>
+    <string name="doom64_coop_disabled">Disabled</string>
+    <string name="doom64_coop_host">Host a game</string>
+    <string name="doom64_coop_join">Join by address</string>
+    <string name="doom64_coop_autojoin">Find a LAN game</string>
+    <string name="doom64_coop_player_name">Player name</string>
+    <string name="doom64_coop_server_address">Server address</string>
+    <string name="doom64_coop_server_address_hint">IP address or hostname, optionally with :port</string>
+    <string name="doom64_coop_port">UDP port</string>
+    <string name="doom64_coop_players_to_start">Start after this many players join (including host)</string>
+    <string name="doom64_coop_map">Starting map</string>
+    <string name="doom64_coop_skill">Difficulty (1–5)</string>
+    <string name="doom64_coop_deathmatch">Deathmatch instead of co-op</string>
+    <string name="doom64_coop_respawn_monsters">Respawn monsters</string>
+    <string name="doom64_coop_respawn_items">Respawn items</string>
+    <string name="doom64_coop_fast_monsters">Fast monsters</string>
+    <string name="doom64_coop_no_monsters">No monsters</string>
+    <string name="doom64_coop_friendly_fire">Allow friendly fire</string>
+    <string name="doom64_coop_keep_items">Keep items on respawn</string>
+    </resources>
