@@ -1,0 +1,51 @@
+"Action Manifest"
+{
+    "major_revision" "1"
+	"major_revision_affects_mousekb" "1"
+	"major_revision_affects_xinput" "1"
+    "configurations"
+    {
+        "controller_neptune"
+        {
+            "0"
+            {
+                "path" "doom_bfa.vdf"
+            }
+        }
+        "controller_xboxone"
+        {
+            "0"
+            {
+                "path" "bfa_test_0.vdf"
+            }
+        }
+    }
+    "actions"
+    {
+        "modern"
+		{
+			"title"		"modern"
+			"legacy_set"		"0"
+			"StickPadGyro"
+			{
+			}
+			"Button"
+			{
+			}
+		}
+		"classic"
+		{
+			"title"		"classic"
+			"legacy_set"		"0"
+			"StickPadGyro"
+			{
+			}
+			"Button"
+			{
+			}
+		}
+    }
+    "localization" 
+    {
+    }
+}
