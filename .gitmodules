@@ -15,7 +15,7 @@
 	url = https://github.com/sandstranger/DoomIIRPG-RE.git
 [submodule "third_party/fluidsynth/src/main/jni/fluidsynth-android"]
 	path = third_party/fluidsynth/src/main/jni/fluidsynth-android
-	url = https://github.com/sandstranger/fluidsynth-android.git
+	url = https://github.com/FluidSynth/fluidsynth.git
 [submodule "third_party/sdl2-ttf/src/main/jni/sdl-ttf"]
 	path = third_party/sdl2-ttf/src/main/jni/sdl-ttf
 	url = https://github.com/sandstranger/SDL_ttf.git

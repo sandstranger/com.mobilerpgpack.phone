@@ -61,7 +61,10 @@ else ()
     set(SDL3_MIXER_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/sdl3-mixer/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/${ANDROID_ABI}/libSDL3_mixer.so)
 endif ()
 
-set(FLUIDSYNTH_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/fluidsynth/src/main/jni/fluidsynth-android/include")
+set(FLUIDSYNTH_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/third_party/fluidsynth/src/main/jni/fluidsynth-android/include"
+        "${CMAKE_SOURCE_DIR}/third_party/fluidsynth/src/main/include" CACHE STRING "" FORCE)
+
+include_directories(PUBLIC ${FLUIDSYNTH_INCLUDE_DIR} "${CMAKE_SOURCE_DIR}/third_party/fluidsynth/src/main/include")
 
 if (IS_DEBUG_BUILD)
     set(FLUIDSYNTH_LIBRARY ${CMAKE_SOURCE_DIR}/third_party/fluidsynth/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/${ANDROID_ABI}/libfluidsynth.so)

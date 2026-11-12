@@ -47,7 +47,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path "src/main/jni/fluidsynth-android/CMakeLists.txt"
+            path "CMakeLists.txt"
             version versions.cmake_version
         }
     }
