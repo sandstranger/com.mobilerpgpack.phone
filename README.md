@@ -159,11 +159,10 @@ Connection is working without issues even between PC and android devices, use ta
 - **Credits:** Integrates code from the [Nintendo Switch port](https://github.com/capsterx-switch/Vanilla-Conquer).
 
 ### Classic-RBDOOM-3-BFG
-- **Rendering:** Strictly OpenGL ES 3.2 due to heavy reliance on modern GLSL 3.x features.
+- **Rendering:** Strictly OpenGL ES 3.0 due to heavy reliance on modern GLSL 3.x features.
 - **Texture Compression (DXT vs ETC2):** Hardware DXT decoding is implemented and functional, but it is highly recommended to disable it and use the ETC2 fallback. **Do not disable the ETC2 texture cache** (even though the toggle exists).
 - **Mali/PowerVR GPUs:** Doom 3 BFG is a heavy IMR (Immediate Mode Rendering) engine. Performance on tile-based GPUs is inherently limited. Use the custom Android UI options to disable heavy effects and lower the screen resolution. No further engine-level optimizations will be made for these architectures.
 - **Memory Optimization (Texture Shrinking):** Enable texture shrinking (skipping MIP-map levels) in the launcher to save 200-300 MB of RAM. 
-- **ARMv7 Limitations:** Running this engine on ARMv7 devices will likely result in OOM (Out of Memory) crashes due to the severe RAM limitations of 32-bit architectures. This is expected behavior.
 - **Credits:** Integrates renderer code from [glKarin](https://github.com/glKarin/com.n0n3m4.diii4a) and bugfixes from [emileb's dhewm3 port](https://github.com/emileb/d3es-multithread).
 
 ---
