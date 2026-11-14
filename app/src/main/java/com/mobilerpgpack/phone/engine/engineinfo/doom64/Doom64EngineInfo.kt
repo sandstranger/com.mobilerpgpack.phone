@@ -20,7 +20,6 @@ open class Doom64EngineInfo(
     override val gl4esShaderCacheFolderName = "doom64_gl4es_cache"
     final override val commandLineParams: String get() = preferencesStorage.doom64CommandLineArgsString.value!!
     final override val pathToResource get() = preferencesStorage.pathToDoom64MainWadsFolder.value!!
-    final override val touchFullScreenModeCanBeUsed = false
     final override val enableNGGL4ESSimpleShaderConv = false
     final override val loadGL4ES = true
     final override val supportRenderChanges = true

@@ -169,7 +169,7 @@ abstract class EngineInfo(
 
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 
-    override val touchFullScreenModeCanBeUsed: Boolean = true
+    final override val touchFullScreenModeCanBeUsed: Boolean = false
 
     final override val commandLineArgs: Array<String>
         get() {

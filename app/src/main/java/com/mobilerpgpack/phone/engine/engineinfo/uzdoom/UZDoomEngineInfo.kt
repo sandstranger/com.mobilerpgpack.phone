@@ -11,7 +11,6 @@ import com.mobilerpgpack.phone.engine.engineinfo.utils.dehFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.modsCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.playingRecordsFileCanBeUsed
 import com.mobilerpgpack.phone.engine.engineinfo.utils.xlatFileCanBeUsed
-import com.mobilerpgpack.phone.utils.GpuProbe
 import com.sun.jna.Native
 import org.koin.core.component.get
 import org.koin.core.component.inject
@@ -20,7 +19,6 @@ import java.io.File
 import kotlin.collections.contains
 
 class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
-    private val gpuProbe by inject <GpuProbe>()
     private val allNativeLibraries : Array<String> by lazy { get (named(UZDoomEngineVersions.Dev.name)) }
     private val mainNativeLibrary : String by lazy { get (named(UZDoomEngineVersions.Dev.name)) }
     private val modsModel : UZDoomModsModel by inject (named(EngineTypes.UZDoom.toString()))
@@ -32,9 +30,6 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
         super.pathToRootUserFolder + File.separator + DEV_GZDOOM_USER_FOLDER_NAME
     }
     private val enableLightShaders get() = preferencesStorage.enableLightShaders.value!!
-    private val useAngleLayerForced: Boolean by lazy { !uzDoomViewModel.useOpenGLESRender &&
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !gpuProbe.probe().isAdreno }
-
     private val pathToUZDoomConfigsFile by lazy { pathToUZDoomUserFolder + File.separator + "uzdoom.ini" }
 
     override val preferencesStorage by inject <UZDoomPreferenceStorage>(named(
@@ -46,7 +41,6 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
     override val requiredResourceExtensions = listOf(".wad", ".WAD", ".pk3",
         ".PK3", ".ipk3",".IPK3")
     override val loadGL4ES = false
-    override val enableAngleSupport: Boolean get() = super.enableAngleSupport || useAngleLayerForced
 
     private external fun UpdateGLLiteShaderState(enableLightShaders : Boolean)
     private external fun UpdateHarmGLESVersion(glesVersion : Int)
@@ -54,6 +48,7 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
     private external fun UpdateUseOpenGLESState(useOpenGLES : Boolean)
     private external fun setSpirvCrossState(enableSpirvCross : Boolean)
     private external fun setTargetFPS (targetFPS : Int)
+    private external fun UZDoom_SetShaderCacheDirectory(path: String)
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -64,7 +59,13 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
 
     override fun onNativeLibrariesLoadedBeforeStart() {
         super.onNativeLibrariesLoadedBeforeStart()
-        val glesVersion = enumValueOf<UZDoomGLESVersion>(preferencesStorage.uzDoomGLESVersion.value!!).value
+        val storedGLESVersion = preferencesStorage.uzDoomGLESVersion.value
+        val glesVersionEnum = UZDoomGLESVersion.fromStoredName(storedGLESVersion)
+        if (storedGLESVersion != glesVersionEnum.name) {
+            // e.g. the removed "OpenGLES_3_2": store the version that is actually used
+            preferencesStorage.setStringValue(preferencesStorage.uzDoomGLESVersionPrefsKey, glesVersionEnum.name)
+        }
+        val glesVersion = glesVersionEnum.value
         Native.register(UZDoomEngineInfo::class.java, mainLibraryName)
         UpdateHarmGLESVersion(glesVersion)
         UpdateGLLiteShaderState(enableLightShaders)
@@ -72,6 +73,8 @@ class UZDoomEngineInfo: SDL3EngineInfo(activeEngineType = EngineTypes.UZDoom) {
             uzDoomCacheFolder.absolutePath)
         UpdateUseOpenGLESState(uzDoomViewModel.renderAPI == UZDoomRenderAPI.OpenGLES)
         setSpirvCrossState(true)
+        // Driver-specific program binaries: codeCacheDir is wiped by Android on app updates.
+        UZDoom_SetShaderCacheDirectory(File(activity.codeCacheDir, "uzdoom_program_cache").absolutePath)
         preferencesStorage.apply {
             setTargetFPS(framePacingTargetFPS.value!!)
         }

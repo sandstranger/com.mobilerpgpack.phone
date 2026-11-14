@@ -8,8 +8,11 @@
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_egl.h"
 #include "jni.h"
+#include <android/log.h>
 #include <atomic>
+#include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <mutex>
 
 #define NS_PER_MS 1000000ULL
@@ -52,6 +55,40 @@ static inline SDL_Window* GetSDLWindow() {
 
     SDL_free(windows);
     return result;
+}
+
+// Graphics debuggers and capture tools are GLES layers or interceptors loaded into the process;
+// their libraries show up in its memory map.
+static bool DetectGraphicsDebugger() {
+    static const char* const markers[] = {
+        "renderdoc",        // RenderDoc: libVkLayer_GLES_RenderDoc.so, librenderdoc.so
+        "libgapii",         // Android GPU Inspector / GAPID
+        "/libaga.so",       // Arm Graphics Analyzer (Arm Mobile Studio)
+        "/libmgd.so",       // Mali Graphics Debugger
+    };
+
+    FILE* maps = fopen("/proc/self/maps", "re");
+    if (maps == nullptr) {
+        return false;
+    }
+
+    char line[1024];
+    const char* found = nullptr;
+    while (found == nullptr && fgets(line, sizeof(line), maps) != nullptr) {
+        for (const char* marker : markers) {
+            if (strcasestr(line, marker) != nullptr) {
+                found = marker;
+                break;
+            }
+        }
+    }
+    fclose(maps);
+
+    if (found != nullptr) {
+        __android_log_print(ANDROID_LOG_INFO, "AndroidGraphicsLayer",
+                            "Graphics debugger in the process (%s): Swappy is bypassed, plain eglSwapBuffers", found);
+    }
+    return found != nullptr;
 }
 
 // Engines that quit with exit() straight from their game loop (fteqw's Sys_Quit/Sys_Error and others)
@@ -122,7 +159,20 @@ Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_destroySwappyGL(JNIEnv *env, j
 }
 
 __attribute__((used)) __attribute__((visibility("default")))
+bool AndroidGraphicsDebuggerAttached(void) {
+    static const bool attached = DetectGraphicsDebugger();
+    return attached;
+}
+
+__attribute__((used)) __attribute__((visibility("default")))
 bool SwappySwapBuffers() {
+    // Under a capture tool the swap is where the captured frame ends and the tool reads back all
+    // resources; Swappy's own EGL fences and presentation timestamps around it only get in the way
+    // (and frame pacing a captured frame is pointless): the engine does a plain swap instead.
+    if (AndroidGraphicsDebuggerAttached()) {
+        return false;
+    }
+
     // SwappyGL_swap() runs against Swappy's shared state and background
     // Choreographer/filter threads. Serialize it with init/destroy to prevent
     // teardown from freeing that state while a render thread is still swapping.

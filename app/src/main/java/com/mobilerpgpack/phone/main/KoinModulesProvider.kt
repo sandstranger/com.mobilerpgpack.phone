@@ -117,7 +117,6 @@ import com.mobilerpgpack.phone.ui.screen.viewmodels.DownloadViewModel
 import com.mobilerpgpack.phone.ui.screen.viewmodels.SettingsScreenViewModel
 import com.mobilerpgpack.phone.ui.viewmodel.MainActivityViewModel
 import com.mobilerpgpack.phone.utils.AssetExtractor
-import com.mobilerpgpack.phone.utils.GpuProbe
 import com.mobilerpgpack.phone.utils.IAssetExtractor
 import com.mobilerpgpack.phone.utils.IKeyCodesProvider
 import com.mobilerpgpack.phone.utils.KeyCodesProvider
@@ -192,7 +191,6 @@ class KoinModulesProvider(private val context: Context) : KoinComponent  {
         factory <File>{ (pathToFile : String) -> File(get<File>(named(ROOT_USER_DIRECTORY_KEY)),
             pathToFile) }
         singleOf(::VirtualControllerJnaLayer)
-        singleOf(::GpuProbe)
     }
 
     private val httpModule = module {

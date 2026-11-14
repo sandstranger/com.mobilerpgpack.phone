@@ -46,7 +46,6 @@ class DoomBFAEngineInfo(mainEngineLib: String, allLibs: Array<String>) :
     override val commandLineParams: String get() = doomBFAPreferenceStorage.commandLineArgs.value!!
     override val loadGL4ES = false
     override val callExitProcessOnDestroy = true
-    override val touchFullScreenModeCanBeUsed = false
     override val targetGLESVersion get() = preferencesStorage.targetGLESVersion.value!!.glesIntVersion
     override val mouseButtonsEventsCanBeInvoked: Boolean get() = needToInvokeMouseButtonsEvents()
 

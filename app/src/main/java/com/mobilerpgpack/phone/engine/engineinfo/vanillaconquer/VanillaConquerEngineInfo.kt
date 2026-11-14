@@ -27,7 +27,6 @@ class VanillaConquerEngineInfo :
     override val loadGL4ES = false
     override val enableGyroscope = false
     override val allowedToEnableAngle = false
-    override val touchFullScreenModeCanBeUsed = false
     override val commandLineParams get() = prefsStorage.vanillaConquerCommandLineArgs.value!!
     override val backPressedReleaseDelay = 80L
     override val pathToResource: String

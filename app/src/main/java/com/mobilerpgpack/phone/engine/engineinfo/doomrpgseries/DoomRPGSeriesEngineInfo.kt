@@ -16,7 +16,6 @@ abstract class DoomRPGSeriesEngineInfo(
     private val translationManager: ITranslationManager by inject()
     final override val mouseButtonsEventsCanBeInvoked: Boolean = true
     override val requiredResourceExtensions = listOf(".ipa", ".IPA")
-    final override val touchFullScreenModeCanBeUsed: Boolean = false
     final override val keyboardInputType = CustomKeyboardView.KeyboardType.NUMBER_DECIMAL
     final override val enableGyroscope = false
     final override val enableNGGL4ESSimpleShaderConv = true

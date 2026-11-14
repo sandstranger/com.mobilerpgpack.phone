@@ -42,6 +42,11 @@ struct PS_OUT {
 
 void main( PS_IN fragment, out PS_OUT result ) {
 	float4 color = tex2D( samp0, fragment.texcoord0 ) * fragment.color;
+	// the alpha test. On tile-based GPUs (TBR_MOBILE) only the USE_ALPHA_TEST variants keep it, bound by
+	// the alpha-tested depth and shadow draws: a discard anywhere in a program costs every draw of it the
+	// early depth/stencil test and hidden surface removal, and rpAlphaTest is 0 for all the others.
+#if !defined( TBR_MOBILE ) || defined( USE_ALPHA_TEST )
 	clip( color.a - rpAlphaTest.x );
+#endif
 	result.color = sRGBAToLinearRGBA( color );
 }

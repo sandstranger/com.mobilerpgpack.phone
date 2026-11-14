@@ -88,8 +88,6 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
         }
     }
 
-    override val touchFullScreenModeCanBeUsed: Boolean get() = gameType != FTEQWGames.Quake3
-
     val attackWithLeftMouseButton : Boolean get() = gameType.attackWithLeftMouseButton
 
     // a menu (engine, menuqc) or a csqc interface is driving the mouse cursor
@@ -100,6 +98,9 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
     private external fun setUIScale (uiScale : Float)
     private external fun setQuake2LibraryName (targetLibraryName : String)
     private external fun setTargetFPS(targetFPS : Int)
+    // native C ABI in libftedroid (engine/gl/gl_shadercache.c): where linked GLSL program binaries are kept.
+    // Must be set before the renderer starts; no GL work happens in it.
+    private external fun FTE_SetShaderCacheDirectory(path : String)
 
     override fun initialize(activity: ComponentActivity) {
         super.initialize(activity)
@@ -116,6 +117,14 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
         preferencesStorage.apply {
             setUIScale(fteqwUIScale.value!!)
             setTargetFPS(framePacingTargetFPS.value!!)
+        }
+        // the code cache dir is emptied by Android on every app update, which is exactly when the
+        // generated GLSL changes; the engine also keys every binary on the GL driver and build.
+        File(activity.codeCacheDir, SHADER_CACHE_DIR).also {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+            FTE_SetShaderCacheDirectory(it.absolutePath)
         }
         setQuake2LibraryName(getQuake2NativeLibraryName() + ".so")
     }
@@ -205,5 +214,6 @@ class FTEQWEngineInfo : SDL3EngineInfo( EngineTypes.FTEQW){
         private const val GAME_COMMAND = "-game"
         private const val MANIFEST_COMMAND = "-manifest"
         private const val FTEQW_CONFIGS_DIR = "FTEQW"
+        private const val SHADER_CACHE_DIR = "fteqw_glsl_cache"
     }
 }
