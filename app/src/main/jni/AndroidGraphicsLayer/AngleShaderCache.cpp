@@ -202,6 +202,8 @@ static bool read_file(const std::string &path, std::vector<uint8_t> &out) {
 using BlobData = std::shared_ptr<const std::vector<uint8_t>>;
 
 static std::mutex g_write_mutex;
+// Serializes background and overflow writes so a stale queued blob cannot overwrite a newer one.
+static std::mutex g_file_write_mutex;
 static std::condition_variable g_write_cv;      // the writer waits for blobs, a shutdown for the queue to empty
 static std::deque<std::string> g_write_queue;   // paths, as set (a path set again may come twice)
 static std::unordered_map<std::string, BlobData> g_pending;     // the newest data of each path not written yet
@@ -212,7 +214,7 @@ static bool g_writer_started = false;
 // More than this waiting (a slow flash and a huge pipeline cache): written right away as before.
 // Every blob waiting here is a copy held in RAM - ANGLE hands over its whole compressed pipeline
 // cache again each time new pipelines were made - so the queue stays small.
-static const size_t kMaxPendingBytes = 16u * 1024u * 1024u;
+static const size_t kMaxPendingBytes = 64u * 1024u * 1024u;
 
 static void blob_writer_main() {
     size_t blobs = 0;
@@ -250,7 +252,25 @@ static void blob_writer_main() {
             g_writer_busy = true;
         }
 
-        const bool ok = write_file_atomic(path, data->data(), data->size());
+        bool ok = true;
+        bool current = false;
+        {
+            // A synchronous overflow write may have replaced or removed this pending blob.
+            // Serialize the file operation and re-check after taking the I/O lock.
+            std::lock_guard<std::mutex> fileLock(g_file_write_mutex);
+            {
+                std::lock_guard<std::mutex> lock(g_write_mutex);
+                const auto it = g_pending.find(path);
+                current = it != g_pending.end() && it->second == data;
+            }
+            if (current) {
+                ok = write_file_atomic(path, data->data(), data->size());
+            }
+        }
+
+        if (!current) {
+            continue;   // superseded or written synchronously while this item was queued
+        }
         if (!ok) {
             SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
                         "ANGLE blobcache: failed to write %s", path.c_str());
@@ -288,22 +308,40 @@ static void set_blob_cb(const void *key, EGLsizeiANDROID keySize,
 
     {
         std::lock_guard<std::mutex> lock(g_write_mutex);
-        if (g_writer_started && g_pending_bytes + data->size() <= kMaxPendingBytes) {
+        const auto pendingIt = g_pending.find(path);
+        const size_t oldPendingSize =
+                pendingIt == g_pending.end() ? 0 : pendingIt->second->size();
+        const size_t bytesWithoutThisPath = g_pending_bytes - oldPendingSize;
+
+        if (g_writer_started &&
+            data->size() <= kMaxPendingBytes &&
+            bytesWithoutThisPath <= kMaxPendingBytes - data->size()) {
             auto &slot = g_pending[path];
-            if (slot) {
-                g_pending_bytes -= slot->size();
-            }
             slot = data;
-            g_pending_bytes += data->size();
+            g_pending_bytes = bytesWithoutThisPath + data->size();
             g_write_queue.push_back(path);
             g_write_cv.notify_all();
             return;
         }
     }
 
-    if (!write_file_atomic(path, data->data(), data->size())) {
-        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
-                    "ANGLE blobcache: failed to write %s", path.c_str());
+    {
+        // Remove any older queued copy before writing the newest blob synchronously.
+        // The I/O mutex makes this safe even if the writer has already taken that blob.
+        std::lock_guard<std::mutex> fileLock(g_file_write_mutex);
+        {
+            std::lock_guard<std::mutex> lock(g_write_mutex);
+            const auto it = g_pending.find(path);
+            if (it != g_pending.end()) {
+                g_pending_bytes -= it->second->size();
+                g_pending.erase(it);
+            }
+        }
+
+        if (!write_file_atomic(path, data->data(), data->size())) {
+            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+                        "ANGLE blobcache: failed to write %s", path.c_str());
+        }
     }
 }
 
