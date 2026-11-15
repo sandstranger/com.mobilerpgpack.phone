@@ -10,6 +10,7 @@ import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.util.fastCoerceIn
 import androidx.navigation.NavHostController
 import com.mobilerpgpack.phone.R
 import com.mobilerpgpack.phone.engine.EngineTypes
@@ -271,7 +272,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             stringResource(R.string.psydoom_anti_aliasing_samples),
             viewModel.antialiasingMultisamplesAsLiveData,
         ) {
-            viewModel.antialiasingMultisamples = it
+            viewModel.antialiasingMultisamples = it.fastCoerceIn(-1, 2)
         }
         DrawHorizontalDivider()
         SwitchItem(

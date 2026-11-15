@@ -2,13 +2,17 @@
 // Created by sandstranger on 21.06.2026.
 //
 #include "SwappyController.h"
+#include "SwappyVkController.h"
 #include "swappy/swappyGL.h"
 #include <swappy/swappyGL_extra.h>
+#include <swappy/swappyVk.h>
 #include <swappy/swappy_common.h>
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_egl.h"
 #include "jni.h"
 #include <android/log.h>
+#include <android/native_window.h>
+#include <algorithm>
 #include <atomic>
 #include <cstdio>
 #include <cstdlib>
@@ -23,6 +27,26 @@ using PFNEGLGETERRORPROC = EGLint (*)();
 static std::atomic<bool> swappyWasEnabled = false;
 static std::atomic<bool> g_swappyDestroyed = false;
 static std::mutex g_swappyMutex;
+
+// The launcher's frame pacing settings (initSwappyGL), kept for the Vulkan renderers (SwappyVk), with what
+// SwappyVk needs from Java: the VM to get the render thread's JNIEnv and the activity.
+struct SwappyVkSettings {
+    bool valid = false;
+    bool autoPipelineMode = true;
+    bool autoSwap = false;
+    bool framePacing = true;
+    bool blockingWait = true;
+    uint64_t fenceTimeoutNS = 0;
+    uint64_t swapIntervalNS = SWAPPY_SWAP_60FPS;
+};
+static SwappyVkSettings g_vkSettings;
+static JavaVM* g_javaVM = nullptr;
+static jobject g_activity = nullptr;    // global reference
+
+// SwappyVk state, all under g_swappyMutex: the device whose present queue Swappy knows, the swapchain it paces.
+static VkDevice g_vkDevice = VK_NULL_HANDLE;
+static VkSwapchainKHR g_vkSwapchain = VK_NULL_HANDLE;
+static bool g_vkAtExitRegistered = false;
 
 static inline PFNEGLGETCURRENTSURFACEPROC GetEGLGetCurrentSurface() {
     static auto p_eglGetCurrentSurface = []() -> PFNEGLGETCURRENTSURFACEPROC {
@@ -55,6 +79,26 @@ static inline SDL_Window* GetSDLWindow() {
 
     SDL_free(windows);
     return result;
+}
+
+// The ANativeWindow of the SDL window, the one the Vulkan surface was created for.
+static ANativeWindow* GetANativeWindow() {
+    SDL_Window* window = GetSDLWindow();
+    if (window == nullptr) {
+        return nullptr;
+    }
+    return static_cast<ANativeWindow*>(SDL_GetPointerProperty(SDL_GetWindowProperties(window),
+                                                              SDL_PROP_WINDOW_ANDROID_WINDOW_POINTER, nullptr));
+}
+
+// JNIEnv of the calling (render) thread. SDL's main thread is a Java thread; any other thread is attached by
+// SDL, which detaches it when it exits.
+static JNIEnv* GetJNIEnv() {
+    JNIEnv* env = nullptr;
+    if (g_javaVM != nullptr && g_javaVM->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) == JNI_OK) {
+        return env;
+    }
+    return static_cast<JNIEnv*>(SDL_GetAndroidJNIEnv());
 }
 
 // Graphics debuggers and capture tools are GLES layers or interceptors loaded into the process;
@@ -101,6 +145,22 @@ static void DestroySwappyAtExit() {
     DestroySwappy();
 }
 
+// Releases what SwappyVk has (its threads, fences and command buffers on the device), g_swappyMutex held.
+static void DestroySwappyVkLocked() {
+    if (g_vkSwapchain != VK_NULL_HANDLE) {
+        SwappyVk_destroySwapchain(g_vkDevice, g_vkSwapchain);
+        g_vkSwapchain = VK_NULL_HANDLE;
+    }
+    if (g_vkDevice != VK_NULL_HANDLE) {
+        SwappyVk_destroyDevice(g_vkDevice);
+        g_vkDevice = VK_NULL_HANDLE;
+    }
+}
+
+static bool SwappyVkAvailableLocked() {
+    return g_vkSettings.valid && g_activity != nullptr && !g_swappyDestroyed.load(std::memory_order_acquire);
+}
+
 extern "C" {
 __attribute__((used)) __attribute__((visibility("default")))
 JNIEXPORT void JNICALL
@@ -124,15 +184,30 @@ Java_com_mobilerpgpack_phone_utils_SwappyJNILayer_initSwappyGL(
         return;
     }
 
-    if (!SwappyGL_init(env, activity)) {
-        return;
-    }
-
     const uint64_t fenceTimeout =
             fenceTimeoutMS <= 0 ? 0 : static_cast<uint64_t>(fenceTimeoutMS) * NS_PER_MS;
     const uint64_t swapInterval =
             targetFPS <= 0 ? SWAPPY_SWAP_60FPS
                            : static_cast<uint64_t>(1000000000ULL / targetFPS);
+
+    // The same settings for a Vulkan renderer (SwappyVk is set up per swapchain, SwappyVkController_*)
+    if (g_javaVM == nullptr) {
+        env->GetJavaVM(&g_javaVM);
+    }
+    if (g_activity == nullptr) {
+        g_activity = env->NewGlobalRef(activity);
+    }
+    g_vkSettings.autoPipelineMode = enableAutoPipelineMode;
+    g_vkSettings.autoSwap = enableAutoSwap;
+    g_vkSettings.framePacing = enableFramePacing;
+    g_vkSettings.blockingWait = enableBlockingWait;
+    g_vkSettings.fenceTimeoutNS = fenceTimeout;
+    g_vkSettings.swapIntervalNS = swapInterval;
+    g_vkSettings.valid = g_javaVM != nullptr && g_activity != nullptr;
+
+    if (!SwappyGL_init(env, activity)) {
+        return;
+    }
 
     SwappyGL_setAutoSwapInterval(enableAutoSwap);
     SwappyGL_setUseAffinity(true);
@@ -229,10 +304,163 @@ void DestroySwappy() {
         return;
     }
 
+    DestroySwappyVkLocked();
+
     const auto wasEnabled = swappyWasEnabled.exchange(false, std::memory_order_acq_rel);
     if (wasEnabled) {
         g_swappyDestroyed = true;
         SwappyGL_destroy();
+    }
+}
+
+__attribute__((used)) __attribute__((visibility("default")))
+uint32_t SwappyVkController_GetDeviceExtensions(VkPhysicalDevice physicalDevice, uint32_t availableExtensionCount,
+                                                const VkExtensionProperties* pAvailableExtensions,
+                                                const char** outNames, uint32_t maxNames) {
+    if (AndroidGraphicsDebuggerAttached() || pAvailableExtensions == nullptr || outNames == nullptr) {
+        return 0;
+    }
+
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+    if (!SwappyVkAvailableLocked()) {
+        return 0;
+    }
+
+    constexpr uint32_t MAX_SWAPPY_EXTENSIONS = 4;
+    static char extensionNames[MAX_SWAPPY_EXTENSIONS][VK_MAX_EXTENSION_NAME_SIZE];
+    char* extensionNamePtrs[MAX_SWAPPY_EXTENSIONS];
+    for (uint32_t i = 0; i < MAX_SWAPPY_EXTENSIONS; ++i) {
+        extensionNamePtrs[i] = extensionNames[i];
+    }
+
+    auto* const availableExtensions = const_cast<VkExtensionProperties*>(pAvailableExtensions);
+    uint32_t requiredCount = 0;
+    SwappyVk_determineDeviceExtensions(physicalDevice, availableExtensionCount, availableExtensions, &requiredCount, nullptr);
+    requiredCount = std::min(requiredCount, std::min(MAX_SWAPPY_EXTENSIONS, maxNames));
+
+    // Called with the names even for none: this is where Swappy notes whether the device will have
+    // VK_GOOGLE_display_timing (the caller enables what is returned).
+    SwappyVk_determineDeviceExtensions(physicalDevice, availableExtensionCount, availableExtensions, &requiredCount,
+                                       extensionNamePtrs);
+    for (uint32_t i = 0; i < requiredCount; ++i) {
+        outNames[i] = extensionNames[i];
+        __android_log_print(ANDROID_LOG_INFO, "AndroidGraphicsLayer", "SwappyVk: device extension %s", extensionNames[i]);
+    }
+    return requiredCount;
+}
+
+__attribute__((used)) __attribute__((visibility("default")))
+void SwappyVkController_SetPresentQueue(VkDevice device, VkQueue queue, uint32_t queueFamilyIndex) {
+    if (AndroidGraphicsDebuggerAttached() || device == VK_NULL_HANDLE || queue == VK_NULL_HANDLE) {
+        return;
+    }
+
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+    if (!SwappyVkAvailableLocked()) {
+        return;
+    }
+
+    if (g_vkDevice != VK_NULL_HANDLE && g_vkDevice != device) {
+        DestroySwappyVkLocked();    // a device the renderer destroyed without telling
+    }
+    SwappyVk_setQueueFamilyIndex(device, queue, queueFamilyIndex);
+    g_vkDevice = device;
+}
+
+__attribute__((used)) __attribute__((visibility("default")))
+bool SwappyVkController_InitSwapchain(VkPhysicalDevice physicalDevice, VkDevice device, VkSwapchainKHR swapchain,
+                                      VkPresentModeKHR presentMode) {
+    if (AndroidGraphicsDebuggerAttached() || swapchain == VK_NULL_HANDLE) {
+        return false;
+    }
+
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+
+    // Swappy paces vsync'd presentation; the queue must be known (SwappyVkController_SetPresentQueue)
+    if (!SwappyVkAvailableLocked() || presentMode != VK_PRESENT_MODE_FIFO_KHR || device != g_vkDevice) {
+        return false;
+    }
+
+    JNIEnv* const env = GetJNIEnv();
+    if (env == nullptr) {
+        return false;
+    }
+
+    if (g_vkSwapchain != VK_NULL_HANDLE) {
+        SwappyVk_destroySwapchain(g_vkDevice, g_vkSwapchain);   // destroyed without telling
+        g_vkSwapchain = VK_NULL_HANDLE;
+    }
+
+    uint64_t refreshPeriodNS = 0;
+    if (!SwappyVk_initAndGetRefreshCycleDuration(env, g_activity, physicalDevice, device, swapchain, &refreshPeriodNS)) {
+        __android_log_print(ANDROID_LOG_WARN, "AndroidGraphicsLayer", "SwappyVk: initialization failed, no frame pacing");
+        SwappyVk_destroySwapchain(device, swapchain);
+        return false;
+    }
+
+    // the window lets Swappy ask the display for a refresh rate that fits the swap interval
+    if (ANativeWindow* const window = GetANativeWindow(); window != nullptr) {
+        SwappyVk_setWindow(device, swapchain, window);
+    }
+
+    // The same settings as SwappyGL (initSwappyGL). The global ones apply to the swapchains Swappy has:
+    // set after the swapchain was given to it.
+    SwappyVk_setAutoSwapInterval(g_vkSettings.autoSwap);
+    SwappyVk_setAutoPipelineMode(g_vkSettings.autoPipelineMode);
+    SwappyVk_setMaxAutoSwapIntervalNS(g_vkSettings.swapIntervalNS);
+    SwappyVk_setFenceTimeoutNS(g_vkSettings.fenceTimeoutNS);
+    SwappyVk_setSwapIntervalNS(device, swapchain, g_vkSettings.swapIntervalNS);
+    SwappyVk_enableStats(swapchain, false);
+    SwappyVk_enableFramePacing(swapchain, g_vkSettings.framePacing);
+    SwappyVk_enableBlockingWait(swapchain, g_vkSettings.blockingWait);
+    g_vkSwapchain = swapchain;
+
+    // Exit handlers run in reverse order of registration: registered after SwappyVk made its singletons,
+    // DestroySwappy stops its threads before those are destroyed (see DestroySwappyAtExit).
+    if (!g_vkAtExitRegistered) {
+        g_vkAtExitRegistered = true;
+        std::atexit(DestroySwappyAtExit);
+    }
+
+    __android_log_print(ANDROID_LOG_INFO, "AndroidGraphicsLayer",
+                        "SwappyVk: pacing the swapchain, refresh period %.3f ms, swap interval %.3f ms",
+                        refreshPeriodNS / 1.0e6, g_vkSettings.swapIntervalNS / 1.0e6);
+    return true;
+}
+
+__attribute__((used)) __attribute__((visibility("default")))
+bool SwappyVkController_QueuePresent(VkQueue queue, const VkPresentInfoKHR* pPresentInfo, VkResult* pResult) {
+    if (pPresentInfo == nullptr || pResult == nullptr) {
+        return false;
+    }
+
+    // Serialized with init/destroy like SwappyGL_swap: teardown must not free Swappy's state mid-present.
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+    if (g_vkSwapchain == VK_NULL_HANDLE || g_swappyDestroyed.load(std::memory_order_acquire)) {
+        return false;
+    }
+    if (pPresentInfo->swapchainCount != 1 || pPresentInfo->pSwapchains[0] != g_vkSwapchain) {
+        return false;
+    }
+
+    *pResult = SwappyVk_queuePresent(queue, pPresentInfo);
+    return true;
+}
+
+__attribute__((used)) __attribute__((visibility("default")))
+void SwappyVkController_DestroySwapchain(VkDevice device, VkSwapchainKHR swapchain) {
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+    if (swapchain != VK_NULL_HANDLE && swapchain == g_vkSwapchain) {
+        SwappyVk_destroySwapchain(device, swapchain);
+        g_vkSwapchain = VK_NULL_HANDLE;
+    }
+}
+
+__attribute__((used)) __attribute__((visibility("default")))
+void SwappyVkController_DestroyDevice(VkDevice device) {
+    std::lock_guard<std::mutex> lock(g_swappyMutex);
+    if (device != VK_NULL_HANDLE && device == g_vkDevice) {
+        DestroySwappyVkLocked();
     }
 }
 }

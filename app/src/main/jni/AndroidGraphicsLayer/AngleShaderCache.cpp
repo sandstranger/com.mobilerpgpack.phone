@@ -3,11 +3,17 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <cctype>
+#include <chrono>
+#include <condition_variable>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <deque>
+#include <memory>
 #include <mutex>
 #include <string>
+#include <thread>
+#include <unordered_map>
 #include <vector>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -185,19 +191,117 @@ static bool read_file(const std::string &path, std::vector<uint8_t> &out) {
     return true;
 }
 
+/*
+ * ANGLE calls the blob callbacks on the thread that renders: when it links a program, and every
+ * so often to save its Vulkan pipeline cache - all of it, megabytes split into blobs, whenever new
+ * pipelines were made since the last time. Writing those files right there (open, write, flush,
+ * rename each) stalled the frame for as long as the flash took: a freeze every few seconds while a
+ * game kept meeting new render states. The callback only copies the blob into a queue now and one
+ * background thread writes them. A blob not written yet is served from memory by get_blob_cb.
+ */
+using BlobData = std::shared_ptr<const std::vector<uint8_t>>;
+
+static std::mutex g_write_mutex;
+static std::condition_variable g_write_cv;      // the writer waits for blobs, a shutdown for the queue to empty
+static std::deque<std::string> g_write_queue;   // paths, as set (a path set again may come twice)
+static std::unordered_map<std::string, BlobData> g_pending;     // the newest data of each path not written yet
+static size_t g_pending_bytes = 0;
+static bool g_writer_busy = false;
+static bool g_writer_started = false;
+
+// More than this waiting (a slow flash and a huge pipeline cache): written right away as before.
+// Every blob waiting here is a copy held in RAM - ANGLE hands over its whole compressed pipeline
+// cache again each time new pipelines were made - so the queue stays small.
+static const size_t kMaxPendingBytes = 16u * 1024u * 1024u;
+
+static void blob_writer_main() {
+    size_t blobs = 0;
+    size_t bytes = 0;
+    auto burstStart = std::chrono::steady_clock::now();
+
+    for (;;) {
+        std::string path;
+        BlobData data;
+        {
+            std::unique_lock<std::mutex> lock(g_write_mutex);
+            g_writer_busy = false;
+            if (g_write_queue.empty()) {
+                g_write_cv.notify_all();
+                if (blobs) {
+                    // one line per burst: lines in step with the freezes would say ANGLE was saving its caches then
+                    const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                            std::chrono::steady_clock::now() - burstStart).count();
+                    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION,
+                                "ANGLE blobcache: %zu blobs, %zu KiB written in the background (%lld ms)",
+                                blobs, bytes / 1024, static_cast<long long>(ms));
+                    blobs = 0;
+                    bytes = 0;
+                }
+                g_write_cv.wait(lock, [] { return !g_write_queue.empty(); });
+                burstStart = std::chrono::steady_clock::now();
+            }
+            path = std::move(g_write_queue.front());
+            g_write_queue.pop_front();
+            const auto it = g_pending.find(path);
+            if (it == g_pending.end()) {
+                continue;   // written already, by its earlier entry
+            }
+            data = it->second;
+            g_writer_busy = true;
+        }
+
+        const bool ok = write_file_atomic(path, data->data(), data->size());
+        if (!ok) {
+            SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+                        "ANGLE blobcache: failed to write %s", path.c_str());
+        }
+        blobs++;
+        bytes += data->size();
+
+        std::lock_guard<std::mutex> lock(g_write_mutex);
+        const auto it = g_pending.find(path);
+        if (it != g_pending.end() && it->second == data) {
+            // not set again while it was written (else its newer data is still queued)
+            g_pending_bytes -= data->size();
+            g_pending.erase(it);
+        }
+    }
+}
+
 static void set_blob_cb(const void *key, EGLsizeiANDROID keySize,
                  const void *value, EGLsizeiANDROID valueSize) {
     if (!key || keySize <= 0 || !value || valueSize <= 0) {
         return;
     }
 
-    std::lock_guard<std::mutex> lock(g_mutex);
-    if (g_namespace_dir.empty()) {
-        return;
+    std::string path;
+    {
+        std::lock_guard<std::mutex> lock(g_mutex);
+        if (g_namespace_dir.empty()) {
+            return;
+        }
+        path = blob_path_for_key(key, keySize);
     }
 
-    const std::string path = blob_path_for_key(key, keySize);
-    if (!write_file_atomic(path, value, static_cast<size_t>(valueSize))) {
+    const auto *bytes = static_cast<const uint8_t *>(value);
+    BlobData data = std::make_shared<const std::vector<uint8_t>>(bytes, bytes + valueSize);
+
+    {
+        std::lock_guard<std::mutex> lock(g_write_mutex);
+        if (g_writer_started && g_pending_bytes + data->size() <= kMaxPendingBytes) {
+            auto &slot = g_pending[path];
+            if (slot) {
+                g_pending_bytes -= slot->size();
+            }
+            slot = data;
+            g_pending_bytes += data->size();
+            g_write_queue.push_back(path);
+            g_write_cv.notify_all();
+            return;
+        }
+    }
+
+    if (!write_file_atomic(path, data->data(), data->size())) {
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
                     "ANGLE blobcache: failed to write %s", path.c_str());
     }
@@ -209,15 +313,29 @@ static EGLsizeiANDROID get_blob_cb(const void *key, EGLsizeiANDROID keySize,
         return 0;
     }
 
-    std::lock_guard<std::mutex> lock(g_mutex);
-    if (g_namespace_dir.empty()) {
-        return 0;
+    std::string path;
+    {
+        std::lock_guard<std::mutex> lock(g_mutex);
+        if (g_namespace_dir.empty()) {
+            return 0;
+        }
+        path = blob_path_for_key(key, keySize);
     }
 
-    const std::string path = blob_path_for_key(key, keySize);
+    // set but not written yet: from memory
+    BlobData pending;
+    {
+        std::lock_guard<std::mutex> lock(g_write_mutex);
+        const auto it = g_pending.find(path);
+        if (it != g_pending.end()) {
+            pending = it->second;
+        }
+    }
 
     std::vector<uint8_t> data;
-    if (!read_file(path, data)) {
+    if (pending) {
+        data = *pending;
+    } else if (!read_file(path, data)) {
         return 0;
     }
 
@@ -291,6 +409,16 @@ bool angle_blobcache_install(const char *namespace_name) {
         return false;
     }
 
+    {
+        std::lock_guard<std::mutex> writeLock(g_write_mutex);
+        if (!g_writer_started) {
+            // Detached: it outlives every engine of the process, and a joinable std::thread left at
+            // exit would terminate the process
+            std::thread(blob_writer_main).detach();
+            g_writer_started = true;
+        }
+    }
+
     func(reinterpret_cast<EGLDisplay>(sdl_display),
          &set_blob_cb,
          &get_blob_cb);
@@ -305,6 +433,12 @@ __attribute__((used)) __attribute__((visibility("default")))
 void angle_blobcache_shutdown(void) {
     if (!g_enable_angle){
         return;
+    }
+    {
+        // the blobs still queued are written first (a cache saved for the next start), two seconds at most
+        std::unique_lock<std::mutex> writeLock(g_write_mutex);
+        g_write_cv.wait_for(writeLock, std::chrono::seconds(2),
+                            [] { return g_write_queue.empty() && !g_writer_busy; });
     }
     std::lock_guard<std::mutex> lock(g_mutex);
     g_installed = false;
