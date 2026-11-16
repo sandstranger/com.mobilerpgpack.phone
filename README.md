@@ -109,8 +109,6 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 ### PsyDoom
 - **Game Data:** Requires a Doom PSX disc image (`.cue`/`.bin`). See the [official PsyDoom documentation](https://github.com/BodbDearg/PsyDoom?tab=readme-ov-file#running-the-game).
 - **Rendering:** Requires Vulkan 1.0 support. Devices without Vulkan must use the legacy OpenGL ES renderer.
-- **Mali/PowerVR Performance:** Low FPS on Mali and PowerVR GPUs is expected due to GPU stalls. This is an architectural limitation and will not be fixed.
-- **Alternative:** For a playable PS1 Doom experience on Android, it is highly recommended to use [DOOM CE via UZDoom](https://www.moddb.com/mods/doom-ce/downloads/psx-doom-ce-205-full-version).
 
 ### UZDoom
 - **Game Data:** Follow the [GZDoom documentation](https://zdoom.org/w/index.php?title=Main_Page).
