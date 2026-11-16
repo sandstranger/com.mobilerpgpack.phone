@@ -2,8 +2,8 @@
 buildscript {
     ext.versions = [
             app_package_name : "com.mobilerpgpack.phone",
-            app_version_code : 144,
-            app_version_name : "4.0.0",
+            app_version_code : 145,
+            app_version_name : "4.0.1",
             min_sdk : 24,
             target_sdk : 37,
             target_sdk_min_revision : 2,
@@ -14,7 +14,7 @@ buildscript {
     ]
     ext.build_flags = [
             compiling_arguments : "-j${Runtime.getRuntime().availableProcessors()}",
-            abi_filters  : ["arm64-v8a", "armeabi-v7a"],
+            abi_filters  : ["arm64-v8a", "armeabi-v7a","x86_64"],
             common_c_flags : ["-Os","-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",
                               "-g", "-D_FILE_OFFSET_BITS=64"],
             common_cpp_flags : ["-Os" ,"-flto=thin", "-fno-omit-frame-pointer","-funwind-tables","-fstack-protector-strong",

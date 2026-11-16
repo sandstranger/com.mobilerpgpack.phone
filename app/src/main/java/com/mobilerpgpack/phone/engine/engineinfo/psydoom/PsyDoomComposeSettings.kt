@@ -272,7 +272,7 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
             stringResource(R.string.psydoom_anti_aliasing_samples),
             viewModel.antialiasingMultisamplesAsLiveData,
         ) {
-            viewModel.antialiasingMultisamples = it.fastCoerceIn(-1, 2)
+            viewModel.antialiasingMultisamples = it.fastCoerceIn(-1, 32)
         }
         DrawHorizontalDivider()
         SwitchItem(
