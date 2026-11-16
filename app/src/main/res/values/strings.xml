@@ -100,6 +100,7 @@
     <string name="psydoom_vulkan_render">Vulkan render</string>
     <string name="psydoom_render_height">Render height</string>
     <string name="psydoom_anti_aliasing_samples">Anti-aliasing multisamples</string>
+    <string name="psydoom_anti_aliasing_edges_only">Anti-aliasing: edges only (faster)</string>
     <string name="psydoom_mimic_original_pixel_stretch">Mimic original pixel stretch</string>
     <string name="psydoom_widescreen">Widescreen enabled</string>
     <string name="psydoom_extended_status_bar">Draw extended status bar</string>

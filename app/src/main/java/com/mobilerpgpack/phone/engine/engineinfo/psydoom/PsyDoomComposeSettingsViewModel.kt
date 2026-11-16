@@ -45,6 +45,7 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
     val renderHeightAsLiveData = graphicsIniFile.getIntValue("VulkanRenderHeight")
     val outputRefreshRateAsLiveData = graphicsIniFile.getIntValue("OutputRefreshRate")
     val antialiasingMultisamplesAsLiveData = graphicsIniFile.getIntValue("AntiAliasingMultisamples")
+    val antialiasingEdgesOnlyAsLiveData = graphicsIniFile.getBooleanValueFromInt("AntiAliasingEdgesOnly")
 
     val vramSizeInMbytesAsLiveData = graphicsIniFile.getIntValue("VramSizeInMegabytes")
     val bottomOverscanPixelsAsLiveData = graphicsIniFile.getIntValue("BottomOverscanPixels")
@@ -192,6 +193,10 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
     var antialiasingMultisamples: Int
         get() = antialiasingMultisamplesAsLiveData.value!!
         set(value) = graphicsIniFile.setValue("AntiAliasingMultisamples", value)
+
+    var antialiasingEdgesOnly: Boolean
+        get() = antialiasingEdgesOnlyAsLiveData.value!!
+        set(value) = graphicsIniFile.setValueAsInt("AntiAliasingEdgesOnly", value)
 
     var vramSizeInMbytes: Int
         get() = vramSizeInMbytesAsLiveData.value!!

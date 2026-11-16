@@ -276,6 +276,13 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
         DrawHorizontalDivider()
         SwitchItem(
+            stringResource(R.string.psydoom_anti_aliasing_edges_only),
+            viewModel.antialiasingEdgesOnlyAsLiveData
+        ) {
+            viewModel.antialiasingEdgesOnly = it
+        }
+        DrawHorizontalDivider()
+        SwitchItem(
             stringResource(R.string.psydoom_mimic_original_pixel_stretch),
             viewModel.vulkanPixelsStretchAsLiveData
         ) {

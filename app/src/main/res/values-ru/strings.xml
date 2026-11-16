@@ -142,6 +142,7 @@
     <string name="psydoom_vulkan_render">Рендер Vulkan</string>
     <string name="psydoom_render_height">Высота рендера</string>
     <string name="psydoom_anti_aliasing_samples">Сглаживание (мультисэмплинг)</string>
+    <string name="psydoom_anti_aliasing_edges_only">Сглаживание только краёв (быстрее)</string>
     <string name="psydoom_mimic_original_pixel_stretch">Повторить исходное растяжение пикселей</string>
     <string name="psydoom_widescreen">Широкоэкранный режим</string>
     <string name="psydoom_extended_status_bar">Расширенная панель статуса</string>

@@ -100,6 +100,7 @@
     <string name="psydoom_vulkan_render">Vulkan渲染</string>
     <string name="psydoom_render_height">渲染高度</string>
     <string name="psydoom_anti_aliasing_samples">抗锯齿多重采样</string>
+    <string name="psydoom_anti_aliasing_edges_only">抗锯齿仅限边缘（更快）</string>
     <string name="psydoom_mimic_original_pixel_stretch">模仿原始像素拉伸</string>
     <string name="psydoom_widescreen">启用宽屏</string>
     <string name="psydoom_extended_status_bar">绘制扩展状态栏</string>
