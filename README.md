@@ -112,11 +112,6 @@ The launcher supports machine translation for the Doom RPG series into multiple 
 
 ### UZDoom
 - **Game Data:** Follow the [GZDoom documentation](https://zdoom.org/w/index.php?title=Main_Page).
-- **Known Issues & Workarounds:**
-  - **Vulkan Renderer:** The native Vulkan renderer remains unplayable and will not be fixed. Upstream developers are responsible for this code.
-  - **OpenGL Emulation on Mali/PowerVR:** To avoid black screens caused by a bug in the UZDoom codebase (not the GPU drivers), OpenGL emulation now forces Vulkan rendering via ANGLE. **Requirements:** Vulkan support and Android 8.0+.
-  - **OpenGL Emulation on Adreno:** Works natively with the stock GLES driver without the aforementioned bugs; forced ANGLE is not applied.
-  - **Fallback:** If Vulkan/ANGLE is unavailable on Mali/PowerVR, use the legacy native OpenGL ES renderer (ported by beloko), which does not suffer from these black screen issues.
 - **Credits:** Contains code from [emileb's GZDoom Android port](https://github.com/emileb/gzdoom) and [glKarin's GLES 3.x native render](https://github.com/glKarin/com.n0n3m4.diii4a). Licensed under GPL v3.
 
 ### Perfect Dark
