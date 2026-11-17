@@ -32,11 +32,21 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     override val loadGL4ES: Boolean = false
 
     private external fun setPathToUserFolder (pathToUserFolder : String)
+    // native C ABI in PsyDoom (Gles/GShaderCache.cpp): disk folder and RAM budget of the GLES program binary cache.
+    // Must be set before the renderer starts.
+    private external fun setPathToCacheFolder (pathToCacheFolder : String)
+    private external fun setShaderRamCacheSizeKb (sizeKb : Int)
 
     override fun onNativeLibrariesLoadedBeforeStart() {
         super.onNativeLibrariesLoadedBeforeStart()
         Native.register(PsyDoomEngineInfo::class.java, mainLibraryName)
         setPathToUserFolder(pathToRootUserFolder)
+        // Driver-specific program binaries: codeCacheDir is wiped by Android on app updates.
+        File(activity.codeCacheDir, SHADER_CACHE_FOLDER_NAME).also {
+            it.mkdirs()
+            setPathToCacheFolder(it.absolutePath)
+        }
+        setShaderRamCacheSizeKb(SHADER_RAM_CACHE_SIZE_KB)
     }
 
     override fun buildCustomCommandLineArgs () : Collection<String>{
@@ -146,5 +156,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
         private const val TURBO_COMMAND = "-turbo"
         private const val SERVER_COMMAND = "-server"
         private const val BOSS_FIX_COMMAND = "-nmbossfixup"
+        private const val SHADER_CACHE_FOLDER_NAME = "psydoom_program_cache"
+        private const val SHADER_RAM_CACHE_SIZE_KB = 8 * 1024
     }
 }
