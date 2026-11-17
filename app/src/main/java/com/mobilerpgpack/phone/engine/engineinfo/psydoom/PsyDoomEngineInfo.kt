@@ -26,7 +26,7 @@ class PsyDoomEngineInfo(mainEngineLib: String,
     override val pathToResource get() = psyDoomPreferencesStorage.pathToPsyDoomCueFile.value!!
     override val requiredResourceExtensions = listOf(".cue", ".CUE")
     override val needToShowScreenControls = true
-    override val allowedToEnableAngle = false
+    override val allowedToEnableAngle = true
     override val mouseButtonsEventsCanBeInvoked = false
     override fun isMouseShown() = false
     override val loadGL4ES: Boolean = false
