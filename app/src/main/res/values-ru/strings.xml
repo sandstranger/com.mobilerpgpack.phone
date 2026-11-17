@@ -147,6 +147,10 @@
     <string name="psydoom_widescreen">Широкоэкранный режим</string>
     <string name="psydoom_extended_status_bar">Расширенная панель статуса</string>
     <string name="psydoom_disable_vulkan_render">Отключить рендер Vulkan</string>
+    <string name="psydoom_gles_render">Рендер OpenGL ES</string>
+    <string name="psydoom_use_gles_render">Использовать рендер OpenGL ES вместо Vulkan</string>
+    <string name="psydoom_gles_render_version">Версия OpenGL ES</string>
+    <string name="psydoom_gles_instancing">GPU-инстансинг (OpenGL ES 3.0)</string>
     <string name="psydoom_triple_buffer">Тройная буферизация</string>
     <string name="psydoom_shading">Использовать 32-битное затенение</string>
     <string name="psydoom_brighten_automap">Увеличить яркость автокарты</string>

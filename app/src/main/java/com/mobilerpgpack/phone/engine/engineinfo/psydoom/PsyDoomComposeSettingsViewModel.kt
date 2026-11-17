@@ -1,6 +1,7 @@
 package com.mobilerpgpack.phone.engine.engineinfo.psydoom
 
 import com.mobilerpgpack.phone.engine.EngineTypes
+import com.mobilerpgpack.phone.engine.GlesRenderVersions
 import com.mobilerpgpack.phone.engine.engineinfo.utils.ModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.PsyDoomModsModel
 import com.mobilerpgpack.phone.engine.engineinfo.utils.viewmodel.IniViewModel
@@ -35,6 +36,9 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
     val widescreenEnabledAsLiveData = graphicsIniFile.getBooleanValueFromInt("VulkanWidescreenEnabled")
     val drawExtendedStatusBarAsLiveData = graphicsIniFile.getBooleanValueFromInt("VulkanDrawExtendedStatusBar")
     val disableVulkanRenderAsLiveData = graphicsIniFile.getBooleanValueFromInt("DisableVulkanRenderer")
+    val useGlesRendererAsLiveData = graphicsIniFile.getBooleanValueFromInt("UseGlesRenderer")
+    val glesRendererVersionAsLiveData = graphicsIniFile.getIntValue("GlesRendererVersion")
+    val glesInstancingAsLiveData = graphicsIniFile.getBooleanValueFromInt("GlesInstancing")
     val enhanceWallDrawPrecisionAsLiveData = graphicsIniFile.getBooleanValueFromInt("EnhanceWallDrawPrecision")
     val skyLeakFixAsLiveData = graphicsIniFile.getBooleanValueFromInt("SkyLeakFix")
     val floorGapRenderFixAsLiveData = graphicsIniFile.getBooleanValueFromInt("FloorRenderGapFix")
@@ -153,6 +157,19 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
     var disableVulkanRender: Boolean
         get() = disableVulkanRenderAsLiveData.value!!
         set(value) = graphicsIniFile.setValueAsInt("DisableVulkanRenderer", value)
+
+    var useGlesRenderer: Boolean
+        get() = useGlesRendererAsLiveData.value!!
+        set(value) = graphicsIniFile.setValueAsInt("UseGlesRenderer", value)
+
+    var glesRendererVersion: GlesRenderVersions
+        get() = glesRenderVersionFromIniValue(glesRendererVersionAsLiveData.value!!)
+        set(value) = graphicsIniFile.setValue("GlesRendererVersion",
+            if (value == GlesRenderVersions.OpenGLES_2_0) 2 else 3)
+
+    var glesInstancing: Boolean
+        get() = glesInstancingAsLiveData.value!!
+        set(value) = graphicsIniFile.setValueAsInt("GlesInstancing", value)
 
     var enhanceWallDrawPrecision: Boolean
         get() = enhanceWallDrawPrecisionAsLiveData.value!!
@@ -522,6 +539,12 @@ class PsyDoomComposeSettingsViewModel : IniViewModel() {
         audioIniFile.clear()
         cheatsIniFile.clear()
         multiPlayerIniFile.clear()
+    }
+
+    companion object {
+        // 'GlesRendererVersion' in graphics_cfg.ini: 2 is OpenGL ES 2.0, anything else (3, or not set yet) OpenGL ES 3.0
+        fun glesRenderVersionFromIniValue(value: Int): GlesRenderVersions =
+            if (value == 2) GlesRenderVersions.OpenGLES_2_0 else GlesRenderVersions.OpenGLES_3_0
     }
 
     override fun reloadIniFiles (){

@@ -105,6 +105,10 @@
     <string name="psydoom_widescreen">Widescreen enabled</string>
     <string name="psydoom_extended_status_bar">Draw extended status bar</string>
     <string name="psydoom_disable_vulkan_render">Disable vulkan render</string>
+    <string name="psydoom_gles_render">OpenGL ES render</string>
+    <string name="psydoom_use_gles_render">Use OpenGL ES render instead of Vulkan</string>
+    <string name="psydoom_gles_render_version">OpenGL ES version</string>
+    <string name="psydoom_gles_instancing">GPU instancing (OpenGL ES 3.0)</string>
     <string name="psydoom_triple_buffer">Triple buffer</string>
     <string name="psydoom_shading">Use 32-bit shading</string>
     <string name="psydoom_brighten_automap">Brighten automap</string>

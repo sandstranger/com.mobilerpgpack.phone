@@ -261,6 +261,34 @@ class PsyDoomComposeSettings : IEngineUIController, KoinComponent {
         }
         DrawHorizontalDivider()
 
+        DrawTitleText(stringResource(R.string.psydoom_gles_render))
+
+        SwitchItem(
+            stringResource(R.string.psydoom_use_gles_render),
+            viewModel.useGlesRendererAsLiveData
+        ) {
+            viewModel.useGlesRenderer = it
+        }
+        DrawHorizontalDivider()
+
+        val glesRendererVersionStream = viewModel.glesRendererVersionAsLiveData.getComposableValue(3)
+        val glesRendererVersion by rememberSaveable(glesRendererVersionStream) {
+            mutableStateOf(PsyDoomComposeSettingsViewModel.glesRenderVersionFromIniValue(glesRendererVersionStream))}
+
+        ListPreferenceItem(stringResource(R.string.psydoom_gles_render_version),
+            glesRendererVersion) {
+            viewModel.glesRendererVersion = it
+        }
+        DrawHorizontalDivider()
+
+        SwitchItem(
+            stringResource(R.string.psydoom_gles_instancing),
+            viewModel.glesInstancingAsLiveData
+        ) {
+            viewModel.glesInstancing = it
+        }
+        DrawHorizontalDivider()
+
         DrawTitleText(stringResource(R.string.psydoom_vulkan_render))
 
         EditTextItem(stringResource(R.string.psydoom_render_height),

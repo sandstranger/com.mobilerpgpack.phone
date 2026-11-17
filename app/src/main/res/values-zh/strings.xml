@@ -105,6 +105,10 @@
     <string name="psydoom_widescreen">启用宽屏</string>
     <string name="psydoom_extended_status_bar">绘制扩展状态栏</string>
     <string name="psydoom_disable_vulkan_render">禁用Vulkan渲染</string>
+    <string name="psydoom_gles_render">OpenGL ES渲染</string>
+    <string name="psydoom_use_gles_render">使用OpenGL ES渲染代替Vulkan</string>
+    <string name="psydoom_gles_render_version">OpenGL ES版本</string>
+    <string name="psydoom_gles_instancing">GPU实例化渲染（OpenGL ES 3.0）</string>
     <string name="psydoom_triple_buffer">三重缓冲</string>
     <string name="psydoom_shading">使用32位着色</string>
     <string name="psydoom_brighten_automap">增亮自动地图</string>
