@@ -2,8 +2,8 @@
 buildscript {
     ext.versions = [
             app_package_name : "com.mobilerpgpack.phone",
-            app_version_code : 147,
-            app_version_name : "4.0.3",
+            app_version_code : 148,
+            app_version_name : "4.0.4",
             min_sdk : 24,
             target_sdk : 37,
             target_sdk_min_revision : 2,
